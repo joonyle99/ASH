@@ -55,7 +55,6 @@ public class PlayerController : MonoBehaviour
             _enableDoubleJump = true;
             _currentMovementLerpSpeed = 100;
             OnTouchedGround?.Invoke();
-            transform.SetParent(_ground[0].transform);
 
         }
         // OffGrounded
@@ -63,7 +62,6 @@ public class PlayerController : MonoBehaviour
         {
             IsGrounded = false;
             _timeLeftGrounded = Time.time;
-            transform.SetParent(null);
         }
     }
 
@@ -128,8 +126,8 @@ public class PlayerController : MonoBehaviour
     #region Jumping
 
     [Header("Jumping")] [SerializeField] private float _jumpForce = 25;
-    [SerializeField] private float _fallMultiplier = 10;
-    [SerializeField] private float _jumpVelocityFalloff = 10;
+    [SerializeField] private float _fallMultiplier = 7;
+    [SerializeField] private float _jumpVelocityFalloff = 8;
     //[SerializeField] private Transform _jumpLaunchPoof;
     [SerializeField] private float _coyoteTime = 0.2f;
     [SerializeField] private bool _enableDoubleJump = true;
