@@ -606,11 +606,17 @@ MonoBehaviour:
   _walkSpeed: 10
   _acceleration: 3
   _currentMovementLerpSpeed: 100
-  _jumpForce: 25
-  _fallMultiplier: 10
-  _jumpVelocityFalloff: 10
+  _jumpForce: 12
+  _fallMultiplier: 7
+  _jumpVelocityFalloff: 8
   _coyoteTime: 0.2
+  _hasJumped: 0
   _enableDoubleJump: 1
+  _hasDoubleJumped: 0
+  _dashSpeed: 35
+  _dashLength: 0.22
+  _hasDashed: 0
+  _dashing: 0
 --- !u!70 &1752399871
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
