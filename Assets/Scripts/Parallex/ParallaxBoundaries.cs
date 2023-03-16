@@ -9,27 +9,47 @@ using UnityEditor;
 [System.Serializable]
 public class ParallaxBoundaries
 {
-    [SerializeField] [HideInInspector] float [] _boundaries;
-    [SerializeField] [HideInInspector] string []_layerNames;
+    [SerializeField] [HideInInspector] float [] _minBoundaries;
+    [SerializeField] [HideInInspector] string [] _layerNames;
     [SerializeField] [HideInInspector] bool [] _enables;
     [SerializeField] [HideInInspector] int _lastEnabled = -1;
 
 
-    public float[] Boundaries { get { return _boundaries; } }
     public ParallaxBoundaries()
     {
     }
-    
+    public List<float> GetEnabledMinBoundaries()
+    {
+        List<float> result = new List<float>();
+        for (int i = 0; i < _layerNames.Length; i++)
+        {
+            if (_enables[i])
+                result.Add(_minBoundaries[i]);
+        }
+        return result;
+    }
+    public List<string> GetEnabledLayerNames()
+    {
+        List<string> result = new List<string>();
+        for (int i = 0; i < _layerNames.Length; i++)
+        {
+            if (_enables[i])
+                result.Add(_layerNames[i]);
+        }
+        return result;
+    }
     public void SetSortingLayers(SortingLayer [] layers)
     {
+        //TODO : 이전 값이 있으면 유지하는 기능 필요
         _layerNames = new string[layers.Length];
-        _boundaries = new float[layers.Length];
+        _minBoundaries = new float[layers.Length];
         _enables = new bool[layers.Length];
         for (int i = 0; i < layers.Length; i++)
         {
             _layerNames[i] = layers[i].name;
             _enables[i] = true;
         }
+        _lastEnabled = layers.Length - 1;
     }
     public string GetLayerName(float z)
     {
@@ -37,7 +57,7 @@ public class ParallaxBoundaries
         {
             if (!_enables[i])
                 continue;
-            if (_boundaries[i] <= z)
+            if (_minBoundaries[i] <= z)
                 return _layerNames[i];
         }
         return _layerNames[_lastEnabled];
@@ -67,7 +87,7 @@ public class ParallaxBoundariesDrawer : PropertyDrawer
     int HEIGHT = 18;
 
     SerializedProperty _layerNames;
-    SerializedProperty _boundaries;
+    SerializedProperty _minBoundaries;
     SerializedProperty _enables;
     SerializedProperty _lastEnabled;
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -85,7 +105,7 @@ public class ParallaxBoundariesDrawer : PropertyDrawer
             if(_layerNames == null)
             {
                 _layerNames = property.FindPropertyRelative("_layerNames");
-                _boundaries = property.FindPropertyRelative("_boundaries");
+                _minBoundaries = property.FindPropertyRelative("_minBoundaries");
                 _enables = property.FindPropertyRelative("_enables");
                 _lastEnabled = property.FindPropertyRelative("_lastEnabled");
             }
@@ -100,7 +120,7 @@ public class ParallaxBoundariesDrawer : PropertyDrawer
                 GUI.enabled = _enables.GetArrayElementAtIndex(i).boolValue;
                 if (_lastEnabled.intValue == i)
                     GUI.enabled = false;
-                EditorGUI.PropertyField(fieldRect, _boundaries.GetArrayElementAtIndex(i), GUIContent.none);
+                EditorGUI.PropertyField(fieldRect, _minBoundaries.GetArrayElementAtIndex(i), GUIContent.none);
                 GUI.enabled = true;
                 position.y += HEIGHT + 2;
             }
