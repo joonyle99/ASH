@@ -596,19 +596,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8735b71caefa464e843f675cd39ff10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rb: {fileID: 1752399872}
   _groundMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   _grounderOffset: -1
   _grounderRadius: 0.2
+  _ground:
+  - {fileID: 0}
   IsGrounded: 0
   _walkSpeed: 10
   _acceleration: 3
   _currentMovementLerpSpeed: 100
-  _jumpForce: 12
-  _fallMultiplier: 7
-  _jumpVelocityFalloff: 8
+  _jumpForce: 15
+  _fallMultiplier: 10
+  _jumpVelocityFalloff: 12
   _coyoteTime: 0.2
   _hasJumped: 0
   _enableDoubleJump: 1

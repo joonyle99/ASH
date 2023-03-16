@@ -7,10 +7,16 @@ using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D _rb;
+    private Rigidbody2D _rb;
     private Inputs _inputs;
     private bool _useGravity;
-    
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        _groundMask = LayerMask.GetMask("Ground");
+    }
+
     void Update()
     {
         GatherInput();
@@ -31,37 +37,33 @@ public class PlayerController : MonoBehaviour
         _inputs.X = Input.GetAxis("Horizontal");
         _inputs.Y = Input.GetAxis("Vertical");
 
-        _facingLeft = _inputs.RawX == -1 || _facingLeft;
-            // _inputs.RawX != 1 && (_inputs.RawX == -1 || _facingLeft);
+        _facingLeft = _inputs.RawX != 1 && (_inputs.RawX == -1 || _facingLeft);
     }
 
     #endregion
 
     #region Detection
 
-    [Header("Detection")] [SerializeField] private LayerMask _groundMask;
+    [Header("Detection")]
+    [SerializeField] private LayerMask _groundMask;
     [SerializeField] private float _grounderOffset = -1, _grounderRadius = 0.2f;
+    [SerializeField] private Collider2D[] _ground = new Collider2D[1];
     public bool IsGrounded;
-    //public static event Action OnTouchedGround;
-
-    private readonly Collider2D[] _ground = new Collider2D[1];
 
     private void HandleGrounding()
     {
         // Grounder
-        var grounded = Physics2D.OverlapCircleNonAlloc(transform.position + new Vector3(0, _grounderOffset),
+        bool grounded = Physics2D.OverlapCircleNonAlloc(transform.position + new Vector3(0, _grounderOffset),
             _grounderRadius, _ground, _groundMask) > 0;
 
         // OnGrounded
-        if (!IsGrounded && grounded) // land
+        if (!IsGrounded && grounded) // land state
         {
             IsGrounded = true;
             _hasJumped = false;
             _enableDoubleJump = true;
             _hasDoubleJumped = false;
             _currentMovementLerpSpeed = 100;
-            //OnTouchedGround?.Invoke();
-
         }
         // OffGrounded
         else if (IsGrounded && !grounded) // jump timing
@@ -69,6 +71,7 @@ public class PlayerController : MonoBehaviour
             IsGrounded = false;
             _timeLeftGrounded = Time.time;
         }
+        
     }
 
     private void DrawGrounderGizmos()
@@ -92,6 +95,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWalking()
     {
+        if (_dashing) return;
+
         var acceleration = IsGrounded ? _acceleration : _acceleration * 0.5f;
 
         // left
@@ -132,10 +137,9 @@ public class PlayerController : MonoBehaviour
 
     #region Jumping
 
-    [Header("Jumping")] [SerializeField] private float _jumpForce = 12;
-    [SerializeField] private float _fallMultiplier = 7;
-    [SerializeField] private float _jumpVelocityFalloff = 8;
-    //[SerializeField] private Transform _jumpLaunchPoof;
+    [Header("Jumping")] [SerializeField] private float _jumpForce = 15;
+    [SerializeField] private float _fallMultiplier = 10;
+    [SerializeField] private float _jumpVelocityFalloff = 14;
     [SerializeField] private float _coyoteTime = 0.2f;
     [SerializeField] private bool _hasJumped;
     [SerializeField] private bool _enableDoubleJump = true;
@@ -147,10 +151,13 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            if (_dashing) return;
+
             if (IsGrounded || (Time.time < _timeLeftGrounded + _coyoteTime) || (_enableDoubleJump && !_hasDoubleJumped))
             {
                 if (!_hasJumped || (_hasJumped && !_hasDoubleJumped)){
                     ExecuteJump(new Vector2(_rb.velocity.x, _jumpForce), _hasJumped); // Ground jump (x에 _rb.velocity.x를 줌으로써 더 멀리 점프 가능)
+                    
                     // _hasJumped가 false일 때 들어왔다? -> 1단 점프가 실행된다는 뜻
                     // _hasJumped가 true일 때 들어왔다? -> 2단 점프가 실행된다는 뜻
                 }
@@ -185,8 +192,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _hasDashed;
     [SerializeField] private bool _dashing;
 
-    //public static event Action OnStartDashing, OnStopDashing;
-
     private float _timeStartedDash;
     private Vector2 _dashDir;
 
@@ -203,7 +208,6 @@ public class PlayerController : MonoBehaviour
             _timeStartedDash = Time.time;
             _useGravity = false;
             _rb.gravityScale = _useGravity ? 1 : 0;
-            //OnStartDashing?.Invoke();
         }
 
         // Already Dash
@@ -219,16 +223,27 @@ public class PlayerController : MonoBehaviour
                 _useGravity = true;
                 _rb.gravityScale = _useGravity ? 1 : 0;
                 _hasDashed = false;
-                //OnStopDashing?.Invoke();
             }
         }
     }
 
-
-
-
-
     #endregion
+
+    /*
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        int groundLayer = LayerMask.NameToLayer("Ground");
+        if (collision.gameObject.layer == groundLayer)
+        {
+            Debug.Log("Ground Stay");
+            if(IsGrounded && _hasJumped)
+            {
+                Debug.Log("_hasJumped gonna false");
+                _hasJumped = false;
+            }
+        }
+    }
+    */
 
     private struct Inputs
     {
