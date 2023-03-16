@@ -509,7 +509,7 @@ GameObject:
   - component: {fileID: 1752399868}
   - component: {fileID: 1752399872}
   - component: {fileID: 1752399871}
-  - component: {fileID: 1752399870}
+  - component: {fileID: 1752399873}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -584,40 +584,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1752399870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1752399867}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8735b71caefa464e843f675cd39ff10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _grounderOffset: -1
-  _grounderRadius: 0.2
-  _ground:
-  - {fileID: 0}
-  IsGrounded: 0
-  _walkSpeed: 10
-  _acceleration: 3
-  _currentMovementLerpSpeed: 100
-  _jumpForce: 15
-  _fallMultiplier: 10
-  _jumpVelocityFalloff: 12
-  _coyoteTime: 0.2
-  _hasJumped: 0
-  _enableDoubleJump: 1
-  _hasDoubleJumped: 0
-  _dashSpeed: 35
-  _dashLength: 0.22
-  _hasDashed: 0
-  _dashing: 0
 --- !u!70 &1752399871
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -655,6 +621,36 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &1752399873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752399867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 960d734ede7271542964f3959782032c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _grounderOffset: -1
+  _grounderRadius: 0.2
+  _ground:
+  - {fileID: 0}
+  IsGrounded: 0
+  _walkSpeed: 10
+  _acceleration: 10
+  _currentMovementLerpSpeed: 100
+  _jumpForce: 20
+  _fallMultiplier: 100
+  _jumpVelocityFalloff: 100
+  _coyoteTime: 0.2
+  _hasJumped: 0
+  _enableDoubleJump: 0
+  _hasDoubleJumped: 0
 --- !u!1 &2005413574
 GameObject:
   m_ObjectHideFlags: 0

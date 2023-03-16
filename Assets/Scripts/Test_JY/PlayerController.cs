@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D _rb;
     private Inputs _inputs;
-    private bool _useGravity;
 
     private void Awake()
     {
@@ -191,6 +190,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _dashLength = 0.22f;
     [SerializeField] private bool _hasDashed;
     [SerializeField] private bool _dashing;
+    [SerializeField] private bool _useGravity;
 
     private float _timeStartedDash;
     private Vector2 _dashDir;
