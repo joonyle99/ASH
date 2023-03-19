@@ -10,27 +10,15 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rb;
     private Inputs _inputs;
 
-    public float time;
-
-
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _groundMask = LayerMask.GetMask("Ground");
         _wallMask = LayerMask.GetMask("Wall");
-
-        time = Time.time;
     }
 
     void Update()
     {
-        time += Time.deltaTime;
-
-        if (time >= 0.1f)
-        {
-            time = 0f;
-            Debug.Log("_inputs.X : " + _inputs.X);
-        }
 
         GatherInput();
         HandleGrounding();
@@ -67,6 +55,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private readonly Vector2 _leftOffset = new Vector2(-0.5f, -0.1f);
 
     [SerializeField] private readonly Collider2D[] _ground = new Collider2D[1];
+    [SerializeField] private readonly Collider2D[] _wall = new Collider2D[1];
     [SerializeField] private readonly Collider2D[] _leftWall = new Collider2D[1];
     [SerializeField] private readonly Collider2D[] _rightWall = new Collider2D[1];
 
@@ -83,6 +72,8 @@ public class PlayerController : MonoBehaviour
             _collisionRadius, _ground, _groundMask) > 0;
 
         // Wall
+        bool wall = Physics2D.OverlapCircleNonAlloc((Vector2)transform.position + _leftOffset, _collisionRadius, _leftWall, _wallMask) > 0
+                    || Physics2D.OverlapCircleNonAlloc((Vector2)transform.position + _rightOffset,_collisionRadius, _rightWall, _wallMask) > 0;
         bool leftWall = Physics2D.OverlapCircleNonAlloc((Vector2)transform.position + _leftOffset,
             _collisionRadius, _leftWall, _wallMask) > 0;
         bool rightWall = Physics2D.OverlapCircleNonAlloc((Vector2)transform.position + _rightOffset,
@@ -104,6 +95,36 @@ public class PlayerController : MonoBehaviour
             _timeLeftGrounded = Time.time;
         }
         
+        // OnWall
+        if (!OnWall && wall)
+        {
+            OnWall = true;
+
+            if (!OnLeftWall && leftWall)
+            {
+                OnLeftWall = true;
+            }
+
+            if (!OnRightWall && rightWall)
+            {
+                OnRightWall = true;
+            }
+        }
+        // OffWall
+        else if (OnWall && !wall)
+        {
+            OnWall = false;
+
+            if (OnLeftWall && !leftWall)
+            {
+                OnLeftWall = false;
+            }
+
+            if (OnRightWall && !rightWall)
+            {
+                OnRightWall = false;
+            }
+        }
     }
 
     private void DrawGrounderGizmos()
@@ -124,7 +145,7 @@ public class PlayerController : MonoBehaviour
     #region Walking
 
     [Header("Walking")]
-    [SerializeField] private float _walkSpeed = 10f;
+    [SerializeField] private float _walkSpeed = 13f;
     [SerializeField] private float _acceleration = 3f;
     [SerializeField] private float _currentMovementLerpSpeed = 100f;
 
@@ -132,6 +153,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_dashing) return;
 
+        // 마찰력 > 공기저항
         var acceleration = IsGrounded ? _acceleration : _acceleration * 0.5f;
 
         // left
@@ -174,9 +196,10 @@ public class PlayerController : MonoBehaviour
 
     #region Jumping
 
-    [Header("Jumping")] [SerializeField] private float _jumpForce = 15;
-    [SerializeField] private float _fallMultiplier = 10;
-    [SerializeField] private float _jumpVelocityFalloff = 14;
+    [Header("Jumping")]
+    [SerializeField] private float _jumpForce = 12;
+    [SerializeField] private float _fallMultiplier = 7f;
+    [SerializeField] private float _jumpVelocityFalloff = 10f;
     [SerializeField] private float _coyoteTime = 0.2f;
     [SerializeField] private bool _hasJumped;
     [SerializeField] private bool _enableDoubleJump = true;
@@ -192,7 +215,7 @@ public class PlayerController : MonoBehaviour
 
             if (IsGrounded || (Time.time < _timeLeftGrounded + _coyoteTime) || (_enableDoubleJump && !_hasDoubleJumped))
             {
-                if (!_hasJumped || (_hasJumped && !_hasDoubleJumped)){
+                if (!_hasJumped || (_hasJumped && !_hasDoubleJumped)){ // 1단 or 2단 점프
                     ExecuteJump(new Vector2(_rb.velocity.x, _jumpForce), _hasJumped); // Ground jump (x에 _rb.velocity.x를 줌으로써 더 멀리 점프 가능)
                     
                     // _hasJumped가 false일 때 들어왔다? -> 1단 점프가 실행된다는 뜻
@@ -208,7 +231,6 @@ public class PlayerController : MonoBehaviour
             _hasDoubleJumped = doubleJump;
             _enableDoubleJump = !_hasDoubleJumped;
             _hasJumped = true;
-
         }
 
         // Fall faster and allow small jumps. _jumpVelocityFalloff is the point at which we start adding extra gravity. Using 0 causes floating
@@ -224,8 +246,8 @@ public class PlayerController : MonoBehaviour
     #region Dashing
 
     [Header("Dash")]
-    [SerializeField] private float _dashSpeed = 35.0f;
-    [SerializeField] private float _dashLength = 0.22f;
+    [SerializeField] private float _dashSpeed = 29f;
+    [SerializeField] private float _dashLength = 0.2f;
     [SerializeField] private bool _hasDashed;
     [SerializeField] private bool _dashing;
     [SerializeField] private bool _useGravity;
@@ -236,7 +258,7 @@ public class PlayerController : MonoBehaviour
     private void HandleDashing()
     {
         // Dash
-        if(Input.GetKeyDown(KeyCode.X) && !_hasDashed)
+        if(Input.GetKeyDown(KeyCode.LeftShift) && !_hasDashed)
         {
             _dashDir = new Vector2(_inputs.RawX, _inputs.RawY).normalized; // 대쉬 방향
             if (_dashDir == Vector2.zero)
@@ -256,32 +278,15 @@ public class PlayerController : MonoBehaviour
             if(Time.time >= _timeStartedDash + _dashLength)
             {
                 _dashing = false;
-                // Clamp the velocity so they don't keep shooting off
-                _rb.velocity = new Vector2(_rb.velocity.x, (_rb.velocity.y > 3) ? 3 : _rb.velocity.y);
+                _hasDashed = false;
                 _useGravity = true;
                 _rb.gravityScale = _useGravity ? 1 : 0;
-                _hasDashed = false;
+                _rb.velocity = new Vector2(_rb.velocity.x, (_rb.velocity.y > 3) ? 3 : _rb.velocity.y);
             }
         }
     }
 
     #endregion
-
-    /*
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        int groundLayer = LayerMask.NameToLayer("Ground");
-        if (collision.gameObject.layer == groundLayer)
-        {
-            Debug.Log("Ground Stay");
-            if(IsGrounded && _hasJumped)
-            {
-                Debug.Log("_hasJumped gonna false");
-                _hasJumped = false;
-            }
-        }
-    }
-    */
 
     private struct Inputs
     {
