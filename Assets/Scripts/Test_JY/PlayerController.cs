@@ -10,14 +10,28 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rb;
     private Inputs _inputs;
 
+    public float time;
+
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _groundMask = LayerMask.GetMask("Ground");
+        _wallMask = LayerMask.GetMask("Wall");
+
+        time = Time.time;
     }
 
     void Update()
     {
+        time += Time.deltaTime;
+
+        if (time >= 0.1f)
+        {
+            time = 0f;
+            Debug.Log("_inputs.X : " + _inputs.X);
+        }
+
         GatherInput();
         HandleGrounding();
         HandleWalking();
@@ -45,15 +59,34 @@ public class PlayerController : MonoBehaviour
 
     [Header("Detection")]
     [SerializeField] private LayerMask _groundMask;
-    [SerializeField] private float _grounderOffset = -1, _grounderRadius = 0.2f;
-    [SerializeField] private Collider2D[] _ground = new Collider2D[1];
+    [SerializeField] private LayerMask _wallMask;
+
+    [SerializeField] private readonly float _collisionRadius = 0.2f;
+    [SerializeField] private readonly Vector2 _bottomOffset = new Vector2(0f, -1f);
+    [SerializeField] private readonly Vector2 _rightOffset = new Vector2(0.5f, -0.1f);
+    [SerializeField] private readonly Vector2 _leftOffset = new Vector2(-0.5f, -0.1f);
+
+    [SerializeField] private readonly Collider2D[] _ground = new Collider2D[1];
+    [SerializeField] private readonly Collider2D[] _leftWall = new Collider2D[1];
+    [SerializeField] private readonly Collider2D[] _rightWall = new Collider2D[1];
+
+
     public bool IsGrounded;
+    public bool OnWall;
+    public bool OnLeftWall;
+    public bool OnRightWall;
 
     private void HandleGrounding()
     {
         // Grounder
-        bool grounded = Physics2D.OverlapCircleNonAlloc(transform.position + new Vector3(0, _grounderOffset),
-            _grounderRadius, _ground, _groundMask) > 0;
+        bool grounded = Physics2D.OverlapCircleNonAlloc((Vector2)transform.position + _bottomOffset,
+            _collisionRadius, _ground, _groundMask) > 0;
+
+        // Wall
+        bool leftWall = Physics2D.OverlapCircleNonAlloc((Vector2)transform.position + _leftOffset,
+            _collisionRadius, _leftWall, _wallMask) > 0;
+        bool rightWall = Physics2D.OverlapCircleNonAlloc((Vector2)transform.position + _rightOffset,
+            _collisionRadius, _rightWall, _wallMask) > 0;
 
         // OnGrounded
         if (!IsGrounded && grounded) // land state
@@ -76,7 +109,9 @@ public class PlayerController : MonoBehaviour
     private void DrawGrounderGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position + new Vector3(0, _grounderOffset), _grounderRadius);
+        Gizmos.DrawWireSphere((Vector2)transform.position + _bottomOffset, _collisionRadius);
+        Gizmos.DrawWireSphere((Vector2)transform.position + _leftOffset, _collisionRadius);
+        Gizmos.DrawWireSphere((Vector2)transform.position + _rightOffset, _collisionRadius);
     }
 
     private void OnDrawGizmos()
@@ -88,9 +123,10 @@ public class PlayerController : MonoBehaviour
 
     #region Walking
 
-    [Header("Walking")] [SerializeField] private float _walkSpeed = 10;
-    [SerializeField] private float _acceleration = 3;
-    [SerializeField] private float _currentMovementLerpSpeed = 100;
+    [Header("Walking")]
+    [SerializeField] private float _walkSpeed = 10f;
+    [SerializeField] private float _acceleration = 3f;
+    [SerializeField] private float _currentMovementLerpSpeed = 100f;
 
     private void HandleWalking()
     {
@@ -99,8 +135,9 @@ public class PlayerController : MonoBehaviour
         var acceleration = IsGrounded ? _acceleration : _acceleration * 0.5f;
 
         // left
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
+            // 빠른 방향전환
             if (_rb.velocity.x > 0)
             {
                 _inputs.X = 0;
@@ -110,8 +147,9 @@ public class PlayerController : MonoBehaviour
             _inputs.X = Mathf.MoveTowards(_inputs.X, -1, acceleration * Time.deltaTime);
         }
         // right
-        else if (Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
+            // 빠른 방향전환
             if (_rb.velocity.x < 0)
             {
                 _inputs.X = 0;
