@@ -12,5 +12,7 @@ public class Bootstrapper : HappyTools.GameBootstrapper
         Debug.Log("Game Initialization");
         _inputManager = Instantiate(_inputManagerPrefab, transform);
         _inputManager.ChangeInputSetter(_inputManager.GetComponent<PCInputSetter>());
+
     }
+
 }
