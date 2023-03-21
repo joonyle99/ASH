@@ -4,28 +4,42 @@ using UnityEngine;
 
 public struct InputState
 {
-    bool IsPressingJump;
-    Vector2 Movement;
+    public bool IsPressingJump;
+    public Vector2 Movement;
 }
-public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
+public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, IInputSetter
 {
-    public delegate void InputEventHandler();
-
-    public event InputEventHandler OnJump
+    List<IInputSetter.InputEventHandler> JumpPressedEventHandlers = new List<IInputSetter.InputEventHandler>();
+    public event IInputSetter.InputEventHandler JumpPressedEvent
     {
-        add { _jumpEvent += value; }
-        remove { _jumpEvent -= value; }
+        add
+        {
+            JumpPressedEventHandlers.Add(value);
+            
+        }
+        remove
+        {
+            JumpPressedEventHandlers.Remove(value);
+        }
     }
-    event InputEventHandler _jumpEvent;
-
+    public delegate void InputEventHandler();
     IInputSetter _currentSetter;
 
-    public void SetInputSetter(IInputSetter setter)
+    public void ChangeInputSetter(IInputSetter setter)
     {
+        Debug.Log(JumpPressedEventHandlers.Count);
+
+        foreach(var handler in JumpPressedEventHandlers)
+            _currentSetter.JumpPressedEvent -= handler;
         _currentSetter = setter;
+
+        foreach (var handler in JumpPressedEventHandlers)
+            _currentSetter.JumpPressedEvent += handler;
     }
 
-    public InputState GetInputState()
+    
+
+    public InputState GetState()
     {
         return _currentSetter.GetState();
     }

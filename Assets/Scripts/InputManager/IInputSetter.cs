@@ -4,5 +4,8 @@ using UnityEngine;
 
 public interface IInputSetter
 {
-    InputState GetState();
+    public delegate void InputEventHandler();
+    public event InputEventHandler JumpPressedEvent;
+
+    public InputState GetState();
 }
