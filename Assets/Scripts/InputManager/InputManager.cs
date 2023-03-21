@@ -9,35 +9,22 @@ public struct InputState
 }
 public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, IInputSetter
 {
-    List<IInputSetter.InputEventHandler> JumpPressedEventHandlers = new List<IInputSetter.InputEventHandler>();
-    public event IInputSetter.InputEventHandler JumpPressedEvent
-    {
-        add
-        {
-            JumpPressedEventHandlers.Add(value);
-            
-        }
-        remove
-        {
-            JumpPressedEventHandlers.Remove(value);
-        }
-    }
+    public event IInputSetter.InputEventHandler JumpPressedEvent;
+
     public delegate void InputEventHandler();
     IInputSetter _currentSetter;
 
+    
     public void ChangeInputSetter(IInputSetter setter)
     {
-        Debug.Log(JumpPressedEventHandlers.Count);
-
-        foreach(var handler in JumpPressedEventHandlers)
-            _currentSetter.JumpPressedEvent -= handler;
+        if (_currentSetter != null)
+        {
+            _currentSetter.JumpPressedEvent -= () => JumpPressedEvent.Invoke();
+        }
         _currentSetter = setter;
 
-        foreach (var handler in JumpPressedEventHandlers)
-            _currentSetter.JumpPressedEvent += handler;
+        _currentSetter.JumpPressedEvent += () => JumpPressedEvent.Invoke();
     }
-
-    
 
     public InputState GetState()
     {

@@ -18,7 +18,6 @@ public class PCInputSetter : MonoBehaviour, IInputSetter
     {
         if (Input.GetKeyDown(jumpKey))
         {
-            Debug.Log(JumpPressedEvent.GetInvocationList().Length);
             JumpPressedEvent?.Invoke();
         }
     }
