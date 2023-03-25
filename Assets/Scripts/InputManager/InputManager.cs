@@ -19,11 +19,11 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
     {
         if (_currentSetter != null)
         {
-            _currentSetter.JumpPressedEvent -= () => JumpPressedEvent.Invoke();
+            _currentSetter.JumpPressedEvent -= () => JumpPressedEvent?.Invoke();
         }
         _currentSetter = setter;
 
-        _currentSetter.JumpPressedEvent += () => JumpPressedEvent.Invoke();
+        _currentSetter.JumpPressedEvent += () => JumpPressedEvent?.Invoke();
     }
 
     public InputState GetState()
