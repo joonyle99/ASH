@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D _rb;
     private Animator _anim;
     private Inputs _inputs;
-    private PlayerState _playerState;
 
     private void Awake()
     {

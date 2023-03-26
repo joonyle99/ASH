@@ -10,11 +10,13 @@ using UnityEditor;
 public class StateMachineBase : MonoBehaviour
 {
     [SerializeField] StateBase _initialState;
+    [SerializeField] Rigidbody2D _rb;
     [SerializeField] Animator _animator;
 
     public StateBase CurrentState { get { return _currentState; } }
     public StateBase PreviousState { get { return _previousState; } }
     public Animator Animator { get { return _animator;  } }
+    public Rigidbody2D Rigidbody2D { get { return _rb; } }
 
     StateBase _currentState;
     StateBase _previousState = null;

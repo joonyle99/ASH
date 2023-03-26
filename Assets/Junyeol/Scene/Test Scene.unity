@@ -771,8 +771,6 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  moveSpeed: 5
-  moveRange: 2
 --- !u!114 &925682054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -801,7 +799,38 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initialState: {fileID: 925682054}
+  _rb: {fileID: 0}
   _animator: {fileID: 0}
+  _facingLeft: 0
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _wallMask:
+    serializedVersion: 2
+    m_Bits: 0
+  IsGrounded: 0
+  OnWall: 0
+  OnLeftWall: 0
+  OnRightWall: 0
+  grounded: 0
+  _walkSpeed: 7
+  _acceleration: 3
+  _currentMovementLerpSpeed: 100
+  _jumpForce: 7
+  _fallMultiplier: 3
+  _jumpVelocityFalloff: 6
+  _coyoteTime: 0.2
+  _hasJumped: 0
+  _enableDoubleJump: 1
+  _hasDoubleJumped: 0
+  _timeLeftGrounded: -10
+  _dashSpeed: 13
+  _dashLength: 0.2
+  _hasDashed: 0
+  _dashing: 0
+  _useGravity: 0
+  _timeStartedDash: 0
+  _dashDir: {x: 0, y: 0}
   _attackPower: 0
 --- !u!212 &925682056
 SpriteRenderer:
@@ -1139,11 +1168,11 @@ GameObject:
   - component: {fileID: 1752399872}
   - component: {fileID: 1752399874}
   - component: {fileID: 1752399878}
-  - component: {fileID: 1752399873}
   - component: {fileID: 1752399879}
   - component: {fileID: 1752399877}
   - component: {fileID: 1752399876}
   - component: {fileID: 1752399880}
+  - component: {fileID: 1752399882}
   - component: {fileID: 1752399875}
   - component: {fileID: 1752399881}
   m_Layer: 0
@@ -1241,44 +1270,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1752399873
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1752399867}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8735b71caefa464e843f675cd39ff10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _facingLeft: 0
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _wallMask:
-    serializedVersion: 2
-    m_Bits: 0
-  IsGrounded: 0
-  OnWall: 0
-  OnLeftWall: 0
-  OnRightWall: 0
-  _walkSpeed: 7
-  _acceleration: 3
-  _currentMovementLerpSpeed: 100
-  _jumpForce: 10
-  _fallMultiplier: 3
-  _jumpVelocityFalloff: 6
-  _coyoteTime: 0.2
-  _hasJumped: 0
-  _enableDoubleJump: 1
-  _hasDoubleJumped: 0
-  _dashSpeed: 13
-  _dashLength: 0.2
-  _hasDashed: 0
-  _dashing: 0
-  _useGravity: 0
 --- !u!70 &1752399874
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1325,8 +1316,6 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  moveSpeed: 0
-  moveRange: 0
 --- !u!114 &1752399877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1376,8 +1365,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _initialState: {fileID: 1752399877}
+  _rb: {fileID: 1752399872}
   _animator: {fileID: 1752399878}
-  _attackPower: 10
+  _facingLeft: 0
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _wallMask:
+    serializedVersion: 2
+    m_Bits: 0
+  IsGrounded: 0
+  OnWall: 0
+  OnLeftWall: 0
+  OnRightWall: 0
+  grounded: 0
+  _walkSpeed: 7
+  _acceleration: 3
+  _currentMovementLerpSpeed: 100
+  _jumpForce: 7
+  _fallMultiplier: 3
+  _jumpVelocityFalloff: 6
+  _coyoteTime: 0.2
+  _hasJumped: 0
+  _enableDoubleJump: 1
+  _hasDoubleJumped: 0
+  _timeLeftGrounded: -10
+  _dashSpeed: 13
+  _dashLength: 0.2
+  _hasDashed: 0
+  _dashing: 0
+  _useGravity: 0
+  _timeStartedDash: 0
+  _dashDir: {x: 0, y: 0}
+  _attackPower: 0
 --- !u!114 &1752399880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,6 +1423,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b22ec1d537058d4fa32268caa0927cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorParameters:
+    _enterParams: []
+    _exitParams: []
+--- !u!114 &1752399882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752399867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84141370910e6b142afe760e3355756d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _animatorParameters:
