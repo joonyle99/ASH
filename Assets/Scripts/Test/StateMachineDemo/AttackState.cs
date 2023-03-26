@@ -9,8 +9,10 @@ namespace StateMahineDemo
     {
         protected override void OnEnter()
         {
+            Debug.Log("Start Attack");
             StartCoroutine(Attack());
         }
+
         IEnumerator Attack()
         {
             Debug.Log("Attack with power " + Player.AttackPower);
@@ -23,12 +25,15 @@ namespace StateMahineDemo
             yield return new WaitForSeconds(0.5f);
             ChangeState<IdleState>();
         }
-        protected override void OnExit()
-        {
-        }
 
         protected override void OnUpdate()
         {
+            Debug.Log("Update Attack");
+        }
+
+        protected override void OnExit()
+        {
+            Debug.Log("Exit Attack");
         }
     }
 }

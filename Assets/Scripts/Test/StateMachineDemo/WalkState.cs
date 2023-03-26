@@ -10,25 +10,27 @@ namespace StateMahineDemo
         [SerializeField] float moveSpeed;
         [SerializeField] float moveRange;
 
-        float eTime;
         protected override void OnEnter()
         {
-            eTime = 0f;
+            Debug.Log("Start Walk");
         }
         protected override void OnUpdate()
         {
-            eTime += Time.deltaTime;
-            transform.position += new Vector3(0, Mathf.Sin(eTime * moveSpeed) * moveRange, 0) * Time.deltaTime;
+            Debug.Log("Update Walk");
 
             if (Input.GetKeyDown(KeyCode.A))
+            {
                 ChangeState<AttackState>();
-            if (!Input.GetKey(KeyCode.W))
+            }
+            if (!Input.GetKey(KeyCode.LeftArrow) && !Input.GetKey(KeyCode.RightArrow))
+            {
                 ChangeState<IdleState>();
+            }
         }
 
         protected override void OnExit()
         {
-
+            Debug.Log("Exit Walk");
         }
 
     }

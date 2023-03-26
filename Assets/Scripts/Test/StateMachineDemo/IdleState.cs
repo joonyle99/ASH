@@ -9,20 +9,32 @@ namespace StateMahineDemo
     {
         protected override void OnEnter()
         {
-
+            Debug.Log("Start Idle");
         }
         protected override void OnUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.A))
-                ChangeState<AttackState>();
-            if (Input.GetKey(KeyCode.W))
+            Debug.Log("Update Idle");
+
+            if (Input.GetKey(KeyCode.LeftArrow) && Input.GetKey(KeyCode.RightArrow))
+            {
                 ChangeState<WalkState>();
+            }
+
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                ChangeState<AttackState>();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ChangeState<JumpState>();
+            }
         }
 
 
         protected override void OnExit()
         {
-
+            Debug.Log("Exit Idle");
         }
     }
 }
