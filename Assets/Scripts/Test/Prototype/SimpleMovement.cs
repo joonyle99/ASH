@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SimpleMovement : MonoBehaviour
 {
-    [SerializeField] public float MoveSpeed = 4;
+    [SerializeField] public float MoveSpeed = 6;
     private void OnEnable()
     {
         InputManager.Instance.JumpPressedEvent += OnJumpPressed;
