@@ -771,6 +771,9 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+  _walkSpeed: 7
+  _acceleration: 3
+  _currentMovementLerpSpeed: 100
 --- !u!114 &925682054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -801,35 +804,6 @@ MonoBehaviour:
   _initialState: {fileID: 925682054}
   _rb: {fileID: 0}
   _animator: {fileID: 0}
-  _facingLeft: 0
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _wallMask:
-    serializedVersion: 2
-    m_Bits: 0
-  IsGrounded: 0
-  OnWall: 0
-  OnLeftWall: 0
-  OnRightWall: 0
-  _walkSpeed: 7
-  _acceleration: 3
-  _currentMovementLerpSpeed: 100
-  _jumpForce: 7
-  _fallMultiplier: 3
-  _jumpVelocityFalloff: 6
-  _coyoteTime: 0.2
-  _hasJumped: 0
-  _enableDoubleJump: 1
-  _hasDoubleJumped: 0
-  _timeLeftGrounded: -10
-  _dashSpeed: 13
-  _dashLength: 0.2
-  _hasDashed: 0
-  _dashing: 0
-  _useGravity: 0
-  _timeStartedDash: 0
-  _dashDir: {x: 0, y: 0}
   _attackPower: 0
 --- !u!212 &925682056
 SpriteRenderer:
@@ -1167,6 +1141,9 @@ GameObject:
   - component: {fileID: 1752399872}
   - component: {fileID: 1752399874}
   - component: {fileID: 1752399878}
+  - component: {fileID: 1752399884}
+  - component: {fileID: 1752399883}
+  - component: {fileID: 1752399885}
   - component: {fileID: 1752399879}
   - component: {fileID: 1752399877}
   - component: {fileID: 1752399876}
@@ -1315,6 +1292,9 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+  _walkSpeed: 7
+  _acceleration: 3
+  _currentMovementLerpSpeed: 100
 --- !u!114 &1752399877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1366,36 +1346,7 @@ MonoBehaviour:
   _initialState: {fileID: 1752399877}
   _rb: {fileID: 1752399872}
   _animator: {fileID: 1752399878}
-  _facingLeft: 0
-  _groundMask:
-    serializedVersion: 2
-    m_Bits: 0
-  _wallMask:
-    serializedVersion: 2
-    m_Bits: 0
-  IsGrounded: 0
-  OnWall: 0
-  OnLeftWall: 0
-  OnRightWall: 0
-  _walkSpeed: 7
-  _acceleration: 3
-  _currentMovementLerpSpeed: 100
-  _jumpForce: 9
-  _fallMultiplier: 4
-  _jumpVelocityFalloff: 7
-  _coyoteTime: 0.2
-  _hasJumped: 0
-  _enableDoubleJump: 1
-  _hasDoubleJumped: 0
-  _timeLeftGrounded: -10
-  _dashSpeed: 13
-  _dashLength: 0.2
-  _hasDashed: 0
-  _dashing: 0
-  _useGravity: 0
-  _timeStartedDash: 0
-  _dashDir: {x: 0, y: 0}
-  _attackPower: 0
+  _attackPower: 10
 --- !u!114 &1752399880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1411,6 +1362,14 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+  _jumpForce: 9
+  _fallMultiplier: 4
+  _jumpVelocityFalloff: 7
+  _coyoteTime: 0.2
+  _hasJumped: 0
+  _enableDoubleJump: 1
+  _hasDoubleJumped: 0
+  _timeLeftGrounded: -10
 --- !u!114 &1752399881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1426,6 +1385,13 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+  _dashSpeed: 13
+  _dashLength: 0.2
+  _hasDashed: 0
+  _dashing: 0
+  _useGravity: 0
+  _timeStartedDash: 0
+  _dashDir: {x: 0, y: 0}
 --- !u!114 &1752399882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1441,6 +1407,66 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+--- !u!114 &1752399883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752399867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 181a68dba4b25ee46b3fa31333dde673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _wallMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _ground:
+  - {fileID: 0}
+  _wall:
+  - {fileID: 0}
+  _leftWall:
+  - {fileID: 0}
+  _rightWall:
+  - {fileID: 0}
+  IsGrounded: 0
+  OnWall: 0
+  OnLeftWall: 0
+  OnRightWall: 0
+--- !u!114 &1752399884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752399867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82897e3ec6717ca4bb749ff0a7b523a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inputs:
+    X: 0
+    Y: 0
+    RawX: 0
+    RawY: 0
+  _facingLeft: 0
+--- !u!114 &1752399885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752399867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20a8ac0fe69c24e4486ec1c651a06f62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2005413574
 GameObject:
   m_ObjectHideFlags: 0

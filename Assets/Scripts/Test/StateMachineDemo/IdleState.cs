@@ -7,6 +7,9 @@ namespace StateMahineDemo
 
     public class IdleState : PlayerState
     {
+        PlayerCollision playerCollision;
+        JumpState jump;
+
         protected override void OnEnter()
         {
             Debug.Log("Start Idle");
@@ -14,7 +17,7 @@ namespace StateMahineDemo
 
         protected override void OnUpdate()
         {
-            Debug.Log("Update Idle");
+            //Debug.Log("Update Idle");
 
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
             {

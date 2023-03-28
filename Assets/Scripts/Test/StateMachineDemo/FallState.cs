@@ -7,22 +7,19 @@ namespace StateMahineDemo
 
     public class FallState : PlayerState
     {
+        PlayerCollision playerCollision;
+
         protected override void OnEnter()
         {
+            playerCollision = GetComponent<PlayerCollision>();
+
             Debug.Log("Start Fall");
         }
 
         protected override void OnUpdate()
         {
-            Debug.Log("Update Fall");
-
-            if (Input.GetKeyDown(KeyCode.Space) && Player._enableDoubleJump)
-            {
-                Debug.Log("Double Jump");
-                ChangeState<JumpState>();
-            }
-
-            if (Player.IsGrounded)
+            //Debug.Log("Update Fall");
+            if (playerCollision.IsGrounded)
             {
                 ChangeState<IdleState>();
             }
