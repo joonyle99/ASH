@@ -11,7 +11,10 @@ public class PCInputSetter : MonoBehaviour, IInputSetter
     {
         InputState state = new InputState();
         state.IsPressingJump = Input.GetKey(jumpKey);
-        state.Movement = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        if (Input.GetKey(KeyCode.LeftArrow))
+            state.Movement.x -= 1;
+        if (Input.GetKey(KeyCode.RightArrow))
+            state.Movement.x += 1;
         return state;
     }
     void Update()

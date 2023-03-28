@@ -1,4 +1,3 @@
-using StateMahineDemo;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,26 +42,6 @@ public class PlayerCollision : MonoBehaviour
             _collisionRadius, _leftWall, _wallMask) > 0;
         bool rightWall = Physics2D.OverlapCircleNonAlloc((Vector2)transform.position + _rightOffset,
             _collisionRadius, _rightWall, _wallMask) > 0;
-
-        // OnGrounded
-        if (!IsGrounded && grounded) // land state
-        {
-            IsGrounded = true;
-            jump._hasJumped = false;
-            jump._enableDoubleJump = true;
-            jump._hasDoubleJumped = false;
-            walk._currentMovementLerpSpeed = 100;
-            _anim.SetBool("Grounded", true);
-
-
-        }
-        // OffGrounded
-        else if (IsGrounded && !grounded) // jump timing
-        {
-            IsGrounded = false;
-            jump._timeLeftGrounded = Time.time;
-            _anim.SetBool("Grounded", false);
-        }
 
         // OnWall
         if (!OnWall && wall)

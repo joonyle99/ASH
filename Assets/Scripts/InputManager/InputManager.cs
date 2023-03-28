@@ -14,6 +14,7 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
     public delegate void InputEventHandler();
     IInputSetter _currentSetter;
 
+    InputState _cachedState;
     
     public void ChangeInputSetter(IInputSetter setter)
     {
@@ -25,9 +26,12 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
 
         _currentSetter.JumpPressedEvent += () => JumpPressedEvent?.Invoke();
     }
-
+    void Update()
+    {
+        _cachedState = _currentSetter.GetState();
+    }
     public InputState GetState()
     {
-        return _currentSetter.GetState();
+        return _cachedState;
     }
 }
