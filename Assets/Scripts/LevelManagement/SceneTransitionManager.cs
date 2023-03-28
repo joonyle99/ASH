@@ -10,11 +10,17 @@ public class SceneTransitionManager : HappyTools.SingletonBehaviourFixed<SceneTr
     [SerializeField] float _fadeDuration;
 
     bool _isTransitioning;
-    public void ChangeScene(string sceneName)
+    public void StartSceneChange(string sceneName)
     {
         if (_isTransitioning)
             return;
         Instance.StartCoroutine(TransitionCoroutine(sceneName));
+    }
+    public void StartSceneChangeByPassage(PassageData targetPassageData)
+    {
+        if (_isTransitioning)
+            return;
+        Instance.StartCoroutine(TransitionCoroutine(targetPassageData.TargetSceneName));
     }
     IEnumerator TransitionCoroutine(string targetSceneName)
     {
@@ -22,6 +28,8 @@ public class SceneTransitionManager : HappyTools.SingletonBehaviourFixed<SceneTr
         yield return FadeCoroutine(_fadeDuration, 0, 1);
         AsyncOperation load = SceneManager.LoadSceneAsync(targetSceneName);
         yield return new WaitUntil(()=>!load.isDone);
+        //OnLoad
+        //Find other passage and override inputsetter
         yield return FadeCoroutine(_fadeDuration, 1, 0);
         _isTransitioning = false;
     }
