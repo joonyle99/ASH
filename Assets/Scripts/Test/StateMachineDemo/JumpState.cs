@@ -25,15 +25,18 @@ namespace StateMahineDemo
 
         private void HandleJumping()
         {
+
+            // 1단 or 2단 점프
+            ExecuteJump(new Vector2(Player.Rigidbody2D.velocity.x, _jumpForce), _hasJumped); // Ground jump (x에 _rb.velocity.x를 줌으로써 더 멀리 점프 가능)
+
+            // _hasJumped가 false일 때 들어왔다? -> 1단 점프가 실행된다는 뜻
+            // _hasJumped가 true일 때 들어왔다? -> 2단 점프가 실행된다는 뜻
+
             if (playerCollision.IsGrounded || (Time.time < _timeLeftGrounded + _coyoteTime) || (_enableDoubleJump && !_hasDoubleJumped))
             {
                 if (!_hasJumped || (_hasJumped && !_hasDoubleJumped))
                 {
-                    // 1단 or 2단 점프
-                    ExecuteJump(new Vector2(Player.Rigidbody2D.velocity.x, _jumpForce), _hasJumped); // Ground jump (x에 _rb.velocity.x를 줌으로써 더 멀리 점프 가능)
 
-                    // _hasJumped가 false일 때 들어왔다? -> 1단 점프가 실행된다는 뜻
-                    // _hasJumped가 true일 때 들어왔다? -> 2단 점프가 실행된다는 뜻
                 }
             }
 
@@ -67,7 +70,7 @@ namespace StateMahineDemo
             if (Input.GetKeyDown(KeyCode.Space) && _enableDoubleJump)
             {
                 Debug.Log("Double Jump");
-                ChangeState<JumpState>(true);
+                ChangeState<JumpState>();
             }
 
             if(Player.Rigidbody2D.velocity.y < 0)

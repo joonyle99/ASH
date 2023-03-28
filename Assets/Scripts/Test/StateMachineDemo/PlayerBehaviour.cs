@@ -8,8 +8,10 @@ namespace StateMahineDemo
 
     public class PlayerBehaviour : StateMachineBase
     {
+        [SerializeField] Rigidbody2D _rb;
         [SerializeField] int _attackPower;
 
+        public Rigidbody2D Rigidbody2D { get { return _rb; } }
         public int AttackPower { get { return _attackPower; } }
 
         protected override void Start()

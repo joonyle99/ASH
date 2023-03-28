@@ -42,8 +42,8 @@ namespace StateMahineDemo
                 if (Player.Rigidbody2D.velocity.x < 0)
                 {
                     playerInput._inputs.X = 0;
-                }
 
+                }
                 // Smooth
                 playerInput._inputs.X = Mathf.MoveTowards(playerInput._inputs.X, 1, acceleration * Time.deltaTime);
             }
