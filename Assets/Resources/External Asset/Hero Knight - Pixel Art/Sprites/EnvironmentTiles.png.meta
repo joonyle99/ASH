@@ -1,22 +1,19 @@
 fileFormatVersion: 2
-guid: 7fb51a422c4a36e40b71b06331a74b11
+guid: f094595c900579d4c85a02612d8fa36c
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 21300000
-    second: SlideDust_0
+    second: EnvironmentTiles_0
   - first:
       213: 21300002
-    second: SlideDust_1
+    second: EnvironmentTiles_1
   - first:
       213: 21300004
-    second: SlideDust_2
+    second: EnvironmentTiles_2
   - first:
       213: 21300006
-    second: SlideDust_3
-  - first:
-      213: 21300008
-    second: SlideDust_4
+    second: EnvironmentTiles_3
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -64,7 +61,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -85,7 +82,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -97,7 +94,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -109,7 +106,19 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 1
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -120,106 +129,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SlideDust_0
+      name: EnvironmentTiles_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 25
+        y: 32
+        width: 32
         height: 32
-      alignment: 9
-      pivot: {x: 0.56, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 19156b223e89a7f41a60a2d2a5dd7a23
+      spriteID: 2cf6186365c49fb4aa9504cc09e4f6be
       internalID: 21300000
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SlideDust_1
+      name: EnvironmentTiles_1
       rect:
         serializedVersion: 2
-        x: 25
-        y: 0
-        width: 25
+        x: 32
+        y: 32
+        width: 32
         height: 32
-      alignment: 9
-      pivot: {x: 0.56, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 69f72c75e59cefb4e89a73602feed4b8
+      spriteID: ee2195938173a3445a24721b6d1d9e23
       internalID: 21300002
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SlideDust_2
+      name: EnvironmentTiles_2
       rect:
         serializedVersion: 2
-        x: 50
+        x: 0
         y: 0
-        width: 25
+        width: 32
         height: 32
-      alignment: 9
-      pivot: {x: 0.56, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6168eeb00a3a1ba42b81c4b2e9d6b636
+      spriteID: ca152fac7d41f5541abdcbc44f9b5185
       internalID: 21300004
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SlideDust_3
+      name: EnvironmentTiles_3
       rect:
         serializedVersion: 2
-        x: 75
+        x: 32
         y: 0
-        width: 25
+        width: 32
         height: 32
-      alignment: 9
-      pivot: {x: 0.56, y: 0.5}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 12d95361003b4e3428e01ea2c937de0e
+      spriteID: bbb432ff0cb76ef4ea4fe0713d57abee
       internalID: 21300006
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SlideDust_4
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 0
-        width: 25
-        height: 32
-      alignment: 9
-      pivot: {x: 0.56, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4a925f3c38addc8478737c40b604917b
-      internalID: 21300008
       vertices: []
       indices: 
       edges: []
@@ -227,7 +215,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: aa0cc07ba0762344199b10a253ec201e
+    spriteID: 27b531848459cbf47b1a6f53e9f3142a
     internalID: 0
     vertices: []
     indices: 
@@ -235,11 +223,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SlideDust_0: 21300000
-      SlideDust_1: 21300002
-      SlideDust_2: 21300004
-      SlideDust_3: 21300006
-      SlideDust_4: 21300008
+      EnvironmentTiles_0: 21300000
+      EnvironmentTiles_1: 21300002
+      EnvironmentTiles_2: 21300004
+      EnvironmentTiles_3: 21300006
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

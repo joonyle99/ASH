@@ -28,7 +28,7 @@ namespace StateMahineDemo
 
         protected override void OnUpdate()
         {
-            Debug.Log("Update Attack");
+            //Debug.Log("Update Attack");
         }
 
         protected override void OnExit()
