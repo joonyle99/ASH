@@ -25,6 +25,7 @@ public class PlayerBehaviour : StateMachineBase
 
     bool _isJumpQueued;
     float _timeAfterJumpQueued;
+    int _recentDir = 1;
 
 
     private void Awake()
@@ -47,6 +48,9 @@ public class PlayerBehaviour : StateMachineBase
 
         UpdateImageFlip();
 
+        Animator.SetBool("Grounded", IsGrounded);
+        Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
+
         if (IsGrounded)
         {
             _jumpController.ResetJumpCount();
@@ -62,10 +66,9 @@ public class PlayerBehaviour : StateMachineBase
 
     private void UpdateImageFlip()
     {
-        int dir = 1;
-        if (RawInputs.Movement.x == -1)
-            dir = -1;
-        transform.localScale = new Vector3(dir, transform.localScale.y, transform.localScale.z);
+        if (RawInputs.Movement.x != 0)
+            _recentDir = (int)RawInputs.Movement.x;
+        transform.localScale = new Vector3(_recentDir, transform.localScale.y, transform.localScale.z);
         //_anim.transform.rotation = left ? Quaternion.Euler(0, -90, 0) : Quaternion.Euler(0, 90, 0);
     }
 }

@@ -6,12 +6,9 @@ using UnityEngine;
 public class WalkState : PlayerState
 {
     [SerializeField] float _walkSpeed = 7;
-    [SerializeField] float _acceleration = 3f;
-    [SerializeField] float _movementLerpSpeed = 100f;
 
     protected override void OnEnter()
     {
-        Player.Animator.SetInteger("AnimState", 1);
     }
     protected override void OnUpdate()
     {

@@ -22,17 +22,19 @@ public class InAirState : PlayerState
         Vector3 targetVelocity = new Vector3(xInput * _moveSpeed, Player.Rigidbody.velocity.y);
         Player.Rigidbody.velocity = targetVelocity;
 
-        //떨어지는 속도 증가
-        if (Player.Rigidbody.velocity.y < 0)
-        {
-            Player.Rigidbody.velocity += _fastDropPower * Physics2D.gravity * Time.deltaTime;
-        }
-
         if (Player.IsGrounded)
         {
             ChangeState<IdleState>();
             return;
         }
+
+        //떨어지는 속도 증가
+        if (Player.Rigidbody.velocity.y < _fastDropThreshhold)
+        {
+            Player.Rigidbody.velocity += _fastDropPower * Physics2D.gravity * Time.deltaTime;
+        }
+
+
 
     }
 
