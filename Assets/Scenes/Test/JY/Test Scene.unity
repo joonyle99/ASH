@@ -833,10 +833,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7a579f296a37a743893983094cfcd14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
-  _stateMachine: {fileID: 0}
 --- !u!114 &925682053
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -849,15 +845,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9102e94c0e459dd4a8808866b8e0d810, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
-  _stateMachine: {fileID: 0}
-  playerInput: {fileID: 0}
-  playerCollision: {fileID: 0}
-  _walkSpeed: 7
-  _acceleration: 3
-  _currentMovementLerpSpeed: 100
 --- !u!114 &925682054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -870,12 +857,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca7a028f1acd0e45a783ca16cba6210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
-  _stateMachine: {fileID: 0}
-  playerCollision: {fileID: 0}
-  jump: {fileID: 0}
 --- !u!114 &925682055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -888,12 +869,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94eee53d22c10674ba59828550bbf48e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initialState: {fileID: 925682054}
-  _animator: {fileID: 0}
-  _currentState: {fileID: 0}
-  _previousState: {fileID: 0}
-  _rb: {fileID: 0}
-  _attackPower: 0
 --- !u!212 &925682056
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1435,6 +1410,8 @@ MonoBehaviour:
     _enterParams: []
     _exitParams: []
   _moveSpeed: 6
+  _fastDropThreshhold: 4
+  _fastDropPower: 2
 --- !u!114 &1752399893
 MonoBehaviour:
   m_ObjectHideFlags: 0
