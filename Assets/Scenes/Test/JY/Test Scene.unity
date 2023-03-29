@@ -1276,6 +1276,7 @@ GameObject:
   - component: {fileID: 1752399894}
   - component: {fileID: 1752399893}
   - component: {fileID: 1752399892}
+  - component: {fileID: 1752399898}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1434,8 +1435,6 @@ MonoBehaviour:
     _enterParams: []
     _exitParams: []
   _moveSpeed: 6
-  _jumpVelocityFalloff: 7
-  _coyoteTime: 0.2
 --- !u!114 &1752399893
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1451,8 +1450,6 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  _groundJumpPower: 10
-  _inAirJumpPower: 10
 --- !u!114 &1752399894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1500,8 +1497,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initialState: {fileID: 1752399895}
   _animator: {fileID: 1752399878}
-  _jumpQueueDuration: 0.1
-  _maxJumpCount: 2
 --- !u!114 &1752399897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1516,6 +1511,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inputAdaptSpeed: 6
   _inputAdaptSpeedInAir: 6
+--- !u!114 &1752399898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752399867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec117cbb66eddee429bcae8cf364510f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groundJumpPower: 15
+  _inAirJumpPower: 15
+  _longJumpDuration: 0.4
+  _longJumpBonus: 2.5
+  _coyoteTime: 0.2
+  _jumpQueueDuration: 0.1
+  _maxJumpCount: 2
 --- !u!1 &2005413574
 GameObject:
   m_ObjectHideFlags: 0

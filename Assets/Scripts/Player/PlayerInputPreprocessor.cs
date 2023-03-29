@@ -36,13 +36,6 @@ public class PlayerInputPreprocessor : MonoBehaviour
 
     }
 
-    //REMOVE!!
-    bool _facingLeft;
-    private void SetFacingDirection(bool left)
-    {
-        this.transform.localScale = new Vector3(left ? -1 : 1, transform.localScale.y, transform.localScale.z);
-        //_anim.transform.rotation = left ? Quaternion.Euler(0, -90, 0) : Quaternion.Euler(0, 90, 0);
-    }
 }
 
 //TODO : 인스펙터에 input / smoothed input 표시

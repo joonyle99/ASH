@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase
 {
-    [SerializeField] float _jumpQueueDuration = 0.1f;
-    [SerializeField] int _maxJumpCount = 2;
-
     /// <summary>
     /// Smooth 효과로 전처리 된 InputState
     /// </summary>
@@ -16,18 +13,13 @@ public class PlayerBehaviour : StateMachineBase
     /// </summary>
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
 
-    //TODO
-    /// <summary>
-    /// 플레이어의 발이 땅에 닿아 있는가?
-    /// </summary>
     public bool IsGrounded { get { return _rigidbody.velocity.y == 0; } }
-    public bool CanJump { get { return RemainingJumpCount > 0 && !StateIs<JumpState>(); } }
-    public int RemainingJumpCount { get; set; }
-    public int MaxJumpCount { get { return _maxJumpCount; } }
+    public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
 
     public Rigidbody2D Rigidbody { get { return _rigidbody; } }
 
 
+    PlayerJumpController _jumpController;
     PlayerInputPreprocessor _inputPreprocessor;
     Rigidbody2D _rigidbody;
 
@@ -38,51 +30,42 @@ public class PlayerBehaviour : StateMachineBase
     private void Awake()
     {
         _inputPreprocessor = GetComponent<PlayerInputPreprocessor>();
+        _jumpController = GetComponent<PlayerJumpController>();
         _rigidbody = GetComponent<Rigidbody2D>();
         
     }
     protected override void Start()
     {
         base.Start();
-        InputManager.Instance.JumpPressedEvent += OnJumpPressed; //TODO : unsubscribe
+        InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : unsubscribe
 
-        RemainingJumpCount = _maxJumpCount;
     }
 
     protected override void Update()
     {
         base.Update();
 
+        UpdateImageFlip();
+
         if (IsGrounded)
         {
-            RemainingJumpCount = _maxJumpCount;
+            _jumpController.ResetJumpCount();
         }
-        else if (!StateIs<InAirState>())
+        else //필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
         {
-            ChangeState<InAirState>();
-            
+            if (!StateIs<InAirState>())
+                ChangeState<InAirState>();
         }
-        //Jump if queued
-        if (_isJumpQueued)
-        {
-            _timeAfterJumpQueued += Time.deltaTime;
-            if (_timeAfterJumpQueued > _jumpQueueDuration)
-                _isJumpQueued = false;
-            else if (CanJump)
-            {
-                if (!IsGrounded && RemainingJumpCount == _maxJumpCount)
-                    RemainingJumpCount--;
-                _isJumpQueued = false;
-                ChangeState<JumpState>();
-                return;
-            }
-        }
+
     }
 
-    void OnJumpPressed()
+
+    private void UpdateImageFlip()
     {
-        _isJumpQueued = true;
-        _timeAfterJumpQueued = 0f;
-        Debug.Log(CurrentState);
+        int dir = 1;
+        if (RawInputs.Movement.x == -1)
+            dir = -1;
+        transform.localScale = new Vector3(dir, transform.localScale.y, transform.localScale.z);
+        //_anim.transform.rotation = left ? Quaternion.Euler(0, -90, 0) : Quaternion.Euler(0, 90, 0);
     }
 }
