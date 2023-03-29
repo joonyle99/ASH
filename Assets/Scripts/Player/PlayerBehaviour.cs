@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase
 {
+    [SerializeField] LayerMask _groundLayer;
+    [SerializeField] Collider2D _groundCheckCollider;
+
     /// <summary>
     /// Smooth 효과로 전처리 된 InputState
     /// </summary>
@@ -13,7 +16,7 @@ public class PlayerBehaviour : StateMachineBase
     /// </summary>
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
 
-    public bool IsGrounded { get { return _rigidbody.velocity.y == 0; } }
+    public bool IsGrounded { get; private set; }
     public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
 
     public Rigidbody2D Rigidbody { get { return _rigidbody; } }
@@ -50,6 +53,8 @@ public class PlayerBehaviour : StateMachineBase
 
         Animator.SetBool("Grounded", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
+
+        IsGrounded = _groundCheckCollider.IsTouchingLayers(_groundLayer);
 
         if (IsGrounded)
         {
