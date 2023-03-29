@@ -35,6 +35,10 @@ public class StateMachineBase : MonoBehaviour
     {
         _currentState.TriggerUpdate();
     }
+    protected virtual void FixedUpdate()
+    {
+        _currentState.TriggerFixedUpdate();
+    }
     public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
     {
         var nextState = GetComponent<NextState>();

@@ -26,9 +26,14 @@ public abstract class StateBase : MonoBehaviour
         OnExit();
         _stateMachine = null;
     }
+    public void TriggerFixedUpdate()
+    {
+        OnFixedUpdate();
+    }
 
     protected abstract void OnEnter();
     protected abstract void OnUpdate();
+    protected virtual void OnFixedUpdate() { }
     protected abstract void OnExit();
     public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
     {
