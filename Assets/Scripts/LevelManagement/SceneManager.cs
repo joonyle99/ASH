@@ -2,37 +2,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
-public class SceneTransitionManager : HappyTools.SingletonBehaviourFixed<SceneTransitionManager>
+public class SceneManager : HappyTools.SingletonBehaviourFixed<SceneManager>
 {
     [SerializeField] Image _fadeImage;
     [SerializeField] float _fadeDuration;
+    SceneContextController _sceneContext;
 
     bool _isTransitioning;
-    public void StartSceneChange(string sceneName)
+
+    protected override void Awake()
     {
-        if (_isTransitioning)
-            return;
-        Instance.StartCoroutine(TransitionCoroutine(sceneName));
+        base.Awake();
+        _sceneContext = GetComponent<SceneContextController>();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(InitialStartCoroutine());
     }
     public void StartSceneChangeByPassage(PassageData targetPassageData)
     {
         if (_isTransitioning)
             return;
-        Instance.StartCoroutine(TransitionCoroutine(targetPassageData.TargetSceneName));
+        Instance.StartCoroutine(TransitionCoroutine(targetPassageData));
     }
-    IEnumerator TransitionCoroutine(string targetSceneName)
+    IEnumerator InitialStartCoroutine()
+    {
+        yield return StartCoroutine(StartSceneAfterLoadCoroutine());
+    }
+    IEnumerator TransitionCoroutine(PassageData targetPassageData)
     {
         _isTransitioning = true;
         yield return FadeCoroutine(_fadeDuration, 0, 1);
-        AsyncOperation load = SceneManager.LoadSceneAsync(targetSceneName);
-        yield return new WaitUntil(()=>!load.isDone);
+        //TODO : Close scene?
+        AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(targetPassageData.TargetSceneName);
+        yield return new WaitUntil(() => load.isDone);
+        
+        yield return StartCoroutine(StartSceneAfterLoadCoroutine());
+    }
+
+    IEnumerator StartSceneAfterLoadCoroutine()
+    {
         //OnLoad
+        _sceneContext.OnLoad();
         //Find other passage and override inputsetter
         yield return FadeCoroutine(_fadeDuration, 1, 0);
         _isTransitioning = false;
     }
+
     IEnumerator FadeCoroutine(float duration, float from, float to)
     {
         float eTime = 0f;

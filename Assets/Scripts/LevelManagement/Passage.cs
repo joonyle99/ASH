@@ -15,20 +15,47 @@ public class Passage : MonoBehaviour, ITriggerZone
     [SerializeField] InputSetterScriptableObject _enterInputSetter;
     [SerializeField] InputSetterScriptableObject _exitInputSetter;
 
+    [SerializeField] Transform _playerSpawnPoint;
+
     public PassageData Data { get { return _data; } set { _data = value; } }
 
+    bool _isPlayerExiting;
+    void Awake()
+    {
+        if (_playerSpawnPoint == null)
+            _playerSpawnPoint = transform;
+    }
     public void OnActivatorEnter(TriggerActivator activator)
     {
-        SceneTransitionManager.Instance.StartSceneChange(_otherPassageData.TargetSceneName);
+        if (_isPlayerExiting)
+            return;
+        SceneManager.Instance.StartSceneChangeByPassage(_otherPassageData);
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
     }
-
-    public void OnExitPassaage()
+    public void OnActivatorExit(TriggerActivator activator)
     {
-        InputManager.Instance.ChangeInputSetter(_exitInputSetter);
+        if (!_isPlayerExiting)
+            return;
+        if (activator.GetComponent<PlayerDummy>() != null)
+            _isPlayerExiting = false;
     }
+    
+    //Passage를 통해 밖으로 나옴
+    public IEnumerator PlayerExitCoroutine(PlayerDummy player)
+    {
+        //Spawn player
+        _isPlayerExiting = true;
+        player.transform.position = _playerSpawnPoint.position;
+        if (_exitInputSetter == null)
+            InputManager.Instance.ChangeToDefaultSetter();
+        else
+            InputManager.Instance.ChangeInputSetter(_exitInputSetter);
+        yield return null;
 
-
+        //Wait until player exits zone
+        yield return new WaitUntil(() => !_isPlayerExiting);
+        yield return new WaitForSeconds(0.3f);
+    }
 }
 
 
@@ -57,9 +84,9 @@ public class PassageEditor : Editor
 
                 Tymski.SceneReference sceneRef = new Tymski.SceneReference();
                 sceneRef.ScenePath  = currentScene.path;
+                
                 targetScene.SetValue(asset, sceneRef);
                 name.SetValue(asset, passage.name);
-
 
                 AssetDatabase.CreateAsset(asset, outputPath);
                 AssetDatabase.SaveAssets();

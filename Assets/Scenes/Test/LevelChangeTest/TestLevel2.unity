@@ -136,8 +136,8 @@ GameObject:
   - component: {fileID: 649129973}
   - component: {fileID: 649129974}
   m_Layer: 0
-  m_Name: Passage1
-  m_TagString: Untagged
+  m_Name: Passage2
+  m_TagString: Passage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -249,6 +249,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data: {fileID: 11400000, guid: 2048280727c8ca84fb33551663f88a49, type: 2}
   _otherPassageData: {fileID: 11400000, guid: 9761ad591b45abc4789f43375f4f37c9, type: 2}
+  _enterInputSetter: {fileID: 11400000, guid: bda65bfa556fab147895b7d4385ad239, type: 2}
+  _exitInputSetter: {fileID: 11400000, guid: d64c3139295c5ec4697d66ad6a58d04f, type: 2}
+  _playerSpawnPoint: {fileID: 649129972}
 --- !u!1 &711245240
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,9 +266,10 @@ GameObject:
   - component: {fileID: 711245244}
   - component: {fileID: 711245245}
   - component: {fileID: 711245246}
-  m_Layer: 0
+  - component: {fileID: 711245247}
+  m_Layer: 8
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -409,6 +413,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &711245247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711245240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e4ed2e65d121284a87761b772b4f839, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &743657261
 GameObject:
   m_ObjectHideFlags: 0

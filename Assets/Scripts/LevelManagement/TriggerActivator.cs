@@ -12,4 +12,12 @@ public class TriggerActivator : MonoBehaviour
             triggerZone.OnActivatorEnter(this);
         }
     }
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        ITriggerZone triggerZone = collision.GetComponent<ITriggerZone>();
+        if (triggerZone != null)
+        {
+            triggerZone.OnActivatorExit(this);
+        }
+    }
 }
