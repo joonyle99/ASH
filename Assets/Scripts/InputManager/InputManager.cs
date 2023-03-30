@@ -13,8 +13,18 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
 
     public delegate void InputEventHandler();
     IInputSetter _currentSetter;
+    IInputSetter _defaultSetter;
 
     InputState _cachedState;
+    protected override void Awake()
+    {
+        base.Awake();
+        _defaultSetter = GetComponent<PCInputSetter>();
+    }
+    public void ChangeToDefaultSetter()
+    {
+        ChangeInputSetter(_defaultSetter);
+    }
     
     public void ChangeInputSetter(IInputSetter setter)
     {
