@@ -56,11 +56,7 @@ public class PlayerBehaviour : StateMachineBase
 
         IsGrounded = _groundCheckCollider.IsTouchingLayers(_groundLayer);
 
-        if (IsGrounded)
-        {
-            _jumpController.ResetJumpCount();
-        }
-        else //필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
+        if(!IsGrounded) // TODO : 필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
         {
             if (!StateIs<InAirState>())
                 ChangeState<InAirState>();

@@ -17,8 +17,8 @@ public class PlayerJumpController : MonoBehaviour
     [SerializeField] float _jumpQueueDuration = 0.1f;
     [SerializeField] int _maxJumpCount = 2;
 
-    public bool CanJump { get { return (_remainingJumpCount > 0 && !_player.StateIs<JumpState>())
-                                    || _coyoteAvailable; } }
+    public bool CanJump { get { return _remainingJumpCount > 0 && !_player.StateIs<JumpState>() || 
+                                (_remainingJumpCount == _maxJumpCount && _coyoteAvailable); } }
     public int MaxJumpCount { get { return _maxJumpCount; } }
 
 
@@ -43,6 +43,9 @@ public class PlayerJumpController : MonoBehaviour
     }
     void Update()
     {
+        if (_player.IsGrounded && !_player.StateIs<JumpState>())
+            ResetJumpCount();
+
         //Process Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
         if (_isLongJumping)
         {
