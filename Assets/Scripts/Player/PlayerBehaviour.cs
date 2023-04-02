@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class PlayerBehaviour : StateMachineBase
 {
@@ -23,7 +22,7 @@ public class PlayerBehaviour : StateMachineBase
 
 
     PlayerJumpController _jumpController;
-    PlayerDashController _dashController;
+    DashState _dashState;
     PlayerInputPreprocessor _inputPreprocessor;
     Rigidbody2D _rigidbody;
 
@@ -36,7 +35,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         _inputPreprocessor = GetComponent<PlayerInputPreprocessor>();
         _jumpController = GetComponent<PlayerJumpController>();
-        _dashController = GetComponent<PlayerDashController>();
+        _dashState = GetComponent<DashState>();
         _rigidbody = GetComponent<Rigidbody2D>();
         
     }
@@ -58,10 +57,23 @@ public class PlayerBehaviour : StateMachineBase
 
         IsGrounded = _groundCheckCollider.IsTouchingLayers(_groundLayer);
 
-        if(!IsGrounded && !_dashController._dashing) // TODO : 필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
+        if(!IsGrounded) // TODO : 필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
         {
-            if (!StateIs<InAirState>())
+            if (!StateIs<InAirState>() && !StateIs<DashState>())
                 ChangeState<InAirState>();
+        }
+
+        // Dash Start
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _dashState.EnableDash)
+        {
+            if (!StateIs<DashState>())
+                ChangeState<DashState>();
+        }
+
+        // 플레이어가 땅을 밟으면 EnableDash 활성화
+        if(IsGrounded)
+        {
+            _dashState.EnableDash = true;
         }
     }
 

@@ -79,7 +79,6 @@ GameObject:
   - component: {fileID: 4222197489795936867}
   - component: {fileID: 4222197489795936877}
   - component: {fileID: 1119801424664723805}
-  - component: {fileID: 1993454736272198475}
   - component: {fileID: 1663921311720722264}
   m_Layer: 8
   m_Name: Player
@@ -256,6 +255,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _groundCheckCollider: {fileID: 446016811}
+  recentDir: 1
 --- !u!114 &4222197489795936878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,21 +369,8 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
---- !u!114 &1993454736272198475
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4222197489795976578}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 933011eef9bebc44c991c016ad0f7ed3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _dashSpeed: 12
+  _dashSpeed: 25
   _dashLength: 0.2
-  _hasDashed: 0
   _dashing: 0
   _timeStartedDash: 0
   _dashDir: {x: 0, y: 0}
