@@ -1,36 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 
 public class DashState : PlayerState
 {
-    #region Dash
-
-    // 5. Dash
-    [Header("Dash")]
-    public float _dashSpeed = 13f;
-    public float _dashLength = 0.2f;
-    public bool _hasDashed;
-    public bool _dashing;
-    public bool _useGravity;
-
-    public float _timeStartedDash;
-    public Vector2 _dashDir;
-
-    #endregion
-
+    PlayerDashController _dashController;
+    PlayerBehaviour _player;
     protected override void OnEnter()
     {
-
-    }
-    protected override void OnExit()
-    {
-
+        //Debug.Log("Dash Enter");
+        _dashController = GetComponent<PlayerDashController>();
+        _player = GetComponent<PlayerBehaviour>();
     }
 
     protected override void OnUpdate()
     {
+        //Debug.Log("Update Dash");
 
+        // Already Dash
+        if (_dashController._dashing)
+        {
+            // End Dash
+            if (Time.time >= _dashController._timeStartedDash + _dashController._dashLength)
+            {
+                _dashController._dashing = false;
+                _player.Rigidbody.gravityScale = 5;
+                _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, (_player.Rigidbody.velocity.y > 3) ? 3 : _player.Rigidbody.velocity.y);
+                _player.ChangeState<InAirState>();
+            }
+        }
     }
+    protected override void OnExit()
+    {
+        //Debug.Log("Dash Exit");
+    }
+
 }

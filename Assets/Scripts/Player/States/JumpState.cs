@@ -9,6 +9,7 @@ public class JumpState : PlayerState
 
     protected override void OnEnter()
     {
+        //Debug.Log("Jump Enter");
         _jumpController = Player.GetComponent<PlayerJumpController>();
         //TODO : ExecuteJumpAnimEvent 애니메이션 이벤트로 실행
         _jumpController.ExecuteJumpAnimEvent();
@@ -16,8 +17,10 @@ public class JumpState : PlayerState
 
     protected override void OnUpdate()
     {
+
     }
     protected override void OnExit()
     {
+        //Debug.Log("Jump Exit");
     }
 }

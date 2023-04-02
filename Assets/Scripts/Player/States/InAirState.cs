@@ -12,6 +12,7 @@ public class InAirState : PlayerState
     PlayerJumpController _jumpController;
     protected override void OnEnter()
     {
+        //Debug.Log("InAir Enter");
         _jumpController = GetComponent<PlayerJumpController>();
     }
 
@@ -33,12 +34,10 @@ public class InAirState : PlayerState
         {
             Player.Rigidbody.velocity += _fastDropPower * Physics2D.gravity * Time.deltaTime;
         }
-
-
-
     }
 
     protected override void OnExit()
     {
+        //Debug.Log("InAir Exit");
     }
 }

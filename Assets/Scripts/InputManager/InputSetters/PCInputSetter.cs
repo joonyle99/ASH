@@ -15,6 +15,10 @@ public class PCInputSetter : MonoBehaviour, IInputSetter
             state.Movement.x -= 1;
         if (Input.GetKey(KeyCode.RightArrow))
             state.Movement.x += 1;
+        if (Input.GetKey(KeyCode.UpArrow))
+            state.Movement.y += 1;
+        if (Input.GetKey(KeyCode.DownArrow))
+            state.Movement.y -= 1;
         return state;
     }
     void Update()
