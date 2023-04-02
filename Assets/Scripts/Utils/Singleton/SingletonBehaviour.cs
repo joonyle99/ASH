@@ -35,7 +35,8 @@ namespace HappyTools
             }
 
             instance = GetComponent<T>();
-            DontDestroyOnLoad(gameObject);
+            if(transform.parent == null)
+                DontDestroyOnLoad(gameObject);
         }
     }
 
