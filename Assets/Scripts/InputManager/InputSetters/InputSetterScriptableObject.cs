@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class InputSetterScriptableObject : ScriptableObject, IInputSetter
 {
-    public abstract event IInputSetter.InputEventHandler JumpPressedEvent;
+    public event IInputSetter.InputEventHandler JumpPressedEvent;
+    public event IInputSetter.InputEventHandler DashPressedEvent;
     public abstract InputState GetState();
 }

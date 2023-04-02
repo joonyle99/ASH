@@ -5,12 +5,14 @@ using UnityEngine;
 public class PCInputSetter : MonoBehaviour, IInputSetter
 {
     public event IInputSetter.InputEventHandler JumpPressedEvent;
+    public event IInputSetter.InputEventHandler DashPressedEvent;
 
-    KeyCode jumpKey = KeyCode.Space;
+    [SerializeField] KeyCode _jumpKey = KeyCode.Space;
+    [SerializeField] KeyCode _dashKey = KeyCode.LeftShift;
     public InputState GetState()
     {
         InputState state = new InputState();
-        state.IsPressingJump = Input.GetKey(jumpKey);
+        state.IsPressingJump = Input.GetKey(_jumpKey);
         if (Input.GetKey(KeyCode.LeftArrow))
             state.Movement.x -= 1;
         if (Input.GetKey(KeyCode.RightArrow))
@@ -23,9 +25,13 @@ public class PCInputSetter : MonoBehaviour, IInputSetter
     }
     void Update()
     {
-        if (Input.GetKeyDown(jumpKey))
+        if (Input.GetKeyDown(_jumpKey))
         {
             JumpPressedEvent?.Invoke();
+        }
+        if (Input.GetKeyDown(_dashKey))
+        {
+            DashPressedEvent?.Invoke();
         }
     }
 

@@ -10,6 +10,7 @@ public struct InputState
 public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, IInputSetter
 {
     public event IInputSetter.InputEventHandler JumpPressedEvent;
+    public event IInputSetter.InputEventHandler DashPressedEvent;
 
     public delegate void InputEventHandler();
     IInputSetter _currentSetter;
@@ -31,10 +32,12 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
         if (_currentSetter != null)
         {
             _currentSetter.JumpPressedEvent -= () => JumpPressedEvent?.Invoke();
+            _currentSetter.DashPressedEvent -= () => DashPressedEvent?.Invoke();
         }
         _currentSetter = setter;
 
         _currentSetter.JumpPressedEvent += () => JumpPressedEvent?.Invoke();
+        _currentSetter.DashPressedEvent += () => DashPressedEvent?.Invoke();
     }
     void Update()
     {

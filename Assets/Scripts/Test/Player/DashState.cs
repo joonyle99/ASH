@@ -8,13 +8,12 @@ public class DashState : PlayerState
 {
     #region Dash
 
-    [Header("Dash")]
     [SerializeField] private float _dashSpeed = 25f;
     [SerializeField] private float _dashLength = 0.2f;
-    [SerializeField] private bool _dashing = false;
+    private bool _dashing = false;
 
-    [SerializeField] private float _timeStartedDash;
-    [SerializeField] private Vector2 _dashDir;
+    private float _timeStartedDash;
+    private Vector2 _dashDir;
 
     public bool EnableDash;
 
@@ -57,7 +56,7 @@ public class DashState : PlayerState
         _dashDir = new Vector2(Player.RawInputs.Movement.x, Player.RawInputs.Movement.y).normalized; // 대쉬 방향 설정
 
         if (_dashDir == Vector2.zero) // 키보드에 입력이 없이 대쉬를 하는 경우
-            _dashDir = (Player.recentDir < 0) ? Vector2.left : Vector2.right;
+            _dashDir = (Player.RecentDir.x < 0) ? Vector2.left : Vector2.right;
 
         Player.Rigidbody.velocity = _dashDir * _dashSpeed; // 대쉬 실행
         _timeStartedDash = Time.time; // Dash를 시작한 시간을 기록

@@ -17,9 +17,8 @@ public class PlayerBehaviour : StateMachineBase
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
     public bool IsGrounded { get; private set; }
     public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
-
     public Rigidbody2D Rigidbody { get { return _rigidbody; } }
-
+    public Vector2 RecentDir { get { return new Vector2(_recentDir, 0); } }
 
     PlayerJumpController _jumpController;
     DashState _dashState;
@@ -28,7 +27,7 @@ public class PlayerBehaviour : StateMachineBase
 
     bool _isJumpQueued;
     float _timeAfterJumpQueued;
-    public int recentDir = 1;
+    int _recentDir = 1;
 
 
     private void Awake()
@@ -80,8 +79,8 @@ public class PlayerBehaviour : StateMachineBase
     private void UpdateImageFlip()
     {
         if (RawInputs.Movement.x != 0)
-            recentDir = (int)RawInputs.Movement.x;
-        transform.localScale = new Vector3(recentDir, transform.localScale.y, transform.localScale.z);
+            _recentDir = (int)RawInputs.Movement.x;
+        transform.localScale = new Vector3(_recentDir, transform.localScale.y, transform.localScale.z);
         //_anim.transform.rotation = left ? Quaternion.Euler(0, -90, 0) : Quaternion.Euler(0, 90, 0);
     }
 }
