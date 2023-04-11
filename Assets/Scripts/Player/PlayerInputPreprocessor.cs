@@ -33,7 +33,6 @@ public class PlayerInputPreprocessor : MonoBehaviour
 
         _smoothedInputs = inputs;
         _smoothedInputs.Movement.x = movementX;
-
     }
 
 }

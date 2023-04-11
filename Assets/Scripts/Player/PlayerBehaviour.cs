@@ -29,7 +29,6 @@ public class PlayerBehaviour : StateMachineBase
     float _timeAfterJumpQueued;
     int _recentDir = 1;
 
-
     private void Awake()
     {
         _inputPreprocessor = GetComponent<PlayerInputPreprocessor>();
@@ -63,16 +62,21 @@ public class PlayerBehaviour : StateMachineBase
         }
 
         // Dash Start
-        if (Input.GetKeyDown(KeyCode.LeftShift) && _dashState.EnableDash)
+        if (Input.GetKeyDown(KeyCode.V) && _dashState.EnableDash && RawInputs.Movement.x != 0)
         {
             if (!StateIs<DashState>())
                 ChangeState<DashState>();
         }
 
-        // 플레이어가 땅을 밟으면 EnableDash 활성화
-        if(IsGrounded)
+        if(!_dashState.Dashing && !_dashState.EnableDash)
         {
-            _dashState.EnableDash = true;
+            if(Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
+            {
+                if (IsGrounded)
+                {
+                    _dashState.EnableDash = true;
+                }
+            }
         }
     }
 

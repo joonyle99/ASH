@@ -7,7 +7,7 @@ public class InAirState : PlayerState
 {
     [SerializeField] float _moveSpeed = 7f;
     [SerializeField] float _fastDropThreshhold = 7f;
-    [SerializeField] float _fastDropPower = 7f;
+    [SerializeField] float _fastDropPower = 1f;
 
     PlayerJumpController _jumpController;
     protected override void OnEnter()
