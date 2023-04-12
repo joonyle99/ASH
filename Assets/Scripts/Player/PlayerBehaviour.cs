@@ -86,7 +86,7 @@ public class PlayerBehaviour : StateMachineBase
 
         if (!IsGrounded) // TODO : 필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
         {
-            if (!StateIs<InAirState>() && !StateIs<DashState>())
+            if (!StateIs<InAirState>() && !StateIs<DashState>() && !StateIs<WallSlideState>())
                 ChangeState<InAirState>();
         }
 
