@@ -34,6 +34,11 @@ public class InAirState : PlayerState
         {
             Player.Rigidbody.velocity += _fastDropPower * Physics2D.gravity * Time.deltaTime;
         }
+
+        if(Player.IsTouchedWall)
+        {
+            ChangeState<WallSlideState>();
+        }
     }
 
     protected override void OnExit()

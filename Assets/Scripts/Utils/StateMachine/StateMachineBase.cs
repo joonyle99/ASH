@@ -10,14 +10,13 @@ using UnityEditor;
 public class StateMachineBase : MonoBehaviour
 {
     [SerializeField] StateBase _initialState;
+    [SerializeField] StateBase _currentState;
+    [SerializeField] StateBase _previousState = null;
     [SerializeField] Animator _animator;
 
     public StateBase CurrentState { get { return _currentState; } }
     public StateBase PreviousState { get { return _previousState; } }
     public Animator Animator { get { return _animator;  } }
-
-    StateBase _currentState;
-    StateBase _previousState = null;
     
     Dictionary<Type, Component> _cachedComponents = new Dictionary<Type, Component>();
 

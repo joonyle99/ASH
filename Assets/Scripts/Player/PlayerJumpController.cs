@@ -5,11 +5,11 @@ using UnityEngine;
 public class PlayerJumpController : MonoBehaviour
 {
     [Header("Jump Power")]
-    [SerializeField] float _groundJumpPower = 9f;
-    [SerializeField] float _inAirJumpPower = 9f;
+    [SerializeField] float _groundJumpPower = 15f;
+    [SerializeField] float _inAirJumpPower = 12f;
 
-    [SerializeField] float _longJumpDuration = 0.3f;
-    [SerializeField] float _longJumpBonus = 0.3f;
+    [SerializeField] float _longJumpDuration = 0.2f;
+    [SerializeField] float _longJumpBonus = 3f;
 
     [Header("Jump Settings")]
     [SerializeField] float _coyoteTime = 0.2f;
@@ -98,7 +98,9 @@ public class PlayerJumpController : MonoBehaviour
         _remainingJumpCount -= 1;
         _isLongJumping = true;
         _longJumpTime = 0f;
-        _player.ChangeState<JumpState>();
+
+        if(!_player.StateIs<DashState>())
+            _player.ChangeState<JumpState>();
     }
 
     //점프 애니메이션 종료 시점
