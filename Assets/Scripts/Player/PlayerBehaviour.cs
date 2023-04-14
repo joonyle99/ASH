@@ -61,6 +61,7 @@ public class PlayerBehaviour : StateMachineBase
 
         Animator.SetBool("Grounded", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
+        Animator.SetBool("WallSlide", IsTouchedWall);
 
         // Check Ground / Wall
         IsGrounded = _groundCheckCollider.IsTouchingLayers(_groundLayer);
