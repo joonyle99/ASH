@@ -5,30 +5,55 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Windows;
 
-public class WallSlideState : PlayerState
+public class WallSlideState : WallState
 {
-    [SerializeField] private float _wallSlideSpeed = -3f;
+    [SerializeField] private float _wallSlideSpeed = 3f;
 
     protected override void OnEnter()
     {
-        Debug.Log("Enter WallSlide");
+        //Debug.Log("Enter WallSlide");
+        Animator.SetBool("WallSlide", true);
     }
     protected override void OnUpdate()
     {
-        // 그리고 서서히 땅에 떨어지는 기능 추가
-        Player.Rigidbody.velocity = new Vector2(0, _wallSlideSpeed);
+        // 서서히 땅에 떨어지는 기능 추가
+        Player.Rigidbody.velocity = Vector2.down * _wallSlideSpeed;
 
-        // 땅에 떨어지면 IdleState로
+        // Wall Grab State
+        if (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x))
+        {
+            ChangeState<WallGrabState>();
+            return;
+        }
+
+        // Wall Climb State
+        if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0)
+        {
+            ChangeState<WallClimbState>();
+            return;
+        }
+
+        // InAirState
+        if (!Player.IsTouchedWall || (Player.RecentDir == (-1) * Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        {
+            ChangeState<InAirState>();
+            return;
+        }
+
+        // Jump
+        
+
+        // IdleState로
         if (Player.IsGrounded)
+        {
             ChangeState<IdleState>();
-
-        // Grab Input 시 WallGrabState로
-        //if (grabInput && yInput == 0)
-        //    ChangeState<WallGrabState>();
+            return;
+        }
     }
 
     protected override void OnExit()
     {
-        Debug.Log("Exit WallSlide");
+        //Debug.Log("Exit WallSlide");
+        Animator.SetBool("WallSlide", false);
     }
 }

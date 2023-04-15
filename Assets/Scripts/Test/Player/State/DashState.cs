@@ -27,7 +27,7 @@ public class DashState : PlayerState
     
     protected override void OnEnter()
     {
-        Debug.Log("Dash Enter");
+        //Debug.Log("Dash Enter");
         ExcuteDash();
     }
 
