@@ -6,9 +6,11 @@ public class PCInputSetter : MonoBehaviour, IInputSetter
 {
     public event IInputSetter.InputEventHandler JumpPressedEvent;
     public event IInputSetter.InputEventHandler DashPressedEvent;
+    public event IInputSetter.InputEventHandler BasicAttackPressedEvent;
 
     [SerializeField] KeyCode _jumpKey = KeyCode.Space;
     [SerializeField] KeyCode _dashKey = KeyCode.LeftShift;
+    [SerializeField] KeyCode _basicAttackKey = KeyCode.Alpha1;
     public InputState GetState()
     {
         InputState state = new InputState();
@@ -32,6 +34,10 @@ public class PCInputSetter : MonoBehaviour, IInputSetter
         if (Input.GetKeyDown(_dashKey))
         {
             DashPressedEvent?.Invoke();
+        }
+        if (Input.GetKeyDown(_basicAttackKey))
+        {
+            BasicAttackPressedEvent?.Invoke();
         }
     }
 

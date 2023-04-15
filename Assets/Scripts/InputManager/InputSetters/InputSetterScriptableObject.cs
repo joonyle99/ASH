@@ -7,6 +7,7 @@ public abstract class InputSetterScriptableObject : ScriptableObject, IInputSett
 #pragma warning disable CS0067 // Disable event never used
     public event IInputSetter.InputEventHandler JumpPressedEvent;
     public event IInputSetter.InputEventHandler DashPressedEvent;
+    public event IInputSetter.InputEventHandler BasicAttackPressedEvent;
 #pragma warning restore CS0067 // Disable event never used
     public abstract InputState GetState();
 }

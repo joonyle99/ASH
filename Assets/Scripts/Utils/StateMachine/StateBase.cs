@@ -13,6 +13,7 @@ public abstract class StateBase : MonoBehaviour
     public void TriggerEnter(StateMachineBase stateMachine)
     {
         _stateMachine = stateMachine;
+        SetAnimsOnEnter();
         _animatorParameters.InvokeEnter(_stateMachine.Animator);
         OnEnter();
     }
@@ -31,6 +32,7 @@ public abstract class StateBase : MonoBehaviour
         OnFixedUpdate();
     }
 
+    protected virtual void SetAnimsOnEnter() {}
     protected abstract void OnEnter();
     protected abstract void OnUpdate();
     protected virtual void OnFixedUpdate() { }

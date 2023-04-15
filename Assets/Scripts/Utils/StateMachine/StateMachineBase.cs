@@ -9,10 +9,10 @@ using UnityEditor;
 
 public class StateMachineBase : MonoBehaviour
 {
-    [SerializeField] StateBase _initialState;
-    [SerializeField] StateBase _currentState;
-    [SerializeField] StateBase _previousState = null;
     [SerializeField] Animator _animator;
+    [SerializeField] StateBase _initialState;
+    StateBase _currentState;
+    StateBase _previousState = null;
 
     public StateBase CurrentState { get { return _currentState; } }
     public StateBase PreviousState { get { return _previousState; } }

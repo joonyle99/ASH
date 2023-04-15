@@ -11,6 +11,7 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
 {
     public event IInputSetter.InputEventHandler JumpPressedEvent;
     public event IInputSetter.InputEventHandler DashPressedEvent;
+    public event IInputSetter.InputEventHandler BasicAttackPressedEvent;
 
     public delegate void InputEventHandler();
     IInputSetter _currentSetter;
@@ -33,11 +34,13 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
         {
             _currentSetter.JumpPressedEvent -= () => JumpPressedEvent?.Invoke();
             _currentSetter.DashPressedEvent -= () => DashPressedEvent?.Invoke();
+            _currentSetter.BasicAttackPressedEvent -= () => BasicAttackPressedEvent?.Invoke();
         }
         _currentSetter = setter;
 
         _currentSetter.JumpPressedEvent += () => JumpPressedEvent?.Invoke();
         _currentSetter.DashPressedEvent += () => DashPressedEvent?.Invoke();
+        _currentSetter.BasicAttackPressedEvent += () => BasicAttackPressedEvent?.Invoke();
     }
     void Update()
     {

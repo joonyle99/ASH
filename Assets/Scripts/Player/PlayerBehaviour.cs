@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase
 {
+    [Header("Collision Check Prams")]
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] Collider2D _groundCheckCollider;
     [SerializeField] LayerMask _wallLayer;
     [SerializeField] Collider2D _wallCheckCollider;
+
+    [Header("Attack Settings")]
+    [SerializeField] float _attackCountRefreshTime;
 
     /// <summary>
     /// Smooth 효과로 전처리 된 InputState
@@ -21,6 +25,7 @@ public class PlayerBehaviour : StateMachineBase
     public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
     public bool IsTouchedLWall { get { return _isTouchedLWall; } private set { _isTouchedLWall = value; } }
     public bool IsTouchedRWall { get { return _isTouchedRWall; } private set { _isTouchedRWall = value; } }
+    public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<WalkState>(); } }
     public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
     public Rigidbody2D Rigidbody { get { return _rigidbody; } }
     public Vector2 RecentDir { get { return new Vector2(_recentDir, 0); } }
@@ -38,6 +43,8 @@ public class PlayerBehaviour : StateMachineBase
     float _timeAfterJumpQueued;
     int _recentDir = 1;
 
+    float _timeAfterLastBasicAttack;
+
     private void Awake()
     {
         _inputPreprocessor = GetComponent<PlayerInputPreprocessor>();
@@ -50,6 +57,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Start();
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : unsubscribe
+        InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : unsubscribe
 
     }
 
@@ -109,6 +117,14 @@ public class PlayerBehaviour : StateMachineBase
                 }
             }
         }
+
+        //Refresh Attack count
+        if (_timeAfterLastBasicAttack < _attackCountRefreshTime)
+        {
+            _timeAfterLastBasicAttack += Time.deltaTime;
+            if (_timeAfterLastBasicAttack > _attackCountRefreshTime)
+                GetComponent<BasicAttackState>().RefreshAttackCount();
+        }
     }
 
     private void UpdateImageFlip()
@@ -117,5 +133,16 @@ public class PlayerBehaviour : StateMachineBase
             _recentDir = (int)RawInputs.Movement.x;
         transform.localScale = new Vector3(_recentDir, transform.localScale.y, transform.localScale.z);
         //_anim.transform.rotation = left ? Quaternion.Euler(0, -90, 0) : Quaternion.Euler(0, 90, 0);
+    }
+
+    void OnBasicAttackPressed()
+    {
+        if (CanBasicAttack)
+            CastBasicAttack();
+    }
+    void CastBasicAttack()
+    {
+        _timeAfterLastBasicAttack = 0f;
+        ChangeState<BasicAttackState>();
     }
 }

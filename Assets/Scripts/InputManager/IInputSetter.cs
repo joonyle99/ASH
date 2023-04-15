@@ -7,6 +7,7 @@ public interface IInputSetter
     public delegate void InputEventHandler();
     public event InputEventHandler JumpPressedEvent;
     public event InputEventHandler DashPressedEvent;
+    public event InputEventHandler BasicAttackPressedEvent;
 
     public InputState GetState();
 }
