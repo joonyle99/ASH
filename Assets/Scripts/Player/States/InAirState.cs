@@ -12,7 +12,7 @@ public class InAirState : PlayerState
     PlayerJumpController _jumpController;
     protected override void OnEnter()
     {
-        Debug.Log("InAir Enter");
+        //Debug.Log("InAir Enter");
         _jumpController = GetComponent<PlayerJumpController>();
     }
 
@@ -35,15 +35,23 @@ public class InAirState : PlayerState
             Player.Rigidbody.velocity += _fastDropPower * Physics2D.gravity * Time.deltaTime;
         }
 
-        // º®Å¸±â
-        if(Player.IsTouchedWall)
+        // Wall Grab State
+        if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        {
+            ChangeState<WallGrabState>();
+            return;
+        }
+
+        // Wall Slide State
+        if (Player.IsTouchedWall && Player.Rigidbody.velocity.y < 0)
         {
             ChangeState<WallSlideState>();
+            return;
         }
     }
 
     protected override void OnExit()
     {
-        Debug.Log("InAir Exit");
+        //Debug.Log("InAir Exit");
     }
 }

@@ -9,7 +9,7 @@ public class BasicAttackState : PlayerState
     protected override void SetAnimsOnEnter()
     {
         base.SetAnimsOnEnter();
-        Animator.SetInteger("BaseAttackCount", _attackCount);
+        Animator.SetInteger("BasicAttackCount", _attackCount);
     }
     protected override void OnEnter()
     {
@@ -34,6 +34,5 @@ public class BasicAttackState : PlayerState
     public void RefreshAttackCount()
     {
         _attackCount = 0;
-        Animator.SetInteger("BaseAttackCount", _attackCount);
     }
 }

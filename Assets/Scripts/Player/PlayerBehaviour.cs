@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase
@@ -7,8 +8,9 @@ public class PlayerBehaviour : StateMachineBase
     [Header("Collision Check Prams")]
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] Collider2D _groundCheckCollider;
+
     [SerializeField] LayerMask _wallLayer;
-    [SerializeField] Collider2D _wallCheckCollider;
+    [SerializeField] Transform _wallCheckTrans;
 
     [Header("Attack Settings")]
     [SerializeField] float _attackCountRefreshTime;
@@ -23,12 +25,10 @@ public class PlayerBehaviour : StateMachineBase
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
     public bool IsGrounded { get; private set; }
     public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
-    public bool IsTouchedLWall { get { return _isTouchedLWall; } private set { _isTouchedLWall = value; } }
-    public bool IsTouchedRWall { get { return _isTouchedRWall; } private set { _isTouchedRWall = value; } }
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<WalkState>(); } }
     public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
     public Rigidbody2D Rigidbody { get { return _rigidbody; } }
-    public Vector2 RecentDir { get { return new Vector2(_recentDir, 0); } }
+    public int RecentDir { get { return _recentDir; } }
 
     PlayerJumpController _jumpController;
     DashState _dashState;
@@ -36,8 +36,7 @@ public class PlayerBehaviour : StateMachineBase
     Rigidbody2D _rigidbody;
 
     [SerializeField] private bool _isTouchedWall;
-    [SerializeField] private bool _isTouchedLWall;
-    [SerializeField] private bool _isTouchedRWall;
+    [SerializeField] float _wallCheckDistance = 0.5f;
 
     bool _isJumpQueued;
     float _timeAfterJumpQueued;
@@ -65,51 +64,35 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Update();
 
-        UpdateImageFlip();
+        // Player Flip
+        if (!StateIs<DashState>() && !StateIs<WallState>())
+            UpdateImageFlip();
 
+        // Animation
         Animator.SetBool("Grounded", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
-        Animator.SetBool("WallSlide", IsTouchedWall);
 
         // Check Ground / Wall
         IsGrounded = _groundCheckCollider.IsTouchingLayers(_groundLayer);
-        IsTouchedWall = _wallCheckCollider.IsTouchingLayers(_wallLayer);
-
-        // Check Left or Right Wall
-        if(IsTouchedWall)
-        {
-            if(_recentDir == 1) // 플레이어 방향이 오른쪽
-            {
-                IsTouchedRWall = true;
-            }
-            else if(_recentDir == -1) // 왼쪽
-            {
-                IsTouchedLWall = true;
-            }
-        }
-        else
-        {
-            IsTouchedRWall = false;
-            IsTouchedLWall = false;
-        }
+        IsTouchedWall = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * _recentDir, _wallCheckDistance, _wallLayer);
 
         if (!IsGrounded) // TODO : 필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
         {
-            if (!StateIs<InAirState>() && !StateIs<DashState>() && !StateIs<WallSlideState>())
+            if (!StateIs<InAirState>() && !StateIs<DashState>() && !StateIs<WallState>())
                 ChangeState<InAirState>();
         }
 
         // Dash Start
-        if (Input.GetKeyDown(KeyCode.V) && _dashState.EnableDash && RawInputs.Movement.x != 0)
+        if (Input.GetKeyDown(KeyCode.V) && _dashState.EnableDash && RawInputs.Movement.x != 0 && !StateIs<WallState>())
         {
             if (!StateIs<DashState>())
                 ChangeState<DashState>();
         }
 
         // Dash CoolTime
-        if(!_dashState.Dashing && !_dashState.EnableDash)
+        if (!_dashState.Dashing && !_dashState.EnableDash)
         {
-            if(Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
+            if (Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
             {
                 if (IsGrounded)
                 {
@@ -125,6 +108,7 @@ public class PlayerBehaviour : StateMachineBase
             if (_timeAfterLastBasicAttack > _attackCountRefreshTime)
                 GetComponent<BasicAttackState>().RefreshAttackCount();
         }
+        // Wall Jump
     }
 
     private void UpdateImageFlip()
@@ -144,5 +128,10 @@ public class PlayerBehaviour : StateMachineBase
     {
         _timeAfterLastBasicAttack = 0f;
         ChangeState<BasicAttackState>();
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * _recentDir);
     }
 }

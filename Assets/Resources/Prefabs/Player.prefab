@@ -58,6 +58,67 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.69823956, y: 0.07}
   m_EdgeRadius: 0
+--- !u!1 &1099303060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1099303061}
+  - component: {fileID: 1099303062}
+  - component: {fileID: 1099303063}
+  m_Layer: 8
+  m_Name: BasicAttackHitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1099303061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099303060}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.549, y: 0.701, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4222197489795976580}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1099303062
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099303060}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.91
+--- !u!114 &1099303063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099303060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d314f2de87de5f419af4e4a8d5b214b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1451126566
 GameObject:
   m_ObjectHideFlags: 0
@@ -67,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1451126567}
-  - component: {fileID: 1451126568}
   m_Layer: 0
   m_Name: WallCheck
   m_TagString: Untagged
@@ -83,39 +143,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1451126566}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.912, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4222197489795976580}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &1451126568
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1451126566}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.25027275, y: 0.68985367}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.19142723, y: 1.301611}
-  m_EdgeRadius: 0
 --- !u!1 &4222197489795976578
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,6 +174,8 @@ GameObject:
   - component: {fileID: 1663921311720722264}
   - component: {fileID: 294021079}
   - component: {fileID: 294021080}
+  - component: {fileID: 2128969258426517539}
+  - component: {fileID: 4222197490195542652}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -161,6 +197,7 @@ Transform:
   m_Children:
   - {fileID: 446016810}
   - {fileID: 1451126567}
+  - {fileID: 1099303061}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -250,7 +287,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.05, y: 0.71}
+  m_Offset: {x: -0.049999952, y: 0.71000004}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -261,7 +298,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.7, y: 1.29}
+  m_Size: {x: 0.79534197, y: 1.29}
   m_EdgeRadius: 0
 --- !u!95 &4222197489795936895
 Animator:
@@ -310,10 +347,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbbedf25f49f0a041ac4515148658ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _initialState: {fileID: 4222197489795936878}
-  _currentState: {fileID: 0}
-  _previousState: {fileID: 0}
   _animator: {fileID: 4222197489795936895}
+  _initialState: {fileID: 4222197489795936878}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -321,10 +356,10 @@ MonoBehaviour:
   _wallLayer:
     serializedVersion: 2
     m_Bits: 128
-  _wallCheckCollider: {fileID: 1451126568}
+  _wallCheckTrans: {fileID: 1451126567}
+  _attackCountRefreshTime: 1
   _isTouchedWall: 0
-  _isTouchedLWall: 0
-  _isTouchedRWall: 0
+  _wallCheckDistance: 0.5
 --- !u!114 &4222197489795936878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,6 +504,7 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+  _wallSlideSpeed: 3
 --- !u!114 &294021080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,4 +519,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animatorParameters:
     _enterParams: []
+    _exitParams: []
+--- !u!114 &2128969258426517539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4222197489795976578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3969673444ad65d4fb61f6aa30e9bb66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorParameters:
+    _enterParams: []
+    _exitParams: []
+  _wallClimbSpeed: 4
+--- !u!114 &4222197490195542652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4222197489795976578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3537926703c35a448c71d0ea64fe9d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorParameters:
+    _enterParams:
+    - _type: 3
+      _paramName: BasicAttack
+      _intValue: 0
+      _floatValue: 0
+      _boolValue: 0
     _exitParams: []
