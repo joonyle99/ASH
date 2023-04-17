@@ -108,6 +108,7 @@ public class PlayerBehaviour : StateMachineBase
             if (_timeAfterLastBasicAttack > _attackCountRefreshTime)
                 GetComponent<BasicAttackState>().RefreshAttackCount();
         }
+
         // Wall Jump
     }
 

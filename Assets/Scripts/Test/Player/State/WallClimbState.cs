@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WallClimbState : WallState
 {
-    [SerializeField] private float _wallClimbSpeed = 4f;
+    [SerializeField] private float _wallClimbSpeed = 2.5f;
     protected override void OnEnter()
     {
         //Debug.Log("Enter Wall Climb");

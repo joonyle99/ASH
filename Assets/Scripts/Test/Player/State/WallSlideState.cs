@@ -7,7 +7,7 @@ using UnityEngine.Windows;
 
 public class WallSlideState : WallState
 {
-    [SerializeField] private float _wallSlideSpeed = 3f;
+    [SerializeField] private float _wallSlideSpeed = 3.5f;
 
     protected override void OnEnter()
     {
