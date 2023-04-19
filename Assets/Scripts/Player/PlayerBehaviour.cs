@@ -95,9 +95,7 @@ public class PlayerBehaviour : StateMachineBase
             if (Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
             {
                 if (IsGrounded)
-                {
                     _dashState.EnableDash = true;
-                }
             }
         }
 

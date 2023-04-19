@@ -32,12 +32,24 @@ public class WallClimbState : WallState
             return;
         }
 
-        // InAirState
-        if (!Player.IsTouchedWall || (Player.RecentDir == (-1) * Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        // Wall Jump
+        // 벽 반대방향 키
+        if(Player.RecentDir == (-1) * Mathf.RoundToInt(Player.RawInputs.Movement.x))
         {
-            ChangeState<InAirState>();
-            return;
+            // 위쪽 키
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Debug.Log("Wall Jump");
+            }
         }
+
+        
+        //// InAirState
+        //if (!Player.IsTouchedWall || (Player.RecentDir == (-1) * Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        //{
+        //    ChangeState<InAirState>();
+        //    return;
+        //}
     }
 
     protected override void OnExit()

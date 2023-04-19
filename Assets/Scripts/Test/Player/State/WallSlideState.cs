@@ -20,7 +20,7 @@ public class WallSlideState : WallState
         Player.Rigidbody.velocity = Vector2.down * _wallSlideSpeed;
 
         // Wall Grab State
-        if (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x))
+        if (Player.RawInputs.Movement.x != 0 && Player.RawInputs.Movement.y == 0)
         {
             ChangeState<WallGrabState>();
             return;

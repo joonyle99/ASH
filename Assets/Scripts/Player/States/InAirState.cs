@@ -42,12 +42,12 @@ public class InAirState : PlayerState
             return;
         }
 
-        // Wall Slide State
-        if (Player.IsTouchedWall && Player.Rigidbody.velocity.y < 0)
-        {
-            ChangeState<WallSlideState>();
-            return;
-        }
+        //// Wall Slide State
+        //if (Player.IsTouchedWall && Player.Rigidbody.velocity.y < 0)
+        //{
+        //    ChangeState<WallSlideState>();
+        //    return;
+        //}
     }
 
     protected override void OnExit()

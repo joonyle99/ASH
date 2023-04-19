@@ -22,15 +22,21 @@ public class WallGrabState : WallState
             return;
         }
 
-        // Wall Slide State
-        if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
+        //// Wall Slide State
+        //if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
+        //{
+        //    ChangeState<WallSlideState>();
+        //    return;
+        //}
+        
+        // Wall Jump
+        if(Input.GetKeyDown(KeyCode.Space))
         {
-            ChangeState<WallSlideState>();
-            return;
+            Debug.Log("jump");
         }
 
         // InAirState
-        if (!Player.IsTouchedWall || (Player.RecentDir == (-1) * Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        if (!Player.IsTouchedWall)
         {
             ChangeState<InAirState>();
             return;
