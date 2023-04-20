@@ -9,6 +9,7 @@ public class WalkState : PlayerState
 
     protected override void OnEnter()
     {
+
     }
     protected override void OnUpdate()
     {
@@ -19,6 +20,13 @@ public class WalkState : PlayerState
         if (Player.RawInputs.Movement.x == 0)
         {
             ChangeState<IdleState>();
+            return;
+        }
+
+        // Wall Grab State
+        if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        {
+            ChangeState<WallGrabState>();
             return;
         }
     }

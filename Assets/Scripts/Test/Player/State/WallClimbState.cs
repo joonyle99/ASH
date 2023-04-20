@@ -7,7 +7,7 @@ public class WallClimbState : WallState
     [SerializeField] private float _wallClimbSpeed = 2.5f;
     protected override void OnEnter()
     {
-        //Debug.Log("Enter Wall Climb");
+        Debug.Log("Enter Wall Climb");
         Player.Rigidbody.gravityScale = 0f;
         Animator.SetBool("WallClimb", true);
     }
@@ -54,7 +54,7 @@ public class WallClimbState : WallState
 
     protected override void OnExit()
     {
-        //Debug.Log("Exit Wall Climb");
+        Debug.Log("Exit Wall Climb");
         Player.Rigidbody.gravityScale = 5f;
         Animator.SetBool("WallClimb", false);
     }

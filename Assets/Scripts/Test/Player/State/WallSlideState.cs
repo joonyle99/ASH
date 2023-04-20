@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class WallSlideState : WallState
 {
-    [SerializeField] private float _wallSlideSpeed = 3.5f;
+    [SerializeField] private float _wallSlideSpeed = 1.5f;
 
     protected override void OnEnter()
     {
@@ -36,12 +35,13 @@ public class WallSlideState : WallState
         // InAirState
         if (!Player.IsTouchedWall || (Player.RecentDir == (-1) * Mathf.RoundToInt(Player.RawInputs.Movement.x)))
         {
-            ChangeState<InAirState>();
-            return;
+            // Jump
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ChangeState<InAirState>();
+                return;
+            }
         }
-
-        // Jump
-        
 
         // IdleState·Î
         if (Player.IsGrounded)
