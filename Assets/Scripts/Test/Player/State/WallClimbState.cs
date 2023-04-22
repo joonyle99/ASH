@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class WallClimbState : WallState
 {
-    [SerializeField] private float _wallClimbSpeed = 2.5f;
+    [SerializeField] private float _wallClimbSpeed = 4.0f;
     protected override void OnEnter()
     {
-        Debug.Log("Enter Wall Climb");
+        //Debug.Log("Enter Wall Climb");
         Player.Rigidbody.gravityScale = 0f;
         Animator.SetBool("WallClimb", true);
     }
@@ -32,29 +32,17 @@ public class WallClimbState : WallState
             return;
         }
 
-        // Wall Jump
-        // 벽 반대방향 키
-        if(Player.RecentDir == (-1) * Mathf.RoundToInt(Player.RawInputs.Movement.x))
+        // InAirState
+        if(!Player.IsTouchedWall)
         {
-            // 위쪽 키
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Debug.Log("Wall Jump");
-            }
+            ChangeState<InAirState>();
+            return;
         }
-
-        
-        //// InAirState
-        //if (!Player.IsTouchedWall || (Player.RecentDir == (-1) * Mathf.RoundToInt(Player.RawInputs.Movement.x)))
-        //{
-        //    ChangeState<InAirState>();
-        //    return;
-        //}
     }
 
     protected override void OnExit()
     {
-        Debug.Log("Exit Wall Climb");
+        //Debug.Log("Exit Wall Climb");
         Player.Rigidbody.gravityScale = 5f;
         Animator.SetBool("WallClimb", false);
     }

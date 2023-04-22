@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class WallSlideState : WallState
 {
-    [SerializeField] private float _wallSlideSpeed = 1.5f;
+    [SerializeField] private float _wallSlideSpeed = 0.5f;
 
     protected override void OnEnter()
     {
@@ -15,8 +15,10 @@ public class WallSlideState : WallState
     }
     protected override void OnUpdate()
     {
-        // 서서히 땅에 떨어지는 기능 추가
+        // 서서히 땅에 떨어지는 기능
         Player.Rigidbody.velocity = Vector2.down * _wallSlideSpeed;
+
+
 
         // Wall Grab State
         if (Player.RawInputs.Movement.x != 0 && Player.RawInputs.Movement.y == 0)
@@ -25,6 +27,7 @@ public class WallSlideState : WallState
             return;
         }
 
+
         // Wall Climb State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0)
         {
@@ -32,18 +35,16 @@ public class WallSlideState : WallState
             return;
         }
 
+
         // InAirState
-        if (!Player.IsTouchedWall || (Player.RecentDir == (-1) * Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        if (!Player.IsTouchedWall)
         {
-            // Jump
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                ChangeState<InAirState>();
-                return;
-            }
+            ChangeState<InAirState>();
+            return;
         }
 
-        // IdleState로
+
+        // IdleState
         if (Player.IsGrounded)
         {
             ChangeState<IdleState>();

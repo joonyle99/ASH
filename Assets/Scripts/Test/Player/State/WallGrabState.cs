@@ -6,7 +6,7 @@ public class WallGrabState : WallState
 {
     protected override void OnEnter()
     {
-        Debug.Log("Enter Wall Grab");
+        //Debug.Log("Enter Wall Grab");
         Player.Rigidbody.gravityScale = 0f;
     }
 
@@ -28,23 +28,10 @@ public class WallGrabState : WallState
             ChangeState<WallSlideState>();
             return;
         }
-
-        // Wall Jump
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Debug.Log("jump");
-        }
-
-        // InAirState
-        if (!Player.IsTouchedWall)
-        {
-            ChangeState<InAirState>();
-            return;
-        }
     }
     protected override void OnExit()
     {
-        Debug.Log("Exit Wall Grab");
+        //Debug.Log("Exit Wall Grab");
         Player.Rigidbody.gravityScale = 5f;
     }
 }

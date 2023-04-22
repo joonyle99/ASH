@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class PlayerJumpController : MonoBehaviour
 {
     [Header("Jump Power")]
     [SerializeField] float _groundJumpPower = 15f;
     [SerializeField] float _inAirJumpPower = 12f;
+    [SerializeField] float _wallJumpPower = 6f;
 
     [SerializeField] float _longJumpDuration = 0.2f;
     [SerializeField] float _longJumpBonus = 3f;
@@ -64,6 +66,17 @@ public class PlayerJumpController : MonoBehaviour
         //Jump if queued
         if (_isJumpQueued)
         {
+            // 대쉬 상태 이라면 return
+            if (_player.StateIs<DashState>())
+                return;
+
+            // 벽타기 상태에서 "바라보는 방향 == 키 입력 방향" 이라면 return
+            if (_player.StateIs<WallState>() && (_player.RecentDir == Mathf.RoundToInt(_player.RawInputs.Movement.x)))
+            {
+                _isJumpQueued = false;
+                return;
+            }
+
             _timeAfterJumpQueued += Time.deltaTime;
             if (_timeAfterJumpQueued > _jumpQueueDuration)
                 _isJumpQueued = false;
@@ -73,7 +86,10 @@ public class PlayerJumpController : MonoBehaviour
                 return;
             }
         }
-
+        
+        // Wall State 시 1회 점프 가능
+        if(_player.StateIs<WallState>())
+            _remainingJumpCount = 1;
     }
 
     public void ResetJumpCount()
@@ -99,8 +115,7 @@ public class PlayerJumpController : MonoBehaviour
         _isLongJumping = true;
         _longJumpTime = 0f;
 
-        if(!_player.StateIs<DashState>())
-            _player.ChangeState<JumpState>();
+        _player.ChangeState<JumpState>();
     }
 
     //점프 애니메이션 종료 시점
@@ -108,5 +123,25 @@ public class PlayerJumpController : MonoBehaviour
     {
         float jumpPower = _isGroundJump ? _groundJumpPower : _inAirJumpPower;
         _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, jumpPower);
+    }
+
+    public void ExecuteWallJumpAnimEvent()
+    {
+        _player.IsWallJump = true;
+
+        // player input
+        int xInput = (int)_player.RawInputs.Movement.x; // -1 0 1
+        int yInput = (int)_player.RawInputs.Movement.y; // -1 0 1
+
+        // sub power
+        float xPower = (xInput == 0) ? 0.5f : Mathf.Abs(xInput);
+        float yPower = (yInput > 0) ? 2.5f : 1f; // 위쪽키를 누르지 않으면 살짝 점프
+
+        // player flip
+        _player.RecentDir = (-1) * _player.RecentDir;
+        transform.localScale = new Vector3(_player.RecentDir, transform.localScale.y, transform.localScale.z);
+
+        // execute jump
+        _player.Rigidbody.velocity = new Vector2(_player.RecentDir * xPower, yPower) * _wallJumpPower;
     }
 }

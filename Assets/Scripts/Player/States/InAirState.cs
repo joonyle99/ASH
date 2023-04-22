@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 
 public class InAirState : PlayerState
@@ -18,10 +19,19 @@ public class InAirState : PlayerState
 
     protected override void OnUpdate()
     {
-        //аб©Л ют╥б
-        float xInput = Player.SmoothedInputs.Movement.x;
-        Vector3 targetVelocity = new Vector3(xInput * _moveSpeed, Player.Rigidbody.velocity.y);
-        Player.Rigidbody.velocity = targetVelocity;
+        if(/*Player.PreviousState is WallState*/ Player.IsWallJump)
+        {
+            Vector3 targetVelocity = new Vector3(Player.Rigidbody.velocity.x, Player.Rigidbody.velocity.y);
+            Player.Rigidbody.velocity = targetVelocity;
+        }
+        else
+        {
+            //аб©Л ют╥б
+            float xInput = Player.SmoothedInputs.Movement.x;
+            Vector3 targetVelocity = new Vector3(xInput * _moveSpeed, Player.Rigidbody.velocity.y);
+            Player.Rigidbody.velocity = targetVelocity;
+        }
+
 
         if (Player.IsGrounded)
         {
@@ -53,5 +63,6 @@ public class InAirState : PlayerState
     protected override void OnExit()
     {
         //Debug.Log("InAir Exit");
+        Player.IsWallJump = false;
     }
 }

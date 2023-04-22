@@ -11,8 +11,18 @@ public class JumpState : PlayerState
     {
         //Debug.Log("Jump Enter");
         _jumpController = Player.GetComponent<PlayerJumpController>();
+
         //TODO : ExecuteJumpAnimEvent 애니메이션 이벤트로 실행
-        _jumpController.ExecuteJumpAnimEvent();
+        if (Player.PreviousState is WallState)
+        {
+            Debug.Log("wall jump");
+            _jumpController.ExecuteWallJumpAnimEvent();
+        }
+        else
+        {
+            Debug.Log("just jump");
+            _jumpController.ExecuteJumpAnimEvent();
+        }
     }
 
     protected override void OnUpdate()

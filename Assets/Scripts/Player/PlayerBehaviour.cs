@@ -28,7 +28,8 @@ public class PlayerBehaviour : StateMachineBase
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<WalkState>(); } }
     public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
     public Rigidbody2D Rigidbody { get { return _rigidbody; } }
-    public int RecentDir { get { return _recentDir; } }
+    public int RecentDir { get { return _recentDir; } set { _recentDir = value; } }
+    public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
 
     PlayerJumpController _jumpController;
     DashState _dashState;
@@ -37,6 +38,7 @@ public class PlayerBehaviour : StateMachineBase
 
     [SerializeField] private bool _isTouchedWall;
     [SerializeField] float _wallCheckDistance = 0.5f;
+    [SerializeField] bool _isWallJump;
 
     bool _isJumpQueued;
     float _timeAfterJumpQueued;
@@ -106,8 +108,6 @@ public class PlayerBehaviour : StateMachineBase
             if (_timeAfterLastBasicAttack > _attackCountRefreshTime)
                 GetComponent<BasicAttackState>().RefreshAttackCount();
         }
-
-        // Wall Jump
     }
 
     private void UpdateImageFlip()
