@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DesolateDiveState : PlayerState
 {
-    [SerializeField] float _diveSpeed = 10.0f;
+    [SerializeField] float _diveSpeed =20.0f;
     [SerializeField] float _diveTime = 0.5f;
     [SerializeField] float _explosionRadius = 2.0f;
     [SerializeField] int _explosionDamage = 10;
@@ -15,16 +15,18 @@ public class DesolateDiveState : PlayerState
 
     protected override void OnEnter()
     {
-
-    }
-
-    protected override void OnExit()
-    {
-
+        Debug.Log("Enter Desolate Dive");
     }
 
     protected override void OnUpdate()
     {
+        Player.Rigidbody.velocity = new Vector2(0, -_diveSpeed);
 
+        if(Player.IsGrounded)
+                ChangeState<IdleState>();
+    }
+    protected override void OnExit()
+    {
+        Debug.Log("Exit Desolate Dive");
     }
 }

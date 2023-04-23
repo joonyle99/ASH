@@ -176,6 +176,7 @@ GameObject:
   - component: {fileID: 294021080}
   - component: {fileID: 2128969258426517539}
   - component: {fileID: 4222197490195542652}
+  - component: {fileID: 1852432337}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -353,6 +354,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   _groundCheckCollider: {fileID: 446016811}
+  _playerGroundCollider: {fileID: 0}
   _wallLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -361,6 +363,7 @@ MonoBehaviour:
   _isTouchedWall: 0
   _wallCheckDistance: 0.5
   _isWallJump: 0
+  _groundDistance: 0
 --- !u!114 &4222197489795936878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -558,3 +561,23 @@ MonoBehaviour:
       _floatValue: 0
       _boolValue: 0
     _exitParams: []
+--- !u!114 &1852432337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4222197489795976578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d74638c33f05ff8429602cc5cdda0a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorParameters:
+    _enterParams: []
+    _exitParams: []
+  _diveSpeed: 10
+  _diveTime: 0.5
+  _explosionRadius: 2
+  _explosionDamage: 10
+  _minHeight: 5
