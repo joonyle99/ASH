@@ -15,14 +15,30 @@ public class PlayerJumpController : MonoBehaviour
 
     [Header("Jump Settings")]
     [SerializeField] float _coyoteTime = 0.2f;
-
     [SerializeField] float _jumpQueueDuration = 0.1f;
     [SerializeField] int _maxJumpCount = 2;
 
-    public bool CanJump { get { return _remainingJumpCount > 0 && !_player.StateIs<JumpState>() || 
-                                (_remainingJumpCount == _maxJumpCount && _coyoteAvailable); } }
-    public int MaxJumpCount { get { return _maxJumpCount; } }
+    public bool CanJump
+    {
+        get
+        {
+            return ((_remainingJumpCount > 0) && !_player.StateIs<JumpState>()) ||
+                                        (_remainingJumpCount == _maxJumpCount && _coyoteAvailable);
+        }
+    }
 
+    //public bool CanJump
+    //{
+    //    get
+    //    {
+    //        return ((_remainingJumpCount == _maxJumpCount) && _coyoteAvailable) // first jump
+    //                   || (_remainingJumpCount == 1) && !_player.IsGrounded  // second jump
+    //                   || (_player.IsTouchedWall) && (_remainingJumpCount == _maxJumpCount); // wall jump
+    //                // || (_remainingJumpCount == _maxJumpCount) && !_player.IsGrounded; // air jump
+    //    }
+    //}
+
+    public int MaxJumpCount { get { return _maxJumpCount; } }
 
     bool _coyoteAvailable { get { return _timeAfterGroundLeft <= _coyoteTime; } }
 
@@ -45,7 +61,7 @@ public class PlayerJumpController : MonoBehaviour
     }
     void Update()
     {
-        if (_player.IsGrounded && !_player.StateIs<JumpState>())
+        if ((_player.IsGrounded && !_player.StateIs<JumpState>()) || _player.StateIs<WallState>())
             ResetJumpCount();
 
         //Process Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
@@ -86,10 +102,6 @@ public class PlayerJumpController : MonoBehaviour
                 return;
             }
         }
-        
-        // Wall State 시 1회 점프 가능
-        if(_player.StateIs<WallState>())
-            _remainingJumpCount = 1;
     }
 
     public void ResetJumpCount()
@@ -106,12 +118,13 @@ public class PlayerJumpController : MonoBehaviour
     //JumpState 시작
     void CastJump()
     {
-        if ((!_player.IsGrounded && _remainingJumpCount == _maxJumpCount) && !_coyoteAvailable) //공중점프 시 점프 차감
-            _remainingJumpCount--;
         _isJumpQueued = false;
 
-        _isGroundJump = _remainingJumpCount == _maxJumpCount;
-        _remainingJumpCount -= 1;
+        //if ((!_player.IsGrounded && _remainingJumpCount == _maxJumpCount) && !_coyoteAvailable) //공중점프 시 점프 차감
+        //    _remainingJumpCount--;
+
+        _isGroundJump = (_remainingJumpCount == _maxJumpCount);
+        _remainingJumpCount--;
         _isLongJumping = true;
         _longJumpTime = 0f;
 

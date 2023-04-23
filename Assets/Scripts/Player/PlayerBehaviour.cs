@@ -8,6 +8,7 @@ public class PlayerBehaviour : StateMachineBase
     [Header("Collision Check Prams")]
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] Collider2D _groundCheckCollider;
+    [SerializeField] Collider2D _playerGroundCollider;
 
     [SerializeField] LayerMask _wallLayer;
     [SerializeField] Transform _wallCheckTrans;
@@ -39,6 +40,7 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] private bool _isTouchedWall;
     [SerializeField] float _wallCheckDistance = 0.5f;
     [SerializeField] bool _isWallJump;
+    [SerializeField] float _groundDistance = 0;
 
     bool _isJumpQueued;
     float _timeAfterJumpQueued;
@@ -78,6 +80,20 @@ public class PlayerBehaviour : StateMachineBase
         IsGrounded = _groundCheckCollider.IsTouchingLayers(_groundLayer);
         IsTouchedWall = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * _recentDir, _wallCheckDistance, _wallLayer);
 
+        if(IsGrounded)
+        {
+            _playerGroundCollider =  Physics2D.OverlapBox(_groundCheckCollider.transform.position, _groundCheckCollider.bounds.size, 0, _groundLayer);
+        }
+        else
+        {
+            if(_playerGroundCollider != null)
+            {
+                _groundDistance = _groundCheckCollider.transform.position.y - _playerGroundCollider.transform.position.y;
+                Debug.Log("ground check : " + _groundCheckCollider.gameObject.transform.position.y);
+                Debug.Log(_playerGroundCollider.gameObject.name + " : " + _playerGroundCollider.gameObject.transform.position.y);
+            }
+        }
+
         if (!IsGrounded) // TODO : 필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
         {
             if (!StateIs<InAirState>() && !StateIs<DashState>() && !StateIs<WallState>())
@@ -108,6 +124,16 @@ public class PlayerBehaviour : StateMachineBase
             if (_timeAfterLastBasicAttack > _attackCountRefreshTime)
                 GetComponent<BasicAttackState>().RefreshAttackCount();
         }
+
+        // Desolate Dive
+        // 1. jump height
+        // 2. when not dashing
+        // 3. InAirState -> DiveStatee
+        if(Input.GetKeyDown(KeyCode.Alpha5) && StateIs<InAirState>())
+        {
+            ChangeState<DesolateDiveState>();
+        }
+        
     }
 
     private void UpdateImageFlip()

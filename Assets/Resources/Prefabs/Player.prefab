@@ -360,6 +360,7 @@ MonoBehaviour:
   _attackCountRefreshTime: 1
   _isTouchedWall: 0
   _wallCheckDistance: 0.5
+  _isWallJump: 0
 --- !u!114 &4222197489795936878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,6 +436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundJumpPower: 15
   _inAirJumpPower: 12
+  _wallJumpPower: 6
   _longJumpDuration: 0.2
   _longJumpBonus: 3
   _coyoteTime: 0.2
@@ -504,7 +506,7 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  _wallSlideSpeed: 3.5
+  _wallSlideSpeed: 0.5
 --- !u!114 &294021080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -535,7 +537,7 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  _wallClimbSpeed: 2.5
+  _wallClimbSpeed: 4
 --- !u!114 &4222197490195542652
 MonoBehaviour:
   m_ObjectHideFlags: 0
