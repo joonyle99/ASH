@@ -7,7 +7,7 @@ public class DashState : PlayerState
     [Header("Dash Setting")]
     [SerializeField] private float _dashSpeed = 20f;
     [SerializeField] private float _dashLength = 0.2f;
-    [SerializeField] private float _coolTime = 0.5f;
+    [SerializeField] private float _coolTime = 0.3f;
 
     public bool EnableDash = true;
 

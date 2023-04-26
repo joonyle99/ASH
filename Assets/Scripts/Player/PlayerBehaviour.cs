@@ -21,11 +21,11 @@ public class PlayerBehaviour : StateMachineBase
     /// InputManager.Instance.GetState() 와 동일
     /// </summary>
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
+    public Rigidbody2D Rigidbody { get { return _rigidbody; } }
     public bool IsGrounded { get; private set; }
     public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<WalkState>(); } }
     public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
-    public Rigidbody2D Rigidbody { get { return _rigidbody; } }
     public int RecentDir { get { return _recentDir; } set { _recentDir = value; } }
     public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
 
@@ -34,14 +34,16 @@ public class PlayerBehaviour : StateMachineBase
     PlayerInputPreprocessor _inputPreprocessor;
     Rigidbody2D _rigidbody;
 
-    [SerializeField] private bool _isTouchedWall;
+    [Header("Wall Settings")]
     [SerializeField] float _wallCheckDistance = 0.5f;
-    [SerializeField] bool _isWallJump;
-    [SerializeField] float _groundDistance;
 
-    bool _isJumpQueued;
-    float _timeAfterJumpQueued;
+    bool _isTouchedWall;
+    bool _isWallJump;
+    float _groundDistance;
     int _recentDir = 1;
+
+    //bool _isJumpQueued;
+    //float _timeAfterJumpQueued;
 
     float _timeAfterLastBasicAttack;
 
@@ -69,7 +71,7 @@ public class PlayerBehaviour : StateMachineBase
         if (!StateIs<DashState>() && !StateIs<WallState>())
             UpdateImageFlip();
 
-        // Animation
+        // Animation Param
         Animator.SetBool("Grounded", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
 
@@ -79,11 +81,9 @@ public class PlayerBehaviour : StateMachineBase
 
         // ground collider -> what is overlaped collider
         if(IsGrounded)
-        {
             _playerGroundCollider =  Physics2D.OverlapBox(_groundCheckCollider.transform.position, _groundCheckCollider.bounds.size, 0, _groundLayer);
-        }
 
-        // distance of from ground to player
+        // distance between ground and player
         if (_playerGroundCollider != null)
         {
             _groundDistance = _groundCheckCollider.transform.position.y - _playerGroundCollider.transform.position.y;
@@ -91,13 +91,14 @@ public class PlayerBehaviour : StateMachineBase
             //Debug.Log(_playerGroundCollider.gameObject.name + " : " + _playerGroundCollider.gameObject.transform.position.y);
         }
 
-        if (!IsGrounded) // TODO : 필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
+        // TODO : 필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
+        if (!IsGrounded)
         {
             if (!StateIs<InAirState>() && !StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DesolateDiveState>())
                 ChangeState<InAirState>();
         }
 
-        // Dash Start
+        // Dash State
         if (Input.GetKeyDown(KeyCode.V) && _dashState.EnableDash && RawInputs.Movement.x != 0 && !StateIs<WallState>())
         {
             if (!StateIs<DashState>())
