@@ -25,6 +25,10 @@ public class FollowTarget : MonoBehaviour
         
         //transform.position = Vector3.MoveTowards(transform.position, _target.position, _followSpeed * Time.deltaTime);
 
+    }
+
+    private void FixedUpdate()
+    {
         transform.position = Vector3.Lerp(transform.position, _target.position, _followSpeed * Time.deltaTime);
     }
 

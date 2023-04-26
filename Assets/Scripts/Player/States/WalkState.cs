@@ -9,7 +9,7 @@ public class WalkState : PlayerState
 
     protected override void OnEnter()
     {
-
+        Player.Animator.SetInteger("AnimState", 1);
     }
     protected override void OnUpdate()
     {
@@ -33,6 +33,7 @@ public class WalkState : PlayerState
 
     protected override void OnExit()
     {
+        Player.Animator.SetInteger("AnimState", 0);
     }
 
 }
