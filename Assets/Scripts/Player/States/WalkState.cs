@@ -1,23 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 
 public class WalkState : PlayerState
 {
+    [Header("Walk Setting")]
     [SerializeField] float _walkSpeed = 7;
 
     protected override void OnEnter()
     {
-        Player.Animator.SetInteger("AnimState", 1);
+        Player.Animator.SetBool("Walk", true);
     }
     protected override void OnUpdate()
     {
         float xInput = Player.SmoothedInputs.Movement.x;
-        Vector3 targetVelocity = new Vector3(xInput * _walkSpeed, Player.Rigidbody.velocity.y);
+        Vector2 targetVelocity = new Vector2(xInput * _walkSpeed, Player.Rigidbody.velocity.y);
         Player.Rigidbody.velocity = targetVelocity;
         
-        if (Player.RawInputs.Movement.x == 0)
+        // Idle State
+        if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0)
         {
             ChangeState<IdleState>();
             return;
@@ -33,7 +32,7 @@ public class WalkState : PlayerState
 
     protected override void OnExit()
     {
-        Player.Animator.SetInteger("AnimState", 0);
+        Player.Animator.SetBool("Walk", false);
     }
 
 }

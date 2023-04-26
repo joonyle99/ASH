@@ -1,23 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
-
 
 public class DashState : PlayerState
 {
     #region Dash
 
+    [Header("Dash Setting")]
     [SerializeField] private float _dashSpeed = 20f;
     [SerializeField] private float _dashLength = 0.2f;
     [SerializeField] private float _coolTime = 0.5f;
+
+    public bool EnableDash = true;
 
     private bool _dashing = false;
     private float _timeStartedDash;
     private float _timeEndeddDash;
     private Vector2 _dashDir;
-
-    public bool EnableDash = true;
 
     public bool Dashing { get { return _dashing; } }
     public float CoolTime { get { return _coolTime; } }
@@ -28,6 +25,7 @@ public class DashState : PlayerState
     protected override void OnEnter()
     {
         //Debug.Log("Dash Enter");
+
         ExcuteDash();
     }
 
@@ -35,7 +33,7 @@ public class DashState : PlayerState
     {
         //Debug.Log("Update Dash");
 
-        // Already Dash
+        // Dashing
         if (_dashing)
         {
             // End Dash (대쉬가 끝나는 순간)
@@ -44,7 +42,7 @@ public class DashState : PlayerState
                 _dashing = false;
                 _timeEndeddDash = Time.time; // 대쉬가 끝나는 순간의 시간
                 Player.Rigidbody.gravityScale = 5;
-                Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, Player.Rigidbody.velocity.y);
+                //Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, Player.Rigidbody.velocity.y);
                 Player.ChangeState<InAirState>();
             }
         }
@@ -55,7 +53,7 @@ public class DashState : PlayerState
         //Debug.Log("Dash Exit");
     }
 
-    public void ExcuteDash()
+    private void ExcuteDash()
     {
         _dashing = true;
         EnableDash = false;

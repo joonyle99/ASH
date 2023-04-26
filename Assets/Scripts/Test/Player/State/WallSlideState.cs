@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class WallSlideState : WallState
 {
+    [Header("Wall Slide Setting")]
     [SerializeField] private float _wallSlideSpeed = 0.5f;
 
     protected override void OnEnter()
     {
         //Debug.Log("Enter WallSlide");
+
         Animator.SetBool("WallSlide", true);
     }
     protected override void OnUpdate()
@@ -19,9 +17,8 @@ public class WallSlideState : WallState
         Player.Rigidbody.velocity = Vector2.down * _wallSlideSpeed;
 
 
-
         // Wall Grab State
-        if (Player.RawInputs.Movement.x != 0 && Player.RawInputs.Movement.y == 0)
+        if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
         {
             ChangeState<WallGrabState>();
             return;
@@ -55,6 +52,7 @@ public class WallSlideState : WallState
     protected override void OnExit()
     {
         //Debug.Log("Exit WallSlide");
+
         Animator.SetBool("WallSlide", false);
     }
 }

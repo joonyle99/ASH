@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Windows;
+﻿using UnityEngine;
 
 public class PlayerJumpController : MonoBehaviour
 {
@@ -14,30 +11,11 @@ public class PlayerJumpController : MonoBehaviour
     [SerializeField] float _longJumpBonus = 3f;
 
     [Header("Jump Settings")]
-    [SerializeField] float _coyoteTime = 0.2f;
+    [SerializeField] float _coyoteTime = 2f;
     [SerializeField] float _jumpQueueDuration = 0.1f;
     [SerializeField] int _maxJumpCount = 2;
 
-    public bool CanJump
-    {
-        get
-        {
-            return ((_remainingJumpCount > 0) && !_player.StateIs<JumpState>()) ||
-                                        (_remainingJumpCount == _maxJumpCount && _coyoteAvailable);
-        }
-    }
-
-    //public bool CanJump
-    //{
-    //    get
-    //    {
-    //        return ((_remainingJumpCount == _maxJumpCount) && _coyoteAvailable) // first jump
-    //                   || (_remainingJumpCount == 1) && !_player.IsGrounded  // second jump
-    //                   || (_player.IsTouchedWall) && (_remainingJumpCount == _maxJumpCount); // wall jump
-    //                // || (_remainingJumpCount == _maxJumpCount) && !_player.IsGrounded; // air jump
-    //    }
-    //}
-
+    public bool CanJump { get{ return _remainingJumpCount > 0 && !_player.StateIs<JumpState>() && _coyoteAvailable; } }
     public int MaxJumpCount { get { return _maxJumpCount; } }
 
     bool _coyoteAvailable { get { return _timeAfterGroundLeft <= _coyoteTime; } }
@@ -54,35 +32,38 @@ public class PlayerJumpController : MonoBehaviour
     float _timeAfterGroundLeft;
 
     PlayerBehaviour _player;
+
     void Awake()
     {
         _remainingJumpCount = _maxJumpCount;
         _player = GetComponent<PlayerBehaviour>();
     }
+
     void Update()
     {
+        // reset jump count
         if ((_player.IsGrounded && !_player.StateIs<JumpState>()) || _player.StateIs<WallState>())
             ResetJumpCount();
 
-        //Process Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
+        // Process Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
         if (_isLongJumping)
         {
             _player.Rigidbody.velocity -= _longJumpBonus * Physics2D.gravity * Time.deltaTime;
             _longJumpTime += Time.deltaTime;
-            if (_longJumpTime > _longJumpDuration || !_player.RawInputs.IsPressingJump)
+            if (_longJumpTime >= _longJumpDuration || !_player.RawInputs.IsPressingJump)
                 _isLongJumping = false;
         }
 
-        //Coyote Jump
+        // Jump time check
         if(_player.IsGrounded)
             _timeAfterGroundLeft = 0f;
         else
             _timeAfterGroundLeft += Time.deltaTime;
 
-        //Jump if queued
+        // Jump if queued
         if (_isJumpQueued)
         {
-            // 대쉬 상태 이라면 return
+            // 대쉬 상태면 return
             if (_player.StateIs<DashState>())
                 return;
 
@@ -94,6 +75,7 @@ public class PlayerJumpController : MonoBehaviour
             }
 
             _timeAfterJumpQueued += Time.deltaTime;
+
             if (_timeAfterJumpQueued > _jumpQueueDuration)
                 _isJumpQueued = false;
             else if (CanJump)
@@ -120,7 +102,8 @@ public class PlayerJumpController : MonoBehaviour
     {
         _isJumpQueued = false;
 
-        //if ((!_player.IsGrounded && _remainingJumpCount == _maxJumpCount) && !_coyoteAvailable) //공중점프 시 점프 차감
+        //// 공중에서 점프 시 차감
+        //if ((!_player.IsGrounded && _remainingJumpCount == _maxJumpCount) && !_coyoteAvailable)
         //    _remainingJumpCount--;
 
         _isGroundJump = (_remainingJumpCount == _maxJumpCount);
@@ -129,6 +112,7 @@ public class PlayerJumpController : MonoBehaviour
         _longJumpTime = 0f;
 
         _player.ChangeState<JumpState>();
+        return;
     }
 
     //점프 애니메이션 종료 시점
@@ -136,6 +120,8 @@ public class PlayerJumpController : MonoBehaviour
     {
         float jumpPower = _isGroundJump ? _groundJumpPower : _inAirJumpPower;
         _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, jumpPower);
+
+        _timeAfterGroundLeft = 0f;
     }
 
     public void ExecuteWallJumpAnimEvent()
@@ -156,5 +142,7 @@ public class PlayerJumpController : MonoBehaviour
 
         // execute jump
         _player.Rigidbody.velocity = new Vector2(_player.RecentDir * xPower, yPower) * _wallJumpPower;
+
+        _timeAfterGroundLeft = 0f;
     }
 }

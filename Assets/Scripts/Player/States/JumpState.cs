@@ -1,24 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class JumpState : PlayerState
 {
-
     PlayerJumpController _jumpController;
 
     protected override void OnEnter()
     {
         //Debug.Log("Jump Enter");
+
         _jumpController = Player.GetComponent<PlayerJumpController>();
         Player.Animator.SetTrigger("Jump");
 
-        //TODO : ExecuteJumpAnimEvent 애니메이션 이벤트로 실행
+        // Wall Jump
         if (Player.PreviousState is WallState)
         {
             //Debug.Log("wall jump");
             _jumpController.ExecuteWallJumpAnimEvent();
         }
+        // Just Jump
         else
         {
             //Debug.Log("just jump");

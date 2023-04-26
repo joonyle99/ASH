@@ -1,23 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WallGrabState : WallState
 {
+    // wall grab state를 통해
+    // wall slide / wall climb state로 갈 수 있다
+    // 즉 wall state 중 가장 기본인 상태
+
     protected override void OnEnter()
     {
         //Debug.Log("Enter Wall Grab");
+
+        // Player Stop
         Player.Rigidbody.gravityScale = 0f;
+        Player.Rigidbody.velocity = Vector2.zero;
+
         Animator.SetBool("WallGrab", true);
     }
 
     protected override void OnUpdate()
     {
-        // Player Stop
-        Player.Rigidbody.velocity = Vector2.zero;
-
         // Wall Climb State
-        if (Player.RawInputs.Movement.y != 0f )
+        if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0 )
         {
             ChangeState<WallClimbState>();
             return;
@@ -33,6 +36,7 @@ public class WallGrabState : WallState
     protected override void OnExit()
     {
         //Debug.Log("Exit Wall Grab");
+
         Player.Rigidbody.gravityScale = 5f;
         Animator.SetBool("WallGrab", false);
     }
