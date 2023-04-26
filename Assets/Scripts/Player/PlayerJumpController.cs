@@ -57,6 +57,8 @@ public class PlayerJumpController : MonoBehaviour
         // Jump time check
         if(_player.IsGrounded)
             _timeAfterGroundLeft = 0f;
+        else if(_player.StateIs<WallState>())
+            _timeAfterGroundLeft = 0f;
         else
             _timeAfterGroundLeft += Time.deltaTime;
 
@@ -120,8 +122,6 @@ public class PlayerJumpController : MonoBehaviour
     {
         float jumpPower = _isGroundJump ? _groundJumpPower : _inAirJumpPower;
         _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, jumpPower);
-
-        _timeAfterGroundLeft = 0f;
     }
 
     public void ExecuteWallJumpAnimEvent()
@@ -142,7 +142,5 @@ public class PlayerJumpController : MonoBehaviour
 
         // execute jump
         _player.Rigidbody.velocity = new Vector2(_player.RecentDir * xPower, yPower) * _wallJumpPower;
-
-        _timeAfterGroundLeft = 0f;
     }
 }
