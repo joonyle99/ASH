@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &389334071
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 389334072}
+  m_Layer: 8
+  m_Name: Dive Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &389334072
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389334071}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4222197489795976580}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &446016809
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,6 +230,7 @@ Transform:
   - {fileID: 446016810}
   - {fileID: 1451126567}
   - {fileID: 1099303061}
+  - {fileID: 389334072}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -360,10 +392,7 @@ MonoBehaviour:
     m_Bits: 128
   _wallCheckTrans: {fileID: 1451126567}
   _attackCountRefreshTime: 1
-  _isTouchedWall: 0
   _wallCheckDistance: 0.5
-  _isWallJump: 0
-  _groundDistance: 0
 --- !u!114 &4222197489795936878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,12 +406,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animatorParameters:
-    _enterParams:
-    - _type: 1
-      _paramName: AnimState
-      _intValue: 0
-      _floatValue: 0
-      _boolValue: 0
+    _enterParams: []
     _exitParams: []
 --- !u!114 &4222197489795936879
 MonoBehaviour:
@@ -397,12 +421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animatorParameters:
-    _enterParams:
-    - _type: 1
-      _paramName: AnimState
-      _intValue: 1
-      _floatValue: 0
-      _boolValue: 0
+    _enterParams: []
     _exitParams: []
   _walkSpeed: 7
 --- !u!114 &4222197489795936876
@@ -418,12 +437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animatorParameters:
-    _enterParams:
-    - _type: 3
-      _paramName: Jump
-      _intValue: 0
-      _floatValue: 0
-      _boolValue: 0
+    _enterParams: []
     _exitParams: []
 --- !u!114 &4222197489795936867
 MonoBehaviour:
@@ -442,7 +456,7 @@ MonoBehaviour:
   _wallJumpPower: 6
   _longJumpDuration: 0.2
   _longJumpBonus: 3
-  _coyoteTime: 0.2
+  _coyoteTime: 1.5
   _jumpQueueDuration: 0.1
   _maxJumpCount: 2
 --- !u!114 &4222197489795936877
@@ -460,9 +474,10 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  _moveSpeed: 7
+  _inAirSpeed: 7
   _fastDropThreshhold: 7
   _fastDropPower: 1
+  _maxDropSpeed: -80
 --- !u!114 &1119801424664723805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,7 +495,7 @@ MonoBehaviour:
     _exitParams: []
   _dashSpeed: 20
   _dashLength: 0.2
-  _coolTime: 0.5
+  _coolTime: 0.3
   EnableDash: 1
 --- !u!114 &1663921311720722264
 MonoBehaviour:
@@ -576,8 +591,13 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  _diveSpeed: 50
+  _divePoint: {fileID: 389334072}
+  _enemyLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  _diveSpeed: 20
   _diveTime: 0.5
-  _explosionRadius: 2
+  _explosionSizeX: 6
+  _explosionSizeY: 0.3
   _explosionDamage: 10
   _minHeight: 5

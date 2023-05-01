@@ -25,6 +25,7 @@ public class BasicAttackState : PlayerState
 
     protected override void OnExit()
     {
+
     }
 
     public void AnimEvent_FinishBaseAttackAnim()
