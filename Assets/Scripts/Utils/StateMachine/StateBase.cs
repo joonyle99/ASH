@@ -5,45 +5,46 @@ using UnityEngine;
 public abstract class StateBase : MonoBehaviour
 {
     [SerializeField] StateAnimatorParamData _animatorParameters;
-    StateMachineBase _stateMachine;
 
-    protected Animator Animator { get { return _stateMachine.Animator; } }
-    protected StateMachineBase StateMachine { get { return _stateMachine; } }
+    protected StateMachineBase StateMachine { get; set; }
+    protected Animator Animator { get => StateMachine.Animator; }
 
     public void TriggerEnter(StateMachineBase stateMachine)
     {
-        _stateMachine = stateMachine;
+        StateMachine = stateMachine;
         SetAnimsOnEnter();
-        _animatorParameters.InvokeEnter(_stateMachine.Animator);
+        _animatorParameters.InvokeEnter(StateMachine.Animator);
         OnEnter();
     }
     public void TriggerUpdate()
     {
         OnUpdate();
     }
+
     public void TriggerExit()
     {
-        _animatorParameters.InvokeExit(_stateMachine.Animator);
+        _animatorParameters.InvokeExit(StateMachine.Animator);
         OnExit();
-        _stateMachine = null;
+        StateMachine = null;
     }
-    public void TriggerFixedUpdate()
-    {
-        OnFixedUpdate();
-    }
+
+    //public void TriggerFixedUpdate()
+    //{
+    //    OnFixedUpdate();
+    //}
 
     protected virtual void SetAnimsOnEnter() {}
     protected abstract void OnEnter();
     protected abstract void OnUpdate();
-    protected virtual void OnFixedUpdate() { }
+    // protected virtual void OnFixedUpdate() { }
     protected abstract void OnExit();
     public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
     {
-        return _stateMachine.ChangeState<NextState>(ignoreSameState);
+        return StateMachine.ChangeState<NextState>(ignoreSameState);
     }
     public new T GetComponent<T>() where T : Component
     {
-        return _stateMachine.GetComponent<T>();
+        return StateMachine.GetComponent<T>();
     }
 
 }

@@ -44,8 +44,8 @@ public class DesolateDiveState : PlayerState
             foreach (Collider2D enemy in _targetEnemys)
             {
                 //Debug.Log(enemy.gameObject.name);
-                enemy.GetComponent<Enemy>().OnDamage(_explosionDamage);
-                enemy.GetComponent<Enemy>().KnockBack(_knockBackVec);
+                //enemy.GetComponent<NormalMonster>().OnDamage(_explosionDamage);
+                //enemy.GetComponent<NormalMonster>().KnockBack(_knockBackVec);
             }
 
             ChangeState<IdleState>();

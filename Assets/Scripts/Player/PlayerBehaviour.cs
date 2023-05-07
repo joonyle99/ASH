@@ -121,7 +121,7 @@ public class PlayerBehaviour : StateMachineBase
             }
         }
 
-        //Refresh Attack count
+        // Refresh Attack count
         if (_timeAfterLastBasicAttack < _attackCountRefreshTime)
         {
             _timeAfterLastBasicAttack += Time.deltaTime;
@@ -156,11 +156,13 @@ public class PlayerBehaviour : StateMachineBase
         if (CanBasicAttack)
             CastBasicAttack();
     }
+
     void CastBasicAttack()
     {
         _timeAfterLastBasicAttack = 0f;
         ChangeState<BasicAttackState>();
     }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
