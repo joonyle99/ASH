@@ -65,8 +65,8 @@ public class PlayerJumpController : MonoBehaviour
         // Jump if queued
         if (_isJumpQueued)
         {
-            // 대쉬 상태면 return
-            if (_player.StateIs<DashState>())
+            // 대쉬 상태 or 급강하 상태면 return
+            if (_player.StateIs<DashState>() || _player.StateIs<DesolateDiveState>())
                 return;
 
             // 벽타기 상태에서 "바라보는 방향 == 키 입력 방향" 이라면 return

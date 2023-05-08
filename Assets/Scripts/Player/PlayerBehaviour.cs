@@ -36,10 +36,13 @@ public class PlayerBehaviour : StateMachineBase
 
     [Header("Wall Settings")]
     [SerializeField] float _wallCheckDistance = 0.5f;
+    [SerializeField] bool _isWallJump;
+    [SerializeField] bool _isTouchedWall;
 
-    bool _isTouchedWall;
-    bool _isWallJump;
-    float _groundDistance;
+    [Header("Dive Settings")]
+    [SerializeField] float _groundDistance;
+    [SerializeField] float _diveThreshhold = 2.0f;
+
     int _recentDir = 1;
 
     //bool _isJumpQueued;
@@ -99,10 +102,13 @@ public class PlayerBehaviour : StateMachineBase
         }
 
         // Dash State
-        if (Input.GetKeyDown(KeyCode.V) && _dashState.EnableDash && RawInputs.Movement.x != 0 && !StateIs<WallState>())
+        if (Input.GetKeyDown(KeyCode.V) && _dashState.EnableDash && RawInputs.Movement.x != 0)
         {
-            if (!StateIs<DashState>())
-                ChangeState<DashState>();
+            if(!StateIs<WallState>() && !StateIs<DesolateDiveState>())
+            {
+                if (!StateIs<DashState>())
+                    ChangeState<DashState>();
+            }
         }
 
         // Dash CoolTime
@@ -115,7 +121,7 @@ public class PlayerBehaviour : StateMachineBase
             }
         }
 
-        //Refresh Attack count
+        // Refresh Attack count
         if (_timeAfterLastBasicAttack < _attackCountRefreshTime)
         {
             _timeAfterLastBasicAttack += Time.deltaTime;
@@ -127,9 +133,12 @@ public class PlayerBehaviour : StateMachineBase
         // 1. jump height
         // 2. when not dashing
         // 3. InAirState -> DiveStatee
-        if (Input.GetKeyDown(KeyCode.Alpha5) && StateIs<InAirState>() && !StateIs<DashState>() && _groundDistance > 2.0f)
+        if (Input.GetKeyDown(KeyCode.Alpha5) && RawInputs.Movement.y < 0)
         {
-            ChangeState<DesolateDiveState>();
+            if(StateIs<InAirState>() && !StateIs<DashState>() && _groundDistance > _diveThreshhold)
+            {
+                ChangeState<DesolateDiveState>();
+            }
         }
         
     }
@@ -147,11 +156,13 @@ public class PlayerBehaviour : StateMachineBase
         if (CanBasicAttack)
             CastBasicAttack();
     }
+
     void CastBasicAttack()
     {
         _timeAfterLastBasicAttack = 0f;
         ChangeState<BasicAttackState>();
     }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

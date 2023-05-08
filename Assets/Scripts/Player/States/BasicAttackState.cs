@@ -11,6 +11,7 @@ public class BasicAttackState : PlayerState
         base.SetAnimsOnEnter();
         Animator.SetInteger("BasicAttackCount", _attackCount);
     }
+
     protected override void OnEnter()
     {
         _attackCount++;
@@ -25,12 +26,14 @@ public class BasicAttackState : PlayerState
 
     protected override void OnExit()
     {
+
     }
 
     public void AnimEvent_FinishBaseAttackAnim()
     {
         ChangeState<IdleState>();
     }
+
     public void RefreshAttackCount()
     {
         _attackCount = 0;

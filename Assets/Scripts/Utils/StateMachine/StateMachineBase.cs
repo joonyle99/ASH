@@ -1,24 +1,19 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 #if UNITY_EDITOR
-using UnityEditor;
 #endif
 
-public class StateMachineBase : MonoBehaviour
+public abstract class StateMachineBase : MonoBehaviour
 {
     [SerializeField] Animator _animator;
     [SerializeField] StateBase _initialState;
-    StateBase _currentState;
-    StateBase _previousState = null;
 
-    public StateBase CurrentState { get { return _currentState; } }
-    public StateBase PreviousState { get { return _previousState; } }
-    public Animator Animator { get { return _animator;  } }
-    
-    Dictionary<Type, Component> _cachedComponents = new Dictionary<Type, Component>();
+    public Animator Animator => _animator;
+    public StateBase CurrentState { get; set; }
+    public StateBase PreviousState { get; set; }
+    public StateBase PrePreviousState { get; set; }
+
+    // Dictionary<Type, Component> _cachedComponents = new Dictionary<Type, Component>();
 
     protected virtual void Start()
     {
@@ -26,67 +21,70 @@ public class StateMachineBase : MonoBehaviour
         if (_initialState == null)
             Debug.LogError(string.Format("Initial state of {0} is missing!", this.gameObject.name));
 #endif
-        _currentState = _initialState;
-        _currentState.TriggerEnter(this);
+        CurrentState = _initialState;
+        CurrentState.TriggerEnter(this);
     }
 
     protected virtual void Update()
     {
-        _currentState.TriggerUpdate();
+        CurrentState.TriggerUpdate();
     }
-    protected virtual void FixedUpdate()
-    {
-        _currentState.TriggerFixedUpdate();
-    }
+
+    //protected virtual void FixedUpdate()
+    //{
+    //    CurrentState.TriggerFixedUpdate();
+    //}
+
     public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
     {
         var nextState = GetComponent<NextState>();
-        if (ignoreSameState && nextState == _currentState)
+        if (ignoreSameState && nextState == CurrentState)
             return nextState;
-        _currentState.TriggerExit();
-        _previousState = _currentState;
-        _currentState = nextState; 
-        _currentState.TriggerEnter(this);
+        CurrentState.TriggerExit();
+        PreviousState = CurrentState;
+        CurrentState = nextState;
+        CurrentState.TriggerEnter(this);
         return nextState;
     }
-    public bool StateIs<State>() where State:StateBase
+
+    public bool StateIs<State>() where State : StateBase
     {
-        return _currentState is State;
+        return CurrentState is State;
     }
+
     public PrevState GetPreviousStateAs<PrevState>() where PrevState : StateBase
     {
-        if (_previousState is PrevState)
-            return _previousState as PrevState;
+        if (PreviousState is PrevState)
+            return PreviousState as PrevState;
         return null;
     }
 
-    public new T GetComponent<T>() where T : Component
-    {
-        if (_cachedComponents.ContainsKey(typeof(T)))
-            return _cachedComponents[typeof(T)] as T;
+    //public new T GetComponent<T>() where T : Component
+    //{
+    //    if (_cachedComponents.ContainsKey(typeof(T)))
+    //        return _cachedComponents[typeof(T)] as T;
 
-        var component = base.GetComponent<T>();
-        if (component != null)
-            _cachedComponents.Add(typeof(T), component);
-        return component;
-    }
+    //    var component = base.GetComponent<T>();
+    //    if (component != null)
+    //        _cachedComponents.Add(typeof(T), component);
+    //    return component;
+    //}
 }
 
+//#if UNITY_EDITOR
+//[CustomEditor(typeof(StateMachineBase), true), CanEditMultipleObjects]
+//public class StateMachineBaseEditor : Editor
+//{
+//    public override void OnInspectorGUI()
+//    {
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(StateMachineBase), true), CanEditMultipleObjects]
-public class StateMachineBaseEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-
-        StateMachineBase stateMachine = (StateMachineBase)target;
-        if (stateMachine.CurrentState == null)
-            EditorGUILayout.LabelField("Current State : ", "null");
-        else
-            EditorGUILayout.LabelField("Current State : ", stateMachine.CurrentState.GetType().Name);
-        DrawDefaultInspector();
-        Repaint();
-    }
-}
-#endif
+//        StateMachineBase stateMachine = (StateMachineBase)target;
+//        if (stateMachine.CurrentState == null)
+//            EditorGUILayout.LabelField("Current State : ", "null");
+//        else
+//            EditorGUILayout.LabelField("Current State : ", stateMachine.CurrentState.GetType().Name);
+//        DrawDefaultInspector();
+//        Repaint();
+//    }
+//}
+//#endif
