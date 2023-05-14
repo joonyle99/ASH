@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class InteractionController : MonoBehaviour
 {
-    public List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
+    List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
 
 
-    public InteractableObject _interactionTarget = null;
+    InteractableObject _interactionTarget = null;
 
     InteractionMarker _interactionMarker;
 
