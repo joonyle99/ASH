@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class SceneContextController : HappyTools.SingletonBehaviourFixed<SceneContextController>
 {
+    [SerializeField]
+    public class SceneContext
+    {
+        public PlayerBehaviour Player;
+        public List<Passage> Passages;
+    }
+
     SceneContext _context;
+
+    public static PlayerBehaviour Player { get { return Instance._context.Player; } }
     public void OnLoad(string entranceName)
     {
         BuildSceneContext();

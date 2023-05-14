@@ -22,6 +22,7 @@ public class PlayerBehaviour : StateMachineBase
     /// </summary>
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
     public Rigidbody2D Rigidbody { get { return _rigidbody; } }
+    public InteractionController InteractionController { get { return _interactionController; } }
     public bool IsGrounded { get; private set; }
     public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<WalkState>(); } }
@@ -30,6 +31,7 @@ public class PlayerBehaviour : StateMachineBase
     public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
 
     PlayerJumpController _jumpController;
+    InteractionController _interactionController;
     DashState _dashState;
     PlayerInputPreprocessor _inputPreprocessor;
     Rigidbody2D _rigidbody;
@@ -54,6 +56,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         _inputPreprocessor = GetComponent<PlayerInputPreprocessor>();
         _jumpController = GetComponent<PlayerJumpController>();
+        _interactionController = GetComponent<InteractionController>();
         _dashState = GetComponent<DashState>();
         _rigidbody = GetComponent<Rigidbody2D>();
         

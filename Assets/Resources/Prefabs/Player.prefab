@@ -208,6 +208,7 @@ GameObject:
   - component: {fileID: 2128969258426517539}
   - component: {fileID: 4222197490195542652}
   - component: {fileID: 1852432337}
+  - component: {fileID: 7443853380666242593}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -393,6 +394,10 @@ MonoBehaviour:
   _wallCheckTrans: {fileID: 1451126567}
   _attackCountRefreshTime: 1
   _wallCheckDistance: 0.5
+  _isWallJump: 0
+  _isTouchedWall: 0
+  _groundDistance: 0
+  _diveThreshhold: 2
 --- !u!114 &4222197489795936878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,13 +596,26 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  _divePoint: {fileID: 389334072}
   _enemyLayers:
     serializedVersion: 2
     m_Bits: 0
+  _targetEnemys: []
+  _particleSystem: {fileID: 0}
   _diveSpeed: 20
-  _diveTime: 0.5
+  _fastDiveSpeed: 10
   _explosionSizeX: 6
   _explosionSizeY: 0.3
   _explosionDamage: 10
-  _minHeight: 5
+  _knockBackVec: {x: 0, y: 10}
+--- !u!114 &7443853380666242593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4222197489795976578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9fa46ddc7170484b8cf7c42ce54ecb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
