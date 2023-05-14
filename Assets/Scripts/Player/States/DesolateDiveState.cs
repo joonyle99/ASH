@@ -56,7 +56,7 @@ public class DesolateDiveState : PlayerState
         //Debug.Log("Exit Desolate Dive");
     }
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.DrawWireCube(transform.position, new Vector2(_explosionSizeX, _explosionSizeY));
