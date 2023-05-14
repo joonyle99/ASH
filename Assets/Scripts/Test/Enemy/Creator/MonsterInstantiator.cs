@@ -30,7 +30,7 @@ public class MonsterInstantiator : MonoBehaviour
             OncologySlime monster = monsterPrefab.GetComponent<OncologySlime>();
 
             // 몬스터 초기화
-            monster.SetUp(monseterNames[i], 100 * (i + 1));
+            monster.SetUp(monseterNames[i], 100 * (i + 1), TYPE.Normal, ACTION_TYPE.Ground);
 
             // monster들의 재생 제어를 위해 리스트에 저장
             // monsters.Add(monster);

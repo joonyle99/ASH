@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class M_IdleState : MonsterState
+public class M_WalkState : MonsterState
 {
     protected override void OnEnter()
     {

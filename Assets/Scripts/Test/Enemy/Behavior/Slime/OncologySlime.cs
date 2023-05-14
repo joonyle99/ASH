@@ -8,14 +8,28 @@ public class OncologySlime : NormalMonster
     // slime member
     // ...
 
-    public override void SetUp(string name, int maxHp)
+    protected override void Start()
+    {
+        base.Start();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+    }
+
+    public override void SetUp(string name, int maxHp, TYPE type, ACTION_TYPE aType)
     {
         // 기본 초기화
-        base.SetUp(name, maxHp);
-        //Debug.Log("slime");
+        base.SetUp(name, maxHp, type, aType);
 
         // 추가 초기화 옵션
 
+        // ID 설정
+        ID = 1001;
+
+        // 활동 종류
+        ActionType = aType;
     }
 
     public override void OnDamage(int _damage)
@@ -27,6 +41,13 @@ public class OncologySlime : NormalMonster
 
     }
 
+    public override void KnockBack(Vector2 vec)
+    {
+        base.KnockBack(vec);
+
+        //Rigidbody.AddForce(vec);
+    }
+
     public override void Die()
     {
         // 기본 사망
@@ -34,15 +55,5 @@ public class OncologySlime : NormalMonster
 
         // 추가 사망 옵션
 
-    }
-
-    private void Start()
-    {
-        Debug.Log(MonsterName + "가 생성되었습니다");
-    }
-
-    private void Update()
-    {
-        //Debug.Log(this.gameObject.name + "의 Update가 돌고있다");
     }
 }

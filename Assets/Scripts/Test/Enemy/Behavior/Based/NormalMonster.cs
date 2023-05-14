@@ -2,20 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class NormalMonster : BasedMonster
-    // 일반 몬스터 클래스 (추상 클래스)
+public class NormalMonster : BasedMonster
+    // 일반 몬스터 클래스
 {
     // Noraml Monster members
     // ...
 
-    public override void SetUp(string name, int maxHp)
+    public override void SetUp(string name, int maxHp, TYPE type, ACTION_TYPE aType)
     {
         // 기본 초기화
-        base.SetUp(name, maxHp);
-        //Debug.Log("normal");
+        base.SetUp(name, maxHp, type, aType);
 
         // 추가 초기화 옵션
 
+        // 타입 설정
+        Type = type;
     }
 
     public override void OnDamage(int _damage)
