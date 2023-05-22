@@ -212,7 +212,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack3
-  m_Speed: 0.5
+  m_Speed: 0.4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 696402222146146708}
@@ -291,7 +291,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack2
-  m_Speed: 0.5
+  m_Speed: 0.4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 1594665471794240812}
@@ -388,6 +388,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &-2549807610423240182
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Wall_attach
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: f1959c4b939e4c640b812aff8792cccf, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1107 &-2218535224457549181
 AnimatorStateMachine:
   serializedVersion: 6
@@ -433,6 +459,12 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -169232321697666996}
     m_Position: {x: 706.83405, y: -221.08246, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 2379820560626360721}
+    m_Position: {x: 741.83405, y: -156.08246, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -2549807610423240182}
+    m_Position: {x: 776.83405, y: -91.08246, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -628,7 +660,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Attack
-  m_Speed: 0.5
+  m_Speed: 0.4
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6444805535479425360}
@@ -696,6 +728,32 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &2379820560626360721
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Dash
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 65516dc4a85c60e44b3ff776e4f6ea85, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1101 &2515356606529895285
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
