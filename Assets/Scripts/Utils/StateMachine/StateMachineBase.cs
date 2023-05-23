@@ -5,13 +5,14 @@ using UnityEngine;
 
 public abstract class StateMachineBase : MonoBehaviour
 {
+    [SerializeField] Rigidbody2D _rigidbody;
     [SerializeField] Animator _animator;
     [SerializeField] StateBase _initialState;
 
+    public Rigidbody2D Rigidbody => _rigidbody;
     public Animator Animator => _animator;
     public StateBase CurrentState { get; set; }
     public StateBase PreviousState { get; set; }
-    public StateBase PrePreviousState { get; set; }
 
     // Dictionary<Type, Component> _cachedComponents = new Dictionary<Type, Component>();
 

@@ -56,10 +56,12 @@ public enum IS_RUNAWAY
 
 #endregion
 
-public class BasedMonster : MonsterBehaviour
-    // 기반 몬스터 클래스
+/// <summary>
+/// 몬스터의 기본 행동을 정의
+/// </summary>
+public abstract class BasedMonster : MonsterBehaviour
 {
-    #region Attribute
+#region Attribute
 
     // 고유 식별 번호 ID
     public int ID { get; protected set; }
@@ -67,69 +69,47 @@ public class BasedMonster : MonsterBehaviour
     // 몬스터 이름
     public string MonsterName { get; protected set; }
 
-    // 체력
+    // 최대 체력
     public int MaxHp { get; protected set; }
+
+    // 현재 체력
     public int CurHP { get; protected set; }
 
     // 이동속도
     public float MoveSpeed { get; protected set; }
 
 
-    public bool IsReturn { get; protected set; }
-    public SIZE Size { get; protected set; }
-    public TYPE Type { get; protected set; }
-    public ACTION_TYPE ActionType { get; protected set; }
-    public RESPONE Response { get; protected set; }
-    public IS_AGGRESSIVE IsAggressive { get; protected set; }
-    public IS_CHASE IsChase { get; protected set; }
-    public IS_RUNAWAY IsRunaway { get; protected set; }
+    // 추가 프로퍼티
+    public SIZE Size { get; protected set; } // 몬스터 크기 구분
+    public TYPE Type { get; protected set; } // 몬스터 종류
+    public ACTION_TYPE ActionType { get; protected set; } // 몬스터 활동 종류
+    public RESPONE Response { get; protected set; } // 리젠 방식 구분
+    public bool IsReturn { get; protected set; } // 귀환 여부
+    public IS_AGGRESSIVE IsAggressive { get; protected set; } // 선공 여부
+    public IS_CHASE IsChase { get; protected set; } // 추경 방식 구분
+    public IS_RUNAWAY IsRunaway { get; protected set; } // 도망 여부
 
 
     // 그 외 속성들
     public bool Dead { get; protected set; } = false;
     public bool InAir { get; protected set; } = false;
 
-    [SerializeField]
-    private Rigidbody2D _rigidbody;
-    
-    public Rigidbody2D Rigidbody { get; protected set; }
-
     #endregion
 
     #region Function
 
     // 몬스터 초기화
-    public virtual void SetUp(string name, int maxHp, TYPE type, ACTION_TYPE aType)
-    {
-        // 이름 설정
-        MonsterName = name;
-
-        // 체력 설정
-        MaxHp = maxHp;
-        CurHP = MaxHp;
-    }
+    public abstract void SetUp();
 
     // 데미지 피격
-    public virtual void OnDamage(int damage)
-    {
-        CurHP -= damage;
+    public abstract void OnDamage(int damage);
 
-        if (CurHP <= 0)
-        {
-            CurHP = 0;
-            Die();
-        }
-    }
+    // 넉백
+    public abstract void KnockBack(Vector2 vec);
 
-    public virtual void KnockBack(Vector2 vec)
-    {
+    // 사망
+    public abstract void Die();
 
-    }
-
-    public virtual void Die()
-    {
-        Dead = true;
-    }
 
     #endregion
 }

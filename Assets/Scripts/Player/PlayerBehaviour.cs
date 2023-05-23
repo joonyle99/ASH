@@ -21,7 +21,6 @@ public class PlayerBehaviour : StateMachineBase
     /// InputManager.Instance.GetState() ¿Í µ¿ÀÏ
     /// </summary>
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
-    public Rigidbody2D Rigidbody { get { return _rigidbody; } }
     public InteractionController InteractionController { get { return _interactionController; } }
     public bool IsGrounded { get; private set; }
     public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
@@ -34,7 +33,6 @@ public class PlayerBehaviour : StateMachineBase
     InteractionController _interactionController;
     DashState _dashState;
     PlayerInputPreprocessor _inputPreprocessor;
-    Rigidbody2D _rigidbody;
 
     [Header("Wall Settings")]
     [SerializeField] float _wallCheckDistance = 0.5f;
@@ -58,8 +56,7 @@ public class PlayerBehaviour : StateMachineBase
         _jumpController = GetComponent<PlayerJumpController>();
         _interactionController = GetComponent<InteractionController>();
         _dashState = GetComponent<DashState>();
-        _rigidbody = GetComponent<Rigidbody2D>();
-        
+
     }
     protected override void Start()
     {
@@ -131,7 +128,7 @@ public class PlayerBehaviour : StateMachineBase
             if (_timeAfterLastBasicAttack > _attackCountRefreshTime)
                 GetComponent<BasicAttackState>().RefreshAttackCount();
         }
-        
+
         // Desolate Dive State
         // 1. jump height
         // 2. when not dashing
@@ -143,7 +140,7 @@ public class PlayerBehaviour : StateMachineBase
                 ChangeState<DesolateDiveState>();
             }
         }
-        
+
     }
 
     private void UpdateImageFlip()

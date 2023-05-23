@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class M_Slime_Idle : M_IdleState
+public class Ground_Idle : M_IdleState
 {
     protected override void OnEnter()
     {
         base.OnEnter();
-        Debug.Log("Slime Idle");
+        Debug.Log("Ground_Idle Enter");
     }
 
     protected override void OnUpdate()
@@ -18,5 +18,6 @@ public class M_Slime_Idle : M_IdleState
     protected override void OnExit()
     {
         base.OnExit();
+        Debug.Log("Ground_Idle Exit");
     }
 }

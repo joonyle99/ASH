@@ -18,42 +18,43 @@ public class OncologySlime : NormalMonster
         base.Update();
     }
 
-    public override void SetUp(string name, int maxHp, TYPE type, ACTION_TYPE aType)
+    public override void SetUp()
     {
         // 기본 초기화
-        base.SetUp(name, maxHp, type, aType);
+        base.SetUp();
 
-        // 추가 초기화 옵션
+        // 종양 슬라임의 최대 체력
+        MaxHp = 100;
 
-        // ID 설정
+        // 종양 슬라임의 현재 체력
+        CurHP = MaxHp;
+
+        // 종양 슬라임의 ID 설정
         ID = 1001;
 
-        // 활동 종류
-        ActionType = aType;
+        // 종양 슬라임의 이름 설정
+        MonsterName = "종양 슬라임";
+
+        // 종양 슬라임의 활동 종류
+        ActionType = ACTION_TYPE.Ground;
     }
 
     public override void OnDamage(int _damage)
     {
-        // 기본 피격
         base.OnDamage(_damage);
-
-        // 추가 피격 옵션
-
     }
 
     public override void KnockBack(Vector2 vec)
     {
         base.KnockBack(vec);
 
-        //Rigidbody.AddForce(vec);
+        this.Rigidbody.AddForce(vec);
+        Debug.Log("종양슬라임 AddForce");
     }
 
     public override void Die()
     {
-        // 기본 사망
         base.Die();
-
-        // 추가 사망 옵션
 
     }
 }

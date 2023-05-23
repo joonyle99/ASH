@@ -10,9 +10,6 @@ public class MonsterInstantiator : MonoBehaviour
     [SerializeField]
     private Transform[] monsterLocation; // 몬스터 생성 위치
 
-    [SerializeField]
-    private string[] monseterNames; // 몬스터 이름
-
     // 몬스터 리스트
     // private List<BasedMonster> monsters;
 
@@ -30,7 +27,7 @@ public class MonsterInstantiator : MonoBehaviour
             OncologySlime monster = monsterPrefab.GetComponent<OncologySlime>();
 
             // 몬스터 초기화
-            monster.SetUp(monseterNames[i], 100 * (i + 1), TYPE.Normal, ACTION_TYPE.Ground);
+            monster.SetUp();
 
             // monster들의 재생 제어를 위해 리스트에 저장
             // monsters.Add(monster);

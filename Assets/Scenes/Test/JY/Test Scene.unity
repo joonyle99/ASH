@@ -506,11 +506,6 @@ Transform:
   m_Father: {fileID: 1349891286}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &389334072 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 389334072, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-  m_PrefabInstance: {fileID: 4222197490195542649}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &520448820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1797,53 +1792,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 389334072, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.57
-      objectReference: {fileID: 0}
-    - target: {fileID: 446016811, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_Size.x
-      value: 0.79997635
-      objectReference: {fileID: 0}
-    - target: {fileID: 446016811, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.051469803
-      objectReference: {fileID: 0}
     - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _diveMul
-      value: 1.5
+      propertyPath: _knockBackVec.y
+      value: 500
       objectReference: {fileID: 0}
-    - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _divePoint
-      value: 
-      objectReference: {fileID: 389334072}
-    - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _diveSpeed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _fastDiveSpeed
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _explosionSizeX
-      value: 5.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _explosionSizeY
-      value: 0.83
-      objectReference: {fileID: 0}
-    - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _particleSystem
-      value: 
-      objectReference: {fileID: 198405478074982118, guid: 4adffb0018aeda44e9263f901167af1f, type: 3}
     - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _explosionDamage
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _enemyLayers.m_Bits
-      value: 8
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 4222197489795976578, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_Name
@@ -1892,18 +1847,6 @@ PrefabInstance:
     - target: {fileID: 4222197489795976580, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222197489795976581, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_SortingLayer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222197489795976581, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_SortingLayerID
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4222197489795976581, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_RenderingLayerMask
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}

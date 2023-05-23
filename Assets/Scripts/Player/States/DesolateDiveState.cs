@@ -13,8 +13,8 @@ public class DesolateDiveState : PlayerState
     [SerializeField] float _fastDiveSpeed = 10.0f;
     [SerializeField] float _explosionSizeX = 5.0f;
     [SerializeField] float _explosionSizeY = 1.0f;
-    [SerializeField] int _explosionDamage = 10;
-    [SerializeField] Vector2 _knockBackVec = new Vector2(0, 10);
+    [SerializeField] int _explosionDamage = 40;
+    [SerializeField] Vector2 _knockBackVec = new Vector2(0, 500);
     //[SerializeField] float _minHeight = 5.0f;
 
     bool _isDiving = false;
@@ -39,11 +39,13 @@ public class DesolateDiveState : PlayerState
             // create particle system
             Instantiate(_particleSystem, transform.position + new Vector3(0f, 0.5f), Quaternion.identity);
 
+            // damage range
             _targetEnemys = Physics2D.OverlapBoxAll(transform.position, new Vector2(_explosionSizeX, _explosionSizeY), 0, _enemyLayers);
 
+            // target을 전부 순회
             foreach (Collider2D enemy in _targetEnemys)
             {
-                //Debug.Log(enemy.gameObject.name);
+                Debug.Log(enemy.gameObject.name);
                 enemy.GetComponent<OncologySlime>().OnDamage(_explosionDamage);
                 enemy.GetComponent<OncologySlime>().KnockBack(_knockBackVec);
             }

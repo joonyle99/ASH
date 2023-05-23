@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 389334071}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.57, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -76,7 +76,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.050607562, y: 0.06}
+  m_Offset: {x: -0.051469803, y: 0.06}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -87,7 +87,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.69823956, y: 0.07}
+  m_Size: {x: 0.79997635, y: 0.07}
   m_EdgeRadius: 0
 --- !u!1 &1099303060
 GameObject:
@@ -381,6 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbbedf25f49f0a041ac4515148658ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rigidbody: {fileID: 4222197489795936889}
   _animator: {fileID: 4222197489795936895}
   _initialState: {fileID: 4222197489795936878}
   _groundLayer:
@@ -598,14 +599,14 @@ MonoBehaviour:
     _exitParams: []
   _enemyLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   _targetEnemys: []
-  _particleSystem: {fileID: 0}
-  _diveSpeed: 20
+  _particleSystem: {fileID: 198405478074982118, guid: 4adffb0018aeda44e9263f901167af1f, type: 3}
+  _diveSpeed: 15
   _fastDiveSpeed: 10
-  _explosionSizeX: 6
-  _explosionSizeY: 0.3
-  _explosionDamage: 10
+  _explosionSizeX: 5.5
+  _explosionSizeY: 0.83
+  _explosionDamage: 70
   _knockBackVec: {x: 0, y: 10}
 --- !u!114 &7443853380666242593
 MonoBehaviour:

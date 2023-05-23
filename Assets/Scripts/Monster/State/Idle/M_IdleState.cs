@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 몬스터의 기본 Idle
+/// </summary>
 public class M_IdleState : MonsterState
 {
     protected override void OnEnter()
