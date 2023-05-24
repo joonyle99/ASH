@@ -10,6 +10,7 @@ public abstract class NormalMonster : BasedMonster
 
     public override void SetUp()
     {
+        // 타입 노말
         Type = TYPE.Normal;
     }
 

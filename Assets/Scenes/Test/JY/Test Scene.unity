@@ -147,7 +147,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 60157044}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -26.080772, y: -8.027861, z: 0.012169581}
+  m_LocalPosition: {x: -25.1, y: -5.66, z: 0.012169581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -178,7 +178,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 156038586}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -18.740772, y: -8.30786, z: 0.012169581}
+  m_LocalPosition: {x: -17.5, y: 1.37, z: 0.012169581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -499,7 +499,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 380670459}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.140773, y: -7.4778605, z: 0.012169581}
+  m_LocalPosition: {x: -5.58, y: -6.2, z: 0.012169581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -530,7 +530,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 520448820}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.389228, y: -7.7178607, z: 0.012169581}
+  m_LocalPosition: {x: 8.03, y: -0.51, z: 0.012169581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -561,7 +561,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 587066377}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.0492268, y: -7.0178604, z: 0.012169581}
+  m_LocalPosition: {x: 2.21, y: -5.71, z: 0.012169581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1744,6 +1744,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2070214527758970965, guid: 721e1960399f2844caa9d2f5eb0cefb6, type: 3}
+      propertyPath: monstersPrefab
+      value: 
+      objectReference: {fileID: 5872829354476026158, guid: d7e23e22f022bb94d88bd06270396596, type: 3}
+    - target: {fileID: 2070214527758970965, guid: 721e1960399f2844caa9d2f5eb0cefb6, type: 3}
       propertyPath: monseterNames.Array.data[0]
       value: A
       objectReference: {fileID: 0}
@@ -1792,9 +1796,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1099303062, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: m_Radius
+      value: 0.46349072
+      objectReference: {fileID: 0}
+    - target: {fileID: 1099303062, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.18651652
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _knockBackVec.x
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _knockBackVec.y
-      value: 500
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1852432337, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _explosionDamage

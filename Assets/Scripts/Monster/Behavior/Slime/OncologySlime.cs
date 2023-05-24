@@ -35,8 +35,23 @@ public class OncologySlime : NormalMonster
         // 종양 슬라임의 이름 설정
         MonsterName = "종양 슬라임";
 
+        // 크기
+        Size = SIZE.Small;
+
         // 종양 슬라임의 활동 종류
-        ActionType = ACTION_TYPE.Ground;
+        ActionType = ACTION_TYPE.Floating;
+
+        // 리젠
+        // Response = RESPONE.None;
+
+        // 선공
+        IsAggressive = IS_AGGRESSIVE.Peace;
+
+        // 추적
+        IsChase = IS_CHASE.AllTerritory;
+
+        // 도망
+        IsRunaway = IS_RUNAWAY.Aggressive;
     }
 
     public override void OnDamage(int _damage)
@@ -48,8 +63,9 @@ public class OncologySlime : NormalMonster
     {
         base.KnockBack(vec);
 
-        this.Rigidbody.AddForce(vec);
-        Debug.Log("종양슬라임 AddForce");
+        //this.Rigidbody.AddForce(vec);
+        this.Rigidbody.velocity = vec;
+        this.Rigidbody.gravityScale = 1f;
     }
 
     public override void Die()
@@ -57,4 +73,24 @@ public class OncologySlime : NormalMonster
         base.Die();
 
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 레이어가 Wall이면
+        if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            this.Rigidbody.velocity = Vector2.zero;
+            this.Rigidbody.gravityScale = 0f;
+        }
+
+    }
+
+    //public override void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    // 피격 collision에서 "PlayerBasicAttackHitbox" 컴포넌트를 찾음
+    //    if (collision.GetComponent<PlayerBasicAttackHitbox>() != null)
+    //    {
+    //        Debug.Log("Hitted by basic attack");
+    //    }
+    //}
 }

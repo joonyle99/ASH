@@ -14,7 +14,7 @@ public class WalkState : PlayerState
         float xInput = Player.SmoothedInputs.Movement.x;
         Vector2 targetVelocity = new Vector2(xInput * _walkSpeed, Player.Rigidbody.velocity.y);
         Player.Rigidbody.velocity = targetVelocity;
-        
+
         // Idle State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0)
         {

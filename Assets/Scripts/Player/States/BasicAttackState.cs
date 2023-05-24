@@ -31,6 +31,7 @@ public class BasicAttackState : PlayerState
 
     public void AnimEvent_FinishBaseAttackAnim()
     {
+        // IdleState·Î º¯°æ
         ChangeState<IdleState>();
     }
 

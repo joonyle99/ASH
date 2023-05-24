@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class DesolateDiveState : PlayerState
 {
@@ -14,7 +15,7 @@ public class DesolateDiveState : PlayerState
     [SerializeField] float _explosionSizeX = 5.0f;
     [SerializeField] float _explosionSizeY = 1.0f;
     [SerializeField] int _explosionDamage = 40;
-    [SerializeField] Vector2 _knockBackVec = new Vector2(0, 500);
+    [SerializeField] float _knockBackPower = 10f;
     //[SerializeField] float _minHeight = 5.0f;
 
     bool _isDiving = false;
@@ -45,9 +46,19 @@ public class DesolateDiveState : PlayerState
             // target을 전부 순회
             foreach (Collider2D enemy in _targetEnemys)
             {
-                Debug.Log(enemy.gameObject.name);
+                float dir = Mathf.Sign(enemy.transform.position.x - transform.position.x);
+
+                Vector2 vec = new Vector2(_knockBackPower * dir, _knockBackPower / 2f);
+
+                // 만약 슬라임이면
+                if (enemy.GetComponent<OncologySlime>() != null)
+                {
+
+                }
+
+                //Debug.Log(enemy.gameObject.name);
                 enemy.GetComponent<OncologySlime>().OnDamage(_explosionDamage);
-                enemy.GetComponent<OncologySlime>().KnockBack(_knockBackVec);
+                enemy.GetComponent<OncologySlime>().KnockBack(vec);
             }
 
             ChangeState<IdleState>();
