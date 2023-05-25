@@ -9,6 +9,7 @@ public class PlayerAttackController : MonoBehaviour
     int _basicAttackCount = 0 ;
 
     [SerializeField] float _attackCountRefreshTime;
+    [SerializeField] Transform _basicAttackHitbox;
     float _timeAfterLastBasicAttack;
     public bool IsBasicAttacking { get; private set; }
 
@@ -19,7 +20,7 @@ public class PlayerAttackController : MonoBehaviour
     }
     public void CastBasicAttack()
     {
-        this.gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        _basicAttackHitbox.gameObject.SetActive(true);
 
         _timeAfterLastBasicAttack = 0f;
         _animator.SetInteger("BasicAttackCount", _basicAttackCount);
@@ -46,7 +47,7 @@ public class PlayerAttackController : MonoBehaviour
     {
         IsBasicAttacking = false;
 
-        this.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        _basicAttackHitbox.gameObject.SetActive(false);
     }
 
 }

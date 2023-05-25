@@ -64,6 +64,10 @@ public class PlayerBehaviour : StateMachineBase
         InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : unsubscribe
 
     }
+    private void OnDestroy()
+    {
+
+    }
 
     protected override void Update()
     {
