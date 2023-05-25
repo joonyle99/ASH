@@ -71,17 +71,49 @@ public class OncologySlime : NormalMonster
     public override void Die()
     {
         base.Die();
+        StartCoroutine(FadeOutObject());
+    }
 
+    private IEnumerator FadeOutObject()
+    {
+        // 오브젝트의 머티리얼 가져오기
+        Renderer renderer = GetComponent<Renderer>();
+
+        // 초기 알파값 저장
+        float startAlpha = renderer.material.color.a;
+
+        // 서서히 알파값 감소
+        float t = 0;
+        while (t < 2)
+        {
+            t += Time.deltaTime;
+            float normalizedTime = t / 2;
+            Color color = renderer.material.color;
+            color.a = Mathf.Lerp(startAlpha, 0f, normalizedTime);
+            renderer.material.color = color;
+            yield return null;
+        }
+
+        // 오브젝트 비활성화
+        gameObject.SetActive(false);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // 레이어가 Wall이면
-        if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall"))
-        {
-            this.Rigidbody.velocity = Vector2.zero;
-            this.Rigidbody.gravityScale = 0f;
-        }
+        //if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        //{
+        //    this.Rigidbody.velocity = Vector2.zero;
+        //    this.Rigidbody.gravityScale = 0f;
+        //}
+
+        // 플레이어 Attack Box에 피격되면
+        // 임시 피격 코드
+        //if(collision.gameObject.GetComponent<PlayerBasicAttackHitbox>() != null)
+        //{
+        //    KnockBack()
+        //}
+
 
     }
 

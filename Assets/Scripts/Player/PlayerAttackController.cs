@@ -19,6 +19,8 @@ public class PlayerAttackController : MonoBehaviour
     }
     public void CastBasicAttack()
     {
+        this.gameObject.transform.GetChild(0).gameObject.SetActive(true);
+
         _timeAfterLastBasicAttack = 0f;
         _animator.SetInteger("BasicAttackCount", _basicAttackCount);
         _animator.SetTrigger("BasicAttack");
@@ -43,6 +45,8 @@ public class PlayerAttackController : MonoBehaviour
     public void AnimEvent_FinishBaseAttackAnim()
     {
         IsBasicAttacking = false;
+
+        this.gameObject.transform.GetChild(0).gameObject.SetActive(false);
     }
 
 }

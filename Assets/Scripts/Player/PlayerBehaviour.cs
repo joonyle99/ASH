@@ -132,7 +132,6 @@ public class PlayerBehaviour : StateMachineBase
                 ChangeState<DesolateDiveState>();
             }
         }
-
     }
 
     private void UpdateImageFlip()
