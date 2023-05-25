@@ -10,8 +10,6 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] LayerMask _wallLayer;
     [SerializeField] Transform _wallCheckTrans;
 
-    [Header("Attack Settings")]
-    [SerializeField] float _attackCountRefreshTime;
 
     /// <summary>
     /// Smooth 효과로 전처리 된 InputState
@@ -24,7 +22,7 @@ public class PlayerBehaviour : StateMachineBase
     public InteractionController InteractionController { get { return _interactionController; } }
     public bool IsGrounded { get; private set; }
     public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
-    public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<WalkState>(); } }
+    public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<WalkState>() || StateIs<InAirState>(); } }
     public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
     public int RecentDir { get { return _recentDir; } set { _recentDir = value; } }
     public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
@@ -49,7 +47,6 @@ public class PlayerBehaviour : StateMachineBase
     //bool _isJumpQueued;
     //float _timeAfterJumpQueued;
 
-    float _timeAfterLastBasicAttack;
 
     private void Awake()
     {
@@ -123,13 +120,6 @@ public class PlayerBehaviour : StateMachineBase
             }
         }
 
-        // Refresh Attack count
-        if (_timeAfterLastBasicAttack < _attackCountRefreshTime)
-        {
-            _timeAfterLastBasicAttack += Time.deltaTime;
-            if (_timeAfterLastBasicAttack > _attackCountRefreshTime)
-                _attackController.RefreshAttackCount();
-        }
 
         // Desolate Dive State
         // 1. jump height
@@ -161,7 +151,6 @@ public class PlayerBehaviour : StateMachineBase
 
     void CastBasicAttack()
     {
-        _timeAfterLastBasicAttack = 0f;
         _attackController.CastBasicAttack();
     }
 
