@@ -71,7 +71,7 @@ public class OncologySlime : NormalMonster
     public override void Die()
     {
         base.Die();
-        StartCoroutine(FadeOutObject());
+        //StartCoroutine(FadeOutObject());
     }
 
     private IEnumerator FadeOutObject()
