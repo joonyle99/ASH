@@ -66,7 +66,8 @@ public class PlayerBehaviour : StateMachineBase
     }
     private void OnDestroy()
     {
-
+        InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
+        InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
     }
 
     protected override void Update()
