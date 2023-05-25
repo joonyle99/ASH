@@ -30,6 +30,7 @@ public class PlayerBehaviour : StateMachineBase
     public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
 
     PlayerJumpController _jumpController;
+    PlayerAttackController _attackController;
     InteractionController _interactionController;
     DashState _dashState;
     PlayerInputPreprocessor _inputPreprocessor;
@@ -54,6 +55,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         _inputPreprocessor = GetComponent<PlayerInputPreprocessor>();
         _jumpController = GetComponent<PlayerJumpController>();
+        _attackController = GetComponent<PlayerAttackController>();
         _interactionController = GetComponent<InteractionController>();
         _dashState = GetComponent<DashState>();
 
@@ -126,7 +128,7 @@ public class PlayerBehaviour : StateMachineBase
         {
             _timeAfterLastBasicAttack += Time.deltaTime;
             if (_timeAfterLastBasicAttack > _attackCountRefreshTime)
-                GetComponent<BasicAttackState>().RefreshAttackCount();
+                _attackController.RefreshAttackCount();
         }
 
         // Desolate Dive State
@@ -160,7 +162,7 @@ public class PlayerBehaviour : StateMachineBase
     void CastBasicAttack()
     {
         _timeAfterLastBasicAttack = 0f;
-        ChangeState<BasicAttackState>();
+        _attackController.CastBasicAttack();
     }
 
     private void OnDrawGizmos()

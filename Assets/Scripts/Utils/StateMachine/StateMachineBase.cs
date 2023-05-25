@@ -1,6 +1,7 @@
 using UnityEngine;
 
 #if UNITY_EDITOR
+using UnityEditor;
 #endif
 
 public abstract class StateMachineBase : MonoBehaviour
@@ -72,20 +73,20 @@ public abstract class StateMachineBase : MonoBehaviour
     //}
 }
 
-//#if UNITY_EDITOR
-//[CustomEditor(typeof(StateMachineBase), true), CanEditMultipleObjects]
-//public class StateMachineBaseEditor : Editor
-//{
-//    public override void OnInspectorGUI()
-//    {
+#if UNITY_EDITOR
+[CustomEditor(typeof(StateMachineBase), true), CanEditMultipleObjects]
+public class StateMachineBaseEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
 
-//        StateMachineBase stateMachine = (StateMachineBase)target;
-//        if (stateMachine.CurrentState == null)
-//            EditorGUILayout.LabelField("Current State : ", "null");
-//        else
-//            EditorGUILayout.LabelField("Current State : ", stateMachine.CurrentState.GetType().Name);
-//        DrawDefaultInspector();
-//        Repaint();
-//    }
-//}
-//#endif
+        StateMachineBase stateMachine = (StateMachineBase)target;
+        if (stateMachine.CurrentState == null)
+            EditorGUILayout.LabelField("Current State : ", "null");
+        else
+            EditorGUILayout.LabelField("Current State : ", stateMachine.CurrentState.GetType().Name);
+        DrawDefaultInspector();
+        Repaint();
+    }
+}
+#endif
