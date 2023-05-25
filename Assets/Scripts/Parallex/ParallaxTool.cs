@@ -100,7 +100,7 @@ public class ParallaxTool : MonoBehaviour
             _volumetricLights[i].sortingOrder = GetSortingOrder(minBoundaries[i - 1]);
 
         }
-        if (_volumeType == VolumetricLightType.DistanceBased)
+        if (Camera.main != null && _volumeType == VolumetricLightType.DistanceBased)
             Camera.main.backgroundColor = _volumetricLightColor * _volumeOpacity;
     }
     int GetSortingOrder(float z)
