@@ -57,6 +57,12 @@ public class OncologySlime : NormalMonster
     public override void OnDamage(int _damage)
     {
         base.OnDamage(_damage);
+
+        if (CurHP <= 0)
+        {
+            CurHP = 0;
+            Die();
+        }
     }
 
     public override void KnockBack(Vector2 vec)
@@ -71,6 +77,7 @@ public class OncologySlime : NormalMonster
     public override void Die()
     {
         base.Die();
+        this.gameObject.SetActive(false);
         //StartCoroutine(FadeOutObject());
     }
 
