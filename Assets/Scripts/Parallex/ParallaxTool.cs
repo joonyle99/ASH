@@ -10,6 +10,9 @@ using UnityEditor;
 public class ParallaxTool : MonoBehaviour
 {
     public enum VolumetricLightType { DistanceBased, LayerBased}
+
+    [SerializeField] GameObject _backgroundParent;
+
     [Tooltip("각 레이어 별 최소 z 값을 지정합니다. \n마지막 레이어는 이전 레이어의 최소 z값보다 작은 모든 이미지를 포함합니다.")]
     [SerializeField] ParallaxBoundaries _parallaxBoundaries= new ParallaxBoundaries();
 
@@ -35,7 +38,7 @@ public class ParallaxTool : MonoBehaviour
     {
         SetVolumetricLights();
         SetGlobalLight();
-        var allSprites = FindObjectsOfType<SpriteRenderer>();
+        var allSprites = _backgroundParent.transform.GetComponentsInChildren<SpriteRenderer>();
         //TODO : Parallax 영향 안받을 오브젝트들에 대한 처리 방법
         //
         for (int i=0; i<allSprites.Length; i++)
