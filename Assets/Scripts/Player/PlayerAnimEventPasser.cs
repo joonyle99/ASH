@@ -14,6 +14,5 @@ public class PlayerAnimEventPasser : MonoBehaviour
     {
         // IdleState·Î º¯°æ
         _attackState.AnimEvent_FinishBaseAttackAnim();
-        Debug.Log("Finish");
     }
 }

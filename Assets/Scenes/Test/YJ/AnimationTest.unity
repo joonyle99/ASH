@@ -972,7 +972,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6003767271374705665, guid: faf1679ff704ef747b9d786a861091ff, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.88
+      value: 0.53
       objectReference: {fileID: 0}
     - target: {fileID: 6003767271374705665, guid: faf1679ff704ef747b9d786a861091ff, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1810,7 +1810,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _wallCheckTrans: {fileID: 1836993855}
-  _attackCountRefreshTime: 1
   _wallCheckDistance: 0.5
   _isWallJump: 0
   _isTouchedWall: 0
@@ -1879,7 +1878,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4222197489376554906}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.67, y: -1.77, z: 0}
+  m_LocalPosition: {x: -1.67, y: 1.6400001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1937,6 +1936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90c11dc4b0d3c9444a1ab89f6dd3a804, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attackCountRefreshTime: 1
   _animator: {fileID: 595810420}
 --- !u!114 &7443853380515238971
 MonoBehaviour:
@@ -1953,3 +1953,4 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+  <StateMachine>k__BackingField: {fileID: 0}
