@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-public class Passage : MonoBehaviour, ITriggerZone
+public class Passage : ITriggerZone
 {
     [SerializeField] PassageData _data;
     [SerializeField] PassageData _otherPassageData;
@@ -25,18 +25,18 @@ public class Passage : MonoBehaviour, ITriggerZone
         if (_playerSpawnPoint == null)
             _playerSpawnPoint = transform;
     }
-    public void OnActivatorEnter(TriggerActivator activator)
+    public override void OnActivatorEnter(TriggerActivator activator)
     {
         if (_isPlayerExiting)
             return;
         SceneManager.Instance.StartSceneChangeByPassage(_otherPassageData);
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
     }
-    public void OnActivatorExit(TriggerActivator activator)
+    public override void OnActivatorExit(TriggerActivator activator)
     {
         if (!_isPlayerExiting)
             return;
-        if (activator.GetComponent<PlayerBehaviour>() != null)
+        if (activator.IsPlayer)
             _isPlayerExiting = false;
     }
     

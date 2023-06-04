@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public class InteractableZone : MonoBehaviour, ITriggerZone
+public class InteractableZone : ITriggerZone
 {
     InteractableObject _interactableObject;
 
@@ -11,13 +11,13 @@ public class InteractableZone : MonoBehaviour, ITriggerZone
     {
         _interactableObject = GetComponentInParent<InteractableObject>();
     }
-    public void OnActivatorEnter(TriggerActivator activator)
+    public override void OnActivatorEnter(TriggerActivator activator)
     {
         if (!activator.IsPlayer)
             return;
         activator.AsPlayer.InteractionController.AddInteractableInRange(_interactableObject);
     }
-    public void OnActivatorExit(TriggerActivator activator)
+    public override void OnActivatorExit(TriggerActivator activator)
     {
         if (!activator.IsPlayer)
             return;
