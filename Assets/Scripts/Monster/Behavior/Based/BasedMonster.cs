@@ -102,13 +102,26 @@ public abstract class BasedMonster : MonsterBehaviour
     public abstract void SetUp();
 
     // µ¥¹ÌÁö ÇÇ°İ
-    public abstract void OnDamage(int damage);
+    public virtual void OnDamage(int damage)
+    {
+        CurHP -= damage;
+
+        if (CurHP <= 0)
+        {
+            CurHP = 0;
+            Die();
+        }
+    }
 
     // ³Ë¹é
     public abstract void KnockBack(Vector2 vec);
 
     // »ç¸Á
-    public abstract void Die();
+    public virtual void Die()
+    {
+        Dead = true;
+        this.gameObject.SetActive(false);
+    }
 
 
     #endregion

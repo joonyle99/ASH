@@ -16,13 +16,7 @@ public abstract class NormalMonster : BasedMonster
 
     public override void OnDamage(int _damage)
     {
-        CurHP -= _damage;
-
-        if (CurHP <= 0)
-        {
-            CurHP = 0;
-            Die();
-        }
+        base.OnDamage(_damage);
     }
 
     public override void KnockBack(Vector2 vec)
@@ -32,6 +26,6 @@ public abstract class NormalMonster : BasedMonster
 
     public override void Die()
     {
-        Dead = true;
+        base.Die();
     }
 }

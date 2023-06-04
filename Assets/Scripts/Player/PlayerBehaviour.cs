@@ -23,6 +23,8 @@ public class PlayerBehaviour : StateMachineBase
     public bool IsGrounded { get; private set; }
     public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<WalkState>() || StateIs<InAirState>(); } }
+    public bool CanHealing { get { return StateIs<IdleState>(); } }
+    public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
     public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
     public int RecentDir { get { return _recentDir; } set { _recentDir = value; } }
     public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
@@ -60,14 +62,17 @@ public class PlayerBehaviour : StateMachineBase
     protected override void Start()
     {
         base.Start();
-        InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : unsubscribe
-        InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : unsubscribe
-
+        InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
+        InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
+        InputManager.Instance.HealingPressedEvent += OnHealingPressed; //TODO : subscribe
+        InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
     }
     private void OnDestroy()
     {
         InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
         InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
+        InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
+        InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
     }
 
     protected override void Update()
@@ -152,10 +157,31 @@ public class PlayerBehaviour : StateMachineBase
         if (CanBasicAttack)
             CastBasicAttack();
     }
+    void OnHealingPressed()
+    {
+        if (CanBasicAttack)
+            CastHealing();
+    }
+
+    void OnShootingAttackPressed()
+    {
+        if (CanShootingAttack)
+            CastShootingAttack();
+    }
 
     void CastBasicAttack()
     {
         _attackController.CastBasicAttack();
+    }
+
+    void CastHealing()
+    {
+
+    }
+
+    void CastShootingAttack()
+    {
+        _attackController.CastShootingAttack();
     }
 
     private void OnDrawGizmos()
