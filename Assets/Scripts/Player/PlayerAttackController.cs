@@ -10,11 +10,14 @@ public class PlayerAttackController : MonoBehaviour
 
     [SerializeField] float _attackCountRefreshTime;
     [SerializeField] float _shootingCoolTime;
+    [SerializeField] float _shootingDelay;
     [SerializeField] Transform _basicAttackHitbox;
     [SerializeField] GameObject _fireBullet;
+    [SerializeField] ParticleSystem _ShootingDelayEffect;
 
     float _timeAfterLastBasicAttack;
     float _timeAfterLastShootingAttack;
+
     public bool IsBasicAttacking { get; private set; }
     public bool IsShootingAttacking { get; private set; }
 
@@ -67,9 +70,17 @@ public class PlayerAttackController : MonoBehaviour
     {
         IsShootingAttacking = true;
 
-        // 0.8초의 딜레이
+        // create particle system
+        ParticleSystem effect = Instantiate(_ShootingDelayEffect, transform.position + new Vector3(0f, 0.5f), Quaternion.identity, transform);
+        effect.Play();
+
+        // 1.5초의 딜레이
         // 이 동안은 움직일 수 없어야 한다.
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(1.5f);
+
+        // delete particle system
+        effect.Stop();
+        Destroy(effect.gameObject);
 
         _basicAttackHitbox.gameObject.SetActive(true);
 
@@ -82,6 +93,6 @@ public class PlayerAttackController : MonoBehaviour
 
         IsShootingAttacking = false;
 
-        yield return 0;
+        yield return null;
     }
 }
