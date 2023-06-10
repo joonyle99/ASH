@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class PlayerBasicAttackHitbox : MonoBehaviour
 {
+    public PlayerBehaviour Player { get; private set; }
+    private void Awake()
+    {
+        Player = GetComponentInParent<PlayerBehaviour>();
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         OncologySlime slime = collision.GetComponent<OncologySlime>();
