@@ -55,6 +55,8 @@ public class ParallaxTool : MonoBehaviour
     }
     private void OnValidate()
     {
+        if (EditorUtility.IsPersistent(gameObject))
+            return;
         _parallaxBoundaries.OnValidate();
         SetVolumetricLights();
         SetGlobalLight();
