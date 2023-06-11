@@ -10,6 +10,9 @@ public class WallState : PlayerState
 
     protected override void OnEnter()
     {
+        if (!Player.WallHit)
+            return;
+
         // 벽이 플레이어 보다 오른쪽에 있으면, 벽의 법선 벡터를 반대로
         if (Player.WallHit.transform.position.x > Player.transform.position.x)
             wallNormal = Player.WallHit.normal;

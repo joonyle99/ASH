@@ -3,10 +3,13 @@ using UnityEngine;
 public class PlayerBehaviour : StateMachineBase
 {
     [Header("Collision Check Prams")]
+    // ground
     [SerializeField] LayerMask _groundLayer;
-    [SerializeField] Collider2D _groundCheckCollider;
-    [SerializeField] Collider2D _playerGroundCollider;
+    [SerializeField] Transform _groundCheckTrans;
+    //[SerializeField] Collider2D _groundCheckCollider;
+    //[SerializeField] Collider2D _playerGroundCollider;
 
+    // wall
     [SerializeField] LayerMask _wallLayer;
     [SerializeField] Transform _wallCheckTrans;
 
@@ -29,6 +32,7 @@ public class PlayerBehaviour : StateMachineBase
     public int RecentDir { get { return _recentDir; } set { _recentDir = value; } }
     public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
     public Vector2 PlayerLookDir { get { return new Vector2(RecentDir, 0); } }
+    public RaycastHit2D GroundHit { get; private set; }
     public RaycastHit2D WallHit { get; private set; }
 
 
@@ -44,6 +48,7 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] bool _isTouchedWall;
 
     [Header("Dive Settings")]
+    [SerializeField] float _groundCheckDistance = 0.5f;
     [SerializeField] float _groundDistance;
     [SerializeField] float _diveThreshhold = 2.0f;
 
@@ -91,24 +96,20 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
 
         // Check Ground / Wall
-        IsGrounded = _groundCheckCollider.IsTouchingLayers(_groundLayer);
+        GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
+        if (GroundHit)
+            IsGrounded = true;
+        else
+            IsGrounded = false;
+
         WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * _recentDir, _wallCheckDistance, _wallLayer);
         if (WallHit)
             IsTouchedWall = true;
         else
             IsTouchedWall = false;
 
-        // ground collider -> what is overlaped collider
-        if (IsGrounded)
-            _playerGroundCollider =  Physics2D.OverlapBox(_groundCheckCollider.transform.position, _groundCheckCollider.bounds.size, 0, _groundLayer);
-
         // distance between ground and player
-        if (_playerGroundCollider != null)
-        {
-            _groundDistance = _groundCheckCollider.transform.position.y - _playerGroundCollider.transform.position.y;
-            //Debug.Log(_groundCheckCollider.gameObject.name + " : " + _groundCheckCollider.gameObject.transform.position.y);
-            //Debug.Log(_playerGroundCollider.gameObject.name + " : " + _playerGroundCollider.gameObject.transform.position.y);
-        }
+        _groundDistance = _groundCheckTrans.position.y - GroundHit.point.y;
 
         // TODO : 필요하다면 코요테 타임 동안은 InAir상태가 안되게 할지 결정
         if (!IsGrounded)
@@ -195,5 +196,8 @@ public class PlayerBehaviour : StateMachineBase
     {
         Gizmos.color = Color.red;
         Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * _recentDir);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(_groundCheckTrans.position, _groundCheckTrans.position + Vector3.down * _groundCheckDistance);
     }
 }

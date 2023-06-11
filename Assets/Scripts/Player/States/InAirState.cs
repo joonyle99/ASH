@@ -64,11 +64,11 @@ public class InAirState : PlayerState
 
         // Wall Slide State
         // 벽을 터치하고 있고, 플레이어가 아래로 떨어지고 있으면
-        if (Player.IsTouchedWall && Player.Rigidbody.velocity.y < 0)
-        {
-            ChangeState<WallSlideState>();
-            return;
-        }
+                //if (Player.IsTouchedWall && Player.Rigidbody.velocity.y < 0)
+                //{
+                //    ChangeState<WallSlideState>();
+                //    return;
+                //}
     }
 
     protected override void OnExit()
