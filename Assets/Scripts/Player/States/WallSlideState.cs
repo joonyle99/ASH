@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class WallSlideState : WallState
 {
@@ -7,15 +8,17 @@ public class WallSlideState : WallState
 
     protected override void OnEnter()
     {
-        //Debug.Log("Enter WallSlide");
+        base.OnEnter();
 
+        Debug.Log("enter slide");
         Animator.SetBool("WallSlide", true);
     }
     protected override void OnUpdate()
     {
-        // 서서히 땅에 떨어지는 기능
-        Player.Rigidbody.velocity = Vector2.down * _wallSlideSpeed;
+        base.OnUpdate();
 
+        // 서서히 땅에 떨어지는 기능
+        Player.Rigidbody.velocity = - moveDirection * _wallSlideSpeed;
 
         // Wall Grab State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
