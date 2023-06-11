@@ -54,6 +54,8 @@ public class InAirState : PlayerState
         // Debug.Log("player velocity y" + Player.Rigidbody.velocity.y);
 
         // Wall Grab State
+        // 벽을 터치하고 있고, 입력 방향과 바라보는 방향이 같으면 Grab
+        // if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
         if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
         {
             ChangeState<WallGrabState>();
@@ -61,6 +63,7 @@ public class InAirState : PlayerState
         }
 
         // Wall Slide State
+        // 벽을 터치하고 있고, 플레이어가 아래로 떨어지고 있으면
         if (Player.IsTouchedWall && Player.Rigidbody.velocity.y < 0)
         {
             ChangeState<WallSlideState>();

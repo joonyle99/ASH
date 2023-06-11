@@ -28,6 +28,9 @@ public class PlayerBehaviour : StateMachineBase
     public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
     public int RecentDir { get { return _recentDir; } set { _recentDir = value; } }
     public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
+    public Vector2 PlayerLookDir { get { return new Vector2(RecentDir, 0); } }
+    public RaycastHit2D WallHit { get; private set; }
+
 
     PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
@@ -36,7 +39,7 @@ public class PlayerBehaviour : StateMachineBase
     PlayerInputPreprocessor _inputPreprocessor;
 
     [Header("Wall Settings")]
-    [SerializeField] float _wallCheckDistance = 0.5f;
+    [SerializeField] float _wallCheckDistance = 0.8f;
     [SerializeField] bool _isWallJump;
     [SerializeField] bool _isTouchedWall;
 
@@ -89,10 +92,14 @@ public class PlayerBehaviour : StateMachineBase
 
         // Check Ground / Wall
         IsGrounded = _groundCheckCollider.IsTouchingLayers(_groundLayer);
-        IsTouchedWall = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * _recentDir, _wallCheckDistance, _wallLayer);
+        WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * _recentDir, _wallCheckDistance, _wallLayer);
+        if (WallHit)
+            IsTouchedWall = true;
+        else
+            IsTouchedWall = false;
 
         // ground collider -> what is overlaped collider
-        if(IsGrounded)
+        if (IsGrounded)
             _playerGroundCollider =  Physics2D.OverlapBox(_groundCheckCollider.transform.position, _groundCheckCollider.bounds.size, 0, _groundLayer);
 
         // distance between ground and player

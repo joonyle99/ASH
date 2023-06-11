@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class WallClimbState : WallState
 {
@@ -7,22 +8,25 @@ public class WallClimbState : WallState
 
     protected override void OnEnter()
     {
-        //Debug.Log("Enter Wall Climb");
+        base.OnEnter();
 
+        Debug.Log("enter climb");
         Player.Rigidbody.gravityScale = 0f;
         Animator.SetBool("WallClimb", true);
     }
     protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         // Move Up
         if (Player.RawInputs.Movement.y > 0)
         {
-            Player.Rigidbody.velocity = Vector2.up * _wallClimbSpeed;
+            Player.Rigidbody.velocity = moveDirection * _wallClimbSpeed;
         }
         // Move Down
         else if (Player.RawInputs.Movement.y < 0)
         {
-            Player.Rigidbody.velocity = Vector2.down * _wallClimbSpeed;
+            Player.Rigidbody.velocity = - moveDirection * _wallClimbSpeed;
         }
         // Move Stop => Wall Grab
         else
