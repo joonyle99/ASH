@@ -9,13 +9,15 @@ public class DialogueManager : HappyTools.SingletonBehaviourFixed<DialogueManage
         get 
         {
             if (_view == null)
-                _view = FindObjectOfType<DialogueView>();
+                _view = FindObjectOfType<DialogueView>(true);
             return _view;
         }
     }
     DialogueView _view;
 
     bool _isDialogueActive = false;
+
+    [SerializeField] float _waitTimeAfterScriptEnd;
     public void StartDialogue(DialogueData data)
     {
         if (_isDialogueActive)
@@ -34,10 +36,9 @@ public class DialogueManager : HappyTools.SingletonBehaviourFixed<DialogueManage
         //Proceed Dialogue
         for (int i=0; i<scriptInfos.Count; i++)
         {
-            yield return null;
-            View.SetText(scriptInfos[i].Text);
-
-            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.Return));
+            yield return StartCoroutine(View.StartScriptCoroutine(scriptInfos[i]));
+            yield return new WaitUntil(() => InputManager.InteractionKeyDown);
+            yield return StartCoroutine(View.FadeOutCoroutine(_waitTimeAfterScriptEnd));
         }
 
         //Close Dialogue

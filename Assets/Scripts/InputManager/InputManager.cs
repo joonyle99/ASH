@@ -21,6 +21,10 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
     IInputSetter _defaultSetter;
 
     InputState _cachedState;
+
+
+    public static bool InteractionKeyDown { get { return FixedInputManager.InteractionKeyDown; } }
+
     protected override void Awake()
     {
         base.Awake();
