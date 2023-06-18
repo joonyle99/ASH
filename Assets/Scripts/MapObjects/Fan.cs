@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Fan : ToggleObject
 {
+    [SerializeField] GameObject _windZone;
     protected override void OnToggleChanged()
     {
-        gameObject.SetActive(IsOn);
+        _windZone.SetActive(IsOn);
     }
 }
