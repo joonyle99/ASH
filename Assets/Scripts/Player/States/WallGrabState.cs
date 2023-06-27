@@ -10,7 +10,7 @@ public class WallGrabState : WallState
     {
         base.OnEnter();
 
-        Debug.Log("enter grab");
+        Debug.Log("Enter Grab");
 
         // Player Stop
         Player.Rigidbody.gravityScale = 0f;

@@ -10,7 +10,8 @@ public class WallSlideState : WallState
     {
         base.OnEnter();
 
-        Debug.Log("enter slide");
+        Debug.Log("Enter Slide");
+
         Animator.SetBool("WallSlide", true);
     }
     protected override void OnUpdate()

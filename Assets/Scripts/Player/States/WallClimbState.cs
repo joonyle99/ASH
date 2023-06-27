@@ -10,7 +10,8 @@ public class WallClimbState : WallState
     {
         base.OnEnter();
 
-        Debug.Log("enter climb");
+        Debug.Log("Enter Climb");
+
         Player.Rigidbody.gravityScale = 0f;
         Animator.SetBool("WallClimb", true);
     }
