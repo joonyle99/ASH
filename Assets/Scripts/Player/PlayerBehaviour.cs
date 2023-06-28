@@ -15,13 +15,13 @@ public class PlayerBehaviour : StateMachineBase
 
     [Header("Wall Settings")]
 
-    [SerializeField] float _wallCheckDistance = 0.8f;
+    [SerializeField] float _wallCheckDistance = 0.7f;
     [SerializeField] bool _isWallJump;
     [SerializeField] bool _isTouchedWall;
 
     [Header("Dive Settings")]
 
-    [SerializeField] float _groundCheckDistance = 0.3f;
+    [SerializeField] float _groundCheckDistance = 0.6f;
     [SerializeField] float _groundDistance;
     [SerializeField] float _diveThreshhold = 2.0f;
 
@@ -109,7 +109,10 @@ public class PlayerBehaviour : StateMachineBase
         // Check Wall
         WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * _recentDir, _wallCheckDistance, _wallLayer);
         if (WallHit)
+        {
+            // Debug.Log("Player.WallHit.collider.name : " + WallHit.transform.gameObject.name);
             IsTouchedWall = true;
+        }
         else
             IsTouchedWall = false;
 
@@ -144,8 +147,8 @@ public class PlayerBehaviour : StateMachineBase
         }
 
         // Desolate Dive State
-        // 1. jump height
-        // 2. when not dashing
+        // 1. Jump Height > 2.0f
+        // 2. When not in DashState
         // 3. InAirState -> DiveStatee
         if (Input.GetKeyDown(KeyCode.Alpha5) && RawInputs.Movement.y < 0)
         {

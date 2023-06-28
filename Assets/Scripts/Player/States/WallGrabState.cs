@@ -10,7 +10,7 @@ public class WallGrabState : WallState
     {
         base.OnEnter();
 
-        Debug.Log("Enter Grab");
+        //Debug.Log("Enter Grab");
 
         // Player Stop
         Player.Rigidbody.gravityScale = 0f;
@@ -21,8 +21,6 @@ public class WallGrabState : WallState
 
     protected override void OnUpdate()
     {
-        base.OnUpdate();
-
         // Wall Climb State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0 )
         {

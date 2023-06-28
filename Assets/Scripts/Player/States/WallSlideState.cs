@@ -4,22 +4,22 @@ using UnityEngine.EventSystems;
 public class WallSlideState : WallState
 {
     [Header("Wall Slide Setting")]
-    [SerializeField] private float _wallSlideSpeed = 0.5f;
+    [SerializeField] private float _wallSlideSpeed = 0.65f;
 
     protected override void OnEnter()
     {
         base.OnEnter();
 
-        Debug.Log("Enter Slide");
+        //Debug.Log("Enter Slide");
 
+        Player.Rigidbody.gravityScale = 0f;
         Animator.SetBool("WallSlide", true);
     }
     protected override void OnUpdate()
     {
-        base.OnUpdate();
-
         // 憮憮�� 階縑 雲橫雖朝 晦棟
-        Player.Rigidbody.velocity = - moveDirection * _wallSlideSpeed;
+        Debug.Log("天天天天天天天天天天天天天天天天天天天" + moveDirection);
+        Player.Rigidbody.velocity = (-1) * moveDirection * _wallSlideSpeed;
 
         // Wall Grab State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
@@ -37,7 +37,7 @@ public class WallSlideState : WallState
         }
 
 
-        // InAirState
+        // In Air State
         if (!Player.IsTouchedWall)
         {
             ChangeState<InAirState>();
@@ -57,6 +57,7 @@ public class WallSlideState : WallState
     {
         //Debug.Log("Exit WallSlide");
 
+        Player.Rigidbody.gravityScale = 5f;
         Animator.SetBool("WallSlide", false);
     }
 }

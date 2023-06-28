@@ -10,18 +10,17 @@ public class WallClimbState : WallState
     {
         base.OnEnter();
 
-        Debug.Log("Enter Climb");
+        //Debug.Log("Enter Climb");
 
         Player.Rigidbody.gravityScale = 0f;
         Animator.SetBool("WallClimb", true);
     }
     protected override void OnUpdate()
     {
-        base.OnUpdate();
-
         // Move Up
         if (Player.RawInputs.Movement.y > 0)
         {
+            Debug.Log("++++++++++++++++++++++++++++++++" + moveDirection);
             Player.Rigidbody.velocity = moveDirection * _wallClimbSpeed;
         }
         // Move Down
@@ -36,7 +35,7 @@ public class WallClimbState : WallState
             return;
         }
 
-        // InAirState
+        // In Air State
         if(!Player.IsTouchedWall)
         {
             ChangeState<InAirState>();
