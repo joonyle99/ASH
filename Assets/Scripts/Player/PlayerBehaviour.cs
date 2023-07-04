@@ -203,11 +203,11 @@ public class PlayerBehaviour : StateMachineBase
 
     private void OnDrawGizmos()
     {
-        // Draw Ground Check
+        // Draw Wall Check
         Gizmos.color = Color.red;
         Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * _recentDir);
 
-        // Draw Wall Check
+        // Draw Ground Check
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(_groundCheckTrans.position, _groundCheckTrans.position + Vector3.down * _groundCheckDistance);
     }
