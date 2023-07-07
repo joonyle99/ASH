@@ -3,45 +3,57 @@ using UnityEngine;
 public class InAirState : PlayerState
 {
     [Header("InAir Setting")]
-    [SerializeField] float _inAirSpeed = 7f;
-    [SerializeField] float _fastDropThreshhold = 7f;
-    [SerializeField] float _fastDropPower = 1f;
-    [SerializeField] float _maxDropSpeed = -80f;
+    [SerializeField] float _inAirSpeed = 7f;            // 공중에서 좌우 움직이는 스피드
+    [SerializeField] float _fastDropThreshhold = 7f;    // 빨리 떨어지는 한계 높이
+    [SerializeField] float _fastDropPower = 1f;         // 빨리 떨어지는 힘
+    [SerializeField] float _maxDropSpeed = -80f;        // 떨어지는 속도 최대값
 
-    PlayerJumpController _jumpController;
+    //PlayerJumpController _jumpController;
 
     protected override void OnEnter()
     {
         //Debug.Log("InAir Enter");
 
-        _jumpController = GetComponent<PlayerJumpController>();
+        //_jumpController = GetComponent<PlayerJumpController>();
     }
 
     protected override void OnUpdate()
     {
-        // wall jump를 했을 때,, 다른 Target Velocity
-        if(Player.IsWallJump)
-        {
-            // wall jump는 "공중에서 이동 불가능"
-            Vector2 targetVelocity = new Vector2(Player.Rigidbody.velocity.x, Player.Rigidbody.velocity.y);
-            Player.Rigidbody.velocity = targetVelocity;
-        }
-        // jump
-        else
-        {
-            // 좌우 입력
-            float xInput = Player.SmoothedInputs.Movement.x;
-            Vector2 targetVelocity = new Vector2(xInput * _inAirSpeed, Player.Rigidbody.velocity.y);
-            Player.Rigidbody.velocity = targetVelocity;
-        }
-
+        // Idle State
         if (Player.IsGrounded)
         {
             ChangeState<IdleState>();
             return;
         }
 
-        // // 한계점 지나면 더 빨리 떨어짐
+        // Wall Grab State
+        if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        {
+            ChangeState<WallGrabState>();
+            return;
+        }
+
+        // Wall Slide State
+        if (Player.IsTouchedWall && (Player.RecentDir != Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        {
+            ChangeState<WallSlideState>();
+            return;
+        }
+
+        // wall jump -> In Air
+        if (Player.IsWallJump)
+        {
+            Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, Player.Rigidbody.velocity.y);
+            Player.IsWallJump = false;
+        }
+        // jump -> In Air
+        else
+        {
+            float xInput = Player.SmoothedInputs.Movement.x;
+            Player.Rigidbody.velocity = new Vector2(xInput * _inAirSpeed, Player.Rigidbody.velocity.y);
+        }
+
+        // 한계점 지나면 더 빨리 떨어짐
         if (Player.Rigidbody.velocity.y < _fastDropThreshhold)
         {
             // 떨어지는 속도에 최대값 부여
@@ -50,31 +62,10 @@ public class InAirState : PlayerState
             else
                 Player.Rigidbody.velocity += _fastDropPower * Physics2D.gravity * Time.deltaTime;
         }
-
-        // Debug.Log("player velocity y" + Player.Rigidbody.velocity.y);
-
-        // Wall Grab State
-        // 벽을 터치하고 있고, 입력 방향과 바라보는 방향이 같으면 Grab
-        // if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
-        if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
-        {
-            ChangeState<WallGrabState>();
-            return;
-        }
-
-        // Wall Slide State
-        // 벽을 터치하고 있고, 플레이어가 아래로 떨어지고 있으면
-                //if (Player.IsTouchedWall && Player.Rigidbody.velocity.y < 0)
-                //{
-                //    ChangeState<WallSlideState>();
-                //    return;
-                //}
     }
 
     protected override void OnExit()
     {
         //Debug.Log("InAir Exit");
-
-        Player.IsWallJump = false;
     }
 }

@@ -10,7 +10,7 @@ public class WallClimbState : WallState
     {
         base.OnEnter();
 
-        //Debug.Log("Enter Climb");
+        Debug.Log("Enter Climb");
 
         Player.Rigidbody.gravityScale = 0f;
         Animator.SetBool("WallClimb", true);
@@ -20,7 +20,7 @@ public class WallClimbState : WallState
         // Move Up
         if (Player.RawInputs.Movement.y > 0)
         {
-            Debug.Log("++++++++++++++++++++++++++++++++" + moveDirection);
+            // Debug.Log("=======================================" + moveDirection);
             Player.Rigidbody.velocity = moveDirection * _wallClimbSpeed;
         }
         // Move Down
@@ -35,15 +35,15 @@ public class WallClimbState : WallState
             return;
         }
 
-        // In Air State
-        if(!Player.IsTouchedWall)
+        if (!Player.IsTouchedWall)
         {
+            // TODO : 여기 버그 개선하기 => 전반적으로 Wall State 관련 버그 개선하기
             ChangeState<InAirState>();
             return;
         }
 
-        // IdleState
-        if (Player.IsGrounded)
+        // Idle State
+        if (Player.IsGrounded && Player.RawInputs.Movement.y < 0)
         {
             ChangeState<IdleState>();
             return;

@@ -91,13 +91,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Update();
 
-        // Player Flip
-        if (!StateIs<DashState>() && !StateIs<WallState>())
-            UpdateImageFlip();
-
-        // Animation Param
-        Animator.SetBool("Grounded", IsGrounded);
-        Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
+#region Check Ground & Wall
 
         // Check Ground
         GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
@@ -119,6 +113,20 @@ public class PlayerBehaviour : StateMachineBase
         // Ground Distance
         _groundDistance = _groundCheckTrans.position.y - GroundHit.point.y;
 
+#endregion
+
+        // Player Flip
+        if (!StateIs<DashState>() && !StateIs<WallState>())
+        {
+            // Input이 없을 때는 방향을 유지
+            if (Mathf.RoundToInt(RawInputs.Movement.x) != 0)
+                UpdateImageFlip();
+        }
+
+        // Animation Param
+        Animator.SetBool("Grounded", IsGrounded);
+        Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
+
         // In Air State
         if (!IsGrounded)
         {
@@ -127,15 +135,16 @@ public class PlayerBehaviour : StateMachineBase
         }
 
         // Dash State
-        if (Input.GetKeyDown(KeyCode.V) && _dashState.EnableDash && RawInputs.Movement.x != 0)
+        if (Input.GetKeyDown(KeyCode.V) && _dashState.EnableDash && Mathf.RoundToInt(RawInputs.Movement.x) != 0)
         {
-            if(!StateIs<WallState>() && !StateIs<DesolateDiveState>())
+            if (!StateIs<WallState>() && !StateIs<DesolateDiveState>())
             {
                 if (!StateIs<DashState>())
                     ChangeState<DashState>();
             }
         }
 
+        // TODO : 쿨타임 관리 시스템 만들기
         // Dash CoolTime
         if (!_dashState.Dashing && !_dashState.EnableDash)
         {
@@ -147,26 +156,18 @@ public class PlayerBehaviour : StateMachineBase
         }
 
         // Desolate Dive State
-        // 1. Jump Height > 2.0f
-        // 2. When not in DashState
-        // 3. InAirState -> DiveStatee
         if (Input.GetKeyDown(KeyCode.Alpha5) && RawInputs.Movement.y < 0)
         {
-            if(StateIs<InAirState>() && !StateIs<DashState>() && _groundDistance > _diveThreshhold)
+            if(StateIs<InAirState>() && _groundDistance > _diveThreshhold)
                 ChangeState<DesolateDiveState>();
         }
     }
 
     private void UpdateImageFlip()
     {
-        // Input이 없을 때는 방향을 유지
-        if (RawInputs.Movement.x != 0)
-            _recentDir = (int)RawInputs.Movement.x;
-
-        transform.localScale = new Vector3(_recentDir, transform.localScale.y, transform.localScale.z);
+        _recentDir = (int)RawInputs.Movement.x;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * _recentDir, transform.localScale.y, transform.localScale.z);
     }
-
-
 
     void OnBasicAttackPressed()
     {
@@ -184,8 +185,6 @@ public class PlayerBehaviour : StateMachineBase
             CastShootingAttack();
     }
 
-
-
     void CastBasicAttack()
     {
         _attackController.CastBasicAttack();
@@ -199,9 +198,7 @@ public class PlayerBehaviour : StateMachineBase
         _attackController.CastShootingAttack();
     }
 
-
-
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         // Draw Wall Check
         Gizmos.color = Color.red;

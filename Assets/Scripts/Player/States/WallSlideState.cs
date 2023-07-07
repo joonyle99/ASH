@@ -15,19 +15,20 @@ public class WallSlideState : WallState
         Player.Rigidbody.gravityScale = 0f;
         Animator.SetBool("WallSlide", true);
     }
+
     protected override void OnUpdate()
     {
         // 憮憮�� 階縑 雲橫雖朝 晦棟
-        Debug.Log("天天天天天天天天天天天天天天天天天天天" + moveDirection);
+        // Debug.Log("=======================================" + moveDirection);
         Player.Rigidbody.velocity = (-1) * moveDirection * _wallSlideSpeed;
 
         // Wall Grab State
-        if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
+        // if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
+        if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
         {
             ChangeState<WallGrabState>();
             return;
         }
-
 
         // Wall Climb State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0)
@@ -36,7 +37,6 @@ public class WallSlideState : WallState
             return;
         }
 
-
         // In Air State
         if (!Player.IsTouchedWall)
         {
@@ -44,8 +44,7 @@ public class WallSlideState : WallState
             return;
         }
 
-
-        // IdleState
+        // Idle State
         if (Player.IsGrounded)
         {
             ChangeState<IdleState>();

@@ -98,7 +98,7 @@ public class PlayerJumpController : MonoBehaviour
         _isJumpQueued = true;
         _timeAfterJumpQueued = 0f;
     }
-    
+
     //JumpState 시작
     void CastJump()
     {

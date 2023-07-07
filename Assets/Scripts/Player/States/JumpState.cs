@@ -17,7 +17,7 @@ public class JumpState : PlayerState
             //Debug.Log("wall jump");
             _jumpController.ExecuteWallJumpAnimEvent();
         }
-        // Just Jump
+        // Jump
         else
         {
             //Debug.Log("just jump");

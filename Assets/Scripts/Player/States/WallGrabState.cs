@@ -22,7 +22,7 @@ public class WallGrabState : WallState
     protected override void OnUpdate()
     {
         // Wall Climb State
-        if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0 )
+        if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0)
         {
             ChangeState<WallClimbState>();
             return;
