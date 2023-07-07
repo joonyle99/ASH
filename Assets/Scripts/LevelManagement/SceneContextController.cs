@@ -13,21 +13,31 @@ public class SceneContextController : HappyTools.SingletonBehaviourFixed<SceneCo
 
     SceneContext _context;
 
+
     public static PlayerBehaviour Player { get { return Instance._context.Player; } }
     public void OnLoad(string entranceName)
     {
-        BuildSceneContext();
-        StartCoroutine(ExitPassageCoroutine(entranceName));
+        Result result = BuildSceneContext();
+        if (result == Result.Success) 
+            StartCoroutine(ExitPassageCoroutine(entranceName));
     }
-    void BuildSceneContext()
+    Result BuildSceneContext()
     {
         _context = new SceneContext();
-        _context.Player = GameObject.FindWithTag("Player").GetComponent<PlayerBehaviour>();
-        
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player == null)
+        {
+            Debug.LogWarning("No player in scene!");
+            return Result.Fail;
+        }
+        _context.Player = player.GetComponent<PlayerBehaviour>();
+
+
         var passages = GameObject.FindGameObjectsWithTag("Passage");
         _context.Passages = new List<Passage>();
         for (int i = 0; i < passages.Length; i++)
             _context.Passages.Add( passages[i].GetComponent<Passage>());
+        return Result.Success;
     }
     IEnumerator ExitPassageCoroutine(string entranceName)
     {
