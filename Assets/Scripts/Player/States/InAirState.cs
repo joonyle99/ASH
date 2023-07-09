@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class InAirState : PlayerState
 {
@@ -27,18 +28,19 @@ public class InAirState : PlayerState
         }
 
         // Wall Grab State
-        if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        //if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        if (Player.IsTouchedWall)
         {
             ChangeState<WallGrabState>();
             return;
         }
 
-        // Wall Slide State
-        if (Player.IsTouchedWall && (Player.RecentDir != Mathf.RoundToInt(Player.RawInputs.Movement.x)))
-        {
-            ChangeState<WallSlideState>();
-            return;
-        }
+        //// Wall Slide State
+        //if (Player.IsTouchedWall)
+        //{
+        //    ChangeState<WallSlideState>();
+        //    return;
+        //}
 
         // wall jump -> In Air
         if (Player.IsWallJump)
@@ -67,5 +69,7 @@ public class InAirState : PlayerState
     protected override void OnExit()
     {
         //Debug.Log("InAir Exit");
+
+        Player.Animator.SetBool("Jump", false);
     }
 }

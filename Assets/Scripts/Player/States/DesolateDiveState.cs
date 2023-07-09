@@ -25,6 +25,8 @@ public class DesolateDiveState : PlayerState
     {
         //Debug.Log("Enter Desolate Dive");
 
+        Player.Animator.SetBool("Dive", true);
+
         // init dive speed
         Player.Rigidbody.velocity = new Vector2(0, -_diveSpeed);
     }
@@ -67,6 +69,8 @@ public class DesolateDiveState : PlayerState
     protected override void OnExit()
     {
         //Debug.Log("Exit Desolate Dive");
+
+        Player.Animator.SetBool("Dive", false);
     }
 
     void OnDrawGizmosSelected()

@@ -12,22 +12,21 @@ public class PlayerJumpController : MonoBehaviour
 
     [Header("Jump Settings")]
     [SerializeField] float _coyoteTime = 2f;
-    [SerializeField] float _jumpQueueDuration = 0.1f;
+    //[SerializeField] float _jumpQueueDuration = 0.1f;
     [SerializeField] int _maxJumpCount = 2;
 
-    public bool CanJump { get{ return _remainingJumpCount > 0 && !_player.StateIs<JumpState>() && _coyoteAvailable; } }
+    public bool CanJump { get { return _remainingJumpCount > 0 && !_player.StateIs<JumpState>() && CoyoteAvailable; } }
     public int MaxJumpCount { get { return _maxJumpCount; } }
-
-    bool _coyoteAvailable { get { return _timeAfterGroundLeft <= _coyoteTime; } }
+    public bool CoyoteAvailable { get { return _timeAfterGroundLeft <= _coyoteTime; } }
 
     bool _isLongJumping;
-    float _longJumpTime = 0f;
+    float _longJumpTime;
 
     int _remainingJumpCount;
     bool _isGroundJump;
 
     bool _isJumpQueued;
-    float _timeAfterJumpQueued;
+    //float _timeAfterJumpQueued;
 
     float _timeAfterGroundLeft;
 
@@ -41,46 +40,51 @@ public class PlayerJumpController : MonoBehaviour
 
     void Update()
     {
-        // reset jump count
-        if ((_player.IsGrounded && !_player.StateIs<JumpState>()) || _player.StateIs<WallState>())
+        // Reset jump count
+        // if ((_player.IsGrounded && !_player.StateIs<JumpState>()) || _player.StateIs<WallState>())
+        if (_player.StateIs<IdleState>() || _player.StateIs<WallState>())
             ResetJumpCount();
 
-        // Process Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
+        // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
         if (_isLongJumping)
         {
             _player.Rigidbody.velocity -= _longJumpBonus * Physics2D.gravity * Time.deltaTime;
             _longJumpTime += Time.deltaTime;
-            if (_longJumpTime >= _longJumpDuration || !_player.RawInputs.IsPressingJump)
+            if ((_longJumpTime >= _longJumpDuration) || !_player.RawInputs.IsPressingJump)
                 _isLongJumping = false;
         }
 
         // Jump time check
-        if(_player.IsGrounded)
-            _timeAfterGroundLeft = 0f;
-        else if(_player.StateIs<WallState>())
+        if(_player.IsGrounded || _player.StateIs<WallState>())
             _timeAfterGroundLeft = 0f;
         else
-            _timeAfterGroundLeft += Time.deltaTime;
+            _timeAfterGroundLeft += Time.deltaTime; // 공중에 떠있는 시간
 
         // Jump if queued
         if (_isJumpQueued)
         {
-            // 대쉬 상태 or 급강하 상태면 return
+            // 대쉬 상태 or 급강하 상태면 종료
             if (_player.StateIs<DashState>() || _player.StateIs<DesolateDiveState>())
-                return;
-
-            // 벽타기 상태에서 "바라보는 방향 == 키 입력 방향" 이라면 return
-            if (_player.StateIs<WallState>() && (_player.RecentDir == Mathf.RoundToInt(_player.RawInputs.Movement.x)))
             {
                 _isJumpQueued = false;
                 return;
             }
 
-            _timeAfterJumpQueued += Time.deltaTime;
+            // 벽타기 상태에서 "바라보는 방향 == 키 입력 방향" 이라면 종료
+            // if (_player.StateIs<WallState>() && (_player.RecentDir == Mathf.RoundToInt(_player.RawInputs.Movement.x)))
+            //if (_player.StateIs<WallGrabState>())
+            //{
+            //    _isJumpQueued = false;
+            //    return;
+            //}
 
-            if (_timeAfterJumpQueued > _jumpQueueDuration)
-                _isJumpQueued = false;
-            else if (CanJump)
+            //_timeAfterJumpQueued += Time.deltaTime;
+
+            //if (_timeAfterJumpQueued > _jumpQueueDuration)
+                //_isJumpQueued = false;
+            //else if (CanJump)
+
+            if (CanJump)
             {
                 CastJump();
                 return;
@@ -96,7 +100,7 @@ public class PlayerJumpController : MonoBehaviour
     public void OnJumpPressed()
     {
         _isJumpQueued = true;
-        _timeAfterJumpQueued = 0f;
+        //_timeAfterJumpQueued = 0f;
     }
 
     //JumpState 시작
@@ -112,6 +116,9 @@ public class PlayerJumpController : MonoBehaviour
         _remainingJumpCount--;
         _isLongJumping = true;
         _longJumpTime = 0f;
+
+        if (_player.StateIs<InAirState>())
+            _player.Animator.SetTrigger("Double Jump");
 
         _player.ChangeState<JumpState>();
         return;

@@ -10,10 +10,10 @@ public class WallClimbState : WallState
     {
         base.OnEnter();
 
-        Debug.Log("Enter Climb");
+        //Debug.Log("Enter Climb");
 
         Player.Rigidbody.gravityScale = 0f;
-        Animator.SetBool("WallClimb", true);
+        Animator.SetBool("Wall Climb", true);
     }
     protected override void OnUpdate()
     {
@@ -52,9 +52,11 @@ public class WallClimbState : WallState
 
     protected override void OnExit()
     {
+        base.OnExit();
+
         //Debug.Log("Exit Wall Climb");
 
         Player.Rigidbody.gravityScale = 5f;
-        Animator.SetBool("WallClimb", false);
+        Animator.SetBool("Wall Climb", false);
     }
 }

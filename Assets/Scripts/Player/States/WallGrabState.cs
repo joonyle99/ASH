@@ -10,13 +10,13 @@ public class WallGrabState : WallState
     {
         base.OnEnter();
 
+        Animator.SetBool("Wall Grab", true);
+
         //Debug.Log("Enter Grab");
 
         // Player Stop
         Player.Rigidbody.gravityScale = 0f;
         Player.Rigidbody.velocity = Vector2.zero;
-
-        Animator.SetBool("WallGrab", true);
     }
 
     protected override void OnUpdate()
@@ -37,9 +37,12 @@ public class WallGrabState : WallState
     }
     protected override void OnExit()
     {
+        base.OnExit();
+
         //Debug.Log("Exit Wall Grab");
 
+        Animator.SetBool("Wall Grab", false);
+
         Player.Rigidbody.gravityScale = 5f;
-        Animator.SetBool("WallGrab", false);
     }
 }

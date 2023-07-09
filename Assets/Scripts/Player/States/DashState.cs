@@ -22,6 +22,8 @@ public class DashState : PlayerState
     {
         //Debug.Log("Dash Enter");
 
+        Player.Animator.SetBool("Dash", true);
+
         ExcuteDash();
     }
 
@@ -47,6 +49,8 @@ public class DashState : PlayerState
     protected override void OnExit()
     {
         //Debug.Log("Dash Exit");
+
+        Player.Animator.SetBool("Dash", false);
     }
 
     private void ExcuteDash()
