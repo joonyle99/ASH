@@ -15,7 +15,7 @@ public class PlayerBehaviour : StateMachineBase
 
     [Header("Wall Settings")]
 
-    [SerializeField] float _wallCheckDistance = 0.7f;
+    [SerializeField] float _wallCheckDistance = 0.8f;
     [SerializeField] bool _isWallJump;
     [SerializeField] bool _isTouchedWall;
 
@@ -24,6 +24,7 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] float _groundCheckDistance = 0.8f;
     [SerializeField] float _groundDistance;
     [SerializeField] float _diveThreshhold = 2.0f;
+    [SerializeField] Vector3 _groundLastPos = Vector3.one;
 
     // controllers
     PlayerJumpController _jumpController;
@@ -36,7 +37,7 @@ public class PlayerBehaviour : StateMachineBase
 
     int _recentDir = 1;
 
-    #region Properties
+#region Properties
 
     public bool IsGrounded { get; private set; }
     public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
@@ -58,7 +59,7 @@ public class PlayerBehaviour : StateMachineBase
     public InputState SmoothedInputs { get { return _inputPreprocessor.SmoothedInputs; } }          // Smooth 효과로 전처리 된 InputState
     public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.Instance.GetState() 와 동일
 
-    #endregion
+#endregion
 
     private void Awake()
     {
@@ -96,11 +97,11 @@ public class PlayerBehaviour : StateMachineBase
         // Check Ground
         GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
 
-        Debug.Log("땅의 정보 : " + GroundHit.point.y);
-        //Debug.Log("땅 체커의 정보 : " + _groundCheckTrans.position);
-
         if (GroundHit)
+        {
             IsGrounded = true;
+            _groundLastPos = GroundHit.point;
+        }
         else
             IsGrounded = false;
 
@@ -115,7 +116,7 @@ public class PlayerBehaviour : StateMachineBase
             IsTouchedWall = false;
 
         // Ground Distance
-        _groundDistance = Mathf.Abs(_groundCheckTrans.position.y - GroundHit.point.y);
+        _groundDistance = _groundCheckTrans.position.y - _groundLastPos.y;
 
 #endregion
 
@@ -129,6 +130,7 @@ public class PlayerBehaviour : StateMachineBase
 
         // Animation Param
         Animator.SetBool("Grounded", IsGrounded);
+        //Animator.SetBool("Walled", IsTouchedWall);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
 
         // In Air State
@@ -200,6 +202,21 @@ public class PlayerBehaviour : StateMachineBase
     void CastShootingAttack()
     {
         _attackController.CastShootingAttack();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == _groundLayer)
+        {
+            collision.collider.usedByEffector = true;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == _groundLayer)
+        {
+            collision.collider.usedByEffector = false;
+        }
     }
 
     private void OnDrawGizmosSelected()

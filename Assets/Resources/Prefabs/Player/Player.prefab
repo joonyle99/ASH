@@ -58,7 +58,9 @@ GameObject:
   - component: {fileID: 2936927171279259828}
   - component: {fileID: 3839760623545100111}
   - component: {fileID: 2936927172107219133}
+  - component: {fileID: 8029469345376958905}
   - component: {fileID: 5733063111376558413}
+  - component: {fileID: 1324316292}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -183,6 +185,7 @@ MonoBehaviour:
   _groundCheckDistance: 0.8
   _groundDistance: 0
   _diveThreshhold: 2
+  _groundLastPos: {x: 1, y: 1, z: 1}
 --- !u!114 &5733063111376558414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,11 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _attackCountRefreshTime: 1
-  _shootingCoolTime: 0
-  _shootingDelay: 0
   _basicAttackHitbox: {fileID: 2936927172621461497}
-  _fireBullet: {fileID: 7083264288868709419, guid: 19790a3cafdcab943a3a019ee84b88ab, type: 3}
-  _ShootingDelayEffect: {fileID: 198159274938206214, guid: 9e4577abe56a95f4a91d29a0473cd30c, type: 3}
   _animator: {fileID: 9213343480644679670}
 --- !u!114 &1322454706829155586
 MonoBehaviour:
@@ -266,6 +265,7 @@ MonoBehaviour:
   _longJumpDuration: 0.2
   _longJumpBonus: 3
   _coyoteTime: 1.5
+  _jumpQueueDuration: 0.1
   _maxJumpCount: 2
 --- !u!114 &1322454706829155585
 MonoBehaviour:
@@ -389,6 +389,26 @@ MonoBehaviour:
   _explosionSizeY: 0.83
   _explosionDamage: 70
   _knockBackPower: 10
+--- !u!114 &8029469345376958905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322454706829173486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 784ca3015a4a85141affb87caac4f45c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorParameters:
+    _enterParams: []
+    _exitParams: []
+  _basicAttackHitbox: {fileID: 2936927172621461497}
+  _shootingCoolTime: 2
+  _shootingDelay: 1.5
+  _fireBullet: {fileID: 7083264288868709419, guid: 19790a3cafdcab943a3a019ee84b88ab, type: 3}
+  _ShootingDelayEffect: {fileID: 7679846100771874108, guid: 22c89930bdb1b3c419a589f24ddc6773, type: 3}
 --- !u!114 &5733063111376558413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,6 +421,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9fa46ddc7170484b8cf7c42ce54ecb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1324316292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322454706829173486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 784ca3015a4a85141affb87caac4f45c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorParameters:
+    _enterParams: []
+    _exitParams: []
+  _basicAttackHitbox: {fileID: 0}
+  _shootingCoolTime: 0
+  _shootingDelay: 0
+  _fireBullet: {fileID: 0}
+  _ShootingDelayEffect: {fileID: 0}
 --- !u!1 &2936927171190041435
 GameObject:
   m_ObjectHideFlags: 0

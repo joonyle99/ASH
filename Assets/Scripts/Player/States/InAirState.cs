@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class InAirState : PlayerState
 {
@@ -9,13 +8,9 @@ public class InAirState : PlayerState
     [SerializeField] float _fastDropPower = 1f;         // 빨리 떨어지는 힘
     [SerializeField] float _maxDropSpeed = -80f;        // 떨어지는 속도 최대값
 
-    //PlayerJumpController _jumpController;
-
     protected override void OnEnter()
     {
         //Debug.Log("InAir Enter");
-
-        //_jumpController = GetComponent<PlayerJumpController>();
     }
 
     protected override void OnUpdate()
@@ -28,21 +23,13 @@ public class InAirState : PlayerState
         }
 
         // Wall Grab State
-        //if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
         if (Player.IsTouchedWall)
         {
             ChangeState<WallGrabState>();
             return;
         }
 
-        //// Wall Slide State
-        //if (Player.IsTouchedWall)
-        //{
-        //    ChangeState<WallSlideState>();
-        //    return;
-        //}
-
-        // wall jump -> In Air
+        // Wall Jump에서 In Air State로 넘어온 경우
         if (Player.IsWallJump)
         {
             Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, Player.Rigidbody.velocity.y);
@@ -70,6 +57,8 @@ public class InAirState : PlayerState
     {
         //Debug.Log("InAir Exit");
 
+
         Player.Animator.SetBool("Jump", false);
+
     }
 }
