@@ -13,7 +13,7 @@ public class WallSlideState : WallState
         //Debug.Log("Enter Slide");
 
         Player.Rigidbody.gravityScale = 0f;
-        Animator.SetBool("WallSlide", true);
+        //Animator.SetBool("WallSlide", true);
     }
 
     protected override void OnUpdate()
@@ -54,9 +54,11 @@ public class WallSlideState : WallState
 
     protected override void OnExit()
     {
+        base.OnExit();
+
         //Debug.Log("Exit WallSlide");
 
         Player.Rigidbody.gravityScale = 5f;
-        Animator.SetBool("WallSlide", false);
+        //Animator.SetBool("WallSlide", false);
     }
 }

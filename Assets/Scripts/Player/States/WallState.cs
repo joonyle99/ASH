@@ -14,6 +14,9 @@ public class WallState : PlayerState
         if (!Player.WallHit)
             return;
 
+        Player.Animator.SetBool("Wall", true);
+        Player.Animator.SetBool("Jump", false);
+
         // 벽의 법선벡터
         wallNormal = Player.WallHit.normal;
 
@@ -48,7 +51,7 @@ public class WallState : PlayerState
 
     protected override void OnExit()
     {
-
+        Player.Animator.SetBool("Wall", false);
     }
 
     private void OnDrawGizmosSelected()

@@ -7,6 +7,7 @@ public class WalkState : PlayerState
 
     protected override void OnEnter()
     {
+        // Walk Animation Enter
         Player.Animator.SetBool("Walk", true);
     }
     protected override void OnUpdate()
@@ -31,6 +32,7 @@ public class WalkState : PlayerState
 
     protected override void OnExit()
     {
+        // Walk Animation Exit
         Player.Animator.SetBool("Walk", false);
     }
 

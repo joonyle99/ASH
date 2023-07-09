@@ -11,7 +11,7 @@ public class IdleState : PlayerState
 
     protected override void OnEnter()
     {
-        Debug.Log("Idle Enter");
+        //Debug.Log("Idle Enter");
 
         // Exception
         if (!Player.GroundHit)

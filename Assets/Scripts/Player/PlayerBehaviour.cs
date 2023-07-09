@@ -21,7 +21,7 @@ public class PlayerBehaviour : StateMachineBase
 
     [Header("Dive Settings")]
 
-    [SerializeField] float _groundCheckDistance = 0.6f;
+    [SerializeField] float _groundCheckDistance = 0.8f;
     [SerializeField] float _groundDistance;
     [SerializeField] float _diveThreshhold = 2.0f;
 
@@ -95,6 +95,10 @@ public class PlayerBehaviour : StateMachineBase
 
         // Check Ground
         GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
+
+        Debug.Log("¶¥ÀÇ Á¤º¸ : " + GroundHit.point.y);
+        //Debug.Log("¶¥ Ã¼Ä¿ÀÇ Á¤º¸ : " + _groundCheckTrans.position);
+
         if (GroundHit)
             IsGrounded = true;
         else
@@ -111,7 +115,7 @@ public class PlayerBehaviour : StateMachineBase
             IsTouchedWall = false;
 
         // Ground Distance
-        _groundDistance = _groundCheckTrans.position.y - GroundHit.point.y;
+        _groundDistance = Mathf.Abs(_groundCheckTrans.position.y - GroundHit.point.y);
 
 #endregion
 
