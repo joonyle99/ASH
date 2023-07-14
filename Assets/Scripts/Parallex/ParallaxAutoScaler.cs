@@ -17,7 +17,6 @@ public class ParallaxAutoScaler : MonoBehaviour
             return;
         float zOffset = transform.position.z - Camera.main.transform.position.z;
         transform.localScale = new Vector3(zOffset, zOffset, 0) / (0 -Camera.main.transform.position.z);
-        print(gameObject.name + " " + zOffset.ToString());
     }
     /*
     private void OnDrawGizmosSelected()
