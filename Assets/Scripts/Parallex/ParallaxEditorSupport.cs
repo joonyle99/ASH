@@ -13,7 +13,7 @@ public class ParallaxEditorSupport : MonoBehaviour
 
     [SerializeField][Tooltip("z축을 움직여도 scale이 고정됩니다.")]
     bool _autoScale = true;
-    Vector3 _baseScale;
+    [SerializeField][HideInInspector] Vector3 _baseScale;
     //Set sorting layer order only on editor
 
     private void Awake()
