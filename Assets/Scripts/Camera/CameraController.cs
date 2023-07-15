@@ -2,17 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+using Com.LuisPedroFonseca.ProCamera2D;
+
+public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
-    // Start is called before the first frame update
-    void Start()
+    ProCamera2D _proCamera;
+
+    public void OnSceneContextBuilt()
     {
-        
+        _proCamera.AddCameraTarget(SceneContextController.Player.transform);
     }
 
+    private void Awake()
+    {
+        _proCamera = GetComponent<ProCamera2D>();
+    }
     // Update is called once per frame
     void Update()
     {
-        
     }
 }

@@ -13,21 +13,19 @@ public class SceneContextController : HappyTools.SingletonBehaviourFixed<SceneCo
 
     SceneContext _context;
 
+    bool _recentBuildSucceeded = false;
+    public static bool RecentBuildSucceeded { get { return Instance._recentBuildSucceeded; } }
 
     public static PlayerBehaviour Player { get { return Instance._context.Player; } }
-    public void OnLoad(string entranceName)
-    {
-        Result result = BuildSceneContext();
-        if (result == Result.Success) 
-            StartCoroutine(ExitPassageCoroutine(entranceName));
-    }
-    Result BuildSceneContext()
+
+    public Result BuildSceneContext()
     {
         _context = new SceneContext();
         GameObject player = GameObject.FindWithTag("Player");
         if (player == null)
         {
             Debug.LogWarning("No player in scene!");
+            _recentBuildSucceeded = false;
             return Result.Fail;
         }
         _context.Player = player.GetComponent<PlayerBehaviour>();
@@ -37,9 +35,15 @@ public class SceneContextController : HappyTools.SingletonBehaviourFixed<SceneCo
         _context.Passages = new List<Passage>();
         for (int i = 0; i < passages.Length; i++)
             _context.Passages.Add( passages[i].GetComponent<Passage>());
+
+        _recentBuildSucceeded = true;
         return Result.Success;
     }
-    IEnumerator ExitPassageCoroutine(string entranceName)
+    public void StartEnterPassage(string entranceName)
+    {
+        StartCoroutine(EnterPassageCoroutine(entranceName));
+    }
+    IEnumerator EnterPassageCoroutine(string entranceName)
     {
         Passage entrance = _context.Passages.Find(x => x.Data.Name == entranceName);
         if (entrance == null)

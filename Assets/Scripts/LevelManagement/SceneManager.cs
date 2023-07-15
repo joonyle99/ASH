@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class SceneManager : HappyTools.SingletonBehaviourFixed<SceneManager>
 {
@@ -41,11 +42,20 @@ public class SceneManager : HappyTools.SingletonBehaviourFixed<SceneManager>
         
         yield return StartCoroutine(StartSceneAfterLoadCoroutine(targetPassageData.Name));
     }
-
+    
     IEnumerator StartSceneAfterLoadCoroutine(string entranceName = "")
     {
         //OnLoad
-        _sceneContext.OnLoad(entranceName);
+        Result buildResult = _sceneContext.BuildSceneContext();
+        
+        if (buildResult == Result.Success)
+        {
+            _sceneContext.StartEnterPassage(entranceName);
+            foreach (ISceneContextBuildListener listener in FindObjectsOfType<MonoBehaviour>().OfType<ISceneContextBuildListener>())
+            {
+                listener.OnSceneContextBuilt();
+            }
+        }
 
         yield return FadeCoroutine(_fadeDuration, 1, 0);
         _isTransitioning = false;
