@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class WallState : PlayerState
 {
@@ -15,7 +14,6 @@ public class WallState : PlayerState
             return;
 
         Player.Animator.SetBool("Wall", true);
-        Player.Animator.SetBool("Jump", false);
 
         // 벽의 법선벡터
         wallNormal = Player.WallHit.normal;

@@ -23,7 +23,7 @@ public class WalkState : PlayerState
         }
 
         // Wall Grab State
-        if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)) && Mathf.RoundToInt(Player.RawInputs.Movement.y) > 0)
         {
             ChangeState<WallGrabState>();
             return;

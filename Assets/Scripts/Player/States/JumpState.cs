@@ -1,5 +1,5 @@
+
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class JumpState : PlayerState
 {
@@ -10,6 +10,7 @@ public class JumpState : PlayerState
         //Debug.Log("Jump Enter");
 
         // Jump Animation Enter
+        // Player.Animator.SetTrigger("Jump");
         Player.Animator.SetBool("Jump", true);
 
         _jumpController = Player.GetComponent<PlayerJumpController>();

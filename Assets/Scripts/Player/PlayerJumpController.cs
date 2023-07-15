@@ -12,7 +12,7 @@ public class PlayerJumpController : MonoBehaviour
 
     [Header("Jump Settings")]
     [SerializeField] float _coyoteTime = 2f;
-    //[SerializeField] float _jumpQueueDuration = 0.1f;
+    [SerializeField] float _jumpQueueDuration = 0.1f;
     [SerializeField] int _maxJumpCount = 2;
 
     public bool CanJump { get { return _remainingJumpCount > 0 && !_player.StateIs<JumpState>() && CoyoteAvailable; } }
@@ -26,7 +26,7 @@ public class PlayerJumpController : MonoBehaviour
     bool _isGroundJump;
 
     bool _isJumpQueued;
-    //float _timeAfterJumpQueued;
+    float _timeAfterJumpQueued;
 
     float _timeAfterGroundLeft;
 
@@ -71,20 +71,17 @@ public class PlayerJumpController : MonoBehaviour
             }
 
             // 벽타기 상태에서 "바라보는 방향 == 키 입력 방향" 이라면 종료
-            // if (_player.StateIs<WallState>() && (_player.RecentDir == Mathf.RoundToInt(_player.RawInputs.Movement.x)))
-            //if (_player.StateIs<WallGrabState>())
-            //{
-            //    _isJumpQueued = false;
-            //    return;
-            //}
+            if (_player.StateIs<WallState>() && (_player.RecentDir == Mathf.RoundToInt(_player.RawInputs.Movement.x)))
+            {
+                _isJumpQueued = false;
+                return;
+            }
 
-            //_timeAfterJumpQueued += Time.deltaTime;
+            _timeAfterJumpQueued += Time.deltaTime;
 
-            //if (_timeAfterJumpQueued > _jumpQueueDuration)
-                //_isJumpQueued = false;
-            //else if (CanJump)
-
-            if (CanJump)
+            if (_timeAfterJumpQueued > _jumpQueueDuration)
+                _isJumpQueued = false;
+            else if (CanJump)
             {
                 CastJump();
                 return;
@@ -100,7 +97,7 @@ public class PlayerJumpController : MonoBehaviour
     public void OnJumpPressed()
     {
         _isJumpQueued = true;
-        //_timeAfterJumpQueued = 0f;
+        _timeAfterJumpQueued = 0f;
     }
 
     //JumpState 시작
@@ -108,9 +105,11 @@ public class PlayerJumpController : MonoBehaviour
     {
         _isJumpQueued = false;
 
+        /*
         //// 공중에서 점프 시 차감
         //if ((!_player.IsGrounded && _remainingJumpCount == _maxJumpCount) && !_coyoteAvailable)
         //    _remainingJumpCount--;
+        */
 
         _isGroundJump = (_remainingJumpCount == _maxJumpCount);
         _remainingJumpCount--;

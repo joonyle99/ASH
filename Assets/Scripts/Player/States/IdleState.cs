@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class IdleState : PlayerState
 {
@@ -33,7 +30,10 @@ public class IdleState : PlayerState
         }
 
         // 벽에서 미끄러지지 않음
-        Player.Rigidbody.velocity = new Vector2((-1) * _groundNormal.x, (-1) * _groundNormal.y) * Time.deltaTime;
+        float angle = Vector3.Angle(_groundNormal, Player.PlayerLookDir);
+        if (Mathf.Abs(90 - angle) > 10f)
+            Player.Rigidbody.velocity = new Vector2((-1) * _groundNormal.x, (-1) * _groundNormal.y) * 100f * Time.deltaTime;
+
     }
 
     protected override void OnExit()

@@ -105,9 +105,13 @@ public class ParallaxTool : MonoBehaviour
         if (Camera.main != null && _volumeType == VolumetricLightType.DistanceBased)
             Camera.main.backgroundColor = _volumetricLightColor * _volumeOpacity;
     }
-    int GetSortingOrder(float z)
+    public static int GetSortingOrder(float z)
     {
         return -(int)(z * 100);
+    }
+    public string GetSortingLayerName(float z)
+    {
+        return _parallaxBoundaries.GetLayerName(z);
     }
 }
 
