@@ -204,6 +204,16 @@ public class PlayerBehaviour : StateMachineBase
         _attackController.CastShootingAttack();
     }
 
+    public void OnHitbyWater(float damage, Vector3 spawnPoint)
+    {
+        Debug.Log("물 웅덩이에 닿음 ");
+        //애니메이션, 체력 닳기 등 하면 됨.
+        //애니메이션 종료 후 spawnpoint에서 생성
+
+        //TEMP
+        transform.position = spawnPoint;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == _groundLayer)
