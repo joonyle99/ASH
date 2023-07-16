@@ -121,7 +121,7 @@ public class PlayerBehaviour : StateMachineBase
 #endregion
 
         // Player Flip
-        if (!StateIs<DashState>() && !StateIs<WallState>())
+        if (!StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DesolateDiveState>())
         {
             // Input이 없을 때는 방향을 유지
             if (Mathf.RoundToInt(RawInputs.Movement.x) != 0)
