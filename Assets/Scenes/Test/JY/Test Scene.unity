@@ -1973,11 +1973,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!4 &2058823291 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2936927171190041428, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-  m_PrefabInstance: {fileID: 4222197490195542649}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2070214526294632049
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2090,10 +2085,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 524874519, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _fireballTransform
-      value: 
-      objectReference: {fileID: 4222197490195542650}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -2142,41 +2133,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 2040072695455763983, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_Name
-      value: Fireball Point
-      objectReference: {fileID: 0}
-    - target: {fileID: 2040072695455763983, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2936927171364045381, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_Name
-      value: Ground Check
+    - target: {fileID: 2936927172107219133, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _diveSpeed
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2936927172107219133, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _divePoint
-      value: 
-      objectReference: {fileID: 2058823291}
-    - target: {fileID: 2936927172242374730, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_Name
-      value: Wall Check
-      objectReference: {fileID: 0}
-    - target: {fileID: 4105442348694175209, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.14
-      objectReference: {fileID: 0}
-    - target: {fileID: 4105442348694175209, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.04
+      propertyPath: _fastDiveSpeed
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
---- !u!4 &4222197490195542650 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4105442348694175209, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-  m_PrefabInstance: {fileID: 4222197490195542649}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6799398460762504347
 PrefabInstance:
   m_ObjectHideFlags: 0
