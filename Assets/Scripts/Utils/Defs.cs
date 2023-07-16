@@ -1,4 +1,4 @@
-enum Result
+public enum Result
 {
     Success, Fail
 }
