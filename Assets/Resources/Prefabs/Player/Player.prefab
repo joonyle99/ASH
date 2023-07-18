@@ -30,7 +30,7 @@ Transform:
   m_Children:
   - {fileID: 6038346179498335887}
   m_Father: {fileID: 1322454706829173480}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1322454706829173486
 GameObject:
@@ -58,9 +58,8 @@ GameObject:
   - component: {fileID: 2936927171279259828}
   - component: {fileID: 3839760623545100111}
   - component: {fileID: 2936927172107219133}
-  - component: {fileID: 8029469345376958905}
+  - component: {fileID: 524874519}
   - component: {fileID: 5733063111376558413}
-  - component: {fileID: 1324316292}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -81,6 +80,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2936927172621461497}
+  - {fileID: 4105442348694175209}
   - {fileID: 2936927171364045382}
   - {fileID: 2936927172242374731}
   - {fileID: 2936927171190041428}
@@ -378,18 +378,21 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+  _explosionPoint: {fileID: 2936927171190041428}
   _enemyLayers:
     serializedVersion: 2
     m_Bits: 8
   _targetEnemys: []
-  _particleSystem: {fileID: 198405478074982118, guid: 4adffb0018aeda44e9263f901167af1f, type: 3}
+  _boomParticle: {fileID: 4593184484909914550, guid: f4b13f1fe770d5946b66303e795e4bf1, type: 3}
+  _chargingParticle: {fileID: 198858562690846188, guid: 968c924d2be019d4b9e67647551eec3e, type: 3}
   _diveSpeed: 15
   _fastDiveSpeed: 10
   _explosionSizeX: 5.5
   _explosionSizeY: 0.83
   _explosionDamage: 70
   _knockBackPower: 10
---- !u!114 &8029469345376958905
+  _isDiving: 0
+--- !u!114 &524874519
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -398,17 +401,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1322454706829173486}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 784ca3015a4a85141affb87caac4f45c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0ca300fa930fef3479df52eb200d96f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  _basicAttackHitbox: {fileID: 2936927172621461497}
-  _shootingCoolTime: 2
-  _shootingDelay: 1.5
+  _fireballTransform: {fileID: 4105442348694175209}
+  _fireballCoolTime: 2
+  _fireballDelay: 2
   _fireBullet: {fileID: 7083264288868709419, guid: 19790a3cafdcab943a3a019ee84b88ab, type: 3}
-  _ShootingDelayEffect: {fileID: 7679846100771874108, guid: 22c89930bdb1b3c419a589f24ddc6773, type: 3}
+  _lightingParticle: {fileID: 198858562690846188, guid: 968c924d2be019d4b9e67647551eec3e, type: 3}
 --- !u!114 &5733063111376558413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,26 +424,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9fa46ddc7170484b8cf7c42ce54ecb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1324316292
-MonoBehaviour:
+--- !u!1 &2040072695455763983
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1322454706829173486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 784ca3015a4a85141affb87caac4f45c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
-  _basicAttackHitbox: {fileID: 0}
-  _shootingCoolTime: 0
-  _shootingDelay: 0
-  _fireBullet: {fileID: 0}
-  _ShootingDelayEffect: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4105442348694175209}
+  m_Layer: 8
+  m_Name: Fireball Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4105442348694175209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2040072695455763983}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.14, y: 1.04, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1322454706829173480}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2936927171190041435
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,7 +465,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2936927171190041428}
   m_Layer: 8
-  m_Name: Dive Point
+  m_Name: Explosion Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -470,7 +484,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1322454706829173480}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2936927171364045381
 GameObject:
@@ -482,7 +496,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2936927171364045382}
   m_Layer: 0
-  m_Name: GroundCheck
+  m_Name: Ground Check
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -501,7 +515,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1322454706829173480}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2936927172242374730
 GameObject:
@@ -513,7 +527,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2936927172242374731}
   m_Layer: 0
-  m_Name: WallCheck
+  m_Name: Wall Check
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -532,7 +546,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1322454706829173480}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2936927172621461496
 GameObject:
@@ -625,7 +639,7 @@ Transform:
   m_Children:
   - {fileID: 7562538969069080102}
   m_Father: {fileID: 1322454706829173480}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2936927172065353010
 PrefabInstance:

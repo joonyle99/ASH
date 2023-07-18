@@ -121,7 +121,7 @@ public class PlayerBehaviour : StateMachineBase
 #endregion
 
         // Player Flip
-        if (!StateIs<DashState>() && !StateIs<WallState>())
+        if (!StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DesolateDiveState>() && !StateIs<ShootingState>())
         {
             // Input이 없을 때는 방향을 유지
             if (Mathf.RoundToInt(RawInputs.Movement.x) != 0)
@@ -166,6 +166,17 @@ public class PlayerBehaviour : StateMachineBase
         {
             if(StateIs<InAirState>() && _groundDistance > _diveThreshhold)
                 ChangeState<DesolateDiveState>();
+        }
+
+        // TODO : 쿨타임 관리 시스템 만들기
+        // Desolate Dive CoolTime
+        if (!_dashState.Dashing && !_dashState.EnableDash)
+        {
+            if (Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
+            {
+                if (IsGrounded || StateIs<WallState>())
+                    _dashState.EnableDash = true;
+            }
         }
     }
 

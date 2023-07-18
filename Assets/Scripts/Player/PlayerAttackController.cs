@@ -5,21 +5,19 @@ using UnityEngine;
 public class PlayerAttackController : MonoBehaviour
 {
     PlayerBehaviour _playerBehaviour;
-
-    int _basicAttackCount = 0 ;
-
-    [SerializeField] float _attackCountRefreshTime;
+    Animator _animator;
     [SerializeField] Transform _basicAttackHitbox;
+    [SerializeField] float _attackCountRefreshTime;
 
-    float _timeAfterLastBasicAttack;
-
-    [SerializeField] Animator _animator;
+    private int _basicAttackCount = 0;
+    private float _timeAfterLastBasicAttack = 0f;
 
     public bool IsBasicAttacking { get; private set; }
 
     private void Awake()
     {
         _playerBehaviour = GetComponent<PlayerBehaviour>();
+        _animator = GetComponent<Animator>();
     }
 
     public void CastBasicAttack()
