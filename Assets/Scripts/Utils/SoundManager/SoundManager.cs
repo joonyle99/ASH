@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
 {
-    //Dictionary<float, AudioSource> _audioSources;
+    Dictionary<int, AudioSource> _pitchedAudioSources = new Dictionary<int, AudioSource>();
 
     [SerializeField] GameObject _soundListParent;
 
     [SerializeField] AudioSource _sfxPlayer;
     [SerializeField] AudioSource _bgmPlayer;
+
+    const int PitchPrecision = 1000;
 
     SoundList [] _soundLists;
     Dictionary<string, int> _soundListIndicies  = new Dictionary<string, int>();
@@ -24,17 +26,26 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
             for (int j = 0; j < _soundLists[i].Datas.Count; j++)
                 _soundListIndicies[_soundLists[i].Datas[j].Key] = i;
         }
+        _pitchedAudioSources[1 * PitchPrecision] = _sfxPlayer;
     }
-    public void PlaySFXPitched(AudioClip clip, float pitchMultiplier = 1, float volumeMultiplier = 1f)
+    public void PlaySFXPitched(AudioClip clip, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
-        _sfxPlayer.PlayOneShot(clip, volumeMultiplier);
+        if (pitchMultiplier < 0)
+            pitchMultiplier = 0.001f;
+        int pitch = Mathf.RoundToInt(pitchMultiplier * PitchPrecision);
+        if (!_pitchedAudioSources.ContainsKey(pitch))
+        {
+            _pitchedAudioSources[pitch] = _sfxPlayer.AddComponent<AudioSource>();
+            _pitchedAudioSources[pitch].pitch = pitch / 1000f;
+        }
+        _pitchedAudioSources[pitch].PlayOneShot(clip, volumeMultiplier);
     }
     public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f)
     {
         _bgmPlayer.PlayOneShot(clip, volumeMultiplier);
     }
 
-    public void PlayCommonSFXPitched(string key, float pitchMultiplier = 1, float volumeMultiplier = 1f)
+    public void PlayCommonSFXPitched(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
         if (_soundListIndicies.ContainsKey(key))
         {
@@ -49,7 +60,7 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
     {
         if (_soundListIndicies.ContainsKey(key))
         {
-            _soundLists[_soundListIndicies[key]].PlaySFXPitched(key, volumeMultiplier);
+            _soundLists[_soundListIndicies[key]].PlayBGM(key, volumeMultiplier);
         }
         else
         {
