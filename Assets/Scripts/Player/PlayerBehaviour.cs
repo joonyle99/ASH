@@ -26,23 +26,26 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] float _diveThreshhold = 2.0f;
     [SerializeField] Vector3 _groundLastPos = Vector3.one;
 
-    // controllers
+    [Header("Player Direction")]
+
+    [SerializeField] int _recentDir = 1;
+
+
+
     PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
     InteractionController _interactionController;
-
     PlayerInputPreprocessor _inputPreprocessor;
-
     DashState _dashState;
 
-    int _recentDir = 1;
+
 
 #region Properties
 
     public bool IsGrounded { get; private set; }
     public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
 
-    public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<WalkState>() || StateIs<InAirState>(); } }
+    public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<RunState>() || StateIs<InAirState>(); } }
     public bool CanHealing { get { return StateIs<IdleState>(); } }
     public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
 
@@ -53,7 +56,6 @@ public class PlayerBehaviour : StateMachineBase
     public int RecentDir { get { return _recentDir; } set { _recentDir = value; } }
     public Vector2 PlayerLookDir { get { return new Vector2(RecentDir, 0); } }
 
-    public int MaxJumpCount { get { return _jumpController.MaxJumpCount; } }
     public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
 
     public InputState SmoothedInputs { get { return _inputPreprocessor.SmoothedInputs; } }          // Smooth 효과로 전처리 된 InputState
@@ -118,32 +120,31 @@ public class PlayerBehaviour : StateMachineBase
         // Ground Distance
         _groundDistance = _groundCheckTrans.position.y - _groundLastPos.y;
 
-#endregion
+        #endregion
+
+        // Animation Param
+        Animator.SetBool("IsGround", IsGrounded);
+        Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
 
         // Player Flip
-        if (!StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DesolateDiveState>() && !StateIs<ShootingState>())
+        if (!StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DiveState>() && !StateIs<ShootingState>())
         {
-            // Input이 없을 때는 방향을 유지
+            // 좌 & 우 방향키가 입력되므로 Flip
             if (Mathf.RoundToInt(RawInputs.Movement.x) != 0)
                 UpdateImageFlip();
         }
 
-        // Animation Param
-        Animator.SetBool("Grounded", IsGrounded);
-        //Animator.SetBool("Walled", IsTouchedWall);
-        Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
-
         // In Air State
         if (!IsGrounded)
         {
-            if (!StateIs<InAirState>() && !StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DesolateDiveState>())
+            if (!StateIs<InAirState>() && !StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DiveState>())
                 ChangeState<InAirState>();
         }
 
         // Dash State
         if (Input.GetKeyDown(KeyCode.V) && _dashState.EnableDash && Mathf.RoundToInt(RawInputs.Movement.x) != 0)
         {
-            if (!StateIs<WallState>() && !StateIs<DesolateDiveState>())
+            if (!StateIs<WallState>() && !StateIs<DiveState>() && !StateIs<ShootingState>())
             {
                 if (!StateIs<DashState>())
                     ChangeState<DashState>();
@@ -152,7 +153,7 @@ public class PlayerBehaviour : StateMachineBase
 
         // TODO : 쿨타임 관리 시스템 만들기
         // Dash CoolTime
-        if (!_dashState.Dashing && !_dashState.EnableDash)
+        if (!_dashState.IsDashing && !_dashState.EnableDash)
         {
             if (Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
             {
@@ -165,12 +166,12 @@ public class PlayerBehaviour : StateMachineBase
         if (Input.GetKeyDown(KeyCode.Alpha5) && RawInputs.Movement.y < 0)
         {
             if(StateIs<InAirState>() && _groundDistance > _diveThreshhold)
-                ChangeState<DesolateDiveState>();
+                ChangeState<DiveState>();
         }
 
         // TODO : 쿨타임 관리 시스템 만들기
         // Desolate Dive CoolTime
-        if (!_dashState.Dashing && !_dashState.EnableDash)
+        if (!_dashState.IsDashing && !_dashState.EnableDash)
         {
             if (Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
             {
@@ -223,21 +224,6 @@ public class PlayerBehaviour : StateMachineBase
 
         //TEMP
         transform.position = spawnPoint;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == _groundLayer)
-        {
-            collision.collider.usedByEffector = true;
-        }
-    }
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == _groundLayer)
-        {
-            collision.collider.usedByEffector = false;
-        }
     }
 
     private void OnDrawGizmosSelected()

@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 public class JumpState : PlayerState
@@ -7,26 +6,16 @@ public class JumpState : PlayerState
 
     protected override void OnEnter()
     {
-        //Debug.Log("Jump Enter");
-
-        // Jump Animation Enter
-        // Player.Animator.SetTrigger("Jump");
-        Player.Animator.SetBool("Jump", true);
-
         _jumpController = Player.GetComponent<PlayerJumpController>();
+
+        Player.Animator.SetBool("IsJump", true);
 
         // Wall Jump
         if (Player.PreviousState is WallState)
-        {
-            //Debug.Log("wall jump");
             _jumpController.ExecuteWallJumpAnimEvent();
-        }
         // Jump
         else
-        {
-            //Debug.Log("just jump");
             _jumpController.ExecuteJumpAnimEvent();
-        }
     }
 
     protected override void OnUpdate()
@@ -35,6 +24,6 @@ public class JumpState : PlayerState
     }
     protected override void OnExit()
     {
-        //Debug.Log("Jump Exit");
+
     }
 }

@@ -1,19 +1,20 @@
 using UnityEngine;
 
-public class WalkState : PlayerState
+public class RunState : PlayerState
 {
-    [Header("Walk Setting")]
-    [SerializeField] float _walkSpeed = 7;
+    [Header("Run Setting")]
+    [SerializeField] float _runSpeed = 7f;
 
     protected override void OnEnter()
     {
-        // Walk Animation Enter
-        Player.Animator.SetBool("Walk", true);
+        Player.Animator.SetBool("IsRun", true);
     }
+
     protected override void OnUpdate()
     {
+        // 플레이어 이동
         float xInput = Player.SmoothedInputs.Movement.x;
-        Player.Rigidbody.velocity = new Vector2(xInput * _walkSpeed, Player.Rigidbody.velocity.y);
+        Player.Rigidbody.velocity = new Vector2(xInput * _runSpeed, Player.Rigidbody.velocity.y);
 
         // Idle State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0)
@@ -32,8 +33,7 @@ public class WalkState : PlayerState
 
     protected override void OnExit()
     {
-        // Walk Animation Exit
-        Player.Animator.SetBool("Walk", false);
+        Player.Animator.SetBool("IsRun", false);
     }
 
 }

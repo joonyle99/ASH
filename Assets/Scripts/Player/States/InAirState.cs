@@ -3,14 +3,14 @@ using UnityEngine;
 public class InAirState : PlayerState
 {
     [Header("InAir Setting")]
-    [SerializeField] float _inAirSpeed = 7f;            // 공중에서 좌우 움직이는 스피드
-    [SerializeField] float _fastDropThreshhold = 7f;    // 빨리 떨어지는 한계 높이
+    [SerializeField] float _inAirSpeed = 7f;            // 공중에서 좌우로 움직이는 스피드
+    [SerializeField] float _fastDropThreshhold = 7f;    // 빨리 떨어지기 시작하는 높이
     [SerializeField] float _fastDropPower = 1f;         // 빨리 떨어지는 힘
-    [SerializeField] float _maxDropSpeed = -80f;        // 떨어지는 속도 최대값
+    [SerializeField] float _maxDropSpeed = 80f;         // 떨어지는 속도 최대값
 
     protected override void OnEnter()
     {
-        //Debug.Log("InAir Enter");
+
     }
 
     protected override void OnUpdate()
@@ -23,7 +23,7 @@ public class InAirState : PlayerState
         }
 
         // Wall Grab State
-        if (Player.IsTouchedWall)
+        if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
         {
             ChangeState<WallGrabState>();
             return;
@@ -32,12 +32,14 @@ public class InAirState : PlayerState
         // Wall Jump에서 In Air State로 넘어온 경우
         if (Player.IsWallJump)
         {
+            // 플레이어의 velocity를 그대로 가지고 간다
             Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, Player.Rigidbody.velocity.y);
             Player.IsWallJump = false;
         }
         // jump -> In Air
         else
         {
+            // 공중에서 좌우로 움직일 수 있다.
             float xInput = Player.SmoothedInputs.Movement.x;
             Player.Rigidbody.velocity = new Vector2(xInput * _inAirSpeed, Player.Rigidbody.velocity.y);
         }
@@ -46,8 +48,8 @@ public class InAirState : PlayerState
         if (Player.Rigidbody.velocity.y < _fastDropThreshhold)
         {
             // 떨어지는 속도에 최대값 부여
-            if (Player.Rigidbody.velocity.y < _maxDropSpeed)
-                Player.Rigidbody.velocity = Vector2.up * _maxDropSpeed;
+            if (Player.Rigidbody.velocity.y < (-1) * _maxDropSpeed)
+                Player.Rigidbody.velocity = Vector2.down * _maxDropSpeed;
             else
                 Player.Rigidbody.velocity += _fastDropPower * Physics2D.gravity * Time.deltaTime;
         }
@@ -55,10 +57,6 @@ public class InAirState : PlayerState
 
     protected override void OnExit()
     {
-        //Debug.Log("InAir Exit");
-
-
-        Player.Animator.SetBool("Jump", false);
-
+        Player.Animator.SetBool("IsJump", false);
     }
 }
