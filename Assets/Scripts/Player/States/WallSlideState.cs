@@ -3,26 +3,23 @@ using UnityEngine;
 public class WallSlideState : WallState
 {
     [Header("Wall Slide Setting")]
-    [SerializeField] private float _wallSlideSpeed = 0.65f;
+    [SerializeField] float _wallSlideSpeed = 0.65f;
 
     protected override void OnEnter()
     {
         base.OnEnter();
 
-        //Debug.Log("Enter Slide");
-
         Player.Rigidbody.gravityScale = 0f;
-        //Animator.SetBool("WallSlide", true);
+
+        Animator.SetBool("IsSlide", true);
     }
 
     protected override void OnUpdate()
     {
-        // 서서히 땅에 떨어지는 기능
-        // Debug.Log("=======================================" + moveDirection);
+        // 벽면을 따라 서서히 땅에 떨어지는 기능
         Player.Rigidbody.velocity = (-1) * moveDirection * _wallSlideSpeed;
 
         // Wall Grab State
-        // if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
         {
             ChangeState<WallGrabState>();
@@ -36,7 +33,7 @@ public class WallSlideState : WallState
             return;
         }
 
-        // In Air State
+        // In Air State로 가는 조건
         if (!Player.IsTouchedWall)
         {
             ChangeState<InAirState>();
@@ -53,11 +50,10 @@ public class WallSlideState : WallState
 
     protected override void OnExit()
     {
-        base.OnExit();
-
-        //Debug.Log("Exit WallSlide");
-
         Player.Rigidbody.gravityScale = 5f;
-        //Animator.SetBool("WallSlide", false);
+
+        Animator.SetBool("IsSlide", false);
+
+        base.OnExit();
     }
 }

@@ -10,11 +10,8 @@ public class WallGrabState : WallState
     {
         base.OnEnter();
 
-        Animator.SetBool("Wall Grab", true);
+        Animator.SetBool("IsGrab", true);
 
-        //Debug.Log("Enter Grab");
-
-        // Player Stop
         Player.Rigidbody.gravityScale = 0f;
         Player.Rigidbody.velocity = Vector2.zero;
     }
@@ -29,6 +26,7 @@ public class WallGrabState : WallState
         }
 
         // Wall Slide State
+        // 방향키 입력 정보가 없을때
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
         {
             ChangeState<WallSlideState>();
@@ -37,12 +35,10 @@ public class WallGrabState : WallState
     }
     protected override void OnExit()
     {
-        base.OnExit();
-
-        //Debug.Log("Exit Wall Grab");
-
-        Animator.SetBool("Wall Grab", false);
+        Animator.SetBool("IsGrab", false);
 
         Player.Rigidbody.gravityScale = 5f;
+
+        base.OnExit();
     }
 }

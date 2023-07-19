@@ -1,23 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-// ReSharper disable All
 
 public class ShootingState : PlayerState
 {
-    [SerializeField] Transform _fireballTransform;          // 파이어볼 생성위치
-
-    [SerializeField] float _fireballCoolTime = 2f;          // 파이어볼 쿨타임
-    [SerializeField] float _fireballDelay = 2f;             // 파이어볼 딜레이
-
-    [SerializeField] GameObject _fireBullet;                // 파이어볼 오브젝트
+    [Header("Shooting Setting")]
+    [SerializeField] Transform _shootingTransform;          // 생성위치
     [SerializeField] ParticleSystem _lightingParticle;      // 차징 파티클
+    [SerializeField] GameObject _bullet;                    // 총알
+
+    [SerializeField] float _shootingCoolTime = 2f;          // 쿨타임
+    [SerializeField] float _shootingDelay = 2f;             // 딜레이
+
+    [SerializeField] Vector3 _particlePos = new Vector3(0f, 1f);
+    [SerializeField] float _bulletPosX = 0.4f;
+    [SerializeField] float _bulletPosY = 0.8f;
 
     protected override void OnEnter()
     {
         Player.Animator.SetTrigger("Shooting");
 
-        StartCoroutine(ShootingFire());
+        StartCoroutine(Shooting());
     }
 
     protected override void OnUpdate()
@@ -30,22 +33,29 @@ public class ShootingState : PlayerState
 
     }
 
-    private IEnumerator ShootingFire()
+    private IEnumerator Shooting()
     {
-        // 차징 파티클 생성
-        ParticleSystem effect = Instantiate(_lightingParticle, transform.position + new Vector3(0f, 0.5f), Quaternion.identity, transform);
-        effect.Play();
+        // 파티클 생성 & 시작
+        ParticleSystem chargingEffect = Instantiate(_lightingParticle, transform.position + _particlePos, Quaternion.identity, transform);
+        chargingEffect.Play();  // 반복되는 이펙트
 
-        // N초 만큼 딜레이 발생
-        yield return new WaitForSeconds(_fireballDelay);
+        // 발사 딜레이
+        yield return new WaitForSeconds(_shootingDelay);
 
-        // delete particle system
-        effect.Stop();
-        Destroy(effect.gameObject);
+        // 파티클 종료 & 파괴
+        chargingEffect.Stop();
+        Destroy(chargingEffect.gameObject);
 
-        // 파이어볼 생성
-        GameObject bullet = Instantiate(_fireBullet, _fireballTransform.transform.position + new Vector3(0.4f * Player.RecentDir, 0.8f), transform.rotation);
-        bullet.transform.localScale *= Player.RecentDir;
+        /// 발사
+
+        // Bullet 생성
+        GameObject bullet = Instantiate(_bullet, _shootingTransform.transform.position + new Vector3(_bulletPosX * Player.RecentDir, _bulletPosY), transform.rotation);
+
+        // 플레이어가 발사하는 방향에 따라 Bullet의 방향도 바뀐다
+        Vector3 scale = bullet.transform.localScale;
+        scale.x *= Player.RecentDir;
+        bullet.transform.localScale = scale;
+        // TODO : 나중에 플레이어가 회전을 한 상태에서 발사하면 y축의 반전도 생각해야해서 모든 scale을 반전
 
         // Idle State
         ChangeState<IdleState>();

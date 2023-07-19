@@ -64,7 +64,7 @@ public class PlayerJumpController : MonoBehaviour
         if (_isJumpQueued)
         {
             // 대쉬 상태 or 급강하 상태면 종료
-            if (_player.StateIs<DashState>() || _player.StateIs<DesolateDiveState>())
+            if (_player.StateIs<DashState>() || _player.StateIs<DiveState>())
             {
                 _isJumpQueued = false;
                 return;

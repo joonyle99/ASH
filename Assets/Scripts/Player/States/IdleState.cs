@@ -2,15 +2,13 @@ using UnityEngine;
 
 public class IdleState : PlayerState
 {
-    [Header("Idle Setting")]
     Vector2 _groundNormal;
     Vector3 _tempGroundHitPoint;
+    float _forcePower = 100f;
 
     protected override void OnEnter()
     {
-        //Debug.Log("Idle Enter");
-
-        // Exception
+        // 플레이어가 땅을 밟고있지 않은 경우
         if (!Player.GroundHit)
             return;
 
@@ -25,22 +23,24 @@ public class IdleState : PlayerState
     {
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
         {
-            ChangeState<WalkState>();
+            ChangeState<RunState>();
             return;
         }
 
-        // 벽에서 미끄러지지 않음
+        // 벽에서 미끄러지지 않음 (땅에서는 처리 X)
         float angle = Vector3.Angle(_groundNormal, Player.PlayerLookDir);
-        if (Mathf.Abs(90 - angle) > 10f)
-            Player.Rigidbody.velocity = new Vector2((-1) * _groundNormal.x, (-1) * _groundNormal.y) * 100f * Time.deltaTime;
-
+        if (Mathf.Abs(90 - angle) > 5f)
+            Player.Rigidbody.velocity = new Vector2((-1) * _groundNormal.x, (-1) * _groundNormal.y) * _forcePower * Time.deltaTime;
     }
 
     protected override void OnExit()
     {
-        //Debug.Log("Idle Exit");
+
     }
 
+    /// <summary>
+    /// 땅의 법선벡터 시각화
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
