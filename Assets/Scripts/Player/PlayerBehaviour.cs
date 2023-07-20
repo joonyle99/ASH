@@ -188,22 +188,24 @@ public class PlayerBehaviour : StateMachineBase
     void OnBasicAttackPressed()
     {
         if (CanBasicAttack)
-            CastBasicAttack();
+            _attackController.CastBasicAttack();
     }
     void OnHealingPressed()
     {
+        /*
         if (CanBasicAttack)
             CastHealing();
+        */
     }
     void OnShootingAttackPressed()
     {
         if (CanShootingAttack)
-            CastShootingAttack();
+            _attackController.CastShootingAttack();
     }
 
     void CastBasicAttack()
     {
-        _attackController.CastBasicAttack();
+        //_attackController.CastBasicAttack();
     }
     void CastHealing()
     {
@@ -211,7 +213,7 @@ public class PlayerBehaviour : StateMachineBase
     }
     void CastShootingAttack()
     {
-        _attackController.CastShootingAttack();
+        //_attackController.CastShootingAttack();
     }
 
     public void OnHitbyWater(float damage, Vector3 spawnPoint)

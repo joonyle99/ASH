@@ -1,35 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerAttackController : MonoBehaviour
 {
-    PlayerBehaviour _playerBehaviour;
-    Animator _animator;
+    [SerializeField] PlayerBehaviour _player;
     [SerializeField] Transform _basicAttackHitbox;
     [SerializeField] float _attackCountRefreshTime;
 
-    private int _basicAttackCount = 0;
-    private float _timeAfterLastBasicAttack = 0f;
+    int _basicAttackCount = 0;
+    float _timeAfterLastBasicAttack = 0f;
 
     public bool IsBasicAttacking { get; private set; }
 
     private void Awake()
     {
-        _playerBehaviour = GetComponent<PlayerBehaviour>();
-        _animator = GetComponent<Animator>();
+        _player = GetComponent<PlayerBehaviour>();
     }
 
     public void CastBasicAttack()
     {
         _basicAttackHitbox.gameObject.SetActive(true);
 
-        _timeAfterLastBasicAttack = 0f;
-        //_animator.SetInteger("BasicAttackCount", _basicAttackCount);
-        //_animator.SetTrigger("BasicAttack");
-
+        _timeAfterLastBasicAttack = Time.time;
         _basicAttackCount++;
-        if (_basicAttackCount > 2)
+
+        _player.Animator.SetTrigger("BasicAttack");
+        _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
+
+        if (_basicAttackCount >= 6)
             _basicAttackCount = 0;
 
         IsBasicAttacking = true;
@@ -37,17 +37,14 @@ public class PlayerAttackController : MonoBehaviour
 
     public void CastShootingAttack()
     {
-        _playerBehaviour.ChangeState<ShootingState>();
+        _player.ChangeState<ShootingState>();
     }
 
     private void Update()
     {
-        if (_timeAfterLastBasicAttack < _attackCountRefreshTime)
-        {
-            _timeAfterLastBasicAttack += Time.deltaTime;
-            if (_timeAfterLastBasicAttack > _attackCountRefreshTime)
-                _basicAttackCount = 0;
-        }
+        // 1초 후 다시 처음으로
+        if (Time.time > _timeAfterLastBasicAttack + _attackCountRefreshTime)
+            _basicAttackCount = 0;
     }
 
     public void AnimEvent_FinishBaseAttackAnim()
