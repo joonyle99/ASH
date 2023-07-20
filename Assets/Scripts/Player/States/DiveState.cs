@@ -32,9 +32,6 @@ public class DiveState : PlayerState
 
     protected override void OnUpdate()
     {
-        Player.Animator.SetBool("IsCharging", _isCharging);
-        Player.Animator.SetBool("IsDiving", _isDiving);
-
         if (!_isDiving)
             return;
 
@@ -77,6 +74,10 @@ public class DiveState : PlayerState
         // Â÷Â¡ ½ÃÀÛ
         _isCharging = true;
 
+        // Anim
+        Player.Animator.SetBool("IsCharging", true);
+        Player.Animator.SetBool("IsDiving", false);
+
         Player.Rigidbody.gravityScale = 0;
         Player.Rigidbody.velocity = Vector2.zero;
 
@@ -97,11 +98,17 @@ public class DiveState : PlayerState
 
         _isCharging = false;
         _isDiving = true;
+
+        Player.Animator.SetBool("IsCharging", false);
+        Player.Animator.SetBool("IsDiving", true);
     }
 
     protected override void OnExit()
     {
         _isDiving = false;
+
+        Player.Animator.SetBool("IsCharging", false);
+        Player.Animator.SetBool("IsDiving", false);
     }
 
     void OnDrawGizmosSelected()
