@@ -127,17 +127,18 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
 
         // Player Flip
-        if (!StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DiveState>() && !StateIs<ShootingState>())
+        if (StateIs<RunState>() || StateIs<InAirState>())
         {
             // 좌 & 우 방향키가 입력되므로 Flip
             if (Mathf.RoundToInt(RawInputs.Movement.x) != 0)
                 UpdateImageFlip();
         }
 
+        // TODO : 여기 if문 조건 줄여보기
         // In Air State
         if (!IsGrounded)
         {
-            if (!StateIs<InAirState>() && !StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DiveState>())
+            if (!StateIs<InAirState>() && !StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DiveState>() && !StateIs<ShootingState>())
                 ChangeState<InAirState>();
         }
 

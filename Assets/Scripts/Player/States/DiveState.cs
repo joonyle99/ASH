@@ -45,7 +45,7 @@ public class DiveState : PlayerState
         if (Player.IsGrounded)
         {
             // Boom Particle
-            Instantiate(_boomParticle, transform.position + _boomParticlePos, Quaternion.identity, transform);
+            Instantiate(_boomParticle, transform.position + _boomParticlePos, Quaternion.identity);
 
             // 내려찍기 범위 내의 적 판별
             _targetEnemys = Physics2D.OverlapBoxAll(transform.position, _explosionSize, 0, _enemyLayers);
