@@ -17,14 +17,13 @@ public class PlayerBehaviour : StateMachineBase
 
     [SerializeField] float _wallCheckDistance = 0.8f;
     [SerializeField] bool _isWallJump;
-    [SerializeField] bool _isTouchedWall;
 
     [Header("Dive Settings")]
 
-    [SerializeField] float _groundCheckDistance = 0.8f;
+    [SerializeField] float _groundCheckDistance = 0.3f;
+    [SerializeField] float _diveCheckDistance = 50f;
     [SerializeField] float _groundDistance;
     [SerializeField] float _diveThreshhold = 2.0f;
-    [SerializeField] Vector3 _groundLastPos = Vector3.one;
 
     [Header("Player Direction")]
 
@@ -39,17 +38,17 @@ public class PlayerBehaviour : StateMachineBase
     DashState _dashState;
 
 
-
 #region Properties
 
-    public bool IsGrounded { get; private set; }
-    public bool IsTouchedWall { get { return _isTouchedWall; } private set { _isTouchedWall = value; } }
+    public bool IsGrounded { get; set; }
+    public bool IsTouchedWall { get; set; }
 
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<RunState>() || StateIs<InAirState>(); } }
     public bool CanHealing { get { return StateIs<IdleState>(); } }
     public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
 
     public RaycastHit2D GroundHit { get; private set; }
+    public RaycastHit2D DiveHit { get; private set; }
     public RaycastHit2D WallHit { get; private set; }
 
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
@@ -99,26 +98,24 @@ public class PlayerBehaviour : StateMachineBase
         // Check Ground
         GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
 
+        // Check Dive Hit
+        DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckDistance, _groundLayer);
+
         if (GroundHit)
-        {
             IsGrounded = true;
-            _groundLastPos = GroundHit.point;
-        }
         else
             IsGrounded = false;
 
         // Check Wall
         WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * _recentDir, _wallCheckDistance, _wallLayer);
+
         if (WallHit)
-        {
-            // Debug.Log("Player.WallHit.collider.name : " + WallHit.transform.gameObject.name);
             IsTouchedWall = true;
-        }
         else
             IsTouchedWall = false;
 
         // Ground Distance
-        _groundDistance = _groundCheckTrans.position.y - _groundLastPos.y;
+        _groundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
 
         #endregion
 
@@ -236,5 +233,10 @@ public class PlayerBehaviour : StateMachineBase
         // Draw Ground Check
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(_groundCheckTrans.position, _groundCheckTrans.position + Vector3.down * _groundCheckDistance);
+
+        // Draw Dive Check
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(_groundCheckTrans.position + new Vector3(0.1f, 0),
+            _groundCheckTrans.position + new Vector3(0.1f, -_diveCheckDistance));
     }
 }

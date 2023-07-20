@@ -10,7 +10,7 @@ public class DiveState : PlayerState
     [SerializeField] ParticleSystem _boomParticle;                                      // 폭발 파티클
     [SerializeField] ParticleSystem _chargingParticle;                                  // 차징 파티클
 
-    [Header("Dive Setting")]
+    [Header("DiveHit Setting")]
     [SerializeField] float _diveSpeed = 15.0f;                                          // 떨어지는 속도
     [SerializeField] float _fastDiveSpeed = 10.0f;                                      // 빠른 떨어지는 속도
     [SerializeField] Vector3 _explosionSize = new Vector3(5.0f, 1.0f);             // Boom 크기

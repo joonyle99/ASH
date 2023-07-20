@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class WallState : PlayerState
 {
-    protected Vector2 moveDirection;    // Wall State를 상속받는 클래스에서 사용할 변수
+    // Wall State를 상속받는 클래스에서 사용할 변수
+    protected Vector2 moveDirection;
     protected Vector2 wallNormal;
-    protected Vector3 WallHitPos;
+    protected Vector3 wallHitPos;
+    protected Vector3 crossVector;
 
-    private float _moveDirLength = 1.5f;
-    private float _normalDirLength = 1.5f;
+    // Length for Gizmos
+    float _moveDirLength = 1.5f;
+    float _normalDirLength = 1.5f;
+    float _crossDirLength = 1.5f;
 
     protected override void OnEnter()
     {
@@ -23,10 +27,17 @@ public class WallState : PlayerState
         wallNormal = Player.WallHit.normal;
 
         // 벽의 Raycast Hit 지점 좌표
-        WallHitPos = Player.WallHit.transform.position;
+        wallHitPos = Player.WallHit.transform.position;
 
         // 벽의 법선벡터와 플레이어가 바라보는 방향의 내적을 구한다
         float dot = Vector2.Dot(wallNormal, Player.PlayerLookDir);
+
+        /*
+        crossVector = Vector3.Cross(wallNormal, Vector3.up); // 외적을 이용한 회전축 계산
+        */
+
+        // 벽의 기울기에 따라 캐릭터를 회전
+        // transform.Rotate(new Vector3(0, 0, Player.WallHit.collider.transform.rotation.z * 100f));
 
         // 내적이 0보다 크면 예각
         if (dot > 0)
@@ -55,6 +66,9 @@ public class WallState : PlayerState
     protected override void OnExit()
     {
         Player.Animator.SetBool("IsWall", false);
+
+        // 기울기 원상복구
+        // transform.rotation = Quaternion.identity;
     }
 
     private void OnDrawGizmosSelected()
@@ -63,6 +77,11 @@ public class WallState : PlayerState
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(moveDirection.x, moveDirection.y, 0) * _moveDirLength);
 
         Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(WallHitPos, WallHitPos + new Vector3(wallNormal.x, wallNormal.y, 0) * _normalDirLength);
+        Gizmos.DrawLine(wallHitPos, wallHitPos + new Vector3(wallNormal.x, wallNormal.y, 0) * _normalDirLength);
+
+        /*
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, 0, crossVector.z) * _crossDirLength);
+        */
     }
 }
