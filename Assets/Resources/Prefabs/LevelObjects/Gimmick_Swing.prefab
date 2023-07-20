@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3378615550600865204}
   - component: {fileID: 3378615550600865207}
   - component: {fileID: 3378615550600865206}
+  - component: {fileID: 1614715210}
   m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3378615550600865201}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.049999952, y: -3.4299998, z: 0}
   m_LocalScale: {x: 3.4783018, y: 0.45967603, z: 1}
   m_ConstrainProportionsScale: 0
@@ -125,7 +126,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 3
+  m_Mass: 8
   m_LinearDrag: 0
   m_AngularDrag: 1
   m_GravityScale: 1
@@ -153,11 +154,26 @@ HingeJoint2D:
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
-    m_MaximumMotorForce: 10000
+    m_MaximumMotorForce: 30
   m_UseLimits: 1
   m_AngleLimits:
     m_LowerAngle: -60
     m_UpperAngle: 60
+--- !u!114 &1614715210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3378615550600865201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae5b0b2c5822d347908152640aac66f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _floorCollider: {fileID: 3378615550600865204}
+  _joint: {fileID: 3378615550600865206}
+  _recoverSpeed: 1
 --- !u!1 &3378615550969031753
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,7 +431,7 @@ HingeJoint2D:
   m_BreakTorque: Infinity
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: -0.48, y: 0}
-  m_ConnectedAnchor: {x: 0.039998055, y: -0.052115202}
+  m_ConnectedAnchor: {x: 0.039998055, y: -0.05211544}
   m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0

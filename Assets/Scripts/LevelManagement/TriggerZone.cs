@@ -26,6 +26,7 @@ public abstract class ITriggerZone : MonoBehaviour
     }
     void OnTriggerStay2D(Collider2D other)
     {
+        print("!");
         TriggerActivator activator = other.GetComponent<TriggerActivator>();
         if (!other.isTrigger && activator)
         {
