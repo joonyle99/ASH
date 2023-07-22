@@ -32,6 +32,9 @@ public class DiveState : PlayerState
 
     protected override void OnUpdate()
     {
+        Player.Animator.SetBool("IsCharging", _isCharging);
+        Player.Animator.SetBool("IsDiving", _isDiving);
+
         if (!_isDiving)
             return;
 
@@ -88,13 +91,8 @@ public class DiveState : PlayerState
 
     void Charging()
     {
-        // 차징 시작
         _isCharging = true;
         _isDiving = false;
-
-        // Animation Parameter
-        Player.Animator.SetBool("IsCharging", _isCharging);
-        Player.Animator.SetBool("IsDiving", _isDiving);
 
         Player.Rigidbody.gravityScale = 0;
         Player.Rigidbody.velocity = Vector2.zero;
@@ -106,19 +104,14 @@ public class DiveState : PlayerState
 
     void Dive()
     {
-        // 차징 종료 & 다이브 시작
-        _chargingEffect.Stop();
-        Destroy(_chargingEffect.gameObject);
+        _isCharging = false;
+        _isDiving = true;
 
         Player.Rigidbody.gravityScale = 5;
         Player.Rigidbody.velocity = new Vector2(0, -_diveSpeed);
 
-        _isCharging = false;
-        _isDiving = true;
-
-        // Animation Parameter
-        Player.Animator.SetBool("IsCharging", _isCharging);
-        Player.Animator.SetBool("IsDiving", _isDiving);
+        _chargingEffect.Stop();
+        Destroy(_chargingEffect.gameObject);
     }
 
     void OnDrawGizmosSelected()
