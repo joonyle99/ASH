@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class IdleState : PlayerState
 {
-    /// <summary>
-    /// 기울어진 땅에서 미끄러지지 않도록 하는 변수들
-    /// </summary>
+    [Header("Idle Setting")]
+
+    [Space]
+
+    float _belowForce = 100f;       // 아래로 가해주는 힘
+
     Vector2 _groundNormal;          // 땅의 법선벡터
     Vector3 _groundHitPoint;        // 땅의 Hit Point
-    float _forcePower = 100f;       // 아래로 가해주는 힘
-    public float _angle = 0f;
+    float _angle;
 
     protected override void OnEnter()
     {
@@ -31,8 +33,8 @@ public class IdleState : PlayerState
         }
 
         _angle = Vector3.Angle(_groundNormal, Player.PlayerLookDir);
-        if (Mathf.Abs(90 - _angle) > 10f)
-            Player.Rigidbody.velocity = new Vector2(-_groundNormal.x, -_groundNormal.y) * _forcePower * Time.deltaTime;
+        if (Mathf.Abs(90f - _angle) > 5f)
+            Player.Rigidbody.velocity = new Vector2(-_groundNormal.x, -_groundNormal.y) * _belowForce * Time.deltaTime;
     }
 
     protected override void OnExit()
@@ -40,9 +42,6 @@ public class IdleState : PlayerState
 
     }
 
-    /// <summary>
-    /// 땅의 법선벡터 시각화
-    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;

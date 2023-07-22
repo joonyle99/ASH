@@ -3,8 +3,10 @@ using UnityEngine;
 public class WallClimbState : WallState
 {
     [Header("Wall Climb Setting")]
-    [SerializeField] float _wallClimbSpeed = 4.0f;
-    [SerializeField] float _wallEndJumpPower = 50f;
+
+    [Space]
+
+    [Range(0f, 20f)] [SerializeField] float _wallClimbSpeed = 4.0f;
 
     protected override void OnEnter()
     {
@@ -16,12 +18,13 @@ public class WallClimbState : WallState
     }
     protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         // 위로 올라가기
         if (Player.RawInputs.Movement.y > 0)
         {
             if (!Player.IsTouchedWall)
             {
-                Player.Rigidbody.velocity = moveDirection * _wallEndJumpPower;
                 ChangeState<JumpState>();
                 return;
             }

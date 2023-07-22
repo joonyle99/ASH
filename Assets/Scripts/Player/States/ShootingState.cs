@@ -5,16 +5,19 @@ using UnityEngine;
 public class ShootingState : PlayerState
 {
     [Header("Shooting Setting")]
-    [SerializeField] Transform _shootingTransform;          // »ý¼ºÀ§Ä¡
-    [SerializeField] ParticleSystem _lightingParticle;      // Â÷Â¡ ÆÄÆ¼Å¬
-    [SerializeField] GameObject _bullet;                    // ÃÑ¾Ë
 
-    [SerializeField] float _shootingCoolTime = 2f;          // ÄðÅ¸ÀÓ
-    [SerializeField] float _shootingDelay = 2f;             // µô·¹ÀÌ
+    [Space]
+
+    [SerializeField] Transform _shootingTransform;                              // »ý¼ºÀ§Ä¡
+    [SerializeField] ParticleSystem _lightingParticle;                          // Â÷Â¡ ÆÄÆ¼Å¬
+    [SerializeField] GameObject _bullet;                                        // ÃÑ¾Ë
+
+    [Range(0f, 5f)] [SerializeField] float _shootingCoolTime = 2f;             // ÄðÅ¸ÀÓ
+    [Range(0f, 5f)] [SerializeField] float _shootingDelay = 2f;             // µô·¹ÀÌ
 
     [SerializeField] Vector3 _particlePos = new Vector3(0f, 1f);
-    [SerializeField] float _bulletPosX = 0.4f;
-    [SerializeField] float _bulletPosY = 0.8f;
+    [Range(0f, 5f)] [SerializeField] float _bulletPosX = 0.4f;
+    [Range(0f, 5f)] [SerializeField] float _bulletPosY = 0.8f;
 
     protected override void OnEnter()
     {

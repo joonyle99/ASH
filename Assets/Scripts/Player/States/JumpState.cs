@@ -14,6 +14,9 @@ public class JumpState : PlayerState
         // Wall Jump
         if (Player.PreviousState is WallState && Player.RawInputs.IsPressingJump)
             _jumpController.ExecuteWallJumpAnimEvent();
+        // End Wall Jump
+        else if(Player.PreviousState is WallState && !Player.RawInputs.IsPressingJump)
+            _jumpController.ExcuteEndWallJumpAnimEvent();
         // Jump
         else
             _jumpController.ExecuteJumpAnimEvent();

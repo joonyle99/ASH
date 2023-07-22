@@ -3,7 +3,10 @@ using UnityEngine;
 public class WallSlideState : WallState
 {
     [Header("Wall Slide Setting")]
-    [SerializeField] float _wallSlideSpeed = 0.65f;
+
+    [Space]
+
+    [Range(0f, 1f)] [SerializeField] float _wallSlideSpeed = 0.65f;
 
     protected override void OnEnter()
     {

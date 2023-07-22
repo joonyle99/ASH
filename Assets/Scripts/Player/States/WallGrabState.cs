@@ -1,11 +1,12 @@
 using UnityEngine;
 
+/// <summary>
+/// wall grab state를 통해
+/// wall slide / wall climb state로 갈 수 있다
+/// 즉 wall state 중 가장 기본인 상태
+/// </summary>
 public class WallGrabState : WallState
 {
-    // wall grab state를 통해
-    // wall slide / wall climb state로 갈 수 있다
-    // 즉 wall state 중 가장 기본인 상태
-
     protected override void OnEnter()
     {
         base.OnEnter();

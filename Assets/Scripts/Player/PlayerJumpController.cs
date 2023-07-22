@@ -6,6 +6,7 @@ public class PlayerJumpController : MonoBehaviour
     [SerializeField] float _groundJumpPower = 15f;
     [SerializeField] float _inAirJumpPower = 12f;
     [SerializeField] float _wallJumpPower = 6f;
+    [SerializeField] float _wallEndJumpPower = 15f;
 
     [SerializeField] float _longJumpDuration = 0.2f;
     [SerializeField] float _longJumpBonus = 3f;
@@ -148,5 +149,14 @@ public class PlayerJumpController : MonoBehaviour
 
         // execute jump
         _player.Rigidbody.velocity = new Vector2(_player.RecentDir * xPower, yPower) * _wallJumpPower;
+    }
+
+    public void ExcuteEndWallJumpAnimEvent()
+    {
+        _remainingJumpCount--;
+
+        _player.Rigidbody.velocity =
+            new Vector2(_player.Rigidbody.velocity.x, _wallEndJumpPower);
+
     }
 }
