@@ -115,6 +115,7 @@ public class PlayerBehaviour : StateMachineBase
         // 상시 체크
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
+        Animator.SetFloat("GroundDistane", _groundDistance);
 
         // Player Flip
         if (StateIs<RunState>() || StateIs<InAirState>())
