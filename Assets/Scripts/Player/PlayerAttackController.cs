@@ -1,16 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
+﻿using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
 {
-    [SerializeField] PlayerBehaviour _player;
-    [SerializeField] Transform _basicAttackHitbox;
-    [SerializeField] float _attackCountRefreshTime;
+    [Header("Attack Setting")]
 
-    int _basicAttackCount = 0;
-    float _timeAfterLastBasicAttack = 0f;
+    [Space]
+
+    [SerializeField] Transform _basicAttackHitbox;                              // 공격 타격 박스
+    [Range(0f, 5f)] [SerializeField] float _attackCountRefreshTime = 1.5f;      // 공격 초기화 시간
+
+    PlayerBehaviour _player;
+
+    int _basicAttackCount;              // 공격 카운트
+    float _timeAfterLastBasicAttack;    // 마지막으로 공격한 시간
 
     public bool IsBasicAttacking { get; private set; }
 
@@ -26,7 +28,8 @@ public class PlayerAttackController : MonoBehaviour
         _timeAfterLastBasicAttack = Time.time;
         _basicAttackCount++;
 
-        _player.Animator.SetTrigger("BasicAttack");
+        _player.Animator.SetTrigger("Attack");
+        _player.Animator.SetBool("IsAttack", true);
         _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
 
         if (_basicAttackCount >= 6)
@@ -50,6 +53,8 @@ public class PlayerAttackController : MonoBehaviour
     public void AnimEvent_FinishBaseAttackAnim()
     {
         IsBasicAttacking = false;
+
+        _player.Animator.SetBool("IsAttack", false);
 
         _basicAttackHitbox.gameObject.SetActive(false);
     }

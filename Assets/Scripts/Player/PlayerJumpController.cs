@@ -2,22 +2,27 @@
 
 public class PlayerJumpController : MonoBehaviour
 {
-    [Header("Jump Power")]
-    [SerializeField] float _groundJumpPower = 15f;
-    [SerializeField] float _inAirJumpPower = 12f;
-    [SerializeField] float _wallJumpPower = 6f;
-    [SerializeField] float _wallEndJumpPower = 15f;
+    [Header("Jump Power Settings")]
 
-    [SerializeField] float _longJumpDuration = 0.2f;
-    [SerializeField] float _longJumpBonus = 3f;
+    [Space]
+
+    [Range(0f, 30f)] [SerializeField] float _groundJumpPower = 15f;
+    [Range(0f, 30f)] [SerializeField] float _inAirJumpPower = 12f;
+    [Range(0f, 30f)] [SerializeField] float _wallJumpPower = 6f;
+    [Range(0f, 30f)] [SerializeField] float _wallEndJumpPower = 15f;
+
+    [Range(0f, 1f)] [SerializeField] float _longJumpDuration = 0.2f;
+    [Range(0f, 10f)] [SerializeField] float _longJumpBonusPower = 3f;
 
     [Header("Jump Settings")]
-    [SerializeField] float _coyoteTime = 2f;
-    [SerializeField] float _jumpQueueDuration = 0.1f;
-    [SerializeField] int _maxJumpCount = 2;
+
+    [Space]
+
+    [Range(0f, 10f)] [SerializeField] float _coyoteTime = 2f;
+    [Range(0f, 1f)] [SerializeField] float _jumpQueueDuration = 0.1f;
+    [Range(0, 10)] [SerializeField] int _maxJumpCount = 2;
 
     public bool CanJump { get { return _remainingJumpCount > 0 && !_player.StateIs<JumpState>() && CoyoteAvailable; } }
-    public int MaxJumpCount { get { return _maxJumpCount; } }
     public bool CoyoteAvailable { get { return _timeAfterGroundLeft <= _coyoteTime; } }
 
     bool _isLongJumping;
@@ -42,15 +47,15 @@ public class PlayerJumpController : MonoBehaviour
     void Update()
     {
         // Reset jump count
-        // if ((_player.IsGrounded && !_player.StateIs<JumpState>()) || _player.StateIs<WallState>())
         if (_player.StateIs<IdleState>() || _player.StateIs<WallState>())
             ResetJumpCount();
 
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
         if (_isLongJumping)
         {
-            _player.Rigidbody.velocity -= _longJumpBonus * Physics2D.gravity * Time.deltaTime;
+            _player.Rigidbody.velocity -= _longJumpBonusPower * Physics2D.gravity * Time.deltaTime;
             _longJumpTime += Time.deltaTime;
+
             if ((_longJumpTime >= _longJumpDuration) || !_player.RawInputs.IsPressingJump)
                 _isLongJumping = false;
         }
@@ -105,32 +110,30 @@ public class PlayerJumpController : MonoBehaviour
     void CastJump()
     {
         _isJumpQueued = false;
-
-        /*
-        //// 공중에서 점프 시 차감
-        //if ((!_player.IsGrounded && _remainingJumpCount == _maxJumpCount) && !_coyoteAvailable)
-        //    _remainingJumpCount--;
-        */
-
         _isGroundJump = (_remainingJumpCount == _maxJumpCount);
         _remainingJumpCount--;
         _isLongJumping = true;
         _longJumpTime = 0f;
 
         if (_player.StateIs<InAirState>())
-            _player.Animator.SetTrigger("Double Jump");
+            _player.Animator.SetTrigger("DoubleJump");
 
         _player.ChangeState<JumpState>();
         return;
     }
 
-    //점프 애니메이션 종료 시점
+    /// <summary>
+    /// Basic Jump
+    /// </summary>
     public void ExecuteJumpAnimEvent()
     {
         float jumpPower = _isGroundJump ? _groundJumpPower : _inAirJumpPower;
         _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, jumpPower);
     }
 
+    /// <summary>
+    /// Wall Jump
+    /// </summary>
     public void ExecuteWallJumpAnimEvent()
     {
         _player.IsWallJump = true;
@@ -140,8 +143,8 @@ public class PlayerJumpController : MonoBehaviour
         int yInput = (int)_player.RawInputs.Movement.y; // -1 0 1
 
         // sub power
-        float xPower = (xInput == 0) ? 0.5f : Mathf.Abs(xInput);
-        float yPower = (yInput > 0) ? 2.5f : 1f; // 위쪽키를 누르지 않으면 살짝 점프
+        float xPower = (xInput == 0) ? 0.7f : Mathf.Abs(xInput);    // 좌우 방향키를 누르지 않으면 살짝 점프
+        float yPower = (yInput > 0) ? 2.5f : 1f;                    // 위쪽키를 누르지 않으면 살짝 점프
 
         // player flip
         _player.RecentDir = (-1) * _player.RecentDir;
@@ -151,6 +154,9 @@ public class PlayerJumpController : MonoBehaviour
         _player.Rigidbody.velocity = new Vector2(_player.RecentDir * xPower, yPower) * _wallJumpPower;
     }
 
+    /// <summary>
+    /// End Wall Jump
+    /// </summary>
     public void ExcuteEndWallJumpAnimEvent()
     {
         _remainingJumpCount--;

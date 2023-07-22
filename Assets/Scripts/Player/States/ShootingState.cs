@@ -12,8 +12,8 @@ public class ShootingState : PlayerState
     [SerializeField] ParticleSystem _lightingParticle;                          // Â÷Â¡ ÆÄÆ¼Å¬
     [SerializeField] GameObject _bullet;                                        // ÃÑ¾Ë
 
-    [Range(0f, 5f)] [SerializeField] float _shootingCoolTime = 2f;             // ÄðÅ¸ÀÓ
-    [Range(0f, 5f)] [SerializeField] float _shootingDelay = 2f;             // µô·¹ÀÌ
+    [Range(0f, 5f)] [SerializeField] float _shootingCoolTime = 2f;              // ÄðÅ¸ÀÓ
+    [Range(0f, 5f)] [SerializeField] float _shootingDelay = 2f;                 // µô·¹ÀÌ
 
     [SerializeField] Vector3 _particlePos = new Vector3(0f, 1f);
     [Range(0f, 5f)] [SerializeField] float _bulletPosX = 0.4f;
