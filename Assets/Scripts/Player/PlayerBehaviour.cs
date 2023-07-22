@@ -4,25 +4,20 @@ public class PlayerBehaviour : StateMachineBase
 {
     [Header("Check Params")]
 
-    // ground
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] Transform _groundCheckTrans;
-
-    // wall
     [SerializeField] LayerMask _wallLayer;
     [SerializeField] Transform _wallCheckTrans;
-
+    [SerializeField] float _wallCheckDistance = 0.8f;
+    [SerializeField] float _groundCheckDistance = 0.3f;
 
     [Header("Wall Settings")]
 
-    [SerializeField] float _wallCheckDistance = 0.8f;
     [SerializeField] bool _isWallJump;
 
     [Header("Dive Settings")]
-
-    [SerializeField] float _groundCheckDistance = 0.3f;
+    [SerializeField] float _groundDistance = 0f;
     [SerializeField] float _diveCheckDistance = 50f;
-    [SerializeField] float _groundDistance;
     [SerializeField] float _diveThreshhold = 2.0f;
 
     [Header("Player Direction")]
@@ -30,13 +25,11 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] int _recentDir = 1;
 
 
-
     PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
     InteractionController _interactionController;
     PlayerInputPreprocessor _inputPreprocessor;
     DashState _dashState;
-
 
 #region Properties
 
@@ -119,19 +112,17 @@ public class PlayerBehaviour : StateMachineBase
 
         #endregion
 
-        // Animation Param
+        // 상시 체크
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
 
         // Player Flip
         if (StateIs<RunState>() || StateIs<InAirState>())
         {
-            // 좌 & 우 방향키가 입력되므로 Flip
-            if (Mathf.RoundToInt(RawInputs.Movement.x) != 0)
+            if (Mathf.RoundToInt(RawInputs.Movement.x) != 0 && _recentDir != Mathf.RoundToInt(RawInputs.Movement.x))
                 UpdateImageFlip();
         }
 
-        // TODO : 여기 if문 조건 줄여보기
         // In Air State
         if (!IsGrounded)
         {
