@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class JumpState : PlayerState
 {
@@ -11,7 +12,7 @@ public class JumpState : PlayerState
         Player.Animator.SetBool("IsJump", true);
 
         // Wall Jump
-        if (Player.PreviousState is WallState)
+        if (Player.PreviousState is WallState && Player.RawInputs.IsPressingJump)
             _jumpController.ExecuteWallJumpAnimEvent();
         // Jump
         else

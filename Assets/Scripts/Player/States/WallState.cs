@@ -8,7 +8,7 @@ public class WallState : PlayerState
     protected Vector2 moveDirection;
     protected Vector2 wallNormal;
     protected Vector3 wallHitPos;
-    protected Vector3 crossVector;
+    //protected Vector3 crossVector;
 
     // Length for Gizmos
     float _moveDirLength = 1.5f;

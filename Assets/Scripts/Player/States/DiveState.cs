@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class DiveState : PlayerState
 {
-    [Header("Prepare Setting")]
-    [SerializeField] Collider2D[] _targetEnemys;                                        // 적 콜라이더
+    [Header("Dive Pre Setting")]
     [SerializeField] LayerMask _enemyLayers;                                            // 적 레이어
-    [SerializeField] Transform _explosionPoint;                                         // 폭발 위치
     [SerializeField] ParticleSystem _boomParticle;                                      // 폭발 파티클
     [SerializeField] ParticleSystem _chargingParticle;                                  // 차징 파티클
+    [SerializeField] Collider2D[] _targetEnemys;                                        // 적 콜라이더
+    [SerializeField] Transform _explosionPoint;                                         // 폭발 위치
 
-    [Header("DiveHit Setting")]
+    [Header("Dive Setting")]
     [SerializeField] float _diveSpeed = 15.0f;                                          // 떨어지는 속도
-    [SerializeField] float _fastDiveSpeed = 10.0f;                                      // 빠른 떨어지는 속도
+    [SerializeField] float _fastDiveSpeed = 10.0f;                                      // 가속도
     [SerializeField] Vector3 _explosionSize = new Vector3(5.0f, 1.0f);             // Boom 크기
     [SerializeField] int _explosionDamage = 40;                                         // 폭발 데미지
     [SerializeField] float _knockBackPower = 10f;                                       // 넉백 파워
@@ -21,13 +21,13 @@ public class DiveState : PlayerState
     [SerializeField] float _chargingDelay = 2.0f;                                       // Charging 딜레이
 
 
+    [SerializeField] ParticleSystem _chargingEffect;    // Charging 이펙트 인스턴스
     [SerializeField] bool _isCharging = false;          // 차징 상태
     [SerializeField] bool _isDiving = false;            // 다이빙 상태
 
     protected override void OnEnter()
     {
-        // ChargingDive 코루틴 실행
-        StartCoroutine(ChargingDive());
+        StartCoroutine(ExcutegDive());
     }
 
     protected override void OnUpdate()
@@ -41,6 +41,8 @@ public class DiveState : PlayerState
         // 내려찍기가 끝나면 => 데미지 & 넉백
         if (Player.IsGrounded)
         {
+            _isDiving = false;
+
             // Boom Particle
             Instantiate(_boomParticle, transform.position + _boomParticlePos, Quaternion.identity);
 
@@ -68,47 +70,55 @@ public class DiveState : PlayerState
         }
     }
 
+    protected override void OnExit()
+    {
+        Player.Animator.SetBool("IsCharging", false);
+        Player.Animator.SetBool("IsDiving", false);
+    }
+
     // 코루틴을 사용해서 플레이어를 공중에서 멈추게 한다
-    IEnumerator ChargingDive()
+    IEnumerator ExcutegDive()
+    {
+        Charging();
+
+        yield return new WaitForSeconds(_chargingDelay);
+
+        Dive();
+    }
+
+    void Charging()
     {
         // 차징 시작
         _isCharging = true;
+        _isDiving = false;
 
-        // Anim
-        Player.Animator.SetBool("IsCharging", true);
-        Player.Animator.SetBool("IsDiving", false);
+        // Animation Parameter
+        Player.Animator.SetBool("IsCharging", _isCharging);
+        Player.Animator.SetBool("IsDiving", _isDiving);
 
         Player.Rigidbody.gravityScale = 0;
         Player.Rigidbody.velocity = Vector2.zero;
 
         // 차징 파티클 생성
-        // TODO : transform은 부모를 말한다. 해당 파티클은 부모 아래에 Instantiate 되는것을 말한다
-        ParticleSystem chargingEffect = Instantiate(_chargingParticle, transform.position + _chargingParticlePos, Quaternion.identity, transform);
-        chargingEffect.Play();
+        _chargingEffect = Instantiate(_chargingParticle, transform.position + _chargingParticlePos, Quaternion.identity, transform);
+        _chargingEffect.Play();
+    }
 
-        yield return new WaitForSeconds(_chargingDelay);
-
+    void Dive()
+    {
         // 차징 종료 & 다이브 시작
-        chargingEffect.Stop();
-        Destroy(chargingEffect.gameObject);
+        _chargingEffect.Stop();
+        Destroy(_chargingEffect.gameObject);
 
-        // 내려찍기를 위한 Rigidbody 설정
         Player.Rigidbody.gravityScale = 5;
         Player.Rigidbody.velocity = new Vector2(0, -_diveSpeed);
 
         _isCharging = false;
         _isDiving = true;
 
-        Player.Animator.SetBool("IsCharging", false);
-        Player.Animator.SetBool("IsDiving", true);
-    }
-
-    protected override void OnExit()
-    {
-        _isDiving = false;
-
-        Player.Animator.SetBool("IsCharging", false);
-        Player.Animator.SetBool("IsDiving", false);
+        // Animation Parameter
+        Player.Animator.SetBool("IsCharging", _isCharging);
+        Player.Animator.SetBool("IsDiving", _isDiving);
     }
 
     void OnDrawGizmosSelected()
