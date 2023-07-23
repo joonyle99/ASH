@@ -2,11 +2,15 @@ using UnityEngine;
 
 public class FireBullet : MonoBehaviour
 {
-    [SerializeField] float _speed = 2.5f;
-    [SerializeField] float _destroyTime = 3.0f;
-    [SerializeField] float _knockPowerX = 10f;
-    [SerializeField] float _knockPowerY = 5f;
-    [SerializeField] int _damage = 30;
+    [Header("Bullet Setting")]
+
+    [Space]
+
+    [Range(0f, 30f)] [SerializeField] float _speed = 2.5f;
+    [Range(0f, 20f)] [SerializeField] float _destroyTime = 3.0f;
+    [Range(0f, 50f)] [SerializeField] float _knockPowerX = 10f;
+    [Range(0f, 50f)] [SerializeField] float _knockPowerY = 5f;
+    [Range(0, 100)] [SerializeField] int _damage = 30;
 
     float _time;
 

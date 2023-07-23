@@ -4,6 +4,8 @@ public class PlayerBehaviour : StateMachineBase
 {
     [Header("Check Params")]
 
+    [Space]
+
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] Transform _groundCheckTrans;
     [SerializeField] LayerMask _wallLayer;
@@ -11,21 +13,17 @@ public class PlayerBehaviour : StateMachineBase
 
     [Header("Check Distance")]
 
-    [SerializeField] float _groundCheckDistance = 0.1f;
-    [SerializeField] float _diveCheckDistance = 15f;
-    [SerializeField] float _wallCheckDistance = 0.2f;
+    [Space]
 
-    [Header("Wall Settings")]
-
-    [SerializeField] bool _isWallJump;
+    [Range(0f, 5f)] [SerializeField] float _groundCheckDistance = 0.1f;
+    [Range(0f, 30f)] [SerializeField] float _diveCheckDistance = 15f;
+    [Range(0f, 5f)] [SerializeField] float _wallCheckDistance = 0.2f;
 
     [Header("Dive Settings")]
-    [SerializeField] float _groundDistance;
-    [SerializeField] float _diveThreshhold = 4f;
 
-    [Header("Player Direction")]
+    [Space]
 
-    [SerializeField] int _recentDir = 1;
+    [Range(0f, 10f)] [SerializeField] float _diveThreshhold = 4f;
 
     // Controller
     PlayerJumpController _jumpController;
@@ -48,18 +46,26 @@ public class PlayerBehaviour : StateMachineBase
     public bool CanHealing { get { return StateIs<IdleState>(); } }
     public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
 
+    public bool CanDash { get; set; }
+
     public RaycastHit2D GroundHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
     public RaycastHit2D WallHit { get; set; }
 
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
-    public InputState SmoothedInputs { get { return _inputPreprocessor.SmoothedInputs; } }          // Smooth 瓤苞肺 傈贸府 等 InputState
+    public InputState SmoothedInputs { get { return _inputPreprocessor.SmoothedInputs; } }
     public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.Instance.GetState() 客 悼老
 
-    public int RecentDir { get { return _recentDir; } set { _recentDir = value; } }
+    public int RecentDir { get; set; }
     public Vector2 PlayerLookDir { get { return new Vector2(RecentDir, 0); } }
 
-    public bool IsWallJump { get { return _isWallJump; } set { _isWallJump = value; } }
+    public bool IsWallJump { get; set; }
+    public float GroundDistance { get; set; }
+    public float DiveThreshhold
+    {
+        get { return _diveThreshhold; }
+        private set { _diveThreshhold = value; }
+    }
 
     #endregion
 
@@ -70,6 +76,7 @@ public class PlayerBehaviour : StateMachineBase
         _attackController = GetComponent<PlayerAttackController>();
         _interactionController = GetComponent<InteractionController>();
 
+        // InputPreProcessor
         _inputPreprocessor = GetComponent<PlayerInputPreprocessor>();
 
         // State
@@ -88,27 +95,41 @@ public class PlayerBehaviour : StateMachineBase
     }
     private void OnDestroy()
     {
-        InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
-        InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
-        InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
-        InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
+        // InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
+        // InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
+        // InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
+        // InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
     }
 
     protected override void Update()
     {
         base.Update();
 
-        // Animaotr Parameter
+        #region Animaotr Parameter
+
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
-        Animator.SetFloat("GroundDistane", _groundDistance);
+        Animator.SetFloat("GroundDistance", GroundDistance);
+
+        #endregion
+
+        #region Basic Behavior
 
         // Player Flip
         if (StateIs<RunState>() || StateIs<InAirState>())
         {
-            if (Mathf.RoundToInt(RawInputs.Movement.x) != 0 && _recentDir != Mathf.RoundToInt(RawInputs.Movement.x))
+            if (Mathf.RoundToInt(RawInputs.Movement.x) != 0 && RecentDir != Mathf.RoundToInt(RawInputs.Movement.x))
                 UpdateImageFlip();
         }
+
+        // In Air State
+        if (!IsGrounded && !StateIs<InAirState>())
+        {
+            if (!StateIs<WallState>() && !StateIs<DashState>() && !StateIs<DiveState>() && !StateIs<ShootingState>())
+                ChangeState<InAirState>();
+        }
+
+        #endregion
 
         #region Check Ground & Wall
 
@@ -121,7 +142,7 @@ public class PlayerBehaviour : StateMachineBase
             IsGrounded = false;
 
         // Check Wall
-        WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * _recentDir, _wallCheckDistance, _wallLayer);
+        WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * RecentDir, _wallCheckDistance, _wallLayer);
 
         if (WallHit)
             IsTouchedWall = true;
@@ -132,19 +153,19 @@ public class PlayerBehaviour : StateMachineBase
         DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckDistance, _groundLayer);
 
         // Ground Distance
-        _groundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
+        GroundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
 
         #endregion
 
         #region Skill CoolTime
 
         // Dash CoolTime
-        if (!_dashState.IsDashing && !_dashState.EnableDash)
+        if (!_dashState.IsDashing)
         {
             if (Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
             {
                 if (IsGrounded || StateIs<WallState>())
-                    _dashState.EnableDash = true;
+                    CanDash = true;
             }
         }
 
@@ -153,41 +174,12 @@ public class PlayerBehaviour : StateMachineBase
         // Shooting CoolTime
 
         #endregion
-
-        #region Change State
-
-        // In Air State
-        if (!IsGrounded && !StateIs<InAirState>())
-        {
-            if (!StateIs<DashState>() && !StateIs<WallState>() && !StateIs<DiveState>() && !StateIs<ShootingState>())
-                ChangeState<InAirState>();
-        }
-
-        // Dash State
-        if (Input.GetKeyDown(KeyCode.V) && !StateIs<DashState>())
-        {
-            if (_dashState.EnableDash && Mathf.RoundToInt(RawInputs.Movement.x) != 0)
-            {
-                if (StateIs<RunState>() || StateIs<InAirState>())
-                    ChangeState<DashState>();
-            }
-        }
-
-        // Dive State
-        if (Input.GetKeyDown(KeyCode.Alpha5) && RawInputs.Movement.y < 0)
-        {
-            if (StateIs<InAirState>() && _groundDistance > _diveThreshhold)
-                ChangeState<DiveState>();
-        }
-
-        #endregion
-
     }
 
     private void UpdateImageFlip()
     {
-        _recentDir = (int)RawInputs.Movement.x;
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * _recentDir, transform.localScale.y, transform.localScale.z);
+        RecentDir = (int)RawInputs.Movement.x;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
     }
 
     void OnBasicAttackPressed()
@@ -219,7 +211,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         // Draw Wall Check
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * _recentDir);
+        Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * RecentDir);
 
         // Draw Ground Check
         Gizmos.color = Color.blue;

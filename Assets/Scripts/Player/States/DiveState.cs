@@ -4,37 +4,39 @@ using UnityEngine;
 public class DiveState : PlayerState
 {
     [Header("Dive Pre Setting")]
+
+    [Space]
+
     [SerializeField] LayerMask _enemyLayers;                                            // 적 레이어
     [SerializeField] ParticleSystem _boomParticle;                                      // 폭발 파티클
     [SerializeField] ParticleSystem _chargingParticle;                                  // 차징 파티클
-    [SerializeField] Collider2D[] _targetEnemys;                                        // 적 콜라이더
     [SerializeField] Transform _explosionPoint;                                         // 폭발 위치
 
     [Header("Dive Setting")]
-    [SerializeField] float _diveSpeed = 15.0f;                                          // 떨어지는 속도
-    [SerializeField] float _fastDiveSpeed = 10.0f;                                      // 가속도
-    [SerializeField] Vector3 _explosionSize = new Vector3(5.0f, 1.0f);             // Boom 크기
-    [SerializeField] int _explosionDamage = 40;                                         // 폭발 데미지
-    [SerializeField] float _knockBackPower = 10f;                                       // 넉백 파워
-    [SerializeField] Vector3 _boomParticlePos = new Vector3(0f, 0.5f);             // Boom 생성 위치
-    [SerializeField] Vector3 _chargingParticlePos = new Vector3(0f, 0.5f);         // Charging 생성 위치
-    [SerializeField] float _chargingDelay = 2.0f;                                       // Charging 딜레이
 
+    [Space]
 
-    [SerializeField] ParticleSystem _chargingEffect;    // Charging 이펙트 인스턴스
-    [SerializeField] bool _isCharging = false;          // 차징 상태
-    [SerializeField] bool _isDiving = false;            // 다이빙 상태
+    [Range(0f, 30f)] [SerializeField] float _diveSpeed = 15.0f;                         // 떨어지는 속도
+    [Range(0f, 30f)] [SerializeField] float _fastDiveSpeed = 10.0f;                     // 떨어지는 가속도
+    [Range(0f, 100f)][SerializeField] int _explosionDamage = 40;                        // 폭발 데미지
+    [Range(0f, 50f)][SerializeField] float _knockBackPower = 10f;                       // 넉백 파워
+    [Range(0f, 5f)][SerializeField] float _chargingDelay = 2.0f;                        // 차징 딜레이
+    [SerializeField] Vector3 _explosionSize = new Vector3(5.0f, 1.0f);             // 폭발 범위
+    [SerializeField] Vector3 _chargingParticlePos = new Vector3(0f, 0.5f);         // 차징 파티클 생성 위치 보정
+
+    Collider2D[] _targetEnemys; // 적 콜라이더
+    ParticleSystem _chargingEffect;    // Charging 이펙트 인스턴스
+
+    bool _isCharging = false;          // 차징 상태
+    bool _isDiving = false;            // 다이빙 상태
 
     protected override void OnEnter()
     {
-        StartCoroutine(ExcutegDive());
+        StartCoroutine(ExcuteDive());
     }
 
     protected override void OnUpdate()
     {
-        Player.Animator.SetBool("IsCharging", _isCharging);
-        Player.Animator.SetBool("IsDiving", _isDiving);
-
         if (!_isDiving)
             return;
 
@@ -46,11 +48,8 @@ public class DiveState : PlayerState
         {
             _isDiving = false;
 
-            // Boom Particle
-            Instantiate(_boomParticle, transform.position + _boomParticlePos, Quaternion.identity);
-
-            // 내려찍기 범위 내의 적 판별
-            _targetEnemys = Physics2D.OverlapBoxAll(transform.position, _explosionSize, 0, _enemyLayers);
+            // 내려찍기 범위 내의 적 탐지
+            _targetEnemys = Physics2D.OverlapBoxAll(_explosionPoint.position, _explosionSize, 0, _enemyLayers);
 
             // 적 목록을 전부 순회
             foreach (Collider2D enemy in _targetEnemys)
@@ -68,6 +67,10 @@ public class DiveState : PlayerState
                 enemy.GetComponent<OncologySlime>().KnockBack(knockBackVector);
             }
 
+            // Boom Particle
+            // TODO : 자동으로 삭제된다??
+            Instantiate(_boomParticle, _explosionPoint.position, Quaternion.identity);
+
             // 내려찍기가 끝나면 Idle State
             ChangeState<IdleState>();
         }
@@ -80,7 +83,7 @@ public class DiveState : PlayerState
     }
 
     // 코루틴을 사용해서 플레이어를 공중에서 멈추게 한다
-    IEnumerator ExcutegDive()
+    IEnumerator ExcuteDive()
     {
         Charging();
 
@@ -93,6 +96,10 @@ public class DiveState : PlayerState
     {
         _isCharging = true;
         _isDiving = false;
+
+        Player.Animator.SetBool("IsCharging", _isCharging);
+        Player.Animator.SetBool("IsDiving", _isDiving);
+
 
         Player.Rigidbody.gravityScale = 0;
         Player.Rigidbody.velocity = Vector2.zero;
@@ -107,6 +114,9 @@ public class DiveState : PlayerState
         _isCharging = false;
         _isDiving = true;
 
+        Player.Animator.SetBool("IsCharging", _isCharging);
+        Player.Animator.SetBool("IsDiving", _isDiving);
+
         Player.Rigidbody.gravityScale = 5;
         Player.Rigidbody.velocity = new Vector2(0, -_diveSpeed);
 
@@ -116,6 +126,7 @@ public class DiveState : PlayerState
 
     void OnDrawGizmosSelected()
     {
+        Gizmos.color = Color.gray;
         Gizmos.DrawWireCube(transform.position, _explosionSize);
     }
 }

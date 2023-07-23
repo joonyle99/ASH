@@ -12,7 +12,6 @@ public class PlayerAnimEventPasser : MonoBehaviour
     }
     public void FinishBaseAttackAnim()
     {
-        // IdleState·Î º¯°æ
         _attackState.AnimEvent_FinishBaseAttackAnim();
     }
 }

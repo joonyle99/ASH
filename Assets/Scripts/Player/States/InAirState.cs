@@ -3,10 +3,13 @@ using UnityEngine;
 public class InAirState : PlayerState
 {
     [Header("InAir Setting")]
-    [SerializeField] float _inAirSpeed = 7f;            // 공중에서 좌우로 움직이는 스피드
-    [SerializeField] float _fastDropThreshhold = 7f;    // 빨리 떨어지기 시작하는 높이
-    [SerializeField] float _fastDropPower = 1f;         // 빨리 떨어지는 힘
-    [SerializeField] float _maxDropSpeed = 80f;         // 떨어지는 속도 최대값
+
+    [Space]
+
+    [Range(0f, 20f)] [SerializeField] float _inAirSpeed = 7f;            // 공중에서 좌우로 움직이는 스피드
+    [Range(0f, 20f)] [SerializeField] float _fastDropThreshhold = 7f;    // 빨리 떨어지기 시작하는 높이
+    [Range(0f, 5f)] [SerializeField] float _fastDropPower = 1.1f;        // 빨리 떨어지는 힘
+    [Range(0f, 100f)] [SerializeField] float _maxDropSpeed = 80f;        // 떨어지는 속도 최대값
 
     protected override void OnEnter()
     {
@@ -27,6 +30,26 @@ public class InAirState : PlayerState
         {
             ChangeState<WallGrabState>();
             return;
+        }
+
+        // Dash State
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            if (Player.CanDash && Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
+            {
+                ChangeState<DashState>();
+                return;
+            }
+        }
+
+        // Dive State
+        if (Input.GetKeyDown(KeyCode.Alpha5) && Player.RawInputs.Movement.y < 0)
+        {
+            if (Player.GroundDistance > Player.DiveThreshhold)
+            {
+                ChangeState<DiveState>();
+                return;
+            }
         }
 
         // Wall Jump에서 In Air State로 넘어온 경우

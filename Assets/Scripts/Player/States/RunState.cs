@@ -3,7 +3,10 @@ using UnityEngine;
 public class RunState : PlayerState
 {
     [Header("Run Setting")]
-    [SerializeField] float _runSpeed = 7f;
+
+    [Space]
+
+    [Range(0f, 30f)] [SerializeField] float _runSpeed = 7f;
 
     protected override void OnEnter()
     {
@@ -21,6 +24,16 @@ public class RunState : PlayerState
         {
             ChangeState<IdleState>();
             return;
+        }
+
+        // Dash State
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            if (Player.CanDash && Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
+            {
+                ChangeState<DashState>();
+                return;
+            }
         }
 
         // Wall Grab State
