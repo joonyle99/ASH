@@ -52,6 +52,9 @@ public class DashState : PlayerState
 
     private void ExcuteDash()
     {
+        // TODO : 대시 사운드 Once 재생
+        GetComponent<SoundList>().PlaySFX("SE_Dash");
+
         _isDashing = true;
         Player.CanDash = false;
 

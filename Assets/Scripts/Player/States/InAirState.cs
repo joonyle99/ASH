@@ -21,6 +21,9 @@ public class InAirState : PlayerState
         // Idle State
         if (Player.IsGrounded)
         {
+            // TODO : 점프 마무리 사운드 Once 재생
+            GetComponent<SoundList>().PlaySFX("SE_Jump_02");
+
             ChangeState<IdleState>();
             return;
         }
