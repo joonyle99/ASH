@@ -52,6 +52,8 @@ public class PlayerAttackController : MonoBehaviour
 
     public void AnimEvent_FinishBaseAttackAnim()
     {
+        Debug.Log("Finish");
+
         IsBasicAttacking = false;
 
         _player.Animator.SetBool("IsAttack", false);
