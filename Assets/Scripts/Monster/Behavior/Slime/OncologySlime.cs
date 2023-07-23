@@ -100,6 +100,8 @@ public class OncologySlime : NormalMonster
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // TODO : 슬라임 지면, 벽에 닿는 사운드 Once 재생
+
         // 레이어가 Wall이면
         //if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall"))
         //{
@@ -113,8 +115,6 @@ public class OncologySlime : NormalMonster
         //{
         //    KnockBack()
         //}
-
-
     }
 
     //public override void OnTriggerEnter2D(Collider2D collision)

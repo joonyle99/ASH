@@ -46,6 +46,9 @@ public class DiveState : PlayerState
         // 내려찍기가 끝나면 => 데미지 & 넉백
         if (Player.IsGrounded)
         {
+            // TODO : 급강하 마무리 사운드 Once 재생
+            GetComponent<SoundList>().PlaySFX("SE_DesolateDive_02");
+
             _isDiving = false;
 
             // 내려찍기 범위 내의 적 탐지
@@ -94,6 +97,9 @@ public class DiveState : PlayerState
 
     void Charging()
     {
+        // TODO : 급강하 액션 사운드 Loop 재생?
+        GetComponent<SoundList>().PlaySFX("SE_DesolateDive_01");
+
         _isCharging = true;
         _isDiving = false;
 

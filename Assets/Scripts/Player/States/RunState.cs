@@ -11,6 +11,9 @@ public class RunState : PlayerState
     protected override void OnEnter()
     {
         Player.Animator.SetBool("IsRun", true);
+
+        // TODO : 달리기 사운드 Loop 재생
+        GetComponent<SoundList>().PlaySFX("SE_Run");
     }
 
     protected override void OnUpdate()

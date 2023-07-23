@@ -109,6 +109,7 @@ public class PlayerJumpController : MonoBehaviour
     //JumpState 시작
     void CastJump()
     {
+
         _isJumpQueued = false;
         _isGroundJump = (_remainingJumpCount == _maxJumpCount);
         _remainingJumpCount--;
@@ -116,9 +117,19 @@ public class PlayerJumpController : MonoBehaviour
         _longJumpTime = 0f;
 
         if (_player.StateIs<InAirState>())
+        {
             _player.Animator.SetTrigger("DoubleJump");
 
+            // TODO : 이단 점프 사운드 Once 재생
+            GetComponent<SoundList>().PlaySFX("SE_DoubleJump");
+        }
+        else
+        {
+            // TODO : 점프 액션 사운드 Once 재생
+            GetComponent<SoundList>().PlaySFX("SE_Jump_01");
+        }
         _player.ChangeState<JumpState>();
+
         return;
     }
 

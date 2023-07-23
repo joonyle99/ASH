@@ -32,6 +32,8 @@ public class PlayerAttackController : MonoBehaviour
         _player.Animator.SetBool("IsAttack", true);
         _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
 
+        // TODO : 기본 공격 사운드 Once 재생
+
         if (_basicAttackCount >= 6)
             _basicAttackCount = 0;
 
