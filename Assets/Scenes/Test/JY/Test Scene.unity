@@ -8368,6 +8368,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
+      propertyPath: ShapeModule.angle
+      value: 5.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: moveWithTransform
       value: 0
       objectReference: {fileID: 0}
@@ -8385,11 +8389,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: ShapeModule.arc.value
-      value: 360
+      value: 182
+      objectReference: {fileID: 0}
+    - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: VelocityModule.enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: CollisionModule.enabled
@@ -8409,7 +8417,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: ClampVelocityModule.enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: EmissionModule.m_BurstCount
@@ -8441,7 +8449,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: InitialModule.startSpeed.scalar
-      value: 21.6
+      value: 39.8
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: InitialModule.startSize.minScalar
@@ -8453,7 +8461,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
@@ -8480,8 +8488,12 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
+      propertyPath: VelocityModule.speedModifier.scalar
+      value: 5.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: InitialModule.gravityModifier.scalar
-      value: 0.06
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: InitialModule.startSizeY.minMaxState
@@ -8517,7 +8529,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].time
-      value: 0.001
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 359747189, guid: b359800ff214369419bc14ed42f86134, type: 3}
       propertyPath: CollisionModule.m_EnergyLossOnCollision.scalar
