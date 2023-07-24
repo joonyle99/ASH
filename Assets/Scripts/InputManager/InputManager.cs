@@ -37,6 +37,9 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
 
     public void ChangeInputSetter(IInputSetter setter)
     {
+        if (setter == _currentSetter)
+            return;
+
         if (_currentSetter != null)
         {
             _currentSetter.JumpPressedEvent -= () => JumpPressedEvent?.Invoke();
