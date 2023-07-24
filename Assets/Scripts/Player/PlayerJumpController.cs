@@ -9,7 +9,7 @@ public class PlayerJumpController : MonoBehaviour
     [Range(0f, 30f)] [SerializeField] float _groundJumpPower = 15f;
     [Range(0f, 30f)] [SerializeField] float _inAirJumpPower = 12f;
     [Range(0f, 30f)] [SerializeField] float _wallJumpPower = 6f;
-    [Range(0f, 30f)] [SerializeField] float _wallEndJumpPower = 15f;
+    [Range(0f, 60f)] [SerializeField] float _wallEndJumpPower = 30f;
 
     [Range(0f, 1f)] [SerializeField] float _longJumpDuration = 0.2f;
     [Range(0f, 10f)] [SerializeField] float _longJumpBonusPower = 3f;

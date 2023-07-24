@@ -184,8 +184,6 @@ public class PlayerBehaviour : StateMachineBase
 
     void OnBasicAttackPressed()
     {
-        Debug.Log("sssss");
-
         if (CanBasicAttack)
             _attackController.CastBasicAttack();
     }
