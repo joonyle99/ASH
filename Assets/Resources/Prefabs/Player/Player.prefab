@@ -126,8 +126,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.9308784}
-  m_Size: {x: 0.7, y: 2.0182433}
+  m_Offset: {x: 0, y: 0.8747299}
+  m_Size: {x: 0.7, y: 2.1305404}
   m_Direction: 0
 --- !u!70 &1758241538975804318
 CapsuleCollider2D:
@@ -142,8 +142,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.011183932}
-  m_Size: {x: 0.31705475, y: 0.4}
+  m_Offset: {x: 0.0012617111, y: 0.14748955}
+  m_Size: {x: 0.6448345, y: 0.6957512}
   m_Direction: 0
 --- !u!95 &623491952
 Animator:
@@ -236,6 +236,7 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+  _belowForce: 100
 --- !u!114 &1322454706829155587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,7 +283,7 @@ MonoBehaviour:
   _groundJumpPower: 15
   _inAirJumpPower: 12
   _wallJumpPower: 6
-  _wallEndJumpPower: 15
+  _wallEndJumpPower: 30
   _longJumpDuration: 0.2
   _longJumpBonusPower: 3
   _coyoteTime: 1.5
@@ -495,7 +496,7 @@ MonoBehaviour:
   - _key: SE_DoubleJump
     _clip: {fileID: 8300000, guid: 4d9a0257ae9463b4b854d6d619cd78c0, type: 3}
     _volumeType: 0
-    _volumeA: 1
+    _volumeA: 0.2
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
