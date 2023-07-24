@@ -95,10 +95,10 @@ public class PlayerBehaviour : StateMachineBase
     }
     private void OnDestroy()
     {
-        // InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
-        // InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
-        // InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
-        // InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
+        InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
+        InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
+        InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
+        InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
     }
 
     protected override void Update()
@@ -184,6 +184,8 @@ public class PlayerBehaviour : StateMachineBase
 
     void OnBasicAttackPressed()
     {
+        Debug.Log("sssss");
+
         if (CanBasicAttack)
             _attackController.CastBasicAttack();
     }
@@ -206,6 +208,55 @@ public class PlayerBehaviour : StateMachineBase
         //TEMP
         transform.position = spawnPoint;
     }
+
+    // TODO : 달리기 사운드 Loop 재생
+    public void PlaySound_SE_Run()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Run");
+    }
+
+    // TODO : 점프 액션 사운드 Once 재생
+    public void PlaySound_SE_Jump_01()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Jump_01");
+    }
+
+    // TODO : 점프 마무리 사운드 Once 재생
+    public void PlaySound_SE_Jump_02()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Jump_02");
+    }
+
+    // TODO : 이단 점프 사운드 Once 재생
+    public void PlaySound_SE_DoubleJump()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_DoubleJump");
+    }
+
+    // TODO : 급강하 액션 사운드 Loop 재생?
+    public void PlaySound_SE_DesolateDive_01()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_DesolateDive_01");
+    }
+
+    // TODO : 급강하 마무리 사운드 Once 재생
+    public void PlaySound_SE_DesolateDive_02()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_DesolateDive_02");
+    }
+
+    // TODO : 발사 액션 사운드 Once 재생
+    public void PlaySound_SE_Shooting_01()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Shooting_01");
+    }
+
+    // TODO : 발사 마무리 사운드 Once 재생
+    public void PlaySound_SE_Shooting_02()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Shooting_02");
+    }
+
 
     private void OnDrawGizmosSelected()
     {

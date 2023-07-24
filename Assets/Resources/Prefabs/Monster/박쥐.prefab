@@ -2679,7 +2679,7 @@ ParticleSystem:
         m_RotationOrder: 4
     magnitude:
       serializedVersion: 2
-      minMaxState: 0
+      minMaxState: 1
       scalar: 1
       minScalar: 1
       maxCurve:
@@ -4870,7 +4870,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c9f4b167a70dc3840bf6edaf988eac34, type: 2}
+  - {fileID: 2100000, guid: ba28e013540fcc048bebd6de48c8aaf5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4912,7 +4912,7 @@ ParticleSystemRenderer:
   m_FreeformStretching: 0
   m_RotateWithStretchDirection: 1
   m_VertexStreams: 00010304
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
@@ -4936,6 +4936,9 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+  wayPoint: {fileID: 0}
+  moveSpeed: 5
+  time: 0
 --- !u!114 &359747191
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5295,8 +5298,8 @@ MonoBehaviour:
   - {fileID: 612992285835551376}
   - {fileID: 6456197459418537415}
   m_Bounds:
-    m_Center: {x: -0.60045743, y: -1.6967242, z: 0}
-    m_Extent: {x: 0.34003237, y: 0.43131804, z: 0}
+    m_Center: {x: -0.60045743, y: -1.696728, z: 0}
+    m_Extent: {x: 0.34003237, y: 0.43132186, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -5512,7 +5515,7 @@ MonoBehaviour:
   - {fileID: 2870543208593492410}
   - {fileID: 2917772470587027263}
   m_Bounds:
-    m_Center: {x: -0.019127727, y: -0.64863884, z: 0}
+    m_Center: {x: -0.019127727, y: -0.6486465, z: 0}
     m_Extent: {x: 1.3478782, y: 1.3778886, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -6197,7 +6200,7 @@ MonoBehaviour:
   - {fileID: 4718215119264147716}
   - {fileID: 111194649380634208}
   m_Bounds:
-    m_Center: {x: 0.023677826, y: -0.75809574, z: 0}
+    m_Center: {x: 0.023674011, y: -0.75809574, z: 0}
     m_Extent: {x: 1.3859367, y: 1.0544252, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -6306,8 +6309,8 @@ MonoBehaviour:
   - {fileID: 4900979442639539475}
   - {fileID: 282626779774496390}
   m_Bounds:
-    m_Center: {x: -2.2945368, y: 0.084909916, z: 0}
-    m_Extent: {x: 1.3724394, y: 0.941728, z: 0}
+    m_Center: {x: -2.2945387, y: 0.084909916, z: 0}
+    m_Extent: {x: 1.3724375, y: 0.941728, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -6444,7 +6447,7 @@ MonoBehaviour:
   - {fileID: 2917772470587027263}
   - {fileID: 2870543208593492410}
   m_Bounds:
-    m_Center: {x: 0.19731231, y: -2.0122395, z: 0}
+    m_Center: {x: 0.1973085, y: -2.0122395, z: 0}
     m_Extent: {x: 0.14345609, y: 0.25003898, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -6553,8 +6556,8 @@ MonoBehaviour:
   - {fileID: 2111956506408298552}
   - {fileID: 1272574196524638313}
   m_Bounds:
-    m_Center: {x: 2.1365023, y: 0.14954948, z: 0}
-    m_Extent: {x: 1.2860621, y: 0.92605186, z: 0}
+    m_Center: {x: 2.1365004, y: 0.14954567, z: 0}
+    m_Extent: {x: 1.286064, y: 0.92605567, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -6861,7 +6864,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 1000377066328611159}
   m_Bounds:
-    m_Center: {x: -0.13075152, y: -0.5070864, z: 0}
+    m_Center: {x: -0.13075534, y: -0.50707877, z: 0}
     m_Extent: {x: 0.3167457, y: 0.25821474, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -7158,8 +7161,8 @@ MonoBehaviour:
   - {fileID: 1713814535263413136}
   - {fileID: 4532420914281176128}
   m_Bounds:
-    m_Center: {x: -1.1050735, y: -1.2305489, z: 0}
-    m_Extent: {x: 0.09991288, y: 0.19781786, z: 0}
+    m_Center: {x: -1.1050735, y: -1.2305527, z: 0}
+    m_Extent: {x: 0.09991288, y: 0.19782168, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -7326,7 +7329,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7677490118992564335}
   m_Bounds:
-    m_Center: {x: 2.878087, y: 0.41289937, z: 0}
+    m_Center: {x: 2.878087, y: 0.41289175, z: 0}
     m_Extent: {x: 0.1935991, y: 0.17871562, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
