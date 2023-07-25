@@ -1,4 +1,3 @@
-using UnityEditor.U2D.Path;
 using UnityEngine;
 
 #region Enum
@@ -104,6 +103,7 @@ public abstract class BasedMonster : MonsterBehaviour
     // 데미지 피격
     public virtual void OnDamage(int damage)
     {
+        Debug.Log("based ondamage");
         CurHP -= damage;
 
         if (CurHP <= 0)
@@ -119,10 +119,17 @@ public abstract class BasedMonster : MonsterBehaviour
     // 사망
     public virtual void Die()
     {
+        // 충돌 비활성화
+        gameObject.GetComponent<Collider2D>().enabled = false;
+
         Dead = true;
-        // this.gameObject.SetActive(false);
     }
 
 
     #endregion
+
+    public void PlaySound_SE_Bat()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Bat");
+    }
 }

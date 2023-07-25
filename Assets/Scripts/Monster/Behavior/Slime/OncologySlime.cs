@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
+/// <summary>
+/// 종양슬라임 몬스터 클래스
+/// </summary>
 public class OncologySlime : NormalMonster
-    // 종양슬라임 몬스터 클래스
 {
-    // slime member
-    // ...
-
     public SpriteRenderer renderer;         // 렌더 정보
 
     [SerializeField]
@@ -17,7 +15,7 @@ public class OncologySlime : NormalMonster
     public Transform nextTransform;         // 다음 목적지
     public int currentWaypointIndex;        // 목적지 인덱스
     public float moveSpeed;                 // 몬스터 이동 속도
-    public float time;
+    public float upPower;                   // 튕기는 힘
 
     protected override void Start()
     {
@@ -35,10 +33,7 @@ public class OncologySlime : NormalMonster
     {
         base.Update();
 
-        Debug.Log(Vector3.Distance(currTransform.position,
-            transform.position));
-
-        // 몬스터를 다음 지점으로 이동시킵니다.
+        // 목적지를 다음 지점으로 이동시킵니다.
         if (Vector3.Distance(currTransform.position,
                 transform.position) < 2f)
         {
@@ -87,22 +82,18 @@ public class OncologySlime : NormalMonster
 
     public override void OnDamage(int _damage)
     {
+        Debug.Log("slime damage");
         base.OnDamage(_damage);
     }
 
     public override void KnockBack(Vector2 vec)
     {
-        base.KnockBack(vec);
-
         this.Rigidbody.AddForce(vec);
     }
 
     public override void Die()
     {
         base.Die();
-
-        // 충돌 비활성화
-        gameObject.GetComponent<CircleCollider2D>().enabled = false;
 
         // 사라지기 시작
         StartCoroutine(FadeOutObject());
@@ -125,7 +116,7 @@ public class OncologySlime : NormalMonster
             yield return null;
         }
 
-        // 오브젝트 비활성화
+        // 오브젝트 삭제
         Destroy(gameObject);
     }
 
@@ -144,7 +135,7 @@ public class OncologySlime : NormalMonster
             Debug.Log("Push");
 
             Vector3 moveDirection = (currTransform.position - transform.position).normalized;
-            Vector3 force = new Vector3(moveDirection.x * moveSpeed, 200f, 0f);
+            Vector3 force = new Vector3(moveDirection.x * moveSpeed, upPower, 0f);
             Rigidbody.AddForce(force);
         }
     }

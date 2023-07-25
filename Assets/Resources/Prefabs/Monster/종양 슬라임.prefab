@@ -411,13 +411,14 @@ GameObject:
   - component: {fileID: 1307060684}
   - component: {fileID: 1307060686}
   - component: {fileID: 1307060685}
+  - component: {fileID: 524276232}
   m_Layer: 0
   m_Name: "\uC885\uC591 \uC2AC\uB77C\uC784"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7908579348811713950
 Transform:
   m_ObjectHideFlags: 0
@@ -489,7 +490,7 @@ Rigidbody2D:
   m_AngularDrag: 0.84
   m_GravityScale: 0.1
   m_Material: {fileID: 6200000, guid: 83baeb986a5ef674e94bcb845855cf60, type: 2}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
@@ -508,6 +509,15 @@ MonoBehaviour:
   _rigidbody: {fileID: 1307060684}
   _animator: {fileID: 8858366127600596034}
   _initialState: {fileID: 1307060685}
+  renderer: {fileID: 2265389205131022177}
+  wayPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  currTransform: {fileID: 0}
+  nextTransform: {fileID: 0}
+  currentWaypointIndex: 0
+  moveSpeed: 200
+  upPower: 100
 --- !u!114 &1307060685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,9 +533,27 @@ MonoBehaviour:
   _animatorParameters:
     _enterParams: []
     _exitParams: []
-  wayPoint: {fileID: 0}
-  moveSpeed: 5
-  time: 0
+--- !u!114 &524276232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9009718034006463997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: SE_Slime
+    _clip: {fileID: 8300000, guid: 7b86d89640a995c4b862e45661a3ba03, type: 3}
+    _volumeType: 0
+    _volumeA: 0.2
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!1 &9201159090335397158
 GameObject:
   m_ObjectHideFlags: 0

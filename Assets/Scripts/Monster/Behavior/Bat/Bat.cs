@@ -1,18 +1,220 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utils;
+using Gizmos = UnityEngine.Gizmos;
 
-public class Bat : MonoBehaviour
+public class Bat : NormalMonster
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    public List<SpriteRenderer> renderers;  // 렌더 목록
+
+    [SerializeField]
+    public List<Transform> wayPoints;       // 목적지 목록
+    public Transform currTransform;         // 목적지
+    public Transform nextTransform;         // 다음 목적지
+    public int currentWaypointIndex;        // 목적지 인덱스
+    public float moveSpeed;                 // 몬스터 이동 속도
+    public float waitTime;                  // 기다리는 시간
+    public bool isWaiting;                  // 대기 여부
+    public float time;
+    public Vector3 boxSize;
+    public Collider2D collider;
+    public LayerMask layerMask;
+    public bool isAttack;
+    public float time2;
+    public ParticleSystem shakingParticle;
+    public ParticleSystem shakingParticle2;
+    public ParticleSystem shakingParticle3;
+    public ParticleSystem shakingEffect;
+    public ParticleSystem shakingEffect2;
+    public ParticleSystem shakingEffect3;
+
+    protected override void Start()
     {
-        
+        base.Start();
+
+        // 초기 세팅
+        SetUp();
+
+        // 초기 목적지
+        currTransform = wayPoints[currentWaypointIndex];
+        nextTransform = wayPoints[currentWaypointIndex + 1];
     }
 
-    // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
-        
+        base.Update();
+
+        // 기다리는중
+        if (isWaiting)
+        {
+            time += Time.deltaTime;
+
+            if (time > waitTime)
+            {
+                time = 0f;
+                isWaiting = false;
+            }
+        }
+        // 이동중
+        else
+        {
+            // 목적지에 도착
+            if (Vector3.Distance(currTransform.position,
+                    transform.position) < 1f)
+            {
+                isWaiting = true;
+                Rigidbody.velocity = Vector2.zero;
+
+                currentWaypointIndex++;
+                currentWaypointIndex %= wayPoints.Count;
+                currTransform = wayPoints[currentWaypointIndex];
+                nextTransform = wayPoints[(currentWaypointIndex + 1) % wayPoints.Count];
+            }
+            // 목적지에 도착하지 못함
+            else
+            {
+                // 이동하면서 목적지를 향한 방향을 계속해서 탐지
+                Vector2 moveDirection = (currTransform.position - transform.position).normalized;
+
+                // 목적지로 등속 이동
+                Rigidbody.velocity = moveDirection * moveSpeed;
+            }
+        }
+
+        if (!isAttack)
+        {
+            // 탐지 범위 안에 들어왔는지 확인
+            collider = Physics2D.OverlapBox(transform.position, boxSize, 0f, layerMask);
+            if (collider != null)
+            {
+                if (collider.gameObject.tag == "Player")
+                {
+                    // 공격한다
+                    isAttack = true;
+
+                    Animator.SetTrigger("Shaking");
+
+                    shakingEffect = Instantiate(shakingParticle, transform.position, Quaternion.identity, transform);
+                    shakingEffect2 = Instantiate(shakingParticle2, transform.position, Quaternion.identity, transform);
+                    shakingEffect3 = Instantiate(shakingParticle3, transform.position, Quaternion.identity, transform);
+
+                    shakingEffect.Play();
+                    shakingEffect2.Play();
+                    shakingEffect3.Play();
+                }
+            }
+        }
+        else
+        {
+            time2 += Time.deltaTime;
+
+            if (time2 > waitTime)
+            {
+                time2 = 0f;
+                isAttack = false;
+
+                shakingEffect.Stop();
+                shakingEffect2.Stop();
+                shakingEffect3.Stop();
+                Destroy(shakingEffect.gameObject);
+                Destroy(shakingEffect2.gameObject);
+                Destroy(shakingEffect3.gameObject);
+            }
+        }
     }
+
+    public override void SetUp()
+    {
+        // 기본 초기화
+        base.SetUp();
+
+        // 박쥐의 최대 체력
+        MaxHp = 100;
+
+        // 박쥐의 현재 체력
+        CurHP = MaxHp;
+
+        // 박쥐의 ID 설정
+        ID = 1002;
+
+        // 종양 슬라임의 이름 설정
+        MonsterName = "박쥐";
+
+        // 크기
+        Size = SIZE.Small;
+
+        // 박쥐의 활동 종류
+        ActionType = ACTION_TYPE.Floating;
+
+        // 리젠
+        Response = RESPONE.None;
+
+        // 선공
+        IsAggressive = IS_AGGRESSIVE.TerritoryAggressive;
+
+        // 추적
+        IsChase = IS_CHASE.Territory;
+
+        // 도망
+        IsRunaway = IS_RUNAWAY.Aggressive;
+    }
+
+    public override void OnDamage(int _damage)
+    {
+        Debug.Log("bat damage");
+        base.OnDamage(_damage);
+    }
+
+    public override void KnockBack(Vector2 vec)
+    {
+        this.Rigidbody.AddForce(vec);
+    }
+
+    public override void Die()
+    {
+        base.Die();
+
+        // 사라지기 시작
+        // StartCoroutine(FadeOutObject());
+
+        // 오브젝트 삭제
+        Destroy(gameObject);
+    }
+
+    public IEnumerator FadeOutObject()
+    {
+        // 초기 알파값 저장
+        float startAlpha = renderers[0].material.color.a;
+
+        // 서서히 알파값 감소
+        float t = 0;
+        while (t < 2)
+        {
+            t += Time.deltaTime;
+            float normalizedTime = t / 2;
+            Color color = renderers[0].material.color;
+            color.a = Mathf.Lerp(startAlpha, 0f, normalizedTime);
+            renderers[0].material.color = color;
+            yield return null;
+        }
+
+        // 오브젝트 비활성화
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // Debug.Log(collision.gameObject.name);
+        // if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall") || collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(transform.position, boxSize);
+    }
+
+
 }

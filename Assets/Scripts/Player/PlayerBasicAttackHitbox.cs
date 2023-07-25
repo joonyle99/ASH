@@ -1,3 +1,4 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class PlayerBasicAttackHitbox : MonoBehaviour
@@ -17,6 +18,8 @@ public class PlayerBasicAttackHitbox : MonoBehaviour
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Slime -> Normal -> Based 이런식으로 타고 들어감
+        // base.func() 안하면 Slime만 실행된다
         BasedMonster monster = collision.GetComponent<BasedMonster>();
 
         if (monster != null)

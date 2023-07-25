@@ -4,7 +4,7 @@ public class M_AttackState : MonsterState
 {
     protected override void OnEnter()
     {
-        Debug.Log("Enter M_Idle");
+        Debug.Log("Enter M_AttackState");
     }
 
     protected override void OnUpdate()
@@ -14,6 +14,6 @@ public class M_AttackState : MonsterState
 
     protected override void OnExit()
     {
-        Debug.Log("Enter M_Idle");
+        Debug.Log("Enter M_AttackState");
     }
 }

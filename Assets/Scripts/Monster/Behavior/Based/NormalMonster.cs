@@ -16,6 +16,7 @@ public abstract class NormalMonster : BasedMonster
 
     public override void OnDamage(int _damage)
     {
+        Debug.Log("normal ondamage");
         base.OnDamage(_damage);
     }
 
