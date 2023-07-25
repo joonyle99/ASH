@@ -22,27 +22,31 @@ public class SceneManager : HappyTools.SingletonBehaviourFixed<SceneManager>
     {
         StartCoroutine(InitialStartCoroutine());
     }
+    public void StartSceneChange(string sceneName)
+    {
+        Instance.StartCoroutine(TransitionCoroutine(sceneName));
+    }
     public void StartSceneChangeByPassage(PassageData targetPassageData)
     {
         if (_isTransitioning)
             return;
-        Instance.StartCoroutine(TransitionCoroutine(targetPassageData));
+        Instance.StartCoroutine(TransitionCoroutine(targetPassageData.TargetSceneName));
     }
     IEnumerator InitialStartCoroutine()
     {
         yield return StartCoroutine(StartSceneAfterLoadCoroutine());
     }
-    IEnumerator TransitionCoroutine(PassageData targetPassageData)
+    IEnumerator TransitionCoroutine(string sceneName)
     {
         _isTransitioning = true;
         yield return FadeCoroutine(_fadeDuration, 0, 1);
         //TODO : Close scene?
-        AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(targetPassageData.TargetSceneName);
+        AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         yield return new WaitUntil(() => load.isDone);
-        
-        yield return StartCoroutine(StartSceneAfterLoadCoroutine(targetPassageData.Name));
+
+        yield return StartCoroutine(StartSceneAfterLoadCoroutine());
     }
-    
+
     IEnumerator StartSceneAfterLoadCoroutine(string entranceName = "")
     {
         //OnLoad

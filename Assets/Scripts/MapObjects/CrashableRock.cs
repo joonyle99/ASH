@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class CrashableRock : AttackableEntity
 {
-    [SerializeField] ParticleHelper _particle;
+    [SerializeField] List<ParticleHelper> _particles;
     [SerializeField] List<Transform> _pieces;
     override protected void OnHittedByBasicAttack(PlayerBehaviour player)
     {
-        if (player.transform.position.x > transform.position.x)
-            _particle.SetEmmisionRotation(new Vector3(0, 0, 60));
-        else
-            _particle.SetEmmisionRotation(new Vector3(0, 0, 0));
-        _particle.Activate();
-        _particle.transform.parent = transform.parent;
+        foreach(ParticleHelper particle in _particles)
+        {
+            if (player.transform.position.x > transform.position.x)
+                particle.SetEmmisionRotation(new Vector3(0, 0, 60));
+            else
+                particle.SetEmmisionRotation(new Vector3(0, 0, 0));
+            particle.Activate();
+            particle.transform.parent = transform.parent;
+        }
 
         GetComponent<Collider2D>().enabled = false;
 

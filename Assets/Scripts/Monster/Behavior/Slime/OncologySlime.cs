@@ -11,11 +11,15 @@ public class OncologySlime : NormalMonster
     protected override void Start()
     {
         base.Start();
+
+        SetUp();
     }
 
     protected override void Update()
     {
         base.Update();
+
+
     }
 
     public override void SetUp()
@@ -63,15 +67,16 @@ public class OncologySlime : NormalMonster
     {
         base.KnockBack(vec);
 
-        //this.Rigidbody.AddForce(vec);
+        // this.Rigidbody.AddForce(vec);
+        // this.Rigidbody.gravityScale = 1f;
         this.Rigidbody.velocity = vec;
-        this.Rigidbody.gravityScale = 1f;
     }
 
     public override void Die()
     {
         base.Die();
-        //StartCoroutine(FadeOutObject());
+
+        StartCoroutine(FadeOutObject());
     }
 
     private IEnumerator FadeOutObject()
@@ -103,26 +108,26 @@ public class OncologySlime : NormalMonster
         // TODO : 슬라임 지면, 벽에 닿는 사운드 Once 재생
 
         // 레이어가 Wall이면
-        //if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall"))
-        //{
-        //    this.Rigidbody.velocity = Vector2.zero;
-        //    this.Rigidbody.gravityScale = 0f;
-        //}
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            this.Rigidbody.velocity = Vector2.zero;
+            this.Rigidbody.gravityScale = 0f;
+        }
 
         // 플레이어 Attack Box에 피격되면
         // 임시 피격 코드
-        //if(collision.gameObject.GetComponent<PlayerBasicAttackHitbox>() != null)
-        //{
-        //    KnockBack()
-        //}
+        if (collision.gameObject.GetComponent<PlayerBasicAttackHitbox>() != null)
+        {
+            // KnockBack()
+        }
     }
 
-    //public override void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    // 피격 collision에서 "PlayerBasicAttackHitbox" 컴포넌트를 찾음
-    //    if (collision.GetComponent<PlayerBasicAttackHitbox>() != null)
-    //    {
-    //        Debug.Log("Hitted by basic attack");
-    //    }
-    //}
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 피격 collision에서 "PlayerBasicAttackHitbox" 컴포넌트를 찾음
+        if (collision.GetComponent<PlayerBasicAttackHitbox>() != null)
+        {
+            Debug.Log("Hitted by basic attack");
+        }
+    }
 }

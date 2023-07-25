@@ -9,7 +9,7 @@ public class PlayerJumpController : MonoBehaviour
     [Range(0f, 30f)] [SerializeField] float _groundJumpPower = 15f;
     [Range(0f, 30f)] [SerializeField] float _inAirJumpPower = 12f;
     [Range(0f, 30f)] [SerializeField] float _wallJumpPower = 6f;
-    [Range(0f, 30f)] [SerializeField] float _wallEndJumpPower = 15f;
+    [Range(0f, 60f)] [SerializeField] float _wallEndJumpPower = 30f;
 
     [Range(0f, 1f)] [SerializeField] float _longJumpDuration = 0.2f;
     [Range(0f, 10f)] [SerializeField] float _longJumpBonusPower = 3f;
@@ -117,17 +117,8 @@ public class PlayerJumpController : MonoBehaviour
         _longJumpTime = 0f;
 
         if (_player.StateIs<InAirState>())
-        {
             _player.Animator.SetTrigger("DoubleJump");
 
-            // TODO : 이단 점프 사운드 Once 재생
-            GetComponent<SoundList>().PlaySFX("SE_DoubleJump");
-        }
-        else
-        {
-            // TODO : 점프 액션 사운드 Once 재생
-            GetComponent<SoundList>().PlaySFX("SE_Jump_01");
-        }
         _player.ChangeState<JumpState>();
 
         return;

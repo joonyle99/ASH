@@ -38,18 +38,12 @@ public class ShootingState : PlayerState
 
     private IEnumerator Shooting()
     {
-        // TODO : 발사 액션 사운드 Once 재생
-        GetComponent<SoundList>().PlaySFX("SE_Shooting_01");
-
         // 파티클 생성 & 시작
         ParticleSystem chargingEffect = Instantiate(_lightingParticle, transform.position + _particlePos, Quaternion.identity, transform);
         chargingEffect.Play();  // 반복되는 이펙트
 
         // 발사 딜레이
         yield return new WaitForSeconds(_shootingDelay);
-
-        // TODO : 발사 마무리 사운드 Once 재생
-        GetComponent<SoundList>().PlaySFX("SE_Shooting_02");
 
         // 파티클 종료 & 파괴
         chargingEffect.Stop();
