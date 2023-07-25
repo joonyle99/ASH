@@ -120,7 +120,7 @@ public abstract class BasedMonster : MonsterBehaviour
     public virtual void Die()
     {
         Dead = true;
-        this.gameObject.SetActive(false);
+        // this.gameObject.SetActive(false);
     }
 
 

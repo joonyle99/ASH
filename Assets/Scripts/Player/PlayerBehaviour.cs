@@ -231,6 +231,12 @@ public class PlayerBehaviour : StateMachineBase
         GetComponent<SoundList>().PlaySFX("SE_DoubleJump");
     }
 
+    // TODO : 기본 공격 사운드 Once 재생
+    public void PlaySound_SE_Attack()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Attack");
+    }
+
     // TODO : 급강하 액션 사운드 Loop 재생?
     public void PlaySound_SE_DesolateDive_01()
     {

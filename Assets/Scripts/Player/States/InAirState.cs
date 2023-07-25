@@ -21,6 +21,8 @@ public class InAirState : PlayerState
         // Idle State
         if (Player.IsGrounded)
         {
+            Player.PlaySound_SE_Jump_02();
+
             ChangeState<IdleState>();
             return;
         }

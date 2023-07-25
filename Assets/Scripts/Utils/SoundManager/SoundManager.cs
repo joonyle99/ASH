@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -37,6 +38,9 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
         {
             _pitchedAudioSources[pitch] = _sfxPlayer.AddComponent<AudioSource>();
             _pitchedAudioSources[pitch].pitch = pitch / 1000f;
+            //_pitchedAudioSources[pitch].spatialBlend = 1f;
+            //_pitchedAudioSources[pitch].minDistance = 5f;
+            //_pitchedAudioSources[pitch].maxDistance = 30f;
         }
         _pitchedAudioSources[pitch].PlayOneShot(clip, volumeMultiplier);
     }

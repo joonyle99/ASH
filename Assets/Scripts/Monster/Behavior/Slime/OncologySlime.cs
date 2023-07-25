@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class OncologySlime : NormalMonster
@@ -8,18 +9,44 @@ public class OncologySlime : NormalMonster
     // slime member
     // ...
 
+    public SpriteRenderer renderer;         // 렌더 정보
+
+    [SerializeField]
+    public List<Transform> wayPoints;       // 목적지 목록
+    public Transform currTransform;         // 목적지
+    public Transform nextTransform;         // 다음 목적지
+    public int currentWaypointIndex;        // 목적지 인덱스
+    public float moveSpeed;                 // 몬스터 이동 속도
+    public float time;
+
     protected override void Start()
     {
         base.Start();
 
+        // 초기 세팅
         SetUp();
+
+        // 초기 목적지
+        currTransform = wayPoints[currentWaypointIndex];
+        nextTransform = wayPoints[currentWaypointIndex + 1];
     }
 
     protected override void Update()
     {
         base.Update();
 
+        Debug.Log(Vector3.Distance(currTransform.position,
+            transform.position));
 
+        // 몬스터를 다음 지점으로 이동시킵니다.
+        if (Vector3.Distance(currTransform.position,
+                transform.position) < 2f)
+        {
+            currentWaypointIndex++;
+            currentWaypointIndex %= wayPoints.Count;
+            currTransform = wayPoints[currentWaypointIndex];
+            nextTransform = wayPoints[(currentWaypointIndex + 1) % wayPoints.Count];
+        }
     }
 
     public override void SetUp()
@@ -46,7 +73,7 @@ public class OncologySlime : NormalMonster
         ActionType = ACTION_TYPE.Floating;
 
         // 리젠
-        // Response = RESPONE.None;
+        Response = RESPONE.None;
 
         // 선공
         IsAggressive = IS_AGGRESSIVE.Peace;
@@ -67,23 +94,22 @@ public class OncologySlime : NormalMonster
     {
         base.KnockBack(vec);
 
-        // this.Rigidbody.AddForce(vec);
-        // this.Rigidbody.gravityScale = 1f;
-        this.Rigidbody.velocity = vec;
+        this.Rigidbody.AddForce(vec);
     }
 
     public override void Die()
     {
         base.Die();
 
+        // 충돌 비활성화
+        gameObject.GetComponent<CircleCollider2D>().enabled = false;
+
+        // 사라지기 시작
         StartCoroutine(FadeOutObject());
     }
 
     private IEnumerator FadeOutObject()
     {
-        // 오브젝트의 머티리얼 가져오기
-        Renderer renderer = GetComponent<Renderer>();
-
         // 초기 알파값 저장
         float startAlpha = renderer.material.color.a;
 
@@ -100,34 +126,26 @@ public class OncologySlime : NormalMonster
         }
 
         // 오브젝트 비활성화
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
+    /// <summary>
+    /// 땅이나 벽과 Collision 충돌
+    /// </summary>
+    /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // TODO : 슬라임 지면, 벽에 닿는 사운드 Once 재생
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall") || collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            GetComponent<SoundList>().PlaySFX("SE_Slime");
 
-        // 레이어가 Wall이면
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        // 땅에 닿았을 때 힘을 줘볼까?
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            this.Rigidbody.velocity = Vector2.zero;
-            this.Rigidbody.gravityScale = 0f;
-        }
+            Debug.Log("Push");
 
-        // 플레이어 Attack Box에 피격되면
-        // 임시 피격 코드
-        if (collision.gameObject.GetComponent<PlayerBasicAttackHitbox>() != null)
-        {
-            // KnockBack()
-        }
-    }
-
-    public void OnTriggerEnter2D(Collider2D collision)
-    {
-        // 피격 collision에서 "PlayerBasicAttackHitbox" 컴포넌트를 찾음
-        if (collision.GetComponent<PlayerBasicAttackHitbox>() != null)
-        {
-            Debug.Log("Hitted by basic attack");
+            Vector3 moveDirection = (currTransform.position - transform.position).normalized;
+            Vector3 force = new Vector3(moveDirection.x * moveSpeed, 200f, 0f);
+            Rigidbody.AddForce(force);
         }
     }
 }
