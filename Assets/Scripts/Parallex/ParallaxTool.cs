@@ -53,6 +53,7 @@ public class ParallaxTool : MonoBehaviour
 
 
     }
+#if UNITY_EDITOR
     private void OnValidate()
     {
         if (EditorUtility.IsPersistent(gameObject))
@@ -61,6 +62,7 @@ public class ParallaxTool : MonoBehaviour
         SetVolumetricLights();
         SetGlobalLight();
     }
+#endif
     private void Reset()
     {
         _parallaxBoundaries.SetSortingLayers(SortingLayer.layers);

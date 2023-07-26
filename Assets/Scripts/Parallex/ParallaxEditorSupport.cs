@@ -1,9 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-
+#if UNITY_EDITOR
+using UnityEditor;
 [ExecuteInEditMode]
+#endif 
 public class ParallaxEditorSupport : MonoBehaviour
 {
     [SerializeField][Tooltip("z축을 움직이면 자동으로 sorting layer도 조정됩니다.")]
@@ -16,6 +17,7 @@ public class ParallaxEditorSupport : MonoBehaviour
     [SerializeField][HideInInspector] Vector3 _baseScale;
     //Set sorting layer order only on editor
 
+#if UNITY_EDITOR
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -55,5 +57,6 @@ public class ParallaxEditorSupport : MonoBehaviour
         transform.localScale = new Vector3(zOffset, zOffset, 0) / (-Camera.main.transform.position.z);
         //print(gameObject.name + " " +  zOffset.ToString());
     }*/
+#endif 
 }
 
