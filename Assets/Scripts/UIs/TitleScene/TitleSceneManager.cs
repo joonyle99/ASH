@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class TitleSceneManager : MonoBehaviour
 {
+    //[SerializeField] PassageData _initialPassageData;
     public void OnStartButtonClicked()
     {
-        SceneManager.Instance.StartSceneChange("TestStage");
+        SceneManager.Instance.StartSceneChange("Stage1-1");
+        //SceneManager.Instance.StartSceneChangeByPassage(_initialPassageData);
     }
     public void OnExitButtonClicked()
     {
