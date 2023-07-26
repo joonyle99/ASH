@@ -48,7 +48,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 1, g: 0.6650944, b: 0.91508484, a: 1}
+  m_BackGroundColor: {r: 0.39, g: 0.39, b: 0.39, a: 0.17741176}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -62,7 +62,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 111
+  far clip plane: 1000
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -136,7 +136,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraTargets: []
-  CenterTargetOnStart: 0
+  CenterTargetOnStart: 1
   Axis: 0
   UpdateType: 0
   FollowHorizontal: 1
@@ -144,7 +144,7 @@ MonoBehaviour:
   FollowVertical: 1
   VerticalFollowSmoothness: 0.15
   OffsetX: 0
-  OffsetY: 0
+  OffsetY: 0.38
   IsRelativeOffset: 1
   ZoomWithFOV: 0
   IgnoreTimeScale: 0
@@ -196,7 +196,7 @@ GameObject:
   - component: {fileID: 7219351680063161429}
   m_Layer: 0
   m_Name: UI Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

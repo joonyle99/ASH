@@ -12,8 +12,8 @@ public class Passage : ITriggerZone
     [SerializeField] PassageData _data;
     [SerializeField] PassageData _otherPassageData;
 
-    [SerializeField] InputSetterScriptableObject _enterInputSetter;
-    [SerializeField] InputSetterScriptableObject _exitInputSetter;
+    [Tooltip("플레이어가 여기로 들어가서 다음 스테이지로 갈 때")][SerializeField] InputSetterScriptableObject _enterInputSetter;
+    [Tooltip("플레이어가 이전 스테이지에서 여기로 나올 때")][SerializeField] InputSetterScriptableObject _exitInputSetter;
 
     [SerializeField] Transform _playerSpawnPoint;
 
@@ -45,6 +45,7 @@ public class Passage : ITriggerZone
     {
         //Spawn player
         _isPlayerExiting = true;
+        Camera.main.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
         player.transform.position = _playerSpawnPoint.position;
         if (_exitInputSetter == null)
             InputManager.Instance.ChangeToDefaultSetter();
