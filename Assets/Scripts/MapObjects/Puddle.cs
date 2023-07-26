@@ -12,6 +12,7 @@ public class Puddle : ITriggerZone
         if(activator.IsPlayer)
         {
             activator.AsPlayer.OnHitbyPuddle(_damage, _spawnPoint.position, _reviveDelay);
+            SoundManager.Instance.PlayCommonSFXPitched("SE_Puddle_splash");
         }
     }
     private void OnDrawGizmosSelected()

@@ -38,6 +38,7 @@ public class DialogueManager : HappyTools.SingletonBehaviourFixed<DialogueManage
         {
             yield return StartCoroutine(View.StartScriptCoroutine(scriptInfos[i]));
             yield return new WaitUntil(() => InputManager.InteractionKeyDown);
+            SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
             yield return StartCoroutine(View.FadeOutCoroutine(_waitTimeAfterScriptEnd));
         }
 

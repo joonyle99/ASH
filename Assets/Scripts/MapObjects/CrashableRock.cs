@@ -8,7 +8,8 @@ public class CrashableRock : AttackableEntity
     [SerializeField] List<Transform> _pieces;
     override protected void OnHittedByBasicAttack(PlayerBehaviour player)
     {
-        foreach(ParticleHelper particle in _particles)
+        SoundManager.Instance.PlayCommonSFXPitched("SE_CrashRock_hit");
+        foreach (ParticleHelper particle in _particles)
         {
             if (player.transform.position.x > transform.position.x)
                 particle.SetEmmisionRotation(new Vector3(0, 0, 60));

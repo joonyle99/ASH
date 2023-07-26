@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class TitleSceneManager : MonoBehaviour
 {
+    private void Start()
+    {
+        SoundManager.Instance.PlayCommonBGM("MainTheme");
+    }
     //[SerializeField] PassageData _initialPassageData;
     public void OnStartButtonClicked()
     {

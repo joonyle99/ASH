@@ -110,6 +110,9 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Start();
 
+        //TEMP!!
+        SoundManager.Instance.PlayCommonBGM("Exploration1");
+
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
         InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
         InputManager.Instance.HealingPressedEvent += OnHealingPressed; //TODO : subscribe

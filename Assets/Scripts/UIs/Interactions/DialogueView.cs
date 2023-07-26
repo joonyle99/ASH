@@ -45,7 +45,11 @@ public class DialogueView : MonoBehaviour
         while (true)
         {
             if (_fastForward)
+            {
+
+                SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
                 break;
+            }
             if (script.Text[index] == '<')
             {
                 index = script.Text.IndexOf('>', index);
@@ -55,6 +59,7 @@ public class DialogueView : MonoBehaviour
             {
                 shownScript += script.Text[index];
                 _dialogueText.text = shownScript;
+                SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Script" + Random.Range(1, 6).ToString());
             }
 
             index++;

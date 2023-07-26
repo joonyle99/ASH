@@ -44,9 +44,19 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
         }
         _pitchedAudioSources[pitch].PlayOneShot(clip, volumeMultiplier);
     }
-    public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f)
+    public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f, bool replayIfSameClip = false)
     {
-        _bgmPlayer.PlayOneShot(clip, volumeMultiplier);
+        if (replayIfSameClip && clip == _bgmPlayer.clip)
+            return;
+        _bgmPlayer.Stop();
+        _bgmPlayer.clip = clip;
+        _bgmPlayer.volume = volumeMultiplier;
+        _bgmPlayer.Play();
+    }
+
+    public void StopBGM()
+    {
+        _bgmPlayer.Stop();
     }
 
     public void PlayCommonSFXPitched(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)

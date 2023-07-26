@@ -19,6 +19,8 @@ public class FadeAndDestroy : MonoBehaviour
     IEnumerator Fade()
     {
         yield return new WaitForSeconds(_fadeStartTime);
+        
+
         float duration = _totalDuration - _fadeStartTime;
         float eTime = 0f;
         Color originalColor = _spriteRenderer.color;
