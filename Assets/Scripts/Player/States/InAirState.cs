@@ -21,6 +21,7 @@ public class InAirState : PlayerState
         // Idle State
         if (Player.IsGrounded)
         {
+            // 공중에서 바닥에 닿으면 나는 사운드
             Player.PlaySound_SE_Jump_02();
 
             ChangeState<IdleState>();

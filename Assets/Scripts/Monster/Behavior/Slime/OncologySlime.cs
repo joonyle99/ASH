@@ -8,18 +8,19 @@ using UnityEngine;
 /// </summary>
 public class OncologySlime : NormalMonster
 {
-    public SpriteRenderer renderer;         // 렌더 정보
+    public SpriteRenderer renderer;             // 렌더 정보
 
     [SerializeField]
-    public List<Transform> wayPoints;       // 목적지 목록
-    public Transform currTransform;         // 목적지
-    public Transform nextTransform;         // 다음 목적지
-    public int currentWaypointIndex;        // 목적지 인덱스
-    public float moveSpeed;                 // 몬스터 이동 속도
-    public float upPower;                   // 튕기는 힘
+    public List<Transform> wayPoints;           // 목적지 목록
+    public Transform currTransform;             // 목적지
+    public Transform nextTransform;             // 다음 목적지
+    public int currentWaypointIndex;            // 목적지 인덱스
+    public float moveSpeed;                     // 몬스터 이동 속도
+    public float upPower;                       // 튕기는 힘
     public GameObject player;
-    [Range(0f, 50f)] public float volumeMul;
-    [Range(0f, 1500)] public float power;
+    [Range(0f, 50f)] public float volumeMul;    // 볼륨 계수
+    [Range(0f, 1000f)] public float power;      // 넉백 파워
+    [Range(0, 100)] public int damage;          // 데미지
 
     protected override void Start()
     {
@@ -27,6 +28,9 @@ public class OncologySlime : NormalMonster
 
         // 초기 세팅
         SetUp();
+
+        // 플레이어 게임오브젝트
+        player = GameObject.FindWithTag("Player");
 
         // 초기 목적지
         currTransform = wayPoints[currentWaypointIndex];
@@ -37,7 +41,7 @@ public class OncologySlime : NormalMonster
     {
         base.Update();
 
-        // 목적지를 다음 지점으로 이동시킵니다.
+        // 목적지를 다음 지점으로 이동
         if (Vector3.Distance(currTransform.position,
                 transform.position) < 2f)
         {
@@ -86,7 +90,7 @@ public class OncologySlime : NormalMonster
 
     public override void OnDamage(int _damage)
     {
-        Debug.Log("slime damage");
+        //Debug.Log("slime damage");
         base.OnDamage(_damage);
     }
 
@@ -106,17 +110,17 @@ public class OncologySlime : NormalMonster
     private IEnumerator FadeOutObject()
     {
         // 초기 알파값 저장
-        float startAlpha = renderer.material.color.a;
+        float startAlpha = renderer.color.a;
 
         // 서서히 알파값 감소
         float t = 0;
-        while (t < 2)
+        while (t < 3)
         {
             t += Time.deltaTime;
             float normalizedTime = t / 2;
-            Color color = renderer.material.color;
+            Color color = renderer.color;
             color.a = Mathf.Lerp(startAlpha, 0f, normalizedTime);
-            renderer.material.color = color;
+            renderer.color = color;
             yield return null;
         }
 
@@ -138,13 +142,13 @@ public class OncologySlime : NormalMonster
             float finalMul = 1 / Vector3.Distance(player.transform.position, transform.position) * volumeMul;
             if (finalMul > 1f)
                 finalMul = 1f;
-            Debug.Log(finalMul);
+            //Debug.Log(finalMul);
             GetComponent<SoundList>().PlaySFX("SE_Slime", finalMul);
 
             // 땅에 닿았을 때 힘을 줘볼까?
             if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-                Debug.Log("Push");
+                //Debug.Log("Push");
 
                 Vector3 moveDirection = (currTransform.position - transform.position).normalized;
                 Vector3 force = new Vector3(moveDirection.x * moveSpeed, upPower, 0f);
@@ -156,15 +160,14 @@ public class OncologySlime : NormalMonster
         {
             Debug.Log("플레이어와 충돌");
 
-            int damage = 20;
-
             // 반대 방향
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
-            Vector2 vec = new Vector2(power * dir, power / 1.5f);
 
-            collision.gameObject.GetComponent<PlayerBehaviour>().KnockBack(vec);         // 넉백
-            collision.gameObject.GetComponent<PlayerBehaviour>().OnDamage(damage);       // 데미지
+            // 넉백 벡터
+            Vector2 vec = new Vector2(power * dir, power / 3f);
 
+            collision.gameObject.GetComponent<PlayerBehaviour>().KnockBack(vec);            // 넉백
+            collision.gameObject.GetComponent<PlayerBehaviour>().OnDamage(damage);          // 데미지
         }
     }
 }

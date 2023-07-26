@@ -103,7 +103,7 @@ public abstract class BasedMonster : MonsterBehaviour
     // 데미지 피격
     public virtual void OnDamage(int damage)
     {
-        Debug.Log("based ondamage");
+        //Debug.Log("based ondamage");
         CurHP -= damage;
 
         if (CurHP <= 0)

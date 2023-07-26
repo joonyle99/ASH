@@ -18,10 +18,10 @@ public class DiveState : PlayerState
 
     [Range(0f, 30f)] [SerializeField] float _diveSpeed = 15.0f;                         // 떨어지는 속도
     [Range(0f, 30f)] [SerializeField] float _fastDiveSpeed = 10.0f;                     // 떨어지는 가속도
-    [Range(0f, 100f)][SerializeField] int _explosionDamage = 40;                        // 폭발 데미지
-    [Range(0f, 50f)][SerializeField] float _knockBackPower = 10f;                       // 넉백 파워
+    [Range(0f, 100f)][SerializeField] int _explosionDamage = 70;                        // 폭발 데미지
+    [Range(0f, 20000f)] [SerializeField] float _knockBackPower;                         // 넉백 파워
     [Range(0f, 5f)][SerializeField] float _chargingDelay = 2.0f;                        // 차징 딜레이
-    [SerializeField] Vector3 _explosionSize = new Vector3(5.0f, 1.0f);             // 폭발 범위
+    [SerializeField] Vector3 _explosionSize;                                            // 폭발 범위
     [SerializeField] Vector3 _chargingParticlePos = new Vector3(0f, 0.5f);         // 차징 파티클 생성 위치 보정
 
     Collider2D[] _targetEnemys; // 적 콜라이더
@@ -57,14 +57,16 @@ public class DiveState : PlayerState
                 float dir = Mathf.Sign(enemy.transform.position.x - transform.position.x);                  // 플레이어가 적을 바라보는 방향
                 Vector2 knockBackVector = new Vector2(_knockBackPower * dir, _knockBackPower / 2f);       // 넉백 벡터
 
-                // 만약 슬라임이면
-                if (enemy.GetComponent<OncologySlime>() != null)
-                {
+                // // 만약 슬라임이면
+                // if (enemy.GetComponent<BasedMonster>() != null)
+                // {
+                //
+                // }
 
-                }
+                Debug.Log("타격 !!!");
 
-                enemy.GetComponent<OncologySlime>().OnDamage(_explosionDamage);
-                enemy.GetComponent<OncologySlime>().KnockBack(knockBackVector);
+                enemy.GetComponent<BasedMonster>().OnDamage(_explosionDamage);
+                enemy.GetComponent<BasedMonster>().KnockBack(knockBackVector);
             }
 
             // Boom Particle
@@ -127,6 +129,6 @@ public class DiveState : PlayerState
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.gray;
-        Gizmos.DrawWireCube(transform.position, _explosionSize);
+        Gizmos.DrawWireCube(_explosionPoint.position, _explosionSize);
     }
 }

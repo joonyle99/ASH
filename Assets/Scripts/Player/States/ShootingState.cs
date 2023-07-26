@@ -38,6 +38,8 @@ public class ShootingState : PlayerState
 
     private IEnumerator Shooting()
     {
+        yield return null;
+
         // 파티클 생성 & 시작
         ParticleSystem chargingEffect = Instantiate(_lightingParticle, transform.position + _particlePos, Quaternion.identity, transform);
         chargingEffect.Play();  // 반복되는 이펙트
@@ -53,6 +55,7 @@ public class ShootingState : PlayerState
 
         // Bullet 생성
         GameObject bullet = Instantiate(_bullet, _shootingTransform.transform.position + new Vector3(_bulletPosX * Player.RecentDir, _bulletPosY), transform.rotation);
+        Debug.Log(bullet.gameObject.name + "이 생성되었습니다");
 
         // 플레이어가 발사하는 방향에 따라 Bullet의 방향도 바뀐다
         Vector3 scale = bullet.transform.localScale;
