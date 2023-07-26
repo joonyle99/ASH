@@ -25,6 +25,13 @@ public class PlayerBehaviour : StateMachineBase
 
     [Range(0f, 10f)] [SerializeField] float _diveThreshhold = 4f;
 
+
+    [Header("Player Settings")]
+
+    [Space]
+
+    [Range(0f, 200f)] [SerializeField] float _hp = 100f;
+
     // Controller
     PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
@@ -67,6 +74,12 @@ public class PlayerBehaviour : StateMachineBase
         private set { _diveThreshhold = value; }
     }
 
+    public float HP
+    {
+        get { return _hp;}
+        set { _hp = value; }
+    }
+
     #endregion
 
     private void Awake()
@@ -95,10 +108,10 @@ public class PlayerBehaviour : StateMachineBase
     }
     private void OnDestroy()
     {
-        InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
-        InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
-        InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
-        InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
+        // InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
+        // InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
+        // InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
+        // InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
     }
 
     protected override void Update()
@@ -205,6 +218,16 @@ public class PlayerBehaviour : StateMachineBase
 
         //TEMP
         transform.position = spawnPoint;
+    }
+
+    public void OnDamage(int _damage)
+    {
+
+    }
+
+    public void KnockBack(Vector2 vec)
+    {
+        // Rigidbody.AddForce(vec);
     }
 
     // TODO : 달리기 사운드 Loop 재생
