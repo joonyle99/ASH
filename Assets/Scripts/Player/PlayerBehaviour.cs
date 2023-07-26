@@ -37,6 +37,7 @@ public class PlayerBehaviour : StateMachineBase
 
     [SerializeField] int _curHp;
 
+
     // Controller
     PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
@@ -79,6 +80,12 @@ public class PlayerBehaviour : StateMachineBase
         private set { _diveThreshhold = value; }
     }
 
+    public int CurHP
+    {
+        get { return _curHp; }
+        set { _curHp = value; }
+    }
+
     #endregion
 
     private void Awake()
@@ -97,6 +104,7 @@ public class PlayerBehaviour : StateMachineBase
         _shootingState = GetComponent<ShootingState>();
 
         _curHp = _maxHp;
+        RecentDir = 1;
     }
     protected override void Start()
     {
@@ -221,7 +229,7 @@ public class PlayerBehaviour : StateMachineBase
 
     public void OnHitbyPuddle(float damage, Vector3 spawnPoint, float reviveDelay)
     {
-        Debug.Log("물 웅덩이에 닿음 ");
+        //Debug.Log("물 웅덩이에 닿음 ");
         //애니메이션, 체력 닳기 등 하면 됨.
         //애니메이션 종료 후 spawnpoint에서 생성
 
@@ -230,24 +238,28 @@ public class PlayerBehaviour : StateMachineBase
         SceneManager.Instance.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay);
     }
 
+    /// <summary>
+    /// 플레이어 피격
+    /// </summary>
+    /// <param name="_damage"></param>
     public void OnDamage(int _damage)
     {
         Animator.SetTrigger("Hurt");
-        Animator.SetInteger("HP", _curHp);
-
         _curHp -= _damage;
 
-        if (_curHp <= 0)
+        if (_curHp < 0)
         {
             _curHp = 0;
             ChangeState<DieState>();
-            return;
         }
     }
 
+    /// <summary>
+    /// 플레이어 넉백
+    /// </summary>
+    /// <param name="vec"></param>
     public void KnockBack(Vector2 vec)
     {
-        Rigidbody.velocity = Vector2.zero;
         Rigidbody.AddForce(vec);
     }
 

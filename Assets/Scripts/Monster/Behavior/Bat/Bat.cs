@@ -7,9 +7,6 @@ using Gizmos = UnityEngine.Gizmos;
 public class Bat : NormalMonster
 {
     [SerializeField]
-    public List<SpriteRenderer> renderers;  // 렌더 목록
-
-    [SerializeField]
     public List<Transform> wayPoints;       // 목적지 목록
     public Transform currTransform;         // 목적지
     public Transform nextTransform;         // 다음 목적지
@@ -37,7 +34,7 @@ public class Bat : NormalMonster
         // 초기 세팅
         SetUp();
 
-        // 초기 목적지
+        // 초기 목적지 설정
         currTransform = wayPoints[currentWaypointIndex];
         nextTransform = wayPoints[currentWaypointIndex + 1];
     }
@@ -46,7 +43,7 @@ public class Bat : NormalMonster
     {
         base.Update();
 
-        // 기다리는중
+        // 대기 상태
         if (isWaiting)
         {
             time += Time.deltaTime;
@@ -83,6 +80,7 @@ public class Bat : NormalMonster
             }
         }
 
+        // 공격 상태 아니라면
         if (!isAttack)
         {
             // 탐지 범위 안에 들어왔는지 확인
@@ -177,31 +175,43 @@ public class Bat : NormalMonster
         base.Die();
 
         // 사라지기 시작
-        // StartCoroutine(FadeOutObject());
-
-        // 오브젝트 삭제
-        Destroy(gameObject);
+        StartCoroutine(FadeOutObject());
     }
 
     public IEnumerator FadeOutObject()
     {
-        // 초기 알파값 저장
-        float startAlpha = renderers[0].material.color.a;
+        yield return null;
 
-        // 서서히 알파값 감소
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+
+        // 초기 알파값 저장
+        float[] startAlphas = new float[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            startAlphas[i] = renderers[i].color.a;
+        }
+
+        // 모든 렌더 컴포넌트를 돌면서 Fade Out
         float t = 0;
-        while (t < 2)
+        while (t < 3)
         {
             t += Time.deltaTime;
             float normalizedTime = t / 2;
-            Color color = renderers[0].material.color;
-            color.a = Mathf.Lerp(startAlpha, 0f, normalizedTime);
-            renderers[0].material.color = color;
+
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Color color = renderers[i].color;
+                color.a = Mathf.Lerp(startAlphas[i], 0f, normalizedTime);
+                renderers[i].color = color;
+            }
+
             yield return null;
         }
 
-        // 오브젝트 비활성화
+        // 오브젝트 삭제
         Destroy(gameObject);
+
+        yield return null;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

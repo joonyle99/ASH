@@ -8,9 +8,8 @@ public class FireBullet : MonoBehaviour
 
     [Range(0f, 30f)] [SerializeField] float _speed = 2.5f;
     [Range(0f, 20f)] [SerializeField] float _destroyTime = 3.0f;
-    [Range(0f, 50f)] [SerializeField] float _knockPowerX = 10f;
-    [Range(0f, 50f)] [SerializeField] float _knockPowerY = 5f;
-    [Range(0, 100)] [SerializeField] int _damage = 30;
+    [Range(0f, 10000f)] [SerializeField] float _power;
+    [Range(0, 100)] [SerializeField] int _damage = 40;
 
     float _time;
 
@@ -31,7 +30,7 @@ public class FireBullet : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Monster"))
         {
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
-            Vector2 vec = new Vector2(_knockPowerX * dir, _knockPowerY);
+            Vector2 vec = new Vector2(_power * dir, _power / 2f);
 
             // 데미지와 넉백
             collision.GetComponent<BasedMonster>().OnDamage(_damage);
