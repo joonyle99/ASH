@@ -30,7 +30,9 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
-    [Range(0f, 200f)] [SerializeField] float _hp = 100f;
+    [Range(0f, 200f)] [SerializeField] float _maxHp = 100f;
+
+    private float _curHp;
 
     // Controller
     PlayerJumpController _jumpController;
@@ -74,10 +76,16 @@ public class PlayerBehaviour : StateMachineBase
         private set { _diveThreshhold = value; }
     }
 
-    public float HP
+    public float MaxHp
     {
-        get { return _hp;}
-        set { _hp = value; }
+        get { return _maxHp;}
+        set { _maxHp = value; }
+    }
+
+    public float CurHP
+    {
+        get { return _curHp; }
+        set { _curHp = value; }
     }
 
     #endregion
@@ -96,6 +104,8 @@ public class PlayerBehaviour : StateMachineBase
         _dashState = GetComponent<DashState>();
         _diveState = GetComponent<DiveState>();
         _shootingState = GetComponent<ShootingState>();
+
+        CurHP = MaxHp;
     }
     protected override void Start()
     {
@@ -187,6 +197,14 @@ public class PlayerBehaviour : StateMachineBase
         // Shooting CoolTime
 
         #endregion
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (StateIs<IdleState>())
+            {
+                Animator.SetTrigger("Healing");
+            }
+        }
     }
 
     private void UpdateImageFlip()
@@ -222,12 +240,26 @@ public class PlayerBehaviour : StateMachineBase
 
     public void OnDamage(int _damage)
     {
+        Animator.SetTrigger("Hurt");
 
+        CurHP -= _damage;
+
+        if (CurHP <= 0)
+        {
+            CurHP = 0;
+            Die();
+        }
     }
 
     public void KnockBack(Vector2 vec)
     {
-        // Rigidbody.AddForce(vec);
+        Rigidbody.AddForce(vec);
+    }
+
+    public void Die()
+    {
+        Animator.SetTrigger("Die");
+        gameObject.SetActive(false);
     }
 
     // TODO : 달리기 사운드 Loop 재생

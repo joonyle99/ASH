@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 /// <summary>
@@ -18,6 +19,7 @@ public class OncologySlime : NormalMonster
     public float upPower;                   // Æ¨±â´Â Èû
     public GameObject player;
     [Range(0f, 50f)] public float volumeMul;
+    [Range(0f, 1000f)] public float power;
 
     protected override void Start()
     {
@@ -151,6 +153,16 @@ public class OncologySlime : NormalMonster
         else if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             Debug.Log("ÇÃ·¹ÀÌ¾î¶û ´êÀ½");
+
+            int damage = 20;
+
+            // ¹Ý´ë ¹æÇâ
+            float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
+            Vector2 vec = new Vector2(power * dir, power / 1.5f);
+
+            collision.gameObject.GetComponent<PlayerBehaviour>().KnockBack(vec);         // ³Ë¹é
+            collision.gameObject.GetComponent<PlayerBehaviour>().OnDamage(damage);       // µ¥¹ÌÁö
+
         }
     }
 }
