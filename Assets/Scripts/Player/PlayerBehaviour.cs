@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase
@@ -30,7 +31,9 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
-    [Range(0f, 200f)] [SerializeField] float _hp = 100f;
+    [Range(0f, 200f)] [SerializeField] float _maxHp = 100f;
+
+    private float _curHp;
 
     // Controller
     PlayerJumpController _jumpController;
@@ -74,10 +77,16 @@ public class PlayerBehaviour : StateMachineBase
         private set { _diveThreshhold = value; }
     }
 
-    public float HP
+    public float MaxHp
     {
-        get { return _hp;}
-        set { _hp = value; }
+        get { return _maxHp;}
+        set { _maxHp = value; }
+    }
+
+    public float CurHP
+    {
+        get { return _curHp; }
+        set { _curHp = value; }
     }
 
     #endregion
@@ -96,6 +105,8 @@ public class PlayerBehaviour : StateMachineBase
         _dashState = GetComponent<DashState>();
         _diveState = GetComponent<DiveState>();
         _shootingState = GetComponent<ShootingState>();
+
+        CurHP = MaxHp;
     }
     protected override void Start()
     {
@@ -187,6 +198,14 @@ public class PlayerBehaviour : StateMachineBase
         // Shooting CoolTime
 
         #endregion
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (StateIs<IdleState>())
+            {
+                Animator.SetTrigger("Healing");
+            }
+        }
     }
 
     private void UpdateImageFlip()
@@ -210,24 +229,44 @@ public class PlayerBehaviour : StateMachineBase
             _attackController.CastShootingAttack();
     }
 
-    public void OnHitbyWater(float damage, Vector3 spawnPoint)
+    public void OnHitbyPuddle(float damage, Vector3 spawnPoint, float reviveDelay)
     {
         Debug.Log("물 웅덩이에 닿음 ");
         //애니메이션, 체력 닳기 등 하면 됨.
         //애니메이션 종료 후 spawnpoint에서 생성
 
         //TEMP
+        StartCoroutine(ReviveAfterPuddleHitCoroutine(reviveDelay));
         transform.position = spawnPoint;
     }
-
+    IEnumerator ReviveAfterPuddleHitCoroutine(float reviveDelay)
+    {
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(reviveDelay);
+        gameObject.SetActive(true);
+    }
     public void OnDamage(int _damage)
     {
+        Animator.SetTrigger("Hurt");
 
+        CurHP -= _damage;
+
+        if (CurHP <= 0)
+        {
+            CurHP = 0;
+            Die();
+        }
     }
 
     public void KnockBack(Vector2 vec)
     {
-        // Rigidbody.AddForce(vec);
+        Rigidbody.AddForce(vec);
+    }
+
+    public void Die()
+    {
+        Animator.SetTrigger("Die");
+        gameObject.SetActive(false);
     }
 
     // TODO : 달리기 사운드 Loop 재생
