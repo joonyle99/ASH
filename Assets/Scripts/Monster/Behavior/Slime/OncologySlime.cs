@@ -30,11 +30,13 @@ public class OncologySlime : NormalMonster
         SetUp();
 
         // 플레이어 게임오브젝트
-        player = GameObject.FindWithTag("Player");
+        player = SceneContextController.Player.gameObject;
 
         // 초기 목적지
         currTransform = wayPoints[currentWaypointIndex];
         nextTransform = wayPoints[currentWaypointIndex + 1];
+
+        renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     protected override void Update()
