@@ -45,6 +45,7 @@ public class Passage : ITriggerZone
     {
         //Spawn player
         _isPlayerExiting = true;
+        Camera.main.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
         player.transform.position = _playerSpawnPoint.position;
         if (_exitInputSetter == null)
             InputManager.Instance.ChangeToDefaultSetter();
