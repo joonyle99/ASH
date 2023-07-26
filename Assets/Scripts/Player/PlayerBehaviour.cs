@@ -225,16 +225,11 @@ public class PlayerBehaviour : StateMachineBase
         //애니메이션, 체력 닳기 등 하면 됨.
         //애니메이션 종료 후 spawnpoint에서 생성
 
-        //TEMP
-        StartCoroutine(ReviveAfterPuddleHitCoroutine(reviveDelay));
-        transform.position = spawnPoint;
-    }
-    IEnumerator ReviveAfterPuddleHitCoroutine(float reviveDelay)
-    {
+        //TEMP!!!!
         gameObject.SetActive(false);
-        yield return new WaitForSeconds(reviveDelay);
-        gameObject.SetActive(true);
+        SceneManager.Instance.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay);
     }
+
     public void OnDamage(int _damage)
     {
         Animator.SetTrigger("Hurt");

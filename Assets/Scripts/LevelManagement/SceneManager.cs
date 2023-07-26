@@ -16,6 +16,7 @@ public class SceneManager : HappyTools.SingletonBehaviourFixed<SceneManager>
     {
         base.Awake();
         _sceneContext = GetComponent<SceneContextController>();
+
     }
 
     private void Start()
@@ -63,6 +64,19 @@ public class SceneManager : HappyTools.SingletonBehaviourFixed<SceneManager>
 
         yield return FadeCoroutine(_fadeDuration, 1, 0);
         _isTransitioning = false;
+    }
+
+    public void ReactivatePlayerAfterDelay(Vector3 spawnPosition, float delay)
+    {
+        StartCoroutine(ReactivatePlayerAfterDelayCoroutine(spawnPosition, delay));
+    }
+    IEnumerator ReactivatePlayerAfterDelayCoroutine(Vector3 spawnPosition, float delay)
+    {
+        yield return FadeCoroutine(_fadeDuration, 0, 1);
+        yield return new WaitForSeconds(delay);
+        SceneContextController.Player.transform.position = spawnPosition;
+        SceneContextController.Player.gameObject.SetActive(true);
+        yield return FadeCoroutine(_fadeDuration, 1, 0);
     }
 
     IEnumerator FadeCoroutine(float duration, float from, float to)

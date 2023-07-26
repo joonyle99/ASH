@@ -6,7 +6,6 @@ public class Puddle : ITriggerZone
 {
     [SerializeField] float _damage = 1;
     [SerializeField] float _reviveDelay = 1;
-    [SerializeField] float _reviveDelay2 = 1;
     [SerializeField] Transform _spawnPoint;
     public override void OnActivatorStay(TriggerActivator activator) 
     {
