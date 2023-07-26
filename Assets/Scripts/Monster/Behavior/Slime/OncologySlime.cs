@@ -16,6 +16,8 @@ public class OncologySlime : NormalMonster
     public int currentWaypointIndex;        // ¸ñÀûÁö ÀÎµ¦½º
     public float moveSpeed;                 // ¸ó½ºÅÍ ÀÌµ¿ ¼Óµµ
     public float upPower;                   // Æ¨±â´Â Èû
+    public GameObject player;
+    [Range(0f, 50f)] public float volumeMul;
 
     protected override void Start()
     {
@@ -126,17 +128,29 @@ public class OncologySlime : NormalMonster
     /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall") || collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
-            GetComponent<SoundList>().PlaySFX("SE_Slime");
-
-        // ¶¥¿¡ ´ê¾ÒÀ» ¶§ ÈûÀ» Áàº¼±î?
-        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall") ||
+            collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Debug.Log("Push");
+            // °Å¸®¿¡ ºñ·ÊÇØ¼­ º¼·ý ¼Ò¸®¸¦ Å°¿î´Ù
+            float finalMul = 1 / Vector3.Distance(player.transform.position, transform.position) * volumeMul;
+            if (finalMul > 1f)
+                finalMul = 1f;
+            Debug.Log(finalMul);
+            GetComponent<SoundList>().PlaySFX("SE_Slime", finalMul);
 
-            Vector3 moveDirection = (currTransform.position - transform.position).normalized;
-            Vector3 force = new Vector3(moveDirection.x * moveSpeed, upPower, 0f);
-            Rigidbody.AddForce(force);
+            // ¶¥¿¡ ´ê¾ÒÀ» ¶§ ÈûÀ» Áàº¼±î?
+            if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                Debug.Log("Push");
+
+                Vector3 moveDirection = (currTransform.position - transform.position).normalized;
+                Vector3 force = new Vector3(moveDirection.x * moveSpeed, upPower, 0f);
+                Rigidbody.AddForce(force);
+            }
+        }
+        else if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            Debug.Log("ÇÃ·¹ÀÌ¾î¶û ´êÀ½");
         }
     }
 }
