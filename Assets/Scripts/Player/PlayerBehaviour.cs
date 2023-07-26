@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase
@@ -210,16 +211,22 @@ public class PlayerBehaviour : StateMachineBase
             _attackController.CastShootingAttack();
     }
 
-    public void OnHitbyWater(float damage, Vector3 spawnPoint)
+    public void OnHitbyPuddle(float damage, Vector3 spawnPoint, float reviveDelay)
     {
         Debug.Log("물 웅덩이에 닿음 ");
         //애니메이션, 체력 닳기 등 하면 됨.
         //애니메이션 종료 후 spawnpoint에서 생성
 
         //TEMP
+        StartCoroutine(ReviveAfterPuddleHitCoroutine(reviveDelay));
         transform.position = spawnPoint;
     }
-
+    IEnumerator ReviveAfterPuddleHitCoroutine(float reviveDelay)
+    {
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(reviveDelay);
+        gameObject.SetActive(true);
+    }
     public void OnDamage(int _damage)
     {
 
