@@ -31,9 +31,11 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
-    [Range(0f, 200f)] [SerializeField] float _maxHp = 100f;
+    [Range(0, 200)]
 
-    private float _curHp;
+    [SerializeField] int _maxHp;
+
+    [SerializeField] int _curHp;
 
     // Controller
     PlayerJumpController _jumpController;
@@ -77,18 +79,6 @@ public class PlayerBehaviour : StateMachineBase
         private set { _diveThreshhold = value; }
     }
 
-    public float MaxHp
-    {
-        get { return _maxHp;}
-        set { _maxHp = value; }
-    }
-
-    public float CurHP
-    {
-        get { return _curHp; }
-        set { _curHp = value; }
-    }
-
     #endregion
 
     private void Awake()
@@ -106,7 +96,7 @@ public class PlayerBehaviour : StateMachineBase
         _diveState = GetComponent<DiveState>();
         _shootingState = GetComponent<ShootingState>();
 
-        CurHP = MaxHp;
+        _curHp = _maxHp;
     }
     protected override void Start()
     {
@@ -149,7 +139,7 @@ public class PlayerBehaviour : StateMachineBase
         // In Air State
         if (!IsGrounded && !StateIs<InAirState>())
         {
-            if (!StateIs<WallState>() && !StateIs<DashState>() && !StateIs<DiveState>() && !StateIs<ShootingState>())
+            if (!StateIs<WallState>() && !StateIs<DashState>() && !StateIs<DiveState>() && !StateIs<ShootingState>() && !StateIs<DieState>())
                 ChangeState<InAirState>();
         }
 
@@ -248,25 +238,22 @@ public class PlayerBehaviour : StateMachineBase
     public void OnDamage(int _damage)
     {
         Animator.SetTrigger("Hurt");
+        Animator.SetInteger("HP", _curHp);
 
-        CurHP -= _damage;
+        _curHp -= _damage;
 
-        if (CurHP <= 0)
+        if (_curHp <= 0)
         {
-            CurHP = 0;
-            Die();
+            _curHp = 0;
+            ChangeState<DieState>();
+            return;
         }
     }
 
     public void KnockBack(Vector2 vec)
     {
+        Rigidbody.velocity = Vector2.zero;
         Rigidbody.AddForce(vec);
-    }
-
-    public void Die()
-    {
-        Animator.SetTrigger("Die");
-        gameObject.SetActive(false);
     }
 
     // TODO : 달리기 사운드 Loop 재생
@@ -322,7 +309,6 @@ public class PlayerBehaviour : StateMachineBase
     {
         GetComponent<SoundList>().PlaySFX("SE_Shooting_02");
     }
-
 
     private void OnDrawGizmosSelected()
     {

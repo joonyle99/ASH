@@ -19,7 +19,7 @@ public class OncologySlime : NormalMonster
     public float upPower;                   // 튕기는 힘
     public GameObject player;
     [Range(0f, 50f)] public float volumeMul;
-    [Range(0f, 1000f)] public float power;
+    [Range(0f, 1500)] public float power;
 
     protected override void Start()
     {
@@ -130,6 +130,7 @@ public class OncologySlime : NormalMonster
     /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // 땅이나 벽과 충돌했을 때
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall") ||
             collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
@@ -150,9 +151,10 @@ public class OncologySlime : NormalMonster
                 Rigidbody.AddForce(force);
             }
         }
+        // 플레이어와 충돌했을 때
         else if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            Debug.Log("플레이어랑 닿음");
+            Debug.Log("플레이어와 충돌");
 
             int damage = 20;
 
