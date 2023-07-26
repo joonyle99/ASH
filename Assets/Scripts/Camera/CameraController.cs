@@ -19,6 +19,22 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.HorizontalFollowSmoothness = 100f;
         _proCamera.VerticalFollowSmoothness = 100f;
     }
+    public void SnapFollow()
+    {
+        StartCoroutine(SnapFollowCoroutine());
+        
+    }
+    IEnumerator SnapFollowCoroutine()
+    {
+        float originalSmoothnessX = _proCamera.HorizontalFollowSmoothness;
+        float originalSmoothnessY = _proCamera.VerticalFollowSmoothness;
+        _proCamera.HorizontalFollowSmoothness = 0;
+        _proCamera.VerticalFollowSmoothness = 0;
+        yield return null;
+        _proCamera.HorizontalFollowSmoothness = originalSmoothnessX;
+        _proCamera.VerticalFollowSmoothness = originalSmoothnessY;
+
+    }
     private void Awake()
     {
         _proCamera = GetComponent<ProCamera2D>();
