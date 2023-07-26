@@ -31,6 +31,9 @@ public class SceneManager : HappyTools.SingletonBehaviourFixed<SceneManager>
     {
         if (_isTransitioning)
             return;
+
+        Camera.main.GetComponent<CameraController>().DisableCameraFollow();
+
         Instance.StartCoroutine(TransitionCoroutine(targetPassageData.TargetSceneName, targetPassageData.Name));
     }
     IEnumerator InitialStartCoroutine()
