@@ -15,7 +15,7 @@ public class HealthTest : MonoBehaviour
     }
     // Update is called once per frame
     void Update()
-    {
+    {/*
         if (Input.GetKeyDown(KeyCode.UpArrow))
             _healthPanel.Life += _lifeSpeed;
         if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -24,6 +24,6 @@ public class HealthTest : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow))
             _healthPanel.HealGauge -= Time.deltaTime;
         if (Input.GetKey(KeyCode.RightArrow))
-            _healthPanel.HealGauge += Time.deltaTime;
+            _healthPanel.HealGauge += Time.deltaTime;*/
     }
 }

@@ -9,24 +9,18 @@ public class HealthPanelUI : MonoBehaviour
 
     [SerializeField] Slider _healGauge;
     [SerializeField] Transform[] _lifeIcons;
-    int _lastLifeIconIndex = 9;
 
     public float HealGauge { get { return _healGauge.value; } set { _healGauge.value = value; } }
 
     public int Life
     {
-        get
-        {
-            return _lastLifeIconIndex + 1;
-        }
         set
         {
             if (value > MaxLife)
                 value = MaxLife;
             else if (value < 0)
                 value = 0;
-            if (_lastLifeIconIndex != value - 1)
-                UpdateLifeIcons(value);
+            UpdateLifeIcons(value);
         }
     }
     void Awake()
@@ -38,20 +32,10 @@ public class HealthPanelUI : MonoBehaviour
         {
             //»ç¸Á
         }
-        if(target < _lastLifeIconIndex + 1)
+        for (int i = 0; i < _lifeIcons.Length; i++)
         {
-            for (int i = _lastLifeIconIndex; i > target - 1; i--)
-            {
-                _lifeIcons[i].gameObject.SetActive(false);
-            }
+            bool on = i < target;
+            _lifeIcons[i].gameObject.SetActive(on);
         }
-        else if (target > _lastLifeIconIndex + 1)
-        {
-            for (int i = _lastLifeIconIndex; i < target; i++)
-            {
-                _lifeIcons[i].gameObject.SetActive(true);
-            }
-        }
-        _lastLifeIconIndex = target - 1;
     }
 }
