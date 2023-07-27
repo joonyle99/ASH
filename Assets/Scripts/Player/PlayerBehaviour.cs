@@ -99,10 +99,6 @@ public class PlayerBehaviour : StateMachineBase
         _dashState = GetComponent<DashState>();
         _diveState = GetComponent<DiveState>();
         _shootingState = GetComponent<ShootingState>();
-
-        // Init
-        CurHP = _maxHp;
-        RecentDir = 1;
     }
     protected override void Start()
     {
@@ -115,6 +111,10 @@ public class PlayerBehaviour : StateMachineBase
         InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
         InputManager.Instance.HealingPressedEvent += OnHealingPressed; //TODO : subscribe
         InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
+
+        // Init Value
+        CurHP = _maxHp;
+        RecentDir = 1;
     }
 
     /// <summary>
@@ -208,6 +208,7 @@ public class PlayerBehaviour : StateMachineBase
 
         #endregion
 
+        // 임시 Healing State
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             if (StateIs<IdleState>())
@@ -215,6 +216,9 @@ public class PlayerBehaviour : StateMachineBase
         }
     }
 
+    /// <summary>
+    /// 플레이어 좌우 방향 전환
+    /// </summary>
     private void UpdateImageFlip()
     {
         RecentDir = (int)RawInputs.Movement.x;
@@ -236,6 +240,12 @@ public class PlayerBehaviour : StateMachineBase
             _attackController.CastShootingAttack();
     }
 
+    /// <summary>
+    /// 물 웅덩이에 빠지는 함수
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <param name="spawnPoint"></param>
+    /// <param name="reviveDelay"></param>
     public void OnHitbyPuddle(float damage, Vector3 spawnPoint, float reviveDelay)
     {
         Debug.Log("물 웅덩이에 닿음 ");
@@ -248,7 +258,7 @@ public class PlayerBehaviour : StateMachineBase
     }
 
     /// <summary>
-    /// 플레이어 피격
+    /// 플레이어 피격 함수
     /// </summary>
     /// <param name="_damage"></param>
     public void OnDamage(int _damage)
@@ -264,7 +274,7 @@ public class PlayerBehaviour : StateMachineBase
     }
 
     /// <summary>
-    /// 플레이어 넉백
+    /// 플레이어 넉백 함수
     /// </summary>
     /// <param name="vec"></param>
     public void KnockBack(Vector2 vec)
@@ -273,10 +283,15 @@ public class PlayerBehaviour : StateMachineBase
         Rigidbody.AddForce(vec);
     }
 
+    /// <summary>
+    /// 플레이어 부활 함수
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator Alive()
     {
         Debug.Log("부활 !!");
 
+        // 초기 설정
         ChangeState<IdleState>();
         CurHP = _maxHp;
         RecentDir = 1;
@@ -342,6 +357,12 @@ public class PlayerBehaviour : StateMachineBase
         GetComponent<SoundList>().PlaySFX("SE_Attack");
     }
 
+    // TODO : 대시 사운드 Once 재생
+    public void PlayerSound_SE_Dash()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Dash");
+    }
+
     // TODO : 급강하 액션 사운드 Loop 재생?
     public void PlaySound_SE_DesolateDive_01()
     {
@@ -366,27 +387,22 @@ public class PlayerBehaviour : StateMachineBase
         GetComponent<SoundList>().PlaySFX("SE_Shooting_02");
     }
 
+    /// <summary>
+    /// Ground, Wall, Dive Raycast 그리기
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
-        // Draw Wall Check
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * RecentDir);
-
         // Draw Ground Check
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(_groundCheckTrans.position, _groundCheckTrans.position + Vector3.down * _groundCheckDistance);
+
+        // Draw Wall Check
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * RecentDir);
 
         // Draw Dive Check
         Gizmos.color = Color.white;
         Gizmos.DrawLine(_groundCheckTrans.position + new Vector3(0.1f, 0),
             _groundCheckTrans.position + new Vector3(0.1f, -_diveCheckDistance));
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.tag == "SpawnPoint")
-        {
-            mySpawnPoint = collision.transform.position;
-        }
     }
 }

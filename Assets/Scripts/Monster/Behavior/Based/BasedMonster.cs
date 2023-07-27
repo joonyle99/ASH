@@ -127,9 +127,4 @@ public abstract class BasedMonster : MonsterBehaviour
 
 
     #endregion
-
-    public void PlaySound_SE_Bat()
-    {
-        GetComponent<SoundList>().PlaySFX("SE_Bat");
-    }
 }

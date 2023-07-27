@@ -22,6 +22,10 @@ public class HealingState : PlayerState
 
     }
 
+    /// <summary>
+    /// 플레이어 치유 함수
+    /// </summary>
+    /// <returns></returns>
     IEnumerator Healing()
     {
         Animator.SetTrigger("Healing");

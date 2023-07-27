@@ -22,9 +22,15 @@ public class DieState : PlayerState
 
     }
 
+    /// <summary>
+    /// 플레이어가 죽는 함수
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Die()
     {
         Animator.SetBool("IsDead", true);
+
+        // 콜라이더 비활성화
         this.GetComponent<Collider2D>().enabled = false;
 
         // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
@@ -54,7 +60,7 @@ public class DieState : PlayerState
 
         Animator.SetBool("IsDead", false);
 
-        // 오브젝트 삭제
+        // 오브젝트의 사망 처리
         gameObject.SetActive(false);
         SceneManager.Instance.ReactivatePlayerAfterDelay(respawnPoint.position, reviveDelay);
 

@@ -211,6 +211,12 @@ public class Bat : NormalMonster
         yield return null;
     }
 
+    // TODO : 박쥐 몸털기 사운드 Once 재생
+    public void PlaySound_SE_Bat()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Bat");
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // Debug.Log(collision.gameObject.name);
@@ -222,6 +228,4 @@ public class Bat : NormalMonster
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(transform.position, boxSize);
     }
-
-
 }

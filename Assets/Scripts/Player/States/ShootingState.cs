@@ -34,6 +34,10 @@ public class ShootingState : PlayerState
 
     }
 
+    /// <summary>
+    /// 플레이어 파이어볼 발사 함수
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Shooting()
     {
         Player.Animator.SetTrigger("Shooting");
@@ -67,5 +71,4 @@ public class ShootingState : PlayerState
 
         yield return null;
     }
-
 }

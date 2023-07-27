@@ -8,19 +8,17 @@ using UnityEngine;
 /// </summary>
 public class OncologySlime : NormalMonster
 {
-    public SpriteRenderer renderer;             // 렌더 정보
-
-    [SerializeField]
-    public List<Transform> wayPoints;           // 목적지 목록
-    public Transform currTransform;             // 목적지
-    public Transform nextTransform;             // 다음 목적지
-    public int currentWaypointIndex;            // 목적지 인덱스
-    public float moveSpeed;                     // 몬스터 이동 속도
-    public float upPower;                       // 튕기는 힘
-    public GameObject player;
-    [Range(0f, 50f)] public float volumeMul;    // 볼륨 계수
-    [Range(0f, 1000f)] public float power;      // 넉백 파워
-    [Range(0, 100)] public int damage;          // 데미지
+    public SpriteRenderer renderer;                             // 렌더 정보
+    [SerializeField] public List<Transform> wayPoints;          // 목적지 목록
+    public Transform currTransform;                             // 목적지
+    public Transform nextTransform;                             // 다음 목적지
+    public int currentWaypointIndex;                            // 목적지 인덱스
+    public float moveSpeed;                                     // 몬스터 이동 속도
+    public float upPower;                                       // 튕기는 힘
+    public GameObject player;                                   // 플레이어 정보
+    [Range(0f, 50f)] public float volumeMul;                    // 볼륨 계수
+    [Range(0f, 1000f)] public float power;                      // 넉백 파워
+    [Range(0, 100)] public int damage;                          // 데미지
 
     protected override void Start()
     {
@@ -145,7 +143,6 @@ public class OncologySlime : NormalMonster
             float finalMul = 1 / Vector3.Distance(player.transform.position, transform.position) * volumeMul;
             if (finalMul > 1f)
                 finalMul = 1f;
-            //Debug.Log(finalMul);
             GetComponent<SoundList>().PlaySFX("SE_Slime", finalMul);
 
             // 땅에 닿았을 때 힘을 줘볼까?
