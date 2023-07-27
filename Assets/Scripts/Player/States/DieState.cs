@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class DieState : PlayerState
 {
+    public Transform respawnPoint;
+    [Range(0f, 10f)] public float disapearTime;
+    [Range(0f, 10f)] public float reviveDelay;
+
     protected override void OnEnter()
     {
         StartCoroutine(Die());
@@ -20,24 +24,20 @@ public class DieState : PlayerState
 
     private IEnumerator Die()
     {
-        yield return null;
-
-        Debug.Log("Enter Die");
         Animator.SetBool("IsDead", true);
         this.GetComponent<Collider2D>().enabled = false;
 
+        // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
 
         // 초기 알파값 저장
         float[] startAlphas = new float[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
-        {
             startAlphas[i] = renderers[i].color.a;
-        }
 
         // 모든 렌더 컴포넌트를 돌면서 Fade Out
         float t = 0;
-        while (t < 5)
+        while (t < disapearTime)
         {
             t += Time.deltaTime;
             float normalizedTime = t / 2;
@@ -52,12 +52,11 @@ public class DieState : PlayerState
             yield return null;
         }
 
-        Debug.Log("Exit Die");
         Animator.SetBool("IsDead", false);
 
         // 오브젝트 삭제
-        this.gameObject.SetActive(false);
-        // Destroy(gameObject);
+        gameObject.SetActive(false);
+        SceneManager.Instance.ReactivatePlayerAfterDelay(respawnPoint.position, reviveDelay);
 
         yield return null;
     }

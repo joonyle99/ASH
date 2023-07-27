@@ -92,6 +92,8 @@ public class DiveState : PlayerState
         yield return new WaitForSeconds(_chargingDelay);
 
         Dive();
+
+        yield return null;
     }
 
     void Charging()

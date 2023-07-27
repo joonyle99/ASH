@@ -180,8 +180,6 @@ public class Bat : NormalMonster
 
     public IEnumerator FadeOutObject()
     {
-        yield return null;
-
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
 
         // 초기 알파값 저장
@@ -210,7 +208,6 @@ public class Bat : NormalMonster
 
         // 오브젝트 삭제
         Destroy(gameObject);
-
         yield return null;
     }
 

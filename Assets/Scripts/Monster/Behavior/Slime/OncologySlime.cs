@@ -128,6 +128,7 @@ public class OncologySlime : NormalMonster
 
         // ø¿∫Í¡ß∆Æ ªË¡¶
         Destroy(gameObject);
+        yield return null;
     }
 
     /// <summary>
@@ -150,10 +151,9 @@ public class OncologySlime : NormalMonster
             // ∂•ø° ¥Íæ“¿ª ∂ß »˚¿ª ¡‡∫º±Ó?
             if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-                //Debug.Log("Push");
-
                 Vector3 moveDirection = (currTransform.position - transform.position).normalized;
                 Vector3 force = new Vector3(moveDirection.x * moveSpeed, upPower, 0f);
+                Rigidbody.velocity = Vector2.zero;
                 Rigidbody.AddForce(force);
             }
         }

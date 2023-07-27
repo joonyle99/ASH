@@ -15,14 +15,12 @@ public class ShootingState : PlayerState
     [Range(0f, 5f)] [SerializeField] float _shootingCoolTime = 2f;              // 쿨타임
     [Range(0f, 5f)] [SerializeField] float _shootingDelay = 2f;                 // 딜레이
 
-    [SerializeField] Vector3 _particlePos = new Vector3(0f, 1f);
+    [SerializeField] Vector3 _particlePos;
     [Range(0f, 5f)] [SerializeField] float _bulletPosX = 0.4f;
     [Range(0f, 5f)] [SerializeField] float _bulletPosY = 0.8f;
 
     protected override void OnEnter()
     {
-        Player.Animator.SetTrigger("Shooting");
-
         StartCoroutine(Shooting());
     }
 
@@ -38,7 +36,8 @@ public class ShootingState : PlayerState
 
     private IEnumerator Shooting()
     {
-        yield return null;
+        Player.Animator.SetTrigger("Shooting");
+        Player.Animator.SetBool("IsShooting", true);
 
         // 파티클 생성 & 시작
         ParticleSystem chargingEffect = Instantiate(_lightingParticle, transform.position + _particlePos, Quaternion.identity, transform);
@@ -51,17 +50,17 @@ public class ShootingState : PlayerState
         chargingEffect.Stop();
         Destroy(chargingEffect.gameObject);
 
-        /// 발사
+        Player.Animator.SetBool("IsShooting", false);
 
         // Bullet 생성
         GameObject bullet = Instantiate(_bullet, _shootingTransform.transform.position + new Vector3(_bulletPosX * Player.RecentDir, _bulletPosY), transform.rotation);
         Debug.Log(bullet.gameObject.name + "이 생성되었습니다");
 
+        // TODO : 나중에 플레이어가 회전을 한 상태에서 발사하면 y축의 반전도 생각해야해서 모든 scale을 반전
         // 플레이어가 발사하는 방향에 따라 Bullet의 방향도 바뀐다
         Vector3 scale = bullet.transform.localScale;
         scale.x *= Player.RecentDir;
         bullet.transform.localScale = scale;
-        // TODO : 나중에 플레이어가 회전을 한 상태에서 발사하면 y축의 반전도 생각해야해서 모든 scale을 반전
 
         // Idle State
         ChangeState<IdleState>();

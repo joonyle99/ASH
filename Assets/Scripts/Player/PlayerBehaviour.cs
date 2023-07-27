@@ -16,27 +16,24 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
-    [Range(0f, 5f)] [SerializeField] float _groundCheckDistance = 0.1f;
-    [Range(0f, 30f)] [SerializeField] float _diveCheckDistance = 15f;
-    [Range(0f, 5f)] [SerializeField] float _wallCheckDistance = 0.2f;
+    [Range(0f, 5f)] [SerializeField] float _groundCheckDistance;
+    [Range(0f, 30f)] [SerializeField] float _diveCheckDistance;
+    [Range(0f, 5f)] [SerializeField] float _wallCheckDistance;
 
     [Header("Dive Settings")]
 
     [Space]
 
-    [Range(0f, 10f)] [SerializeField] float _diveThreshhold = 4f;
+    [Range(0f, 10f)] [SerializeField] float _diveThreshhold;
 
 
     [Header("Player Settings")]
 
     [Space]
 
-    [Range(0, 200)]
-
-    [SerializeField] int _maxHp;
+    [Range(0, 200)] [SerializeField] int _maxHp;
 
     [SerializeField] int _curHp;
-
 
     // Controller
     PlayerJumpController _jumpController;
@@ -103,7 +100,8 @@ public class PlayerBehaviour : StateMachineBase
         _diveState = GetComponent<DiveState>();
         _shootingState = GetComponent<ShootingState>();
 
-        _curHp = _maxHp;
+        // Init
+        CurHP = _maxHp;
         RecentDir = 1;
     }
     protected override void Start()
@@ -111,13 +109,23 @@ public class PlayerBehaviour : StateMachineBase
         base.Start();
 
         //TEMP!!
-        SoundManager.Instance.PlayCommonBGM("Exploration1");
+        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
 
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
         InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
         InputManager.Instance.HealingPressedEvent += OnHealingPressed; //TODO : subscribe
         InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
     }
+
+    /// <summary>
+    /// 리스폰 되었을때 초기화
+    /// </summary>
+    private void OnEnable()
+    {
+        if(StateIs<DieState>())
+            StartCoroutine(Alive());
+    }
+
     private void OnDestroy()
     {
         // InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
@@ -203,9 +211,7 @@ public class PlayerBehaviour : StateMachineBase
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             if (StateIs<IdleState>())
-            {
-                Animator.SetTrigger("Healing");
-            }
+                ChangeState<HealingState>();
         }
     }
 
@@ -232,7 +238,7 @@ public class PlayerBehaviour : StateMachineBase
 
     public void OnHitbyPuddle(float damage, Vector3 spawnPoint, float reviveDelay)
     {
-        //Debug.Log("물 웅덩이에 닿음 ");
+        Debug.Log("물 웅덩이에 닿음 ");
         //애니메이션, 체력 닳기 등 하면 됨.
         //애니메이션 종료 후 spawnpoint에서 생성
 
@@ -263,7 +269,47 @@ public class PlayerBehaviour : StateMachineBase
     /// <param name="vec"></param>
     public void KnockBack(Vector2 vec)
     {
+        Rigidbody.velocity = Vector2.zero;
         Rigidbody.AddForce(vec);
+    }
+
+    public IEnumerator Alive()
+    {
+        Debug.Log("부활 !!");
+
+        ChangeState<IdleState>();
+        CurHP = _maxHp;
+        RecentDir = 1;
+
+        // 콜라이더 활성화
+        this.GetComponent<Collider2D>().enabled = true;
+
+        // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+
+        // 초기 알파값 저장
+        float[] startAlphas = new float[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+            startAlphas[i] = renderers[i].color.a;
+
+        // 모든 렌더 컴포넌트를 돌면서 Fade In
+        float t = 0;
+        while (t < 3)
+        {
+            t += Time.deltaTime;
+            float normalizedTime = t / 2;
+
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Color color = renderers[i].color;
+                color.a = Mathf.Lerp(startAlphas[i], 1f, normalizedTime);
+                renderers[i].color = color;
+            }
+
+            yield return null;
+        }
+
+        yield return null;
     }
 
     // TODO : 달리기 사운드 Loop 재생
@@ -334,5 +380,13 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.color = Color.white;
         Gizmos.DrawLine(_groundCheckTrans.position + new Vector3(0.1f, 0),
             _groundCheckTrans.position + new Vector3(0.1f, -_diveCheckDistance));
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "SpawnPoint")
+        {
+            mySpawnPoint = collision.transform.position;
+        }
     }
 }
