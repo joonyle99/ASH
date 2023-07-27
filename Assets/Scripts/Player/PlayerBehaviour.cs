@@ -49,6 +49,9 @@ public class PlayerBehaviour : StateMachineBase
 
     [SerializeField] float _reviveFadeInDuration;
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
+
+
+    [SerializeField] HealthPanelUI _healthPanelUI;
     public SkinnedMeshRenderer CapeRenderer { get { return _capeRenderer; } }
 
     #region Properties
@@ -81,10 +84,16 @@ public class PlayerBehaviour : StateMachineBase
         private set { _diveThreshhold = value; }
     }
 
+
     public int CurHP
     {
         get { return _curHp; }
-        set { _curHp = value; }
+        set { 
+            _curHp = value;
+            if (_curHp < 0)
+                _curHp = 0;
+            _healthPanelUI.Life = value; 
+        }
     }
 
     #endregion
@@ -265,10 +274,20 @@ public class PlayerBehaviour : StateMachineBase
         Debug.Log("물 웅덩이에 닿음 ");
         //애니메이션, 체력 닳기 등 하면 됨.
         //애니메이션 종료 후 spawnpoint에서 생성
-
-        //TEMP!!!!
-        gameObject.SetActive(false);
-        SceneManager.Instance.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay);
+        if (CurHP == 1)
+        {
+            CurHP = _maxHp;
+            //TEMP!!!!
+            gameObject.SetActive(false);
+            SceneManager.Instance.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay * 2);
+        }
+        else
+        {
+            CurHP -= 1;
+            //TEMP!!!!
+            gameObject.SetActive(false);
+            SceneManager.Instance.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay);
+        }
     }
 
     /// <summary>

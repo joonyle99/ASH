@@ -7,13 +7,26 @@ public class Puddle : ITriggerZone
     [SerializeField] float _damage = 1;
     [SerializeField] float _reviveDelay = 1;
     [SerializeField] Transform _spawnPoint;
-    public override void OnActivatorStay(TriggerActivator activator) 
+
+    //TEMP
+    bool _canKill = true;
+    public override void OnActivatorEnter(TriggerActivator activator) 
     {
-        if(activator.IsPlayer)
+        //TEMP (cankill)
+        if(_canKill && activator.IsPlayer)
         {
             activator.AsPlayer.OnHitbyPuddle(_damage, _spawnPoint.position, _reviveDelay);
             SoundManager.Instance.PlayCommonSFXPitched("SE_Puddle_splash");
+            //TEMP
+            StartCoroutine(SetKillCoroutine());
         }
+    }
+    //TEMP
+    IEnumerator SetKillCoroutine()
+    {
+        _canKill = false;
+        yield return new WaitForSeconds(0.5f);
+        _canKill = true;
     }
     private void OnDrawGizmosSelected()
     {
