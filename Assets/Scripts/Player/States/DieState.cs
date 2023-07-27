@@ -8,12 +8,13 @@ public class DieState : PlayerState
     [Range(0f, 10f)] public float reviveDelay;
     private SpriteRenderer[] renderers;
     private float[] startAlphas;
-    private float time = 0f;
+    private float time;
 
     protected override void OnEnter()
     {
         time = 0f;
         Animator.SetBool("IsDead", true);
+        // Player.PlaySound_SE_Die_01();
         this.GetComponent<Collider2D>().enabled = false;
         renderers = GetComponentsInChildren<SpriteRenderer>();
         startAlphas = new float[renderers.Length];
@@ -37,6 +38,8 @@ public class DieState : PlayerState
         }
         else
         {
+            Player.PlaySound_SE_Die_02();
+            Animator.SetBool("IsDead", false);
             gameObject.SetActive(false);
             SceneManager.Instance.ReactivatePlayerAfterDelay(respawnPoint.position, reviveDelay);
         }
@@ -44,7 +47,7 @@ public class DieState : PlayerState
 
     protected override void OnExit()
     {
-        Animator.SetBool("IsDead", false);
+
     }
 }
 

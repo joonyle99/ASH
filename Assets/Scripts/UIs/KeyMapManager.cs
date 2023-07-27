@@ -19,12 +19,21 @@ public class KeyMapManager : MonoBehaviour
         }
     }
     IEnumerator RemoveKeymap()
-
     {
-        yield return new WaitForSeconds(_firstDuration);
-        _keyMapUI.GetComponent<Animator>().SetTrigger("Close");
-        yield return new WaitForSeconds(0.5f);
-        _keyMapUI.SetActive(false);
+        float eTime = 0f;
+        while(eTime < _firstDuration)
+        {
+            eTime += Time.deltaTime;
+            if (!_keyMapUI.activeInHierarchy)
+                yield break;
+            yield return null;
+        }
+        if(_keyMapUI.activeInHierarchy)
+        {
+            _keyMapUI.GetComponent<Animator>().SetTrigger("Close");
+            yield return new WaitForSeconds(0.5f);
+            _keyMapUI.SetActive(false);
+        }
     }
     public void Update()
     {
