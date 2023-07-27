@@ -71,7 +71,7 @@ public class DiveState : PlayerState
 
             // Boom Particle
             // TODO : 자동으로 삭제된다??
-            // Instantiate(_boomParticle, _explosionPoint.position, Quaternion.identity);
+            Instantiate(_boomParticle, _explosionPoint.position, Quaternion.identity);
 
             // 내려찍기가 끝나면 Idle State
             ChangeState<IdleState>();

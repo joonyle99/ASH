@@ -657,11 +657,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -10.884312
+      value: -91.997025
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.2538753
+      value: -11.715469
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2065,7 +2065,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1313969891}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1307060686, guid: 351f1c6ff3cb13c4eac5e02143dfc48f, type: 3}
       propertyPath: wayPoints.Array.data[0]
@@ -2077,19 +2077,19 @@ PrefabInstance:
       objectReference: {fileID: 1001534594}
     - target: {fileID: 7908579348811713950, guid: 351f1c6ff3cb13c4eac5e02143dfc48f, type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 7908579348811713950, guid: 351f1c6ff3cb13c4eac5e02143dfc48f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -188.33
+      value: -91.27293
       objectReference: {fileID: 0}
     - target: {fileID: 7908579348811713950, guid: 351f1c6ff3cb13c4eac5e02143dfc48f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.53
+      value: -11.83327
       objectReference: {fileID: 0}
     - target: {fileID: 7908579348811713950, guid: 351f1c6ff3cb13c4eac5e02143dfc48f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.27968854
+      value: -0.057164013
       objectReference: {fileID: 0}
     - target: {fileID: 7908579348811713950, guid: 351f1c6ff3cb13c4eac5e02143dfc48f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2125,11 +2125,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 351f1c6ff3cb13c4eac5e02143dfc48f, type: 3}
---- !u!4 &98170193 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7908579348811713950, guid: 351f1c6ff3cb13c4eac5e02143dfc48f, type: 3}
-  m_PrefabInstance: {fileID: 98170192}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &103066258
 GameObject:
   m_ObjectHideFlags: 0
@@ -21897,7 +21892,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: 2134.0183
+      value: 2127.1946
       objectReference: {fileID: 0}
     - target: {fileID: 5171320284482388750, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_IsActive
@@ -38826,7 +38821,6 @@ Transform:
   - {fileID: 750882618}
   - {fileID: 465894949}
   - {fileID: 690022310}
-  - {fileID: 98170193}
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -46592,6 +46586,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 524874519, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _shootingDelay
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 524874519, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _lightingParticle
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -46639,6 +46641,10 @@ PrefabInstance:
     - target: {fileID: 1322454706829173486, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 2936927172107219133, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _chargingParticle
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}

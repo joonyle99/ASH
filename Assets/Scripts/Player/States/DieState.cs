@@ -9,7 +9,7 @@ public class DieState : PlayerState
     private SpriteRenderer[] renderers;
     private float[] startAlphas;
     private float time;
-    
+
 
     protected override void OnEnter()
     {

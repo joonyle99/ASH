@@ -5,7 +5,7 @@ public class PlayerBasicAttackHitbox : MonoBehaviour
 {
     public PlayerBehaviour Player { get; private set; }
     public int damage = 20;
-    public float power = 1000f;
+    public float power;
 
     private void Awake()
     {
@@ -27,6 +27,8 @@ public class PlayerBasicAttackHitbox : MonoBehaviour
             // 반대 방향
             float dir = Mathf.Sign(collision.transform.position.x - this.gameObject.transform.parent.position.x);
             Vector2 vec = new Vector2(power * dir, power / 2f);
+
+            Player.PlaySound_SE_Hurt_02();
 
             monster.KnockBack(vec);         // 넉백
             monster.OnDamage(damage);       // 데미지

@@ -70,7 +70,7 @@ public class PlayerJumpController : MonoBehaviour
         if (_isJumpQueued)
         {
             // 대쉬 상태 or 급강하 상태면 종료
-            if (_player.StateIs<DashState>() || _player.StateIs<DiveState>() || _player.StateIs<ShootingState>())
+            if (_player.StateIs<DashState>() || _player.StateIs<DiveState>() || _player.StateIs<ShootingState>() || _player.StateIs<HurtState>() || _player.StateIs<DieState>())
             {
                 _isJumpQueued = false;
                 return;
