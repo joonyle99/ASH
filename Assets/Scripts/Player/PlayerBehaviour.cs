@@ -289,6 +289,8 @@ public class PlayerBehaviour : StateMachineBase
         ChangeState<IdleState>();
         CurHP = _maxHp;
         RecentDir = 1;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
+
 
         // 콜라이더 활성화
         this.GetComponent<Collider2D>().enabled = true;
