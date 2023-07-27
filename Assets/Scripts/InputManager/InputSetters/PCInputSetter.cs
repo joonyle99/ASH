@@ -10,11 +10,11 @@ public class PCInputSetter : MonoBehaviour, IInputSetter
     public event IInputSetter.InputEventHandler HealingPressedEvent;
     public event IInputSetter.InputEventHandler ShootingAttackPressedEvent;
 
-    [SerializeField] KeyCode _jumpKey = KeyCode.Space;
-    [SerializeField] KeyCode _dashKey = KeyCode.LeftShift;
-    [SerializeField] KeyCode _basicAttackKey = KeyCode.Alpha1;
-    [SerializeField] KeyCode _healingKey = KeyCode.Alpha2;
-    [SerializeField] KeyCode _shootingAttackKey = KeyCode.Alpha3;
+    [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
+    [SerializeField] private KeyCode _dashKey = KeyCode.F;
+    [SerializeField] private KeyCode _basicAttackKey = KeyCode.A;
+    [SerializeField] private KeyCode _healingKey = KeyCode.Alpha2;
+    [SerializeField] private KeyCode _shootingAttackKey = KeyCode.S;
     public InputState GetState()
     {
         InputState state = new InputState();

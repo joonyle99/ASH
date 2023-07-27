@@ -214,6 +214,12 @@ public class PlayerBehaviour : StateMachineBase
             if (StateIs<IdleState>())
                 ChangeState<HealingState>();
         }
+
+        // 임시 메인화면 전환 코드
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
+        }
     }
 
     /// <summary>
@@ -263,14 +269,8 @@ public class PlayerBehaviour : StateMachineBase
     /// <param name="_damage"></param>
     public void OnDamage(int _damage)
     {
-        Animator.SetTrigger("Hurt");
         _curHp -= _damage;
-
-        if (_curHp < 0)
-        {
-            _curHp = 0;
-            ChangeState<DieState>();
-        }
+        ChangeState<HurtState>();
     }
 
     /// <summary>
@@ -279,7 +279,6 @@ public class PlayerBehaviour : StateMachineBase
     /// <param name="vec"></param>
     public void KnockBack(Vector2 vec)
     {
-        Rigidbody.velocity = Vector2.zero;
         Rigidbody.AddForce(vec);
     }
 

@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void SnapFollow()
     {
         StartCoroutine(SnapFollowCoroutine());
-        
+
     }
     IEnumerator SnapFollowCoroutine()
     {
@@ -42,5 +42,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     // Update is called once per frame
     void Update()
     {
+
     }
 }

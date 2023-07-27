@@ -36,7 +36,7 @@ public class InAirState : PlayerState
         }
 
         // Dash State
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             if (Player.CanDash && Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
             {
@@ -46,7 +46,7 @@ public class InAirState : PlayerState
         }
 
         // Dive State
-        if (Input.GetKeyDown(KeyCode.Alpha5) && Player.RawInputs.Movement.y < 0)
+        if (Input.GetKeyDown(KeyCode.D) && Player.RawInputs.Movement.y < 0)
         {
             if (Player.GroundDistance > Player.DiveThreshhold)
             {

@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 2936927172107219133}
   - component: {fileID: 524874519}
   - component: {fileID: 8665253762165332983}
+  - component: {fileID: 1331048234}
   - component: {fileID: 881055322318899542}
   - component: {fileID: 5733063111376558413}
   - component: {fileID: 623491974}
@@ -254,7 +255,6 @@ MonoBehaviour:
   _diveThreshhold: 4
   _maxHp: 100
   _curHp: 0
-  mySpawnPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &5733063111376558414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,6 +500,21 @@ MonoBehaviour:
     _enterParams: []
     _exitParams: []
   _healingTime: 3
+--- !u!114 &1331048234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322454706829173486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e8e9be6aed8d2145a0274e5fc750c0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorParameters:
+    _enterParams: []
+    _exitParams: []
 --- !u!114 &881055322318899542
 MonoBehaviour:
   m_ObjectHideFlags: 0

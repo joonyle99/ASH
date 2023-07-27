@@ -28,7 +28,8 @@ public class OncologySlime : NormalMonster
         SetUp();
 
         // 플레이어 게임오브젝트
-        player = SceneContextController.Player.gameObject;
+        // player = SceneContextController.Player.gameObject; -> 에러
+        player = GameObject.Find("Player");
 
         // 초기 목적지
         currTransform = wayPoints[currentWaypointIndex];
@@ -163,7 +164,7 @@ public class OncologySlime : NormalMonster
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
 
             // 넉백 벡터
-            Vector2 vec = new Vector2(power * dir, power / 3f);
+            Vector2 vec = new Vector2(power * dir, 200f);
 
             collision.gameObject.GetComponent<PlayerBehaviour>().KnockBack(vec);            // 넉백
             collision.gameObject.GetComponent<PlayerBehaviour>().OnDamage(damage);          // 데미지
