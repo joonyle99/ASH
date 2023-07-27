@@ -128,10 +128,13 @@ public class PlayerBehaviour : StateMachineBase
 
     private void OnDestroy()
     {
-         InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
-         InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
-         InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
-         InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
+        if (InputManager.Instance != null)
+        {
+            InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
+            InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
+            InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
+            InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
+        }
     }
 
     protected override void Update()
@@ -215,11 +218,6 @@ public class PlayerBehaviour : StateMachineBase
                 ChangeState<HealingState>();
         }
 
-        // 임시 메인화면 전환 코드
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("TitleScene");
-        }
     }
 
     /// <summary>

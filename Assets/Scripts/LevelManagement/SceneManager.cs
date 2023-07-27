@@ -10,6 +10,8 @@ public class SceneManager : HappyTools.SingletonBehaviourFixed<SceneManager>
     [SerializeField] float _fadeDuration;
     SceneContextController _sceneContext;
 
+    [SerializeField] KeyCode _restartKey;
+
     bool _isTransitioning;
 
     protected override void Awake()
@@ -23,8 +25,20 @@ public class SceneManager : HappyTools.SingletonBehaviourFixed<SceneManager>
     {
         StartCoroutine(InitialStartCoroutine());
     }
+
+
+    //TEMP
+    private void Update()
+    {
+        if(Input.GetKeyDown(_restartKey))
+        {
+            StartSceneChange("TitleScene");
+        }
+    }
     public void StartSceneChange(string sceneName)
     {
+        if (_isTransitioning)
+            return;
         Instance.StartCoroutine(TransitionCoroutine(sceneName));
     }
     public void StartSceneChangeByPassage(PassageData targetPassageData)
