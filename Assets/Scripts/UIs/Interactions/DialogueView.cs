@@ -6,6 +6,7 @@ using TMPro;
 public class DialogueView : MonoBehaviour
 {
     [SerializeField] Image _dialoguePanel;
+    [SerializeField] Image _skipUI;
     [SerializeField] TextMeshProUGUI _dialogueText;
 
     TextShaker _textShaker;
@@ -13,6 +14,7 @@ public class DialogueView : MonoBehaviour
     bool _fastForward = false;
     public void OpenPanel()
     {
+        _skipUI.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _textShaker = _dialogueText.GetComponent<TextShaker>();
     }
@@ -28,6 +30,7 @@ public class DialogueView : MonoBehaviour
     }
     public IEnumerator StartScriptCoroutine(DialogueScriptInfo script)
     {
+        _skipUI.gameObject.SetActive(false);
         _dialogueText.alpha = 1;
         float charInterval = 1.0f / script.Speed;
         if (script.Shake.Speed > 0)
@@ -77,6 +80,7 @@ public class DialogueView : MonoBehaviour
         }
         _fastForward = false;
         _dialogueText.text = script.Text;
+        _skipUI.gameObject.SetActive(true);
         yield return null;
     }
     private void Update()
