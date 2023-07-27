@@ -33,6 +33,8 @@ public class HealingState : PlayerState
 
         yield return new WaitForSeconds(_healingTime);
 
+        Player.CurHP++;
+
         Animator.SetBool("IsHealing", false);
         ChangeState<IdleState>();
 

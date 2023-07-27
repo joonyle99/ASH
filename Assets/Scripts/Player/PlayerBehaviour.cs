@@ -88,11 +88,11 @@ public class PlayerBehaviour : StateMachineBase
     public int CurHP
     {
         get { return _curHp; }
-        set { 
+        set {
             _curHp = value;
             if (_curHp < 0)
                 _curHp = 0;
-            _healthPanelUI.Life = value; 
+            _healthPanelUI.Life = value;
         }
     }
 
@@ -230,8 +230,6 @@ public class PlayerBehaviour : StateMachineBase
             if (StateIs<IdleState>())
                 ChangeState<HealingState>();
         }
-
-
     }
 
     /// <summary>
@@ -258,9 +256,10 @@ public class PlayerBehaviour : StateMachineBase
             _attackController.CastShootingAttack();
     }
 
-    public void OnHitByBatSkill(BatSkillParticle particle)
+    public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)
     {
-        Debug.Log("박쥐한테 맞음");
+        Debug.Log("박쥐 점액에 맞음");
+        OnHit(damage, vec);
     }
 
     /// <summary>
@@ -317,7 +316,6 @@ public class PlayerBehaviour : StateMachineBase
         CurHP = _maxHp;
         RecentDir = 1;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
-
 
         // 콜라이더 활성화
         this.GetComponent<Collider2D>().enabled = true;

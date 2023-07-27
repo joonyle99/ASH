@@ -20,6 +20,7 @@ public class Bat : NormalMonster
     public LayerMask layerMask;
     public bool isAttack;
     public float time2;
+
     [Header("Skill Settings")]
     [SerializeField] BatSkillParticle _batSkillPrefab;
     [SerializeField] Sprite [] _skillSprites;
@@ -28,6 +29,9 @@ public class Bat : NormalMonster
     [SerializeField] float _shootAngleVariant;
     [SerializeField] float _shootPower;
     [SerializeField] Transform _shootPosition;
+
+    public int damage;
+    public float power;
 
     protected override void Start()
     {
@@ -38,7 +42,7 @@ public class Bat : NormalMonster
 
         // 초기 목적지 설정
         currTransform = wayPoints[currentWaypointIndex];
-        nextTransform = wayPoints[currentWaypointIndex + 1];
+        nextTransform = wayPoints[(currentWaypointIndex + 1) % wayPoints.Count];
     }
 
     protected override void Update()
@@ -95,8 +99,6 @@ public class Bat : NormalMonster
                     isAttack = true;
 
                     Animator.SetTrigger("Shaking");
-
-                    
                 }
             }
         }
@@ -108,20 +110,12 @@ public class Bat : NormalMonster
             {
                 time2 = 0f;
                 isAttack = false;
-
-                /*shakingEffect.Stop();
-                shakingEffect2.Stop();
-                shakingEffect3.Stop();
-                Destroy(shakingEffect.gameObject);
-                Destroy(shakingEffect2.gameObject);
-                Destroy(shakingEffect3.gameObject);*/
             }
         }
     }
 
     public void AnimEvent_SpawnParticles()
     {
-    
         for (int i = 0; i < _particleCount; i++)
         {
             var particle = Instantiate(_batSkillPrefab, _shootPosition.position, Quaternion.identity);
@@ -175,7 +169,7 @@ public class Bat : NormalMonster
 
     public override void KnockBack(Vector2 vec)
     {
-        this.Rigidbody.AddForce(vec);
+        Rigidbody.velocity = vec;
     }
 
     public override void Die()
@@ -225,10 +219,17 @@ public class Bat : NormalMonster
         GetComponent<SoundList>().PlaySFX("SE_Bat");
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Debug.Log(collision.gameObject.name);
-        // if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall") || collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        // 플레이어와 충돌했을 때
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+            Debug.Log("플레이어와 충돌");
+
+            float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
+            Vector2 vec = new Vector2(power * dir, power);
+            collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(damage, vec);
+        }
     }
 
     private void OnDrawGizmosSelected()

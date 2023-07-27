@@ -55,7 +55,7 @@ public class DiveState : PlayerState
             foreach (Collider2D enemy in _targetEnemys)
             {
                 float dir = Mathf.Sign(enemy.transform.position.x - transform.position.x);                  // 플레이어가 적을 바라보는 방향
-                Vector2 knockBackVector = new Vector2(_knockBackPower * dir, _knockBackPower / 2f);       // 넉백 벡터
+                Vector2 knockBackVector = new Vector2(_knockBackPower * dir, _knockBackPower);           // 넉백 벡터
 
                 // // 만약 슬라임이면
                 // if (enemy.GetComponent<BasedMonster>() != null)

@@ -7,6 +7,10 @@ public class BatSkillParticle : MonoBehaviour
     [SerializeField] LayerMask _groundLayer;
     SpriteRenderer _spriteRenderer;
     Rigidbody2D _rigidbody;
+
+    public int damage;
+    public float power;
+
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -32,7 +36,9 @@ public class BatSkillParticle : MonoBehaviour
         var player = collision.transform.GetComponent<PlayerBehaviour>();
         if (player)
         {
-            player.OnHitByBatSkill(this);
+            float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
+            Vector2 vec = new Vector2(power * dir, power);
+            player.OnHitByBatSkill(this, damage, vec);
             Destroy(gameObject);
         }
     }

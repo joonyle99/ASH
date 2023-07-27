@@ -33,7 +33,7 @@ public class OncologySlime : NormalMonster
 
         // 초기 목적지
         currTransform = wayPoints[currentWaypointIndex];
-        nextTransform = wayPoints[currentWaypointIndex + 1];
+        nextTransform = wayPoints[(currentWaypointIndex + 1) % wayPoints.Count];
 
         renderer = GetComponentInChildren<SpriteRenderer>();
     }
@@ -97,7 +97,7 @@ public class OncologySlime : NormalMonster
 
     public override void KnockBack(Vector2 vec)
     {
-        this.Rigidbody.AddForce(vec);
+        Rigidbody.velocity = vec;
     }
 
     public override void Die()
@@ -151,8 +151,9 @@ public class OncologySlime : NormalMonster
             {
                 Vector3 moveDirection = (currTransform.position - transform.position).normalized;
                 Vector3 force = new Vector3(moveDirection.x * moveSpeed, upPower, 0f);
-                Rigidbody.velocity = Vector2.zero;
-                Rigidbody.AddForce(force);
+                Rigidbody.velocity = force;
+                //Rigidbody.velocity = Vector2.zero;
+                //Rigidbody.AddForce(force);
             }
         }
         // 플레이어와 충돌했을 때

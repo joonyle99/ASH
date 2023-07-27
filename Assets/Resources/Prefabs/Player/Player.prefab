@@ -257,6 +257,7 @@ MonoBehaviour:
   _curHp: 0
   _reviveFadeInDuration: 2
   _capeRenderer: {fileID: 6990369637176003982}
+  _healthPanelUI: {fileID: 0}
 --- !u!114 &5733063111376558414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -454,12 +455,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _boomParticle: {fileID: 4364476420258812052, guid: a7cdf265b2ab5b94386e79ba26e83b47, type: 3}
-  _chargingParticle: {fileID: 2345230135065842602, guid: af72a33d591aa9d4091dff3f14c94045, type: 3}
+  _chargingParticle: {fileID: 0}
   _explosionPoint: {fileID: 2936927171190041428}
   _diveSpeed: 10
   _fastDiveSpeed: 5
   _explosionDamage: 70
-  _knockBackPower: 2000
+  _knockBackPower: 5
   _chargingDelay: 2
   _explosionSize: {x: 3, y: 3, z: 0}
   _chargingParticlePos: {x: 0, y: 0.5, z: 0}
@@ -479,7 +480,7 @@ MonoBehaviour:
     _enterParams: []
     _exitParams: []
   _shootingTransform: {fileID: 4105442348694175209}
-  _lightingParticle: {fileID: 2345230135065842602, guid: af72a33d591aa9d4091dff3f14c94045, type: 3}
+  _lightingParticle: {fileID: 0}
   _bullet: {fileID: 7083264288868709419, guid: 19790a3cafdcab943a3a019ee84b88ab, type: 3}
   _shootingCoolTime: 2
   _shootingDelay: 2
@@ -874,7 +875,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
-  power: 1000
+  power: 5
 --- !u!1 &3345995244144674306
 GameObject:
   m_ObjectHideFlags: 0
