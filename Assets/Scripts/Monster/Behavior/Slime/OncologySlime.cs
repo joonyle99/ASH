@@ -160,14 +160,9 @@ public class OncologySlime : NormalMonster
         {
             Debug.Log("플레이어와 충돌");
 
-            // 반대 방향
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
-
-            // 넉백 벡터
-            Vector2 vec = new Vector2(power * dir, 200f);
-
-            collision.gameObject.GetComponent<PlayerBehaviour>().KnockBack(vec);            // 넉백
-            collision.gameObject.GetComponent<PlayerBehaviour>().OnDamage(damage);          // 데미지
+            Vector2 vec = new Vector2(power * dir, power);
+            collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(damage, vec);
         }
     }
 }

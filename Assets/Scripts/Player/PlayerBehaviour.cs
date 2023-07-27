@@ -158,7 +158,7 @@ public class PlayerBehaviour : StateMachineBase
         // In Air State
         if (!IsGrounded && !StateIs<InAirState>())
         {
-            if (!StateIs<WallState>() && !StateIs<DashState>() && !StateIs<DiveState>() && !StateIs<ShootingState>() && !StateIs<DieState>())
+            if (!StateIs<WallState>() && !StateIs<DashState>() && !StateIs<DiveState>() && !StateIs<ShootingState>() && !StateIs<HurtState>() && !StateIs<DieState>())
                 ChangeState<InAirState>();
         }
 
@@ -264,22 +264,17 @@ public class PlayerBehaviour : StateMachineBase
     }
 
     /// <summary>
-    /// 플레이어 피격 함수
+    /// 피격 함수
     /// </summary>
-    /// <param name="_damage"></param>
-    public void OnDamage(int _damage)
-    {
-        _curHp -= _damage;
-        ChangeState<HurtState>();
-    }
-
-    /// <summary>
-    /// 플레이어 넉백 함수
-    /// </summary>
+    /// <param name="damage"></param>
     /// <param name="vec"></param>
-    public void KnockBack(Vector2 vec)
+    public void OnHit(int damage, Vector2 vec)
     {
-        Rigidbody.AddForce(vec);
+        _curHp -= damage;
+        Rigidbody.velocity = vec;
+        RecentDir = (int)Mathf.Sign(-vec.x);
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
+        ChangeState<HurtState>();
     }
 
     /// <summary>
