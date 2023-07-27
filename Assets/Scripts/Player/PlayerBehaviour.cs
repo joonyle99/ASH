@@ -246,6 +246,11 @@ public class PlayerBehaviour : StateMachineBase
             _attackController.CastShootingAttack();
     }
 
+    public void OnHitByBatSkill(BatSkillParticle particle)
+    {
+        Debug.Log("박쥐한테 맞음");
+    }
+
     /// <summary>
     /// 물 웅덩이에 빠지는 함수
     /// </summary>

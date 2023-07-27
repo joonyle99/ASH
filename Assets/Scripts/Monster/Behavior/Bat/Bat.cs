@@ -20,12 +20,14 @@ public class Bat : NormalMonster
     public LayerMask layerMask;
     public bool isAttack;
     public float time2;
-    public ParticleSystem shakingParticle;
-    public ParticleSystem shakingParticle2;
-    public ParticleSystem shakingParticle3;
-    public ParticleSystem shakingEffect;
-    public ParticleSystem shakingEffect2;
-    public ParticleSystem shakingEffect3;
+    [Header("Skill Settings")]
+    [SerializeField] BatSkillParticle _batSkillPrefab;
+    [SerializeField] Sprite [] _skillSprites;
+    [SerializeField] int _particleCount  = 3;
+    [SerializeField] float _shootAngle;
+    [SerializeField] float _shootAngleVariant;
+    [SerializeField] float _shootPower;
+    [SerializeField] Transform _shootPosition;
 
     protected override void Start()
     {
@@ -94,13 +96,7 @@ public class Bat : NormalMonster
 
                     Animator.SetTrigger("Shaking");
 
-                    shakingEffect = Instantiate(shakingParticle, transform.position, Quaternion.identity, transform);
-                    shakingEffect2 = Instantiate(shakingParticle2, transform.position, Quaternion.identity, transform);
-                    shakingEffect3 = Instantiate(shakingParticle3, transform.position, Quaternion.identity, transform);
-
-                    shakingEffect.Play();
-                    shakingEffect2.Play();
-                    shakingEffect3.Play();
+                    
                 }
             }
         }
@@ -113,13 +109,25 @@ public class Bat : NormalMonster
                 time2 = 0f;
                 isAttack = false;
 
-                shakingEffect.Stop();
+                /*shakingEffect.Stop();
                 shakingEffect2.Stop();
                 shakingEffect3.Stop();
                 Destroy(shakingEffect.gameObject);
                 Destroy(shakingEffect2.gameObject);
-                Destroy(shakingEffect3.gameObject);
+                Destroy(shakingEffect3.gameObject);*/
             }
+        }
+    }
+
+    public void AnimEvent_SpawnParticles()
+    {
+    
+        for (int i = 0; i < _particleCount; i++)
+        {
+            var particle = Instantiate(_batSkillPrefab, _shootPosition.position, Quaternion.identity);
+            particle.SetSprite(_skillSprites[i % (_skillSprites.Length)]);
+            float angle = i % 2 == 0 ? _shootAngle : -_shootAngle;
+            particle.Shoot(Random.Range(-_shootAngleVariant, _shootAngleVariant) + angle, _shootPower);
         }
     }
 
