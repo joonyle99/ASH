@@ -31,7 +31,6 @@ public class ShootingState : PlayerState
 
     protected override void OnExit()
     {
-
         Player.Animator.SetBool("IsShooting", false);
     }
 
@@ -54,8 +53,6 @@ public class ShootingState : PlayerState
         // 파티클 종료 & 파괴
         // chargingEffect.Stop();
         // Destroy(chargingEffect.gameObject);
-
-        Player.Animator.SetBool("IsShooting", false);
 
         // Bullet 생성
         GameObject bullet = Instantiate(_bullet, _shootingTransform.transform.position + new Vector3(_bulletPosX * Player.RecentDir, _bulletPosY), transform.rotation);

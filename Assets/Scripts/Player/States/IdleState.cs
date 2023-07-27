@@ -32,8 +32,8 @@ public class IdleState : PlayerState
 
         // 기울어진 땅에서 미끄럼 방지 코드
         _angle = Vector3.Angle(_groundNormal, Player.PlayerLookDir);
-        if (Mathf.Abs(90f - _angle) > 5f)
-            Player.Rigidbody.velocity = new Vector2(-_groundNormal.x, -_groundNormal.y) * _belowForce * Time.deltaTime;
+        Player.Rigidbody.velocity = new Vector2(-_groundNormal.x, -_groundNormal.y) * _belowForce * Time.deltaTime;
+        // if (Mathf.Abs(90f - _angle) > 5f)
     }
 
     protected override void OnExit()

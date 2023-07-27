@@ -12,6 +12,8 @@ public class HurtState : PlayerState
         Player.PlaySound_SE_Hurt_02();
         Animator.SetTrigger("Hurt");
         Animator.SetBool("IsHurt", true);
+
+        StopAllCoroutines();
     }
 
     protected override void OnUpdate()

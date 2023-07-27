@@ -137,8 +137,6 @@ public class PlayerBehaviour : StateMachineBase
     {
         if(StateIs<DieState>())
             StartCoroutine(Alive());
-        if (!StateIs<IdleState>())
-            ChangeState<IdleState>();
     }
 
     private void OnDestroy()
