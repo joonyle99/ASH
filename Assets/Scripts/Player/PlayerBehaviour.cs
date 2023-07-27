@@ -380,10 +380,39 @@ public class PlayerBehaviour : StateMachineBase
         GetComponent<SoundList>().PlaySFX("SE_Shooting_01");
     }
 
-    // TODO : 발사 마무리 사운드 Once 재생
     public void PlaySound_SE_Shooting_02()
     {
         GetComponent<SoundList>().PlaySFX("SE_Shooting_02");
+    }
+
+    public void PlaySound_SE_Hurt_01()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Hurt_01");
+    }
+
+    public void PlaySound_SE_Hurt_02()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Hurt_02");
+    }
+
+    public void PlaySound_SE_Die_01()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Die_01(long)");
+    }
+
+    public void PlaySound_SE_Die_02()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Die_02");
+    }
+
+    public void PlaySound_SE_Healing_01()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Healing_01");
+    }
+
+    public void PlaySound_SE_Healing_02()
+    {
+        GetComponent<SoundList>().PlaySFX("SE_Healing_02");
     }
 
     /// <summary>

@@ -27,7 +27,7 @@ public class RunState : PlayerState
         }
 
         // Dash State
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             if (Player.CanDash && Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
             {

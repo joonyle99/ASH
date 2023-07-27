@@ -71,7 +71,7 @@ public class DiveState : PlayerState
 
             // Boom Particle
             // TODO : 자동으로 삭제된다??
-            Instantiate(_boomParticle, _explosionPoint.position, Quaternion.identity);
+            // Instantiate(_boomParticle, _explosionPoint.position, Quaternion.identity);
 
             // 내려찍기가 끝나면 Idle State
             ChangeState<IdleState>();
@@ -109,8 +109,8 @@ public class DiveState : PlayerState
         Player.Rigidbody.velocity = Vector2.zero;
 
         // 차징 파티클 생성
-        _chargingEffect = Instantiate(_chargingParticle, transform.position + _chargingParticlePos, Quaternion.identity, transform);
-        _chargingEffect.Play();
+        // _chargingEffect = Instantiate(_chargingParticle, transform.position + _chargingParticlePos, Quaternion.identity, transform);
+        // _chargingEffect.Play();
     }
 
     void Dive()
@@ -124,8 +124,8 @@ public class DiveState : PlayerState
         Player.Rigidbody.gravityScale = 5;
         Player.Rigidbody.velocity = new Vector2(0, -_diveSpeed);
 
-        _chargingEffect.Stop();
-        Destroy(_chargingEffect.gameObject);
+        // _chargingEffect.Stop();
+        // Destroy(_chargingEffect.gameObject);
     }
 
     void OnDrawGizmosSelected()
