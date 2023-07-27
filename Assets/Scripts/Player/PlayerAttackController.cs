@@ -33,9 +33,14 @@ public class PlayerAttackController : MonoBehaviour
     {
         _player = GetComponent<PlayerBehaviour>();
     }
+    private void OnEnable()
+    {
+        AnimEvent_FinishBaseAttackAnim();
+    }
 
     public void CastBasicAttack()
     {
+        print("CastBasicATtac: " + IsBasicAttacking);
         if (!IsBasicAttacking)
         {
             // Basic Attack Hitbox 활성화
