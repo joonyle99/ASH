@@ -13,9 +13,11 @@ public class TitleSceneManager : MonoBehaviour
     {
         SceneManager.Instance.StartSceneChange("Stage1-1");
         //SceneManager.Instance.StartSceneChangeByPassage(_initialPassageData);
+        //SoundManager.Instance.StopBGMFade(0.5f);
     }
     public void OnExitButtonClicked()
     {
 
     }
+
 }

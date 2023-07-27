@@ -58,6 +58,28 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
     {
         _bgmPlayer.Stop();
     }
+    public void StopBGMFade(float duration)
+    {
+        StartCoroutine(BGMFadeOutCoroutine(duration));
+        _bgmPlayer.Stop();
+    }
+    IEnumerator BGMFadeOutCoroutine(float duration)
+    {
+        float eTime = 0f;
+        float originalChannelVolume = _bgmPlayer.volume;
+        while (eTime < duration)
+        {
+            eTime += Time.deltaTime;
+            yield return null;
+            if (!_bgmPlayer.isPlaying)
+                yield break;
+            float t = eTime / duration;
+            _bgmPlayer.volume = Mathf.Lerp(originalChannelVolume, 0, t);
+        }
+        if (!_bgmPlayer.isPlaying)
+            yield break;
+        _bgmPlayer.Stop();
+    }
 
     public void PlayCommonSFXPitched(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
