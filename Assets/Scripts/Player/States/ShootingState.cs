@@ -32,6 +32,7 @@ public class ShootingState : PlayerState
     protected override void OnExit()
     {
 
+        Player.Animator.SetBool("IsShooting", false);
     }
 
     /// <summary>
