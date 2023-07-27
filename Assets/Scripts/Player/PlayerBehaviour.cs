@@ -278,7 +278,7 @@ public class PlayerBehaviour : StateMachineBase
     /// <param name="vec"></param>
     public void OnHit(int damage, Vector2 vec)
     {
-        _curHp -= damage;
+        CurHP -= damage;
         Rigidbody.velocity = vec;
         RecentDir = (int)Mathf.Sign(-vec.x);
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
