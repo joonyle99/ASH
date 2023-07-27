@@ -47,6 +47,10 @@ public class PlayerBehaviour : StateMachineBase
     DiveState _diveState;
     ShootingState _shootingState;
 
+    [SerializeField] float _reviveFadeInDuration;
+    [SerializeField] SkinnedMeshRenderer _capeRenderer;
+    public SkinnedMeshRenderer CapeRenderer { get { return _capeRenderer; } }
+
     #region Properties
 
     public bool IsGrounded { get; set; }
@@ -218,6 +222,7 @@ public class PlayerBehaviour : StateMachineBase
                 ChangeState<HealingState>();
         }
 
+
     }
 
     /// <summary>
@@ -299,7 +304,7 @@ public class PlayerBehaviour : StateMachineBase
         this.GetComponent<Collider2D>().enabled = true;
 
         // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
-        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
 
         // 초기 알파값 저장
         float[] startAlphas = new float[renderers.Length];
@@ -308,16 +313,17 @@ public class PlayerBehaviour : StateMachineBase
 
         // 모든 렌더 컴포넌트를 돌면서 Fade In
         float t = 0;
-        while (t < 3)
+        while (t < _reviveFadeInDuration)
         {
             t += Time.deltaTime;
-            float normalizedTime = t / 2;
+            float normalizedTime = t / _reviveFadeInDuration;
 
             for (int i = 0; i < renderers.Length; i++)
             {
                 Color color = renderers[i].color;
                 color.a = Mathf.Lerp(startAlphas[i], 1f, normalizedTime);
                 renderers[i].color = color;
+                CapeRenderer.sharedMaterial.SetFloat("_Opacity", normalizedTime);
             }
 
             yield return null;

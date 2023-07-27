@@ -9,6 +9,7 @@ public class DieState : PlayerState
     private SpriteRenderer[] renderers;
     private float[] startAlphas;
     private float time;
+    
 
     protected override void OnEnter()
     {
@@ -16,7 +17,7 @@ public class DieState : PlayerState
         Animator.SetBool("IsDead", true);
         // Player.PlaySound_SE_Die_01();
         this.GetComponent<Collider2D>().enabled = false;
-        renderers = GetComponentsInChildren<SpriteRenderer>();
+        renderers = GetComponentsInChildren<SpriteRenderer>(false);
         startAlphas = new float[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
             startAlphas[i] = renderers[i].color.a;
@@ -27,13 +28,14 @@ public class DieState : PlayerState
         if (time < disapearTime)
         {
             time += Time.deltaTime;
-            float normalizedTime = time / 2;
+            float normalizedTime = time / disapearTime;
 
             for (int i = 0; i < renderers.Length; i++)
             {
                 Color color = renderers[i].color;
                 color.a = Mathf.Lerp(startAlphas[i], 0f, normalizedTime);
                 renderers[i].color = color;
+                Player.CapeRenderer.material.SetFloat("_Opacity", 1 - normalizedTime);
             }
         }
         else
