@@ -8,6 +8,10 @@ public class HurtState : PlayerState
 
     protected override void OnEnter()
     {
+        Debug.Log("Enter Hurt");
+
+        time = 0f;
+
         Animator.SetTrigger("Hurt");
         Animator.SetBool("IsHurt", true);
     }
@@ -18,24 +22,24 @@ public class HurtState : PlayerState
         {
             Player.CurHP = 0;
             ChangeState<DieState>();
-            return;
         }
         else
         {
             time += Time.deltaTime;
 
             // Hurt State Á¾·á
-            if (time > 0.7f)
+            if (time > 0.2f)
             {
                 time = 0f;
                 ChangeState<IdleState>();
-                return;
             }
         }
     }
 
     protected override void OnExit()
     {
+        Debug.Log("Exit Hurt");
+
         Animator.SetBool("IsHurt", false);
     }
 }

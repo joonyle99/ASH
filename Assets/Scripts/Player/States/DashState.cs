@@ -33,13 +33,7 @@ public class DashState : PlayerState
             // 대쉬가 끝나는 조건
             if (Time.time >= _timeStartedDash + _dashLength)
             {
-                _isDashing = false;
-
-                _timeEndeddDash = Time.time;        // 대쉬가 끝나는 순간의 시간
-                Player.Rigidbody.gravityScale = 5;
-
                 Player.ChangeState<InAirState>();
-
                 return;
             }
         }
@@ -47,7 +41,11 @@ public class DashState : PlayerState
 
     protected override void OnExit()
     {
-        Player.Animator.SetBool("IsDash", false);
+        _isDashing = false;
+        Player.Animator.SetBool("IsDash", _isDashing);
+
+        _timeEndeddDash = Time.time;        // 대쉬가 끝나는 순간의 시간
+        Player.Rigidbody.gravityScale = 5;
     }
 
     private void ExcuteDash()
