@@ -9,7 +9,7 @@ public class KeyMapManager : MonoBehaviour
     [SerializeField] KeyCode _showKey;
     [SerializeField] float _firstDuration = 10f;
 
-    static bool _isFirst = true;
+    [SerializeField] bool _isFirst = false;
 
     private void Start()
     {
