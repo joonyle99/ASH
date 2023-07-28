@@ -657,11 +657,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -94.17676
+      value: 38.903156
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -10.816074
+      value: -7.316097
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -21784,7 +21784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: 2112.8647
+      value: 2093.076
       objectReference: {fileID: 0}
     - target: {fileID: 5171320284482388750, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_IsActive
@@ -46487,9 +46487,13 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 524874519, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _shootingDelay
-      value: 2
-      objectReference: {fileID: 0}
+      propertyPath: _lightingParticle
+      value: 
+      objectReference: {fileID: 198858562690846188, guid: 968c924d2be019d4b9e67647551eec3e, type: 3}
+    - target: {fileID: 1322454706829155597, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: respawnEffect
+      value: 
+      objectReference: {fileID: 4062196098629978644, guid: 2f77993eac95be84786eceb7d8ba3a2d, type: 3}
     - target: {fileID: 1322454706829155597, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _healthPanelUI
       value: 
@@ -46542,6 +46546,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2936927172107219133, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _chargingParticle
+      value: 
+      objectReference: {fileID: 198858562690846188, guid: 968c924d2be019d4b9e67647551eec3e, type: 3}
+    - target: {fileID: 8665253762165332983, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: particleEffect
+      value: 
+      objectReference: {fileID: 1399491476850481362, guid: 7e691a0229efacd4cba2922df3888456, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
 --- !u!1 &1510253775
@@ -64057,7 +64069,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1915240145}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 79.622246, y: 6.000431, z: 0}
+  m_LocalPosition: {x: 79.568, y: 5.868, z: 0}
   m_LocalScale: {x: 0.6231602, y: 0.5100101, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

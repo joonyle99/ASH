@@ -44,15 +44,15 @@ public class ShootingState : PlayerState
         Player.Animator.SetBool("IsShooting", true);
 
         // 파티클 생성 & 시작
-        // ParticleSystem chargingEffect = Instantiate(_lightingParticle, transform.position + _particlePos, Quaternion.identity, transform);
-        // chargingEffect.Play();  // 반복되는 이펙트
+        ParticleSystem chargingEffect = Instantiate(_lightingParticle, transform.position + _particlePos, Quaternion.identity, transform);
+        chargingEffect.Play();  // 반복되는 이펙트
 
         // 발사 딜레이
         yield return new WaitForSeconds(_shootingDelay);
 
         // 파티클 종료 & 파괴
-        // chargingEffect.Stop();
-        // Destroy(chargingEffect.gameObject);
+        chargingEffect.Stop();
+        Destroy(chargingEffect.gameObject);
 
         // Bullet 생성
         GameObject bullet = Instantiate(_bullet, _shootingTransform.transform.position + new Vector3(_bulletPosX * Player.RecentDir, _bulletPosY), transform.rotation);

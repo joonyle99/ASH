@@ -47,6 +47,9 @@ public class PlayerBehaviour : StateMachineBase
     DiveState _diveState;
     ShootingState _shootingState;
 
+    // Effect
+    public ParticleSystem respawnEffect;
+
     [SerializeField] float _reviveFadeInDuration;
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
 
@@ -320,6 +323,10 @@ public class PlayerBehaviour : StateMachineBase
         // 콜라이더 활성화
         this.GetComponent<Collider2D>().enabled = true;
 
+        // 파티클 생성 & 시작
+        ParticleSystem myEffect = Instantiate(respawnEffect, transform.position, Quaternion.identity, transform);
+        myEffect.Play();  // 반복되는 이펙트
+
         // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
 
@@ -345,6 +352,10 @@ public class PlayerBehaviour : StateMachineBase
 
             yield return null;
         }
+
+        // 파티클 종료 & 파괴
+        myEffect.Stop();
+        Destroy(myEffect.gameObject);
 
         yield return null;
     }

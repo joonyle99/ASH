@@ -159,6 +159,9 @@ public class OncologySlime : NormalMonster
         // 플레이어와 충돌했을 때
         else if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            if (collision.collider.gameObject.GetComponent<PlayerBehaviour>().CurHP == 0)
+                return;
+
             Debug.Log("플레이어와 충돌");
 
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);

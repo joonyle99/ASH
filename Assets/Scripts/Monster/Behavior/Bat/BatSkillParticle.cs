@@ -36,6 +36,9 @@ public class BatSkillParticle : MonoBehaviour
         var player = collision.transform.GetComponent<PlayerBehaviour>();
         if (player)
         {
+            if (player.CurHP == 0)
+                return;
+
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
             Vector2 vec = new Vector2(power * dir, power);
             player.OnHitByBatSkill(this, damage, vec);

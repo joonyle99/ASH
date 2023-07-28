@@ -4,10 +4,13 @@ using UnityEngine;
 public class HealingState : PlayerState
 {
     [Range(0f, 10f)] [SerializeField] float _healingTime;
+    public ParticleSystem particleEffect;
 
     protected override void OnEnter()
     {
         Debug.Log("Enter Healing");
+
+        Player.PlaySound_SE_Healing_01();
 
         StartCoroutine(Healing());
     }
@@ -31,9 +34,20 @@ public class HealingState : PlayerState
         Animator.SetTrigger("Healing");
         Animator.SetBool("IsHealing", true);
 
+        // 파티클 생성 & 시작
+        ParticleSystem myEffect = Instantiate(particleEffect, transform.position, Quaternion.identity, transform);
+        myEffect.Play();  // 반복되는 이펙트
+
         yield return new WaitForSeconds(_healingTime);
 
+        // 파티클 종료 & 파괴
+        myEffect.Stop();
+        Destroy(myEffect.gameObject);
+
         Player.CurHP++;
+
+        if (Player.CurHP > 10)
+            Player.CurHP = 10;
 
         Animator.SetBool("IsHealing", false);
         ChangeState<IdleState>();
