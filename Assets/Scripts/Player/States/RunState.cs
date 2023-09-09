@@ -19,6 +19,9 @@ public class RunState : PlayerState
         float xInput = Player.SmoothedInputs.Movement.x;
         Player.Rigidbody.velocity = new Vector2(xInput * _runSpeed, Player.Rigidbody.velocity.y);
 
+        // TODO : 플레이어 이동을 AddForce로 변경
+        // Player.Rigidbody.AddForce(new Vector2(xInput * _runSpeed, Player.Rigidbody.velocity.y));
+
         // Idle State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0)
         {
