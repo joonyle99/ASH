@@ -11,7 +11,7 @@ public class TitleSceneManager : MonoBehaviour
     //[SerializeField] PassageData _initialPassageData;
     public void OnStartButtonClicked()
     {
-        SceneManager.Instance.StartSceneChange("Stage1-1");
+        SceneChangeManager.Instance.ChangeToScene("Stage1-1");
         //SceneManager.Instance.StartSceneChangeByPassage(_initialPassageData);
         //SoundManager.Instance.StopBGMFade(0.5f);
     }

@@ -9,26 +9,10 @@ namespace LevelGraph
     public class LevelGraphData : ScriptableObject
     {
         [SerializeField] List<SceneData> _nodes = new List<SceneData>();
-        [SerializeField] List<PassagePair> _edges = new List<PassagePair>();
+        [SerializeField] List<PassagePairData> _edges = new List<PassagePairData>();
 
         public List<SceneData> Nodes => _nodes;
-        public List<PassagePair> Edges => _edges;
+        public List<PassagePairData> Edges => _edges;
     }
 
-    [Serializable]
-    public struct PassagePair
-    {
-        public SceneData EntranceScene;
-        public SceneData ExitScene;
-        public string EntrancePassage;
-        public string ExitPassgage;
-
-        public PassagePair(SceneData entranceScene, SceneData exitScene, string entrancePassage, string exitPassage)
-        {
-            EntrancePassage = entrancePassage;
-            ExitPassgage = exitPassage;
-            EntranceScene = entranceScene;
-            ExitScene = exitScene;
-        }
-    }
 }

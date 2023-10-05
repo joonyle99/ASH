@@ -43,7 +43,8 @@ public class DieState : PlayerState
             Player.PlaySound_SE_Die_02();
             Animator.SetBool("IsDead", false);
             gameObject.SetActive(false);
-            SceneManager.Instance.ReactivatePlayerAfterDelay(respawnPoint.position, reviveDelay);
+            //TEMP
+            SceneContext.Current.SceneTransitionPlayer.ReactivatePlayerAfterDelay(respawnPoint.position, reviveDelay);
         }
     }
 

@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void OnSceneContextBuilt()
     {
         _proCamera.enabled = true;
-        _proCamera.AddCameraTarget(SceneContextController.Player.transform);
+        _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
     }
     public void DisableCameraFollow()
     {

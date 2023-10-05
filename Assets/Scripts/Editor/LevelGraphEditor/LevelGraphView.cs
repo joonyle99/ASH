@@ -72,8 +72,8 @@ namespace LevelGraph
                     CreateNodeView(data as ExploreSceneData);
             }
 
-            //Exception Danger Zone !!
-            foreach(PassagePair passagePair in _graphData.Edges)
+            //TODO : Exception Danger Zone !!
+            foreach(PassagePairData passagePair in _graphData.Edges)
             {
                 NodeView entranceNode = GetNodeByGuid(passagePair.EntranceScene.Guid) as NodeView;
                 NodeView exitNode = GetNodeByGuid(passagePair.ExitScene.Guid) as NodeView;
@@ -128,7 +128,7 @@ namespace LevelGraph
 
         void LinkNodes(Edge edgeToCreate)
         {
-            PassagePair passagePair = new PassagePair();
+            PassagePairData passagePair = new PassagePairData();
             passagePair.EntrancePassage = (edgeToCreate.output.parent as Port).portName;
             passagePair.ExitPassgage = edgeToCreate.input.portName;
             passagePair.EntranceScene = (edgeToCreate.output.node as NodeView).Data;
@@ -137,7 +137,7 @@ namespace LevelGraph
         }
         void UnlinkNodes(Edge edgeToDelete)
         {
-            PassagePair passagePair = new PassagePair();
+            PassagePairData passagePair = new PassagePairData();
             passagePair.EntrancePassage = (edgeToDelete.output.parent as Port).portName;
             passagePair.ExitPassgage = edgeToDelete.input.portName;
             passagePair.EntranceScene = (edgeToDelete.output.node as NodeView).Data;
@@ -189,7 +189,7 @@ namespace LevelGraph
 
             }
             var relatedEdges = _graphData.Edges.FindAll(x => x.EntranceScene == node.Data || x.ExitScene == node.Data);
-            foreach (PassagePair edge in relatedEdges)
+            foreach (PassagePairData edge in relatedEdges)
                 _graphData.Edges.Remove(edge);
 
             _graphData.Nodes.Remove(node.Data);
