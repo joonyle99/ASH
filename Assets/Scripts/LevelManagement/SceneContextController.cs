@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SceneContextController : HappyTools.SingletonBehaviourFixed<SceneContextController>
+public class SceneContextController : HappyTools.SingletonBehaviour<SceneContextController>
 {
     [SerializeField]
     public class SceneContext

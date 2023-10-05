@@ -17,6 +17,9 @@ public class Passage : ITriggerZone
 
     [SerializeField] Transform _playerSpawnPoint;
 
+    public InputSetterScriptableObject EnterInputSetter => _enterInputSetter;
+    public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
+
     public PassageData Data { get { return _data; } set { _data = value; } }
 
     bool _isPlayerExiting;
