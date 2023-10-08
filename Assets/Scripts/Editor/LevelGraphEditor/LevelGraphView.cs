@@ -6,6 +6,9 @@ using UnityEngine.UIElements;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.UIElements;
+using static UnityEditor.Rendering.CameraUI;
+using UnityEngine.Windows;
+using System.Drawing.Printing;
 
 namespace LevelGraph
 {
@@ -82,8 +85,22 @@ namespace LevelGraph
                 Port exit = exitNode.PortDatas.Find(x => x.PassageName == passagePair.ExitPassgage).Input;
 
                 Edge edge = entrance.ConnectTo(exit);
+                AddTextToEdge(edge, ">>>>>>");
                 AddElement(edge);
+
             }
+        }
+        private void AddTextToEdge(Edge edge, string text)
+        {
+            /*
+            Label label = new Label(text);
+
+            label.AddToClassList("edge-label"); // You can define a custom style for the label in your stylesheet
+
+            edge.edgeControl.Add(label);
+            label.style.left = new Length(50, LengthUnit.Percent);
+            label.style.top = new Length(50, LengthUnit.Percent);
+            */
         }
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
         {
@@ -110,6 +127,7 @@ namespace LevelGraph
             {
                 foreach (Edge edge in graphViewChange.edgesToCreate)
                 {
+                    AddTextToEdge(edge, ">>>>>>");
                     LinkNodes(edge);
                 }
             }
@@ -129,20 +147,22 @@ namespace LevelGraph
         void LinkNodes(Edge edgeToCreate)
         {
             PassagePairData passagePair = new PassagePairData();
-            passagePair.EntrancePassage = (edgeToCreate.output.parent as Port).portName;
+            passagePair.EntrancePassage = (edgeToCreate.output).portName;
             passagePair.ExitPassgage = edgeToCreate.input.portName;
             passagePair.EntranceScene = (edgeToCreate.output.node as NodeView).Data;
             passagePair.ExitScene = (edgeToCreate.input.node as NodeView).Data;
             _graphData.Edges.Add(passagePair);
+            AssetDatabase.SaveAssets();
         }
         void UnlinkNodes(Edge edgeToDelete)
         {
             PassagePairData passagePair = new PassagePairData();
-            passagePair.EntrancePassage = (edgeToDelete.output.parent as Port).portName;
+            passagePair.EntrancePassage = (edgeToDelete.output).portName;
             passagePair.ExitPassgage = edgeToDelete.input.portName;
             passagePair.EntranceScene = (edgeToDelete.output.node as NodeView).Data;
             passagePair.ExitScene = (edgeToDelete.input.node as NodeView).Data;
             _graphData.Edges.Remove(passagePair);
+            AssetDatabase.SaveAssets();
         }
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {

@@ -7,16 +7,6 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
 {
     [SerializeField] float _transitionDuration = 0.5f;
     public string EntrancePassageName { get; set; }
-    private void Awake()
-    {
-        Result buildSuccess = BuildSceneInfo();
-        if (buildSuccess == Result.Fail)
-            Debug.LogError("Failed to find scene info");
-        else
-        {
-            StartCoroutine(EnterEffectCoroutine());
-        }
-    }
     public override IEnumerator ExitEffectCoroutine()
     {
         Camera.main.GetComponent<CameraController>().DisableCameraFollow();
@@ -32,23 +22,18 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         if (entrance == null)
         {
             Debug.LogWarning("Passage " + EntrancePassageName + " is not found in this scene !!");
-            yield break;
+            if (SceneContext.Current.Passages.Count > 0)
+                entrance = SceneContext.Current.Passages[0];
+            else
+                yield break;
         }
-        else
-        {
-            Camera.main.GetComponent<CameraController>().SnapFollow();
-            yield return StartCoroutine(entrance.PlayerExitCoroutine());
-        }
+        Camera.main.GetComponent<CameraController>().SnapFollow();
+        yield return StartCoroutine(entrance.PlayerExitCoroutine());
 
         yield return null;
 
     }
 
-    public Result BuildSceneInfo()
-    {
-
-        return Result.Success;
-    }
 
 
 }

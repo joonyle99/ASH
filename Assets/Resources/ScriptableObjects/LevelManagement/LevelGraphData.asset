@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: 6c13c0fbd9e79674fb8858fdd28a70d1
-  graphPosition: {x: 0, y: 0}
+  graphPosition: {x: -99.93489, y: -112.77251}
   Scene:
-    sceneAsset: {fileID: 0}
-    scenePath: 
-  PassageNames: []
+    sceneAsset: {fileID: 102900000, guid: 4d4c2599f0e99d347a87f15bae464dab, type: 3}
+    scenePath: Assets/Scenes/Test/YJ/LevelTest/LevelTest_1.unity
+  PassageNames:
+  - Common_Passage
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32,4 +33,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodes:
   - {fileID: -5953328320877525459}
-  _edges: []
+  - {fileID: 1087059649944982679}
+  _edges:
+  - EntranceScene: {fileID: 1087059649944982679}
+    ExitScene: {fileID: -5953328320877525459}
+    EntrancePassage: Common_Passage
+    ExitPassgage: Common_Passage
+--- !u!114 &1087059649944982679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: b578335d5f237e448a14aa1f3ac7aef4
+  graphPosition: {x: 191.31532, y: -177.97363}
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: b90fd8c4f24c82d4ca149f5749b08384, type: 3}
+    scenePath: Assets/Scenes/Test/YJ/LevelTest/LevelTest_2.unity
+  PassageNames:
+  - Common_Passage

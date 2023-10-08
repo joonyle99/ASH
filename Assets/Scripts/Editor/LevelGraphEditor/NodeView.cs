@@ -83,6 +83,8 @@ namespace LevelGraph
                     if (Data.PassageNames.FindIndex(x => x == portData.PassageName) == -1)
                     {
                         inputContainer.Remove(portData.Input);
+                        //TEMP : Seperate output
+                        outputContainer.Remove(portData.Output);
                         PortDatas.Remove(portData);
                     }
                 }
@@ -118,11 +120,10 @@ namespace LevelGraph
         
         Port CreateMatchingOutputPort(Port inputPort)
         {
-            Port outputPort = CreatePort(Direction.Output, "");
-            inputPort.Add(outputPort);
-            outputPort.style.position = Position.Absolute;
-            outputPort.style.marginTop = -15;
-            outputPort.style.marginLeft = -9;
+            Port outputPort = CreatePort(Direction.Output, inputPort.portName);
+            outputPort.Q<Label>().visible = false;
+            outputPort.Q<Label>().style.maxWidth = 0;
+            outputContainer.Add(outputPort);
             return outputPort;
         }
         public override void SetPosition(Rect newPos)

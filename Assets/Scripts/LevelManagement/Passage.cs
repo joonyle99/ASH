@@ -33,13 +33,15 @@ public class Passage : ITriggerZone
     {
         if (_isPlayerExiting)
             return;
-        StartCoroutine(PlayerEnterCoroutine());
+        StartCoroutine(ExitSceneCoroutine());
     }
-    IEnumerator PlayerEnterCoroutine()
+    IEnumerator ExitSceneCoroutine()
     {
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
         yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
-        SceneChangeManager.Instance.ChangeToPlayableScene(_nextSceneName, _passageName);
+        var nextPassageData = SceneChangeManager.Instance.GetNextPassageData(name);
+        _nextSceneName = nextPassageData.SceneName;
+        SceneChangeManager.Instance.ChangeToPlayableScene(_nextSceneName, nextPassageData.PassageName);
     }
     public override void OnActivatorExit(TriggerActivator activator)
     {
