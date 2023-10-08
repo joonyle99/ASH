@@ -281,14 +281,16 @@ public class PlayerBehaviour : StateMachineBase
             CurHP = _maxHp;
             //TEMP!!!!
             gameObject.SetActive(false);
-            SceneManager.Instance.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay * 2);
+            //TEMP
+            SceneContext.Current.SceneTransitionPlayer.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay * 2);
         }
         else
         {
             CurHP -= 1;
             //TEMP!!!!
             gameObject.SetActive(false);
-            SceneManager.Instance.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay);
+            //TEMP
+            SceneContext.Current.SceneTransitionPlayer.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay);
         }
     }
 
