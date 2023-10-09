@@ -9,15 +9,15 @@ public class PlayerAttackController : MonoBehaviour
     [Space]
 
     [SerializeField]
-    Transform _basicAttackHitbox;              // 공격 타격 박스
+    Transform _basicAttackHitbox;               // 공격 타격 박스
 
     [Range(0f, 5f)] [SerializeField]
-    float _attackCountRefreshTime = 1.5f;      // 공격 초기화 시간
+    float _attackCountRefreshTime = 1.5f;       // 공격 초기화 시간
 
     PlayerBehaviour _player;
 
-    int _basicAttackCount;              // 공격 카운트
-    float _timeAfterLastBasicAttack;    // 마지막으로 공격한 시간
+    int _basicAttackCount;                      // 공격 카운트
+    float _timeAfterLastBasicAttack;            // 마지막으로 공격한 시간
 
     /*
     [SerializeField] Slider slider;

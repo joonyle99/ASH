@@ -7,6 +7,9 @@ using UnityEditor;
 public abstract class StateMachineBase : MonoBehaviour
 {
     [Header("State Machine Base")]
+
+    [Space]
+
     [SerializeField] Rigidbody2D _rigidbody;
     [SerializeField] Animator _animator;
     [SerializeField] StateBase _initialState;

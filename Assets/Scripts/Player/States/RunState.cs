@@ -6,7 +6,8 @@ public class RunState : PlayerState
 
     [Space]
 
-    [Range(0f, 30f)] [SerializeField] float _runSpeed = 7f;
+    [Range(0f, 200f)] [SerializeField] float _speedAdder = 60f;
+    [Range(0f, 10f)] [SerializeField] float _maxSpeed = 3f;
 
     protected override void OnEnter()
     {
@@ -17,10 +18,13 @@ public class RunState : PlayerState
     {
         // 플레이어 이동
         float xInput = Player.SmoothedInputs.Movement.x;
-        Player.Rigidbody.velocity = new Vector2(xInput * _runSpeed, Player.Rigidbody.velocity.y);
 
         // TODO : 플레이어 이동을 AddForce로 변경
-        // Player.Rigidbody.AddForce(new Vector2(xInput * _runSpeed, Player.Rigidbody.velocity.y));
+        Player.Rigidbody.AddForce(new Vector2(xInput * _speedAdder, Player.Rigidbody.velocity.y));
+
+        // 플레이어의 최대 이동속도를 제한한다
+        if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxSpeed)
+            Player.Rigidbody.velocity = new Vector2(Mathf.Sign(Player.Rigidbody.velocity.x) * _maxSpeed, Player.Rigidbody.velocity.y);
 
         // Idle State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0)
@@ -51,5 +55,4 @@ public class RunState : PlayerState
     {
         Player.Animator.SetBool("IsRun", false);
     }
-
 }

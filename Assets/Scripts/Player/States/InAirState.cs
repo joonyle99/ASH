@@ -49,7 +49,7 @@ public class InAirState : PlayerState
         //if (Input.GetKeyDown(KeyCode.D) && Player.RawInputs.Movement.y < 0)
         if (Input.GetKeyDown(KeyCode.D))
         {
-            if (Player.GroundDistance > Player.DiveThreshhold)
+            if (Player.GroundDistance > Player.DiveThreshholdHeight)
             {
                 ChangeState<DiveState>();
                 return;

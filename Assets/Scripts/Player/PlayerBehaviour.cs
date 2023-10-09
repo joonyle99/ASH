@@ -1,9 +1,10 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase
 {
-    [Header("Check Params")]
+    [Header("Ground / Wall Checker Setting")]
 
     [Space]
 
@@ -24,16 +25,27 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
-    [Range(0f, 10f)] [SerializeField] float _diveThreshhold;
+    [Range(0f, 10f)] [SerializeField] float _diveThreshholdHeight;
 
-
-    [Header("Player Settings")]
+    [Header("Ability Settings")]
 
     [Space]
 
     [Range(0, 200)] [SerializeField] int _maxHp;
 
     [SerializeField] int _curHp;
+
+    [Header("Player Settings")]
+
+    [Space]
+
+    // Effect
+    [SerializeField] ParticleSystem respawnEffect;
+    [SerializeField] float _reviveFadeInDuration;
+    [SerializeField] SkinnedMeshRenderer _capeRenderer;
+
+    // Health UI
+    [SerializeField] HealthPanelUI _healthPanelUI;
 
     // Controller
     PlayerJumpController _jumpController;
@@ -47,15 +59,9 @@ public class PlayerBehaviour : StateMachineBase
     DiveState _diveState;
     ShootingState _shootingState;
 
-    // Effect
-    public ParticleSystem respawnEffect;
-
-    [SerializeField] float _reviveFadeInDuration;
-    [SerializeField] SkinnedMeshRenderer _capeRenderer;
-
-
-    [SerializeField] HealthPanelUI _healthPanelUI;
-    public SkinnedMeshRenderer CapeRenderer { get { return _capeRenderer; } }
+    // TEMP Viewing Velocity
+    private float _velocityX;
+    private float _velocityY;
 
     #region Properties
 
@@ -81,10 +87,10 @@ public class PlayerBehaviour : StateMachineBase
 
     public bool IsWallJump { get; set; }
     public float GroundDistance { get; set; }
-    public float DiveThreshhold
+    public float DiveThreshholdHeight
     {
-        get { return _diveThreshhold; }
-        private set { _diveThreshhold = value; }
+        get { return _diveThreshholdHeight; }
+        private set { _diveThreshholdHeight = value; }
     }
 
 
@@ -98,6 +104,8 @@ public class PlayerBehaviour : StateMachineBase
             _healthPanelUI.Life = value;
         }
     }
+
+    public SkinnedMeshRenderer CapeRenderer { get { return _capeRenderer; } }
 
     #endregion
 
@@ -120,7 +128,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Start();
 
-        //TEMP!!
+        // TEMP!!
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
 
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
@@ -162,6 +170,10 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
         Animator.SetFloat("GroundDistance", GroundDistance);
+
+        // TEMP
+        _velocityX = Rigidbody.velocity.x;
+        _velocityY = Rigidbody.velocity.y;
 
         #endregion
 
