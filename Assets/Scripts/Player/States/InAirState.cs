@@ -18,6 +18,8 @@ public class InAirState : PlayerState
 
     protected override void OnUpdate()
     {
+        // TODO : In Air State에서 Velocity 대신 AddForce 를 사용하자
+
         // Idle State
         if (Player.IsGrounded)
         {
