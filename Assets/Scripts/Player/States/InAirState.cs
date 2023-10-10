@@ -6,7 +6,8 @@ public class InAirState : PlayerState
 
     [Space]
 
-    [Range(0f, 20f)][SerializeField] float _inAirSpeed = 7f;            // 공중에서 좌우로 움직이는 스피드
+    [Range(0f, 100f)][SerializeField] float _inAirSpeedAdder = 7f;       // 공중에서 좌우로 움직이는 스피드
+    [Range(0f, 20f)][SerializeField] float _maxInAirSpeed = 3f;         // 공중에서 좌우로 움직이는 최대 스피드
     [Range(0f, 20f)][SerializeField] float _fastDropThreshhold = 7f;    // 빨리 떨어지기 시작하는 높이
     [Range(0f, 5f)][SerializeField] float _fastDropPower = 1.1f;        // 빨리 떨어지는 힘
     [Range(0f, 100f)][SerializeField] float _maxDropSpeed = 80f;        // 떨어지는 속도 최대값
@@ -69,8 +70,12 @@ public class InAirState : PlayerState
             float xInput = Player.SmoothedInputs.Movement.x;
 
             // 공중에서 좌우로 움직일 수 있다.
-            // Player.Rigidbody.velocity = new Vector2(xInput * _inAirSpeed, Player.Rigidbody.velocity.y);
-            // Player.Rigidbody.AddForce(new Vector2(xInput * Player.Rigidbody.velocity.x, 0f));
+            // Player.Rigidbody.velocity = new Vector2(xInput * _inAirSpeedAdder, Player.Rigidbody.velocity.y);
+            Player.Rigidbody.AddForce(Vector2.right * xInput * _inAirSpeedAdder);
+
+            // 플레이어의 최대 이동속도를 제한한다
+            if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxInAirSpeed)
+                Player.Rigidbody.velocity = new Vector2(Mathf.Sign(Player.Rigidbody.velocity.x) * _maxInAirSpeed, Player.Rigidbody.velocity.y);
         }
 
         /*

@@ -6,8 +6,8 @@ public class RunState : PlayerState
 
     [Space]
 
-    [Range(0f, 200f)] [SerializeField] float _speedAdder = 60f;
-    [Range(0f, 10f)] [SerializeField] float _maxSpeed = 3f;
+    [Range(0f, 200f)][SerializeField] float _speedAdder = 60f;
+    [Range(0f, 10f)][SerializeField] float _maxSpeed = 3f;
 
     protected override void OnEnter()
     {
@@ -19,10 +19,14 @@ public class RunState : PlayerState
         // 플레이어 이동
         float xInput = Player.SmoothedInputs.Movement.x;
 
-        // TODO : 플레이어 이동을 AddForce로 변경
-        Player.Rigidbody.AddForce(new Vector2(xInput * _speedAdder, Player.Rigidbody.velocity.y));
+        // TODO : speedAdder값을 변경하는데 이동속도가 바뀐다..? 이건 좀 이상한데,,
+        // TODO : AddForce & velocity = & vecocity += 의 차이점에 대해 명확히 알아야 할 듯
+
+        // Player.Rigidbody.AddForce(Vector2.right * xInput * _speedAdder);
+        Player.Rigidbody.velocity += Vector2.right * xInput * _speedAdder;
 
         // 플레이어의 최대 이동속도를 제한한다
+        // 분명히 최대 속도는 이렇게 될텐데 왜 더 빨라지지..?
         if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxSpeed)
             Player.Rigidbody.velocity = new Vector2(Mathf.Sign(Player.Rigidbody.velocity.x) * _maxSpeed, Player.Rigidbody.velocity.y);
 
