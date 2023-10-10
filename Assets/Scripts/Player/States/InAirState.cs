@@ -6,10 +6,10 @@ public class InAirState : PlayerState
 
     [Space]
 
-    [Range(0f, 20f)] [SerializeField] float _inAirSpeed = 7f;            // 공중에서 좌우로 움직이는 스피드
-    [Range(0f, 20f)] [SerializeField] float _fastDropThreshhold = 7f;    // 빨리 떨어지기 시작하는 높이
-    [Range(0f, 5f)] [SerializeField] float _fastDropPower = 1.1f;        // 빨리 떨어지는 힘
-    [Range(0f, 100f)] [SerializeField] float _maxDropSpeed = 80f;        // 떨어지는 속도 최대값
+    [Range(0f, 20f)][SerializeField] float _inAirSpeed = 7f;            // 공중에서 좌우로 움직이는 스피드
+    [Range(0f, 20f)][SerializeField] float _fastDropThreshhold = 7f;    // 빨리 떨어지기 시작하는 높이
+    [Range(0f, 5f)][SerializeField] float _fastDropPower = 1.1f;        // 빨리 떨어지는 힘
+    [Range(0f, 100f)][SerializeField] float _maxDropSpeed = 80f;        // 떨어지는 속도 최대값
 
     protected override void OnEnter()
     {
@@ -18,8 +18,6 @@ public class InAirState : PlayerState
 
     protected override void OnUpdate()
     {
-        // TODO : In Air State에서 Velocity 대신 AddForce 를 사용하자
-
         // Idle State
         if (Player.IsGrounded)
         {
@@ -68,20 +66,25 @@ public class InAirState : PlayerState
         // jump -> In Air
         else
         {
-            // 공중에서 좌우로 움직일 수 있다.
             float xInput = Player.SmoothedInputs.Movement.x;
-            Player.Rigidbody.velocity = new Vector2(xInput * _inAirSpeed, Player.Rigidbody.velocity.y);
+
+            // 공중에서 좌우로 움직일 수 있다.
+            // Player.Rigidbody.velocity = new Vector2(xInput * _inAirSpeed, Player.Rigidbody.velocity.y);
+            // Player.Rigidbody.AddForce(new Vector2(xInput * Player.Rigidbody.velocity.x, 0f));
         }
 
+        /*
         // 한계점 지나면 더 빨리 떨어짐
         if (Player.Rigidbody.velocity.y < _fastDropThreshhold)
         {
             // 떨어지는 속도에 최대값 부여
             if (Player.Rigidbody.velocity.y < (-1) * _maxDropSpeed)
-                Player.Rigidbody.velocity = Vector2.down * _maxDropSpeed;
+                Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, (-1) * _maxDropSpeed);
             else
-                Player.Rigidbody.velocity += _fastDropPower * Physics2D.gravity * Time.deltaTime;
+                // Player.Rigidbody.velocity += _fastDropPower * Physics2D.gravity * Time.deltaTime;
+                Player.Rigidbody.AddForce(_fastDropPower * (-1) * Physics2D.gravity * Time.deltaTime);
         }
+        */
     }
 
     protected override void OnExit()

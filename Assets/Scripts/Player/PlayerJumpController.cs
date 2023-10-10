@@ -12,7 +12,7 @@ public class PlayerJumpController : MonoBehaviour
     [Range(0f, 60f)] [SerializeField] float _wallEndJumpPower = 30f;
 
     [Range(0f, 1f)] [SerializeField] float _longJumpDuration = 0.2f;
-    [Range(0f, 10f)] [SerializeField] float _longJumpBonusPower = 3f;
+    [Range(0f, 100f)] [SerializeField] float _longJumpBonusPower = 190f;
 
     [Header("Jump Settings")]
 
@@ -53,7 +53,9 @@ public class PlayerJumpController : MonoBehaviour
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
         if (_isLongJumping)
         {
-            _player.Rigidbody.velocity -= _longJumpBonusPower * Physics2D.gravity * Time.deltaTime;
+            // _player.Rigidbody.velocity -= _longJumpBonusPower * Physics2D.gravity * Time.deltaTime;
+            _player.Rigidbody.AddForce(_longJumpBonusPower * (-1) * Physics2D.gravity * Time.deltaTime);
+
             _longJumpTime += Time.deltaTime;
 
             if ((_longJumpTime >= _longJumpDuration) || !_player.RawInputs.IsPressingJump)
@@ -130,7 +132,9 @@ public class PlayerJumpController : MonoBehaviour
     public void ExecuteJumpAnimEvent()
     {
         float jumpPower = _isGroundJump ? _groundJumpPower : _inAirJumpPower;
-        _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, jumpPower);
+
+        // ForceMode2D.Force : 충격파와 같은 힘을 가한다
+        _player.Rigidbody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
 
     /// <summary>
