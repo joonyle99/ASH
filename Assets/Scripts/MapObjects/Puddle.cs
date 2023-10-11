@@ -15,7 +15,7 @@ public class Puddle : ITriggerZone
         //TEMP (cankill)
         if(_canKill && activator.IsPlayer)
         {
-            activator.AsPlayer.OnHitbyPuddle(_damage, _spawnPoint.position, _reviveDelay);
+            activator.AsPlayer.OnHitbyPuddle(_damage);
             SoundManager.Instance.PlayCommonSFXPitched("SE_Puddle_splash");
             //TEMP
             StartCoroutine(SetKillCoroutine());

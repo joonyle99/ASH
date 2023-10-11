@@ -187,8 +187,8 @@ GameObject:
   m_Component:
   - component: {fileID: 728585303615239527}
   - component: {fileID: 3499093733113138027}
-  - component: {fileID: 6996522101300585763}
-  - component: {fileID: 6143778225470573197}
+  - component: {fileID: 838453109847924683}
+  - component: {fileID: 2461375257235324726}
   m_Layer: 0
   m_Name: SceneChangeManager
   m_TagString: Untagged
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelGraphData: {fileID: 11400000, guid: c45f5ac7b282c73479e466ed814a5c77, type: 2}
---- !u!114 &6996522101300585763
+--- !u!114 &838453109847924683
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -234,12 +234,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 728585303615239525}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ec29a055f3a44c4fab17823018a9d92, type: 3}
+  m_Script: {fileID: 11500000, guid: 8000da88ab05b124ab25fddb3b74606b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _fadeImage: {fileID: 1022691156}
   _fadeDuration: 0.5
---- !u!114 &6143778225470573197
+--- !u!114 &2461375257235324726
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -248,9 +248,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 728585303615239525}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b1bb54cd138ae64f9c5dcabca7e78b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 05023b3120b6cfc448d9817556ed3708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _fadeImage: {fileID: 1022691156}
-  _fadeDuration: 2
+  _fadeDuration: 0.5
   _transitionDuration: 0.5
+  _respawnFadeDuration: 0.5
+  _respawnDelay: 1

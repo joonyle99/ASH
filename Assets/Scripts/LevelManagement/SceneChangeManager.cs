@@ -23,8 +23,18 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     //TEMP for game start
     private void Start()
     {
-        SceneContext sceneContext = FindFirstObjectByType<SceneContext>();
+        SceneContext sceneContext = FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable("");
+    }
+    SceneContext FindOrCreateSceneContext()
+    {
+        SceneContext sceneContext = FindFirstObjectByType<SceneContext>();
+        if (sceneContext == null)
+        {
+            GameObject go = new GameObject("SceneContext (Created)");
+            sceneContext = go.AddComponent<SceneContext>();
+        }
+        return sceneContext;
     }
     public void ChangeToPlayableScene(string sceneName, string passageName)
     {
@@ -34,7 +44,8 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     }
     public void ChangeToScene(string sceneName)
     {
-
+        //TODO
+        Debug.LogError("Not Implemented");
     }
 
     IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string passageName)
@@ -43,7 +54,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         yield return new WaitUntil(() => load.isDone);
 
-        SceneContext sceneContext= FindFirstObjectByType<SceneContext>();
+        SceneContext sceneContext= FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable(passageName);
         IsChanging = false;
     }

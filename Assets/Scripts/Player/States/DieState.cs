@@ -44,7 +44,7 @@ public class DieState : PlayerState
             Animator.SetBool("IsDead", false);
             gameObject.SetActive(false);
             //TEMP
-            SceneContext.Current.SceneTransitionPlayer.ReactivatePlayerAfterDelay(respawnPoint.position, reviveDelay);
+            SceneContext.Current.InstantRespawn();
         }
     }
 

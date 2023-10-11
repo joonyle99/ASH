@@ -281,9 +281,7 @@ public class PlayerBehaviour : StateMachineBase
     /// ¹° ¿õµ¢ÀÌ¿¡ ºüÁö´Â ÇÔ¼ö
     /// </summary>
     /// <param name="damage"></param>
-    /// <param name="spawnPoint"></param>
-    /// <param name="reviveDelay"></param>
-    public void OnHitbyPuddle(float damage, Vector3 spawnPoint, float reviveDelay)
+    public void OnHitbyPuddle(float damage)
     {
         Debug.Log("¹° ¿õµ¢ÀÌ¿¡ ´êÀ½ ");
         //¾Ö´Ï¸ÞÀÌ¼Ç, Ã¼·Â ´â±â µî ÇÏ¸é µÊ.
@@ -291,19 +289,19 @@ public class PlayerBehaviour : StateMachineBase
         if (CurHP == 1)
         {
             CurHP = _maxHp;
-            //TEMP!!!!
-            gameObject.SetActive(false);
-            //TEMP
-            SceneContext.Current.SceneTransitionPlayer.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay * 2);
         }
         else
         {
             CurHP -= 1;
-            //TEMP!!!!
-            gameObject.SetActive(false);
-            //TEMP
-            SceneContext.Current.SceneTransitionPlayer.ReactivatePlayerAfterDelay(spawnPoint, reviveDelay);
         }
+        InstantRespawn();
+    }
+
+    void InstantRespawn()
+    {
+        //TEMP
+        gameObject.SetActive(false);
+        SceneContext.Current.InstantRespawn();
     }
 
     /// <summary>

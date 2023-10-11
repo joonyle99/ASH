@@ -7,6 +7,9 @@ public class SceneTransitionPlayer : MonoBehaviour, ISceneContextBuildListener
 {
     [SerializeField] Image _fadeImage;
     [SerializeField] float _fadeDuration;
+
+    protected float FadeDuration { get { return _fadeDuration; } }
+
     public void PlayExitEffect()
     {
         StartCoroutine(ExitEffectCoroutine());
@@ -53,19 +56,5 @@ public class SceneTransitionPlayer : MonoBehaviour, ISceneContextBuildListener
         }
         imageColor.a = to;
         _fadeImage.color = imageColor;
-    }
-
-    //TODO : Global 플레이어 상태 관리 오브젝트로 옮겨야함
-    public void ReactivatePlayerAfterDelay(Vector3 spawnPosition, float delay)
-    {
-        StartCoroutine(ReactivatePlayerAfterDelayCoroutine(spawnPosition, delay));
-    }
-    IEnumerator ReactivatePlayerAfterDelayCoroutine(Vector3 spawnPosition, float delay)
-    {
-        yield return FadeCoroutine(_fadeDuration, FadeType.Darken);
-        yield return new WaitForSeconds(delay);
-        SceneContext.Current.Player.transform.position = spawnPosition;
-        SceneContext.Current.Player.gameObject.SetActive(true);
-        yield return FadeCoroutine(_fadeDuration, FadeType.Lighten);
     }
 }
