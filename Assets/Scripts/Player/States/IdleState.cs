@@ -6,11 +6,10 @@ public class IdleState : PlayerState
 
     [Space]
 
-    [SerializeField] float _belowForce = 100f;       // 아래로 가해주는 힘
+    [SerializeField] float _belowForce = 25f;       // 아래로 가해주는 힘
 
-    Vector2 _groundNormal;          // 땅의 법선벡터
-    Vector3 _groundHitPoint;        // 땅의 Hit Point
-    float _angle;
+    Vector2 _groundNormal;                          // 땅의 법선벡터
+    Vector3 _groundHitPoint;                        // 땅의 Hit Point
 
     protected override void OnEnter()
     {
@@ -30,10 +29,17 @@ public class IdleState : PlayerState
             return;
         }
 
-        // 기울어진 땅에서 미끄럼 방지 코드
-        _angle = Vector3.Angle(_groundNormal, Player.PlayerLookDir);
-        // Player.Rigidbody.velocity = new Vector2(-_groundNormal.x, -_groundNormal.y) * _belowForce * Time.deltaTime;
+        // 플레이어와 땅 사이의 각도
+        // float _angle = Vector3.Angle(_groundNormal, Player.PlayerLookDir);
+
+        // 기울어진 땅에서 미끄럼 방지
         // if (Mathf.Abs(90f - _angle) > 5f)
+
+        // 이동을 멈추면 미끄럼 방지
+        // 기울어진 땅에서 효과적
+        // 근데 그냥 마찰력을 키우면 되는거 아니야..?
+        // 그렇게 하면 기울어진 땅을 오르지를 못하네 ~
+        Player.Rigidbody.AddForce(-_groundNormal * _belowForce);
     }
 
     protected override void OnExit()
