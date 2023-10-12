@@ -6,7 +6,7 @@ public class IdleState : PlayerState
 
     [Space]
 
-    [SerializeField] float _belowForce = 100f;       // ¾Æ·¡·Î °¡ÇØÁÖ´Â Èû
+    [SerializeField] float _belowForce = 25f;       // ¾Æ·¡·Î °¡ÇØÁÖ´Â Èû
 
     Vector2 _groundNormal;                          // ¶¥ÀÇ ¹ý¼±º¤ÅÍ
     Vector3 _groundHitPoint;                        // ¶¥ÀÇ Hit Point
