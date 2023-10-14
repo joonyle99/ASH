@@ -59,10 +59,6 @@ public class PlayerBehaviour : StateMachineBase
     DiveState _diveState;
     ShootingState _shootingState;
 
-    // TEMP Viewing Velocity
-    private float _velocityX;
-    private float _velocityY;
-
     #region Properties
 
     public bool IsGrounded { get; set; }
@@ -101,7 +97,8 @@ public class PlayerBehaviour : StateMachineBase
             _curHp = value;
             if (_curHp < 0)
                 _curHp = 0;
-            _healthPanelUI.Life = value;
+
+            // _healthPanelUI.Life = value;
         }
     }
 
@@ -170,10 +167,6 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
         Animator.SetFloat("GroundDistance", GroundDistance);
-
-        // TEMP
-        _velocityX = Rigidbody.velocity.x;
-        _velocityY = Rigidbody.velocity.y;
 
         #endregion
 
