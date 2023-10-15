@@ -7,10 +7,17 @@ public class RunState : PlayerState
 
     [Space]
 
-    [Range(0f, 30f)][SerializeField] float _moveSpeed = 10f;
-    [Range(0f, 50f)][SerializeField] float _acceleration = 7f;
-    [Range(0f, 50f)][SerializeField] float _decceleration = 7f;
-    [Range(0f, 2f)][SerializeField] float _velPower = 0.9f;
+    [SerializeField] float _moveSpeed = 20f;
+    [SerializeField] float _acceleration = 500f;
+    [SerializeField] float _decceleration = 500f;
+    [SerializeField] float _velPower = 0.9f;
+
+    private float _maxSpeed = 10f;
+    private float _moveSpeedAdder = 5000f;
+
+
+    // TEMP
+    [SerializeField] Vector2 velocity;
 
     protected override void OnEnter()
     {
@@ -22,8 +29,8 @@ public class RunState : PlayerState
         // player xInput direction
         float xInput = Player.RawInputs.Movement.x;
 
-        if (Player.Rigidbody.velocity.x * xInput < 0f)
-            Player.Rigidbody.velocity = new Vector2(0f, Player.Rigidbody.velocity.y);
+        /*
+        velocity = Player.Rigidbody.velocity;
 
         // 타겟 속도를 계산한다. 속도는 벡터값이며 스칼라와 방향을 가진다. (x축이므로 1차원)
         float targetSpeed = xInput * _moveSpeed;
@@ -37,8 +44,17 @@ public class RunState : PlayerState
         // 이동 시키는 힘을 구한다.
         float moveForce = Mathf.Pow(Mathf.Abs(speedDiff) * accelRate, _velPower) * Mathf.Sign(speedDiff);
 
+        Debug.Log(moveForce);
+
         // 플레이어 이동에 힘을 적용시킨다
-        Player.Rigidbody.AddForce(moveForce * Vector2.right);
+        Player.Rigidbody.AddForce(Vector2.right * moveForce * Time.deltaTime);
+        */
+
+        Player.Rigidbody.AddForce(Vector2.right * _moveSpeedAdder * xInput * Time.deltaTime);
+
+        if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxSpeed)
+            Player.Rigidbody.velocity = new Vector2(Mathf.Sign(Player.Rigidbody.velocity.x) * _maxSpeed, Player.Rigidbody.velocity.y);
+
 
         // Change to Idle State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0)

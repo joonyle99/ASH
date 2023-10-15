@@ -6,11 +6,11 @@ public class InAirState : PlayerState
 
     [Space]
 
-    [Range(0f, 100f)][SerializeField] float _inAirSpeed = 50f;          // 공중에서 좌우로 움직이는 스피드
-    [Range(0f, 20f)][SerializeField] float _maxInAirSpeed = 5f;         // 공중에서 좌우로 움직이는 최대 스피드
-    [Range(0f, 20f)][SerializeField] float _fastDropThreshhold = 4f;    // 빨리 떨어지기 시작하는 높이
-    [Range(0f, 5f)][SerializeField] float _fastDropPower = 1.0005f;        // 빨리 떨어지는 힘
-    [Range(0f, 100f)][SerializeField] float _maxDropSpeed = 80f;        // 떨어지는 속도 최대값
+    [SerializeField] float _inAirSpeed = 2000f;          // 공중에서 좌우로 움직이는 스피드
+    [SerializeField] float _maxInAirSpeed = 5f;         // 공중에서 좌우로 움직이는 최대 스피드
+    [SerializeField] float _fastDropThreshhold = 4f;    // 빨리 떨어지기 시작하는 높이
+    [SerializeField] float _fastDropPower = 1.0005f;        // 빨리 떨어지는 힘
+    [SerializeField] float _maxDropSpeed = 80f;        // 떨어지는 속도 최대값
 
     protected override void OnEnter()
     {
@@ -67,10 +67,10 @@ public class InAirState : PlayerState
         // Basic Jump에서 In Air State로 넘어온 경우
         else
         {
-            float xInput = Player.SmoothedInputs.Movement.x;
+            float xInput = Player.RawInputs.Movement.x;
 
             // 공중에서 좌우로 움직일 수 있다.
-            Player.Rigidbody.AddForce(Vector2.right * xInput * _inAirSpeed);
+            Player.Rigidbody.AddForce(Vector2.right * xInput * _inAirSpeed * Time.deltaTime);
 
             // 공중에서의 최대 이동속도를 제한한다
             if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxInAirSpeed)
