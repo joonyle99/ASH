@@ -289,7 +289,18 @@ public class PlayerBehaviour : StateMachineBase
         }
         InstantRespawn();
     }
-
+    public void TriggerInstantRespawn(float damage)
+    {
+        if (CurHP == 1)
+        {
+            CurHP = _maxHp;
+        }
+        else
+        {
+            CurHP -= 1;
+        }
+        InstantRespawn();
+    }
     void InstantRespawn()
     {
         //TEMP
