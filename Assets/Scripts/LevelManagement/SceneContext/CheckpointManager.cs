@@ -15,7 +15,7 @@ public class CheckpointManager : MonoBehaviour
     public Result BuildPlayable()
     {
         Result buildResult = Result.Success;
-        print(SceneContext.Current.Player.name);
+        //print(SceneContext.Current.Player.name);
         if (SceneContext.Current.Player != null)
             LatestCheckpointPosition = SceneContext.Current.Player.transform.position;
         else

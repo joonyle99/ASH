@@ -20,7 +20,10 @@ public abstract class StateBase : MonoBehaviour
     {
         OnUpdate();
     }
-
+    public void TriggerFixedUpdate()
+    {
+        OnFixedUpdate();
+    }
     public void TriggerExit()
     {
         _animatorParameters.InvokeExit(StateMachine.Animator);
@@ -28,15 +31,10 @@ public abstract class StateBase : MonoBehaviour
         StateMachine = null;
     }
 
-    //public void TriggerFixedUpdate()
-    //{
-    //    OnFixedUpdate();
-    //}
-
     protected virtual void SetAnimsOnEnter() {}
     protected abstract void OnEnter();
     protected abstract void OnUpdate();
-    // protected virtual void OnFixedUpdate() { }
+    protected abstract void OnFixedUpdate();
     protected abstract void OnExit();
     public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
     {

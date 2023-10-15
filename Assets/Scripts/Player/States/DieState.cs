@@ -48,6 +48,11 @@ public class DieState : PlayerState
         }
     }
 
+    protected override void OnFixedUpdate()
+    {
+
+    }
+
     protected override void OnExit()
     {
 

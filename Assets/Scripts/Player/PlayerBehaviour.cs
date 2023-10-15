@@ -59,6 +59,8 @@ public class PlayerBehaviour : StateMachineBase
     DiveState _diveState;
     ShootingState _shootingState;
 
+    public Vector2 _velocity;
+
     #region Properties
 
     public bool IsGrounded { get; set; }
@@ -231,6 +233,8 @@ public class PlayerBehaviour : StateMachineBase
         // Shooting CoolTime
 
         #endregion
+
+        _velocity = Rigidbody.velocity;
 
         // юс╫ц Healing State
         if (Input.GetKeyDown(KeyCode.Alpha2))

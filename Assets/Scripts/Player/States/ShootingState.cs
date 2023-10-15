@@ -28,6 +28,10 @@ public class ShootingState : PlayerState
     {
 
     }
+    protected override void OnFixedUpdate()
+    {
+
+    }
 
     protected override void OnExit()
     {

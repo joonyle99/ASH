@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class RunState : PlayerState
 {
@@ -7,17 +6,9 @@ public class RunState : PlayerState
 
     [Space]
 
-    [SerializeField] float _moveSpeed = 20f;
-    [SerializeField] float _acceleration = 500f;
-    [SerializeField] float _decceleration = 500f;
-    [SerializeField] float _velPower = 0.9f;
-
-    private float _maxSpeed = 10f;
-    private float _moveSpeedAdder = 5000f;
-
-
-    // TEMP
-    [SerializeField] Vector2 velocity;
+    [SerializeField] float _maxSpeed = 8f;
+    [SerializeField] float _acceleration = 700f;
+    [SerializeField] float _decceleration = 700f;
 
     protected override void OnEnter()
     {
@@ -26,35 +17,20 @@ public class RunState : PlayerState
 
     protected override void OnUpdate()
     {
-        // player xInput direction
-        float xInput = Player.RawInputs.Movement.x;
+        // 목표 속도 계산
+        float targetSpeed = Player.RawInputs.Movement.x * _maxSpeed;
 
-        /*
-        velocity = Player.Rigidbody.velocity;
+        // 가해야 할 힘의 양을 구하기 위한 속도 차이 계산
+        float speedDif = targetSpeed - Player.Rigidbody.velocity.x;
 
-        // 타겟 속도를 계산한다. 속도는 벡터값이며 스칼라와 방향을 가진다. (x축이므로 1차원)
-        float targetSpeed = xInput * _moveSpeed;
-
-        // 타겟 속도와 현재 속도를 차이를 구하면서 앞으로 가해질 힘의 방향을 구할 수 있다.
-        float speedDiff = targetSpeed - Player.Rigidbody.velocity.x;
-
-        // 타겟 속도가 0.01f보다 크다는 것은 움직이고 있는 방향으로 계속해서 가속하는 것을 의미하므로 _acceleration을 사용한다.
+        // 움직임 입력이 있는 경우
         float accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? _acceleration : _decceleration;
 
         // 이동 시키는 힘을 구한다.
-        float moveForce = Mathf.Pow(Mathf.Abs(speedDiff) * accelRate, _velPower) * Mathf.Sign(speedDiff);
-
-        Debug.Log(moveForce);
+        float moveForce = speedDif * accelRate;
 
         // 플레이어 이동에 힘을 적용시킨다
         Player.Rigidbody.AddForce(Vector2.right * moveForce * Time.deltaTime);
-        */
-
-        Player.Rigidbody.AddForce(Vector2.right * _moveSpeedAdder * xInput * Time.deltaTime);
-
-        if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxSpeed)
-            Player.Rigidbody.velocity = new Vector2(Mathf.Sign(Player.Rigidbody.velocity.x) * _maxSpeed, Player.Rigidbody.velocity.y);
-
 
         // Change to Idle State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0)
@@ -79,6 +55,10 @@ public class RunState : PlayerState
             ChangeState<WallGrabState>();
             return;
         }
+    }
+    protected override void OnFixedUpdate()
+    {
+
     }
 
     protected override void OnExit()

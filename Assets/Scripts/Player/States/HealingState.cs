@@ -19,6 +19,10 @@ public class HealingState : PlayerState
     {
 
     }
+    protected override void OnFixedUpdate()
+    {
+
+    }
 
     protected override void OnExit()
     {

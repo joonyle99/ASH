@@ -38,6 +38,10 @@ public class DashState : PlayerState
             }
         }
     }
+    protected override void OnFixedUpdate()
+    {
+
+    }
 
     protected override void OnExit()
     {
