@@ -39,7 +39,7 @@ public class IdleState : PlayerState
         // 기울어진 땅에서 효과적
         // 근데 그냥 마찰력을 키우면 되는거 아니야..?
         // 그렇게 하면 기울어진 땅을 오르지를 못하네 ~
-        // Player.Rigidbody.AddForce(-_groundNormal * _belowForce);
+        Player.Rigidbody.AddForce(-_groundNormal * _belowForce);
     }
 
     protected override void OnExit()
