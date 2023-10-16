@@ -40,17 +40,32 @@ public class RollingStone : ContinuousInteractableObject
 
     public override void InteractUpdate()
     {
-        /*
+        
         if (_isInteracting)
         {
-            var mask = LayerMask.GetMask(new string[] { "Player" });
-            print(mask);
-            if (!_playerInteractor.Collider.IsTouchingLayers())
+            if (!IsPlayerColliding())
+            {
                 SceneContext.Current.Player.InteractionController.RelaseInteractingObject();
+            }
         }
-        */
+
     }
 
+    bool IsPlayerColliding()
+    {
+        List<ContactPoint2D> contacts = new List<ContactPoint2D>();
+        _rigidbody.GetContacts(contacts);
+        bool playerCollided = false;
+        foreach (ContactPoint2D contact in contacts)
+        {
+            if (contact.rigidbody != null && contact.rigidbody.GetComponent<PlayerBehaviour>() != null)
+            {
+                playerCollided = true;
+                break;
+            }
+        }
+        return playerCollided;
+    }
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();

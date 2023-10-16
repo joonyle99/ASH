@@ -88,11 +88,11 @@ public class InteractionController : MonoBehaviour
             {
                 InteractingObject = _interactionTarget as ContinuousInteractableObject;
             }
-            if (Input.GetKey(_interactionKey) && _isInteracting)
+            else if (Input.GetKey(_interactionKey) && _isInteracting)
             {
                 InteractingObject.InteractUpdate();
             }
-            if (Input.GetKeyUp(_interactionKey))
+            else if(Input.GetKeyUp(_interactionKey))
             {
                 InteractingObject = null;
             }
