@@ -289,8 +289,14 @@ public class PlayerBehaviour : StateMachineBase
         }
         InstantRespawn();
     }
+    public void OnHitByPhysicalObject(float damage, Collision2D collision)
+    {
+       //TODO
+        Debug.Log(damage + " 대미지 입음");
+    }
     public void TriggerInstantRespawn(float damage)
     {
+        //TEMP
         if (CurHP == 1)
         {
             CurHP = _maxHp;

@@ -5,11 +5,37 @@ using UnityEngine;
 public class InteractionController : MonoBehaviour
 {
     List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
-
-
-    InteractableObject _interactionTarget = null;
-
     InteractionMarker _interactionMarker;
+
+
+    [SerializeField] InteractableObject _interactionTarget = null;
+
+    ContinuousInteractableObject _interactingObject;
+    ContinuousInteractableObject InteractingObject
+    {
+        get
+        {
+            return _interactingObject;
+        }
+        set
+        {
+            if (_interactingObject == value)
+                return;
+            if (_interactingObject != null)
+            {
+                _interactingObject.InteractExit();
+            }
+            _interactingObject = value;
+            if (_interactingObject != null)
+            {
+                _interactingObject.InteractEnter();
+            }
+        }
+    }
+    //TEMP
+    [SerializeField] KeyCode _interactionKey= KeyCode.E;
+
+    bool _isInteracting { get { return _interactingObject != null; } }
 
     private void Awake()
     {
@@ -22,6 +48,10 @@ public class InteractionController : MonoBehaviour
     public void RemoveInteractableInRange(InteractableObject interactable)
     {
         _interactablesInRange.Remove(interactable);
+    }
+    public void RelaseInteractingObject()
+    {
+        InteractingObject = null;
     }
     void ChangeTarget(InteractableObject newTarget)
     {
@@ -39,16 +69,38 @@ public class InteractionController : MonoBehaviour
     }
     private void Update()
     {
-        UpdateInteractionTarget();
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (!_isInteracting)
+            UpdateInteractionTarget();
+
+        if (_interactionTarget == null)
+            return;
+
+        if (_interactionTarget is InstantInteractableObject)
         {
-            _interactionTarget?.Interact();
+            if (Input.GetKeyDown(_interactionKey))
+            {
+                (_interactionTarget as InstantInteractableObject).Interact();
+            }
+        }
+        else
+        {
+            if (Input.GetKeyDown(_interactionKey))
+            {
+                InteractingObject = _interactionTarget as ContinuousInteractableObject;
+            }
+            if (Input.GetKey(_interactionKey) && _isInteracting)
+            {
+                InteractingObject.InteractUpdate();
+            }
+            if (Input.GetKeyUp(_interactionKey))
+            {
+                InteractingObject = null;
+            }
         }
     }
-
     void UpdateInteractionTarget()
     {
-        _interactablesInRange.RemoveAll(x => x == null);
+        _interactablesInRange.RemoveAll(x => x == null || !x.IsInteractable);
         if (_interactablesInRange.Count == 0)
         {
             ChangeTarget(null);

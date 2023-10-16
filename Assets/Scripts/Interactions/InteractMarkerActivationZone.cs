@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-public class InteractableZone : ITriggerZone
+public class InteractMarkerActivationZone : ITriggerZone
 {
     InteractableObject _interactableObject;
 
