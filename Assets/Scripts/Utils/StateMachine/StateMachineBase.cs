@@ -36,10 +36,10 @@ public abstract class StateMachineBase : MonoBehaviour
         CurrentState.TriggerUpdate();
     }
 
-    //protected virtual void FixedUpdate()
-    //{
-    //    CurrentState.TriggerFixedUpdate();
-    //}
+    protected virtual void FixedUpdate()
+    {
+        CurrentState.TriggerFixedUpdate();
+    }
 
     public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
     {

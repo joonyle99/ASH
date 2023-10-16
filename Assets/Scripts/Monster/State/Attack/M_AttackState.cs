@@ -11,6 +11,10 @@ public class M_AttackState : MonsterState
     {
 
     }
+    protected override void OnFixedUpdate()
+    {
+
+    }
 
     protected override void OnExit()
     {

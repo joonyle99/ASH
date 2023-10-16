@@ -25,6 +25,11 @@ public class JumpState : PlayerState
     {
 
     }
+    protected override void OnFixedUpdate()
+    {
+
+    }
+
     protected override void OnExit()
     {
 

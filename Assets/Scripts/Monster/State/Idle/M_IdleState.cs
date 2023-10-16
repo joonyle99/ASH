@@ -14,6 +14,10 @@ public class M_IdleState : MonsterState
     {
 
     }
+    protected override void OnFixedUpdate()
+    {
+
+    }
 
     protected override void OnExit()
     {

@@ -7,21 +7,21 @@ public class PlayerJumpController : MonoBehaviour
 
     [Space]
 
-    [Range(0f, 30f)] [SerializeField] float _startJumpPower = 15f;
-    [Range(0f, 30f)] [SerializeField] float _inAirJumpPower = 12f;
-    [Range(0f, 30f)] [SerializeField] float _wallJumpPower = 6f;
-    [Range(0f, 60f)] [SerializeField] float _wallEndJumpPower = 30f;
+    [SerializeField] float _startJumpPower = 14f;
+    [SerializeField] float _inAirJumpPower = 12f;
+    [SerializeField] float _wallJumpPower = 6f;
+    [SerializeField] float _wallEndJumpPower = 15f;
 
-    [Range(0f, 1f)] [SerializeField] float _longJumpDuration = 0.2f;
-    [Range(0f, 2f)] [SerializeField] float _longJumpPower = 1.06f;
+    [SerializeField] float _longJumpDuration = 0.2f;
+    [SerializeField] float _longJumpPower = 200f;
 
     [Header("Jump Settings")]
 
     [Space]
 
-    [Range(0f, 10f)] [SerializeField] float _coyoteTime = 3f;
-    [Range(0f, 1f)] [SerializeField] float _jumpQueueDuration = 0.1f;
-    [Range(0, 10)] [SerializeField] int _maxJumpCount = 2;
+    [SerializeField] float _coyoteTime = 3f;
+    [SerializeField] float _jumpQueueDuration = 0.1f;
+    [SerializeField] int _maxJumpCount = 2;
 
     [SerializeField] bool _canJump;
     [SerializeField] bool _coyoteAvailable;
@@ -62,7 +62,7 @@ public class PlayerJumpController : MonoBehaviour
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
         if (_isLongJumping)
         {
-            _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity);
+            _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity * Time.deltaTime);
 
             _longJumpTime += Time.deltaTime;
 
@@ -167,7 +167,8 @@ public class PlayerJumpController : MonoBehaviour
         transform.localScale = new Vector3(_player.RecentDir, transform.localScale.y, transform.localScale.z);
 
         // execute jump
-        _player.Rigidbody.velocity = new Vector2(_player.RecentDir * xPower, yPower) * _wallJumpPower;
+        Vector2 wallJumpForce = new Vector2(_player.RecentDir * xPower, yPower) * _wallJumpPower;
+        _player.Rigidbody.AddForce(wallJumpForce, ForceMode2D.Impulse);
     }
 
     /// <summary>
@@ -177,8 +178,9 @@ public class PlayerJumpController : MonoBehaviour
     {
         _remainingJumpCount--;
 
-        _player.Rigidbody.velocity =
-            new Vector2(_player.Rigidbody.velocity.x, _wallEndJumpPower);
+        Vector2 endWallJumpForce = new Vector2(_player.Rigidbody.velocity.x, _wallEndJumpPower);
+
+        _player.Rigidbody.AddForce(endWallJumpForce, ForceMode2D.Impulse);
 
     }
 }

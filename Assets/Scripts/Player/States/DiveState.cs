@@ -77,6 +77,10 @@ public class DiveState : PlayerState
             ChangeState<IdleState>();
         }
     }
+    protected override void OnFixedUpdate()
+    {
+
+    }
 
     protected override void OnExit()
     {
