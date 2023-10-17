@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class RollingStonePlayerInteractor : DealDamageOnContact
 {
-    Collider2D _collider;
-    public Collider2D Collider { get { return _collider; } }
+    PolygonCollider2D _collider;
+    public PolygonCollider2D Collider { get { return _collider; } }
     public float Damage { get { return _damage; } set { _damage = value; } }
     public float ThreatVelocityThreshold { get { return _threatVelocityThreshold; } set { _threatVelocityThreshold = value; } }
 
     private void Awake()
     {
-        _collider = GetComponent<Collider2D>();
+        _collider = GetComponent<PolygonCollider2D>();
     }
     private void FixedUpdate()
     {

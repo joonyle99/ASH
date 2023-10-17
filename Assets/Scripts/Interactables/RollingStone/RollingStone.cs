@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class RollingStone : ContinuousInteractableObject
 {
@@ -10,6 +13,8 @@ public class RollingStone : ContinuousInteractableObject
 
     [SerializeField] protected float _threatVelocityThreshold = 3;
     [SerializeField] protected float _damage = 1;
+
+    PolygonCollider2D _collider;
 
     bool _immovable
     {
@@ -69,11 +74,36 @@ public class RollingStone : ContinuousInteractableObject
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _collider = GetComponent<PolygonCollider2D>();
         _playerInteractor = GetComponentInChildren<RollingStonePlayerInteractor>();
         _playerInteractor.ThreatVelocityThreshold = _threatVelocityThreshold;
         _playerInteractor.Damage = _damage;
         _immovable = true;
     }
 
+#if UNITY_EDITOR
+    public void ApplyShape()
+    {
+        GetComponentInChildren<RollingStonePlayerInteractor>().GetComponent<PolygonCollider2D>().points 
+            = GetComponent<PolygonCollider2D>().points;
 
+    }
+#endif
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(RollingStone))]
+public class CubeGenerateButton : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        RollingStone t = (RollingStone)target;
+        if (GUILayout.Button("Apply Shape"))
+        {
+            t.ApplyShape();
+        }
+    }
+}
+#endif

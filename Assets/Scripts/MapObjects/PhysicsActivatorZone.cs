@@ -19,9 +19,9 @@ public class PhysicsActivatorZone : ITriggerZone
         }
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.position + _targetRigidbody.transform.position);
+        Gizmos.DrawLine(transform.position, _targetRigidbody.transform.position);
     }
 }
