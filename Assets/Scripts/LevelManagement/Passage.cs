@@ -9,16 +9,12 @@ using UnityEditor.SceneManagement;
 
 public class Passage : ITriggerZone
 {
-    [SerializeField] string _passageName;
-    //TEMP : levelgraph에서 읽어오기 
-    [SerializeField] string _nextSceneName;
-
     [Tooltip("플레이어가 여기로 들어가서 다음 스테이지로 갈 때")][SerializeField] InputSetterScriptableObject _enterInputSetter;
     [Tooltip("플레이어가 이전 스테이지에서 여기로 나올 때")][SerializeField] InputSetterScriptableObject _exitInputSetter;
 
     [SerializeField] Transform _playerSpawnPoint;
 
-    public string PassageName => _passageName;
+    public string PassageName => name;
     public InputSetterScriptableObject EnterInputSetter => _enterInputSetter;
     public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
 
@@ -40,8 +36,8 @@ public class Passage : ITriggerZone
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
         yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
         var nextPassageData = SceneChangeManager.Instance.GetNextPassageData(name);
-        _nextSceneName = nextPassageData.SceneName;
-        SceneChangeManager.Instance.ChangeToPlayableScene(_nextSceneName, nextPassageData.PassageName);
+        string nextSceneName = nextPassageData.SceneName;
+        SceneChangeManager.Instance.ChangeToPlayableScene(nextSceneName, nextPassageData.PassageName);
     }
     public override void OnActivatorExit(TriggerActivator activator)
     {
