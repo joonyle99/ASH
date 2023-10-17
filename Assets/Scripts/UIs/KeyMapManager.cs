@@ -13,7 +13,7 @@ public class KeyMapManager : MonoBehaviour
 
     private void Start()
     {
-        if (_isFirst)
+        if (_isFirst && _keyMapUI != null)
         {
             StartCoroutine(RemoveKeymap());
         }
