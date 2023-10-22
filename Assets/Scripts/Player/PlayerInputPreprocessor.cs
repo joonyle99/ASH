@@ -34,7 +34,6 @@ public class PlayerInputPreprocessor : MonoBehaviour
         _smoothedInputs = inputs;
         _smoothedInputs.Movement.x = movementX;
     }
-
 }
 
 // TODO : 인스펙터에 input / smoothed input 표시
