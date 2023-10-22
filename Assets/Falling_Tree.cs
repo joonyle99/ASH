@@ -4,37 +4,36 @@ using UnityEngine;
 
 public class Falling_Tree : MonoBehaviour
 {
-    public GameObject COM;
-    public bool isFallingEnd = false;
-    public bool isFalling = false;
-    public float fallingPower = 30f;
-    float time = 0f;
-
+    public GameObject com;
 
     // Start is called before the first frame update
     void Start()
     {
+        this.GetComponent<Rigidbody2D>().centerOfMass = com.transform.position;
+
+        Debug.Log(this.GetComponent<Rigidbody2D>().centerOfMass);
+        Debug.Log(com.transform.position);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isFalling)
-        {
-            time += Time.deltaTime;
 
-            if (time < 0.5f)
-            {
-                Fall();
-            }
-        }
     }
 
-    public void Fall()
+    public void FallingTree(float dir)
     {
-        Debug.Log("나무가 쓰러집니다");
+        Debug.Log("나무가 쓰러진다 ~");
 
-        this.GetComponent<Rigidbody2D>().centerOfMass = COM.transform.localPosition;
-        this.GetComponent<Rigidbody2D>().AddTorque(-fallingPower, ForceMode2D.Impulse);
+        float degree = dir * 100f;
+
+        if (dir > 0)
+            Debug.Log("왼쪽으로 " + degree + "만큼 회전력을 준다 ~");
+        else
+            Debug.Log("오른쪽으로 " + degree + "만큼 회전력을 준다 ~");
+
+        float radian = Mathf.Deg2Rad * degree;
+
+        this.GetComponent<Rigidbody2D>().AddTorque(radian, ForceMode2D.Impulse);
     }
 }
