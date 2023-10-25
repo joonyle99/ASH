@@ -7,7 +7,6 @@ public class InteractionController : MonoBehaviour
     List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
     InteractionMarker _interactionMarker;
 
-
     [SerializeField] InteractableObject _interactionTarget = null;
 
     ContinuousInteractableObject _interactingObject;

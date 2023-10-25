@@ -1,13 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInputPreprocessor : MonoBehaviour
 {
     [SerializeField] float _inputAdaptSpeed = 3f;
     [SerializeField] float _inputAdaptSpeedInAir = 1.5f;
-
 
     /// <summary>
     /// InputState.Movement.x¸¦ 0~1·Î Smooth ÇÑ InputState
@@ -21,6 +17,7 @@ public class PlayerInputPreprocessor : MonoBehaviour
     {
         _player = GetComponent<PlayerBehaviour>();
     }
+
     void Update()
     {
         InputState inputs = InputManager.Instance.GetState();
