@@ -25,7 +25,7 @@ namespace Tymski
     // To help with this, a custom PropertyDrawer displays the scene build settings state.
     //
     //  Known issues:
-    // - When reverting back to a prefab which has the asset stored as null, Unity will show the property 
+    // - When reverting back to a comChecker which has the asset stored as null, Unity will show the property 
     // as modified despite having just reverted. This only happens on the fist time, and reverting again fix it. 
     // Under the hood the state is still always valid and serialized correctly regardless.
 
