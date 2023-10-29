@@ -10,10 +10,11 @@ public class DashState : PlayerState
     [Range(0f, 5f)] [SerializeField] float _dashLength = 0.2f;
     [Range(0f, 5f)] [SerializeField] float _coolTime = 0.3f;
 
-    Vector2 _dashDir;
-    bool _isDashing;
-    float _timeStartedDash;
-    float _timeEndeddDash;
+    private Vector2 _dashDir;
+    private bool _isDashing;
+    private float _timeStartedDash;
+    private float _timeEndeddDash;
+    private float _oldGravity;
 
     public bool IsDashing { get { return _isDashing; } }
     public float TimeEndedDash { get { return _timeEndeddDash; } }
@@ -22,6 +23,8 @@ public class DashState : PlayerState
     protected override void OnEnter()
     {
         Player.Animator.SetBool("IsDash", true);
+
+        _oldGravity = Player.Rigidbody.gravityScale;
 
         ExcuteDash();
     }
@@ -48,13 +51,13 @@ public class DashState : PlayerState
         _isDashing = false;
         Player.Animator.SetBool("IsDash", _isDashing);
 
-        _timeEndeddDash = Time.time;        // 대쉬가 끝나는 순간의 시간
-        Player.Rigidbody.gravityScale = 5;
+        _timeEndeddDash = Time.time;                                            // 대쉬가 끝나는 순간의 시간
+        Player.Rigidbody.gravityScale = _oldGravity;
     }
 
     private void ExcuteDash()
     {
-        Player.PlayerSound_SE_Dash();
+        Player.PlayerSound_SE_Dash();                                           // 대쉬 사운드 재생
 
         _isDashing = true;
         Player.CanDash = false;
@@ -63,8 +66,6 @@ public class DashState : PlayerState
         _dashDir = new Vector2(Player.RawInputs.Movement.x, 0f).normalized;   // 대쉬 방향 설정
 
         Player.Rigidbody.velocity = _dashDir * _dashSpeed;                      // 대쉬 실행
-
-        // Debug.Log(Player.Rigidbody.velocity);
 
         _timeStartedDash = Time.time;                                           // Dash를 시작한 시간
     }

@@ -59,6 +59,9 @@ public class PlayerBehaviour : StateMachineBase
     DiveState _diveState;
     ShootingState _shootingState;
 
+    // temp velocity
+    public Vector3 tempVelocity;
+
     // IsMove
     private bool IsMove
     {
@@ -178,6 +181,9 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetFloat("GroundDistance", GroundDistance);
         Animator.SetBool("IsMove", IsMove);
 
+        // temp velocity
+        tempVelocity = this.Rigidbody.velocity;
+
         #endregion
 
         #region Basic Behavior
@@ -201,6 +207,7 @@ public class PlayerBehaviour : StateMachineBase
         #region Check Ground & Wall
 
         // Check Ground
+        // TODO : BoxCast()로 변경하기. 변경 시 플레이어가 플랫폼 끝부분에 끼는 일이 없다.
         GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
 
         if (GroundHit)
@@ -392,55 +399,46 @@ public class PlayerBehaviour : StateMachineBase
         yield return null;
     }
 
-    // TODO : 달리기 사운드 Loop 재생
     public void PlaySound_SE_Run()
     {
         GetComponent<SoundList>().PlaySFX("SE_Run");
     }
 
-    // TODO : 점프 액션 사운드 Once 재생
     public void PlaySound_SE_Jump_01()
     {
         GetComponent<SoundList>().PlaySFX("SE_Jump_01");
     }
 
-    // TODO : 점프 마무리 사운드 Once 재생
     public void PlaySound_SE_Jump_02()
     {
         GetComponent<SoundList>().PlaySFX("SE_Jump_02");
     }
 
-    // TODO : 이단 점프 사운드 Once 재생
     public void PlaySound_SE_DoubleJump()
     {
         GetComponent<SoundList>().PlaySFX("SE_DoubleJump");
     }
 
-    // TODO : 기본 공격 사운드 Once 재생
     public void PlaySound_SE_Attack()
     {
         GetComponent<SoundList>().PlaySFX("SE_Attack");
     }
 
-    // TODO : 대시 사운드 Once 재생
     public void PlayerSound_SE_Dash()
     {
         GetComponent<SoundList>().PlaySFX("SE_Dash");
     }
 
-    // TODO : 급강하 액션 사운드 Loop 재생?
     public void PlaySound_SE_DesolateDive_01()
     {
         GetComponent<SoundList>().PlaySFX("SE_DesolateDive_01");
     }
 
-    // TODO : 급강하 마무리 사운드 Once 재생
     public void PlaySound_SE_DesolateDive_02()
     {
         GetComponent<SoundList>().PlaySFX("SE_DesolateDive_02");
     }
 
-    // TODO : 발사 액션 사운드 Once 재생
     public void PlaySound_SE_Shooting_01()
     {
         GetComponent<SoundList>().PlaySFX("SE_Shooting_01");
@@ -484,7 +482,8 @@ public class PlayerBehaviour : StateMachineBase
     /// <summary>
     /// Ground, Wall, Dive Raycast 그리기
     /// </summary>
-    private void OnDrawGizmosSelected()
+    // private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         // Draw Ground Check
         Gizmos.color = Color.blue;

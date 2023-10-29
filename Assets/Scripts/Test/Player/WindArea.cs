@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class windArea : MonoBehaviour
+public class WindArea : MonoBehaviour
 {
     public float value = 1300f;
 

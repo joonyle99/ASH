@@ -39,7 +39,7 @@ public class ParallaxTool : MonoBehaviour
         SetVolumetricLights();
         SetGlobalLight();
         var allSprites = _backgroundParent.transform.GetComponentsInChildren<SpriteRenderer>();
-        //TODO : Parallax 영향 안받을 오브젝트들에 대한 처리 방법
+        // TODO : Parallax 영향 안받을 오브젝트들에 대한 처리 방법
         //
         for (int i=0; i<allSprites.Length; i++)
         {
@@ -97,7 +97,7 @@ public class ParallaxTool : MonoBehaviour
                     _volumetricLights[j].color = new Color(_volumetricLights[j].color.r, _volumetricLights[j].color.g, _volumetricLights[j].color.b,
                                                     _volumetricLights[j].color.a - color.a);
             }
-            //TODO : 안개효과 이미지가 카메라를 쫓아가고 사이즈가 카메라에 딱맞게 만들기? 를 해야할지도
+            // TODO : 안개효과 이미지가 카메라를 쫓아가고 사이즈가 카메라에 딱맞게 만들기? 를 해야할지도
             _volumetricLights[i].transform.position = new Vector3(0, 0, z);
             _volumetricLights[i].color = color;
             _volumetricLights[i].sortingLayerName = _parallaxBoundaries.GetEnabledLayerNames()[i];
