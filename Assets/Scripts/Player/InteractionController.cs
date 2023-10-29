@@ -35,7 +35,7 @@ public class InteractionController : MonoBehaviour
     }
 
     // Set Interaction Key 'E'
-    [SerializeField] KeyCode _interactionKey= KeyCode.E;
+    [SerializeField] KeyCode _interactionKey = KeyCode.E;
 
     bool _isInteracting { get { return _interactingObject != null; } }
 
@@ -48,6 +48,7 @@ public class InteractionController : MonoBehaviour
     {
         _interactablesInRange.Add(interactable);
 
+        // TODO : 플레이어의 콜라이더가 2개라서 2번의 Add가 된다.
         // Debug.Log(interactable.gameObject.name);
     }
 
@@ -65,8 +66,11 @@ public class InteractionController : MonoBehaviour
     {
         if (newTarget == _interactionTarget)
             return;
+
         _interactionTarget = newTarget;
-        if(_interactionTarget == null)
+
+        /*
+        if (_interactionTarget == null)
         {
             _interactionMarker.Disable();
         }
@@ -74,6 +78,7 @@ public class InteractionController : MonoBehaviour
         {
             _interactionMarker.EnableAt(newTarget);
         }
+        */
     }
 
     private void Update()
@@ -84,12 +89,30 @@ public class InteractionController : MonoBehaviour
         if (_interactionTarget == null)
             return;
 
-        // 여기
         if (_interactionTarget is InstantInteractableObject)
         {
-            if (Input.GetKeyDown(_interactionKey))
+            if (_interactionTarget is InteractableTree)
             {
-                (_interactionTarget as InstantInteractableObject).Interact();
+                // 쓰러지는 나무와의 상호작용
+                if (Input.GetKey(_interactionKey))
+                {
+                    GameObject topTree = (_interactionTarget as InteractableTree).topOfTree;
+
+                    float dir = Mathf.Sign(topTree.transform.position.x - this.transform.position.x);
+
+                    topTree.GetComponent<FallingDownTree>().FallingDown(dir);
+
+                    string dirStr = (dir > 0) ? "오른쪽" : "왼쪽";
+
+                    Debug.Log(dirStr + "으로 나무를 PUSH !!!");
+                }
+            }
+            else
+            {
+                if (Input.GetKeyDown(_interactionKey))
+                {
+                    (_interactionTarget as InstantInteractableObject).Interact();
+                }
             }
         }
         else
@@ -102,7 +125,7 @@ public class InteractionController : MonoBehaviour
             {
                 InteractingObject.InteractUpdate();
             }
-            else if(Input.GetKeyUp(_interactionKey))
+            else if (Input.GetKeyUp(_interactionKey))
             {
                 InteractingObject = null;
             }
@@ -111,15 +134,21 @@ public class InteractionController : MonoBehaviour
 
     void UpdateInteractionTarget()
     {
+        // 범위 내에 상호작용 오브젝트들 중 현재 상호작용이 불가능한 요소를 삭제
         _interactablesInRange.RemoveAll(x => x == null || !x.IsIsInteractable);
+
         if (_interactablesInRange.Count == 0)
         {
             ChangeTarget(null);
             return;
         }
 
+        // Debug.Log("여기까지 들어오나?");
+
+        // 범위 내의 상호작용 오브젝트들 중 가장 가까운 거리 계산
         float minDist = Vector3.SqrMagnitude(_interactablesInRange[0].transform.position - transform.position);
         int minIndex = 0;
+
         for (int i = 1; i < _interactablesInRange.Count; i++)
         {
             float dist = Vector3.SqrMagnitude(_interactablesInRange[i].transform.position - transform.position);
@@ -129,6 +158,7 @@ public class InteractionController : MonoBehaviour
                 minIndex = i;
             }
         }
+
         if (_interactablesInRange[minIndex] != _interactionTarget)
             ChangeTarget(_interactablesInRange[minIndex]);
     }
