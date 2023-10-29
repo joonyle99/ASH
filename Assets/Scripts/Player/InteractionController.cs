@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class InteractionController : MonoBehaviour
 {
+    // 범위 안의 상호작용한 오브젝트 리스트
     List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
     InteractionMarker _interactionMarker;
 
+    // 상호작용 중인 타겟 오브젝트
     [SerializeField] InteractableObject _interactionTarget = null;
 
     ContinuousInteractableObject _interactingObject;
@@ -31,7 +33,8 @@ public class InteractionController : MonoBehaviour
             }
         }
     }
-    //TEMP
+
+    // Set Interaction Key 'E'
     [SerializeField] KeyCode _interactionKey= KeyCode.E;
 
     bool _isInteracting { get { return _interactingObject != null; } }
@@ -40,18 +43,24 @@ public class InteractionController : MonoBehaviour
     {
         _interactionMarker = FindObjectOfType<InteractionMarker>(true);
     }
+
     public void AddInteractableInRange(InteractableObject interactable)
     {
         _interactablesInRange.Add(interactable);
+
+        // Debug.Log(interactable.gameObject.name);
     }
+
     public void RemoveInteractableInRange(InteractableObject interactable)
     {
         _interactablesInRange.Remove(interactable);
     }
+
     public void RelaseInteractingObject()
     {
         InteractingObject = null;
     }
+
     void ChangeTarget(InteractableObject newTarget)
     {
         if (newTarget == _interactionTarget)
@@ -66,6 +75,7 @@ public class InteractionController : MonoBehaviour
             _interactionMarker.EnableAt(newTarget);
         }
     }
+
     private void Update()
     {
         if (!_isInteracting)
@@ -74,6 +84,7 @@ public class InteractionController : MonoBehaviour
         if (_interactionTarget == null)
             return;
 
+        // 여기
         if (_interactionTarget is InstantInteractableObject)
         {
             if (Input.GetKeyDown(_interactionKey))
@@ -97,9 +108,10 @@ public class InteractionController : MonoBehaviour
             }
         }
     }
+
     void UpdateInteractionTarget()
     {
-        _interactablesInRange.RemoveAll(x => x == null || !x.IsInteractable);
+        _interactablesInRange.RemoveAll(x => x == null || !x.IsIsInteractable);
         if (_interactablesInRange.Count == 0)
         {
             ChangeTarget(null);
@@ -120,5 +132,4 @@ public class InteractionController : MonoBehaviour
         if (_interactablesInRange[minIndex] != _interactionTarget)
             ChangeTarget(_interactablesInRange[minIndex]);
     }
-
 }

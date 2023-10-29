@@ -63,6 +63,9 @@ public class DashState : PlayerState
         _dashDir = new Vector2(Player.RawInputs.Movement.x, 0f).normalized;   // 대쉬 방향 설정
 
         Player.Rigidbody.velocity = _dashDir * _dashSpeed;                      // 대쉬 실행
+
+        // Debug.Log(Player.Rigidbody.velocity);
+
         _timeStartedDash = Time.time;                                           // Dash를 시작한 시간
     }
 }

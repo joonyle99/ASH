@@ -8,9 +8,10 @@ public class InteractionMarker : MonoBehaviour
     RectTransform _rectTransform;
 
     InteractableObject _currentInteractable;
+
     private void Awake()
     {
-        _rectTransform = GetComponent<RectTransform>(); 
+        _rectTransform = GetComponent<RectTransform>();
     }
     public void EnableAt(InteractableObject interactableObject)
     {

@@ -59,7 +59,14 @@ public class PlayerBehaviour : StateMachineBase
     DiveState _diveState;
     ShootingState _shootingState;
 
-    public Vector2 _velocity;
+    // IsMove
+    private bool IsMove
+    {
+        get
+        {
+            return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f;
+        }
+    }
 
     #region Properties
 
@@ -169,6 +176,7 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
         Animator.SetFloat("GroundDistance", GroundDistance);
+        Animator.SetBool("IsMove", IsMove);
 
         #endregion
 
@@ -233,8 +241,6 @@ public class PlayerBehaviour : StateMachineBase
         // Shooting CoolTime
 
         #endregion
-
-        _velocity = Rigidbody.velocity;
 
         // юс╫ц Healing State
         if (Input.GetKeyDown(KeyCode.Alpha2))
