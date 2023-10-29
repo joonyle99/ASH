@@ -80,7 +80,7 @@ public class FallingTree : InteractableObject
 
                 _isPushed = true;
 
-                // player.gameObject.GetComponent<Animator>().SetBool("IsPush", true);
+                player.gameObject.GetComponent<Animator>().SetBool("IsPush", true);
 
                 // temp
                 // if (!player.gameObject.GetComponent<PlayerBehaviour>().StateIs<PushState>())
@@ -88,7 +88,7 @@ public class FallingTree : InteractableObject
             }
             else
             {
-                // player.gameObject.GetComponent<Animator>().SetBool("IsPush", false);
+                player.gameObject.GetComponent<Animator>().SetBool("IsPush", false);
             }
         }
         else
