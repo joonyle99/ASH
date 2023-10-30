@@ -1,52 +1,61 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueManager : HappyTools.SingletonBehaviourFixed<DialogueManager>
+public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueController>
 {
-    DialogueView View 
+
+    [SerializeField] float _waitTimeAfterScriptEnd;
+    bool _isDialogueActive = false;
+    DialogueView _view;
+    DialogueView View
     {
-        get 
+        get
         {
             if (_view == null)
                 _view = FindObjectOfType<DialogueView>(true);
             return _view;
         }
     }
-    DialogueView _view;
 
-    bool _isDialogueActive = false;
-
-    [SerializeField] float _waitTimeAfterScriptEnd;
     public void StartDialogue(DialogueData data)
     {
         if (_isDialogueActive)
             return;
         StartCoroutine(DialogueCoroutine(data));
     }
-
     IEnumerator DialogueCoroutine(DialogueData data)
     {
-        _isDialogueActive = true;
-        List<DialogueScriptInfo> scriptInfos = data.GetScript();
+        Dialogue dialogue = new Dialogue(data);
         //Disable Inputs
-        InputManager.Instance.ChangeInputSetter(data.InputOverrider);
+        if (data.InputSetter != null)
+            InputManager.Instance.ChangeInputSetter(data.InputSetter);
+
         //Start Dialogue
         View.OpenPanel();
+
         //Proceed Dialogue
-        for (int i=0; i<scriptInfos.Count; i++)
+        while (!dialogue.IsOver)
         {
-            yield return StartCoroutine(View.StartScriptCoroutine(scriptInfos[i]));
+            View.StartSingleLine(dialogue.CurrentLine);
+            while(!View.IsCurrentLineOver)
+            {
+                if (InputManager.InteractionKeyDown)
+                    View.FastForward();
+                yield return null;
+            }
             yield return new WaitUntil(() => InputManager.InteractionKeyDown);
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
-            yield return StartCoroutine(View.FadeOutCoroutine(_waitTimeAfterScriptEnd));
+            yield return StartCoroutine(View.ClearTextCoroutine(_waitTimeAfterScriptEnd));
+
+            dialogue.MoveNext();
         }
 
         //Close Dialogue
         View.ClosePanel();
+
         //Retain control
         InputManager.Instance.ChangeToDefaultSetter();
-        yield return null;
+
         _isDialogueActive = false;
     }
 

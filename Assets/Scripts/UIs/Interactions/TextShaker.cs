@@ -16,6 +16,16 @@ public class TextShaker : MonoBehaviour
 
     Coroutine _shakeCoroutine;
 
+    public TextShakeParams shakeParams 
+    { 
+        set
+        {
+            AngleMultiplier = value.RotationPower;
+            MoveMultiplier = value.MovePower;
+            SpeedMultiplier = value.Speed;
+        } 
+    }
+
     /// <summary>
     /// Structure to hold pre-computed animation data.
     /// </summary>
@@ -177,4 +187,29 @@ public class TextShaker : MonoBehaviour
         }
     }
 
+}
+public struct TextShakeParams
+{
+    public static TextShakeParams None { get { return new TextShakeParams(0, 0, 0); } }
+
+    public float RotationPower;
+    public float MovePower;
+    public float Speed;
+
+    public TextShakeParams(float rotationPower = 1, float movePower = 1, float speed = 1)
+    {
+        RotationPower = rotationPower;
+        MovePower = movePower;
+        Speed = speed;
+    }
+
+    public static bool operator ==(TextShakeParams a, TextShakeParams b)
+    {
+        return a.MovePower == b.MovePower && a.RotationPower == b.RotationPower &&
+                a.Speed == b.Speed;
+    }
+    public static bool operator !=(TextShakeParams a, TextShakeParams b)
+    {
+        return !(a == b);
+    }
 }

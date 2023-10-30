@@ -7,6 +7,6 @@ public class NPC : InstantInteractableObject
     [SerializeField] DialogueData _data;
     public override void Interact()
     {
-        DialogueManager.Instance.StartDialogue(_data);
+        DialogueController.Instance.StartDialogue(_data);
     }
 }
