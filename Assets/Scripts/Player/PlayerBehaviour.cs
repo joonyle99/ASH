@@ -17,9 +17,11 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
-    [Range(0f, 5f)] [SerializeField] float _groundCheckDistance;
+    [SerializeField] float _groundCheckRadius = 0.35f;
+    // [Range(0f, 5f)] [SerializeField] float _groundCheckDistance;
     [Range(0f, 30f)] [SerializeField] float _diveCheckDistance;
-    [Range(0f, 5f)] [SerializeField] float _wallCheckDistance;
+    // [Range(0f, 5f)] [SerializeField] float _wallCheckDistance;
+    [SerializeField] Vector2 _wallCheckSzie = new Vector2(0.3f, 2f);
 
     [Header("Dive Settings")]
 
@@ -208,7 +210,9 @@ public class PlayerBehaviour : StateMachineBase
 
         // Check Ground
         // TODO : BoxCast()로 변경하기. 변경 시 플레이어가 플랫폼 끝부분에 끼는 일이 없다.
-        GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
+        // GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
+        // GroundHit = Physics2D.CapsuleCast(_groundCheckTrans.position, _groundCheckSize, CapsuleDirection2D.Vertical, 0f, Vector2.down, );
+        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
 
         if (GroundHit)
             IsGrounded = true;
@@ -216,7 +220,8 @@ public class PlayerBehaviour : StateMachineBase
             IsGrounded = false;
 
         // Check Wall
-        WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * RecentDir, _wallCheckDistance, _wallLayer);
+        // WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * RecentDir, _wallCheckDistance, _wallLayer);
+        WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSzie, 0f, Vector2.right * RecentDir, 0f, _wallLayer);
 
         if (WallHit)
             IsTouchedWall = true;
@@ -487,11 +492,14 @@ public class PlayerBehaviour : StateMachineBase
     {
         // Draw Ground Check
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(_groundCheckTrans.position, _groundCheckTrans.position + Vector3.down * _groundCheckDistance);
+        // Gizmos.DrawLine(_groundCheckTrans.position, _groundCheckTrans.position + Vector3.down * _groundCheckDistance);
+        // Gizmos.DrawWireSphere();
+        Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
         // Draw Wall Check
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * RecentDir);
+        // Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * RecentDir);
+        Gizmos.DrawWireCube(_wallCheckTrans.position, _wallCheckSzie);
 
         // Draw Dive Check
         Gizmos.color = Color.white;
