@@ -7,7 +7,7 @@ public class InteractionController : MonoBehaviour
     List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
     InteractionMarker _interactionMarker;
 
-    [SerializeField] InteractableObject _interactionTarget = null;
+    InteractableObject _interactionTarget = null;
 
     ContinuousInteractableObject _interactingObject;
     ContinuousInteractableObject InteractingObject
@@ -31,8 +31,6 @@ public class InteractionController : MonoBehaviour
             }
         }
     }
-    //TEMP
-    [SerializeField] KeyCode _interactionKey= KeyCode.E;
 
     bool _isInteracting { get { return _interactingObject != null; } }
 
@@ -69,35 +67,35 @@ public class InteractionController : MonoBehaviour
     private void Update()
     {
         if (!_isInteracting)
-            UpdateInteractionTarget();
+            SetTargetToClosestInteractable();
 
         if (_interactionTarget == null)
             return;
 
         if (_interactionTarget is InstantInteractableObject)
         {
-            if (Input.GetKeyDown(_interactionKey))
+            if (InputManager.Instance.IsInteractionDown)
             {
                 (_interactionTarget as InstantInteractableObject).Interact();
             }
         }
         else
         {
-            if (Input.GetKeyDown(_interactionKey))
+            if (InputManager.Instance.IsInteractionDown)
             {
                 InteractingObject = _interactionTarget as ContinuousInteractableObject;
             }
-            else if (Input.GetKey(_interactionKey) && _isInteracting)
+            else if (InputManager.Instance.IsPressingInteraction && _isInteracting)
             {
                 InteractingObject.InteractUpdate();
             }
-            else if(Input.GetKeyUp(_interactionKey))
+            else //if(Input.GetKeyUp(_interactionKey))
             {
                 InteractingObject = null;
             }
         }
     }
-    void UpdateInteractionTarget()
+    void SetTargetToClosestInteractable()
     {
         _interactablesInRange.RemoveAll(x => x == null || !x.IsInteractable);
         if (_interactablesInRange.Count == 0)

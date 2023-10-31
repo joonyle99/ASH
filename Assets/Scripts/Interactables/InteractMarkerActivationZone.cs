@@ -11,16 +11,12 @@ public class InteractMarkerActivationZone : ITriggerZone
     {
         _interactableObject = GetComponentInParent<InteractableObject>();
     }
-    public override void OnActivatorEnter(TriggerActivator activator)
+    public override void OnPlayerEnter(PlayerBehaviour player)
     {
-        if (!activator.IsPlayer)
-            return;
-        activator.AsPlayer.InteractionController.AddInteractableInRange(_interactableObject);
+        player.InteractionController.AddInteractableInRange(_interactableObject);
     }
-    public override void OnActivatorExit(TriggerActivator activator)
+    public override void OnPlayerExit(PlayerBehaviour player)
     {
-        if (!activator.IsPlayer)
-            return;
-        activator.AsPlayer.InteractionController.RemoveInteractableInRange(_interactableObject);
+        player.InteractionController.RemoveInteractableInRange(_interactableObject);
     }
 }

@@ -23,6 +23,7 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 
     InputState _cachedState;
     public bool IsInteractionDown { get { return Input.GetKeyDown(_interactionKey); } }
+    public bool IsPressingInteraction { get { return Input.GetKey(_interactionKey); } }
     protected override void Awake()
     {
         base.Awake();

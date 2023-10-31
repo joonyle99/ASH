@@ -11,12 +11,9 @@ public class PhysicsActivatorZone : ITriggerZone
         if (_freezeOnStart)
             _targetRigidbody.simulated = false;
     }
-    public override void OnActivatorEnter(TriggerActivator activator) 
+    public override void OnPlayerEnter(PlayerBehaviour player) 
     {
-        if(activator.IsPlayer)
-        {
-            _targetRigidbody.simulated = true;
-        }
+        _targetRigidbody.simulated = true;
     }
 
     private void OnDrawGizmos()
