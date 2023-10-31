@@ -74,22 +74,22 @@ public class InteractionController : MonoBehaviour
 
         if (_interactionTarget is InstantInteractableObject)
         {
-            if (InputManager.Instance.IsInteractionDown)
+            if (InputManager.Instance.InteractionKey.State == KeyState.KeyDown)
             {
                 (_interactionTarget as InstantInteractableObject).Interact();
             }
         }
         else
         {
-            if (InputManager.Instance.IsInteractionDown)
+            if (InputManager.Instance.InteractionKey.State == KeyState.KeyDown)
             {
                 InteractingObject = _interactionTarget as ContinuousInteractableObject;
             }
-            else if (InputManager.Instance.IsPressingInteraction && _isInteracting)
+            else if (InputManager.Instance.InteractionKey.State == KeyState.Pressing)
             {
                 InteractingObject.InteractUpdate();
             }
-            else //if(Input.GetKeyUp(_interactionKey))
+            else if (InputManager.Instance.InteractionKey.State == KeyState.KeyUp)
             {
                 InteractingObject = null;
             }

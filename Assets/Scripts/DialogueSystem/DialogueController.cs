@@ -39,11 +39,11 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             while (!View.IsCurrentLineOver)
             {
                 yield return null;
-                if (InputManager.Instance.IsInteractionDown)
+                if (InputManager.Instance.InteractionKey.State == KeyState.KeyDown)
                     View.FastForward();
             }
             yield return null;
-            yield return new WaitUntil(() => InputManager.Instance.IsInteractionDown);
+            yield return new WaitUntil(() => InputManager.Instance.InteractionKey.State == KeyState.KeyDown);
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
             yield return StartCoroutine(View.ClearTextCoroutine(_waitTimeAfterScriptEnd));
             dialogue.MoveNext();

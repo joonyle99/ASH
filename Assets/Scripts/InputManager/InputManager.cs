@@ -10,7 +10,7 @@ public struct InputState
 
 public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 {
-    [SerializeField] KeyCode _interactionKey = KeyCode.E;
+    [SerializeField] KeyCode _interactionKeyCode = KeyCode.E;
 
     public event IInputSetter.InputEventHandler JumpPressedEvent;
     public event IInputSetter.InputEventHandler DashPressedEvent;
@@ -22,11 +22,14 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
     IInputSetter _defaultSetter;
 
     InputState _cachedState;
-    public bool IsInteractionDown { get { return Input.GetKeyDown(_interactionKey); } }
-    public bool IsPressingInteraction { get { return Input.GetKey(_interactionKey); } }
+
+    ActionKey _interactionKey;
+    public ActionKey InteractionKey => _interactionKey;
+
     protected override void Awake()
     {
         base.Awake();
+        _interactionKey = new ActionKey(_interactionKeyCode);
         _defaultSetter = GetComponent<PCInputSetter>();
     }
     public void ChangeToDefaultSetter()
