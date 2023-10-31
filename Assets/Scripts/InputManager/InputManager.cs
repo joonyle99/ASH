@@ -8,12 +8,13 @@ public struct InputState
     public Vector2 Movement;
 }
 
-public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, IInputSetter
+public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 {
+    [SerializeField] KeyCode _interactionKey = KeyCode.E;
+
     public event IInputSetter.InputEventHandler JumpPressedEvent;
     public event IInputSetter.InputEventHandler DashPressedEvent;
     public event IInputSetter.InputEventHandler BasicAttackPressedEvent;
-    public event IInputSetter.InputEventHandler HealingPressedEvent;
     public event IInputSetter.InputEventHandler ShootingAttackPressedEvent;
 
     public delegate void InputEventHandler();
@@ -21,10 +22,7 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
     IInputSetter _defaultSetter;
 
     InputState _cachedState;
-
-
-    public static bool InteractionKeyDown { get { return FixedInputManager.InteractionKeyDown; } }
-
+    public bool IsInteractionDown { get { return Input.GetKeyDown(_interactionKey); } }
     protected override void Awake()
     {
         base.Awake();
@@ -45,7 +43,6 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
             _currentSetter.JumpPressedEvent -= () => JumpPressedEvent?.Invoke();
             _currentSetter.DashPressedEvent -= () => DashPressedEvent?.Invoke();
             _currentSetter.BasicAttackPressedEvent -= () => BasicAttackPressedEvent?.Invoke();
-            _currentSetter.HealingPressedEvent -= () => HealingPressedEvent?.Invoke();
             _currentSetter.ShootingAttackPressedEvent -= () => ShootingAttackPressedEvent?.Invoke();
         }
         _currentSetter = setter;
@@ -53,7 +50,6 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>, II
         _currentSetter.JumpPressedEvent += () => JumpPressedEvent?.Invoke();
         _currentSetter.DashPressedEvent += () => DashPressedEvent?.Invoke();
         _currentSetter.BasicAttackPressedEvent += () => BasicAttackPressedEvent?.Invoke();
-        _currentSetter.HealingPressedEvent += () => HealingPressedEvent?.Invoke();
         _currentSetter.ShootingAttackPressedEvent += () => ShootingAttackPressedEvent?.Invoke();
     }
     void Update()

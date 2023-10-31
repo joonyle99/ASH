@@ -14,7 +14,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     DialogueLine _currentLine;
     Coroutine _currentLineCoroutine;
     public bool IsCurrentLineOver { get; private set; }
-    
+    public bool IsPanelActive { get { return _dialoguePanel.gameObject.activeInHierarchy; } }
     public void OpenPanel()
     {
         _skipUI.gameObject.SetActive(false);

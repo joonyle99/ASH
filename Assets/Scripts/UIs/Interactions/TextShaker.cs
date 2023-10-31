@@ -188,6 +188,8 @@ public class TextShaker : MonoBehaviour
     }
 
 }
+#pragma warning disable CS0660 // 형식은 == 연산자 또는 != 연산자를 정의하지만 Object.Equals(object o)를 재정의하지 않습니다.
+#pragma warning disable CS0661 // 형식은 == 연산자 또는 != 연산자를 정의하지만 Object.GetHashCode()를 재정의하지 않습니다.
 public struct TextShakeParams
 {
     public static TextShakeParams None { get { return new TextShakeParams(0, 0, 0); } }
@@ -202,7 +204,6 @@ public struct TextShakeParams
         MovePower = movePower;
         Speed = speed;
     }
-
     public static bool operator ==(TextShakeParams a, TextShakeParams b)
     {
         return a.MovePower == b.MovePower && a.RotationPower == b.RotationPower &&
@@ -213,3 +214,6 @@ public struct TextShakeParams
         return !(a == b);
     }
 }
+
+#pragma warning restore CS0661 // 형식은 == 연산자 또는 != 연산자를 정의하지만 Object.GetHashCode()를 재정의하지 않습니다.
+#pragma warning restore CS0660 // 형식은 == 연산자 또는 != 연산자를 정의하지만 Object.Equals(object o)를 재정의하지 않습니다.

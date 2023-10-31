@@ -5,7 +5,6 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 {
 
     [SerializeField] float _waitTimeAfterScriptEnd;
-    bool _isDialogueActive = false;
     DialogueView _view;
     DialogueView View
     {
@@ -19,7 +18,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
     public void StartDialogue(DialogueData data)
     {
-        if (_isDialogueActive)
+        if (View.IsPanelActive)
             return;
         StartCoroutine(DialogueCoroutine(data));
     }
@@ -37,16 +36,16 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         while (!dialogue.IsOver)
         {
             View.StartSingleLine(dialogue.CurrentLine);
-            while(!View.IsCurrentLineOver)
+            while (!View.IsCurrentLineOver)
             {
-                if (InputManager.InteractionKeyDown)
-                    View.FastForward();
                 yield return null;
+                if (InputManager.Instance.IsInteractionDown)
+                    View.FastForward();
             }
-            yield return new WaitUntil(() => InputManager.InteractionKeyDown);
+            yield return null;
+            yield return new WaitUntil(() => InputManager.Instance.IsInteractionDown);
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
             yield return StartCoroutine(View.ClearTextCoroutine(_waitTimeAfterScriptEnd));
-
             dialogue.MoveNext();
         }
 
@@ -55,8 +54,6 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
         //Retain control
         InputManager.Instance.ChangeToDefaultSetter();
-
-        _isDialogueActive = false;
     }
 
 }
