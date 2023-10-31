@@ -55,9 +55,8 @@ public class InteractionController : MonoBehaviour
             if (_interactionTarget.IsInteracting)
                 _interactionTarget.UpdateInteracting();
         }
-        
-        
     }
+
     void SetTargetToClosestInteractable()
     {
         _interactablesInRange.RemoveAll(x => x == null);
@@ -80,7 +79,7 @@ public class InteractionController : MonoBehaviour
             ChangeTarget(null);
             return;
         }
-        
+
         if (_interactablesInRange[minIndex] != _interactionTarget)
             ChangeTarget(_interactablesInRange[minIndex]);
     }

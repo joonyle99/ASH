@@ -67,15 +67,6 @@ public class PlayerBehaviour : StateMachineBase
     // temp velocity
     public Vector3 tempVelocity;
 
-    // IsMove
-    private bool IsMove
-    {
-        get
-        {
-            return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f;
-        }
-    }
-
     #region Properties
 
     public bool IsGrounded { get; set; }
@@ -98,6 +89,7 @@ public class PlayerBehaviour : StateMachineBase
     public int RecentDir { get; set; }
     public Vector2 PlayerLookDir { get { return new Vector2(RecentDir, 0); } }
 
+    private bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
     public bool IsWallJump { get; set; }
     public float GroundDistance { get; set; }
     public float DiveThreshholdHeight
@@ -106,11 +98,11 @@ public class PlayerBehaviour : StateMachineBase
         private set { _diveThreshholdHeight = value; }
     }
 
-
     public int CurHP
     {
         get { return _curHp; }
-        set {
+        set
+        {
             _curHp = value;
             if (_curHp < 0)
                 _curHp = 0;
