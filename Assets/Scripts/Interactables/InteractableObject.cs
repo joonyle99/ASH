@@ -7,15 +7,30 @@ public abstract class InteractableObject : MonoBehaviour
     [SerializeField] Transform _interactionMarkerPoint;
     [SerializeField] bool _interactable;
 
-    public bool IsInteractable { get { return _interactable; } private set { _interactable = value; } }
     public Vector3 InteractionMarkerPoint
-    { 
-        get 
+    {
+        get
         {
             if (_interactionMarkerPoint == null)
                 return SceneContext.Current.Player.transform.position;
             return _interactionMarkerPoint.position;
         }
+    }
+    public bool IsInteractable { get { return _interactable; } private set { _interactable = value; } }
+    public bool IsInteracting { get; private set; }
+
+    protected abstract void OnInteract();
+    public abstract void UpdateInteracting();
+
+    public void Interact()
+    {
+        IsInteracting = true;
+        OnInteract();
+    }
+
+    public void FinishInteraction()
+    {
+        IsInteracting = false;
     }
 
 }

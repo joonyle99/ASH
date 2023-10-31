@@ -15,10 +15,10 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             return _view;
         }
     }
-
+    public bool IsDialogueActive => View.IsPanelActive;
     public void StartDialogue(DialogueData data)
     {
-        if (View.IsPanelActive)
+        if (IsDialogueActive)
             return;
         StartCoroutine(DialogueCoroutine(data));
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AttackableEntity : MonoBehaviour
 {
-    [SerializeField] bool _allowsBasicAttack;
+    [SerializeField] bool _allowsBasicAttack = true;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var basicAttackHitbox = collision.GetComponent<PlayerBasicAttackHitbox>();

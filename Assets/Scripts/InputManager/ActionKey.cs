@@ -18,15 +18,19 @@ public class ActionKey
     {
         _keyCode = keyCode;
     }
+    public bool KeyDown { get { return Input.GetKeyDown(_keyCode); } }
+    public bool Pressing { get { return Input.GetKey(_keyCode); } }
+    public bool KeyUp { get { return Input.GetKeyUp(_keyCode); } }
+    public bool None { get { return !Input.GetKey(_keyCode); } }
     public KeyState State
     {
         get
         {
-            if (Input.GetKeyDown(_keyCode))
+            if (KeyDown)
                 return KeyState.KeyDown;
-            if (Input.GetKey(_keyCode))
+            if (Pressing)
                 return KeyState.Pressing;
-            if (Input.GetKeyUp(_keyCode))
+            if (KeyUp)
                 return KeyState.KeyUp;
             return KeyState.None;
         }
