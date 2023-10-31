@@ -2,11 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPC : InstantInteractableObject
+public class NPC : InteractableObject
 {
     [SerializeField] DialogueData _data;
-    public override void Interact()
+    protected override void OnInteract()
     {
-        DialogueManager.Instance.StartDialogue(_data);
+        DialogueController.Instance.StartDialogue(_data);
+    }
+    public override void UpdateInteracting()
+    {
+        if(!DialogueController.Instance.IsDialogueActive)
+        {
+            FinishInteraction();
+        }
     }
 }

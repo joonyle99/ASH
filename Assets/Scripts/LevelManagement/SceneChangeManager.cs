@@ -44,7 +44,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     }
     public void ChangeToScene(string sceneName)
     {
-        //TODO
+        // TODO
         Debug.LogError("Not Implemented");
     }
 

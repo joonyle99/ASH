@@ -7,7 +7,7 @@ public class InAirState : PlayerState
     [Space]
 
     [SerializeField] float _inAirSpeed = 3000f;          // 공중에서 좌우로 움직이는 스피드
-    [SerializeField] float _maxInAirSpeed = 5f;         // 공중에서 좌우로 움직이는 최대 스피드
+    [SerializeField] float _maxInAirSpeed = 6f;         // 공중에서 좌우로 움직이는 최대 스피드
     [SerializeField] float _fastDropThreshhold = 4f;    // 빨리 떨어지기 시작하는 높이
     [SerializeField] float _fastDropPower = 150f;        // 빨리 떨어지는 힘
     [SerializeField] float _maxDropSpeed = 60f;        // 떨어지는 속도 최대값

@@ -30,10 +30,10 @@ public class IdleState : PlayerState
         }
 
         // 플레이어와 땅 사이의 각도
-        float _angle = Vector3.Angle(_groundNormal, Player.PlayerLookDir);
+        float _angle = Vector2.Angle(_groundNormal, Player.PlayerLookDir);
 
         // 기울어진 땅에서 미끄럼 방지
-        if (Mathf.Abs(90f - _angle) > 5f)
+        if (Mathf.Abs(90f - _angle) > 10f)
         {
             // Debug.Log("기울어진 땅입니다");
             Player.Rigidbody.AddForce(-_groundNormal * _belowForce * Time.deltaTime);
@@ -56,7 +56,8 @@ public class IdleState : PlayerState
 
     }
 
-    private void OnDrawGizmosSelected()
+    // private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         // 땅의 법선벡터 그리기
         Gizmos.color = Color.cyan;

@@ -39,12 +39,11 @@ public class Passage : ITriggerZone
         string nextSceneName = nextPassageData.SceneName;
         SceneChangeManager.Instance.ChangeToPlayableScene(nextSceneName, nextPassageData.PassageName);
     }
-    public override void OnActivatorExit(TriggerActivator activator)
+    public override void OnPlayerExit(PlayerBehaviour player)
     {
         if (!_isPlayerExiting)
             return;
-        if (activator.IsPlayer)
-            _isPlayerExiting = false;
+        _isPlayerExiting = false;
     }
     
     //Passage를 통해 밖으로 나옴
