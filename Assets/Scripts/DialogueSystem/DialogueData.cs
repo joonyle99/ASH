@@ -2,28 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 하나의 다이얼로그에 대한 모든 정보를 담는 ScriptableObject.
+/// </summary>
 [CreateAssetMenu(menuName = "Dialogue Data", fileName = "New Dialogue Data")]
 public class DialogueData : ScriptableObject
 {
-    [SerializeField] string _name;
-    [SerializeField] InputSetterScriptableObject _inputOverrider;
+    [SerializeField] string _NPCName;
+    [SerializeField] InputSetterScriptableObject _inputSetter;
     [SerializeField] TextAsset _script;
-    [SerializeField] float _defaultSpeed = 12;
-    [SerializeField] List<DialogueAction> _actions;
+    [SerializeField] float _defaultCharactersPerSecond = 12;
+    [SerializeField] DialogueAction[] _actions;
 
-    public string Name { get { return _name; } }
-    public InputSetterScriptableObject InputOverrider { get { return _inputOverrider; } }
-    public TextAsset Script { get { return _script; } }
-    public List<DialogueAction> Actions { get { return _actions; } }
-
-    public List<DialogueScriptInfo> GetScript()
+    public string NPCName => _NPCName;
+    public InputSetterScriptableObject InputSetter => _inputSetter;
+    public List<DialogueLine> GetDialogueSequence()
     {
-        List<DialogueScriptInfo> dialogueScriptInfos = new List<DialogueScriptInfo>();
+        List<DialogueLine> dialogueSequence = new List<DialogueLine>();
         string [] scriptLines = HappyTools.TSVRead.SplitLines(_script.text);
-        float speed = _defaultSpeed;
-        ShakeInfo shake = ShakeInfo.None;
         for (int i=0; i<scriptLines.Length; i++)
         {
+            float charactersPerSecond = _defaultCharactersPerSecond;
+            TextShakeParams shakeParams = TextShakeParams.None;
             if (scriptLines[i].Trim().Length == 0)
                 continue;
             if (scriptLines[i].StartsWith("#"))
@@ -34,40 +34,30 @@ public class DialogueData : ScriptableObject
                     var words = commands[c].Split(":");
                     if (words[0].Trim().ToLower() == "speed")
                     {
-                        if (!float.TryParse(words[1].Trim(), out speed))
+                        if (!float.TryParse(words[1].Trim(), out charactersPerSecond))
                             Debug.LogError("Can't parse speed in line " + i.ToString());
                     }
                     else if (words[0].Trim().ToLower() == "shake")
                     {
-                        var shakeParams = words[1].Trim().Split('/');
-                        Debug.Assert(shakeParams.Length == 3, "Can't parse shake in line " + i.ToString());
-                        if (!float.TryParse(shakeParams[0].Trim(), out shake.RotationPower))
-                            Debug.LogError("Can't parse shake in line " + i.ToString());
-                        if (!float.TryParse(shakeParams[1].Trim(), out shake.MovePower))
-                            Debug.LogError("Can't parse shake in line " + i.ToString());
-                        if (!float.TryParse(shakeParams[2].Trim(), out shake.Speed))
+                        var shakeParamValues = words[1].Trim().Split('/');
+                        Debug.Assert(shakeParamValues.Length == 3, "Can't parse shake in line " + i.ToString());
+                        if (!float.TryParse(shakeParamValues[0].Trim(), out shakeParams.RotationPower)
+                            || !float.TryParse(shakeParamValues[1].Trim(), out shakeParams.MovePower)
+                            || !float.TryParse(shakeParamValues[2].Trim(), out shakeParams.Speed))
                             Debug.LogError("Can't parse shake in line " + i.ToString());
                     }
                 }
                 continue;
             }
-            DialogueScriptInfo info = new DialogueScriptInfo();
-            info.Text = scriptLines[i];
-            info.Speed = speed;
-            info.Shake = shake;
-            dialogueScriptInfos.Add(info);
+            // TODO : @로 시작하는 특수 액션들에 대한 처리
 
-            shake = ShakeInfo.None;
-            speed = _defaultSpeed;
+            DialogueLine line = new DialogueLine();
+            line.Text = scriptLines[i];
+            line.CharactersPerSecond = charactersPerSecond;
+            line.ShakeParams = shakeParams;
+
+            dialogueSequence.Add(line);
         }
-        return dialogueScriptInfos;
+        return dialogueSequence;
     }
-    /*
-     * 대화정보: 
- -스크립트 (텍스트 line by line, @Action1 같은 것으로 특수동작 가능)
- -텍스트 style (default 색 등)
- -액션 (Action1, Action2에 해당하는 액션들 (화면흔들림, 선택지부여, 체력회복 등 뭐든 가능하게) 이건 List of scriptableobjects
- -다이얼로그에 필요한 정보 (이름, 프사 등)
-
-     */
 }

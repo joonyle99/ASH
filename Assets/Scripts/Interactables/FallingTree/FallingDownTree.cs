@@ -52,4 +52,14 @@ public class FallingDownTree : InteractableObject
         // push tree
         _rigid.AddForceAtPosition(Vector2.right * dir * _power * _mul * Time.deltaTime, forcePointTransform.position, ForceMode2D.Force);
     }
+
+    protected override void OnInteract()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void UpdateInteracting()
+    {
+        throw new System.NotImplementedException();
+    }
 }

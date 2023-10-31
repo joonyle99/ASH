@@ -8,12 +8,9 @@ public class OxygenWaveZone : ITriggerZone
     [SerializeField] float _windAngleDegrees;
     float _rotation { get { return transform.rotation.eulerAngles.z + _windAngleDegrees + 90; } }
     Vector2 _windDir { get { return new Vector2(Mathf.Cos(_rotation * Mathf.Deg2Rad), Mathf.Sin(_rotation * Mathf.Deg2Rad)).normalized;} }
-    public override void OnActivatorStay(TriggerActivator activator) 
+    public override void OnPlayerEnter(PlayerBehaviour player)
     {
-        if(activator.IsPlayer)
-        {
-            activator.AsPlayer.Rigidbody.velocity += (_windDir * _windPower);
-        }
+        player.Rigidbody.velocity += (_windDir * _windPower);
     }
 
     private void OnDrawGizmosSelected()

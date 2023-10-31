@@ -9,7 +9,6 @@ public class Bootstrapper : HappyTools.GameBootstrapper
     public override void InitGame()
     {
         _inputManager.ChangeToDefaultSetter();
-        
     }
 
 }

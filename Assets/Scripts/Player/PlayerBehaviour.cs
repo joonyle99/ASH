@@ -144,7 +144,6 @@ public class PlayerBehaviour : StateMachineBase
 
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
         InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
-        InputManager.Instance.HealingPressedEvent += OnHealingPressed; //TODO : subscribe
         InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
 
         // Init Value
@@ -167,7 +166,6 @@ public class PlayerBehaviour : StateMachineBase
         {
             InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
             InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
-            InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
             InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
         }
     }

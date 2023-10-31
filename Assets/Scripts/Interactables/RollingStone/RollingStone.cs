@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class RollingStone : ContinuousInteractableObject
+public class RollingStone : InteractableObject
 {
     Rigidbody2D _rigidbody;
 
@@ -28,31 +28,32 @@ public class RollingStone : ContinuousInteractableObject
                 gameObject.layer = LayerMask.NameToLayer("Default");
         }
     }
-    bool _isInteracting = false;
-    public override void InteractEnter()
+    protected override void OnInteract()
     {
-        Debug.Log("InteractEnter");
         _immovable = false;
-        _isInteracting = true;
+        //TODO : Joint 생성
+    }
+    public override void UpdateInteracting()
+    {
+        //TODO : 플레이어와 떨어질 때 joint 끊기
+        if (
+            InputManager.Instance.InteractionKey.State == KeyState.KeyUp)
+        {
+            _immovable = true;
+            FinishInteraction();
+        }
     }
 
-    public override void InteractExit()
+    public void InteractUpdate()
     {
-        Debug.Log("InteractExit");
-        _immovable = true;
-        _isInteracting = false;
-    }
-
-    public override void InteractUpdate()
-    {
-        
+        /*
         if (_isInteracting)
         {
             if (!IsPlayerColliding())
             {
                 SceneContext.Current.Player.InteractionController.RelaseInteractingObject();
             }
-        }
+        }*/
 
     }
 

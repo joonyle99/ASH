@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class InteractableTree : InstantInteractableObject
+public class InteractableTree : InteractableObject
 {
     public GameObject topOfTree;
 
-    public override void Interact()
+    protected override void OnInteract()
     {
         Debug.Log("이것은 나무와의 상호작용 입니다. -> 이름은 : " + topOfTree.name);
 
@@ -17,4 +17,9 @@ public class InteractableTree : InstantInteractableObject
 
         // topOfTree.GetComponent<FallingDownTree>().FallingDown();
     }
+    public override void UpdateInteracting()
+    {
+        throw new System.NotImplementedException();
+    }
+
 }
