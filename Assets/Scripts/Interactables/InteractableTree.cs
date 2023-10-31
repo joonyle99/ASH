@@ -20,6 +20,23 @@ public class InteractableTree : InteractableObject
     public override void UpdateInteracting()
     {
         throw new System.NotImplementedException();
+        /*
+         * InteractableObject.Update에 있던 코드
+         * 
+        // 쓰러지는 나무와의 상호작용
+        if (Input.GetKey(_interactionKey))
+        {
+            GameObject topTree = (_interactionTarget as InteractableTree).topOfTree;
+
+            float dir = Mathf.Sign(topTree.transform.position.x - this.transform.position.x);
+
+            topTree.GetComponent<FallingDownTree>().FallingDown(dir);
+
+            string dirStr = (dir > 0) ? "오른쪽" : "왼쪽";
+
+            Debug.Log(dirStr + "으로 나무를 PUSH !!!");
+        }
+        */
     }
 
 }
