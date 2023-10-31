@@ -32,6 +32,7 @@ public class RollingStone : InteractableObject
     {
         _immovable = false;
         //TODO : Joint »ý¼º
+        SceneContext.Current.Player.AddJoint<HingeJoint2D>(_rigidbody, 300);
     }
     public override void UpdateInteracting()
     {
@@ -39,8 +40,9 @@ public class RollingStone : InteractableObject
         if (
             InputManager.Instance.InteractionKey.State == KeyState.KeyUp)
         {
-            _immovable = true;
-            FinishInteraction();
+            _immovable = true; 
+            SceneContext.Current.Player.RemoveJoint();
+             FinishInteraction();
         }
     }
 

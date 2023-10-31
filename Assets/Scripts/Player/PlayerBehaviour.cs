@@ -61,6 +61,9 @@ public class PlayerBehaviour : StateMachineBase
     DiveState _diveState;
     ShootingState _shootingState;
 
+    //Joint for interactable
+    Joint2D _joint;
+
     // temp velocity
     public Vector3 tempVelocity;
 
@@ -267,6 +270,17 @@ public class PlayerBehaviour : StateMachineBase
     {
         RecentDir = (int)RawInputs.Movement.x;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
+    }
+    public void AddJoint<T>(Rigidbody2D bodyToAttach, float breakForce) where T : Joint2D
+    {
+        _joint = gameObject.AddComponent<HingeJoint2D>();
+        _joint.connectedBody = bodyToAttach;
+        _joint.enableCollision = true;
+        _joint.breakForce = breakForce;
+    }
+    public void RemoveJoint()
+    {
+        Destroy(_joint);
     }
 
     void OnBasicAttackPressed()

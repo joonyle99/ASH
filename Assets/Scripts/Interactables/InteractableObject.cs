@@ -6,6 +6,8 @@ public abstract class InteractableObject : MonoBehaviour
 {
     [SerializeField] Transform _interactionMarkerPoint;
     [SerializeField] bool _isInteractable;
+    
+    // TODO : 플레이어 상태 및 입력 override 하는 기능
 
     public Vector3 InteractionMarkerPoint
     {
