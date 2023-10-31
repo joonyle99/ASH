@@ -8,9 +8,10 @@ public class InteractionController : MonoBehaviour
     List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
     InteractionMarker _interactionMarker;
 
-    InteractableObject _interactionTarget = null;
+    [SerializeField] InteractableObject _interactionTarget = null;
 
     bool _shouldDetectInteractable { get { return _interactionTarget == null || !_interactionTarget.IsInteracting; } }
+
     private void Awake()
     {
         _interactionMarker = FindObjectOfType<InteractionMarker>(true);
@@ -19,15 +20,13 @@ public class InteractionController : MonoBehaviour
     public void AddInteractableInRange(InteractableObject interactable)
     {
         _interactablesInRange.Add(interactable);
-
-        // TODO : 플레이어의 콜라이더가 2개라서 2번의 Add가 된다.
-        // Debug.Log(interactable.gameObject.name);
     }
 
     public void RemoveInteractableInRange(InteractableObject interactable)
     {
         _interactablesInRange.Remove(interactable);
     }
+
     void ChangeTarget(InteractableObject newTarget)
     {
         if (newTarget == _interactionTarget)

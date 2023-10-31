@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FallingDownTree : InteractableObject
+public class TopOfTree : MonoBehaviour
 {
-    public Transform forcePointTransform;
-
     private Rigidbody2D _rigid;
 
-    [SerializeField] private float _power = 50f;
-    [SerializeField] private float _mul = 1000f;
+    [SerializeField] private Transform forcePointTransform;
+
+    [SerializeField] private float _power = 800f;
     [SerializeField] private float _fallingAngle = 20f;
     [SerializeField] private float _rotatedAngle = 0f;
 
     [SerializeField] private bool _isPushed = false;
     [SerializeField] private bool _isFalling = false;
+    [SerializeField] private float _dir = 0f;
 
     private Quaternion startRotation;
     private Quaternion curRotation;
@@ -40,7 +40,15 @@ public class FallingDownTree : InteractableObject
             _isFalling = true;
     }
 
-    public void FallingDown(float dir)
+    void FixedUpdate()
+    {
+        if (_isPushed)
+        {
+            FallDown();
+        }
+    }
+
+    public void FallDown()
     {
         // if already falling return
         if (_isFalling)
@@ -50,16 +58,21 @@ public class FallingDownTree : InteractableObject
         _rigid.constraints = RigidbodyConstraints2D.None;
 
         // push tree
-        _rigid.AddForceAtPosition(Vector2.right * dir * _power * _mul * Time.deltaTime, forcePointTransform.position, ForceMode2D.Force);
+        // 고려사항
+        // 1. Time.FixedDeltaTime을 곱해야 하는가?
+        // 2. Mass를 곱해야 하는가? -> 곱하면 질량과 상관이 없는 AddForce()이지 않은가
+        _rigid.AddForceAtPosition(Vector2.right * _dir * _power, forcePointTransform.position, ForceMode2D.Force);
     }
 
-    protected override void OnInteract()
+    public void ExcutePush(float dir)
     {
-        throw new System.NotImplementedException();
+        _isPushed = true;
+        _dir = dir;
     }
 
-    public override void UpdateInteracting()
+    public void FinishPush()
     {
-        throw new System.NotImplementedException();
+        _isPushed = false;
+        _dir = 0f;
     }
 }
