@@ -57,10 +57,8 @@ public class TopOfTree : MonoBehaviour
         // rigidbody의 제약조건 해제 (한번만 하고싶은데..)
         _rigid.constraints = RigidbodyConstraints2D.None;
 
-        // push tree
-        // 고려사항
-        // 1. Time.FixedDeltaTime을 곱해야 하는가?
-        // 2. Mass를 곱해야 하는가? -> 곱하면 질량과 상관이 없는 AddForce()이지 않은가
+        // falling tree
+        // 힘(N)을 입력하면 강체의 질량과 DT를 고려해서 속도를 변경한다.
         _rigid.AddForceAtPosition(Vector2.right * _dir * _power, forcePointTransform.position, ForceMode2D.Force);
     }
 
