@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FallingSpike : MonoBehaviour, ITriggerListener
+public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
 {
     Rigidbody2D _rigidbody;
 
@@ -12,6 +12,12 @@ public class FallingSpike : MonoBehaviour, ITriggerListener
     {
         _rigidbody = GetComponent<Rigidbody2D>();
     }
+    public void OnHitted(bool isBasicAttack)
+    {
+        if (isBasicAttack)
+            Destroy(gameObject);
+    }
+
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
         if (activator.Type == ActivatorType.Player)

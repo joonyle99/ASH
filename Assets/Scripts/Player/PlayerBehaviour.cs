@@ -320,7 +320,7 @@ public class PlayerBehaviour : StateMachineBase
         }
         InstantRespawn();
     }
-    public void OnHitByPhysicalObject(float damage, Collision2D collision)
+    public void OnHitByPhysicalObject(float damage, Rigidbody2D other)
     {
        //TODO
         Debug.Log(damage + " 대미지 입음");

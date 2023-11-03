@@ -24732,11 +24732,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742945, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.38
+      value: -9.88
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742945, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4
+      value: 4.19
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742945, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_LocalPosition.z
@@ -24772,28 +24772,40 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582743002, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Name
-      value: Gimmick_RollingStone_Crashable
+      value: Gimmick_RollingStone_Crashable (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
---- !u!1 &2737987851714594182 stripped
+--- !u!1 &2737987851058543614 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1284470427263961506, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1284470426582743002, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
   m_PrefabInstance: {fileID: 3759400119197797412}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1813280589
+--- !u!114 &582110286
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2737987851714594182}
+  m_GameObject: {fileID: 2737987851058543614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517b12a380a17514491fdd6c4d20054f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _allowsBasicAttack: 1
+--- !u!114 &582110287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2737987851058543614}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed5fd4190e6ae494ebdf18bd71854db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _allowsBasicAttack: 1
   _particles:
   - {fileID: 6167631742264756160}
   - {fileID: 8060640508009248311}

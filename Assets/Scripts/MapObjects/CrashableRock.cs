@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CrashableRock : AttackableEntity
+public class CrashableRock : MonoBehaviour, IAttackListener
 {
     [SerializeField] List<ParticleHelper> _particles;
     [SerializeField] List<Transform> _pieces;
-    override protected void OnHittedByBasicAttack(PlayerBehaviour player)
+
+    public void OnHitted(bool isBasicAttack)
     {
         SoundManager.Instance.PlayCommonSFXPitched("SE_CrashRock_hit");
         foreach (ParticleHelper particle in _particles)
         {
-            if (player.transform.position.x > transform.position.x)
+            if (SceneContext.Current.Player.transform.position.x > transform.position.x)
                 particle.SetEmmisionRotation(new Vector3(0, 0, 60));
             else
                 particle.SetEmmisionRotation(new Vector3(0, 0, 0));
