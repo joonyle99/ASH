@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstantRespawnOnContact : ITriggerZone
+public class InstantRespawnOnContact : TriggerZone
 {
     [SerializeField] float _damage = 1;
 

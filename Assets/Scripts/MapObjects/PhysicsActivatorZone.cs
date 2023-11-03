@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhysicsActivatorZone : ITriggerZone
+public class PhysicsActivatorZone : TriggerZone
 {
     [SerializeField] Rigidbody2D _targetRigidbody;
     [SerializeField] bool _freezeOnStart = true;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ITriggerZone : MonoBehaviour
+public abstract class TriggerZone : MonoBehaviour
 {
     public virtual void OnActivatorEnter(TriggerActivator activator) { }
     public virtual void OnActivatorExit(TriggerActivator activator) { }

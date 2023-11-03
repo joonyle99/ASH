@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OxygenWaveZone : ITriggerZone
+public class OxygenWaveZone : TriggerZone
 {
     [SerializeField] float _windPower;
     [SerializeField] float _windAngleDegrees;

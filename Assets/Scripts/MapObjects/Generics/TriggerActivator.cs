@@ -8,6 +8,6 @@ public enum ActivatorType
 }
 public class TriggerActivator : MonoBehaviour
 {
-    ActivatorType _type;
+    [SerializeField] ActivatorType _type;
     public ActivatorType Type => _type;
 }

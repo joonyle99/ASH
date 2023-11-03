@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Checkpoint : ITriggerZone
+public class Checkpoint : TriggerZone
 {
     [SerializeField] Transform _spawnPoint;
 #if UNITY_EDITOR
