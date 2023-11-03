@@ -40,7 +40,7 @@ public class ParallaxBoundaries
     }
     public void SetSortingLayers(SortingLayer [] layers)
     {
-        //TODO : 이전 값이 있으면 유지하는 기능 필요
+        // TODO : 이전 값이 있으면 유지하는 기능 필요
         _layerNames = new string[layers.Length];
         _minBoundaries = new float[layers.Length];
         _enables = new bool[layers.Length];

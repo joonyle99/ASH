@@ -21,7 +21,7 @@ public class RollingStonePlayerInteractor : DealDamageOnContact
 
     protected override bool CanDealDamage(PlayerBehaviour player)
     {
-        //TODO : 플레이어가 밀고있을 땐 false
+        // TODO : 플레이어가 밀고있을 땐 false
         return true;
     }
 

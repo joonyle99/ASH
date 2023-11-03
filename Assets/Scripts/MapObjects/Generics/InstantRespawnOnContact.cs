@@ -6,12 +6,9 @@ public class InstantRespawnOnContact : ITriggerZone
 {
     [SerializeField] float _damage = 1;
 
-    public override void OnActivatorEnter(TriggerActivator activator) 
+    public override void OnPlayerEnter(PlayerBehaviour player)
     {
-        if(activator.IsPlayer)
-        {
-            activator.AsPlayer.TriggerInstantRespawn(_damage);
-        }
+        player.TriggerInstantRespawn(_damage);
     }
 
 }

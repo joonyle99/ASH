@@ -8,36 +8,9 @@ public class InteractionController : MonoBehaviour
     List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
     InteractionMarker _interactionMarker;
 
-    // 상호작용 중인 타겟 오브젝트
     [SerializeField] InteractableObject _interactionTarget = null;
 
-    ContinuousInteractableObject _interactingObject;
-    ContinuousInteractableObject InteractingObject
-    {
-        get
-        {
-            return _interactingObject;
-        }
-        set
-        {
-            if (_interactingObject == value)
-                return;
-            if (_interactingObject != null)
-            {
-                _interactingObject.InteractExit();
-            }
-            _interactingObject = value;
-            if (_interactingObject != null)
-            {
-                _interactingObject.InteractEnter();
-            }
-        }
-    }
-
-    // Set Interaction Key 'E'
-    [SerializeField] KeyCode _interactionKey= KeyCode.E;
-
-    bool _isInteracting { get { return _interactingObject != null; } }
+    bool _shouldDetectInteractable { get { return _interactionTarget == null || !_interactionTarget.IsInteracting; } }
 
     private void Awake()
     {
@@ -47,8 +20,6 @@ public class InteractionController : MonoBehaviour
     public void AddInteractableInRange(InteractableObject interactable)
     {
         _interactablesInRange.Add(interactable);
-
-        // Debug.Log(interactable.gameObject.name);
     }
 
     public void RemoveInteractableInRange(InteractableObject interactable)
@@ -56,72 +27,45 @@ public class InteractionController : MonoBehaviour
         _interactablesInRange.Remove(interactable);
     }
 
-    public void RelaseInteractingObject()
-    {
-        InteractingObject = null;
-    }
-
     void ChangeTarget(InteractableObject newTarget)
     {
         if (newTarget == _interactionTarget)
             return;
+
         _interactionTarget = newTarget;
+
         if(_interactionTarget == null)
-        {
             _interactionMarker.Disable();
-        }
         else
-        {
             _interactionMarker.EnableAt(newTarget);
-        }
     }
 
     private void Update()
     {
-        if (!_isInteracting)
-            UpdateInteractionTarget();
-
-        if (_interactionTarget == null)
-            return;
-
-        // 여기
-        if (_interactionTarget is InstantInteractableObject)
-        {
-            if (Input.GetKeyDown(_interactionKey))
-            {
-                (_interactionTarget as InstantInteractableObject).Interact();
-            }
-        }
+        if (_shouldDetectInteractable)
+            SetTargetToClosestInteractable();
         else
+            _interactionMarker.Disable();
+
+        if (_interactionTarget != null)
         {
-            if (Input.GetKeyDown(_interactionKey))
-            {
-                InteractingObject = _interactionTarget as ContinuousInteractableObject;
-            }
-            else if (Input.GetKey(_interactionKey) && _isInteracting)
-            {
-                InteractingObject.InteractUpdate();
-            }
-            else if(Input.GetKeyUp(_interactionKey))
-            {
-                InteractingObject = null;
-            }
+            if (InputManager.Instance.InteractionKey.KeyDown)
+                _interactionTarget.Interact();
+            if (_interactionTarget.IsInteracting)
+                _interactionTarget.UpdateInteracting();
         }
     }
 
-    void UpdateInteractionTarget()
+    void SetTargetToClosestInteractable()
     {
-        _interactablesInRange.RemoveAll(x => x == null || !x.IsIsInteractable);
-        if (_interactablesInRange.Count == 0)
-        {
-            ChangeTarget(null);
-            return;
-        }
+        _interactablesInRange.RemoveAll(x => x == null);
 
-        float minDist = Vector3.SqrMagnitude(_interactablesInRange[0].transform.position - transform.position);
-        int minIndex = 0;
-        for (int i = 1; i < _interactablesInRange.Count; i++)
+        float minDist = float.MaxValue;
+        int minIndex = -1;
+        for (int i = 0; i < _interactablesInRange.Count; i++)
         {
+            if (!_interactablesInRange[i].IsInteractable)
+                continue;
             float dist = Vector3.SqrMagnitude(_interactablesInRange[i].transform.position - transform.position);
             if (dist < minDist)
             {
@@ -129,6 +73,12 @@ public class InteractionController : MonoBehaviour
                 minIndex = i;
             }
         }
+        if (minIndex == -1)
+        {
+            ChangeTarget(null);
+            return;
+        }
+
         if (_interactablesInRange[minIndex] != _interactionTarget)
             ChangeTarget(_interactablesInRange[minIndex]);
     }

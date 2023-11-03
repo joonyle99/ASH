@@ -6,7 +6,8 @@ public class IdleState : PlayerState
 
     [Space]
 
-    [SerializeField] float _belowForce = 6000f;       // 아래로 가해주는 힘
+    [SerializeField] float _angle = 0f;
+    [SerializeField] float _belowForce = 150;         // 아래로 가해주는 힘
 
     Vector2 _groundNormal;                            // 땅의 법선벡터
     Vector3 _groundHitPoint;                          // 땅의 Hit Point
@@ -29,26 +30,22 @@ public class IdleState : PlayerState
             return;
         }
 
-        // 플레이어와 땅 사이의 각도
-        float _angle = Vector3.Angle(_groundNormal, Player.PlayerLookDir);
-
+        // 플레이어와 땅 사이의 각도 계산
+        _angle = Vector2.Angle(_groundNormal, Player.PlayerLookDir);
+    }
+    protected override void OnFixedUpdate()
+    {
         // 기울어진 땅에서 미끄럼 방지
-        if (Mathf.Abs(90f - _angle) > 5f)
+        if (Mathf.Abs(90f - _angle) > 10f)
         {
             // Debug.Log("기울어진 땅입니다");
-            Player.Rigidbody.AddForce(-_groundNormal * _belowForce * Time.deltaTime);
+            Player.Rigidbody.AddForce(-_groundNormal * _belowForce);
         }
         else
         {
             // Debug.Log("평평한 땅입니다");
-            Player.Rigidbody.AddForce(-_groundNormal * _belowForce / 3f * Time.deltaTime);
+            Player.Rigidbody.AddForce(-_groundNormal * _belowForce / 3f);
         }
-
-
-    }
-    protected override void OnFixedUpdate()
-    {
-
     }
 
     protected override void OnExit()
@@ -56,7 +53,8 @@ public class IdleState : PlayerState
 
     }
 
-    private void OnDrawGizmosSelected()
+    // private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         // 땅의 법선벡터 그리기
         Gizmos.color = Color.cyan;
