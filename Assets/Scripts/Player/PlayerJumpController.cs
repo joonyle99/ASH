@@ -50,6 +50,15 @@ public class PlayerJumpController : MonoBehaviour
         _player = GetComponent<PlayerBehaviour>();
     }
 
+    void FixedUpdate()
+    {
+        // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
+        if (_isLongJumping)
+        {
+            _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity * Time.deltaTime);
+        }
+    }
+
     void Update()
     {
         _coyoteAvailable = (_timeAfterPlatformLeft <= _coyoteTime);
@@ -62,7 +71,8 @@ public class PlayerJumpController : MonoBehaviour
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
         if (_isLongJumping)
         {
-            _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity * Time.deltaTime);
+            // FixedUpdate()로 이동
+            // _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity * Time.deltaTime);
 
             _longJumpTime += Time.deltaTime;
 

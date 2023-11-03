@@ -41,13 +41,18 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
+    /*
     // Effect
     [SerializeField] ParticleSystem respawnEffect;
     [SerializeField] float _reviveFadeInDuration;
+    */
+
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
 
+    /*
     // Health UI
     [SerializeField] HealthPanelUI _healthPanelUI;
+    */
 
     // Controller
     PlayerJumpController _jumpController;
@@ -151,8 +156,10 @@ public class PlayerBehaviour : StateMachineBase
     /// </summary>
     private void OnEnable()
     {
+        /*
         if(StateIs<DieState>())
             StartCoroutine(Alive());
+        */
     }
 
     private void OnDestroy()
@@ -202,9 +209,6 @@ public class PlayerBehaviour : StateMachineBase
         #region Check Ground & Wall
 
         // Check Ground
-        // TODO : BoxCast()로 변경하기. 변경 시 플레이어가 플랫폼 끝부분에 끼는 일이 없다.
-        // GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
-        // GroundHit = Physics2D.CapsuleCast(_groundCheckTrans.position, _groundCheckSize, CapsuleDirection2D.Vertical, 0f, Vector2.down, );
         GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
 
         if (GroundHit)
@@ -213,7 +217,6 @@ public class PlayerBehaviour : StateMachineBase
             IsGrounded = false;
 
         // Check Wall
-        // WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * RecentDir, _wallCheckDistance, _wallLayer);
         WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSzie, 0f, Vector2.right * RecentDir, 0f, _wallLayer);
 
         if (WallHit)
@@ -247,12 +250,14 @@ public class PlayerBehaviour : StateMachineBase
 
         #endregion
 
+        /*
         // 임시 Healing State
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             if (StateIs<IdleState>())
                 ChangeState<HealingState>();
         }
+        */
     }
 
     /// <summary>
@@ -354,6 +359,7 @@ public class PlayerBehaviour : StateMachineBase
         ChangeState<HurtState>();
     }
 
+    /*
     /// <summary>
     /// 플레이어 부활 함수
     /// </summary>
@@ -407,6 +413,7 @@ public class PlayerBehaviour : StateMachineBase
 
         yield return null;
     }
+    */
 
     public void PlaySound_SE_Run()
     {

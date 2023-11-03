@@ -5,38 +5,24 @@ using UnityEngine;
 
 public class InteractableTree : InteractableObject
 {
-    public GameObject topOfTree;
+    public TopOfTree topOfTree;
 
     protected override void OnInteract()
     {
-        Debug.Log("이것은 나무와의 상호작용 입니다. -> 이름은 : " + topOfTree.name);
-
-        // 여기서 나무를 밀어줘야 하는데..
-
-        // 플레이어 정보를 알 수 있나?
-
-        // topOfTree.GetComponent<FallingDownTree>().FallingDown();
+        Debug.Log("나무와의 상호작용 실행");
     }
     public override void UpdateInteracting()
     {
-        throw new System.NotImplementedException();
-        /*
-         * InteractableObject.Update에 있던 코드
-         * 
-        // 쓰러지는 나무와의 상호작용
-        if (Input.GetKey(_interactionKey))
+        // 종료 사인을 줘야한다
+        if (InputManager.Instance.InteractionKey.KeyUp)
         {
-            GameObject topTree = (_interactionTarget as InteractableTree).topOfTree;
-
-            float dir = Mathf.Sign(topTree.transform.position.x - this.transform.position.x);
-
-            topTree.GetComponent<FallingDownTree>().FallingDown(dir);
-
-            string dirStr = (dir > 0) ? "오른쪽" : "왼쪽";
-
-            Debug.Log(dirStr + "으로 나무를 PUSH !!!");
+            topOfTree.FinishPush();
+            FinishInteraction();
         }
-        */
+
+        // Top Tree 부분을 민다.
+        float dir = Mathf.Sign(topOfTree.transform.position.x - SceneContext.Current.Player.transform.position.x);
+        topOfTree.ExcutePush(dir);
     }
 
 }
