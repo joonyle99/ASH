@@ -46,19 +46,6 @@ public class RollingStone : InteractableObject
         }
     }
 
-    public void InteractUpdate()
-    {
-        /*
-        if (_isInteracting)
-        {
-            if (!IsPlayerColliding())
-            {
-                SceneContext.Current.Player.InteractionController.RelaseInteractingObject();
-            }
-        }*/
-
-    }
-
     bool IsPlayerColliding()
     {
         List<ContactPoint2D> contacts = new List<ContactPoint2D>();

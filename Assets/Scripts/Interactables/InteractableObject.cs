@@ -9,6 +9,7 @@ public abstract class InteractableObject : MonoBehaviour
     
     // TODO : 플레이어 상태 및 입력 override 하는 기능
 
+
     public Vector3 InteractionMarkerPoint
     {
         get
