@@ -17,9 +17,11 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
-    [Range(0f, 5f)] [SerializeField] float _groundCheckDistance;
+    [SerializeField] float _groundCheckRadius = 0.35f;
+    // [Range(0f, 5f)] [SerializeField] float _groundCheckDistance;
     [Range(0f, 30f)] [SerializeField] float _diveCheckDistance;
-    [Range(0f, 5f)] [SerializeField] float _wallCheckDistance;
+    // [Range(0f, 5f)] [SerializeField] float _wallCheckDistance;
+    [SerializeField] Vector2 _wallCheckSzie = new Vector2(0.3f, 2f);
 
     [Header("Dive Settings")]
 
@@ -39,13 +41,18 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
+    /*
     // Effect
     [SerializeField] ParticleSystem respawnEffect;
     [SerializeField] float _reviveFadeInDuration;
+    */
+
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
 
+    /*
     // Health UI
     [SerializeField] HealthPanelUI _healthPanelUI;
+    */
 
     // Controller
     PlayerJumpController _jumpController;
@@ -59,7 +66,11 @@ public class PlayerBehaviour : StateMachineBase
     DiveState _diveState;
     ShootingState _shootingState;
 
-    public Vector2 _velocity;
+    //Joint for interactable
+    Joint2D _joint;
+
+    // temp velocity
+    public Vector3 tempVelocity;
 
     #region Properties
 
@@ -83,6 +94,7 @@ public class PlayerBehaviour : StateMachineBase
     public int RecentDir { get; set; }
     public Vector2 PlayerLookDir { get { return new Vector2(RecentDir, 0); } }
 
+    private bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
     public bool IsWallJump { get; set; }
     public float GroundDistance { get; set; }
     public float DiveThreshholdHeight
@@ -91,11 +103,11 @@ public class PlayerBehaviour : StateMachineBase
         private set { _diveThreshholdHeight = value; }
     }
 
-
     public int CurHP
     {
         get { return _curHp; }
-        set {
+        set
+        {
             _curHp = value;
             if (_curHp < 0)
                 _curHp = 0;
@@ -132,7 +144,6 @@ public class PlayerBehaviour : StateMachineBase
 
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
         InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
-        InputManager.Instance.HealingPressedEvent += OnHealingPressed; //TODO : subscribe
         InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
 
         // Init Value
@@ -145,8 +156,10 @@ public class PlayerBehaviour : StateMachineBase
     /// </summary>
     private void OnEnable()
     {
+        /*
         if(StateIs<DieState>())
             StartCoroutine(Alive());
+        */
     }
 
     private void OnDestroy()
@@ -155,7 +168,6 @@ public class PlayerBehaviour : StateMachineBase
         {
             InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
             InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
-            InputManager.Instance.HealingPressedEvent -= OnHealingPressed; //TODO : unsubscribe
             InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
         }
     }
@@ -169,6 +181,10 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
         Animator.SetFloat("GroundDistance", GroundDistance);
+        Animator.SetBool("IsMove", IsMove);
+
+        // temp velocity
+        tempVelocity = this.Rigidbody.velocity;
 
         #endregion
 
@@ -193,7 +209,7 @@ public class PlayerBehaviour : StateMachineBase
         #region Check Ground & Wall
 
         // Check Ground
-        GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance, _groundLayer);
+        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
 
         if (GroundHit)
             IsGrounded = true;
@@ -201,7 +217,7 @@ public class PlayerBehaviour : StateMachineBase
             IsGrounded = false;
 
         // Check Wall
-        WallHit = Physics2D.Raycast(_wallCheckTrans.position, Vector2.right * RecentDir, _wallCheckDistance, _wallLayer);
+        WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSzie, 0f, Vector2.right * RecentDir, 0f, _wallLayer);
 
         if (WallHit)
             IsTouchedWall = true;
@@ -234,14 +250,14 @@ public class PlayerBehaviour : StateMachineBase
 
         #endregion
 
-        _velocity = Rigidbody.velocity;
-
+        /*
         // 임시 Healing State
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             if (StateIs<IdleState>())
                 ChangeState<HealingState>();
         }
+        */
     }
 
     /// <summary>
@@ -251,6 +267,17 @@ public class PlayerBehaviour : StateMachineBase
     {
         RecentDir = (int)RawInputs.Movement.x;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
+    }
+    public void AddJoint<T>(Rigidbody2D bodyToAttach, float breakForce) where T : Joint2D
+    {
+        _joint = gameObject.AddComponent<HingeJoint2D>();
+        _joint.connectedBody = bodyToAttach;
+        _joint.enableCollision = true;
+        _joint.breakForce = breakForce;
+    }
+    public void RemoveJoint()
+    {
+        Destroy(_joint);
     }
 
     void OnBasicAttackPressed()
@@ -293,7 +320,7 @@ public class PlayerBehaviour : StateMachineBase
         }
         InstantRespawn();
     }
-    public void OnHitByPhysicalObject(float damage, Collision2D collision)
+    public void OnHitByPhysicalObject(float damage, Rigidbody2D other)
     {
        //TODO
         Debug.Log(damage + " 대미지 입음");
@@ -332,6 +359,7 @@ public class PlayerBehaviour : StateMachineBase
         ChangeState<HurtState>();
     }
 
+    /*
     /// <summary>
     /// 플레이어 부활 함수
     /// </summary>
@@ -385,56 +413,48 @@ public class PlayerBehaviour : StateMachineBase
 
         yield return null;
     }
+    */
 
-    // TODO : 달리기 사운드 Loop 재생
     public void PlaySound_SE_Run()
     {
         GetComponent<SoundList>().PlaySFX("SE_Run");
     }
 
-    // TODO : 점프 액션 사운드 Once 재생
     public void PlaySound_SE_Jump_01()
     {
         GetComponent<SoundList>().PlaySFX("SE_Jump_01");
     }
 
-    // TODO : 점프 마무리 사운드 Once 재생
     public void PlaySound_SE_Jump_02()
     {
         GetComponent<SoundList>().PlaySFX("SE_Jump_02");
     }
 
-    // TODO : 이단 점프 사운드 Once 재생
     public void PlaySound_SE_DoubleJump()
     {
         GetComponent<SoundList>().PlaySFX("SE_DoubleJump");
     }
 
-    // TODO : 기본 공격 사운드 Once 재생
     public void PlaySound_SE_Attack()
     {
         GetComponent<SoundList>().PlaySFX("SE_Attack");
     }
 
-    // TODO : 대시 사운드 Once 재생
     public void PlayerSound_SE_Dash()
     {
         GetComponent<SoundList>().PlaySFX("SE_Dash");
     }
 
-    // TODO : 급강하 액션 사운드 Loop 재생?
     public void PlaySound_SE_DesolateDive_01()
     {
         GetComponent<SoundList>().PlaySFX("SE_DesolateDive_01");
     }
 
-    // TODO : 급강하 마무리 사운드 Once 재생
     public void PlaySound_SE_DesolateDive_02()
     {
         GetComponent<SoundList>().PlaySFX("SE_DesolateDive_02");
     }
 
-    // TODO : 발사 액션 사운드 Once 재생
     public void PlaySound_SE_Shooting_01()
     {
         GetComponent<SoundList>().PlaySFX("SE_Shooting_01");
@@ -478,15 +498,19 @@ public class PlayerBehaviour : StateMachineBase
     /// <summary>
     /// Ground, Wall, Dive Raycast 그리기
     /// </summary>
-    private void OnDrawGizmosSelected()
+    // private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         // Draw Ground Check
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(_groundCheckTrans.position, _groundCheckTrans.position + Vector3.down * _groundCheckDistance);
+        // Gizmos.DrawLine(_groundCheckTrans.position, _groundCheckTrans.position + Vector3.down * _groundCheckDistance);
+        // Gizmos.DrawWireSphere();
+        Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
         // Draw Wall Check
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * RecentDir);
+        // Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + Vector3.right * _wallCheckDistance * RecentDir);
+        Gizmos.DrawWireCube(_wallCheckTrans.position, _wallCheckSzie);
 
         // Draw Dive Check
         Gizmos.color = Color.white;

@@ -1,9 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class DialogueView : MonoBehaviour
+public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
 {
     [SerializeField] Image _dialoguePanel;
     [SerializeField] Image _skipUI;
@@ -11,14 +11,44 @@ public class DialogueView : MonoBehaviour
 
     TextShaker _textShaker;
 
-    bool _fastForward = false;
+    DialogueLine _currentLine;
+    Coroutine _currentLineCoroutine;
+    public bool IsCurrentLineOver { get; private set; }
+    public bool IsPanelActive { get { return _dialoguePanel.gameObject.activeInHierarchy; } }
     public void OpenPanel()
     {
         _skipUI.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _textShaker = _dialogueText.GetComponent<TextShaker>();
     }
-    public IEnumerator FadeOutCoroutine(float duration)
+    public void ClosePanel()
+    {
+        _dialoguePanel.gameObject.SetActive(false);
+    }
+    public void FastForward()
+    {
+        StopCoroutine(_currentLineCoroutine);
+        CleanUpOnSingleLineOver();
+    }
+    public void StartSingleLine(DialogueLine line)
+    {
+        _currentLine = line;
+        IsCurrentLineOver = false;
+        _skipUI.gameObject.SetActive(false);
+        _dialogueText.alpha = 1;
+
+        //Set shake
+        if (line.ShakeParams == TextShakeParams.None)
+            _textShaker.StopShake();
+        else
+        {
+            _textShaker.shakeParams = line.ShakeParams;
+            _textShaker.StartShake();
+        }
+
+        _currentLineCoroutine = StartCoroutine(SingleLineCoroutine());
+    }
+    public IEnumerator ClearTextCoroutine(float duration)
     {
         float eTime = 0;
         while (eTime < duration)
@@ -28,68 +58,38 @@ public class DialogueView : MonoBehaviour
             eTime += Time.deltaTime;
         }
     }
-    public IEnumerator StartScriptCoroutine(DialogueScriptInfo script)
+    IEnumerator SingleLineCoroutine()
     {
-        _skipUI.gameObject.SetActive(false);
-        _dialogueText.alpha = 1;
-        float charInterval = 1.0f / script.Speed;
-        if (script.Shake.Speed > 0)
-        {
-            _textShaker.AngleMultiplier = script.Shake.RotationPower;
-            _textShaker.MoveMultiplier = script.Shake.MovePower;
-            _textShaker.SpeedMultiplier = script.Shake.Speed;
-            _textShaker.StartShake();
-        }
-        else
-            _textShaker.StopShake();
-        string shownScript = "";
-        int index = 0;
-        _fastForward = false;
+        StringBuilder stringBuilder = new StringBuilder(_currentLine.Text.Length);
+        int textIndex = 0;
+
         while (true)
         {
-            if (_fastForward)
+            if (_currentLine.Text[textIndex] == '<')
             {
-
-                SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
-                break;
-            }
-            if (script.Text[index] == '<')
-            {
-                index = script.Text.IndexOf('>', index);
-                shownScript = script.Text.Substring(0, index+1);
+                int to = _currentLine.Text.IndexOf('>', textIndex);
+                stringBuilder.Append(_currentLine.Text.Substring(textIndex, to + 1));
+                textIndex = to;
             }
             else
             {
-                shownScript += script.Text[index];
-                _dialogueText.text = shownScript;
+                stringBuilder.Append(_currentLine.Text[textIndex]);
+                _dialogueText.text = stringBuilder.ToString();
                 SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Script" + Random.Range(1, 6).ToString());
             }
 
-            index++;
-            if (index == script.Text.Length)
+            textIndex++;
+            if (textIndex == _currentLine.Text.Length)
                 break;
 
-            float eTime = 0f;
-            while (eTime < charInterval)
-            {
-                eTime += Time.deltaTime;
-                yield return null;
-                if (_fastForward)
-                    break;
-            }
+            yield return new WaitForSeconds(_currentLine.CharShowInterval);
         }
-        _fastForward = false;
-        _dialogueText.text = script.Text;
+        CleanUpOnSingleLineOver();
+    }
+    void CleanUpOnSingleLineOver()
+    {
+        IsCurrentLineOver = true;
+        _dialogueText.text = _currentLine.Text;
         _skipUI.gameObject.SetActive(true);
-        yield return null;
-    }
-    private void Update()
-    {
-        if (InputManager.InteractionKeyDown)
-            _fastForward = true;
-    }
-    public void ClosePanel()
-    {
-        _dialoguePanel.gameObject.SetActive(false);
     }
 }

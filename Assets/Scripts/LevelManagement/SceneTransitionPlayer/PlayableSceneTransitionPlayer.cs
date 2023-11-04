@@ -47,7 +47,7 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         yield return FadeCoroutine(_respawnFadeDuration, FadeType.Lighten);
     }
 
-    //TODO : Global 플레이어 상태 관리 오브젝트로 옮겨야함
+    // TODO : Global 플레이어 상태 관리 오브젝트로 옮겨야함
     public void PlayInstantRespawnEffect(Vector3 spawnPosition)
     {
         StartCoroutine(RespawnEffectCoroutine(spawnPosition));

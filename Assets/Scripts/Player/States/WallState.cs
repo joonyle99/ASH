@@ -68,11 +68,14 @@ public class WallState : PlayerState
         Player.Animator.SetBool("IsWall", false);
     }
 
-    private void OnDrawGizmosSelected()
+    // private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
+        // 플레이어가 바라보는 방향
         Gizmos.color = Color.green;
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(moveDirection.x, moveDirection.y, 0) * _moveDirLength);
 
+        // 벽의 법선벡터
         Gizmos.color = Color.magenta;
         Gizmos.DrawLine(wallHitPos, wallHitPos + new Vector3(wallNormal.x, wallNormal.y, 0) * _normalDirLength);
 

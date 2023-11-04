@@ -8,7 +8,6 @@ public interface IInputSetter
     public event InputEventHandler JumpPressedEvent;
     public event InputEventHandler DashPressedEvent;
     public event InputEventHandler BasicAttackPressedEvent;
-    public event InputEventHandler HealingPressedEvent;
     public event InputEventHandler ShootingAttackPressedEvent;
 
     public InputState GetState();

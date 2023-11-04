@@ -2,16 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstantRespawnOnContact : ITriggerZone
+public class InstantRespawnOnContact : TriggerZone
 {
     [SerializeField] float _damage = 1;
 
-    public override void OnActivatorEnter(TriggerActivator activator) 
+    public override void OnPlayerEnter(PlayerBehaviour player)
     {
-        if(activator.IsPlayer)
-        {
-            activator.AsPlayer.TriggerInstantRespawn(_damage);
-        }
+        player.TriggerInstantRespawn(_damage);
     }
 
 }

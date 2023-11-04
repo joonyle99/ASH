@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-public class Passage : ITriggerZone
+public class Passage : TriggerZone
 {
     [Tooltip("플레이어가 여기로 들어가서 다음 스테이지로 갈 때")][SerializeField] InputSetterScriptableObject _enterInputSetter;
     [Tooltip("플레이어가 이전 스테이지에서 여기로 나올 때")][SerializeField] InputSetterScriptableObject _exitInputSetter;
@@ -39,12 +39,11 @@ public class Passage : ITriggerZone
         string nextSceneName = nextPassageData.SceneName;
         SceneChangeManager.Instance.ChangeToPlayableScene(nextSceneName, nextPassageData.PassageName);
     }
-    public override void OnActivatorExit(TriggerActivator activator)
+    public override void OnPlayerExit(PlayerBehaviour player)
     {
         if (!_isPlayerExiting)
             return;
-        if (activator.IsPlayer)
-            _isPlayerExiting = false;
+        _isPlayerExiting = false;
     }
     
     //Passage를 통해 밖으로 나옴
