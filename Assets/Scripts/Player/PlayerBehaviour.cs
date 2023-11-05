@@ -48,6 +48,7 @@ public class PlayerBehaviour : StateMachineBase
     */
 
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
+    [SerializeField] Collider2D _mainCollider;
 
     /*
     // Health UI
@@ -71,6 +72,8 @@ public class PlayerBehaviour : StateMachineBase
 
     // temp velocity
     public Vector3 tempVelocity;
+
+    public Collider2D MainCollider { get { return _mainCollider; } }
 
     #region Properties
 

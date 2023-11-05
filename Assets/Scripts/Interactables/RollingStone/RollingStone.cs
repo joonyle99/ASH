@@ -10,9 +10,7 @@ public class RollingStone : InteractableObject
     Rigidbody2D _rigidbody;
 
     [SerializeField] GameObject _playerInteractor;
-
-    [SerializeField] protected float _threatVelocityThreshold = 3;
-    [SerializeField] protected float _damage = 1;
+    [SerializeField] float _maxInteractionDistance = 0.1f;
 
     PolygonCollider2D _collider;
 
@@ -42,16 +40,16 @@ public class RollingStone : InteractableObject
     {
         _immovable = false;
         //TODO : Joint 생성
-        SceneContext.Current.Player.AddJoint<HingeJoint2D>(_rigidbody, 300);
+        //SceneContext.Current.Player.AddJoint<HingeJoint2D>(_rigidbody, 300);
     }
     public override void UpdateInteracting()
     {
         //TODO : 플레이어와 떨어질 때 joint 끊기
-        if (
-            InputManager.Instance.InteractionKey.State == KeyState.KeyUp)
+        if (Physics2D.Distance(_collider, SceneContext.Current.Player.MainCollider).distance > _maxInteractionDistance
+            ||  InputManager.Instance.InteractionKey.State == KeyState.KeyUp)
         {
             _immovable = true; 
-            SceneContext.Current.Player.RemoveJoint();
+            //SceneContext.Current.Player.RemoveJoint();
              FinishInteraction();
         }
     }
