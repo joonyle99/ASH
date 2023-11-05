@@ -112,9 +112,12 @@ public class DiveState : PlayerState
         Player.Rigidbody.gravityScale = 0;
         Player.Rigidbody.velocity = Vector2.zero;
 
-        // 차징 파티클 생성
-        _chargingEffect = Instantiate(_chargingParticle, transform.position + _chargingParticlePos, Quaternion.identity, transform);
-        _chargingEffect.Play();
+        // TODO : 차징 파티클 생성
+        if (_chargingEffect != null)
+        {
+            _chargingEffect = Instantiate(_chargingParticle, transform.position + _chargingParticlePos, Quaternion.identity, transform);
+            _chargingEffect.Play();
+        }
     }
 
     void Dive()

@@ -16,6 +16,9 @@ public class RollingStone : InteractableObject
 
     PolygonCollider2D _collider;
 
+    AttackableEntity _attackableComponent;
+
+    public bool IsBreakable { get { return _attackableComponent == null; } }
     bool _immovable
     {
         get { return _playerInteractor.activeSelf; }
@@ -32,6 +35,7 @@ public class RollingStone : InteractableObject
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<PolygonCollider2D>();
+        _attackableComponent = GetComponent<AttackableEntity>();
         _immovable = true;
     }
     protected override void OnInteract()
