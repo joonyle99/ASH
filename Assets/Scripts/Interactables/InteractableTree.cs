@@ -10,6 +10,9 @@ public class InteractableTree : InteractableObject
     protected override void OnInteract()
     {
         Debug.Log("나무와의 상호작용 실행");
+
+        // 플레이어를 상호작용 : Push State로
+        // SceneContext.Current.Player.GetComponent<PlayerBehaviour>().ChangeState<PushState>();
     }
     public override void UpdateInteracting()
     {
@@ -18,6 +21,8 @@ public class InteractableTree : InteractableObject
         {
             topOfTree.FinishPush();
             FinishInteraction();
+
+            return;
         }
 
         // Top Tree 부분을 민다.

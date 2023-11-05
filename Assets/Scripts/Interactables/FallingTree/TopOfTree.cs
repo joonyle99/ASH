@@ -66,11 +66,19 @@ public class TopOfTree : MonoBehaviour
     {
         _isPushed = true;
         _dir = dir;
+
+        Debug.Log("Excute Push");
+
+        SceneContext.Current.Player.GetComponent<Animator>().SetBool("IsPush", true);
     }
 
     public void FinishPush()
     {
         _isPushed = false;
         _dir = 0f;
+
+        Debug.Log("Finish Push");
+
+        SceneContext.Current.Player.GetComponent<Animator>().SetBool("IsPush", false);
     }
 }
