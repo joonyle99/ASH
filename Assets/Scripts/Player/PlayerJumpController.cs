@@ -13,7 +13,7 @@ public class PlayerJumpController : MonoBehaviour
     [SerializeField] float _wallEndJumpPower = 15f;
 
     [SerializeField] float _longJumpDuration = 0.2f;
-    [SerializeField] float _longJumpPower = 200f;
+    [SerializeField] float _longJumpPower = 4f;
 
     [Header("Jump Settings")]
 
@@ -55,7 +55,8 @@ public class PlayerJumpController : MonoBehaviour
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
         if (_isLongJumping)
         {
-            _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity * Time.deltaTime);
+            // Debug.Log("롱 점프 되는중 ~~");
+            _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity);
         }
     }
 

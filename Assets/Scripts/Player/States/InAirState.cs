@@ -6,8 +6,8 @@ public class InAirState : PlayerState
 
     [Space]
 
-    [SerializeField] float _inAirSpeed = 30f;          // 공중에서 좌우로 움직이는 스피드
-    [SerializeField] float _maxInAirSpeed = 6f;         // 공중에서 좌우로 움직이는 최대 스피드
+    [SerializeField] float _inAirMoveAcceleration = 30f;          // 공중에서 좌우로 움직이는 스피드
+    [SerializeField] float _maxInAirMoveSpeed = 6f;         // 공중에서 좌우로 움직이는 최대 스피드
     [SerializeField] float _fastDropThreshhold = 4f;    // 빨리 떨어지기 시작하는 높이
     [SerializeField] float _fastDropPower = 1.2f;        // 빨리 떨어지는 힘
     [SerializeField] float _maxDropSpeed = 60f;        // 떨어지는 속도 최대값
@@ -74,12 +74,12 @@ public class InAirState : PlayerState
             // Debug.Log("공중에서 좌우로 움직일 수 있습니다");
 
             // 공중에서 좌우로 움직일 수 있다.
-            Player.Rigidbody.AddForce(Vector2.right * Player.RawInputs.Movement.x * _inAirSpeed);
+            Player.Rigidbody.AddForce(Vector2.right * Player.RawInputs.Movement.x * _inAirMoveAcceleration);
             */
 
             // 공중에서의 최대 이동속도를 제한한다
-            if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxInAirSpeed)
-                Player.Rigidbody.velocity = new Vector2(Mathf.Sign(Player.Rigidbody.velocity.x) * _maxInAirSpeed, Player.Rigidbody.velocity.y);
+            if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxInAirMoveSpeed)
+                Player.Rigidbody.velocity = new Vector2(Mathf.Sign(Player.Rigidbody.velocity.x) * _maxInAirMoveSpeed, Player.Rigidbody.velocity.y);
         }
 
         // 한계점 지나면 더 빨리 떨어짐
@@ -105,7 +105,7 @@ public class InAirState : PlayerState
         if (!Player.IsWallJump)
         {
             // 공중에서 좌우로 움직일 수 있다.
-            Player.Rigidbody.AddForce(Vector2.right * Player.RawInputs.Movement.x * _inAirSpeed);
+            Player.Rigidbody.AddForce(Vector2.right * Player.RawInputs.Movement.x * _inAirMoveAcceleration);
         }
 
         // 한계점 지나면 더 빨리 떨어짐
