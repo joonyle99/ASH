@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TopOfTree : MonoBehaviour
+/// <summary>
+/// 쓰러지는 나무
+/// </summary>
+public class FallingTopTree : MonoBehaviour
 {
     private Rigidbody2D _rigid;
 
@@ -18,6 +21,8 @@ public class TopOfTree : MonoBehaviour
 
     private Quaternion startRotation;
     private Quaternion curRotation;
+
+    public bool IsFalling { get { return _isFalling; } }
 
     void Start()
     {
@@ -38,6 +43,12 @@ public class TopOfTree : MonoBehaviour
         // falling down tree (you can't push any more)
         if (_rotatedAngle > _fallingAngle)
             _isFalling = true;
+
+        if (!_isPushed && _isFalling)
+        {
+            // 나무의 레이어를 Ground Layer로 변경해준다.
+            ChangeLayer();
+        }
     }
 
     void FixedUpdate()
@@ -67,9 +78,9 @@ public class TopOfTree : MonoBehaviour
         _isPushed = true;
         _dir = dir;
 
-        Debug.Log("Excute Push");
+        // Debug.Log("Excute Push");
 
-        SceneContext.Current.Player.GetComponent<Animator>().SetBool("IsPush", true);
+        // SceneContext.Current.Player.GetComponent<Animator>().SetBool("IsPush", true);
     }
 
     public void FinishPush()
@@ -77,8 +88,21 @@ public class TopOfTree : MonoBehaviour
         _isPushed = false;
         _dir = 0f;
 
-        Debug.Log("Finish Push");
+        // Debug.Log("Finish Push");
 
-        SceneContext.Current.Player.GetComponent<Animator>().SetBool("IsPush", false);
+        // SceneContext.Current.Player.GetComponent<Animator>().SetBool("IsPush", false);
+    }
+
+    private void ChangeLayer()
+    {
+        string layerName = "Ground";
+
+        // 상위 오브젝트의 레이어 변경
+        GameObject parent = this.transform.parent.gameObject;
+        parent.layer = LayerMask.NameToLayer(layerName);
+
+        // 그 자식 오브젝트의 레이어 변경
+        parent.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(layerName);
+        parent.transform.GetChild(1).gameObject.layer = LayerMask.NameToLayer(layerName);
     }
 }

@@ -4,6 +4,13 @@ using UnityEngine;
 
 public abstract class InteractableObject : MonoBehaviour
 {
+    public enum InteractionType
+    {
+        Push,
+        Pull,
+        Talk,
+    }
+
     [SerializeField] Transform _interactionMarkerPoint;
     [SerializeField] bool _isInteractable;
 

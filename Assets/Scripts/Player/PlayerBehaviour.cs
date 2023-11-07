@@ -70,8 +70,9 @@ public class PlayerBehaviour : StateMachineBase
     //Joint for interactable
     Joint2D _joint;
 
-    // temp velocity
+    // temp value
     public Vector3 tempVelocity;
+    public Collider2D _groundHit;
 
     public Collider2D MainCollider { get { return _mainCollider; } }
 
@@ -138,6 +139,7 @@ public class PlayerBehaviour : StateMachineBase
         _diveState = GetComponent<DiveState>();
         _shootingState = GetComponent<ShootingState>();
     }
+
     protected override void Start()
     {
         base.Start();
@@ -213,6 +215,9 @@ public class PlayerBehaviour : StateMachineBase
 
         // Check Ground
         GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
+
+        // temp viewer
+        _groundHit = GroundHit.collider;
 
         if (GroundHit)
             IsGrounded = true;
