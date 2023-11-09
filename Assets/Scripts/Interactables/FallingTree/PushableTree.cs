@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class InteractableTree : InteractableObject
+public class PushableTree : InteractableObject
 {
-    public FallingTopTree FallingTopTree;
+    public FallingTreeByPush FallingTreeByPush;
 
     // Own Interaction Type 세팅
     public InteractionType.Type ownInteractionType = InteractionType.Type.PUSH;
@@ -21,10 +21,10 @@ public class InteractableTree : InteractableObject
     public override void UpdateInteracting()
     {
         // 상호작용 종료 타이밍
-        if (InputManager.Instance.InteractionKey.KeyUp || FallingTopTree.IsFalling)
+        if (InputManager.Instance.InteractionKey.KeyUp || FallingTreeByPush.IsFalling)
         {
             // 상호작용 종료
-            FallingTopTree.FinishPush();
+            FallingTreeByPush.FinishPush();
             FinishInteraction();
 
             // 더이상 상호작용 못하게 막는다
@@ -34,8 +34,7 @@ public class InteractableTree : InteractableObject
         }
 
         // Top Tree 부분을 민다.
-        float dir = Mathf.Sign(FallingTopTree.transform.position.x - SceneContext.Current.Player.transform.position.x);
-        FallingTopTree.ExcutePush(dir);
+        float dir = Mathf.Sign(FallingTreeByPush.transform.position.x - SceneContext.Current.Player.transform.position.x);
+        FallingTreeByPush.ExcutePush(dir);
     }
-
 }

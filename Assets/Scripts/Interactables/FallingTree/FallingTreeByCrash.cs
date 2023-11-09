@@ -3,27 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 쓰러지는 나무
+/// 굴러오는 돌에 의해 파괴되며 쓰러지는 나무
 /// </summary>
-public class FallingTopTree : MonoBehaviour
+public class FallingTreeByCrash : MonoBehaviour
 {
     private Rigidbody2D _rigid;
 
-    [SerializeField] private Transform forcePointTransform;
-
-    [SerializeField] private float _power = 800f;
     [SerializeField] private float _fallingAngle = 20f;
     [SerializeField] private float _rotatedAngle = 0f;
 
-    [SerializeField] private bool _isPushed = false;
-    [SerializeField] private bool _isFalling = false;
-    [SerializeField] private float _dir = 0f;
+    [SerializeField] private bool _isCrashed = false;
 
     private Quaternion startRotation;
     private Quaternion curRotation;
 
-    public bool IsFalling { get { return _isFalling; } }
-
+    // Start is called before the first frame update
     void Start()
     {
         _rigid = GetComponent<Rigidbody2D>();
@@ -32,6 +26,7 @@ public class FallingTopTree : MonoBehaviour
         startRotation = this.transform.rotation;
     }
 
+    // Update is called once per frame
     void Update()
     {
         // update current rotation
@@ -42,47 +37,30 @@ public class FallingTopTree : MonoBehaviour
 
         // falling down tree (you can't push any more)
         if (_rotatedAngle > _fallingAngle)
-            _isFalling = true;
+            _isCrashed = true;
 
-        if (!_isPushed && _isFalling)
+        if (_isCrashed)
         {
             // 나무의 레이어를 Ground Layer로 변경해준다.
             ChangeLayer();
         }
     }
 
-    void FixedUpdate()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (_isPushed)
+        // 큰 돌이랑 충돌 시 쓰러짐
+        if (collision.gameObject.GetComponent<RollingStone>())
         {
-            FallDown();
+            Debug.Log("돌이랑 충동했다..!");
+
+            ExcuteCrash();
         }
     }
 
-    public void FallDown()
+    public void ExcuteCrash()
     {
-        // if already falling return
-        if (_isFalling)
-            return;
-
-        // rigidbody의 제약조건 해제 (한번만 하고싶은데..)
+        // rigidbody의 제약조건 해제
         _rigid.constraints = RigidbodyConstraints2D.None;
-
-        // falling tree
-        // 힘(N)을 입력하면 강체의 질량과 DT를 고려해서 속도를 변경한다.
-        _rigid.AddForceAtPosition(Vector2.right * _dir * _power, forcePointTransform.position, ForceMode2D.Force);
-    }
-
-    public void ExcutePush(float dir)
-    {
-        _isPushed = true;
-        _dir = dir;
-    }
-
-    public void FinishPush()
-    {
-        _isPushed = false;
-        _dir = 0f;
     }
 
     private void ChangeLayer()
