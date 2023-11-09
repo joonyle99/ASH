@@ -99,6 +99,10 @@ public class PlayerBehaviour : StateMachineBase
     public Vector2 PlayerLookDir { get { return new Vector2(RecentDir, 0); } }
 
     private bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
+    private bool IsMoveKey
+    {
+        get { return Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow); }
+    }
     public bool IsWallJump { get; set; }
     public float GroundDistance { get; set; }
     public float DiveThreshholdHeight
@@ -187,6 +191,7 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
         Animator.SetFloat("GroundDistance", GroundDistance);
         Animator.SetBool("IsMove", IsMove);
+        Animator.SetBool("IsMoveKey", IsMoveKey);
 
         // temp velocity
         tempVelocity = this.Rigidbody.velocity;

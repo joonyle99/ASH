@@ -33,6 +33,7 @@ public class IdleState : PlayerState
         // 플레이어와 땅 사이의 각도 계산
         _angle = Vector2.Angle(_groundNormal, Player.PlayerLookDir);
     }
+
     protected override void OnFixedUpdate()
     {
         // 기울어진 땅에서 미끄럼 방지
