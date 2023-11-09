@@ -101,7 +101,7 @@ public class PlayerBehaviour : StateMachineBase
     private bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
     private bool IsMoveKey
     {
-        get { return Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow); }
+        get { return Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow); }
     }
     public bool IsWallJump { get; set; }
     public float GroundDistance { get; set; }

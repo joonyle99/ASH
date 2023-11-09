@@ -27,6 +27,9 @@ public class InteractableTree : InteractableObject
             FallingTopTree.FinishPush();
             FinishInteraction();
 
+            // 더이상 상호작용 못하게 막는다
+            IsInteractable = false;
+
             return;
         }
 
