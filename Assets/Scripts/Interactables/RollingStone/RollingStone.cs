@@ -48,7 +48,7 @@ public class RollingStone : InteractableObject
         if (Physics2D.Distance(_collider, SceneContext.Current.Player.MainCollider).distance > _maxInteractionDistance
             ||  InputManager.Instance.InteractionKey.State == KeyState.KeyUp)
         {
-            _immovable = true; 
+            _immovable = true;
             //SceneContext.Current.Player.RemoveJoint();
              FinishInteraction();
         }
@@ -58,7 +58,7 @@ public class RollingStone : InteractableObject
 #if UNITY_EDITOR
     public void ApplyShape()
     {
-        _playerInteractor.GetComponent<PolygonCollider2D>().points 
+        _playerInteractor.GetComponent<PolygonCollider2D>().points
             = GetComponent<PolygonCollider2D>().points;
 
     }
