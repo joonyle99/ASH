@@ -33,6 +33,7 @@ public class LifePieceGet : MonoBehaviour
             
             ItemGetUI.SetActive(true);
             ItemGetUI.transform.GetChild(0).gameObject.SetActive(true);
+            gameObject.SetActive(false);
             Debug.Log("æ∆¿Ã≈€ »πµÊ UI »£√‚");
             Invoke("activateItemGetUIText",1f);
             Invoke("deactivateItemGetUI",5f);
