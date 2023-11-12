@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utils;
 
-public class DealDamageOnContact : MonoBehaviour, ICollisionWithPlayerListener
+public class DealDamageOnFastContact : MonoBehaviour, ICollisionWithPlayerListener
 {
+    [SerializeField] protected float _threatVelocityThreshold = 3;
     [SerializeField] protected float _damage = 1;
 
     Rigidbody2D _rigidbody;
@@ -28,7 +29,7 @@ public class DealDamageOnContact : MonoBehaviour, ICollisionWithPlayerListener
     }
     public void OnPlayerEnter(PlayerBehaviour player)
     {
-        if (CanDealDamage(player))
+        if (_rigidbody.velocity.sqrMagnitude >= Mathf.Pow(_threatVelocityThreshold, 2) && CanDealDamage(player))
             player.OnHitByPhysicalObject(_damage, _rigidbody);
     }
 
