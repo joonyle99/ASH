@@ -10,7 +10,7 @@ Material:
   m_Name: Shader Graphs_Masked
   m_Shader: {fileID: -6465566751694194690, guid: 6324ec61f8bce254fa56930f1738a954, type: 3}
   m_ValidKeywords:
-  - _SWIPEDIRECTION_RIGHT
+  - _SWIPEDIRECTION_DOWN
   m_InvalidKeywords:
   - _DIR_A
   m_LightmapFlags: 4
@@ -45,8 +45,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _DIR: 0
-    - _GradientSize: 0.1
-    - _MaskProgress: -0.01
-    - _SWIPEDIRECTION: 1
-    m_Colors: []
+    - _GradientSize: 1
+    - _MaskBound: -3.13
+    - _MaskProgress: 0.95
+    - _SWIPEDIRECTION: 3
+    m_Colors:
+    - _MaskBound: {r: 0.06, g: 0.01, b: 0, a: 0}
   m_BuildTextureStacks: []
