@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LightCapturer : MonoBehaviour
 {
+    [RequireInterface(typeof(ILightCaptureListener))][SerializeField] Object _lightCaptureListenerObject;
+    ILightCaptureListener _lightCaptureListener => _lightCaptureListenerObject as ILightCaptureListener;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +20,7 @@ public class LightCapturer : MonoBehaviour
 
     public void OnLightHitted(LightSource lightSource)
     {
-        Debug.Log(name + "Hitted by light");
+        if (_lightCaptureListener != null)
+            _lightCaptureListener.OnLightCaptured(this, lightSource);
     }
 }
