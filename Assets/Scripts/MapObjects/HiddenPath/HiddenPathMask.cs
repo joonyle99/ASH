@@ -17,6 +17,8 @@ public class HiddenPathMask : MonoBehaviour
     SpriteRenderer _spriteRenderer;
     float _maskBoundInit;
     float _maskBoundTarget;
+
+    bool _allowSwipe = true;
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
@@ -52,15 +54,16 @@ public class HiddenPathMask : MonoBehaviour
         }
         _spriteRenderer.material.SetFloat("_MaskBound", _maskBoundInit);
     }
-    private void Update()
+    public void OnLightCaptured()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
+        if (_allowSwipe)
         {
             StartCoroutine(SwipeCoroutine());
         }
     }
     IEnumerator SwipeCoroutine()
     {
+        _allowSwipe = false;
         float eTime = 0;
         while(eTime < _swipeDuration)
         {
