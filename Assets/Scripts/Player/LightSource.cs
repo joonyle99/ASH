@@ -15,6 +15,7 @@ public class LightSource : MonoBehaviour
     [SerializeField] LayerMask _capturerMask;
     [SerializeField] LayerMask _rayCastLayers;
 
+    int lookDir => Math.Sign(transform.lossyScale.x);
     // Update is called once per frame
     void Update()
     {
@@ -34,7 +35,7 @@ public class LightSource : MonoBehaviour
         for(int i=0; i<_rayCount; i++)
         {
             float angle = Mathf.Lerp(minAngle, maxAngle, (float)i / (_rayCount-1));
-            var hit = Physics2D.Raycast(transform.position, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)), _radius, _rayCastLayers);
+            var hit = Physics2D.Raycast(transform.position, new Vector2(lookDir * Mathf.Cos(angle), Mathf.Sin(angle)), _radius, _rayCastLayers);
             if(hit)
             {
                 hittedTransforms.Add(hit.transform);
@@ -55,10 +56,8 @@ public class LightSource : MonoBehaviour
         for (int i = 0; i < _rayCount; i++)
         {
             float angle = Mathf.Lerp(minAngle, maxAngle, (float)i / (_rayCount - 1));
-            Gizmos.DrawLine(transform.position, transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * _radius);
+            Gizmos.DrawLine(transform.position, transform.position + new Vector3(lookDir * Mathf.Cos(angle), Mathf.Sin(angle), 0) * _radius);
 
         }
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(Mathf.Cos(minAngle), Mathf.Sin(minAngle),0) * _radius);
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(Mathf.Cos(maxAngle), Mathf.Sin(maxAngle),0) * _radius);
     }
 }
