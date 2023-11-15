@@ -1,3 +1,4 @@
+using Com.LuisPedroFonseca.ProCamera2D.TopDownShooter;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,9 +17,11 @@ public class LightSource : MonoBehaviour
     [SerializeField] LayerMask _rayCastLayers;
 
     int lookDir => Math.Sign(transform.lossyScale.x);
-    // Update is called once per frame
+
     void Update()
     {
+        Debug.Log(this.transform.lossyScale.x);
+
         var targets = Physics2D.OverlapCircleAll(transform.position, _radius, _capturerMask);
         if (targets.Length >= 1)
         {
@@ -26,38 +29,42 @@ public class LightSource : MonoBehaviour
         }
     }
 
-
     void ShootRays()
     {
         HashSet<Transform> hittedTransforms = new HashSet<Transform>();
-        float minAngle = (transform.rotation.eulerAngles.z - _angle / 2) * Mathf.Deg2Rad;
-        float maxAngle = (transform.rotation.eulerAngles.z + _angle / 2) * Mathf.Deg2Rad;
-        for(int i=0; i<_rayCount; i++)
+
+        float minAngle = ((lookDir > 0 ? transform.rotation.eulerAngles.z : 180f + transform.rotation.eulerAngles.z) - _angle / 2) * Mathf.Deg2Rad;
+        float maxAngle = ((lookDir > 0 ? transform.rotation.eulerAngles.z : 180f + transform.rotation.eulerAngles.z) + _angle / 2) * Mathf.Deg2Rad;
+
+        for (int i = 0; i < _rayCount; i++)
         {
-            float angle = Mathf.Lerp(minAngle, maxAngle, (float)i / (_rayCount-1));
-            var hit = Physics2D.Raycast(transform.position, new Vector2(lookDir * Mathf.Cos(angle), Mathf.Sin(angle)), _radius, _rayCastLayers);
-            if(hit)
+            float angle = Mathf.Lerp(minAngle, maxAngle, (float)i / (_rayCount - 1));
+            var hit = Physics2D.Raycast(transform.position, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)), _radius, _rayCastLayers);
+            if (hit)
             {
                 hittedTransforms.Add(hit.transform);
             }
         }
-        foreach(Transform t in hittedTransforms)
+
+        foreach (Transform t in hittedTransforms)
         {
             var capturer = t.GetComponent<LightCapturer>();
             if (capturer != null)
                 capturer.OnLightHitted(this);
         }
     }
+
     private void OnDrawGizmosSelected()
     {
-        float minAngle = (transform.rotation.eulerAngles.z - _angle / 2) * Mathf.Deg2Rad;
-        float maxAngle = (transform.rotation.eulerAngles.z + _angle / 2) * Mathf.Deg2Rad;
+        float minAngle = ((lookDir > 0 ? transform.rotation.eulerAngles.z : 180f + transform.rotation.eulerAngles.z) - _angle / 2) * Mathf.Deg2Rad;
+        float maxAngle = ((lookDir > 0 ? transform.rotation.eulerAngles.z : 180f + transform.rotation.eulerAngles.z) + _angle / 2) * Mathf.Deg2Rad;
+
         Gizmos.color = Color.red;
+
         for (int i = 0; i < _rayCount; i++)
         {
             float angle = Mathf.Lerp(minAngle, maxAngle, (float)i / (_rayCount - 1));
-            Gizmos.DrawLine(transform.position, transform.position + new Vector3(lookDir * Mathf.Cos(angle), Mathf.Sin(angle), 0) * _radius);
-
+            Gizmos.DrawLine(transform.position, transform.position + new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * _radius);
         }
     }
 }
