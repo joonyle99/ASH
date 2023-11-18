@@ -6,6 +6,8 @@ public struct InputState
 {
     public bool IsPressingJump;
     public Vector2 Movement;
+    public float Horizontal;
+    public float Vertical;
 }
 
 public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>

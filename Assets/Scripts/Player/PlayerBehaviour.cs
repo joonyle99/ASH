@@ -230,7 +230,7 @@ public class PlayerBehaviour : StateMachineBase
             IsGrounded = false;
 
         // Check Wall
-        WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSzie, 0f, Vector2.right * RecentDir, 0f, _wallLayer);
+        WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSzie, 0f, Vector2.right * PlayerLookDir, 0f, _wallLayer);
 
         if (WallHit)
             IsTouchedWall = true;

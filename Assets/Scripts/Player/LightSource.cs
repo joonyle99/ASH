@@ -20,7 +20,7 @@ public class LightSource : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(this.transform.lossyScale.x);
+        // Debug.Log(this.transform.lossyScale.x);
 
         var targets = Physics2D.OverlapCircleAll(transform.position, _radius, _capturerMask);
         if (targets.Length >= 1)

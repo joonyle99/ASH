@@ -4,40 +4,44 @@ using UnityEngine;
 
 public class LightController : MonoBehaviour
 {
+    private InputState _inputState;
+
     public GameObject light;
-    public bool isWorking = false;
-    public float playerDir = 1f;
 
-    public float PlayerDir
-    {
-        get => playerDir;
-        set => playerDir = this.transform.localScale.x;
-    }
+    public bool isLightWorking = false;
+    public float rotateSpeed = 30f;
 
-    private float rotateSpeed = 30f;
+    public float PlayerDir { get => this.transform.localScale.x; }
 
     void Update()
     {
+        _inputState = InputManager.Instance.GetState();
+
         // Light Source ON / OFF
         if (Input.GetKeyDown(KeyCode.L))
         {
             light.SetActive(!light.activeSelf);
-            isWorking = light.activeSelf;
+            isLightWorking = light.activeSelf;
         }
 
         // Light Source Up / Down Rotation
-        if (isWorking)
+        if (isLightWorking)
         {
-            // Q와 E로 Rotation을 조절한다.
-            if (Input.GetKey(KeyCode.Q))
+            light.transform.Rotate(Vector3.forward, (PlayerDir > 0f ? rotateSpeed : -rotateSpeed) * _inputState.Vertical * Time.deltaTime);
+
+            // 상한선 하한선 정하기
+
+            // 1 사분면에 위치하도록
+            if (light.transform.localEulerAngles.z > 35f && light.transform.localEulerAngles.z < 90f)
             {
-                // 플레이어가 바라보는 방향에 따라 "위로" 회전
-                light.transform.Rotate(Vector3.forward, (playerDir > 0f ? rotateSpeed : -rotateSpeed) * Time.deltaTime);
+                light.transform.localEulerAngles = new Vector3(light.transform.localEulerAngles.x,
+                    light.transform.localEulerAngles.y, 35f);
             }
-            else if (Input.GetKey(KeyCode.E))
+            // 4 사분면에 위치하도록
+            else if (light.transform.localEulerAngles.z > 270f && light.transform.localEulerAngles.z < 325f)
             {
-                // 플레이어가 바라보는 방향에 따라 "아래로" 회전
-                light.transform.Rotate(Vector3.forward, (playerDir > 0f ? (-1) * rotateSpeed : rotateSpeed) * Time.deltaTime);
+                light.transform.localEulerAngles = new Vector3(light.transform.localEulerAngles.x,
+                    light.transform.localEulerAngles.y, 325f);
             }
         }
     }
