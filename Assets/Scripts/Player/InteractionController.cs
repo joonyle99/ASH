@@ -82,4 +82,6 @@ public class InteractionController : MonoBehaviour
         if (_interactablesInRange[minIndex] != _interactionTarget)
             ChangeTarget(_interactablesInRange[minIndex]);
     }
+
+    public InteractableObject GetTargetObject() { return _interactionTarget; }
 }

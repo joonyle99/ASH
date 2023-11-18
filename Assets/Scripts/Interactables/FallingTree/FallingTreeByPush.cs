@@ -11,7 +11,7 @@ public class FallingTreeByPush : MonoBehaviour
 
     [SerializeField] private Transform forcePointTransform;
 
-    [SerializeField] private float _power = 800f;
+    [SerializeField] private float _power = 40f;
     [SerializeField] private float _fallingAngle = 20f;
     [SerializeField] private float _rotatedAngle = 0f;
 

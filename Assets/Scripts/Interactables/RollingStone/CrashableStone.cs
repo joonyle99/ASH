@@ -29,7 +29,4 @@ public class CrashableStone : MonoBehaviour, IAttackListener
 
         Destroy(transform.gameObject);
     }
-
-
-
 }

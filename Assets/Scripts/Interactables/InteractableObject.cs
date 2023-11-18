@@ -27,15 +27,21 @@ public abstract class InteractableObject : MonoBehaviour
 
     public void Interact()
     {
+        PlayerBehaviour player = SceneContext.Current.Player.GetComponent<PlayerBehaviour>();
+
+        // 상호작용이 가능한 상태를 설정
+        if (!player.StateIs<IdleState>() && !player.StateIs<RunState>())
+            return;
+
         IsInteracting = true;
 
         OnInteract();
 
         // 상호작용 시 플레이어를 Interaction State로 만들어준다
-        SceneContext.Current.Player.GetComponent<PlayerBehaviour>().ChangeState<InteractionState>();
+        player.ChangeState<InteractionState>();
 
         // 플레이어와의 상호작용 애니메이션 트리거
-        SceneContext.Current.Player.GetComponent<PlayerBehaviour>().Animator.SetTrigger("Interact");
+        player.Animator.SetTrigger("Interact");
     }
 
     public void FinishInteraction()

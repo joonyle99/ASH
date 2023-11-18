@@ -15,7 +15,7 @@ public class PushableTree : InteractableObject
         // Debug.Log("나무와의 상호작용 실행");
 
         // Player에게 Own Interaction Type을 넘겨준다
-        SceneContext.Current.Player.GetComponent<InteractionState>().ChangeInteractionType(ownInteractionType);
+        SceneContext.Current.Player.GetComponent<InteractionState>().SetInteractionType(ownInteractionType);
     }
 
     public override void UpdateInteracting()

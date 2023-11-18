@@ -9,6 +9,7 @@ public static class InteractionType
         NULL = 0,
 
         PUSH,
+        ROLL,
         PULL,
         TALK,
 

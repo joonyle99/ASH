@@ -16,6 +16,9 @@ public class RollingStone : InteractableObject
 
     AttackableEntity _attackableComponent;
 
+    // Own Interaction Type 세팅
+    public InteractionType.Type ownInteractionType = InteractionType.Type.ROLL;
+
     public bool IsBreakable { get { return _attackableComponent == null; } }
     bool _immovable
     {
@@ -39,8 +42,12 @@ public class RollingStone : InteractableObject
     protected override void OnInteract()
     {
         _immovable = false;
+
         //TODO : Joint 생성
         //SceneContext.Current.Player.AddJoint<HingeJoint2D>(_rigidbody, 300);
+
+        // Player에게 Own Interaction Type을 넘겨준다
+        SceneContext.Current.Player.GetComponent<InteractionState>().SetInteractionType(ownInteractionType);
     }
     public override void UpdateInteracting()
     {
@@ -49,11 +56,12 @@ public class RollingStone : InteractableObject
             ||  InputManager.Instance.InteractionKey.State == KeyState.KeyUp)
         {
             _immovable = true;
+
             //SceneContext.Current.Player.RemoveJoint();
+
              FinishInteraction();
         }
     }
-
 
 #if UNITY_EDITOR
     public void ApplyShape()
