@@ -41,12 +41,14 @@ public class InteractionState : PlayerState
                 Debug.LogError("상호작용 타입이 입력되지 않았습니다");
                 break;
             case InteractionType.Type.PUSH:
+                Player.Animator.SetBool("IsPush", true);
+                break;
             case InteractionType.Type.ROLL:
+                Player.Animator.SetBool("IsPush", true);
                 Rigidbody2D targetRigid = _targetObject.GetComponent<Rigidbody2D>();
                 if (targetRigid == null)
                     return;
                 _rollPower = targetRigid.mass * 1.1f * Player.Rigidbody.gravityScale;
-                Player.Animator.SetBool("IsPush", true);
                 break;
         }
     }

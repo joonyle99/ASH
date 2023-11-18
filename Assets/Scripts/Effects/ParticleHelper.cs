@@ -17,7 +17,7 @@ public class ParticleHelper : MonoBehaviour
     {
         gameObject.SetActive(true);
     }
-    public void SetEmmisionRotation(Vector3 rotation)
+    public void SetEmisionRotation(Vector3 rotation)
     {
         Init();
         var shape = _particle.shape;

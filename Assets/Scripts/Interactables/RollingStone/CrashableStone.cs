@@ -13,9 +13,9 @@ public class CrashableStone : MonoBehaviour, IAttackListener
         foreach (ParticleHelper particle in _particles)
         {
             if (SceneContext.Current.Player.transform.position.x > transform.position.x)
-                particle.SetEmmisionRotation(new Vector3(0, 0, 60));
+                particle.SetEmisionRotation(new Vector3(0, 0, 60));
             else
-                particle.SetEmmisionRotation(new Vector3(0, 0, 0));
+                particle.SetEmisionRotation(new Vector3(0, 0, 0));
             particle.Activate();
             particle.transform.parent = null;
             particle.transform.localScale = Vector3.one;

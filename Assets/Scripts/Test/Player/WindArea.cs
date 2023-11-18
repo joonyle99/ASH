@@ -5,7 +5,20 @@ using UnityEngine;
 
 public class WindArea : MonoBehaviour
 {
-    public float value = 1300f;
+    public bool isWorking = false;
+    public float value = 15f;
+    public GameObject player = null;
+
+    private void FixedUpdate()
+    {
+        if (isWorking)
+        {
+            if (player.transform.position.x < this.transform.position.x)
+                player.GetComponent<Rigidbody2D>().AddForce(Vector2.left * value, ForceMode2D.Force);
+            else
+                player.GetComponent<Rigidbody2D>().AddForce(Vector2.right * value, ForceMode2D.Force);
+        }
+    }
 
     void OnTriggerStay2D(Collider2D other)
     {
@@ -14,11 +27,10 @@ public class WindArea : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             Debug.Log("windArea");
-
-            if (other.gameObject.transform.position.x < this.transform.position.x)
-                other.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.left * value * Time.deltaTime);
-            else
-                other.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.right * value * Time.deltaTime);
+            player = other.gameObject;
+            isWorking = true;
         }
+        else
+            isWorking = false;
     }
 }
