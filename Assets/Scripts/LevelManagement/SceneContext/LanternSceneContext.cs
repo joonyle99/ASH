@@ -21,6 +21,9 @@ public sealed class LanternSceneContext : SceneContext
     [SerializeField] List<LanternRelation> _lanternRelations;
 
     List<Lantern> _lanternActivationOrder = new List<Lantern>();
+
+    const float MaxRayCastDistance = 1000f;
+    const uint MaxRayCastHitCount = 3;
     public void RecordActivationTime(Lantern lantern)
     {
         _lanternActivationOrder.Remove(lantern);
@@ -62,8 +65,8 @@ public sealed class LanternSceneContext : SceneContext
     bool CanRayBeReached(Lantern a, Lantern b)
     {
         Vector2 rayDirection = b.transform.position - a.transform.position;
-        float distance = rayDirection.magnitude + 1;
-        var hits = Physics2D.RaycastAll(a.transform.position, rayDirection, distance, _beamObstacleLayers);
+        var hits = new RaycastHit2D[MaxRayCastHitCount];
+        Physics2D.RaycastNonAlloc(a.transform.position, rayDirection, hits, MaxRayCastDistance, _beamObstacleLayers);
         foreach (var hit in hits)
         {
             if (hit.transform == a.transform)
@@ -125,6 +128,13 @@ public sealed class LanternSceneContext : SceneContext
         return buildResult;
     }
 
-
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = new Color(0, 1, 1, 0.5f);
+        foreach(var relation in _lanternRelations)
+        {
+            Gizmos.DrawLine(relation.A.transform.position, relation.B.transform.position);
+        }
+    }
 
 }
