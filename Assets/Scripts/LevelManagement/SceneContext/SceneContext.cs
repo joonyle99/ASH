@@ -22,7 +22,7 @@ public class SceneContext : MonoBehaviour
 
     public CheckpointManager CheckPointManager { get { return _checkpointManager; } }
     private PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer { get { return SceneTransitionPlayer as PlayableSceneTransitionPlayer; } }
-    private void Awake()
+    protected void Awake()
     {
         Current = this;
         if (_checkpointManager == null)
@@ -45,7 +45,8 @@ public class SceneContext : MonoBehaviour
             if (reference == null)
             {
                 Debug.LogWarning("No " + typeof(T).Name + " in scene!");
-                buildResult = Result.Fail;
+                if(buildResult == Result.Success)
+                    buildResult = Result.Fail;
             }
         }
 
@@ -73,11 +74,20 @@ public class SceneContext : MonoBehaviour
         if (checkpointBuildResult == Result.Fail)
             buildResult = Result.Fail;
 
+        Result sceneSpecificBuildResult = SceneSpecificBuild();
+        if (sceneSpecificBuildResult == Result.Fail)
+            buildResult = Result.Fail;
+
+
         Result defaultBuildResult = DefaultBuild();
         if (defaultBuildResult == Result.Fail)
             buildResult = Result.Fail;
 
         return buildResult;
+    }
+    protected virtual Result SceneSpecificBuild()
+    {
+        return Result.Success;
     }
     Result DefaultBuild()
     {
