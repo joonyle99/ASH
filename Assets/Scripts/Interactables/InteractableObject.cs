@@ -2,13 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum InteractionType
+{
+    None = 0,
+
+    Push,
+    Roll,
+    Pull,
+    Dialogue,
+
+}
 public abstract class InteractableObject : MonoBehaviour
 {
     [SerializeField] Transform _interactionMarkerPoint;
     [SerializeField] bool _isInteractable;
-
+    [SerializeField] InteractionType _interactionType;
     // TODO : 플레이어 상태 및 입력 override 하는 기능
 
+    public InteractionType InteractionTypeWithPlayer { get { return _interactionType; } }
     public Vector3 InteractionMarkerPoint
     {
         get
@@ -27,21 +38,8 @@ public abstract class InteractableObject : MonoBehaviour
 
     public void Interact()
     {
-        PlayerBehaviour player = SceneContext.Current.Player.GetComponent<PlayerBehaviour>();
-
-        // 상호작용이 가능한 상태를 설정
-        if (!player.StateIs<IdleState>() && !player.StateIs<RunState>())
-            return;
-
         IsInteracting = true;
-
         OnInteract();
-
-        // 상호작용 시 플레이어를 Interaction State로 만들어준다
-        player.ChangeState<InteractionState>();
-
-        // 플레이어와의 상호작용 애니메이션 트리거
-        player.Animator.SetTrigger("Interact");
     }
 
     public void FinishInteraction()

@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerBehaviour : StateMachineBase
 {
@@ -75,6 +76,8 @@ public class PlayerBehaviour : StateMachineBase
     public Collider2D _groundHit;
 
     public Collider2D MainCollider { get { return _mainCollider; } }
+
+    public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
 
     #region Properties
 

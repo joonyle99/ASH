@@ -1,19 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class InteractionController : MonoBehaviour
 {
     // 범위 안의 상호작용한 오브젝트 리스트
     List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
     InteractionMarker _interactionMarker;
+    PlayerBehaviour _player;
+    InteractableObject _interactionTarget = null;
 
-    [SerializeField] InteractableObject _interactionTarget = null;
 
+    public InteractableObject InteractionTarget { get { return _interactionTarget; } }
     bool _shouldDetectInteractable { get { return _interactionTarget == null || !_interactionTarget.IsInteracting; } }
 
     private void Awake()
     {
+        _player = GetComponent<PlayerBehaviour>();
         _interactionMarker = FindObjectOfType<InteractionMarker>(true);
     }
 
@@ -50,7 +54,17 @@ public class InteractionController : MonoBehaviour
         if (_interactionTarget != null)
         {
             if (InputManager.Instance.InteractionKey.KeyDown)
-                _interactionTarget.Interact();
+            {
+                if (_player.IsInteractable)
+                {
+                    _interactionTarget.Interact();
+
+                    // TODO : PlayerBehaviour 코드로 이동해야함
+                    _player.ChangeState<InteractionState>();
+                    _player.Animator.SetTrigger("Interact");
+
+                }
+            }    
             if (_interactionTarget.IsInteracting)
                 _interactionTarget.UpdateInteracting();
         }
@@ -83,5 +97,4 @@ public class InteractionController : MonoBehaviour
             ChangeTarget(_interactablesInRange[minIndex]);
     }
 
-    public InteractableObject GetTargetObject() { return _interactionTarget; }
 }

@@ -14,7 +14,7 @@ public class InteractionState : PlayerState
     [SerializeField] private InteractableObject _targetObject = null;
 
     // 현재의 Interaction Type
-    [SerializeField] private InteractionType.Type _curInteractionType = InteractionType.Type.NULL;
+    [SerializeField] private InteractionType _curInteractionType = InteractionType.None;
 
     #region PUSH
 
@@ -29,21 +29,18 @@ public class InteractionState : PlayerState
 
     protected override void OnEnter()
     {
-        Debug.Log("Enter Interaction State");
-
-        // Target Object 가져오기
-        SetTargetObject(this.GetComponent<InteractionController>().GetTargetObject());
-
+        SetTargetObject(GetComponent<InteractionController>().InteractionTarget);
+        _curInteractionType = _targetObject.InteractionTypeWithPlayer;
         // Animation Parmeter 설정
         switch (_curInteractionType)
         {
-            case InteractionType.Type.NULL:
-                Debug.LogError("상호작용 타입이 입력되지 않았습니다");
+            case InteractionType.None:
+                Debug.LogWarning("Interaction not set");
                 break;
-            case InteractionType.Type.PUSH:
+            case InteractionType.Push:
                 Player.Animator.SetBool("IsPush", true);
                 break;
-            case InteractionType.Type.ROLL:
+            case InteractionType.Roll:
                 Player.Animator.SetBool("IsPush", true);
                 Rigidbody2D targetRigid = _targetObject.GetComponent<Rigidbody2D>();
                 if (targetRigid == null)
@@ -59,10 +56,10 @@ public class InteractionState : PlayerState
 
         switch (_curInteractionType)
         {
-            case InteractionType.Type.NULL:
-            case InteractionType.Type.PUSH:
+            case InteractionType.None:
+            case InteractionType.Push:
                 break;
-            case InteractionType.Type.ROLL:
+            case InteractionType.Roll:
 
                 if (Mathf.Abs(Player.Rigidbody.velocity.x) > _rollMaxSpeed)
                     Player.Rigidbody.velocity = new Vector2(_rollMaxSpeed * Mathf.Sign(Player.Rigidbody.velocity.x),
@@ -78,10 +75,10 @@ public class InteractionState : PlayerState
 
         switch (_curInteractionType)
         {
-            case InteractionType.Type.NULL:
-            case InteractionType.Type.PUSH:
+            case InteractionType.None:
+            case InteractionType.Push:
                 break;
-            case InteractionType.Type.ROLL:
+            case InteractionType.Roll:
 
                 // 오브젝트가 아닌 플레이어 이동에 힘을 적용시킨다
                 // 상호작용 중인 오브젝트의 무게까지 합한 이동값 계산
@@ -95,26 +92,18 @@ public class InteractionState : PlayerState
 
     protected override void OnExit()
     {
-        Debug.Log("OnExit Interaction State");
-
         // Animation Parmeter 초기화
         switch (_curInteractionType)
         {
-            case InteractionType.Type.NULL:
+            case InteractionType.None:
                 break;
-            case InteractionType.Type.PUSH:
-            case InteractionType.Type.ROLL:
+            case InteractionType.Push:
+            case InteractionType.Roll:
                 Player.Animator.SetBool("IsPush", false);
                 break;
         }
 
         Finalize();
-    }
-
-    public void SetInteractionType(InteractionType.Type type)
-    {
-        _curInteractionType = type;
-        return;
     }
 
     public void SetTargetObject(InteractableObject targetObject)
@@ -133,7 +122,7 @@ public class InteractionState : PlayerState
     public void Finalize()
     {
         _targetObject = null;
-        _curInteractionType = InteractionType.Type.NULL;
+        _curInteractionType = InteractionType.None;
         _rollPower = 0f;
 
         return;
