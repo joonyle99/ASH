@@ -22,69 +22,76 @@ public class InteractionState : PlayerState
 
     #region ROLL
 
-    [SerializeField] private float _rollPower = 5f;
-    [SerializeField] private float _rollMaxSpeed = 0.8f;
+    [SerializeField] private float _rollingPower = 5f;
+    [SerializeField] private float _rollingMaxSpeed = 0.8f;
 
     #endregion
 
     protected override void OnEnter()
     {
+        // 타겟 오브젝트와 상호작용 타입 설정
         SetTargetObject(GetComponent<InteractionController>().InteractionTarget);
-        _curInteractionType = _targetObject.InteractionTypeWithPlayer;
-        // Animation Parmeter 설정
+        SetInteractionType(_targetObject.InteractionTypeWithPlayer);
+
+        // 애니메이션 파라미터 설정
         switch (_curInteractionType)
         {
-            case InteractionType.None:
-                Debug.LogWarning("Interaction not set");
-                break;
             case InteractionType.Push:
                 Player.Animator.SetBool("IsPush", true);
                 break;
             case InteractionType.Roll:
                 Player.Animator.SetBool("IsPush", true);
+
+                // rollingPower 설정
                 Rigidbody2D targetRigid = _targetObject.GetComponent<Rigidbody2D>();
+
                 if (targetRigid == null)
                     return;
-                _rollPower = targetRigid.mass * 1.1f * Player.Rigidbody.gravityScale;
+
+                // 플레이어의 GravitySclae이 1이 아닌 5로 설정되어있다. 이 값을 고려해서 힘을 줘야한다.
+                _rollingPower = targetRigid.mass * 1.1f * Player.Rigidbody.gravityScale;
+
                 break;
         }
     }
 
+    /// <summary>
+    /// Game Logic
+    /// </summary>
     protected override void OnUpdate()
     {
         // Debug.Log("OnUpdate Interaction State");
 
         switch (_curInteractionType)
         {
-            case InteractionType.None:
             case InteractionType.Push:
                 break;
             case InteractionType.Roll:
 
-                if (Mathf.Abs(Player.Rigidbody.velocity.x) > _rollMaxSpeed)
-                    Player.Rigidbody.velocity = new Vector2(_rollMaxSpeed * Mathf.Sign(Player.Rigidbody.velocity.x),
+                if (Mathf.Abs(Player.Rigidbody.velocity.x) > _rollingMaxSpeed)
+                    Player.Rigidbody.velocity = new Vector2(_rollingMaxSpeed * Mathf.Sign(Player.Rigidbody.velocity.x),
                         Player.Rigidbody.velocity.y);
 
                 break;
         }
     }
 
+    /// <summary>
+    /// Physics
+    /// </summary>
     protected override void OnFixedUpdate()
     {
         // Debug.Log("OnFixedUpdate Interaction State");
 
         switch (_curInteractionType)
         {
-            case InteractionType.None:
             case InteractionType.Push:
                 break;
             case InteractionType.Roll:
 
                 // 오브젝트가 아닌 플레이어 이동에 힘을 적용시킨다
                 // 상호작용 중인 오브젝트의 무게까지 합한 이동값 계산
-                // 플레이어의 GravitySclae이 1이 아닌 5로 설정되어있다. 이 값을 고려해서 힘을 줘야한다.
-
-                Player.Rigidbody.AddForce(Vector2.right * _rollPower * Player.RawInputs.Movement.x);
+                Player.Rigidbody.AddForce(Vector2.right * _rollingPower * Player.RawInputs.Movement.x);
 
                 break;
         }
@@ -92,18 +99,16 @@ public class InteractionState : PlayerState
 
     protected override void OnExit()
     {
-        // Animation Parmeter 초기화
+        // 애니메이션 파라미터 초기화
         switch (_curInteractionType)
         {
-            case InteractionType.None:
-                break;
             case InteractionType.Push:
             case InteractionType.Roll:
                 Player.Animator.SetBool("IsPush", false);
                 break;
         }
 
-        Finalize();
+        FinalizeInteraction();
     }
 
     public void SetTargetObject(InteractableObject targetObject)
@@ -119,11 +124,20 @@ public class InteractionState : PlayerState
         return;
     }
 
-    public void Finalize()
+    public void SetInteractionType(InteractionType interactionType)
+    {
+        _curInteractionType = interactionType;
+
+        if (interactionType == InteractionType.None)
+            Debug.LogWarning("Interaction not set");
+
+        return;
+    }
+
+    public void FinalizeInteraction()
     {
         _targetObject = null;
         _curInteractionType = InteractionType.None;
-        _rollPower = 0f;
 
         return;
     }
