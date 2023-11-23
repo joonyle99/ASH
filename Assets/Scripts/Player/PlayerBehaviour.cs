@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -20,7 +21,7 @@ public class PlayerBehaviour : StateMachineBase
 
     [SerializeField] float _groundCheckRadius = 0.35f;
     // [Range(0f, 5f)] [SerializeField] float _groundCheckDistance;
-    [Range(0f, 30f)] [SerializeField] float _diveCheckDistance;
+    [Range(0f, 30f)][SerializeField] float _diveCheckDistance;
     // [Range(0f, 5f)] [SerializeField] float _wallCheckDistance;
     [SerializeField] Vector2 _wallCheckSzie = new Vector2(0.3f, 2f);
 
@@ -28,13 +29,13 @@ public class PlayerBehaviour : StateMachineBase
 
     [Space]
 
-    [Range(0f, 10f)] [SerializeField] float _diveThreshholdHeight;
+    [Range(0f, 10f)][SerializeField] float _diveThreshholdHeight;
 
     [Header("Ability Settings")]
 
     [Space]
 
-    [Range(0, 200)] [SerializeField] int _maxHp;
+    [Range(0, 200)][SerializeField] int _maxHp;
 
     [SerializeField] int _curHp;
 
@@ -100,12 +101,9 @@ public class PlayerBehaviour : StateMachineBase
 
     public int RecentDir { get; set; }
     public Vector2 PlayerLookDir { get { return new Vector2(RecentDir, 0); } }
+    public bool IsSameDir { get { return Math.Abs(PlayerLookDir.x - RawInputs.Horizontal) < 0.1f; } }
 
     private bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
-    private bool IsMoveKey
-    {
-        get { return Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow); }
-    }
     public bool IsWallJump { get; set; }
     public float GroundDistance { get; set; }
     public float DiveThreshholdHeight
@@ -194,7 +192,9 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
         Animator.SetFloat("GroundDistance", GroundDistance);
         Animator.SetBool("IsMove", IsMove);
-        Animator.SetBool("IsMoveKey", IsMoveKey);
+        Animator.SetFloat("InputHorizontal", RawInputs.Horizontal);
+        Animator.SetFloat("PlayerLookDirX", PlayerLookDir.x);
+        Animator.SetBool("IsSameDir", IsSameDir);
 
         // temp velocity
         tempVelocity = this.Rigidbody.velocity;
@@ -338,7 +338,7 @@ public class PlayerBehaviour : StateMachineBase
     }
     public void OnHitByPhysicalObject(float damage, Rigidbody2D other)
     {
-       //TODO
+        //TODO
         Debug.Log(damage + " 대미지 입음");
     }
     public void TriggerInstantRespawn(float damage)

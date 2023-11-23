@@ -11,7 +11,6 @@ public class InteractionController : MonoBehaviour
     PlayerBehaviour _player;
     InteractableObject _interactionTarget = null;
 
-
     public InteractableObject InteractionTarget { get { return _interactionTarget; } }
     bool _shouldDetectInteractable { get { return _interactionTarget == null || !_interactionTarget.IsInteracting; } }
 
@@ -64,7 +63,7 @@ public class InteractionController : MonoBehaviour
                     _player.Animator.SetTrigger("Interact");
 
                 }
-            }    
+            }
             if (_interactionTarget.IsInteracting)
                 _interactionTarget.UpdateInteracting();
         }
