@@ -74,7 +74,7 @@ public class DashState : PlayerState
         _timeStartedDash = Time.time;
 
         // 대쉬 사운드 재생
-        Player.PlayerSound_SE_Dash();
+        // Player.PlayerSound_SE_Dash();
     }
 
     private void FinishDash()

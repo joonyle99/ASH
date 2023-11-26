@@ -60,7 +60,6 @@ public class InteractionController : MonoBehaviour
 
                     // TODO : PlayerBehaviour 코드로 이동해야함
                     _player.ChangeState<InteractionState>();
-                    _player.Animator.SetTrigger("Interact");
 
                 }
             }

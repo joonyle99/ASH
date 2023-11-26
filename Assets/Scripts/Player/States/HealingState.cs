@@ -48,10 +48,12 @@ public class HealingState : PlayerState
         myEffect.Stop();
         Destroy(myEffect.gameObject);
 
-        Player.CurHP++;
+        /*
+        Player.CurHp++;
 
-        if (Player.CurHP > 10)
-            Player.CurHP = 10;
+        if (Player.CurHp > 10)
+            Player.CurHp = 10;
+        */
 
         Animator.SetBool("IsHealing", false);
         ChangeState<IdleState>();

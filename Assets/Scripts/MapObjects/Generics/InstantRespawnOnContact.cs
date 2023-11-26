@@ -8,7 +8,7 @@ public class InstantRespawnOnContact : TriggerZone
 
     public override void OnPlayerEnter(PlayerBehaviour player)
     {
-        player.TriggerInstantRespawn(_damage);
+        // player.TriggerInstantRespawn(_damage);
     }
 
 }
