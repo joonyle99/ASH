@@ -18,6 +18,8 @@ public class PhysicsActivatorZone : TriggerZone
 
     private void OnDrawGizmos()
     {
+        if (_targetRigidbody == null)
+            return;
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, _targetRigidbody.transform.position);
     }
