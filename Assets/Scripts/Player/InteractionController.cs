@@ -9,7 +9,7 @@ public class InteractionController : MonoBehaviour
     List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
     InteractionMarker _interactionMarker;
     PlayerBehaviour _player;
-    InteractableObject _interactionTarget = null;
+    [SerializeField] InteractableObject _interactionTarget = null;
 
     public InteractableObject InteractionTarget { get { return _interactionTarget; } }
     bool _shouldDetectInteractable { get { return _interactionTarget == null || !_interactionTarget.IsInteracting; } }

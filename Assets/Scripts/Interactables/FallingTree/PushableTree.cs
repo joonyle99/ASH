@@ -10,7 +10,6 @@ public class PushableTree : InteractableObject
     protected override void OnInteract()
     {
         // Debug.Log("나무와의 상호작용 실행");
-
     }
 
     public override void UpdateInteracting()
@@ -18,7 +17,7 @@ public class PushableTree : InteractableObject
         InputState inputState = InputManager.Instance.GetState();
 
         // 상호작용 종료 타이밍
-        if (InputManager.Instance.InteractionKey.KeyUp || inputState.Horizontal < 0.1f || FallingTreeByPush.IsFalling)
+        if (InputManager.Instance.InteractionKey.KeyUp || Mathf.Abs(inputState.Horizontal) < 0.1f || FallingTreeByPush.IsFalling)
         {
             // 상호작용 해제 타이밍
             if (FallingTreeByPush.IsFalling)

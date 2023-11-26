@@ -29,8 +29,10 @@ public class InteractionState : PlayerState
 
     protected override void OnEnter()
     {
+        // Debug.Log("OnEnter InteractionState");
+
         // 타겟 오브젝트와 상호작용 타입 설정
-        SetTargetObject(GetComponent<InteractionController>().InteractionTarget);
+        SetTargetObject(this.GetComponent<InteractionController>().InteractionTarget);
         SetInteractionType(_targetObject.InteractionTypeWithPlayer);
 
         // 애니메이션 파라미터 설정
@@ -99,6 +101,8 @@ public class InteractionState : PlayerState
 
     protected override void OnExit()
     {
+        // Debug.Log("OnExit InteractionState");
+
         // 애니메이션 파라미터 초기화
         switch (_curInteractionType)
         {
