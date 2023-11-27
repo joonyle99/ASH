@@ -6,14 +6,14 @@ public class LightBeam : MonoBehaviour
 {
     LineRenderer _lineRenderer;
 
-    Lantern _startLantern;
-    Lantern _endLantern;
+    LanternLike _startLantern;
+    LanternLike _endLantern;
 
     public bool IsConnectedTo(Lantern lantern)
     {
         return _startLantern == lantern || _endLantern == lantern;
     }
-    public void SetLanterns(Lantern start, Lantern end)
+    public void SetLanterns(LanternLike start, LanternLike end)
     {
         _startLantern = start;
         _endLantern = end;

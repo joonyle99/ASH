@@ -6,13 +6,13 @@ using UnityEngine.Rendering.Universal;
 using UnityEditor;
 #endif
 
-public class Lantern : MonoBehaviour, ILightCaptureListener
+public class Lantern : LanternLike, ILightCaptureListener
 {
-    public bool IsLightOn => _isLightOn;
     [SerializeField] float _lightUpTime = 1.5f;
     [Header("References")]
     [SerializeField] Light2D _spotLight;
 
+    public override bool IsLightOn => _isLightOn;
     bool _isLightOn = false;
     float _currentLightFill = 0f;
 
@@ -25,7 +25,7 @@ public class Lantern : MonoBehaviour, ILightCaptureListener
         LanternSceneContext.Current.DisconnectFromAll(this);
     }
 
-    public void TurnLightOn()
+    void TurnLightOn()
     {
         if (_isLightOn)
             return;
@@ -33,7 +33,7 @@ public class Lantern : MonoBehaviour, ILightCaptureListener
         _spotLight.gameObject.SetActive(true);
         OnLightTurnedOn();
     }
-    public void TurnLightOff()
+    void TurnLightOff()
     {
         if (!_isLightOn)
             return;
@@ -59,25 +59,3 @@ public class Lantern : MonoBehaviour, ILightCaptureListener
         _currentLightFill = 0f;
     }
 }
-
-
-#if X
-[CustomEditor(typeof(Lantern))]
-public class LanternInspector : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-        var t = target as Lantern;
-        if (GUILayout.Button("On"))
-        {
-            t.TurnLightOn();
-        }
-        if (GUILayout.Button("Off"))
-        {
-            t.TurnLightOff();
-        }
-
-    }
-}
-#endif
