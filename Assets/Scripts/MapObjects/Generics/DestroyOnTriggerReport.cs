@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class DestroyOnTriggerReport : MonoBehaviour, ITriggerListener
 {
+    [SerializeField] bool _destroyReporter = true;
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
-        Destroy(reporter);
+        if(_destroyReporter)
+            Destroy(reporter);
         Destroy(gameObject);
     }
 }
