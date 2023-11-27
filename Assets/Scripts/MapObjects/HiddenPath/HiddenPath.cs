@@ -14,7 +14,7 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener, ITriggerListener
     {
         _mask.InitMask(_swipeDirection);
     }
-    public void OnLightCaptured(LightCapturer capturer, LightSource lightSource)
+    public void OnLightStay(LightCapturer capturer, LightSource lightSource)
     {
         _mask.OnLightCaptured(_swipeDuration);
         Destroy(capturer.gameObject);

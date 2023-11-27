@@ -1,5 +1,7 @@
 ﻿
 public interface ILightCaptureListener
 {
-    public void OnLightCaptured(LightCapturer capturer, LightSource lightSource);
+    public void OnLightStay(LightCapturer capturer, LightSource lightSource) { }
+    public void OnLightEnter(LightCapturer capturer, LightSource lightSource) { }
+    public void OnLightExit(LightCapturer capturer, LightSource lightSource) { }
 }

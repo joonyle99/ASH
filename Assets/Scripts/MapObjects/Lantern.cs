@@ -42,7 +42,7 @@ public class Lantern : MonoBehaviour, ILightCaptureListener
         OnLightTurnedOff();
     }
 
-    public void OnLightCaptured(LightCapturer capturer, LightSource lightSource)
+    public void OnLightStay(LightCapturer capturer, LightSource lightSource)
     {
         if (_isLightOn)
             return;
@@ -51,6 +51,12 @@ public class Lantern : MonoBehaviour, ILightCaptureListener
         {
             TurnLightOn();
         }
+    }
+    public void OnLightExit(LightCapturer capturer, LightSource lightSource)
+    {
+        if (_isLightOn)
+            return;
+        _currentLightFill = 0f;
     }
 }
 
