@@ -9,8 +9,8 @@ public sealed class LanternSceneContext : SceneContext
     [System.Serializable]
     class LanternRelation
     {
-        public Lantern A;
-        public Lantern B;
+        public LanternLike A;
+        public LanternLike B;
         [HideInInspector] public LightBeam Beam;
         public bool IsConnected => Beam != null && Beam.gameObject.activeInHierarchy;
     }
@@ -20,11 +20,11 @@ public sealed class LanternSceneContext : SceneContext
     [SerializeField] LayerMask _beamObstacleLayers;
     [SerializeField] List<LanternRelation> _lanternRelations;
 
-    List<Lantern> _lanternActivationOrder = new List<Lantern>();
+    List<LanternLike> _lanternActivationOrder = new List<LanternLike>();
 
     const float MaxRayCastDistance = 1000f;
     const uint MaxRayCastHitCount = 3;
-    public void RecordActivationTime(Lantern lantern)
+    public void RecordActivationTime(LanternLike lantern)
     {
         _lanternActivationOrder.Remove(lantern);
         _lanternActivationOrder.Add(lantern);
@@ -34,9 +34,18 @@ public sealed class LanternSceneContext : SceneContext
         base.Awake();
         Current = this;
     }
-    public HashSet<Lantern> GetRelatedLanterns(Lantern lantern)
+    public bool IsAllRelationsConnected()
     {
-        HashSet<Lantern> result = new HashSet<Lantern>();
+        foreach(var relation in _lanternRelations)
+        {
+            if (!relation.IsConnected)
+                return false;
+        }
+        return true;
+    }
+    public HashSet<LanternLike> GetRelatedLanterns(LanternLike lantern)
+    {
+        HashSet<LanternLike> result = new HashSet<LanternLike>();
         foreach(var relation in _lanternRelations)
         {
             if (relation.A == lantern)
@@ -62,7 +71,7 @@ public sealed class LanternSceneContext : SceneContext
             }
         }
     }
-    bool CanRayBeReached(Lantern a, Lantern b)
+    bool CanRayBeReached(LanternLike a, LanternLike b)
     {
         Vector2 rayDirection = b.transform.position - a.transform.position;
         var hits = new RaycastHit2D[MaxRayCastHitCount];
@@ -78,7 +87,7 @@ public sealed class LanternSceneContext : SceneContext
         }
         return false;
     }
-    bool IsTurnedOnInOrder(Lantern first, Lantern second)
+    bool IsTurnedOnInOrder(LanternLike first, LanternLike second)
     {
         foreach(var lantern in _lanternActivationOrder)
         {
@@ -104,6 +113,8 @@ public sealed class LanternSceneContext : SceneContext
             relation.Beam.SetLanterns(relation.B, relation.A);
 
         relation.Beam.gameObject.SetActive(true);
+        relation.A.OnBeamConnected(relation.Beam);
+        relation.B.OnBeamConnected(relation.Beam);
     }
     void Disconnect(LanternRelation relation)
     {
@@ -111,7 +122,7 @@ public sealed class LanternSceneContext : SceneContext
             return;
         relation.Beam.gameObject.SetActive(false);
     }
-    public void DisconnectFromAll(Lantern lantern)
+    public void DisconnectFromAll(LanternLike lantern)
     {
         foreach (var relation in _lanternRelations)
         {
@@ -133,6 +144,8 @@ public sealed class LanternSceneContext : SceneContext
         Gizmos.color = new Color(0, 1, 1, 0.5f);
         foreach(var relation in _lanternRelations)
         {
+            if (relation.A == null || relation.B == null)
+                continue;
             Gizmos.DrawLine(relation.A.transform.position, relation.B.transform.position);
         }
     }

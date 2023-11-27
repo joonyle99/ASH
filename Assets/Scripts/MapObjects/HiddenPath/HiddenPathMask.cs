@@ -11,8 +11,7 @@ public class HiddenPathMask : MonoBehaviour
     }
 
     Direction _swipeDirection;
-    [SerializeField] float _swipeDuration;
-    [SerializeField] [HideInInspector] Rect _bounds;
+    Rect _bounds;
 
     SpriteRenderer _spriteRenderer;
     float _maskBoundInit;
@@ -22,52 +21,62 @@ public class HiddenPathMask : MonoBehaviour
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        InitShaderValues();
     }
-
-    void InitShaderValues()
+    void SetEnumValue(Material material, string keyPrefix, Direction value)
     {
-        _bounds = new Rect(transform.position - transform.lossyScale / 2, transform.lossyScale);
-        _swipeDirection = (Direction)_spriteRenderer.material.GetFloat("_SWIPEDIRECTION");
-        //_spriteRenderer.material.SetKeyword(new LocalKeyword(_spriteRenderer.material.shader, "_SWIPEDIRECTION_UP"), true);
-        //_spriteRenderer.material.SetFloat("_SWIPEDIRECTION", (int)_swipeDirection);
-        float gradientSize = _spriteRenderer.material.GetFloat("_GradientSize");
-        if (_swipeDirection == Direction.Right)
+        material.SetFloat(keyPrefix, (int)value);
+        foreach(Direction dir in System.Enum.GetValues(typeof(Direction)))
         {
-            _maskBoundInit = _bounds.xMin - gradientSize;
-            _maskBoundTarget = _bounds.xMax;
+            if (dir == value)
+                material.EnableKeyword(keyPrefix + "_" + dir.ToString().ToUpper());
+            else
+                material.DisableKeyword(keyPrefix + "_" + dir.ToString().ToUpper());
         }
+    }
+    public void InitMask(Direction swipeDirection)
+    {
+        _swipeDirection = swipeDirection;
+        SetEnumValue(_spriteRenderer.material, "_SWIPEDIRECTION", _swipeDirection);
+
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        float gradientSize = _spriteRenderer.material.GetFloat("_GradientSize");
+        _bounds = new Rect(transform.position - transform.lossyScale / 2, transform.lossyScale);
         if (_swipeDirection == Direction.Left)
         {
-            _maskBoundInit = _bounds.xMax + gradientSize;
-            _maskBoundTarget = _bounds.xMin;
+            _maskBoundInit= _bounds.xMax;
+            _maskBoundTarget = _bounds.xMin - gradientSize;
         }
-        if (_swipeDirection == Direction.Up)
+        if (_swipeDirection == Direction.Right)
         {
-            _maskBoundInit = _bounds.yMin - gradientSize;
-            _maskBoundTarget = _bounds.yMax;
+            _maskBoundInit= _bounds.xMin;
+            _maskBoundTarget = _bounds.xMax + gradientSize;
         }
         if (_swipeDirection == Direction.Down)
         {
-            _maskBoundInit = _bounds.yMax + gradientSize;
-            _maskBoundTarget = _bounds.yMin;
+            _maskBoundInit = _bounds.yMax;
+            _maskBoundTarget = _bounds.yMin - gradientSize;
+        }
+        if (_swipeDirection == Direction.Up)
+        {
+            _maskBoundInit = _bounds.yMin;
+            _maskBoundTarget = _bounds.yMax + gradientSize;
         }
         _spriteRenderer.material.SetFloat("_MaskBound", _maskBoundInit);
     }
-    public void OnLightCaptured()
+    public void OnLightCaptured(float swipeDuration)
     {
         if (_allowSwipe)
         {
-            StartCoroutine(SwipeCoroutine());
+            StartCoroutine(SwipeCoroutine(swipeDuration));
         }
     }
-    IEnumerator SwipeCoroutine()
+    IEnumerator SwipeCoroutine(float swipeDuration)
     {
         _allowSwipe = false;
         float eTime = 0;
-        while(eTime < _swipeDuration)
+        while(eTime < swipeDuration)
         {
-            float val = Mathf.Lerp(_maskBoundInit, _maskBoundTarget, eTime / _swipeDuration);
+            float val = Mathf.Lerp(_maskBoundInit, _maskBoundTarget, eTime / swipeDuration);
             _spriteRenderer.material.SetFloat("_MaskBound", val);
             yield return null;
             eTime += Time.deltaTime;
