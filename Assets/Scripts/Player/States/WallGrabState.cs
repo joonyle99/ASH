@@ -19,6 +19,10 @@ public class WallGrabState : WallState
 
     protected override void OnUpdate()
     {
+        base.OnUpdate();
+
+        // Debug.Log("Grab");
+
         // Wall Climb State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0)
         {
@@ -26,6 +30,7 @@ public class WallGrabState : WallState
             return;
         }
 
+        /*
         // Wall Slide State
         // 방향키 입력 정보가 없을때
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0 && Mathf.RoundToInt(Player.RawInputs.Movement.y) == 0)
@@ -33,6 +38,7 @@ public class WallGrabState : WallState
             ChangeState<WallSlideState>();
             return;
         }
+        */
     }
     protected override void OnExit()
     {

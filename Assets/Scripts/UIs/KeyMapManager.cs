@@ -37,10 +37,12 @@ public class KeyMapManager : MonoBehaviour
     }
     public void Update()
     {
+        /*
         if (Input.GetKeyDown(_showKey))
         {
             _keyMapUI.SetActive(!_keyMapUI.activeInHierarchy);
             _isFirst = false;
         }
+        */
     }
 }

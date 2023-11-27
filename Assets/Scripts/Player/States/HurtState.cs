@@ -18,10 +18,10 @@ public class HurtState : PlayerState
 
     protected override void OnUpdate()
     {
-        if (Player.CurHP <= 0)
+        if (Player.CurHp <= 0)
         {
-            Player.CurHP = 0;
-            ChangeState<DieState>();
+            // Player.CurHp = 0;
+            // ChangeState<DieState>();
         }
         else
         {

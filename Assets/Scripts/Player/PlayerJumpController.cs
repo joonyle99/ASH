@@ -72,9 +72,6 @@ public class PlayerJumpController : MonoBehaviour
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
         if (_isLongJumping)
         {
-            // FixedUpdate()로 이동
-            // _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity * Time.deltaTime);
-
             _longJumpTime += Time.deltaTime;
 
             // 롱점프 시간이 지나거나 점프 버튼을 때면 롱점프는 종료된다.
