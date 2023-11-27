@@ -14,7 +14,6 @@ public class WallGrabState : WallState
         Animator.SetBool("IsGrab", true);
 
         Player.Rigidbody.gravityScale = 0f;
-        Player.Rigidbody.velocity = Vector2.zero;
     }
 
     protected override void OnUpdate()
@@ -22,6 +21,8 @@ public class WallGrabState : WallState
         base.OnUpdate();
 
         // Debug.Log("Grab");
+
+        Player.Rigidbody.velocity = Vector2.zero;
 
         // Wall Climb State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0)
