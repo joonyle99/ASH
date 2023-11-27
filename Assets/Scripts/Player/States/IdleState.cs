@@ -31,7 +31,7 @@ public class IdleState : PlayerState
         }
 
         // 플레이어와 땅 사이의 각도 계산
-        _angle = Vector2.Angle(_groundNormal, Player.PlayerLookDir);
+        _angle = Vector2.Angle(_groundNormal, Player.PlayerLookDir2D);
     }
 
     protected override void OnFixedUpdate()

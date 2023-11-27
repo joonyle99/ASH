@@ -21,7 +21,7 @@ public class HurtState : PlayerState
         if (Player.CurHp <= 0)
         {
             // Player.CurHp = 0;
-            ChangeState<DieState>();
+            // ChangeState<DieState>();
         }
         else
         {

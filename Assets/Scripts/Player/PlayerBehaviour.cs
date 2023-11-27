@@ -4,15 +4,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
-public enum GroundType
-{
-    None,
-    SoftGround,
-    HardGround,
-
-    JustGround,
-}
-
 public class PlayerBehaviour : StateMachineBase
 {
     [Header("Ground Check")]
@@ -27,7 +18,7 @@ public class PlayerBehaviour : StateMachineBase
 
     [SerializeField] LayerMask _wallLayer;
     [SerializeField] Transform _wallCheckTrans;
-    [SerializeField] Vector2 _wallCheckSize;
+    [SerializeField] float _wallCheckDistance;
 
     [Header("Dive Check")]
     [Space]
@@ -41,9 +32,12 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] int _maxHp;
     [SerializeField] int _curHp;
 
-    [Header("ETC")]
+    [Header("Viewr")]
     [Space]
 
+    [SerializeField] Collider2D _groundHitCollider;
+    [SerializeField] Collider2D _wallHitCollider;
+    [SerializeField] Collider2D _DiveHitCollider;
     [SerializeField] Collider2D _mainCollider;
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
 
@@ -61,6 +55,9 @@ public class PlayerBehaviour : StateMachineBase
     // Sound List
     SoundList _soundList;
 
+    // Padding Vector
+    readonly Vector3 _paddingVec = new Vector3(0.1f, 0f, 0f);
+
     #region Properties
 
     public bool IsGrounded { get; private set; }
@@ -70,8 +67,12 @@ public class PlayerBehaviour : StateMachineBase
     public bool CanDash { get; set; }
 
     public int RecentDir { get; set; }
-    public Vector2 PlayerLookDir { get { return new Vector2(RecentDir, 0); } }
-    public bool IsSameDir { get { return Math.Abs(PlayerLookDir.x - RawInputs.Horizontal) < 0.1f; } }
+    public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
+    public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
+    public bool IsLookForceSync { get { return Math.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.1f; } }
+    public bool IsMoveYKey { get { return Math.Abs(Mathf.RoundToInt(RawInputs.Movement.y)) > 0f; } }
+    public bool IsMoveUpKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) > 0f; } }
+    public bool IsMoveDownKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) < 0f; } }
     public bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
     public bool IsWallJump { get; set; }
     public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
@@ -81,10 +82,8 @@ public class PlayerBehaviour : StateMachineBase
 
     public Collider2D MainCollider { get { return _mainCollider; } }
     public RaycastHit2D GroundHit { get; set; }
-    public ContactPoint2D GroundHit2 { get; set; }
-    public GroundType GroundType { get; set; }
-    public RaycastHit2D DiveHit { get; set; }
     public RaycastHit2D WallHit { get; set; }
+    public RaycastHit2D DiveHit { get; set; }
 
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
     public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.Instance¿Í µ¿ÀÏ
@@ -155,8 +154,8 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetFloat("GroundDistance", GroundDistance);
         Animator.SetBool("IsMove", IsMove);
         Animator.SetFloat("InputHorizontal", RawInputs.Horizontal);
-        Animator.SetFloat("PlayerLookDirX", PlayerLookDir.x);
-        Animator.SetBool("IsSameDir", IsSameDir);
+        Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
+        Animator.SetBool("IsLookForceSync", IsLookForceSync);
 
         #endregion
 
@@ -175,14 +174,18 @@ public class PlayerBehaviour : StateMachineBase
         // Check Ground
         GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
         IsGrounded = GroundHit.collider != null;
+        _groundHitCollider = GroundHit.collider;
 
         // Check Wall
-        WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSize, 0f, Vector2.right * PlayerLookDir, 0f, _wallLayer);
+        // WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSize, 0f, PlayerLookDir2D, 0f, _wallLayer);
+        WallHit = Physics2D.Raycast(_wallCheckTrans.position, PlayerLookDir2D, _wallCheckDistance, _wallLayer);
         IsTouchedWall = WallHit.collider != null;
+        _wallHitCollider = WallHit.collider;
 
         // Check Dive Hit
         DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckDistance, _groundLayer);
         GroundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
+        _DiveHitCollider = DiveHit.collider;
 
         #endregion
 
@@ -254,15 +257,6 @@ public class PlayerBehaviour : StateMachineBase
         }
     }
 
-    /*
-    public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)
-    {
-        Debug.Log("¹ÚÁã Á¡¾×¿¡ ¸ÂÀ½");
-        OnHit(damage, vec);
-    }
-    */
-
-    /*
     public void OnHitbyPuddle(float damage)
     {
         Debug.Log("¹° ¿õµ¢ÀÌ¿¡ ´êÀ½ ");
@@ -301,6 +295,13 @@ public class PlayerBehaviour : StateMachineBase
         //TEMP
         gameObject.SetActive(false);
         SceneContext.Current.InstantRespawn();
+    }
+
+    /*
+    public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)
+    {
+        Debug.Log("¹ÚÁã Á¡¾×¿¡ ¸ÂÀ½");
+        OnHit(damage, vec);
     }
     */
 
@@ -450,16 +451,16 @@ public class PlayerBehaviour : StateMachineBase
     private void OnDrawGizmosSelected()
     {
         // Draw Ground Check
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
         // Draw Wall Check
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(_wallCheckTrans.position, _wallCheckSize);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + PlayerLookDir3D * _wallCheckDistance);
 
         // Draw Dive Check
         Gizmos.color = Color.white;
-        Gizmos.DrawLine(_groundCheckTrans.position + new Vector3(0.1f, 0),
-            _groundCheckTrans.position + new Vector3(0.1f, -_diveCheckDistance));
+        Gizmos.DrawLine(_groundCheckTrans.position + _paddingVec,
+            _groundCheckTrans.position + _paddingVec + Vector3.down * _diveCheckDistance);
     }
 }

@@ -69,7 +69,7 @@ public class PlayerAttackController : MonoBehaviour
 
     public void CastShootingAttack()
     {
-        _player.ChangeState<ShootingState>();
+        // _player.ChangeState<ShootingState>();
     }
 
     private void Update()

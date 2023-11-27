@@ -29,8 +29,8 @@ public class DealDamageOnFastContact : MonoBehaviour, ICollisionWithPlayerListen
     }
     public void OnPlayerEnter(PlayerBehaviour player)
     {
-        // if (_rigidbody.velocity.sqrMagnitude >= Mathf.Pow(_threatVelocityThreshold, 2) && CanDealDamage(player))
-            // player.OnHitByPhysicalObject(_damage, _rigidbody);
+        if (_rigidbody.velocity.sqrMagnitude >= Mathf.Pow(_threatVelocityThreshold, 2) && CanDealDamage(player))
+            player.OnHitByPhysicalObject(_damage, _rigidbody);
     }
 
 }

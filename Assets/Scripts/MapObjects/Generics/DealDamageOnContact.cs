@@ -28,8 +28,8 @@ public class DealDamageOnContact : MonoBehaviour, ICollisionWithPlayerListener
     }
     public void OnPlayerEnter(PlayerBehaviour player)
     {
-        // if (CanDealDamage(player))
-            // player.OnHitByPhysicalObject(_damage, _rigidbody);
+        if (CanDealDamage(player))
+            player.OnHitByPhysicalObject(_damage, _rigidbody);
     }
 
 }

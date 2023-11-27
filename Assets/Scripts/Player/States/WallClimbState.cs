@@ -20,8 +20,10 @@ public class WallClimbState : WallState
     {
         base.OnUpdate();
 
+        // Debug.Log("Climb");
+
         // 위로 올라가기
-        if (Player.RawInputs.Movement.y > 0)
+        if (Player.IsMoveUpKey)
         {
             if (!Player.IsTouchedWall)
             {
@@ -30,9 +32,10 @@ public class WallClimbState : WallState
             }
 
             Player.Rigidbody.velocity = moveDirection * _wallClimbSpeed;
+
         }
         // 아래로 내려가기
-        else if (Player.RawInputs.Movement.y < 0)
+        else if (Player.IsMoveDownKey)
         {
             if (!Player.IsTouchedWall)
             {
@@ -50,7 +53,7 @@ public class WallClimbState : WallState
         }
 
         // Idle State
-        if (Player.IsGrounded && Player.RawInputs.Movement.y < 0)
+        if (Player.IsGrounded && Player.IsMoveDownKey)
         {
             ChangeState<IdleState>();
             return;

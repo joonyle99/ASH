@@ -30,7 +30,7 @@ public class InAirState : PlayerState
         }
 
         // Change to Wall Grab State
-        if (Player.IsTouchedWall && (Player.RecentDir == Mathf.RoundToInt(Player.RawInputs.Movement.x)))
+        if (Player.IsTouchedWall && Player.IsLookForceSync)
         {
             ChangeState<WallGrabState>();
             return;
@@ -46,6 +46,7 @@ public class InAirState : PlayerState
             }
         }
 
+        /*
         // Change to Dive State
         //if (Input.GetKeyDown(KeyCode.D) && Player.RawInputs.Movement.y < 0)
         if (Input.GetKeyDown(KeyCode.D))
@@ -56,6 +57,7 @@ public class InAirState : PlayerState
                 return;
             }
         }
+        */
 
         // Wall Jump에서 In Air State로 넘어온 경우
         if (Player.IsWallJump)
@@ -67,16 +69,6 @@ public class InAirState : PlayerState
         // Basic Jump에서 In Air State로 넘어온 경우
         else
         {
-            /*
-
-            // FixedUpdate()로 이동
-
-            // Debug.Log("공중에서 좌우로 움직일 수 있습니다");
-
-            // 공중에서 좌우로 움직일 수 있다.
-            Player.Rigidbody.AddForce(Vector2.right * Player.RawInputs.Movement.x * _inAirMoveAcceleration);
-            */
-
             // 공중에서의 최대 이동속도를 제한한다
             if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxInAirMoveSpeed)
                 Player.Rigidbody.velocity = new Vector2(Mathf.Sign(Player.Rigidbody.velocity.x) * _maxInAirMoveSpeed, Player.Rigidbody.velocity.y);
@@ -85,15 +77,6 @@ public class InAirState : PlayerState
         // 한계점 지나면 더 빨리 떨어짐
         if (Player.Rigidbody.velocity.y < _fastDropThreshhold)
         {
-            /*
-
-            // FixedUpdate()로 이동
-
-            // Debug.Log("가속 낙하합니다");
-
-            Player.Rigidbody.AddForce(_fastDropPower * Physics2D.gravity);
-            */
-
             // 떨어지는 속도에 최대값 부여
             if (Player.Rigidbody.velocity.y < (-1) * _maxDropSpeed)
                 Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, (-1) * _maxDropSpeed);
