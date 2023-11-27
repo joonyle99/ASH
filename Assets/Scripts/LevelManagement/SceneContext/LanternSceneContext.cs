@@ -133,6 +133,8 @@ public sealed class LanternSceneContext : SceneContext
         Gizmos.color = new Color(0, 1, 1, 0.5f);
         foreach(var relation in _lanternRelations)
         {
+            if (relation.A == null || relation.B == null)
+                continue;
             Gizmos.DrawLine(relation.A.transform.position, relation.B.transform.position);
         }
     }
