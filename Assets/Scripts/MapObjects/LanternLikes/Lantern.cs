@@ -12,39 +12,26 @@ public class Lantern : LanternLike, ILightCaptureListener
     [Header("References")]
     [SerializeField] Light2D _spotLight;
 
-    public override bool IsLightOn => _isLightOn;
-    bool _isLightOn = false;
     float _currentLightFill = 0f;
-
-    void OnLightTurnedOn()
-    {
-        LanternSceneContext.Current.RecordActivationTime(this);
-    }
-    void OnLightTurnedOff()
-    {
-        LanternSceneContext.Current.DisconnectFromAll(this);
-    }
 
     void TurnLightOn()
     {
-        if (_isLightOn)
+        if (IsLightOn)
             return;
-        _isLightOn = true;
+        IsLightOn = true;
         _spotLight.gameObject.SetActive(true);
-        OnLightTurnedOn();
     }
     void TurnLightOff()
     {
-        if (!_isLightOn)
+        if (!IsLightOn)
             return;
-        _isLightOn = false;
+        IsLightOn = false;
         _spotLight.gameObject.SetActive(false);
-        OnLightTurnedOff();
     }
 
     public void OnLightStay(LightCapturer capturer, LightSource lightSource)
     {
-        if (_isLightOn)
+        if (IsLightOn)
             return;
         _currentLightFill += Time.deltaTime;
         if (_currentLightFill > _lightUpTime)
@@ -54,7 +41,7 @@ public class Lantern : LanternLike, ILightCaptureListener
     }
     public void OnLightExit(LightCapturer capturer, LightSource lightSource)
     {
-        if (_isLightOn)
+        if (IsLightOn)
             return;
         _currentLightFill = 0f;
     }
