@@ -8,10 +8,11 @@ public class WallState : PlayerState
     protected Vector2 moveDirection;
     protected Vector2 wallNormal;
     protected Vector3 wallHitPos;
+    protected Vector3 paddingVec = new Vector3(0.1f, 0f, 0f);
     // protected Vector3 crossVector;
 
     // Length for Gizmos
-    float _moveDirLength = 1.5f;
+    float _moveDirLength = 3.5f;
     float _normalDirLength = 1.5f;
     // float _crossDirLength = 1.5f;
 
@@ -30,7 +31,7 @@ public class WallState : PlayerState
         wallHitPos = Player.WallHit.transform.position;
 
         // 벽의 법선벡터와 플레이어가 바라보는 방향의 내적을 구한다
-        float dot = Vector2.Dot(wallNormal, Player.PlayerLookDir);
+        float dot = Vector2.Dot(wallNormal, Player.PlayerLookDir2D);
 
         // 벽의 기울기에 따라 캐릭터를 회전
         // crossVector = Vector3.Cross(wallNormal, Vector3.up); // 외적을 이용한 회전축 계산
@@ -68,15 +69,14 @@ public class WallState : PlayerState
         Player.Animator.SetBool("IsWall", false);
     }
 
-    // private void OnDrawGizmosSelected()
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
-        // 플레이어가 바라보는 방향
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(moveDirection.x, moveDirection.y, 0) * _moveDirLength);
+        // 플레이어가 이동하는 방향
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(transform.position - paddingVec, transform.position - paddingVec + new Vector3(moveDirection.x, moveDirection.y, 0) * _moveDirLength);
 
         // 벽의 법선벡터
-        Gizmos.color = Color.magenta;
+        Gizmos.color = Color.yellow;
         Gizmos.DrawLine(wallHitPos, wallHitPos + new Vector3(wallNormal.x, wallNormal.y, 0) * _normalDirLength);
 
         // Gizmos.color = Color.yellow;

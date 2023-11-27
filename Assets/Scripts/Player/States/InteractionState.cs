@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D.TopDownShooter;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 /// <summary>
 /// 플레이어가 상호작용 하는 경우에 진입하는 상태
@@ -29,7 +30,7 @@ public class InteractionState : PlayerState
 
     protected override void OnEnter()
     {
-        // Debug.Log("OnEnter InteractionState");
+        Player.Animator.SetTrigger("Interact");
 
         // 타겟 오브젝트와 상호작용 타입 설정
         SetTargetObject(this.GetComponent<InteractionController>().InteractionTarget);

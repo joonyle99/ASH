@@ -9,6 +9,14 @@ public class WindArea : MonoBehaviour
     public float value = 15f;
     public GameObject player = null;
 
+    private void Update()
+    {
+        if (isWorking)
+        {
+            Debug.Log("isWorking");
+        }
+    }
+
     private void FixedUpdate()
     {
         if (isWorking)
@@ -22,15 +30,18 @@ public class WindArea : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
-        // 플레이어 속도가 어느정도 줄어들도록 한다.
-
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("windArea");
             player = other.gameObject;
             isWorking = true;
         }
-        else
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
             isWorking = false;
+        }
     }
 }
