@@ -330,8 +330,8 @@ MonoBehaviour:
   - {fileID: 2851137424601544839}
   - {fileID: 4033287982258850529}
   m_Bounds:
-    m_Center: {x: -0.24437213, y: 1.9700053, z: 0}
-    m_Extent: {x: 2.2678056, y: 2.3099995, z: 0}
+    m_Center: {x: -0.24437976, y: 1.9700062, z: 0}
+    m_Extent: {x: 2.267798, y: 2.3100004, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -526,7 +526,15 @@ MonoBehaviour:
   _aggressiveType: 0
   _chaseType: 0
   _runawayType: 0
-  _wayPoints: []
+  _wayPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  _curTargetPosition: {fileID: 0}
+  _nextTargetPosition: {fileID: 0}
+  _curWayPointIndex: 0
+  _upperPower: 10
+  _volumeMul: 1
+  _power: 0.05
 --- !u!114 &1307060685
 MonoBehaviour:
   m_ObjectHideFlags: 0
