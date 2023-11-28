@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class PlayerAttackController : MonoBehaviour
 {
-    [Header("Attack Setting")]
+    [Header("SprinkleParticle Setting")]
 
     [Space]
 
@@ -43,7 +43,7 @@ public class PlayerAttackController : MonoBehaviour
         print("CastBasicATtac: " + IsBasicAttacking);
         if (!IsBasicAttacking)
         {
-            // Basic Attack Hitbox 활성화
+            // Basic SprinkleParticle Hitbox 활성화
             _basicAttackHitbox.gameObject.SetActive(true);
 
             // 사운드 재생
@@ -58,7 +58,7 @@ public class PlayerAttackController : MonoBehaviour
             // 공격 상태값 설정
             IsBasicAttacking = true;
 
-            _player.Animator.SetTrigger("Attack");
+            _player.Animator.SetTrigger("SprinkleParticle");
             _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
 
             // 공격 횟수를 애니메이션 종속으로,,
@@ -87,7 +87,7 @@ public class PlayerAttackController : MonoBehaviour
         // 공격 상태값 설정
         IsBasicAttacking = false;
 
-        // Basic Attack Hitbox 비활성화
+        // Basic SprinkleParticle Hitbox 비활성화
         _basicAttackHitbox.gameObject.SetActive(false);
     }
 
@@ -95,7 +95,7 @@ public class PlayerAttackController : MonoBehaviour
     public void PlayerBlenAnim(int num)
     {
         _player.Animator.SetFloat("Blend", num);
-        _player.Animator.SetTrigger("Attack");
+        _player.Animator.SetTrigger("SprinkleParticle");
     }
 
     public void SetAttack()

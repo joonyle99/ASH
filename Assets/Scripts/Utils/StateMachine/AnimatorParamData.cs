@@ -63,7 +63,7 @@ public class AnimatorParamDataDrawer : PropertyDrawer
             EditorGUI.indentLevel++;
             var typeProperty = property.FindPropertyRelative("_type");
 
-            Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Type"));
+            Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("MonsterType"));
             Rect fieldRect = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width, HEIGHT));
             EditorGUI.PropertyField(fieldRect, typeProperty, GUIContent.none);
             position.y += HEIGHT+2;

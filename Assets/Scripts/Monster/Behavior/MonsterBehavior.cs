@@ -2,14 +2,14 @@ using UnityEngine;
 
 #region Enum
 
-public enum SIZE
+public enum MONSTER_SIZE
 {
     Small = 0,
     Medium,
     Large
 }
 
-public enum TYPE
+public enum MONSTER_TYPE
 {
     Normal = 0,
     SemiBoss,
@@ -23,14 +23,14 @@ public enum ACTION_TYPE
     Crawl
 }
 
-public enum RESPONE
+public enum RESPONE_TYPE
 {
     Time = 0,
     Reentry,
     None
 }
 
-public enum IS_AGGRESSIVE
+public enum AGGRESSIVE_TYPE
 {
     Peace = 0,
     SightAggressive,
@@ -39,14 +39,14 @@ public enum IS_AGGRESSIVE
     Boss
 }
 
-public enum IS_CHASE
+public enum CHASE_TYPE
 {
     Peace = 0,
     Territory,
     AllTerritory
 }
 
-public enum IS_RUNAWAY
+public enum RUNAWAY_TYPE
 {
     Aggressive = 0,
     Peace,
@@ -132,15 +132,57 @@ public abstract class MonsterBehavior : StateMachineBase
         protected set => _isReturn = value;
     }
 
+    [Space]
 
     // 추가 프로퍼티
-    public SIZE Size { get; protected set; } // 몬스터 크기 구분
-    public TYPE Type { get; protected set; } // 몬스터 종류
-    public ACTION_TYPE ActionType { get; protected set; } // 몬스터 활동 종류
-    public RESPONE Response { get; protected set; } // 리젠 방식 구분
-    public IS_AGGRESSIVE IsAggressive { get; protected set; } // 선공 여부
-    public IS_CHASE IsChase { get; protected set; } // 추경 방식 구분
-    public IS_RUNAWAY IsRunaway { get; protected set; } // 도망 여부
+    [SerializeField] private MONSTER_SIZE _monsterSize;
+    public MONSTER_SIZE MonsterSize // 몬스터 크기 구분
+    {
+        get => _monsterSize;
+        protected set => _monsterSize = value;
+    }
+
+    [SerializeField] private MONSTER_TYPE _monsterType;
+    public MONSTER_TYPE MonsterType // 몬스터 종류
+    {
+        get => _monsterType;
+        protected set => _monsterType = value;
+    }
+
+    [SerializeField] private ACTION_TYPE _actionType;
+    public ACTION_TYPE ActionType // 몬스터 활동 종류
+    {
+        get => _actionType;
+        protected set => _actionType = value;
+    }
+
+    [SerializeField] private RESPONE_TYPE _responseType;
+    public RESPONE_TYPE ResponseType // 리젠 방식 구분
+    {
+        get => _responseType;
+        protected set => _responseType = value;
+    }
+
+    [SerializeField] private AGGRESSIVE_TYPE _aggressiveType;
+    public AGGRESSIVE_TYPE AggressiveType // 선공 여부
+    {
+        get => _aggressiveType;
+        protected set => _aggressiveType = value;
+    }
+
+    [SerializeField] private CHASE_TYPE _chaseType;
+    public CHASE_TYPE ChaseType // 추적 방식 구분
+    {
+        get => _chaseType;
+        protected set => _chaseType = value;
+    }
+
+    [SerializeField] private RUNAWAY_TYPE _runawayType;
+    public RUNAWAY_TYPE RunawayType // 도망 여부
+    {
+        get => _runawayType;
+        protected set => _runawayType = value;
+    }
 
 
     #endregion

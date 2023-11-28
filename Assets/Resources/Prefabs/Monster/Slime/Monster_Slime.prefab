@@ -330,8 +330,8 @@ MonoBehaviour:
   - {fileID: 2851137424601544839}
   - {fileID: 4033287982258850529}
   m_Bounds:
-    m_Center: {x: -0.24435687, y: 1.97001, z: 0}
-    m_Extent: {x: 2.2678056, y: 2.3100023, z: 0}
+    m_Center: {x: -0.24437213, y: 1.9700053, z: 0}
+    m_Extent: {x: 2.2678056, y: 2.3099995, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -510,19 +510,23 @@ MonoBehaviour:
   _rigidbody: {fileID: 1307060684}
   _animator: {fileID: 8858366127600596034}
   _initialState: {fileID: 1307060685}
-  renderer: {fileID: 0}
-  wayPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  currTransform: {fileID: 0}
-  nextTransform: {fileID: 0}
-  currentWaypointIndex: 0
-  moveSpeed: 2
-  upPower: 4
-  player: {fileID: 0}
-  volumeMul: 2
-  power: 6
-  damage: 1
+  _collider2D: {fileID: 0}
+  _id: 0
+  _monsterName: 
+  _maxHp: 0
+  _curHp: 0
+  _moveSpeed: 0
+  _isDead: 0
+  _isInAir: 0
+  _isReturn: 0
+  _monsterSize: 0
+  _monsterType: 0
+  _actionType: 0
+  _responseType: 0
+  _aggressiveType: 0
+  _chaseType: 0
+  _runawayType: 0
+  _wayPoints: []
 --- !u!114 &1307060685
 MonoBehaviour:
   m_ObjectHideFlags: 0

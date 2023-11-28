@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Gizmos = UnityEngine.Gizmos;
 
 /// <summary>
-/// 종양슬라임 몬스터 클래스
+/// 슬라임 몬스터 클래스
 /// </summary>
-public class OncologySlime : NormalMonster
+public class Slime : NormalMonster
 {
     #region Attribute
 
-    private SpriteRenderer _renderer;                             // 렌더 정보
+    [Header("Slime")]
+    [Space]
+
     [SerializeField] private List<Transform> _wayPoints;          // 목적지 목록
     private Transform _currTransform;                             // 목적지
     private Transform _nextTransform;                             // 다음 목적지
@@ -44,8 +47,6 @@ public class OncologySlime : NormalMonster
         // 초기 목적지
         _currTransform = _wayPoints[_currentWaypointIndex];
         _nextTransform = _wayPoints[(_currentWaypointIndex + 1) % _wayPoints.Count];
-
-        _renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     protected override void Update()
@@ -81,22 +82,22 @@ public class OncologySlime : NormalMonster
         MonsterName = "종양 슬라임";
 
         // 크기
-        Size = SIZE.Small;
+        MonsterSize = MONSTER_SIZE.Small;
 
         // 종양 슬라임의 활동 종류
         ActionType = ACTION_TYPE.Floating;
 
         // 리젠
-        Response = RESPONE.None;
+        ResponseType = RESPONE_TYPE.None;
 
         // 선공
-        IsAggressive = IS_AGGRESSIVE.Peace;
+        AggressiveType = AGGRESSIVE_TYPE.Peace;
 
         // 추적
-        IsChase = IS_CHASE.AllTerritory;
+        ChaseType = CHASE_TYPE.AllTerritory;
 
         // 도망
-        IsRunaway = IS_RUNAWAY.Aggressive;
+        RunawayType = RUNAWAY_TYPE.Aggressive;
     }
 
     public override void OnDamage(int _damage)
@@ -121,7 +122,8 @@ public class OncologySlime : NormalMonster
     private IEnumerator FadeOutObject()
     {
         // 초기 알파값 저장
-        float startAlpha = _renderer.color.a;
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        float startAlpha = spriteRenderer.color.a;
 
         // 서서히 알파값 감소
         float t = 0;
@@ -129,9 +131,9 @@ public class OncologySlime : NormalMonster
         {
             t += Time.deltaTime;
             float normalizedTime = t / 2;
-            Color color = _renderer.color;
+            Color color = spriteRenderer.color;
             color.a = Mathf.Lerp(startAlpha, 0f, normalizedTime);
-            _renderer.color = color;
+            spriteRenderer.color = color;
             yield return null;
         }
 
