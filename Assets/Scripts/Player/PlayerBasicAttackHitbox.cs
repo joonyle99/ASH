@@ -20,9 +20,9 @@ public class PlayerBasicAttackHitbox : MonoBehaviour
     {
         // Slime -> Normal -> Based 이런식으로 타고 들어감
         // base.func() 안하면 Slime만 실행된다
-        BasedMonster monster = collision.GetComponent<BasedMonster>();
+        MonsterBehavior monsterBehavior = collision.GetComponent<MonsterBehavior>();
 
-        if (monster != null)
+        if (monsterBehavior != null)
         {
             // 반대 방향
             float dir = Mathf.Sign(collision.transform.position.x - this.gameObject.transform.parent.position.x);
@@ -30,8 +30,8 @@ public class PlayerBasicAttackHitbox : MonoBehaviour
 
             Player.PlaySound_SE_Hurt_02();
 
-            monster.KnockBack(vec);         // 넉백
-            monster.OnDamage(damage);       // 데미지
+            monsterBehavior.KnockBack(vec);         // 넉백
+            monsterBehavior.OnDamage(damage);       // 데미지
         }
     }
 }
