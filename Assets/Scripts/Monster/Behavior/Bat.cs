@@ -1,37 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Utils;
 using Gizmos = UnityEngine.Gizmos;
 
+/// <summary>
+/// 박쥐 몬스터 클래스
+/// </summary>
 public class Bat : NormalMonster
 {
-    [SerializeField]
-    public List<Transform> wayPoints;       // 목적지 목록
-    public Transform currTransform;         // 목적지
-    public Transform nextTransform;         // 다음 목적지
-    public int currentWaypointIndex;        // 목적지 인덱스
-    public float moveSpeed;                 // 몬스터 이동 속도
-    public float waitTime;                  // 기다리는 시간
-    public bool isWaiting;                  // 대기 여부
-    public float time;
-    public Vector3 boxSize;
-    public Collider2D collider;
-    public LayerMask layerMask;
-    public bool isAttack;
-    public float time2;
+    #region Attribute
 
-    [Header("Skill Settings")]
-    [SerializeField] BatSkillParticle _batSkillPrefab;
-    [SerializeField] Sprite [] _skillSprites;
-    [SerializeField] int _particleCount  = 3;
-    [SerializeField] float _shootAngle;
-    [SerializeField] float _shootAngleVariant;
-    [SerializeField] float _shootPower;
-    [SerializeField] Transform _shootPosition;
+    [Header("Bat")]
+    [Space]
 
-    public int damage;
-    public float power;
+    [SerializeField] private bool _isTest;
+
+    private List<Transform> _wayPoints;       // 목적지 목록
+    private Transform _currTransform;         // 목적지
+    private Transform _nextTransform;         // 다음 목적지
+    private int _currentWaypointIndex;        // 목적지 인덱스
+    private float _waitTime;                  // 기다리는 시간
+    private bool _isWaiting;                  // 대기 여부
+    private float _time;
+    private Vector3 _boxSize;
+    private LayerMask _layerMask;
+    private bool _isAttack;
+    private float _time2;
+
+    private BatSkillParticle _batSkillPrefab;
+    private Sprite [] _skillSprites;
+    private int _particleCount  = 3;
+    private float _shootAngle;
+    private float _shootAngleVariant;
+    private float _shootPower;
+    private Transform _shootPosition;
+
+    private int _damage;
+    private float _power;
+
+    #endregion
+
+    #region Function
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
 
     protected override void Start()
     {
@@ -41,62 +55,63 @@ public class Bat : NormalMonster
         SetUp();
 
         // 초기 목적지 설정
-        currTransform = wayPoints[currentWaypointIndex];
-        nextTransform = wayPoints[(currentWaypointIndex + 1) % wayPoints.Count];
+        // _currTransform = _wayPoints[_currentWaypointIndex];
+        // _nextTransform = _wayPoints[(_currentWaypointIndex + 1) % _wayPoints.Count];
     }
 
     protected override void Update()
     {
         base.Update();
 
+        /*
         // 대기 상태
-        if (isWaiting)
+        if (_isWaiting)
         {
-            time += Time.deltaTime;
+            _time += Time.deltaTime;
 
-            if (time > waitTime)
+            if (_time > _waitTime)
             {
-                time = 0f;
-                isWaiting = false;
+                _time = 0f;
+                _isWaiting = false;
             }
         }
         // 이동중
         else
         {
             // 목적지에 도착
-            if (Vector3.Distance(currTransform.position,
+            if (Vector3.Distance(_currTransform.position,
                     transform.position) < 1f)
             {
-                isWaiting = true;
+                _isWaiting = true;
                 Rigidbody.velocity = Vector2.zero;
 
-                currentWaypointIndex++;
-                currentWaypointIndex %= wayPoints.Count;
-                currTransform = wayPoints[currentWaypointIndex];
-                nextTransform = wayPoints[(currentWaypointIndex + 1) % wayPoints.Count];
+                _currentWaypointIndex++;
+                _currentWaypointIndex %= _wayPoints.Count;
+                _currTransform = _wayPoints[_currentWaypointIndex];
+                _nextTransform = _wayPoints[(_currentWaypointIndex + 1) % _wayPoints.Count];
             }
             // 목적지에 도착하지 못함
             else
             {
                 // 이동하면서 목적지를 향한 방향을 계속해서 탐지
-                Vector2 moveDirection = (currTransform.position - transform.position).normalized;
+                Vector2 moveDirection = (_currTransform.position - transform.position).normalized;
 
                 // 목적지로 등속 이동
-                Rigidbody.velocity = moveDirection * moveSpeed;
+                Rigidbody.velocity = moveDirection * MoveSpeed;
             }
         }
 
         // 공격 상태 아니라면
-        if (!isAttack)
+        if (!_isAttack)
         {
             // 탐지 범위 안에 들어왔는지 확인
-            collider = Physics2D.OverlapBox(transform.position, boxSize, 0f, layerMask);
-            if (collider != null)
+            Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _boxSize, 0f, _layerMask);
+            if (targetCollider != null)
             {
-                if (collider.gameObject.tag == "Player")
+                if (targetCollider.gameObject.tag == "Player")
                 {
                     // 공격한다
-                    isAttack = true;
+                    _isAttack = true;
 
                     Animator.SetTrigger("Shaking");
                 }
@@ -104,14 +119,15 @@ public class Bat : NormalMonster
         }
         else
         {
-            time2 += Time.deltaTime;
+            _time2 += Time.deltaTime;
 
-            if (time2 > waitTime)
+            if (_time2 > _waitTime)
             {
-                time2 = 0f;
-                isAttack = false;
+                _time2 = 0f;
+                _isAttack = false;
             }
         }
+        */
     }
 
     public void AnimEvent_SpawnParticles()
@@ -130,17 +146,20 @@ public class Bat : NormalMonster
         // 기본 초기화
         base.SetUp();
 
+        // 박쥐의 ID 설정
+        ID = 1002;
+
+        // 박쥐의 이름 설정
+        MonsterName = "박쥐";
+
         // 박쥐의 최대 체력
         MaxHp = 100;
 
         // 박쥐의 현재 체력
-        CurHP = MaxHp;
+        CurHp = MaxHp;
 
-        // 박쥐의 ID 설정
-        ID = 1002;
-
-        // 종양 슬라임의 이름 설정
-        MonsterName = "박쥐";
+        // 박쥐의 이동속도
+        MoveSpeed = 5;
 
         // 크기
         Size = SIZE.Small;
@@ -163,7 +182,7 @@ public class Bat : NormalMonster
 
     public override void OnDamage(int _damage)
     {
-        Debug.Log("bat damage");
+        Debug.Log("bat _damage");
         base.OnDamage(_damage);
     }
 
@@ -230,14 +249,16 @@ public class Bat : NormalMonster
             Debug.Log("플레이어와 충돌");
 
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
-            Vector2 vec = new Vector2(power * dir, power);
-            // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(damage, vec);
+            Vector2 vec = new Vector2(_power * dir, _power);
+            // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(_damage, vec);
         }
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position, boxSize);
+        Gizmos.DrawWireCube(transform.position, _boxSize);
     }
+
+    #endregion
 }

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
 /// <summary>
@@ -8,17 +7,28 @@ using UnityEngine;
 /// </summary>
 public class OncologySlime : NormalMonster
 {
-    public SpriteRenderer renderer;                             // 렌더 정보
-    [SerializeField] public List<Transform> wayPoints;          // 목적지 목록
-    public Transform currTransform;                             // 목적지
-    public Transform nextTransform;                             // 다음 목적지
-    public int currentWaypointIndex;                            // 목적지 인덱스
-    public float moveSpeed;                                     // 몬스터 이동 속도
-    public float upPower;                                       // 튕기는 힘
-    public GameObject player;                                   // 플레이어 정보
-    [Range(0f, 50f)] public float volumeMul;                    // 볼륨 계수
-    [Range(0f, 1000f)] public float power;                      // 넉백 파워
-    [Range(0, 100)] public int damage;                          // 데미지
+    #region Attribute
+
+    private SpriteRenderer _renderer;                             // 렌더 정보
+    [SerializeField] private List<Transform> _wayPoints;          // 목적지 목록
+    private Transform _currTransform;                             // 목적지
+    private Transform _nextTransform;                             // 다음 목적지
+    private int _currentWaypointIndex;                            // 목적지 인덱스
+    private float _moveSpeed;                                     // 몬스터 이동 속도
+    private float _upPower;                                       // 튕기는 힘
+    private GameObject _player;                                   // 플레이어 정보
+    [Range(0f, 50f)] private float _volumeMul;                    // 볼륨 계수
+    [Range(0f, 1000f)] private float _power;                      // 넉백 파워
+    [Range(0, 100)] private int _damage;                          // 데미지
+
+    #endregion
+
+    #region Function
+
+    protected override void Awake()
+    {
+        base.Awake();
+    }
 
     protected override void Start()
     {
@@ -28,14 +38,14 @@ public class OncologySlime : NormalMonster
         SetUp();
 
         // 플레이어 게임오브젝트
-        // player = SceneContextController.Player.gameObject; -> 에러
-        player = GameObject.Find("Player");
+        // _player = SceneContextController.Player.gameObject; -> 에러
+        _player = GameObject.Find("Player");
 
         // 초기 목적지
-        currTransform = wayPoints[currentWaypointIndex];
-        nextTransform = wayPoints[(currentWaypointIndex + 1) % wayPoints.Count];
+        _currTransform = _wayPoints[_currentWaypointIndex];
+        _nextTransform = _wayPoints[(_currentWaypointIndex + 1) % _wayPoints.Count];
 
-        renderer = GetComponentInChildren<SpriteRenderer>();
+        _renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     protected override void Update()
@@ -43,13 +53,13 @@ public class OncologySlime : NormalMonster
         base.Update();
 
         // 목적지를 다음 지점으로 이동
-        if (Vector3.Distance(currTransform.position,
+        if (Vector3.Distance(_currTransform.position,
                 transform.position) < 2f)
         {
-            currentWaypointIndex++;
-            currentWaypointIndex %= wayPoints.Count;
-            currTransform = wayPoints[currentWaypointIndex];
-            nextTransform = wayPoints[(currentWaypointIndex + 1) % wayPoints.Count];
+            _currentWaypointIndex++;
+            _currentWaypointIndex %= _wayPoints.Count;
+            _currTransform = _wayPoints[_currentWaypointIndex];
+            _nextTransform = _wayPoints[(_currentWaypointIndex + 1) % _wayPoints.Count];
         }
     }
 
@@ -62,7 +72,7 @@ public class OncologySlime : NormalMonster
         MaxHp = 100;
 
         // 종양 슬라임의 현재 체력
-        CurHP = MaxHp;
+        CurHp = MaxHp;
 
         // 종양 슬라임의 ID 설정
         ID = 1001;
@@ -91,7 +101,7 @@ public class OncologySlime : NormalMonster
 
     public override void OnDamage(int _damage)
     {
-        //Debug.Log("slime damage");
+        //Debug.Log("slime _damage");
         base.OnDamage(_damage);
     }
 
@@ -111,7 +121,7 @@ public class OncologySlime : NormalMonster
     private IEnumerator FadeOutObject()
     {
         // 초기 알파값 저장
-        float startAlpha = renderer.color.a;
+        float startAlpha = _renderer.color.a;
 
         // 서서히 알파값 감소
         float t = 0;
@@ -119,9 +129,9 @@ public class OncologySlime : NormalMonster
         {
             t += Time.deltaTime;
             float normalizedTime = t / 2;
-            Color color = renderer.color;
+            Color color = _renderer.color;
             color.a = Mathf.Lerp(startAlpha, 0f, normalizedTime);
-            renderer.color = color;
+            _renderer.color = color;
             yield return null;
         }
 
@@ -141,7 +151,7 @@ public class OncologySlime : NormalMonster
             collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             // 거리에 비례해서 볼륨 소리를 키운다
-            float finalMul = 1 / Vector3.Distance(player.transform.position, transform.position) * volumeMul;
+            float finalMul = 1 / Vector3.Distance(_player.transform.position, transform.position) * _volumeMul;
             if (finalMul > 1f)
                 finalMul = 1f;
             GetComponent<SoundList>().PlaySFX("SE_Slime", finalMul);
@@ -149,8 +159,8 @@ public class OncologySlime : NormalMonster
             // 땅에 닿았을 때 힘을 줘볼까?
             if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-                Vector3 moveDirection = (currTransform.position - transform.position).normalized;
-                Vector3 force = new Vector3(moveDirection.x * moveSpeed, upPower, 0f);
+                Vector3 moveDirection = (_currTransform.position - transform.position).normalized;
+                Vector3 force = new Vector3(moveDirection.x * _moveSpeed, _upPower, 0f);
                 Rigidbody.velocity = force;
                 //Rigidbody.velocity = Vector2.zero;
                 //Rigidbody.AddForce(force);
@@ -165,8 +175,10 @@ public class OncologySlime : NormalMonster
             Debug.Log("플레이어와 충돌");
 
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
-            Vector2 vec = new Vector2(power * dir, power);
-            // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(damage, vec);
+            Vector2 vec = new Vector2(_power * dir, _power);
+            // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(_damage, vec);
         }
     }
+
+    #endregion
 }

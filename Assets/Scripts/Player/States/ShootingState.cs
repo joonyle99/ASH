@@ -12,12 +12,12 @@ public class ShootingState : PlayerState
     [SerializeField] ParticleSystem _lightingParticle;                          // Â÷Â¡ ÆÄÆ¼Å¬
     [SerializeField] GameObject _bullet;                                        // ÃÑ¾Ë
 
-    [Range(0f, 5f)] [SerializeField] float _shootingCoolTime = 2f;              // ÄðÅ¸ÀÓ
-    [Range(0f, 5f)] [SerializeField] float _shootingDelay = 1f;                 // µô·¹ÀÌ
+    [Range(0f, 5f)] [SerializeField] private float _shootingCoolTime;           // ÄðÅ¸ÀÓ
+    [Range(0f, 5f)] [SerializeField] private float _shootingDelay;              // µô·¹ÀÌ
 
-    [SerializeField] Vector3 _particlePos;
-    [Range(0f, 5f)] [SerializeField] float _bulletPosX = 0.4f;
-    [Range(0f, 5f)] [SerializeField] float _bulletPosY = 0.8f;
+    [SerializeField] private Vector3 _particlePos;
+    [Range(0f, 5f)] [SerializeField] private float _bulletPosX;
+    [Range(0f, 5f)] [SerializeField] private float _bulletPosY;
 
     protected override void OnEnter()
     {
