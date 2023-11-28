@@ -18,6 +18,11 @@ public class LightSource : MonoBehaviour
 
     int lookDir => Math.Sign(transform.lossyScale.x);
 
+    void OnEnable()
+    {
+        this.transform.rotation = Quaternion.identity;
+    }
+
     void Update()
     {
         // Debug.Log(this.transform.lossyScale.x);
