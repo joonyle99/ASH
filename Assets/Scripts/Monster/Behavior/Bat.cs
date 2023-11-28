@@ -13,27 +13,26 @@ public class Bat : NormalMonster
     [Header("Bat")]
     [Space]
 
-    [SerializeField] private bool _isTest;
+    [SerializeField] private List<Transform> _wayPoints;
+    [SerializeField] private Transform _curTargetPosition;
+    [SerializeField] private Transform _nextTargetPosition;
+    [SerializeField] private int _curWayPointIndex = 0;
+    [SerializeField] private float _targetWaitTime = 2f;
+    [SerializeField] private float _elapsedWaitTime;
+    [SerializeField] private bool _isWaiting;
+    [SerializeField] private Vector2 _attackBoxSize;
+    [SerializeField] private bool _isAttack;
+    [SerializeField] private float _targetAttackTime = 1.5f;
+    [SerializeField] private float _elapsedAttackTime;
+    [SerializeField] private float _targetFadeOutTime = 3f;
 
-    private List<Transform> _wayPoints;       // 목적지 목록
-    private Transform _currTransform;         // 목적지
-    private Transform _nextTransform;         // 다음 목적지
-    private int _currentWaypointIndex;        // 목적지 인덱스
-    private float _waitTime;                  // 기다리는 시간
-    private bool _isWaiting;                  // 대기 여부
-    private float _time;
-    private Vector3 _boxSize;
-    private LayerMask _layerMask;
-    private bool _isAttack;
-    private float _time2;
-
-    private BatSkillParticle _batSkillPrefab;
-    private Sprite [] _skillSprites;
-    private int _particleCount  = 3;
-    private float _shootAngle;
-    private float _shootAngleVariant;
-    private float _shootPower;
-    private Transform _shootPosition;
+    [SerializeField] private BatSkillParticle _batSkillPrefab;
+    [SerializeField] private Sprite [] _skillSprites;
+    [SerializeField] private int _particleCount = 3;
+    [SerializeField] private Transform _shootPosition;
+    [SerializeField] private float _shootingPower;
+    [SerializeField] private float _shootingAngle;
+    [SerializeField] private float _shootingVariant;
 
     private int _damage;
     private float _power;
@@ -55,23 +54,22 @@ public class Bat : NormalMonster
         SetUp();
 
         // 초기 목적지 설정
-        // _currTransform = _wayPoints[_currentWaypointIndex];
-        // _nextTransform = _wayPoints[(_currentWaypointIndex + 1) % _wayPoints.Count];
+        _curTargetPosition = _wayPoints[_curWayPointIndex];
+        _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
     }
 
     protected override void Update()
     {
         base.Update();
 
-        /*
         // 대기 상태
         if (_isWaiting)
         {
-            _time += Time.deltaTime;
+            _elapsedWaitTime += Time.deltaTime;
 
-            if (_time > _waitTime)
+            if (_elapsedWaitTime > _targetWaitTime)
             {
-                _time = 0f;
+                _elapsedWaitTime = 0f;
                 _isWaiting = false;
             }
         }
@@ -79,22 +77,22 @@ public class Bat : NormalMonster
         else
         {
             // 목적지에 도착
-            if (Vector3.Distance(_currTransform.position,
-                    transform.position) < 1f)
+            if (Vector3.Distance(_curTargetPosition.position,
+                    this.transform.position) < 1f)
             {
                 _isWaiting = true;
+
                 Rigidbody.velocity = Vector2.zero;
 
-                _currentWaypointIndex++;
-                _currentWaypointIndex %= _wayPoints.Count;
-                _currTransform = _wayPoints[_currentWaypointIndex];
-                _nextTransform = _wayPoints[(_currentWaypointIndex + 1) % _wayPoints.Count];
+                _curWayPointIndex++;
+                _curTargetPosition = _nextTargetPosition;
+                _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
             }
             // 목적지에 도착하지 못함
             else
             {
                 // 이동하면서 목적지를 향한 방향을 계속해서 탐지
-                Vector2 moveDirection = (_currTransform.position - transform.position).normalized;
+                Vector2 moveDirection = (_curTargetPosition.position - transform.position).normalized;
 
                 // 목적지로 등속 이동
                 Rigidbody.velocity = moveDirection * MoveSpeed;
@@ -105,39 +103,33 @@ public class Bat : NormalMonster
         if (!_isAttack)
         {
             // 탐지 범위 안에 들어왔는지 확인
-            Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _boxSize, 0f, _layerMask);
+            Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _attackBoxSize, 0f, LayerMask.GetMask("Player"));
             if (targetCollider != null)
             {
-                if (targetCollider.gameObject.tag == "Player")
-                {
-                    // 공격한다
-                    _isAttack = true;
+                // Debug.Log("탐지 범위에 플레이어가 들어왔으니 공격한다.");
+                // Debug.Log(targetCollider.gameObject.name);
 
-                    Animator.SetTrigger("Shaking");
-                }
+                // 공격한다
+                _isAttack = true;
+
+                Animator.SetTrigger("Attack");
+
+                // SprinkleParticle();
+                // PlaySound_SE_Bat();
             }
         }
+        // 공격 쿨타임 계산
         else
         {
-            _time2 += Time.deltaTime;
+            _elapsedAttackTime += Time.deltaTime;
 
-            if (_time2 > _waitTime)
+            if (_elapsedAttackTime > _targetAttackTime)
             {
-                _time2 = 0f;
+                // Debug.Log("다시 공격이 가능해진다");
+
+                _elapsedAttackTime = 0f;
                 _isAttack = false;
             }
-        }
-        */
-    }
-
-    public void AnimEvent_SpawnParticles()
-    {
-        for (int i = 0; i < _particleCount; i++)
-        {
-            var particle = Instantiate(_batSkillPrefab, _shootPosition.position, Quaternion.identity);
-            particle.SetSprite(_skillSprites[i % (_skillSprites.Length)]);
-            float angle = i % 2 == 0 ? _shootAngle : -_shootAngle;
-            particle.Shoot(Random.Range(-_shootAngleVariant, _shootAngleVariant) + angle, _shootPower);
         }
     }
 
@@ -180,14 +172,15 @@ public class Bat : NormalMonster
         IsRunaway = IS_RUNAWAY.Aggressive;
     }
 
-    public override void OnDamage(int _damage)
+    public override void OnDamage(int damage)
     {
-        Debug.Log("bat _damage");
-        base.OnDamage(_damage);
+        base.OnDamage(damage);
     }
 
     public override void KnockBack(Vector2 vec)
     {
+        base.KnockBack(vec);
+
         Rigidbody.velocity = vec;
     }
 
@@ -199,29 +192,41 @@ public class Bat : NormalMonster
         StartCoroutine(FadeOutObject());
     }
 
-    public IEnumerator FadeOutObject()
+    public void SprinkleParticle()
     {
-        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
-
-        // 초기 알파값 저장
-        float[] startAlphas = new float[renderers.Length];
-        for (int i = 0; i < renderers.Length; i++)
+        for (int i = 0; i < _particleCount; i++)
         {
-            startAlphas[i] = renderers[i].color.a;
+            var particle = Instantiate(_batSkillPrefab, _shootPosition.position, Quaternion.identity);
+            particle.SetSprite(_skillSprites[i % (_skillSprites.Length)]);
+            float angle = i % 2 == 0 ? _shootingAngle : -_shootingAngle;
+            particle.Shoot(Random.Range(-_shootingVariant, _shootingVariant) + angle, _shootingPower);
         }
 
-        // 모든 렌더 컴포넌트를 돌면서 Fade Out
-        float t = 0;
-        while (t < 3)
-        {
-            t += Time.deltaTime;
-            float normalizedTime = t / 2;
+        // TODO : 소리가 가끔 씹히는데 사운드가 길어서 그런가?
+        PlaySound_SE_Bat();
+    }
 
-            for (int i = 0; i < renderers.Length; i++)
+    public IEnumerator FadeOutObject()
+    {
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+
+        // 초기 알파값 저장
+        float[] alphaArray = new float[spriteRenderers.Length];
+        for (int i = 0; i < spriteRenderers.Length; i++)
+            alphaArray[i] = spriteRenderers[i].color.a;
+
+        // 모든 렌더 컴포넌트를 돌면서 Fade Out
+        while (_targetFadeOutTime < 3)
+        {
+            _targetFadeOutTime += Time.deltaTime;
+            float normalizedTime = _targetFadeOutTime / 2;
+
+            for (int i = 0; i < spriteRenderers.Length; i++)
             {
-                Color color = renderers[i].color;
-                color.a = Mathf.Lerp(startAlphas[i], 0f, normalizedTime);
-                renderers[i].color = color;
+                // 현재 스프라이트 렌더러의 알파값을 변경
+                Color targetColor = spriteRenderers[i].color;
+                targetColor.a = Mathf.Lerp(alphaArray[i], 0f, normalizedTime);
+                spriteRenderers[i].color = targetColor;
             }
 
             yield return null;
@@ -229,17 +234,20 @@ public class Bat : NormalMonster
 
         // 오브젝트 삭제
         Destroy(gameObject);
+
         yield return null;
     }
 
-    // TODO : 박쥐 몸털기 사운드 Once 재생
     public void PlaySound_SE_Bat()
     {
+        Debug.Log("박쥐 공격 사운드 재생");
+
         GetComponent<SoundList>().PlaySFX("SE_Bat");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        /*
         // 플레이어와 충돌했을 때
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
@@ -250,14 +258,15 @@ public class Bat : NormalMonster
 
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
             Vector2 vec = new Vector2(_power * dir, _power);
-            // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(_damage, vec);
+            // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(damage, vec);
         }
+        */
     }
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position, _boxSize);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(this.transform.position, _attackBoxSize);
     }
 
     #endregion

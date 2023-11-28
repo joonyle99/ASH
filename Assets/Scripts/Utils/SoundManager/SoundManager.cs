@@ -42,7 +42,7 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
             //_pitchedAudioSources[pitch].minDistance = 5f;
             //_pitchedAudioSources[pitch].maxDistance = 30f;
         }
-        _pitchedAudioSources[pitch].Stop();                                     // 이전 사운드 종료
+
         _pitchedAudioSources[pitch].PlayOneShot(clip, volumeMultiplier);        // 새로운 사운드 출력
     }
     public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f, bool replayIfSameClip = false)
