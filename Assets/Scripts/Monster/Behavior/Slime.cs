@@ -13,16 +13,13 @@ public class Slime : NormalMonster
     [Header("Slime")]
     [Space]
 
-    [SerializeField] private List<Transform> _wayPoints;          // 목적지 목록
-    private Transform _currTransform;                             // 목적지
-    private Transform _nextTransform;                             // 다음 목적지
-    private int _currentWaypointIndex;                            // 목적지 인덱스
-    private float _moveSpeed;                                     // 몬스터 이동 속도
-    private float _upPower;                                       // 튕기는 힘
-    private GameObject _player;                                   // 플레이어 정보
-    [Range(0f, 50f)] private float _volumeMul;                    // 볼륨 계수
-    [Range(0f, 1000f)] private float _power;                      // 넉백 파워
-    [Range(0, 100)] private int _damage;                          // 데미지
+    [SerializeField] private List<Transform> _wayPoints;
+    [SerializeField] private Transform _curTargetPosition;
+    [SerializeField] private Transform _nextTargetPosition;
+    [SerializeField] private int _curWayPointIndex = 0;
+    [SerializeField] private float _upperPower = 10f;
+    [SerializeField] private float _volumeMul;
+    [SerializeField] private float _power;
 
     #endregion
 
@@ -40,13 +37,9 @@ public class Slime : NormalMonster
         // 초기 세팅
         SetUp();
 
-        // 플레이어 게임오브젝트
-        // _player = SceneContextController.Player.gameObject; -> 에러
-        _player = GameObject.Find("Player");
-
         // 초기 목적지
-        _currTransform = _wayPoints[_currentWaypointIndex];
-        _nextTransform = _wayPoints[(_currentWaypointIndex + 1) % _wayPoints.Count];
+        _curTargetPosition = _wayPoints[_curWayPointIndex];
+        _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
     }
 
     protected override void Update()
@@ -54,13 +47,12 @@ public class Slime : NormalMonster
         base.Update();
 
         // 목적지를 다음 지점으로 이동
-        if (Vector3.Distance(_currTransform.position,
+        if (Vector3.Distance(_curTargetPosition.position,
                 transform.position) < 2f)
         {
-            _currentWaypointIndex++;
-            _currentWaypointIndex %= _wayPoints.Count;
-            _currTransform = _wayPoints[_currentWaypointIndex];
-            _nextTransform = _wayPoints[(_currentWaypointIndex + 1) % _wayPoints.Count];
+            _curWayPointIndex++;
+            _curTargetPosition = _nextTargetPosition;
+            _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
         }
     }
 
@@ -69,22 +61,25 @@ public class Slime : NormalMonster
         // 기본 초기화
         base.SetUp();
 
-        // 종양 슬라임의 최대 체력
-        MaxHp = 100;
-
-        // 종양 슬라임의 현재 체력
-        CurHp = MaxHp;
-
-        // 종양 슬라임의 ID 설정
+        // 슬라임의 ID 설정
         ID = 1001;
 
-        // 종양 슬라임의 이름 설정
+        // 슬라임의 이름 설정
         MonsterName = "종양 슬라임";
+
+        // 슬라임의 최대 체력
+        MaxHp = 200;
+
+        // 슬라임의 현재 체력
+        CurHp = MaxHp;
+
+        // 박쥐의 이동속도
+        MoveSpeed = 3;
 
         // 크기
         MonsterSize = MONSTER_SIZE.Small;
 
-        // 종양 슬라임의 활동 종류
+        // 슬라임의 활동 종류
         ActionType = ACTION_TYPE.Floating;
 
         // 리젠
@@ -100,10 +95,9 @@ public class Slime : NormalMonster
         RunawayType = RUNAWAY_TYPE.Aggressive;
     }
 
-    public override void OnDamage(int _damage)
+    public override void OnDamage(int damage)
     {
-        //Debug.Log("slime _damage");
-        base.OnDamage(_damage);
+        base.OnDamage(damage);
     }
 
     public override void KnockBack(Vector2 vec)
@@ -152,8 +146,8 @@ public class Slime : NormalMonster
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Wall") ||
             collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            // 거리에 비례해서 볼륨 소리를 키운다
-            float finalMul = 1 / Vector3.Distance(_player.transform.position, transform.position) * _volumeMul;
+            // 거리에 반비례해서 볼륨 소리를 키운다
+            float finalMul = 1 / Vector3.Distance(SceneContext.Current.Player.transform.position, this.transform.position) * _volumeMul;
             if (finalMul > 1f)
                 finalMul = 1f;
             GetComponent<SoundList>().PlaySFX("SE_Slime", finalMul);
@@ -161,16 +155,15 @@ public class Slime : NormalMonster
             // 땅에 닿았을 때 힘을 줘볼까?
             if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-                Vector3 moveDirection = (_currTransform.position - transform.position).normalized;
-                Vector3 force = new Vector3(moveDirection.x * _moveSpeed, _upPower, 0f);
+                Vector3 moveDirection = (_curTargetPosition.position - transform.position).normalized;
+                Vector3 force = new Vector3(moveDirection.x * MoveSpeed, _upperPower, 0f);
                 Rigidbody.velocity = force;
-                //Rigidbody.velocity = Vector2.zero;
-                //Rigidbody.AddForce(force);
             }
         }
         // 플레이어와 충돌했을 때
         else if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
+            /*
             if (collision.collider.gameObject.GetComponent<PlayerBehaviour>().CurHp == 0)
                 return;
 
@@ -178,7 +171,9 @@ public class Slime : NormalMonster
 
             float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
             Vector2 vec = new Vector2(_power * dir, _power);
-            // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(_damage, vec);
+
+            // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(damage, vec);
+            */
         }
     }
 
