@@ -14,7 +14,7 @@ public class InteractionState : PlayerState
     // 상호작용 중인 타겟 오브젝트
     [SerializeField] private InteractableObject _targetObject = null;
 
-    // 현재의 Interaction Type
+    // 현재의 Interaction MonsterType
     [SerializeField] private InteractionType _curInteractionType = InteractionType.None;
 
     #region PUSH

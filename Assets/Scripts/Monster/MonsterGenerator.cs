@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MonsterInstantiator : MonoBehaviour
+public class MonsterGenerator : MonoBehaviour
 {
     [SerializeField]
     private GameObject _monstersPrefab; // 몬스터 프리팹
@@ -22,7 +22,7 @@ public class MonsterInstantiator : MonoBehaviour
             GameObject monsterPrefab = Instantiate(_monstersPrefab, _monsterLocation[i].position, Quaternion.identity);
 
             // 초기화를 위한 GetComponent<>
-            OncologySlime monster = monsterPrefab.GetComponent<OncologySlime>();
+            Slime monster = monsterPrefab.GetComponent<Slime>();
 
             // 몬스터 초기화
             monster.SetUp();

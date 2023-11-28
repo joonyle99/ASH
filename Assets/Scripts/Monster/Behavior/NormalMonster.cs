@@ -29,7 +29,7 @@ public abstract class NormalMonster : MonsterBehavior
         base.SetUp();
 
         // 타입 노말
-        Type = TYPE.Normal;
+        MonsterType = MONSTER_TYPE.Normal;
     }
 
     public override void OnDamage(int damage)

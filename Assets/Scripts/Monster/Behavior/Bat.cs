@@ -154,22 +154,22 @@ public class Bat : NormalMonster
         MoveSpeed = 5;
 
         // 크기
-        Size = SIZE.Small;
+        MonsterSize = MONSTER_SIZE.Small;
 
         // 박쥐의 활동 종류
         ActionType = ACTION_TYPE.Floating;
 
         // 리젠
-        Response = RESPONE.None;
+        ResponseType = RESPONE_TYPE.None;
 
         // 선공
-        IsAggressive = IS_AGGRESSIVE.TerritoryAggressive;
+        AggressiveType = AGGRESSIVE_TYPE.TerritoryAggressive;
 
         // 추적
-        IsChase = IS_CHASE.Territory;
+        ChaseType = CHASE_TYPE.Territory;
 
         // 도망
-        IsRunaway = IS_RUNAWAY.Aggressive;
+        RunawayType = RUNAWAY_TYPE.Aggressive;
     }
 
     public override void OnDamage(int damage)
@@ -211,9 +211,9 @@ public class Bat : NormalMonster
         SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 
         // 초기 알파값 저장
-        float[] alphaArray = new float[spriteRenderers.Length];
+        float[] startAlphaArray = new float[spriteRenderers.Length];
         for (int i = 0; i < spriteRenderers.Length; i++)
-            alphaArray[i] = spriteRenderers[i].color.a;
+            startAlphaArray[i] = spriteRenderers[i].color.a;
 
         // 모든 렌더 컴포넌트를 돌면서 Fade Out
         while (_targetFadeOutTime < 3)
@@ -225,7 +225,7 @@ public class Bat : NormalMonster
             {
                 // 현재 스프라이트 렌더러의 알파값을 변경
                 Color targetColor = spriteRenderers[i].color;
-                targetColor.a = Mathf.Lerp(alphaArray[i], 0f, normalizedTime);
+                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
                 spriteRenderers[i].color = targetColor;
             }
 

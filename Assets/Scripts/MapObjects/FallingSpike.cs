@@ -21,7 +21,7 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
     /*
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
-        if (activator.Type == ActivatorType.Player)
+        if (activator.MonsterType == ActivatorType.Player)
         {
             Invoke("Fall", _fallDelay);
             Destroy(reporter.gameObject);

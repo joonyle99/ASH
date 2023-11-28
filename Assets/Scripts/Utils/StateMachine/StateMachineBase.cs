@@ -19,7 +19,7 @@ public abstract class StateMachineBase : MonoBehaviour
     public StateBase CurrentState { get; set; }
     public StateBase PreviousState { get; set; }
 
-    // Dictionary<Type, Component> _cachedComponents = new Dictionary<Type, Component>();
+    // Dictionary<MonsterType, Component> _cachedComponents = new Dictionary<MonsterType, Component>();
 
     protected virtual void Start()
     {
