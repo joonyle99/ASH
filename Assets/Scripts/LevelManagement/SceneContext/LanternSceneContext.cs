@@ -13,11 +13,13 @@ public sealed class LanternSceneContext : SceneContext
         public LanternLike B;
         [HideInInspector] public LightBeam Beam;
         public bool IsConnected => Beam != null && Beam.gameObject.activeInHierarchy;
+        public bool IsConnectionDone => IsConnected && Beam.IsShootingDone;
     }
     public new static LanternSceneContext Current { get; private set; }
 
     [SerializeField] LightBeam _beamPrefab;
     [SerializeField] LayerMask _beamObstacleLayers;
+    [SerializeField] LightDoor _lightDoor;
     [SerializeField] List<LanternRelation> _lanternRelations;
 
     List<LanternLike> _lanternActivationOrder = new List<LanternLike>();
@@ -33,12 +35,16 @@ public sealed class LanternSceneContext : SceneContext
     {
         base.Awake();
         Current = this;
+        if (_lightDoor == null)
+            Debug.LogWarning("Light Door is not set!");
     }
-    public bool IsAllRelationsConnected()
+    public bool IsAllRelationsFullyConnected(params LanternLike [] exceptions)
     {
         foreach(var relation in _lanternRelations)
         {
-            if (!relation.IsConnected)
+            if (exceptions.Count(x => x == relation.A || x == relation.B) > 0)
+                continue;
+            if (!relation.IsConnectionDone)
                 return false;
         }
         return true;
@@ -107,12 +113,21 @@ public sealed class LanternSceneContext : SceneContext
             relation.Beam = Instantiate<LightBeam>(_beamPrefab);
         }
 
-        if (IsTurnedOnInOrder(relation.A, relation.B))
-            relation.Beam.SetLanterns(relation.A, relation.B);
-        else
-            relation.Beam.SetLanterns(relation.B, relation.A);
 
+        StartCoroutine(ConnectionCoroutine(relation));
+    }
+    IEnumerator ConnectionCoroutine(LanternRelation relation)
+    {
+        if (relation.A.transform == _lightDoor.transform)
+            relation.Beam.SetLanterns(relation.B, relation.A);
+        else if (relation.B.transform == _lightDoor.transform)
+            relation.Beam.SetLanterns(relation.A, relation.B);
+        else if (IsTurnedOnInOrder(relation.A, relation.B))
+            relation.Beam.SetLanterns(relation.B, relation.A);
+        else
+            relation.Beam.SetLanterns(relation.A, relation.B);
         relation.Beam.gameObject.SetActive(true);
+        yield return new WaitUntil(()=>relation.Beam.IsShootingDone);
         relation.A.OnBeamConnected(relation.Beam);
         relation.B.OnBeamConnected(relation.Beam);
     }

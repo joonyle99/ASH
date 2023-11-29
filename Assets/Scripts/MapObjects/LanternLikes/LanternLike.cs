@@ -11,6 +11,8 @@ public abstract class LanternLike : MonoBehaviour
         get { return _isLightOn; }
         set 
         {
+            if (value == _isLightOn)
+                return;
             _isLightOn = value;
             if(value)
                 LanternSceneContext.Current.RecordActivationTime(this);
