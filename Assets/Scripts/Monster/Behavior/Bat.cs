@@ -268,9 +268,11 @@ public class Bat : NormalMonster
 
     private void OnDrawGizmosSelected()
     {
+        // 공격 범위
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(this.transform.position, _attackBoxSize);
 
+        // 이동 방향
         Gizmos.color = Color.magenta;
         Gizmos.DrawLine(this.transform.position, this.transform.position + _moveDir * 2f);
     }
