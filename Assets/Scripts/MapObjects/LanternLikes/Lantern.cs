@@ -45,9 +45,6 @@ public class Lantern : LanternLike, ILightCaptureListener
 
     void Awake()
     {
-    }
-    void Start()
-    {
         if (_isInsideCave)
         {
             _caveLightSettings.OuterRadius = _caveSpotLight.pointLightOuterRadius;
@@ -63,6 +60,8 @@ public class Lantern : LanternLike, ILightCaptureListener
             _currentSettings = _normalLightSettings;
         }
         _idleInterval = Random.Range(_idleEffectIntervalMin, _idleEffectIntervalMax);
+        _currentSpotLight.intensity = 0;
+        _currentSpotLight.pointLightOuterRadius = 0;
     }
     void Update()
     {
