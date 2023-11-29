@@ -1,47 +1,59 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LightController : MonoBehaviour
 {
-    private InputState _inputState;
+    [SerializeField] private GameObject _flashLight;
 
-    public GameObject light;
-
-    public bool isLightWorking = false;
-    public float rotateSpeed = 30f;
+    [SerializeField] private bool _isUsableLightState;
+    [SerializeField] private bool _isLightWorking;
+    [SerializeField] private float _rotateSpeed = 30f;
 
     public float PlayerDir { get => this.transform.localScale.x; }
 
     void Update()
     {
-        _inputState = InputManager.Instance.GetState();
+        PlayerBehaviour playerBehaviour = this.GetComponent<PlayerBehaviour>();
+        _isUsableLightState = playerBehaviour.StateIs<IdleState>() || playerBehaviour.StateIs<RunState>();
+
+        if (this._isLightWorking)
+        {
+            if (!_isUsableLightState)
+            {
+                _flashLight.SetActive(false);
+                _isLightWorking = _flashLight.activeSelf;
+            }
+        }
+
+        InputState inputState = InputManager.Instance.GetState();
 
         // Light Source ON / OFF
         if (Input.GetKeyDown(KeyCode.L))
         {
-            light.SetActive(!light.activeSelf);
-            isLightWorking = light.activeSelf;
+            if (_isUsableLightState)
+            {
+                _flashLight.SetActive(!_flashLight.activeSelf);
+                _isLightWorking = _flashLight.activeSelf;
+            }
         }
 
         // Light Source Up / Down Rotation
-        if (isLightWorking)
+        if (_isLightWorking)
         {
-            light.transform.Rotate(Vector3.forward, (PlayerDir > 0f ? rotateSpeed : -rotateSpeed) * _inputState.Vertical * Time.deltaTime);
+            _flashLight.transform.Rotate(Vector3.forward, (PlayerDir > 0f ? _rotateSpeed : -_rotateSpeed) * inputState.Vertical * Time.deltaTime);
 
             // 상한선 하한선 정하기
 
             // 1 사분면에 위치하도록
-            if (light.transform.localEulerAngles.z > 35f && light.transform.localEulerAngles.z < 90f)
+            if (_flashLight.transform.localEulerAngles.z > 35f && _flashLight.transform.localEulerAngles.z < 90f)
             {
-                light.transform.localEulerAngles = new Vector3(light.transform.localEulerAngles.x,
-                    light.transform.localEulerAngles.y, 35f);
+                _flashLight.transform.localEulerAngles = new Vector3(_flashLight.transform.localEulerAngles.x,
+                    _flashLight.transform.localEulerAngles.y, 35f);
             }
             // 4 사분면에 위치하도록
-            else if (light.transform.localEulerAngles.z > 270f && light.transform.localEulerAngles.z < 325f)
+            else if (_flashLight.transform.localEulerAngles.z > 270f && _flashLight.transform.localEulerAngles.z < 325f)
             {
-                light.transform.localEulerAngles = new Vector3(light.transform.localEulerAngles.x,
-                    light.transform.localEulerAngles.y, 325f);
+                _flashLight.transform.localEulerAngles = new Vector3(_flashLight.transform.localEulerAngles.x,
+                    _flashLight.transform.localEulerAngles.y, 325f);
             }
         }
     }

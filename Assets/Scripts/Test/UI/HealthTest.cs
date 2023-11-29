@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HealthTest : MonoBehaviour
 {
-    [SerializeField] int _lifeSpeed = 1;
+    [SerializeField] int _lifeSpeed;
     HealthPanelUI _healthPanel;
 
 

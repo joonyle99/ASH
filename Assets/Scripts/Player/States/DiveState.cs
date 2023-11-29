@@ -16,16 +16,17 @@ public class DiveState : PlayerState
 
     [Space]
 
-    [Range(0f, 30f)] [SerializeField] float _diveSpeed = 15.0f;                         // 떨어지는 속도
-    [Range(0f, 30f)] [SerializeField] float _fastDiveSpeed = 10.0f;                     // 떨어지는 가속도
-    [Range(0f, 100f)][SerializeField] int _explosionDamage = 70;                        // 폭발 데미지
-    [Range(0f, 20000f)] [SerializeField] float _knockBackPower;                         // 넉백 파워
-    [Range(0f, 5f)][SerializeField] float _chargingDelay = 2.0f;                        // 차징 딜레이
-    [SerializeField] Vector3 _explosionSize;                                            // 폭발 범위
-    [SerializeField] Vector3 _chargingParticlePos = new Vector3(0f, 0.5f);         // 차징 파티클 생성 위치 보정
+    [Range(0f, 30f)] [SerializeField] private float _diveSpeed;                         // 떨어지는 속도
 
-    Collider2D[] _targetEnemys; // 적 콜라이더
-    ParticleSystem _chargingEffect;    // Charging 이펙트 인스턴스
+    [Range(0f, 30f)] [SerializeField] private float _fastDiveSpeed;                     // 떨어지는 가속도
+    [Range(0f, 100f)] [SerializeField] private int _explosionDamage;                    // 폭발 데미지
+    [Range(0f, 20000f)] [SerializeField] float _knockBackPower;                         // 넉백 파워
+    [Range(0f, 5f)] [SerializeField] private float _chargingDelay;                      // 차징 딜레이
+    [SerializeField] private Vector3 _explosionSize;                                    // 폭발 범위
+    [SerializeField] private Vector3 _chargingParticlePos;                              // 차징 파티클 생성 위치 보정
+
+    Collider2D[] _targetEnemys;         // 적 콜라이더
+    ParticleSystem _chargingEffect;     // Charging 이펙트 인스턴스
 
     bool _isCharging = false;          // 차징 상태
     bool _isDiving = false;            // 다이빙 상태
@@ -58,15 +59,15 @@ public class DiveState : PlayerState
                 Vector2 knockBackVector = new Vector2(_knockBackPower * dir, _knockBackPower);           // 넉백 벡터
 
                 // // 만약 슬라임이면
-                // if (enemy.GetComponent<BasedMonster>() != null)
+                // if (enemy.GetComponent<MonsterBehavior>() != null)
                 // {
                 //
                 // }
 
                 Debug.Log("타격 !!!");
 
-                enemy.GetComponent<BasedMonster>().OnDamage(_explosionDamage);
-                enemy.GetComponent<BasedMonster>().KnockBack(knockBackVector);
+                enemy.GetComponent<MonsterBehavior>().OnDamage(_explosionDamage);
+                enemy.GetComponent<MonsterBehavior>().KnockBack(knockBackVector);
             }
 
             // Boom Particle
