@@ -15,9 +15,11 @@ public class LightBeamLineEffect : MonoBehaviour
     [SerializeField] float _lineIdleIntensityMax = 1.2f;
     [SerializeField] float _lineIdleIntensityMin = 0.6f;
     [SerializeField] float _lineIdleEffectInterval= 1f;
+    [SerializeField] float _lastIdleInterval = 0.2f;
 
-    Transform[] _connectedTransforms = null;  
+    Transform[] _connectedTransforms = null;
 
+    bool _isLastBeam = false;
 
     Coroutine _shootingCoroutine = null;
     bool _isShootingDone = false;
@@ -27,7 +29,8 @@ public class LightBeamLineEffect : MonoBehaviour
     const float MinDistanceFromLantern = 0.01f;
     public void MarkAsLastConnection()
     {
-        _lineDrawSpeed = _lastLineDrawSpeed;
+        _isLastBeam = true;
+        _lineIdleEffectInterval = _lastIdleInterval;
     }
     private void Update()
     {
@@ -74,7 +77,10 @@ public class LightBeamLineEffect : MonoBehaviour
         {
             Vector3 targetPosition = _connectedTransforms[targetPointIndex].position;
             Vector3 direction = (targetPosition - currentPosition).normalized;
-            currentPosition += direction * _lineDrawSpeed * Time.deltaTime;
+            if(!_isLastBeam)
+                currentPosition += direction * _lineDrawSpeed * Time.deltaTime;
+            else
+                currentPosition += direction * _lastLineDrawSpeed * Time.deltaTime;
             if ((currentPosition - targetPosition).sqrMagnitude < MinDistanceFromLantern * MinDistanceFromLantern)
             {
                 _lineRenderer.SetPosition(targetPointIndex, targetPosition);
