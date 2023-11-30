@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 646087599043860266}
   - component: {fileID: 646087599043860267}
   - component: {fileID: 646087599043860244}
-  - component: {fileID: 912839290}
   m_Layer: 0
   m_Name: Bottom
   m_TagString: Untagged
@@ -132,19 +131,6 @@ PolygonCollider2D:
       - {x: 0.995, y: -1.28}
       - {x: 1.475, y: -1.29}
       - {x: 1.235, y: -1.18}
---- !u!114 &912839290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646087599043860265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7810ea0dd40c4344a988be38fe9fd3b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tolerance: 0.1
 --- !u!1 &646087599225333303
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,7 +245,6 @@ GameObject:
   - component: {fileID: 646087600557381148}
   - component: {fileID: 358460005848678282}
   - component: {fileID: 646087600557381150}
-  - component: {fileID: 242467076}
   - component: {fileID: 646087600557381151}
   m_Layer: 0
   m_Name: Falling Top
@@ -408,19 +393,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &242467076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646087600557381138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7810ea0dd40c4344a988be38fe9fd3b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tolerance: 0.12
 --- !u!114 &646087600557381151
 MonoBehaviour:
   m_ObjectHideFlags: 0
