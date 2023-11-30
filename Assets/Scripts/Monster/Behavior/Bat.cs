@@ -17,6 +17,8 @@ public class Bat : NormalMonster
     [SerializeField] private Transform _curTargetPosition;
     [SerializeField] private Transform _nextTargetPosition;
     [SerializeField] private int _curWayPointIndex = 0;
+    [SerializeField] private float _distanceWithTarget = 1f;
+    [SerializeField] private Vector3 _moveDir;
     [SerializeField] private float _targetWaitTime = 2f;
     [SerializeField] private float _elapsedWaitTime;
     [SerializeField] private bool _isWaiting;
@@ -24,6 +26,7 @@ public class Bat : NormalMonster
     [SerializeField] private bool _isAttack;
     [SerializeField] private float _targetAttackTime = 1.5f;
     [SerializeField] private float _elapsedAttackTime;
+    [SerializeField] private float _elapsedFadeOutTime;
     [SerializeField] private float _targetFadeOutTime = 3f;
 
     [SerializeField] private BatSkillParticle _batSkillPrefab;
@@ -78,7 +81,7 @@ public class Bat : NormalMonster
         {
             // 목적지에 도착
             if (Vector3.Distance(_curTargetPosition.position,
-                    this.transform.position) < 1f)
+                    this.transform.position) < _distanceWithTarget)
             {
                 _isWaiting = true;
 
@@ -92,10 +95,10 @@ public class Bat : NormalMonster
             else
             {
                 // 이동하면서 목적지를 향한 방향을 계속해서 탐지
-                Vector2 moveDirection = (_curTargetPosition.position - transform.position).normalized;
+                _moveDir = (_curTargetPosition.position - transform.position).normalized;
 
                 // 목적지로 등속 이동
-                Rigidbody.velocity = moveDirection * MoveSpeed;
+                Rigidbody.velocity = _moveDir * MoveSpeed;
             }
         }
 
@@ -216,10 +219,10 @@ public class Bat : NormalMonster
             startAlphaArray[i] = spriteRenderers[i].color.a;
 
         // 모든 렌더 컴포넌트를 돌면서 Fade Out
-        while (_targetFadeOutTime < 3)
+        while (_elapsedFadeOutTime < _targetFadeOutTime)
         {
-            _targetFadeOutTime += Time.deltaTime;
-            float normalizedTime = _targetFadeOutTime / 2;
+            _elapsedFadeOutTime += Time.deltaTime;
+            float normalizedTime = _elapsedFadeOutTime / 2;
 
             for (int i = 0; i < spriteRenderers.Length; i++)
             {
@@ -265,8 +268,13 @@ public class Bat : NormalMonster
 
     private void OnDrawGizmosSelected()
     {
+        // 공격 범위
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(this.transform.position, _attackBoxSize);
+
+        // 이동 방향
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(this.transform.position, this.transform.position + _moveDir * 2f);
     }
 
     #endregion
