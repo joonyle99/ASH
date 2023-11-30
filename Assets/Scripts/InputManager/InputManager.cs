@@ -59,6 +59,8 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
     }
     void Update()
     {
+        if (_currentSetter is InputSetterScriptableObject)
+            (_currentSetter as InputSetterScriptableObject).Update();
         _cachedState = _currentSetter.GetState();
     }
     public InputState GetState()

@@ -11,4 +11,5 @@ public abstract class InputSetterScriptableObject : ScriptableObject, IInputSett
     public virtual event IInputSetter.InputEventHandler ShootingAttackPressedEvent;
 #pragma warning restore CS0067 // Disable event never used
     public abstract InputState GetState();
+    public virtual void Update() { }
 }

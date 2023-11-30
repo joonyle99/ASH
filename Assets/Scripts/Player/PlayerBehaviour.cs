@@ -12,6 +12,7 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] Transform _groundCheckTrans;
     [SerializeField] float _groundCheckRadius;
+    [SerializeField] float _groundCheckLength;
 
     [Header("Wall Check")]
     [Space]
@@ -23,7 +24,7 @@ public class PlayerBehaviour : StateMachineBase
     [Header("Dive Check")]
     [Space]
 
-    [SerializeField] float _diveCheckDistance;
+    [SerializeField] float _diveCheckLength;
     [SerializeField] float _diveThreshholdHeight;
 
     [Header("Player Settings")]
@@ -82,6 +83,7 @@ public class PlayerBehaviour : StateMachineBase
 
     public Collider2D MainCollider { get { return _mainCollider; } }
     public RaycastHit2D GroundHit { get; set; }
+    public RaycastHit2D GroundHitWithRayCast { get; set; }
     public RaycastHit2D WallHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
 
@@ -176,6 +178,9 @@ public class PlayerBehaviour : StateMachineBase
         IsGrounded = GroundHit.collider != null;
         _groundHitCollider = GroundHit.collider;
 
+        // Check Ground with RayCast
+        GroundHitWithRayCast = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
+
         // Check Wall
         // WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSize, 0f, PlayerLookDir2D, 0f, _wallLayer);
         WallHit = Physics2D.Raycast(_wallCheckTrans.position, PlayerLookDir2D, _wallCheckDistance, _wallLayer);
@@ -183,7 +188,7 @@ public class PlayerBehaviour : StateMachineBase
         _wallHitCollider = WallHit.collider;
 
         // Check Dive Hit
-        DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckDistance, _groundLayer);
+        DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckLength, _groundLayer);
         GroundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
         _DiveHitCollider = DiveHit.collider;
 
@@ -294,6 +299,11 @@ public class PlayerBehaviour : StateMachineBase
         //TEMP
         gameObject.SetActive(false);
         SceneContext.Current.InstantRespawn();
+    }
+
+    public void Interact()
+    {
+        ChangeState<InteractionState>();
     }
 
     /*
@@ -453,6 +463,11 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
+        // Draw Ground Check With RayCast
+        Gizmos.color = Color.grey;
+        Gizmos.DrawLine(_groundCheckTrans.position,
+            _groundCheckTrans.position + Vector3.down * _groundCheckLength);
+
         // Draw Wall Check
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + PlayerLookDir3D * _wallCheckDistance);
@@ -460,6 +475,6 @@ public class PlayerBehaviour : StateMachineBase
         // Draw Dive Check
         Gizmos.color = Color.white;
         Gizmos.DrawLine(_groundCheckTrans.position + _paddingVec,
-            _groundCheckTrans.position + _paddingVec + Vector3.down * _diveCheckDistance);
+            _groundCheckTrans.position + _paddingVec + Vector3.down * _diveCheckLength);
     }
 }

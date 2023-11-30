@@ -36,6 +36,9 @@ public class LightController : MonoBehaviour
             }
         }
 
+        // Animator Parameter
+        playerBehaviour.Animator.SetBool("IsLightWorking", _isLightWorking);
+
         // Light Source Up / Down Rotation
         if (_isLightWorking)
         {

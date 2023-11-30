@@ -30,7 +30,7 @@ public sealed class LanternSceneContext : SceneContext
     List<LanternLike> _lanternActivationOrder = new List<LanternLike>();
 
     const float MaxRayCastDistance = 1000f;
-    const uint MaxRayCastHitCount = 3;
+    const uint MaxRayCastHitCount = 5;
     public void RecordActivationTime(LanternLike lantern)
     {
         _lanternActivationOrder.Remove(lantern);
