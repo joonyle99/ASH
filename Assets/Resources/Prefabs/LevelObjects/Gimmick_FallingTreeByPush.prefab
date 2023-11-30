@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 646087599043860266}
   - component: {fileID: 646087599043860267}
   - component: {fileID: 646087599043860244}
-  - component: {fileID: 912839290}
   m_Layer: 0
   m_Name: Bottom
   m_TagString: Untagged
@@ -124,7 +123,7 @@ PolygonCollider2D:
       - {x: -0.515, y: 1.22}
       - {x: -1.105, y: 1.12}
       - {x: -1.165, y: 0.35999998}
-      - {x: -1.285, y: 0.9}
+      - {x: -1.2497898, y: 1.099523}
       - {x: -1.3249999, y: -0.29999998}
       - {x: -1.475, y: -0.62}
       - {x: -2.395, y: -1.04}
@@ -132,19 +131,6 @@ PolygonCollider2D:
       - {x: 0.995, y: -1.28}
       - {x: 1.475, y: -1.29}
       - {x: 1.235, y: -1.18}
---- !u!114 &912839290
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646087599043860265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7810ea0dd40c4344a988be38fe9fd3b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tolerance: 0.1
 --- !u!1 &646087599225333303
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,7 +245,6 @@ GameObject:
   - component: {fileID: 646087600557381148}
   - component: {fileID: 358460005848678282}
   - component: {fileID: 646087600557381150}
-  - component: {fileID: 242467076}
   - component: {fileID: 646087600557381151}
   m_Layer: 0
   m_Name: Falling Top
@@ -365,7 +350,7 @@ PolygonCollider2D:
       - {x: -0.545, y: -6.2549996}
       - {x: -0.515, y: -5.535}
       - {x: -0.465, y: -6.355}
-      - {x: 0.575, y: -6.5049996}
+      - {x: 0.52805334, y: -6.3289504}
       - {x: 0.775, y: -1.605}
       - {x: 1.785, y: 1.285}
       - {x: 0.835, y: -0.49499997}
@@ -382,10 +367,10 @@ PolygonCollider2D:
       - {x: -1.405, y: -3.195}
       - {x: -1.805, y: -2.345}
       - {x: -1.4549999, y: -4.065}
-      - {x: -1.755, y: -6.6349998}
+      - {x: -1.7550008, y: -6.517633}
       - {x: -1.615, y: -6.265}
       - {x: -1.045, y: -6.2549996}
-      - {x: -0.905, y: -6.7149997}
+      - {x: -0.9284733, y: -6.492004}
       - {x: -0.805, y: -6.245}
 --- !u!50 &646087600557381150
 Rigidbody2D:
@@ -408,19 +393,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &242467076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646087600557381138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7810ea0dd40c4344a988be38fe9fd3b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tolerance: 0.18
 --- !u!114 &646087600557381151
 MonoBehaviour:
   m_ObjectHideFlags: 0

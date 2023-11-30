@@ -73,13 +73,13 @@ public class FallingTreeByPush : MonoBehaviour
         _rigid.AddForceAtPosition(Vector2.right * _dir * _power, forcePointTransform.position, ForceMode2D.Force);
     }
 
-    public void ExcutePush(float dir)
+    public void StartPush(float dir)
     {
         _isPushed = true;
         _dir = dir;
     }
 
-    public void FinishPush()
+    public void StopPush()
     {
         _isPushed = false;
         _dir = 0f;
