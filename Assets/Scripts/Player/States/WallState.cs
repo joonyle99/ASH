@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class WallState : PlayerState
 {
+    [Header("Wall State")]
+    [Space]
+
     // Wall State를 상속받는 클래스에서 사용할 변수
-    protected Vector2 moveDirection;
-    protected Vector2 wallNormal;
+    protected Vector2 wallPerPendVec;
+    protected Vector2 wallNormalVec;
+    protected Vector3 wallHitPointPos;
     protected Vector3 wallHitPos;
-    protected Vector3 paddingVec = new Vector3(0.1f, 0f, 0f);
-    // protected Vector3 crossVector;
 
     // Length for Gizmos
-    float _moveDirLength = 3.5f;
+    float _perpendVecLength = 3.5f;
     float _normalDirLength = 1.5f;
-    // float _crossDirLength = 1.5f;
 
     protected override void OnEnter()
     {
@@ -25,34 +26,23 @@ public class WallState : PlayerState
         Player.Animator.SetBool("IsWall", true);
 
         // 벽의 법선벡터
-        wallNormal = Player.WallHit.normal;
+        wallNormalVec = Player.WallHit.normal;
 
-        // 벽의 Raycast Hit 지점 좌표
+        // 벽의 위치
         wallHitPos = Player.WallHit.transform.position;
 
-        // 벽의 법선벡터와 플레이어가 바라보는 방향의 내적을 구한다
-        float dot = Vector2.Dot(wallNormal, Player.PlayerLookDir2D);
+        // 벽의 Hit 위치
+        wallHitPointPos = Player.WallHit.point;
 
-        // 벽의 기울기에 따라 캐릭터를 회전
-        // crossVector = Vector3.Cross(wallNormal, Vector3.up); // 외적을 이용한 회전축 계산
-
-        // 내적이 0보다 크면 예각
-        if (dot > 0)
-        {
-            // 벽의 법선벡터와 수직한 벡터는 플레이어의 이동방향 (Normalize)
-            // Perpendicular()로 구한 벡터는 시계 반대 방향으로 항상 90도 회전한 벡터
-            // https://docs.unity3d.com/ScriptReference/Vector2.Perpendicular.html
-            moveDirection = Vector2.Perpendicular(Player.WallHit.normal).normalized;
-        }
-        // 작으면 둔각
+        // 벽의 노말 벡터의 수직한 벡터 계산
+        if (wallHitPointPos.x > Player.transform.position.x)
+            wallPerPendVec = (-1) * Vector2.Perpendicular(wallNormalVec).normalized;
         else
-        {
-            // 벽의 법선벡터에 수직인 벡터를 반대 방향으로 만들어줘야 한다 (플레이어와 벽의 위치에 따른 이동방향을 변화)
-            if (Player.WallHit.point.x > Player.transform.position.x)
-                moveDirection = (-1) * Vector2.Perpendicular(Player.WallHit.normal).normalized;
-            else
-                moveDirection = Vector2.Perpendicular(Player.WallHit.normal).normalized;
-        }
+            wallPerPendVec = Vector2.Perpendicular(wallNormalVec).normalized;
+
+        Debug.Log("WallState Enter");
+
+        // Player.transform.position = new Vector3(wallHitPos.x, Player.transform.position.y);
     }
 
     protected override void OnUpdate()
@@ -72,14 +62,11 @@ public class WallState : PlayerState
     private void OnDrawGizmosSelected()
     {
         // 플레이어가 이동하는 방향
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(transform.position - paddingVec, transform.position - paddingVec + new Vector3(moveDirection.x, moveDirection.y, 0) * _moveDirLength);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(wallHitPos, wallHitPos + new Vector3(wallPerPendVec.x, wallPerPendVec.y, 0) * _perpendVecLength);
 
         // 벽의 법선벡터
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(wallHitPos, wallHitPos + new Vector3(wallNormal.x, wallNormal.y, 0) * _normalDirLength);
-
-        // Gizmos.color = Color.yellow;
-        // Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, 0, crossVector.z) * _crossDirLength);
+        Gizmos.DrawLine(wallHitPos, wallHitPos + new Vector3(wallNormalVec.x, wallNormalVec.y, 0) * _normalDirLength);
     }
 }
