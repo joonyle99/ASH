@@ -16,7 +16,8 @@ public class Lantern : LanternLike, ILightCaptureListener
         public float OuterRadius;
         public float Intensity;
     }
-    [SerializeField] bool _isInsideCave = false;
+    bool _isInsideCave = false;
+    [SerializeField] bool _turnedOnAtStart = false;
     [SerializeField] float _lightUpTime = 1.5f;
     LightSettings _normalLightSettings;
     LightSettings _caveLightSettings;
@@ -45,6 +46,15 @@ public class Lantern : LanternLike, ILightCaptureListener
 
     void Awake()
     {
+        var collisions = Physics2D.OverlapPointAll(LightPoint.position);
+        foreach(var collision in collisions)
+        {
+            if (collision.GetComponent<HiddenPathDarkness>() != null)
+            {
+                _isInsideCave = true;
+                break;
+            }
+        }
         if (_isInsideCave)
         {
             _caveLightSettings.OuterRadius = _caveSpotLight.pointLightOuterRadius;
@@ -60,8 +70,19 @@ public class Lantern : LanternLike, ILightCaptureListener
             _currentSettings = _normalLightSettings;
         }
         _idleInterval = Random.Range(_idleEffectIntervalMin, _idleEffectIntervalMax);
-        _currentSpotLight.intensity = 0;
-        _currentSpotLight.pointLightOuterRadius = 0;
+        if (!_turnedOnAtStart)
+        {
+            _currentSpotLight.intensity = 0;
+            _currentSpotLight.pointLightOuterRadius = 0;
+        }
+        else
+        {
+            _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
+            _currentSpotLight.intensity = _currentSettings.Intensity;
+
+            IsLightOn = true;
+            _currentSpotLight.gameObject.SetActive(true);
+        }
     }
     void Update()
     {

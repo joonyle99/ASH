@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using Com.LuisPedroFonseca.ProCamera2D;
+using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,12 +27,19 @@ public sealed class LanternSceneContext : SceneContext
     [Header("Last Connection Camera Effect")]
     [SerializeField] Transform _lastConnectionCameraPoint;
     [SerializeField] InputSetterScriptableObject _lastConnectionInputSetter;
+    [SerializeField] float _cameraLastLanternStayDuration;
+    [SerializeField] float _lastBeamDuration = 1;
+    [SerializeField] float _doorOpenDelay = 1;
     [SerializeField] float _cameraDoorStayDuration;
+    [SerializeField] ShakePreset _beamHitDoorPreset;
+    [SerializeField] ConstantShakePreset _beamShootingPreset;
 
     List<LanternLike> _lanternActivationOrder = new List<LanternLike>();
 
     const float MaxRayCastDistance = 1000f;
     const uint MaxRayCastHitCount = 5;
+
+    bool _StopCheckingConnections = false;
     public void RecordActivationTime(LanternLike lantern)
     {
         _lanternActivationOrder.Remove(lantern);
@@ -40,8 +49,6 @@ public sealed class LanternSceneContext : SceneContext
     {
         base.Awake();
         Current = this;
-        if (_lightDoor == null)
-            Debug.LogWarning("Light Door is not set!");
     }
     public bool IsAllRelationsFullyConnected(params LanternLike [] exceptions)
     {
@@ -68,6 +75,8 @@ public sealed class LanternSceneContext : SceneContext
     }
     private void Update()
     {
+        if (_StopCheckingConnections) //TEMP..?
+            return;
         foreach(var relation in _lanternRelations)
         {
             if (!relation.IsConnected)
@@ -84,9 +93,9 @@ public sealed class LanternSceneContext : SceneContext
     }
     bool CanRayBeReached(LanternLike a, LanternLike b)
     {
-        Vector2 rayDirection = b.transform.position - a.transform.position;
+        Vector2 rayDirection = b.LightPoint.position - a.LightPoint.position;
         var hits = new RaycastHit2D[MaxRayCastHitCount];
-        Physics2D.RaycastNonAlloc(a.transform.position, rayDirection, hits, MaxRayCastDistance, _beamObstacleLayers);
+        Physics2D.RaycastNonAlloc(a.LightPoint.position, rayDirection, hits, MaxRayCastDistance, _beamObstacleLayers);
         foreach (var hit in hits)
         {
             if (hit.transform == a.transform)
@@ -117,33 +126,18 @@ public sealed class LanternSceneContext : SceneContext
         {
             relation.Beam = Instantiate<LightBeam>(_beamPrefab);
         }
-        StartCoroutine(ConnectionCoroutine(relation));
+        SetBeamConnections(relation);
         if (relation.A.transform == _lightDoor.transform || relation.B.transform == _lightDoor.transform)
         {
-            StartCoroutine(LastConnectionCameraCoroutine(relation.Beam));   
+            StartCoroutine(LastConnectionCameraCoroutine(relation));   
+        }
+        else
+        {
+            StartCoroutine(ConnectionCoroutine(relation));
         }
 
     }
-    IEnumerator LastConnectionCameraCoroutine(LightBeam beam)
-    {
-        var cameraController = Camera.main.GetComponent<CameraController>();
-        cameraController.StartFollow(_lastConnectionCameraPoint);
-        _lastConnectionCameraPoint.position = beam.CurrentShootingPosition;
-        InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
-        while (!beam.IsShootingDone)
-        {
-            _lastConnectionCameraPoint.position = beam.CurrentShootingPosition;
-            yield return null;
-        }
-        while(_lightDoor.CurrentState == LightDoor.State.Opening)
-        {
-            yield return null;
-        }
-        yield return new WaitForSecondsRealtime(_cameraDoorStayDuration);
-        cameraController.StartFollow(Player.transform);
-        InputManager.Instance.ChangeToDefaultSetter();
-    }
-    IEnumerator ConnectionCoroutine(LanternRelation relation)
+    void SetBeamConnections(LanternRelation relation)
     {
         if (relation.A.transform == _lightDoor.transform)
             relation.Beam.SetLanterns(relation.B, relation.A);
@@ -153,6 +147,44 @@ public sealed class LanternSceneContext : SceneContext
             relation.Beam.SetLanterns(relation.B, relation.A);
         else
             relation.Beam.SetLanterns(relation.A, relation.B);
+    }
+    IEnumerator LastConnectionCameraCoroutine(LanternRelation relation)
+    {
+        _StopCheckingConnections = true;
+        var cameraController = Camera.main.GetComponent<CameraController>();
+        //랜턴으로 카메라 이동 후 대기
+        cameraController.StartFollow(relation.A.transform == _lightDoor ? relation.B.LightPoint : relation.A.LightPoint);
+        InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
+        yield return new WaitForSecondsRealtime(_cameraLastLanternStayDuration);
+        //레이저 발사
+        cameraController.StartConstantShake(_beamShootingPreset);
+        StartCoroutine(ConnectionCoroutine(relation));
+        _lastConnectionCameraPoint.position = relation.Beam.CurrentShootingPosition;
+        cameraController.StartFollow(_lastConnectionCameraPoint);
+        while (!relation.Beam.IsShootingDone)
+        {
+            _lastConnectionCameraPoint.position = relation.Beam.CurrentShootingPosition;
+            yield return null;
+        }
+        //cameraController.StartShake(_beamHitDoorPreset);
+        yield return new WaitForSeconds(_lastBeamDuration);
+        relation.Beam.gameObject.SetActive(false);
+        //빔 사라진 후 문열기 시작
+        cameraController.StopConstantShake(0.1f);
+        yield return new WaitForSecondsRealtime(_doorOpenDelay);
+        _lightDoor.Open();
+        while(_lightDoor.CurrentState == LightDoor.State.Opening)
+        {
+            yield return null;
+        }
+        //문 열림 끝남
+        cameraController.StopConstantShake(_cameraDoorStayDuration);
+        yield return new WaitForSecondsRealtime(_cameraDoorStayDuration);
+        cameraController.StartFollow(Player.transform);
+        InputManager.Instance.ChangeToDefaultSetter();
+    }
+    IEnumerator ConnectionCoroutine(LanternRelation relation)
+    {
         relation.Beam.gameObject.SetActive(true);
         yield return new WaitUntil(()=>relation.Beam.IsShootingDone);
         relation.A.OnBeamConnected(relation.Beam);
@@ -163,6 +195,8 @@ public sealed class LanternSceneContext : SceneContext
         if (!relation.IsConnected)
             return;
         relation.Beam.gameObject.SetActive(false);
+        relation.A.OnBeamDisconnected(relation.Beam);
+        relation.B.OnBeamDisconnected(relation.Beam);
     }
     public void DisconnectFromAll(LanternLike lantern)
     {
@@ -176,6 +210,15 @@ public sealed class LanternSceneContext : SceneContext
     {
         Result buildResult = Result.Success;
 
+        if (_lightDoor == null)
+        {
+            _lightDoor = FindObjectOfType<LightDoor>();
+            if (_lightDoor == null)
+            {
+                Debug.LogWarning("Light Door is not set!");
+                buildResult = Result.Fail;
+            }
+        }
 
 
         return buildResult;
@@ -188,7 +231,7 @@ public sealed class LanternSceneContext : SceneContext
         {
             if (relation.A == null || relation.B == null)
                 continue;
-            Gizmos.DrawLine(relation.A.transform.position, relation.B.transform.position);
+            Gizmos.DrawLine(relation.A.LightPoint.position, relation.B.LightPoint.position);
         }
     }
 
