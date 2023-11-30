@@ -4,32 +4,27 @@ using UnityEngine;
 
 public class LightBeam : MonoBehaviour
 {
-    LineRenderer _lineRenderer;
+    LightBeamLineEffect _beamEffect;
 
     LanternLike _startLantern;
     LanternLike _endLantern;
 
-    public bool IsConnectedTo(Lantern lantern)
+    public bool IsShootingDone { get { return _beamEffect.IsShootingDone; } }
+    private void Awake()
     {
-        return _startLantern == lantern || _endLantern == lantern;
+        _beamEffect = GetComponent<LightBeamLineEffect>();
     }
     public void SetLanterns(LanternLike start, LanternLike end)
     {
         _startLantern = start;
         _endLantern = end;
     }
-    private void Awake()
-    {
-        _lineRenderer = GetComponent<LineRenderer>();
-    }
     void ResetLinePositions()
     {
         if (_startLantern == null)
             return;
-        _lineRenderer.SetPosition(0, _startLantern.transform.position);
-        _lineRenderer.SetPosition(1, _endLantern.transform.position);
+        _beamEffect.StartBeamEffect(new Transform[]{ _startLantern.transform, _endLantern.transform});
     }
-    // Start is called before the first frame update
     void Start()
     {
         ResetLinePositions();
@@ -39,9 +34,8 @@ public class LightBeam : MonoBehaviour
     {
         ResetLinePositions();
     }
-    // Update is called once per frame
-    void Update()
+    public bool IsConnectedTo(Lantern lantern)
     {
-        ResetLinePositions();
+        return _startLantern == lantern || _endLantern == lantern;
     }
 }

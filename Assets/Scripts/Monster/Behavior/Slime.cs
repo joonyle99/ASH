@@ -17,9 +17,13 @@ public class Slime : NormalMonster
     [SerializeField] private Transform _curTargetPosition;
     [SerializeField] private Transform _nextTargetPosition;
     [SerializeField] private int _curWayPointIndex = 0;
+    [SerializeField] private float _distanceWithTarget = 2f;
+    [SerializeField] private Vector3 _moveDir;
     [SerializeField] private float _upperPower = 10f;
     [SerializeField] private float _volumeMul;
     [SerializeField] private float _power;
+    [SerializeField] private float _elapsedFadeOutTime;
+    [SerializeField] private float _targetFadeOutTime = 3f;
 
     #endregion
 
@@ -48,7 +52,7 @@ public class Slime : NormalMonster
 
         // 목적지를 다음 지점으로 이동
         if (Vector3.Distance(_curTargetPosition.position,
-                transform.position) < 2f)
+                transform.position) < _distanceWithTarget)
         {
             _curWayPointIndex++;
             _curTargetPosition = _nextTargetPosition;
@@ -120,11 +124,10 @@ public class Slime : NormalMonster
         float startAlpha = spriteRenderer.color.a;
 
         // 서서히 알파값 감소
-        float t = 0;
-        while (t < 3)
+        while (_elapsedFadeOutTime < _targetFadeOutTime)
         {
-            t += Time.deltaTime;
-            float normalizedTime = t / 2;
+            _elapsedFadeOutTime += Time.deltaTime;
+            float normalizedTime = _elapsedFadeOutTime / 2;
             Color color = spriteRenderer.color;
             color.a = Mathf.Lerp(startAlpha, 0f, normalizedTime);
             spriteRenderer.color = color;
@@ -155,9 +158,10 @@ public class Slime : NormalMonster
             // 땅에 닿았을 때 힘을 줘볼까?
             if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-                Vector3 moveDirection = (_curTargetPosition.position - transform.position).normalized;
-                Vector3 force = new Vector3(moveDirection.x * MoveSpeed, _upperPower, 0f);
-                Rigidbody.velocity = force;
+                float dir = Mathf.Sign(_curTargetPosition.position.x - transform.position.x);
+                Vector2 moveVector = new Vector2(dir * MoveSpeed, _upperPower);
+                _moveDir = moveVector.normalized;
+                Rigidbody.velocity = moveVector;
             }
         }
         // 플레이어와 충돌했을 때
@@ -175,6 +179,12 @@ public class Slime : NormalMonster
             // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(damage, vec);
             */
         }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        // 이동 방향
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(this.transform.position, this.transform.position + _moveDir * 2f);
     }
 
     #endregion
