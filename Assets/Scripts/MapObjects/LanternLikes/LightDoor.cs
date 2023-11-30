@@ -5,16 +5,17 @@ public class LightDoor : LanternLike
 {
     private void Start()
     {
-        IsLightOn = true;
     }
-
+    public void Update()
+    {
+        if (LanternSceneContext.Current.IsAllRelationsFullyConnected(this))
+        {
+            IsLightOn = true;
+        }
+    }
     public override void OnBeamConnected(LightBeam beam)
     {
-        //모두 연결되면 문열림
-        if (LanternSceneContext.Current.IsAllRelationsConnected())
-        {
             Debug.Log("문열림");
-        }
     }
 
 }
