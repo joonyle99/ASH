@@ -170,6 +170,7 @@ public sealed class LanternSceneContext : SceneContext
         yield return new WaitForSeconds(_lastBeamDuration);
         relation.Beam.gameObject.SetActive(false);
         //빔 사라진 후 문열기 시작
+        cameraController.StopConstantShake(0.1f);
         yield return new WaitForSecondsRealtime(_doorOpenDelay);
         _lightDoor.Open();
         while(_lightDoor.CurrentState == LightDoor.State.Opening)
