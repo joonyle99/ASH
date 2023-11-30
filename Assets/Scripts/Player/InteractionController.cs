@@ -57,10 +57,7 @@ public class InteractionController : MonoBehaviour
                 if (_player.IsInteractable)
                 {
                     _interactionTarget.Interact();
-
-                    // TODO : PlayerBehaviour 코드로 이동해야함
-                    _player.ChangeState<InteractionState>();
-
+                    _player.Interact();
                 }
             }
             if (_interactionTarget.IsInteracting)

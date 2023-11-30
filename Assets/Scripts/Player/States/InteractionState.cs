@@ -30,6 +30,8 @@ public class InteractionState : PlayerState
 
     protected override void OnEnter()
     {
+        // Debug.Log("OnEnter InteractionState");
+
         Player.Animator.SetTrigger("Interact");
 
         // 타겟 오브젝트와 상호작용 타입 설정
@@ -125,8 +127,6 @@ public class InteractionState : PlayerState
         }
 
         _targetObject = targetObject;
-
-        return;
     }
 
     public void SetInteractionType(InteractionType interactionType)
@@ -135,15 +135,11 @@ public class InteractionState : PlayerState
 
         if (interactionType == InteractionType.None)
             Debug.LogWarning("Interaction not set");
-
-        return;
     }
 
     public void FinalizeInteraction()
     {
         _targetObject = null;
         _curInteractionType = InteractionType.None;
-
-        return;
     }
 }

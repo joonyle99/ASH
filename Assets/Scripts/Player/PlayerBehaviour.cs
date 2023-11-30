@@ -296,6 +296,11 @@ public class PlayerBehaviour : StateMachineBase
         SceneContext.Current.InstantRespawn();
     }
 
+    public void Interact()
+    {
+        ChangeState<InteractionState>();
+    }
+
     /*
     public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)
     {
