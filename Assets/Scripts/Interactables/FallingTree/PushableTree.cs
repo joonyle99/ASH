@@ -17,9 +17,9 @@ public class PushableTree : InteractableObject
         InputState inputState = InputManager.Instance.GetState();
 
         // 상호작용 종료 타이밍
-        if (InputManager.Instance.InteractionKey.KeyUp || Mathf.Abs(inputState.Horizontal) < 0.1f || FallingTreeByPush.IsFalling)
+        if (InputManager.Instance.InteractionKey.KeyUp || FallingTreeByPush.IsFalling)
         {
-            // 상호작용 해제 타이밍
+            // 상호작용 해제 타이밍 (나무가 이미 쓰러진 경우)
             if (FallingTreeByPush.IsFalling)
             {
                 // 더이상 상호작용 못하게 막는다
@@ -27,33 +27,48 @@ public class PushableTree : InteractableObject
             }
 
             // 상호작용 종료
-            FallingTreeByPush.FinishPush();
+            FallingTreeByPush.StopPush();
             FinishInteraction();
 
             return;
         }
 
-        // Push Dir 설정
-        float pushDir = Mathf.Sign(FallingTreeByPush.transform.position.x - SceneContext.Current.Player.transform.position.x);
+        if (Mathf.Abs(inputState.Horizontal) < 0.1f)
+        {
+            // -------------------------------------------- //
+            //      나무를 밀지 않고 가만히 있는 코드         //
+            // -------------------------------------------- //
 
-        // 오른쪽으로 밀어야하는 경우
-        if (pushDir > 0)
-        {
-            // 오른쪽 방향키를 누른다
-            if (inputState.Horizontal > 0f)
-            {
-                // Top Tree 부분을 민다.
-                FallingTreeByPush.ExcutePush(pushDir);
-            }
+            // Debug.Log("나무를 가만히 잡고만 있는다");
+
+            FallingTreeByPush.StopPush();
         }
-        // 왼쪽으로 밀어야하는 경우
-        else if (pushDir < 0)
+        else
         {
-            // 왼쪽 방향키를 누른다
-            if (inputState.Horizontal < 0f)
+
+            // -------------------------------------------- //
+            //      실제로 플레이어가 나무를 미는 코드         //
+            // -------------------------------------------- //
+
+            // Debug.Log("나무를 민다");
+
+            // Push Dir 설정
+            float pushDir = Mathf.Sign(FallingTreeByPush.transform.position.x - SceneContext.Current.Player.transform.position.x);
+
+            if (pushDir > 0f)
             {
-                // Top Tree 부분을 민다.
-                FallingTreeByPush.ExcutePush(pushDir);
+                if (inputState.Horizontal > 0f)
+                {
+                    // Top Tree 부분을 민다.
+                    FallingTreeByPush.StartPush(pushDir);
+                }
+            }
+            else if (pushDir < 0f)
+            {
+                if (inputState.Horizontal < 0f)
+                {
+                    FallingTreeByPush.StartPush(pushDir);
+                }
             }
         }
     }
