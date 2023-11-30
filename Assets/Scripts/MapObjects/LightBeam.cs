@@ -26,7 +26,7 @@ public class LightBeam : MonoBehaviour
     private void OnEnable()
     {
         if (_startLantern != null)
-            _beamEffect.StartBeamEffect(new Transform[] { _startLantern.transform, _endLantern.transform });
+            _beamEffect.StartBeamEffect(new Transform[] { _startLantern.LightPoint, _endLantern.LightPoint });
     }
     public bool IsConnectedTo(Lantern lantern)
     {
