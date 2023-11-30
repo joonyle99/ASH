@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 
 public class LightBeamLineEffect : MonoBehaviour
 {
+    public Vector3 CurrentShootingPosition { get; private set; }
     public bool IsShootingDone { get { return _isShootingDone;} }
     [SerializeField] LineRenderer _lineRenderer;
 
@@ -23,10 +24,6 @@ public class LightBeamLineEffect : MonoBehaviour
     float _idleTime = 0f;
 
     const float MinDistanceFromLantern = 0.01f;
-    private void Awake()
-    { 
-        _lineRenderer = GetComponent<LineRenderer>();
-    }
     private void Update()
     {
         if (_connectedTransforms != null)
@@ -88,6 +85,7 @@ public class LightBeamLineEffect : MonoBehaviour
             {
                 _lineRenderer.SetPosition(targetPointIndex, currentPosition);
             }
+            CurrentShootingPosition = currentPosition;
             yield return null;
         }
         _isShootingDone = true;

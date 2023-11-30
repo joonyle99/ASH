@@ -10,6 +10,7 @@ public class LightBeam : MonoBehaviour
     LanternLike _endLantern;
 
     public bool IsShootingDone { get { return _beamEffect.IsShootingDone; } }
+    public Vector3 CurrentShootingPosition { get { return _beamEffect.CurrentShootingPosition; } }
     private void Awake()
     {
         _beamEffect = GetComponent<LightBeamLineEffect>();
@@ -19,20 +20,10 @@ public class LightBeam : MonoBehaviour
         _startLantern = start;
         _endLantern = end;
     }
-    void ResetLinePositions()
-    {
-        if (_startLantern == null)
-            return;
-        _beamEffect.StartBeamEffect(new Transform[]{ _startLantern.transform, _endLantern.transform});
-    }
-    void Start()
-    {
-        ResetLinePositions();
-        //TODO : Connecting animation
-    }
     private void OnEnable()
     {
-        ResetLinePositions();
+        if (_startLantern != null)
+            _beamEffect.StartBeamEffect(new Transform[] { _startLantern.transform, _endLantern.transform });
     }
     public bool IsConnectedTo(Lantern lantern)
     {
