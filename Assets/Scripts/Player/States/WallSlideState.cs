@@ -20,7 +20,7 @@ public class WallSlideState : WallState
     protected override void OnUpdate()
     {
         // 벽면을 따라 서서히 땅에 떨어지는 기능
-        Player.Rigidbody.velocity = (-1) * moveDirection * _wallSlideSpeed;
+        Player.Rigidbody.velocity = (-1) * wallPerPendVec * _wallSlideSpeed;
 
         // Wall Grab State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
