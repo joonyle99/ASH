@@ -19,6 +19,9 @@ public class LightBeam : MonoBehaviour
     {
         _startLantern = start;
         _endLantern = end;
+        _beamEffect = GetComponent<LightBeamLineEffect>();
+        if (_endLantern == LanternSceneContext.Current.LightDoor)
+            _beamEffect.MarkAsLastConnection();
     }
     private void OnEnable()
     {

@@ -10,7 +10,8 @@ public class LightBeamLineEffect : MonoBehaviour
     public bool IsShootingDone { get { return _isShootingDone;} }
     [SerializeField] LineRenderer _lineRenderer;
 
-    [SerializeField] float _lineDrawSpeed = 5f;
+    [SerializeField] float _lineDrawSpeed = 30f;
+    [SerializeField] float _lastLineDrawSpeed = 10f;
     [SerializeField] float _lineIdleIntensityMax = 1.2f;
     [SerializeField] float _lineIdleIntensityMin = 0.6f;
     [SerializeField] float _lineIdleEffectInterval= 1f;
@@ -24,6 +25,10 @@ public class LightBeamLineEffect : MonoBehaviour
     float _idleTime = 0f;
 
     const float MinDistanceFromLantern = 0.01f;
+    public void MarkAsLastConnection()
+    {
+        _lineDrawSpeed = _lastLineDrawSpeed;
+    }
     private void Update()
     {
         if (_connectedTransforms != null)

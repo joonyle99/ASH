@@ -8,10 +8,16 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
     ProCamera2D _proCamera;
 
+
     public void OnSceneContextBuilt()
     {
         _proCamera.enabled = true;
         _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
+    }
+    public void StartFollow(Transform target)
+    {
+        _proCamera.RemoveAllCameraTargets();
+        _proCamera.AddCameraTarget(target);
     }
     public void DisableCameraFollow()
     {
@@ -22,7 +28,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void SnapFollow()
     {
         StartCoroutine(SnapFollowCoroutine());
-
     }
     IEnumerator SnapFollowCoroutine()
     {
