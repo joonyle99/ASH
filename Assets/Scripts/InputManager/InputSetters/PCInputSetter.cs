@@ -46,7 +46,7 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
         return state;
     }
 
-    void Update()
+    public override void Update()
     {
         if (Input.GetKeyDown(_jumpKey))
         {
