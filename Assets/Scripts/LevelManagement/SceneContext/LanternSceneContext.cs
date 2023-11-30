@@ -16,16 +16,21 @@ public sealed class LanternSceneContext : SceneContext
         public bool IsConnectionDone => IsConnected && Beam.IsShootingDone;
     }
     public new static LanternSceneContext Current { get; private set; }
+    public LightDoor LightDoor { get { return _lightDoor; } }
 
     [SerializeField] LightBeam _beamPrefab;
     [SerializeField] LayerMask _beamObstacleLayers;
     [SerializeField] LightDoor _lightDoor;
     [SerializeField] List<LanternRelation> _lanternRelations;
+    [Header("Last Connection Camera Effect")]
+    [SerializeField] Transform _lastConnectionCameraPoint;
+    [SerializeField] InputSetterScriptableObject _lastConnectionInputSetter;
+    [SerializeField] float _cameraDoorStayDuration;
 
     List<LanternLike> _lanternActivationOrder = new List<LanternLike>();
 
     const float MaxRayCastDistance = 1000f;
-    const uint MaxRayCastHitCount = 3;
+    const uint MaxRayCastHitCount = 5;
     public void RecordActivationTime(LanternLike lantern)
     {
         _lanternActivationOrder.Remove(lantern);
@@ -112,9 +117,31 @@ public sealed class LanternSceneContext : SceneContext
         {
             relation.Beam = Instantiate<LightBeam>(_beamPrefab);
         }
-
-
         StartCoroutine(ConnectionCoroutine(relation));
+        if (relation.A.transform == _lightDoor.transform || relation.B.transform == _lightDoor.transform)
+        {
+            StartCoroutine(LastConnectionCameraCoroutine(relation.Beam));   
+        }
+
+    }
+    IEnumerator LastConnectionCameraCoroutine(LightBeam beam)
+    {
+        var cameraController = Camera.main.GetComponent<CameraController>();
+        cameraController.StartFollow(_lastConnectionCameraPoint);
+        _lastConnectionCameraPoint.position = beam.CurrentShootingPosition;
+        InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
+        while (!beam.IsShootingDone)
+        {
+            _lastConnectionCameraPoint.position = beam.CurrentShootingPosition;
+            yield return null;
+        }
+        while(_lightDoor.CurrentState == LightDoor.State.Opening)
+        {
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(_cameraDoorStayDuration);
+        cameraController.StartFollow(Player.transform);
+        InputManager.Instance.ChangeToDefaultSetter();
     }
     IEnumerator ConnectionCoroutine(LanternRelation relation)
     {

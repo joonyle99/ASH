@@ -11,4 +11,5 @@ public interface IInputSetter
     public event InputEventHandler ShootingAttackPressedEvent;
 
     public InputState GetState();
+    public void Update();
 }
