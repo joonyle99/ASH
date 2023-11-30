@@ -7,11 +7,14 @@ using UnityEditor;
 
 public class RollingStone : InteractableObject
 {
+    public enum StoneType { RollingStone, StillStone}
     Rigidbody2D _rigidbody;
 
     [SerializeField] GameObject _playerInteractor;
     [SerializeField] float _maxInteractionDistance = 0.1f;
+    [SerializeField] StoneType _type = StoneType.RollingStone;
 
+    public StoneType Type { get { return _type; } } 
     PolygonCollider2D _collider;
 
     AttackableEntity _attackableComponent;
