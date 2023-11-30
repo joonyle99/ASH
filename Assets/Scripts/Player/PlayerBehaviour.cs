@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerBehaviour : StateMachineBase
 {
@@ -86,6 +84,8 @@ public class PlayerBehaviour : StateMachineBase
     public RaycastHit2D GroundHitWithRayCast { get; set; }
     public RaycastHit2D WallHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
+
+    public Vector2 GroundAlignedMoveDir { get; set; }
 
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
     public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.Instance¿Í µ¿ÀÏ
@@ -180,6 +180,14 @@ public class PlayerBehaviour : StateMachineBase
 
         // Check Ground with RayCast
         GroundHitWithRayCast = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
+
+        if (GroundHitWithRayCast)
+        {
+            if (PlayerLookDir2D.x > 0f)
+                GroundAlignedMoveDir = (-1) * Vector2.Perpendicular(GroundHitWithRayCast.normal).normalized;
+            else
+                GroundAlignedMoveDir = Vector2.Perpendicular(GroundHitWithRayCast.normal).normalized;
+        }
 
         // Check Wall
         // WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSize, 0f, PlayerLookDir2D, 0f, _wallLayer);
