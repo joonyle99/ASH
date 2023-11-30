@@ -11,11 +11,12 @@ public class RollingStone : InteractableObject
     Rigidbody2D _rigidbody;
 
     [SerializeField] GameObject _playerInteractor;
+    [SerializeField] float _maxRollSpeed;
     [SerializeField] float _maxInteractionDistance = 0.1f;
     [SerializeField] StoneType _type = StoneType.RollingStone;
 
-    public StoneType Type { get { return _type; } } 
-    PolygonCollider2D _collider;
+    public StoneType Type { get { return _type; } }
+    Collider2D _collider;
 
     AttackableEntity _attackableComponent;
 
@@ -35,7 +36,7 @@ public class RollingStone : InteractableObject
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _collider = GetComponent<PolygonCollider2D>();
+        _collider = GetComponent<Collider2D>();
         _attackableComponent = GetComponent<AttackableEntity>();
         _immovable = true;
     }
@@ -44,11 +45,17 @@ public class RollingStone : InteractableObject
         _immovable = false;
 
         //TODO : Joint 생성
-        //SceneContext.Current.Player.AddJoint<HingeJoint2D>(_rigidbody, 300);
+        //SceneContext.Current.Player.AddJoint<DistanceJoint2D>(_rigidbody, 300);
 
     }
     public override void UpdateInteracting()
     {
+
+        if (_rigidbody.velocity.sqrMagnitude > _maxRollSpeed * _maxRollSpeed)
+        {
+            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxRollSpeed;
+        }
+
         //TODO : 플레이어와 떨어질 때 joint 끊기
         if (Physics2D.Distance(_collider, SceneContext.Current.Player.MainCollider).distance > _maxInteractionDistance
             ||  InputManager.Instance.InteractionKey.State == KeyState.KeyUp)

@@ -311,7 +311,9 @@ MonoBehaviour:
   _isInteractable: 1
   _interactionType: 2
   _playerInteractor: {fileID: 1284470427263961506}
+  _maxRollSpeed: 2
   _maxInteractionDistance: 0.1
+  _type: 0
 --- !u!114 &1857939148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,6 +328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _threatVelocityThreshold: 3
   _damage: 1
+  _interactableComponent: {fileID: 1284470426582742949}
 --- !u!114 &1857939149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,8 +364,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1284470427263961517}
   - component: {fileID: 1284470427263961513}
-  - component: {fileID: 1284470427263961518}
   - component: {fileID: 7174848021176993594}
+  - component: {fileID: 1386102874}
   m_Layer: 15
   m_Name: PlayerInteractor
   m_TagString: Untagged
@@ -406,7 +409,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!60 &1284470427263961518
+--- !u!114 &7174848021176993594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284470427263961506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0374d1f0b467b88428f4e2624dbb9ace, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!60 &1386102874
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -422,10 +437,10 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.5, y: 0.5}
-    newSize: {x: 5.46, y: 9.81}
-    adaptiveTilingThreshold: 0.5
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
@@ -557,15 +572,3 @@ PolygonCollider2D:
       - {x: 0.2833621, y: -3.041715}
       - {x: 0.49588364, y: -2.9885845}
       - {x: 0.66412985, y: -2.9531643}
---- !u!114 &7174848021176993594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1284470427263961506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0374d1f0b467b88428f4e2624dbb9ace, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
