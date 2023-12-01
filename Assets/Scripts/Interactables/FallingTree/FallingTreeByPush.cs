@@ -31,7 +31,8 @@ public class FallingTreeByPush : MonoBehaviour
 
     [SerializeField] SoundList _soundList;
 
-    bool _isFallingSoundPlayed = false;
+    bool _isFallingSoundPlayed;
+    bool _isLandingSoundPlayed;
 
     void Start()
     {
@@ -123,7 +124,13 @@ public class FallingTreeByPush : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-            _soundList.PlaySFX("SE_FallingTree_Landing");
+        if (!_isLandingSoundPlayed)
+        {
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                _soundList.PlaySFX("SE_FallingTree_Landing");
+                _isLandingSoundPlayed = true;
+            }
+        }
     }
 }
