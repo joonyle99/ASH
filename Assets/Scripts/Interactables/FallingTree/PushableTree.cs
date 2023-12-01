@@ -33,43 +33,12 @@ public class PushableTree : InteractableObject
             return;
         }
 
-        if (Mathf.Abs(inputState.Horizontal) < 0.1f)
-        {
-            // -------------------------------------------- //
-            //      나무를 밀지 않고 가만히 있는 코드         //
-            // -------------------------------------------- //
+        float pushDir = Mathf.Sign(FallingTreeByPush.transform.position.x - SceneContext.Current.Player.transform.position.x);
+        bool isSync = Mathf.Abs(pushDir - inputState.Horizontal) < 0.01f;
 
-            // Debug.Log("나무를 가만히 잡고만 있는다");
-
+        if (!isSync)
             FallingTreeByPush.StopPush();
-        }
         else
-        {
-
-            // -------------------------------------------- //
-            //      실제로 플레이어가 나무를 미는 코드         //
-            // -------------------------------------------- //
-
-            // Debug.Log("나무를 민다");
-
-            // Push Dir 설정
-            float pushDir = Mathf.Sign(FallingTreeByPush.transform.position.x - SceneContext.Current.Player.transform.position.x);
-
-            if (pushDir > 0f)
-            {
-                if (inputState.Horizontal > 0f)
-                {
-                    // Top Tree 부분을 민다.
-                    FallingTreeByPush.StartPush(pushDir);
-                }
-            }
-            else if (pushDir < 0f)
-            {
-                if (inputState.Horizontal < 0f)
-                {
-                    FallingTreeByPush.StartPush(pushDir);
-                }
-            }
-        }
+            FallingTreeByPush.StartPush(pushDir);
     }
 }
