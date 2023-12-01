@@ -27,6 +27,9 @@ public class FallingTreeByPush : MonoBehaviour
     private bool _isChangedLayer;
 
     public bool IsFalling { get { return _isFalling; } }
+    [SerializeField] SoundList _soundList;
+
+    bool _isFallingSoundPlayed = false;
 
     void Start()
     {
@@ -50,7 +53,14 @@ public class FallingTreeByPush : MonoBehaviour
 
         // falling down tree (you can't push any more)
         if (_rotatedAngle > _fallingAngle)
+        {
             _isFalling = true;
+            if (!_isFallingSoundPlayed)
+            {
+                _isFallingSoundPlayed = true;
+                _soundList.PlaySFX("SE_FallingTree_Break");
+            }
+        }
 
         // 나무가 쓰러지는 타이밍에 레이어를 한번만 바꿔준다.
         if (_isFalling && !_isChangedLayer)

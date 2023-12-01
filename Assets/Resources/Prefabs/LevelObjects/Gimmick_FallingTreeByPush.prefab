@@ -213,6 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9192b4ea5acf7241b68c579c1caae69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interactableObject: {fileID: 0}
 --- !u!1 &646087600557381138
 GameObject:
   m_ObjectHideFlags: 0
@@ -226,6 +227,7 @@ GameObject:
   - component: {fileID: 646087600557381150}
   - component: {fileID: 646087600557381151}
   - component: {fileID: 1007129551}
+  - component: {fileID: 7983575211267847095}
   m_Layer: 9
   m_Name: Falling Top
   m_TagString: Untagged
@@ -339,11 +341,12 @@ MonoBehaviour:
     m_Bits: 1
   _forcePoint: {fileID: 646087601005803098}
   _power: 50
-  _fallingAngle: 20
+  _fallingAngle: 10
   _rotatedAngle: 0
   _isPushed: 0
   _isFalling: 0
   _dir: 1
+  _soundList: {fileID: 7983575211267847095}
 --- !u!60 &1007129551
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -395,6 +398,43 @@ PolygonCollider2D:
       - {x: 0.34988582, y: 5.4323864}
       - {x: 0.40751356, y: 6.3945503}
       - {x: 0.7624983, y: 6.9663067}
+--- !u!114 &7983575211267847095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646087600557381138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: SE_FallingTree_Collision
+    _clip: {fileID: 8300000, guid: c2c103b9a7376534faac8297e6d032af, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: SE_FallingTree_Break
+    _clip: {fileID: 8300000, guid: 34c08c3e014ac9049ad43ae5bbe5e4dd, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: SE_FallingTree_Landing
+    _clip: {fileID: 8300000, guid: 90c11a540eb862f4d9c9e21a059cd558, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!1 &646087600954455176
 GameObject:
   m_ObjectHideFlags: 0

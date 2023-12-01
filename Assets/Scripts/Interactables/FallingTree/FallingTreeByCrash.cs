@@ -20,6 +20,10 @@ public class FallingTreeByCrash : MonoBehaviour
     private Quaternion _startRotation;
     private Quaternion _curRotation;
 
+    [SerializeField] SoundList _soundList;
+
+    bool _isFalling = false;
+
     void Start()
     {
         _rigid = GetComponent<Rigidbody2D>();
@@ -47,13 +51,16 @@ public class FallingTreeByCrash : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Å« µ¹ÀÌ¶û Ãæµ¹ ½Ã ¾²·¯Áü
-        if (collision.gameObject.GetComponent<RollingStone>())
+        if (!_isFalling && collision.gameObject.GetComponent<RollingStone>())
             ExcuteCrash();
     }
 
     public void ExcuteCrash()
     {
+        _isFalling = true;
         _rigid.constraints = RigidbodyConstraints2D.None;
+        _soundList.PlaySFX("SE_FallingTree_Break");
+        _soundList.PlaySFX("SE_FallingTree_Collision");
     }
 
     private int ChangeToIndex(int v)
