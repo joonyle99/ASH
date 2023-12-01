@@ -9900,6 +9900,99 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0fdb54b0e0b0dc468b4add7dd1db56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1706213873
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1706213874}
+  - component: {fileID: 1706213876}
+  - component: {fileID: 1706213875}
+  - component: {fileID: 1706213877}
+  m_Layer: 0
+  m_Name: InteractionMarkerZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1706213874
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706213873}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.05, y: 1.05, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1284470426582742945}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1706213876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706213873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9192b4ea5acf7241b68c579c1caae69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactableObject: {fileID: 0}
+--- !u!60 &1706213875
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706213873}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 2.968193, y: -0.004978657}
+      - {x: 2.8585138, y: 0.7063339}
+      - {x: -2.9041595, y: 0.7361865}
+      - {x: -3.0534058, y: 0.18339801}
+      - {x: -2.5139542, y: -1.8595865}
+      - {x: -1.2618256, y: -2.8712492}
+      - {x: 0.48731858, y: -3.099433}
+      - {x: 1.8264786, y: -2.4917717}
+      - {x: 2.5636969, y: -1.6074531}
+--- !u!114 &1706213877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706213873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a102dab3bed23ae4cb912aa786ab36f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1853203779
 GameObject:
   m_ObjectHideFlags: 0
@@ -19682,6 +19775,7 @@ GameObject:
   - component: {fileID: 1857939149}
   - component: {fileID: 3837802176941800685}
   - component: {fileID: 3969225227170957643}
+  - component: {fileID: 7537142565806814644}
   m_Layer: 0
   m_Name: "\uAD74\uB7EC\uAC00\uB294\uB3CC(RollingStone)"
   m_TagString: Untagged
@@ -19704,6 +19798,7 @@ Transform:
   - {fileID: 1284470427263961517}
   - {fileID: 1024364935}
   - {fileID: 351016200}
+  - {fileID: 1706213874}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -19898,6 +19993,8 @@ MonoBehaviour:
   _maxRollSpeed: 2
   _maxInteractionDistance: 0.1
   _type: 0
+  _soundList: {fileID: 7537142565806814644}
+  _pushSoundInterval: 1.5
 --- !u!114 &1857939148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19959,6 +20056,27 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 1
+--- !u!114 &7537142565806814644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284470426582743002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: Roll
+    _clip: {fileID: 8300000, guid: c4745a6b9c7c7f74ea4ea26b5ca8ba0f, type: 3}
+    _volumeType: 0
+    _volumeA: 0.6
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 0.8
+    _pitchB: 0
 --- !u!1 &1284470427263961506
 GameObject:
   m_ObjectHideFlags: 0
@@ -19969,7 +20087,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1284470427263961517}
   - component: {fileID: 1284470427263961513}
-  - component: {fileID: 7174848021176993594}
   - component: {fileID: 1386102874}
   m_Layer: 15
   m_Name: PlayerInteractor
@@ -20014,18 +20131,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7174848021176993594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1284470427263961506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0374d1f0b467b88428f4e2624dbb9ace, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!60 &1386102874
 PolygonCollider2D:
   m_ObjectHideFlags: 0

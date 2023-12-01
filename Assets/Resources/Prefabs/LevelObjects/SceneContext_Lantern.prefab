@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 4910479212113593465}
   - component: {fileID: 4910479212113593414}
   - component: {fileID: 379839286386919315}
+  - component: {fileID: 6999117469602735902}
   m_Layer: 0
   m_Name: SceneContext_Lantern
   m_TagString: Untagged
@@ -95,6 +96,9 @@ MonoBehaviour:
   _cameraDoorStayDuration: 1
   _beamHitDoorPreset: {fileID: 11400000, guid: 865c0998fbb884706bc8e9216bc17d0c, type: 2}
   _beamShootingPreset: {fileID: 11400000, guid: 57d1bc348b84d48feaec92922c5473d1, type: 2}
+  _soundList: {fileID: 6999117469602735902}
+  _openSoundInterval: 0.15
+  _openSoundRepeat: 7
 --- !u!114 &379839286386919315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107,3 +111,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 964e8d3858bc6574b9e86ebb568fad26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6999117469602735902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4910479212113593467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: SE_Lantern_Line
+    _clip: {fileID: 8300000, guid: 4328036e37315384589d7b52b14d8a42, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: SE_LightDoor_Contact
+    _clip: {fileID: 8300000, guid: d8ca7f35d07863e408501e03e6dd1ac1, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: SE_LightDoor_Open
+    _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 1
+    _pitchA: 0.8
+    _pitchB: 1

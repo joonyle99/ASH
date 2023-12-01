@@ -1,4 +1,5 @@
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class LightController : MonoBehaviour
 {
@@ -17,10 +18,16 @@ public class LightController : MonoBehaviour
 
     public float PlayerDir { get => this.transform.localScale.x; }
 
+    PlayerBehaviour _player;
+
+    private void Awake()
+    {
+
+        _player = GetComponent<PlayerBehaviour>();
+    }
     void Update()
     {
-        PlayerBehaviour playerBehaviour = this.GetComponent<PlayerBehaviour>();
-        _isLightableState = playerBehaviour.StateIs<IdleState>() || playerBehaviour.StateIs<RunState>();
+        _isLightableState = _player.StateIs<IdleState>() || _player.StateIs<RunState>();
 
         if (_isLightWorking)
         {
@@ -44,8 +51,8 @@ public class LightController : MonoBehaviour
         _lightAngleValue = (_curAngle + _maxAngle) / (2 * _maxAngle);
 
         // Animator Parameter
-        playerBehaviour.Animator.SetBool("IsLightWorking", _isLightWorking);
-        playerBehaviour.Animator.SetFloat("LightAngleValue", _lightAngleValue);
+        _player.Animator.SetBool("IsLightWorking", _isLightWorking);
+        _player.Animator.SetFloat("LightAngleValue", _lightAngleValue);
 
         // Light Source Up / Down Rotations
         if (_isLightWorking)
@@ -91,6 +98,7 @@ public class LightController : MonoBehaviour
 
         // ºûÀ» ÄÒ´Ù
         _light.SetActive(true);
+        _player.SoundList.PlaySFX("SE_LightSkill");
 
         // ÁöÆÎÀÌÀÇ ÀÚ½ÄÀ¸·Î ºÙÈù´Ù.
         _light.transform.SetParent(_cane.transform.GetChild(0).transform);

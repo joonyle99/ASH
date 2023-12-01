@@ -4,23 +4,35 @@ using UnityEngine;
 
 public class BreakableGround : MonoBehaviour
 {
+
     [SerializeField] float _breakDelay = 0.5f;
+    [SerializeField] SoundClipData _collisionSound;
+
+    bool _isBreaking = false;
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        PlayerBehaviour player = collision.transform.GetComponent<PlayerBehaviour>();
+        if (_isBreaking)
+            return;
+            PlayerBehaviour player = collision.transform.GetComponent<PlayerBehaviour>();
         if (player != null && player.StateIs<DiveState>())
         {
-            Invoke("Break", _breakDelay);
+            StartBreaking();
             return;
         }
 
         RollingStone stone = collision.transform.GetComponent<RollingStone>();
         if (stone != null && stone.IsBreakable)
         {
-            Invoke("Break", _breakDelay);
+            StartBreaking();
             return;
         }    
 
+    }
+    void StartBreaking()
+    {
+        SoundManager.Instance.PlaySFX(_collisionSound);
+        Invoke("Break", _breakDelay);
+        _isBreaking = true;
     }
     void Break()
     {

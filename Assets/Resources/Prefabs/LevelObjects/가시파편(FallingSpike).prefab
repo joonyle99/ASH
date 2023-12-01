@@ -19599,6 +19599,7 @@ GameObject:
   - component: {fileID: 244775009}
   - component: {fileID: 244775010}
   - component: {fileID: 244775011}
+  - component: {fileID: 877286543}
   m_Layer: 12
   m_Name: "\uAC00\uC2DC\uD30C\uD3B8(FallingSpike)"
   m_TagString: Untagged
@@ -19670,6 +19671,7 @@ MonoBehaviour:
   _collisionLayers:
     serializedVersion: 2
     m_Bits: 256
+  _soundList: {fileID: 877286543}
 --- !u!50 &3797027538955047023
 Rigidbody2D:
   serializedVersion: 4
@@ -19779,6 +19781,35 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1.8
     _pitchB: 1
+--- !u!114 &877286543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797027538955047029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: SE_FallingSpike_Broke
+    _clip: {fileID: 8300000, guid: c4745a6b9c7c7f74ea4ea26b5ca8ba0f, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 2
+    _pitchB: 0
+  - _key: SE_FallingSpike_Land
+    _clip: {fileID: 8300000, guid: 83f24ee06310fbd4989850c7860204ec, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!1 &3797027539000872478
 GameObject:
   m_ObjectHideFlags: 0

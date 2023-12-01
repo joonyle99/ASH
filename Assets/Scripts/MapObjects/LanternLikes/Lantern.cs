@@ -37,6 +37,7 @@ public class Lantern : LanternLike, ILightCaptureListener
     Light2D _currentSpotLight;
     [SerializeField] Light2D _normalSpotLight;
     [SerializeField] Light2D _caveSpotLight;
+    [SerializeField] SoundList _soundList;
 
     float _currentLightFill = 0f;
 
@@ -103,6 +104,7 @@ public class Lantern : LanternLike, ILightCaptureListener
         float eTime = 0f;
         float originalRadius = _currentSpotLight.pointLightOuterRadius;
         float originalIntensity = _currentSpotLight.intensity;
+        _soundList.PlaySFX("SE_Lantern_Work");
         while (eTime < _explosionStartDuration)
         {
             float t = (eTime / _explosionStartDuration);
@@ -141,6 +143,7 @@ public class Lantern : LanternLike, ILightCaptureListener
         _isExplodeDone = false;
         StopAllCoroutines();
     }
+
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {
         if (IsLightOn)
