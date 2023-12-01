@@ -20,6 +20,7 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] Transform _wallCheckBoxTrans;
     [SerializeField] float _wallCheckRayLength;
     [SerializeField] Vector2 _wallCheckBoxSize;
+    [SerializeField] float _upwardRayLength;
 
     [Header("Dive Check")]
     [Space]
@@ -84,6 +85,7 @@ public class PlayerBehaviour : StateMachineBase
     public Collider2D MainCollider { get { return _mainCollider; } }
     public RaycastHit2D GroundHit { get; set; }
     public RaycastHit2D GroundHitWithRayCast { get; set; }
+    public RaycastHit2D UpwardHit { get; set; }
     public RaycastHit2D WallHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
 
@@ -191,9 +193,11 @@ public class PlayerBehaviour : StateMachineBase
                 GroundAlignedMoveDir = Vector2.Perpendicular(GroundHitWithRayCast.normal).normalized;
         }
 
+        // Check Upward
+        UpwardHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
+
         // Check Wall
         WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
-        // WallHit = Physics2D.BoxCast(_wallCheckRayTrans.position, _wallCheckBoxSize, 0f, PlayerLookDir2D, 0f, _wallLayer);
         IsTouchedWall = WallHit.collider != null;
         _wallHitCollider = WallHit.collider;
 
@@ -477,6 +481,12 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.color = Color.red;
         Gizmos.DrawLine(_groundCheckTrans.position,
             _groundCheckTrans.position + Vector3.down * _groundCheckLength);
+
+        // Draw Upward Ray
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(transform.position - _paddingVec,
+            transform.position - _paddingVec + Vector3.up * _upwardRayLength);
+
 
         // Draw Wall Check
         Gizmos.color = Color.blue;
