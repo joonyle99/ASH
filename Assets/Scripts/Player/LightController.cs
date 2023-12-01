@@ -13,6 +13,7 @@ public class LightController : MonoBehaviour
     [SerializeField] private float _maxAngle = 35f;
     [SerializeField] private float _curAngle;
     [SerializeField] private bool _isRotatingUp;
+    [SerializeField] private float _isNormalizedAngle;
 
     public float PlayerDir { get => this.transform.localScale.x; }
 
@@ -39,9 +40,12 @@ public class LightController : MonoBehaviour
                 _isLightWorking = !_isLightWorking;
         }
 
+        // -35 ~ 35를 0 ~ 1로 정규화
+        _isNormalizedAngle = (_curAngle + _maxAngle) / (2 * _maxAngle);
+
         // Animator Parameter
         playerBehaviour.Animator.SetBool("IsLightWorking", _isLightWorking);
-        playerBehaviour.Animator.SetFloat("LightAngle", (_curAngle + _maxAngle) / (2 * _maxAngle));
+        playerBehaviour.Animator.SetFloat("LightAngle", _isNormalizedAngle);
 
         // Light Source Up / Down Rotations
         if (_isLightWorking)
