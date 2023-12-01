@@ -71,7 +71,7 @@ public class PlayerBehaviour : StateMachineBase
     public int RecentDir { get; set; }
     public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
-    public bool IsLookForceSync { get { return Math.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.1f; } }
+    public bool IsDirSync { get { return Math.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.1f; } }
     public bool IsMoveYKey { get { return Math.Abs(Mathf.RoundToInt(RawInputs.Movement.y)) > 0f; } }
     public bool IsMoveUpKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) > 0f; } }
     public bool IsMoveDownKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) < 0f; } }
@@ -131,9 +131,7 @@ public class PlayerBehaviour : StateMachineBase
 
     private void OnEnable()
     {
-        // 초기화
-        CurHp = _maxHp;
-        RecentDir = 1;
+
     }
 
     private void OnDestroy()
@@ -161,7 +159,7 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetBool("IsMove", IsMove);
         Animator.SetFloat("InputHorizontal", RawInputs.Horizontal);
         Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
-        Animator.SetBool("IsLookForceSync", IsLookForceSync);
+        Animator.SetBool("IsDirSync", IsDirSync);
 
         #endregion
 
@@ -220,7 +218,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         if (StateIs<RunState>() || StateIs<InAirState>())
         {
-            if (Mathf.RoundToInt(RawInputs.Movement.x) != 0 && RecentDir != Mathf.RoundToInt(RawInputs.Movement.x))
+            if (!IsDirSync && Mathf.Abs(RawInputs.Horizontal) > 0.01f)
             {
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
@@ -278,8 +276,10 @@ public class PlayerBehaviour : StateMachineBase
     public void OnHitbyPuddle(float damage)
     {
         Debug.Log("물 웅덩이에 닿음 ");
+
         //애니메이션, 체력 닳기 등 하면 됨.
         //애니메이션 종료 후 spawnpoint에서 생성
+
         if (CurHp == 1)
         {
             CurHp = _maxHp;
@@ -288,30 +288,30 @@ public class PlayerBehaviour : StateMachineBase
         {
             CurHp -= 1;
         }
+
         InstantRespawn();
     }
+
     public void OnHitByPhysicalObject(float damage, Rigidbody2D other)
     {
-        //TODO
+        // TODO
+
         Debug.Log(damage + " 대미지 입음");
     }
+
     public void TriggerInstantRespawn(float damage)
     {
-        //TEMP
         if (CurHp == 1)
-        {
             CurHp = _maxHp;
-        }
         else
-        {
             CurHp -= 1;
-        }
+
         InstantRespawn();
     }
+
     void InstantRespawn()
     {
-        //TEMP
-        gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
         SceneContext.Current.InstantRespawn();
     }
 
