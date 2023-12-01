@@ -168,7 +168,7 @@ public class PlayerJumpController : MonoBehaviour
 
         // sub power
         float xPower = (xInput == 0) ? 0.7f : Mathf.Abs(xInput);    // 좌우 방향키를 누르지 않으면 살짝 점프
-        float yPower = (yInput > 0) ? 2.5f : 1f;                    // 위쪽키를 누르지 않으면 살짝 점프
+        float yPower = (yInput > 0) ? 2.5f : 1.5f;                  // 위쪽키를 누르지 않으면 살짝 점프
 
         // player flip
         _player.RecentDir = (-1) * _player.RecentDir;

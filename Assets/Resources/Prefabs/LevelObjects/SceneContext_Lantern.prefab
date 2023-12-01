@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1207604083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1207604084}
+  m_Layer: 0
+  m_Name: LastConnectionCameraPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1207604084
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1207604083}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4910479212113593465}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4910479212113593467
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4910479212113593465}
   - component: {fileID: 4910479212113593414}
+  - component: {fileID: 379839286386919315}
   m_Layer: 0
   m_Name: SceneContext_Lantern
   m_TagString: Untagged
@@ -28,7 +60,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1207604084}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,4 +82,28 @@ MonoBehaviour:
   _beamObstacleLayers:
     serializedVersion: 2
     m_Bits: 713
-  _lanternRelations: []
+  _lightDoor: {fileID: 0}
+  _lanternRelations:
+  - A: {fileID: 0}
+    B: {fileID: 0}
+    Beam: {fileID: 0}
+  _lastConnectionCameraPoint: {fileID: 1207604084}
+  _lastConnectionInputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+  _cameraLastLanternStayDuration: 1.5
+  _lastBeamDuration: 1
+  _doorOpenDelay: 0.74
+  _cameraDoorStayDuration: 1
+  _beamHitDoorPreset: {fileID: 11400000, guid: 865c0998fbb884706bc8e9216bc17d0c, type: 2}
+  _beamShootingPreset: {fileID: 11400000, guid: 57d1bc348b84d48feaec92922c5473d1, type: 2}
+--- !u!114 &379839286386919315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4910479212113593467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 964e8d3858bc6574b9e86ebb568fad26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

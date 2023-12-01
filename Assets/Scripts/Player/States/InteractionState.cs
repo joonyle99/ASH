@@ -30,6 +30,8 @@ public class InteractionState : PlayerState
 
     protected override void OnEnter()
     {
+        // Debug.Log("OnEnter InteractionState");
+
         Player.Animator.SetTrigger("Interact");
 
         // 타겟 오브젝트와 상호작용 타입 설정
@@ -52,7 +54,7 @@ public class InteractionState : PlayerState
                     return;
 
                 // 플레이어의 GravitySclae이 1이 아닌 5로 설정되어있다. 이 값을 고려해서 힘을 줘야한다.
-                _rollingPower = targetRigid.mass * 1.1f * Player.Rigidbody.gravityScale;
+                //_rollingPower = targetRigid.mass * 1.1f * Player.Rigidbody.gravityScale;
 
                 break;
         }
@@ -64,7 +66,7 @@ public class InteractionState : PlayerState
     protected override void OnUpdate()
     {
         // Debug.Log("OnUpdate Interaction State");
-
+        return;
         switch (_curInteractionType)
         {
             case InteractionType.Push:
@@ -78,13 +80,13 @@ public class InteractionState : PlayerState
                 break;
         }
     }
-
     /// <summary>
     /// Physics
     /// </summary>
     protected override void OnFixedUpdate()
     {
         // Debug.Log("OnFixedUpdate Interaction State");
+
 
         switch (_curInteractionType)
         {
@@ -94,8 +96,7 @@ public class InteractionState : PlayerState
 
                 // 오브젝트가 아닌 플레이어 이동에 힘을 적용시킨다
                 // 상호작용 중인 오브젝트의 무게까지 합한 이동값 계산
-                Player.Rigidbody.AddForce(Vector2.right * _rollingPower * Player.RawInputs.Movement.x);
-
+                Player.Rigidbody.AddForce(Player.RawInputs.Movement * _rollingPower);
                 break;
         }
     }
@@ -125,8 +126,6 @@ public class InteractionState : PlayerState
         }
 
         _targetObject = targetObject;
-
-        return;
     }
 
     public void SetInteractionType(InteractionType interactionType)
@@ -135,15 +134,11 @@ public class InteractionState : PlayerState
 
         if (interactionType == InteractionType.None)
             Debug.LogWarning("Interaction not set");
-
-        return;
     }
 
     public void FinalizeInteraction()
     {
         _targetObject = null;
         _curInteractionType = InteractionType.None;
-
-        return;
     }
 }

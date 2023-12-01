@@ -6,7 +6,7 @@ public class DestroyOnCollision : MonoBehaviour
 {
     public enum ObjectType
     {
-        None, FallingTree, RollingStone, Spikes
+        None, FallingTree, RollingStone, Spikes, StillStone
     }
 
     [SerializeField] List<ObjectType> _objectList;
@@ -18,9 +18,13 @@ public class DestroyOnCollision : MonoBehaviour
     public void OnCollisionEnter2D(Collision2D collision)
     {
         //굴러가는 돌
-        if (IsKillableBy(ObjectType.RollingStone) && collision.transform.GetComponent<RollingStone>() != null)
+        RollingStone stone;
+        if ((stone = collision.transform.GetComponent<RollingStone>()) != null)
         {
-            Destroy(gameObject);
+            if (IsKillableBy(ObjectType.RollingStone) && stone.Type == RollingStone.StoneType.RollingStone)
+                Destroy(gameObject);
+            else if (IsKillableBy(ObjectType.StillStone) && stone.Type == RollingStone.StoneType.StillStone)
+                Destroy(gameObject);
         }
         //나무
         else if (IsKillableBy(ObjectType.FallingTree) &&

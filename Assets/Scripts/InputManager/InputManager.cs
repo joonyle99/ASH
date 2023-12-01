@@ -12,6 +12,7 @@ public struct InputState
 
 public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 {
+    [SerializeField] InputSetterScriptableObject _defaultInputSetter;
     [SerializeField] KeyCode _interactionKeyCode = KeyCode.E;
 
     public event IInputSetter.InputEventHandler JumpPressedEvent;
@@ -21,7 +22,6 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 
     public delegate void InputEventHandler();
     IInputSetter _currentSetter;
-    IInputSetter _defaultSetter;
 
     InputState _cachedState;
 
@@ -32,11 +32,10 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
     {
         base.Awake();
         _interactionKey = new ActionKey(_interactionKeyCode);
-        _defaultSetter = GetComponent<PCInputSetter>();
     }
     public void ChangeToDefaultSetter()
     {
-        ChangeInputSetter(_defaultSetter);
+        ChangeInputSetter(_defaultInputSetter);
     }
 
     public void ChangeInputSetter(IInputSetter setter)
@@ -60,6 +59,8 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
     }
     void Update()
     {
+        if (_currentSetter is InputSetterScriptableObject)
+            (_currentSetter as InputSetterScriptableObject).Update();
         _cachedState = _currentSetter.GetState();
     }
     public InputState GetState()
