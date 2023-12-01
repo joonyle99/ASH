@@ -132,7 +132,7 @@ public class PlayerBehaviour : StateMachineBase
 
     private void OnEnable()
     {
-
+        RecentDir = 1;
     }
 
     private void OnDestroy()
