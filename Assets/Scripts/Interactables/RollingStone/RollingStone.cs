@@ -20,6 +20,11 @@ public class RollingStone : InteractableObject
 
     AttackableEntity _attackableComponent;
 
+    [SerializeField] SoundList _soundList;
+    [SerializeField] float _pushSoundInterval;
+
+    bool _isPushSoundPlaying = false;
+
     public bool IsBreakable { get { return _attackableComponent == null; } }
     bool _immovable
     {
@@ -48,6 +53,22 @@ public class RollingStone : InteractableObject
         //SceneContext.Current.Player.AddJoint<DistanceJoint2D>(_rigidbody, 300);
 
     }
+    IEnumerator PlayPushSoundCoroutine(string key, float interval)
+    {
+        _isPushSoundPlaying = true;
+        _soundList.PlaySFX(key);
+        yield return new WaitForSeconds(interval);
+        _isPushSoundPlaying = false;
+    }
+
+    private void Update()
+    {
+        if (_rigidbody.velocity.sqrMagnitude > 0.3f && _rigidbody.GetContacts(new Collider2D[1]) > 0)
+        {
+            if (!_isPushSoundPlaying)
+                StartCoroutine(PlayPushSoundCoroutine("Roll", _pushSoundInterval));
+        }
+    }
     public override void UpdateInteracting()
     {
 
@@ -55,7 +76,6 @@ public class RollingStone : InteractableObject
         {
             _rigidbody.velocity = _rigidbody.velocity.normalized * _maxRollSpeed;
         }
-
         //TODO : 플레이어와 떨어질 때 joint 끊기
         if (Physics2D.Distance(_collider, SceneContext.Current.Player.MainCollider).distance > _maxInteractionDistance
             ||  InputManager.Instance.InteractionKey.State == KeyState.KeyUp)

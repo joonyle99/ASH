@@ -207,6 +207,7 @@ GameObject:
   - component: {fileID: 944378821364196209}
   - component: {fileID: 640195226}
   - component: {fileID: 1057617493}
+  - component: {fileID: 2484200782093305914}
   m_Layer: 0
   m_Name: "\uB79C\uD134_\uC77C\uBC18\uB79C\uD134(Lantern)"
   m_TagString: Untagged
@@ -259,6 +260,7 @@ MonoBehaviour:
   _explosionEndDuration: 0.9
   _normalSpotLight: {fileID: 7011453831104871506}
   _caveSpotLight: {fileID: 794987636344753790}
+  _soundList: {fileID: 2484200782093305914}
 --- !u!61 &640195226
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -296,6 +298,35 @@ SortingGroup:
   m_SortingLayerID: -1199877377
   m_SortingLayer: -1
   m_SortingOrder: 1
+--- !u!114 &2484200782093305914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011453829756755116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: SE_Lantern_Work
+    _clip: {fileID: 8300000, guid: 51e4de3dd08358a429b64b87fc7b6040, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: SE_Lantern_Line
+    _clip: {fileID: 8300000, guid: 4328036e37315384589d7b52b14d8a42, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!1 &7011453831104871516
 GameObject:
   m_ObjectHideFlags: 0

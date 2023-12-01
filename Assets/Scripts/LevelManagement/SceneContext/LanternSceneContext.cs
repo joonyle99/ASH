@@ -34,6 +34,10 @@ public sealed class LanternSceneContext : SceneContext
     [SerializeField] ShakePreset _beamHitDoorPreset;
     [SerializeField] ConstantShakePreset _beamShootingPreset;
 
+    [SerializeField] SoundList _soundList;
+    [SerializeField] float _openSoundInterval = 0.1f;
+    [SerializeField] int _openSoundRepeat= 5;
+
     List<LanternLike> _lanternActivationOrder = new List<LanternLike>();
 
     const float MaxRayCastDistance = 1000f;
@@ -166,6 +170,7 @@ public sealed class LanternSceneContext : SceneContext
             _lastConnectionCameraPoint.position = relation.Beam.CurrentShootingPosition;
             yield return null;
         }
+        _soundList.PlaySFX("SE_LightDoor_Contact");
         //cameraController.StartShake(_beamHitDoorPreset);
         yield return new WaitForSeconds(_lastBeamDuration);
         relation.Beam.gameObject.SetActive(false);
@@ -173,7 +178,8 @@ public sealed class LanternSceneContext : SceneContext
         cameraController.StopConstantShake(0.1f);
         yield return new WaitForSecondsRealtime(_doorOpenDelay);
         _lightDoor.Open();
-        while(_lightDoor.CurrentState == LightDoor.State.Opening)
+        StartCoroutine(PlayOpenSoundCoroutine());
+        while (_lightDoor.CurrentState == LightDoor.State.Opening)
         {
             yield return null;
         }
@@ -183,8 +189,17 @@ public sealed class LanternSceneContext : SceneContext
         cameraController.StartFollow(Player.transform);
         InputManager.Instance.ChangeToDefaultSetter();
     }
+    IEnumerator PlayOpenSoundCoroutine()
+    {
+        for(int i=0; i<_openSoundRepeat; i++)
+        {
+        _soundList.PlaySFX("SE_LightDoor_Open");
+            yield return new WaitForSeconds(_openSoundInterval);
+        }
+    }
     IEnumerator ConnectionCoroutine(LanternRelation relation)
     {
+            _soundList.PlaySFX("SE_Lantern_Line");
         relation.Beam.gameObject.SetActive(true);
         yield return new WaitUntil(()=>relation.Beam.IsShootingDone);
         relation.A.OnBeamConnected(relation.Beam);

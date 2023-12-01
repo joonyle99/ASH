@@ -9,6 +9,9 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
     [SerializeField] float _fallDelay = 0.3f;
     [SerializeField] float _fallSpeedBonus = 0f;
     [SerializeField] LayerMask _collisionLayers;
+    [SerializeField] SoundList _soundList;
+
+    bool _isFallInvoked = false;
     void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -18,23 +21,20 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
         if (isBasicAttack)
             Destroy(gameObject);
     }
-    /*
-    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (activator.MonsterType == ActivatorType.Player)
-        {
-            Invoke("Fall", _fallDelay);
-            Destroy(reporter.gameObject);
-        }
-    }*/
+        _soundList.PlaySFX("SE_FallingSpike_Land");
+    }
 
     void FixedUpdate()
     {
+        if (_isFallInvoked)
+            return;
         {
             var hit = Physics2D.Raycast(transform.position + new Vector3(_raycastWidth / 2, 0, 0), Vector2.down, 100, _collisionLayers);
             if (hit && hit.transform.GetComponent<PlayerBehaviour>())
             {
-                Invoke("Fall", _fallDelay);
+                StartCoroutine(InvokeFallCoroutine());
                 return;
             }
         }
@@ -42,11 +42,18 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
             var hit = Physics2D.Raycast(transform.position - new Vector3(_raycastWidth / 2, 0, 0), Vector2.down, 100, _collisionLayers);
             if (hit && hit.transform.GetComponent<PlayerBehaviour>())
             {
-                Invoke("Fall", _fallDelay);
+                StartCoroutine(InvokeFallCoroutine());
                 return;
             }
         }
 
+    }
+    IEnumerator InvokeFallCoroutine()
+    {
+        _isFallInvoked = true;
+        _soundList.PlaySFX("SE_FallingSpike_Broke");
+        yield return new WaitForSeconds(_fallDelay);
+        Fall();
     }
     void Fall()
     {

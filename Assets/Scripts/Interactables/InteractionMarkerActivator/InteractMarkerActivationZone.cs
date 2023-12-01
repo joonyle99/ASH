@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class InteractMarkerActivationZone : TriggerZone
 {
-    InteractableObject _interactableObject;
+    [SerializeField] InteractableObject _interactableObject;
 
     void Awake()
     {
+        if(_interactableObject == null )
         _interactableObject = GetComponentInParent<InteractableObject>();
     }
     public override void OnPlayerEnter(PlayerBehaviour player)

@@ -8,17 +8,39 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     [SerializeField] HiddenPathMask.Direction _swipeDirection;
     [SerializeField] float _swipeDuration;
     [SerializeField] GameObject _destroyingCollidersParent;
+    [SerializeField] InputSetterScriptableObject _openInputSetter;
+    [SerializeField] float _requiredLightTime = 0.7f;
+    [SerializeField] float _openDelay = 0.7f;
+    [SerializeField] SoundList _soundList;
 
-    LayerMask [] _originalColliderLayers;
+    float _eTime = 0f;
     void Awake()
     {
         _mask.InitMask(_swipeDirection);
     }
+    
+    IEnumerator OpenPathCoroutine()
+    {
+        InputManager.Instance.ChangeInputSetter(_openInputSetter);
+        _soundList.PlaySFX("SE_HiddenPath_Contact");
+        yield return new WaitForSeconds(_openDelay);
+        _soundList.PlaySFX("SE_HiddenPath_Open");
+        _mask.OnLightCaptured(_swipeDuration);
+        InputManager.Instance.ChangeToDefaultSetter();
+    }
     public void OnLightStay(LightCapturer capturer, LightSource lightSource)
     {
-        _mask.OnLightCaptured(_swipeDuration);
-        Destroy(capturer.gameObject);
-        Destroy(_destroyingCollidersParent);
+        _eTime += Time.deltaTime;
+        if (_eTime >= _requiredLightTime)
+        {
+            StartCoroutine(OpenPathCoroutine());
+            Destroy(capturer.gameObject);
+            Destroy(_destroyingCollidersParent);
+        }
+    }
+    public void OnLightExit(LightCapturer capturer, LightSource lightSource)
+    {
+        _eTime = 0f;
     }
 
 }

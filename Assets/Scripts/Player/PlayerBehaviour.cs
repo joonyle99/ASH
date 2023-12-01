@@ -95,6 +95,7 @@ public class PlayerBehaviour : StateMachineBase
 
     #endregion
 
+    public SoundList SoundList { get { return _soundList; } }
     private void Awake()
     {
         // Collider
