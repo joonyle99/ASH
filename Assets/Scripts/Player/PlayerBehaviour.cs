@@ -98,6 +98,7 @@ public class PlayerBehaviour : StateMachineBase
     #endregion
 
     public SoundList SoundList { get { return _soundList; } }
+
     private void Awake()
     {
         // Collider
@@ -133,6 +134,7 @@ public class PlayerBehaviour : StateMachineBase
     private void OnEnable()
     {
         RecentDir = 1;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
     }
 
     private void OnDestroy()
