@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,10 +10,12 @@ public class AttackableEntity : MonoBehaviour
     [SerializeField] bool _allowsBasicAttack = true;
 
     IAttackListener [] _attackListeners;
+
     private void Awake()
     {
         _attackListeners = GetComponents<IAttackListener>();
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var basicAttackHitbox = collision.GetComponent<PlayerBasicAttackHitbox>();
