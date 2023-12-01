@@ -23,6 +23,7 @@ public class WallState : PlayerState
         if (!Player.WallHit)
             return;
 
+        Player.Animator.SetTrigger("Wall");
         Player.Animator.SetBool("IsWall", true);
 
         // 벽의 법선벡터
@@ -40,7 +41,7 @@ public class WallState : PlayerState
         else
             wallPerPendVec = Vector2.Perpendicular(wallNormalVec).normalized;
 
-        Debug.Log("WallState Enter");
+        // Debug.Log("WallState Enter");
 
         // Player.transform.position = new Vector3(wallHitPos.x, Player.transform.position.y);
     }

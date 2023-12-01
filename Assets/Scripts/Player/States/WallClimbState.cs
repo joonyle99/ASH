@@ -20,7 +20,7 @@ public class WallClimbState : WallState
     }
     protected override void OnUpdate()
     {
-        base.OnUpdate();
+        // base.OnUpdate();
 
         // Debug.Log("Climb");
 
