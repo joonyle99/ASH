@@ -1,26 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class ParticleHelper : MonoBehaviour
 {
-    ParticleSystem _particle;
-    void Awake()
+    ParticleSystem _particleSystem;
+    protected ParticleSystem ParticleSystem { get { return _particleSystem; } }
+
+    protected void Awake()
     {
-    }
-    void Init()
-    {
-        if (_particle == null)
-            _particle = GetComponent<ParticleSystem>();
+        _particleSystem = GetComponent<ParticleSystem>();
     }
     public void Activate()
     {
         gameObject.SetActive(true);
     }
+
     public void SetEmisionRotation(Vector3 rotation)
     {
-        Init();
-        var shape = _particle.shape;
+        if (_particleSystem == null)
+            _particleSystem = GetComponent<ParticleSystem>();
+        var shape = _particleSystem.shape;
         shape.rotation = rotation;
     }
+    
 }
