@@ -1,14 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
-public class SoundPlayerOnParticleCollision : MonoBehaviour
+public class SoundPlayerOnParticleCollision : ParticleHelper
 {
-    [SerializeField] float _probability;
-    private void OnCollisionEnter2D(Collision2D collision)
+    [Header("Sound Effects")]
+    [SerializeField] string _collisionSoundKey = "";
+    [SerializeField] float _collisionSoundProbability = 1f;
+
+    SoundList _soundList;
+
+    new void Awake()
     {
-        if (Random.Range(0f,1f) < _probability)
-            SoundManager.Instance.PlayCommonSFXPitched("SE_CrashRock_split");
+        base.Awake();
+        _soundList = GetComponent<SoundList>();
+        var collisionModule = ParticleSystem.collision;
+        collisionModule.sendCollisionMessages = true;
+    }
+    private void OnParticleCollision(GameObject other)
+    {
+        if (_soundList != null && _collisionSoundKey != "")
+        {
+            if (_collisionSoundProbability > Random.value)
+                _soundList.PlaySFX(_collisionSoundKey);
+        }
 
     }
 }
