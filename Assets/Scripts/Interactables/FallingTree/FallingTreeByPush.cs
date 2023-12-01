@@ -21,8 +21,8 @@ public class FallingTreeByPush : MonoBehaviour
 
     private Rigidbody2D _rigid;
 
-    private Quaternion startRotation;
-    private Quaternion curRotation;
+    private Quaternion _startRotation;
+    private Quaternion _curRotation;
 
     private bool _isChangedLayer;
 
@@ -33,7 +33,7 @@ public class FallingTreeByPush : MonoBehaviour
         _rigid = GetComponent<Rigidbody2D>();
 
         // set start rotation
-        startRotation = this.transform.rotation;
+        _startRotation = this.transform.rotation;
     }
 
     void Update()
@@ -43,10 +43,10 @@ public class FallingTreeByPush : MonoBehaviour
         // -------------------------------- //
 
         // update current rotation
-        curRotation = this.transform.rotation;
+        _curRotation = this.transform.rotation;
 
         // calculate rotated angle
-        _rotatedAngle = Quaternion.Angle(startRotation, curRotation);
+        _rotatedAngle = Quaternion.Angle(_startRotation, _curRotation);
 
         // falling down tree (you can't push any more)
         if (_rotatedAngle > _fallingAngle)
