@@ -37,7 +37,7 @@ public class PlayerAttackController : MonoBehaviour
 
     public void CastBasicAttack()
     {
-        print("CastBasicATtac: " + IsBasicAttacking);
+        Debug.Log("attack");
 
         if (!IsBasicAttacking)
         {

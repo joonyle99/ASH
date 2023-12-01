@@ -59,27 +59,23 @@ public class FallingTreeByPush : MonoBehaviour
 
     void FixedUpdate()
     {
-        // TODO :
         if (_isPushed)
             FallDown();
     }
 
     public void FallDown()
     {
-        // if already falling return
         if (_isFalling)
             return;
 
-        // rigidbody의 제약조건 해제 (한번만 하고싶은데..)
-        _rigid.constraints = RigidbodyConstraints2D.None;
-
-        // falling tree
         // 힘(N)을 입력하면 강체의 질량과 DT를 고려해서 속도를 변경한다.
         _rigid.AddForceAtPosition(Vector2.right * _dir * _power, _forcePoint.position, ForceMode2D.Force);
     }
 
     public void StartPush(float dir)
     {
+        _rigid.constraints = RigidbodyConstraints2D.None;
+
         _isPushed = true;
         _dir = dir;
     }
@@ -90,13 +86,32 @@ public class FallingTreeByPush : MonoBehaviour
         _dir = 0f;
     }
 
+    private int ChangeToIndex(int v)
+    {
+        int value = 1;
+        int index = 0;
+
+        while (v != value)
+        {
+            value <<= 1;
+            index++;
+        }
+
+        return index;
+    }
+
     private void ChangeLayer()
     {
         Transform parent = this.transform.parent;
 
-        parent.gameObject.layer = _targetLayerMask.value;
+        /*
+        parent.gameObject.layer = ChangeToIndex(_targetLayerMask.value);
         foreach (Transform child in parent)
-            child.gameObject.layer = _targetLayerMask.value;
+            child.gameObject.layer = ChangeToIndex(_targetLayerMask.value);
+        */
+
+        parent.transform.GetChild(0).gameObject.layer = ChangeToIndex(_targetLayerMask.value);
+        parent.transform.GetChild(1).gameObject.layer = ChangeToIndex(_targetLayerMask.value);
 
         _isChangedLayer = true;
     }

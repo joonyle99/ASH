@@ -181,7 +181,7 @@ public class PlayerBehaviour : StateMachineBase
         _groundHitCollider = GroundHit.collider;
 
         // Check Ground with RayCast
-        GroundHitWithRayCast = Physics2D.Raycast(_groundCheckTrans.position + _paddingVec, Vector2.down, _groundCheckLength, _groundLayer);
+        GroundHitWithRayCast = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
 
         if (GroundHitWithRayCast)
         {
@@ -192,8 +192,8 @@ public class PlayerBehaviour : StateMachineBase
         }
 
         // Check Wall
-        // WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
-        WallHit = Physics2D.BoxCast(_wallCheckRayTrans.position, _wallCheckBoxSize, 0f, PlayerLookDir2D, 0f, _wallLayer);
+        WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
+        // WallHit = Physics2D.BoxCast(_wallCheckRayTrans.position, _wallCheckBoxSize, 0f, PlayerLookDir2D, 0f, _wallLayer);
         IsTouchedWall = WallHit.collider != null;
         _wallHitCollider = WallHit.collider;
 
@@ -475,13 +475,13 @@ public class PlayerBehaviour : StateMachineBase
 
         // Draw Ground Check With RayCast
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(_groundCheckTrans.position + _paddingVec,
-            _groundCheckTrans.position + _paddingVec + Vector3.down * _groundCheckLength);
+        Gizmos.DrawLine(_groundCheckTrans.position,
+            _groundCheckTrans.position + Vector3.down * _groundCheckLength);
 
         // Draw Wall Check
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(_wallCheckRayTrans.position, _wallCheckRayTrans.position + PlayerLookDir3D * _wallCheckRayLength);
-        Gizmos.DrawWireCube(_wallCheckBoxTrans.position, _wallCheckBoxSize);
+        // Gizmos.DrawWireCube(_wallCheckBoxTrans.position, _wallCheckBoxSize);
 
         // Draw Dive Check
         Gizmos.color = Color.white;
