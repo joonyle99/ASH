@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class FallingTreeByCrash : MonoBehaviour
 {
+    [SerializeField] private LayerMask _targetLayerMask;
+
     private Rigidbody2D _rigid;
 
     [SerializeField] private float _fallingAngle = 20f;
