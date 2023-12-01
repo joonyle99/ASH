@@ -15,10 +15,13 @@ public abstract class LanternLike : MonoBehaviour
             if (value == _isLightOn)
                 return;
             _isLightOn = value;
-            if(value)
-                LanternSceneContext.Current.RecordActivationTime(this);
-            else
-                LanternSceneContext.Current.DisconnectFromAll(this);
+            if(LanternSceneContext.Current != null)
+            {
+                if (value)
+                    LanternSceneContext.Current.RecordActivationTime(this);
+                else
+                    LanternSceneContext.Current.DisconnectFromAll(this);
+            }
         }
     }
 
