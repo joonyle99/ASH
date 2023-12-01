@@ -28,7 +28,7 @@ public class Passage : TriggerZone
     }
     public override void OnActivatorEnter(TriggerActivator activator)
     {
-        if (_isPlayerExiting || _canEnter)
+        if (_isPlayerExiting || !_canEnter)
             return;
         StartCoroutine(ExitSceneCoroutine());
     }
