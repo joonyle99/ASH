@@ -4,20 +4,17 @@ using UnityEngine.UI;
 
 public class PlayerAttackController : MonoBehaviour
 {
-    [Header("SprinkleParticle Setting")]
+    [Header("Attack Setting")]
 
-    [Space]
+    [SerializeField] Transform _basicAttackHitbox;               // 공격 타격 박스
 
-    [SerializeField]
-    Transform _basicAttackHitbox;               // 공격 타격 박스
-
-    [Range(0f, 5f)] [SerializeField]
-    float _attackCountRefreshTime = 1.5f;       // 공격 초기화 시간
-
-    PlayerBehaviour _player;
+    [Range(0f, 5f)]
+    [SerializeField] float _attackCountRefreshTime = 1.5f;       // 공격 초기화 시간
 
     int _basicAttackCount;                      // 공격 카운트
     float _timeAfterLastBasicAttack;            // 마지막으로 공격한 시간
+
+    PlayerBehaviour _player;
 
     /*
     [SerializeField] Slider slider;
@@ -41,6 +38,7 @@ public class PlayerAttackController : MonoBehaviour
     public void CastBasicAttack()
     {
         print("CastBasicATtac: " + IsBasicAttacking);
+
         if (!IsBasicAttacking)
         {
             // Basic SprinkleParticle Hitbox 활성화
@@ -58,7 +56,7 @@ public class PlayerAttackController : MonoBehaviour
             // 공격 상태값 설정
             IsBasicAttacking = true;
 
-            _player.Animator.SetTrigger("SprinkleParticle");
+            _player.Animator.SetTrigger("Attack");
             _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
 
             // 공격 횟수를 애니메이션 종속으로,,

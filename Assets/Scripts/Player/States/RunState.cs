@@ -9,7 +9,6 @@ public class RunState : PlayerState
 
     [SerializeField] bool _isPlayerOnSlope;
     [SerializeField] float _movePower;
-    [SerializeField] float _moveDirLength = 2.5f;
     [SerializeField] float _angleWithGround;
     [SerializeField] float _maxSpeed = 8f;
     [SerializeField] float _acceleration = 15f;

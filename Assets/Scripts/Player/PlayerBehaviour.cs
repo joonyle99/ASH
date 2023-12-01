@@ -118,9 +118,9 @@ public class PlayerBehaviour : StateMachineBase
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
 
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
+        InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
 
         /*
-        InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
         InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
         */
     }
@@ -137,9 +137,9 @@ public class PlayerBehaviour : StateMachineBase
         if (InputManager.Instance != null)
         {
             InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
+            InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
 
             /*
-            InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
             InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
             */
         }
@@ -179,7 +179,7 @@ public class PlayerBehaviour : StateMachineBase
         _groundHitCollider = GroundHit.collider;
 
         // Check Ground with RayCast
-        GroundHitWithRayCast = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
+        GroundHitWithRayCast = Physics2D.Raycast(_groundCheckTrans.position + _paddingVec, Vector2.down, _groundCheckLength, _groundLayer);
 
         if (GroundHitWithRayCast)
         {
@@ -472,9 +472,9 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
         // Draw Ground Check With RayCast
-        Gizmos.color = Color.grey;
-        Gizmos.DrawLine(_groundCheckTrans.position,
-            _groundCheckTrans.position + Vector3.down * _groundCheckLength);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(_groundCheckTrans.position + _paddingVec,
+            _groundCheckTrans.position + _paddingVec + Vector3.down * _groundCheckLength);
 
         // Draw Wall Check
         Gizmos.color = Color.blue;

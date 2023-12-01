@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -7,20 +8,23 @@ using UnityEngine;
 /// </summary>
 public class FallingTreeByPush : MonoBehaviour
 {
-    private Rigidbody2D _rigid;
-
-    [SerializeField] private Transform forcePointTransform;
+    [SerializeField] private LayerMask _targetLayerMask;
+    [SerializeField] private Transform _forcePoint;
 
     [SerializeField] private float _power = 40f;
     [SerializeField] private float _fallingAngle = 20f;
-    [SerializeField] private float _rotatedAngle = 0f;
+    [SerializeField] private float _rotatedAngle;
 
-    [SerializeField] private bool _isPushed = false;
-    [SerializeField] private bool _isFalling = false;
-    [SerializeField] private float _dir = 0f;
+    [SerializeField] private bool _isPushed;
+    [SerializeField] private bool _isFalling;
+    [SerializeField] private float _dir;
+
+    private Rigidbody2D _rigid;
 
     private Quaternion startRotation;
     private Quaternion curRotation;
+
+    private bool _isChangedLayer;
 
     public bool IsFalling { get { return _isFalling; } }
 
@@ -34,6 +38,10 @@ public class FallingTreeByPush : MonoBehaviour
 
     void Update()
     {
+        // -------------------------------- //
+        //          쓰러지는 타이밍          //
+        // -------------------------------- //
+
         // update current rotation
         curRotation = this.transform.rotation;
 
@@ -44,19 +52,16 @@ public class FallingTreeByPush : MonoBehaviour
         if (_rotatedAngle > _fallingAngle)
             _isFalling = true;
 
-        if (!_isPushed && _isFalling)
-        {
-            // 나무의 레이어를 Ground Layer로 변경해준다.
+        // 나무가 쓰러지는 타이밍에 레이어를 한번만 바꿔준다.
+        if (_isFalling && !_isChangedLayer)
             ChangeLayer();
-        }
     }
 
     void FixedUpdate()
     {
+        // TODO :
         if (_isPushed)
-        {
             FallDown();
-        }
     }
 
     public void FallDown()
@@ -70,7 +75,7 @@ public class FallingTreeByPush : MonoBehaviour
 
         // falling tree
         // 힘(N)을 입력하면 강체의 질량과 DT를 고려해서 속도를 변경한다.
-        _rigid.AddForceAtPosition(Vector2.right * _dir * _power, forcePointTransform.position, ForceMode2D.Force);
+        _rigid.AddForceAtPosition(Vector2.right * _dir * _power, _forcePoint.position, ForceMode2D.Force);
     }
 
     public void StartPush(float dir)
@@ -87,14 +92,12 @@ public class FallingTreeByPush : MonoBehaviour
 
     private void ChangeLayer()
     {
-        string layerName = "Ground";
+        Transform parent = this.transform.parent;
 
-        // 상위 오브젝트의 레이어 변경
-        GameObject parent = this.transform.parent.gameObject;
-        parent.layer = LayerMask.NameToLayer(layerName);
+        parent.gameObject.layer = _targetLayerMask.value;
+        foreach (Transform child in parent)
+            child.gameObject.layer = _targetLayerMask.value;
 
-        // 그 자식 오브젝트의 레이어 변경
-        parent.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(layerName);
-        parent.transform.GetChild(1).gameObject.layer = LayerMask.NameToLayer(layerName);
+        _isChangedLayer = true;
     }
 }
