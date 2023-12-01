@@ -16,8 +16,10 @@ public class PlayerBehaviour : StateMachineBase
     [Space]
 
     [SerializeField] LayerMask _wallLayer;
-    [SerializeField] Transform _wallCheckTrans;
-    [SerializeField] float _wallCheckDistance;
+    [SerializeField] Transform _wallCheckRayTrans;
+    [SerializeField] Transform _wallCheckBoxTrans;
+    [SerializeField] float _wallCheckRayLength;
+    [SerializeField] Vector2 _wallCheckBoxSize;
 
     [Header("Dive Check")]
     [Space]
@@ -190,8 +192,8 @@ public class PlayerBehaviour : StateMachineBase
         }
 
         // Check Wall
-        // WallHit = Physics2D.BoxCast(_wallCheckTrans.position, _wallCheckSize, 0f, PlayerLookDir2D, 0f, _wallLayer);
-        WallHit = Physics2D.Raycast(_wallCheckTrans.position, PlayerLookDir2D, _wallCheckDistance, _wallLayer);
+        // WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
+        WallHit = Physics2D.BoxCast(_wallCheckRayTrans.position, _wallCheckBoxSize, 0f, PlayerLookDir2D, 0f, _wallLayer);
         IsTouchedWall = WallHit.collider != null;
         _wallHitCollider = WallHit.collider;
 
@@ -478,7 +480,8 @@ public class PlayerBehaviour : StateMachineBase
 
         // Draw Wall Check
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(_wallCheckTrans.position, _wallCheckTrans.position + PlayerLookDir3D * _wallCheckDistance);
+        Gizmos.DrawLine(_wallCheckRayTrans.position, _wallCheckRayTrans.position + PlayerLookDir3D * _wallCheckRayLength);
+        Gizmos.DrawWireCube(_wallCheckBoxTrans.position, _wallCheckBoxSize);
 
         // Draw Dive Check
         Gizmos.color = Color.white;
