@@ -9,72 +9,74 @@ public class FallingTreeByCrash : MonoBehaviour
 {
     [SerializeField] private LayerMask _targetLayerMask;
 
+    [SerializeField] private float _fallingAngle = 20f;
+    [SerializeField] private float _rotatedAngle;
+    [SerializeField] private bool _isCrashed;
+
+    private bool _isChangedLayer;
+
     private Rigidbody2D _rigid;
 
-    [SerializeField] private float _fallingAngle = 20f;
-    [SerializeField] private float _rotatedAngle = 0f;
+    private Quaternion _startRotation;
+    private Quaternion _curRotation;
 
-    [SerializeField] private bool _isCrashed = false;
-
-    private Quaternion startRotation;
-    private Quaternion curRotation;
-
-    // Start is called before the first frame update
     void Start()
     {
         _rigid = GetComponent<Rigidbody2D>();
 
-        // set start rotation
-        startRotation = this.transform.rotation;
+        _startRotation = this.transform.rotation;
     }
 
-    // Update is called once per frame
     void Update()
     {
         // update current rotation
-        curRotation = this.transform.rotation;
+        _curRotation = this.transform.rotation;
 
         // calculate rotated angle
-        _rotatedAngle = Quaternion.Angle(startRotation, curRotation);
+        _rotatedAngle = Quaternion.Angle(_startRotation, _curRotation);
 
         // falling down tree (you can't push any more)
         if (_rotatedAngle > _fallingAngle)
             _isCrashed = true;
 
-        if (_isCrashed)
-        {
-            // 나무의 레이어를 Ground Layer로 변경해준다.
+        // 나무가 쓰러지는 타이밍에 레이어를 한번만 바꿔준다.
+        if (_isCrashed && !_isChangedLayer)
             ChangeLayer();
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // 큰 돌이랑 충돌 시 쓰러짐
         if (collision.gameObject.GetComponent<RollingStone>())
-        {
-            Debug.Log("돌이랑 충동했다..!");
-
             ExcuteCrash();
-        }
     }
 
     public void ExcuteCrash()
     {
-        // rigidbody의 제약조건 해제
         _rigid.constraints = RigidbodyConstraints2D.None;
+    }
+
+    private int ChangeToIndex(int v)
+    {
+        int value = 1;
+        int index = 0;
+
+        while (v != value)
+        {
+            value <<= 1;
+            index++;
+        }
+
+        return index;
     }
 
     private void ChangeLayer()
     {
-        string layerName = "Ground";
+        Transform parent = this.transform.parent;
 
-        // 상위 오브젝트의 레이어 변경
-        GameObject parent = this.transform.parent.gameObject;
-        parent.layer = LayerMask.NameToLayer(layerName);
+        parent.transform.GetChild(0).gameObject.layer = ChangeToIndex(_targetLayerMask.value);
+        parent.transform.GetChild(1).gameObject.layer = ChangeToIndex(_targetLayerMask.value);
 
-        // 그 자식 오브젝트의 레이어 변경
-        parent.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(layerName);
-        parent.transform.GetChild(1).gameObject.layer = LayerMask.NameToLayer(layerName);
+        _isChangedLayer = true;
     }
 }
