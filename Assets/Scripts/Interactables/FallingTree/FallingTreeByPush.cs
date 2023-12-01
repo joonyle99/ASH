@@ -16,17 +16,19 @@ public class FallingTreeByPush : MonoBehaviour
     [SerializeField] private float _rotatedAngle;
 
     [SerializeField] private bool _isPushed;
-    [SerializeField] private bool _isFalling;
-    [SerializeField] private float _dir;
+    [SerializeField] private bool _isFallingEnd;
+    [SerializeField] private float _pushDir;
 
     private Rigidbody2D _rigid;
 
     private Quaternion _startRotation;
     private Quaternion _curRotation;
 
+    private bool _isConstraint = true;
     private bool _isChangedLayer;
 
-    public bool IsFalling { get { return _isFalling; } }
+    public bool IsFallingEnd { get { return _isFallingEnd; } }
+
     [SerializeField] SoundList _soundList;
 
     bool _isFallingSoundPlayed = false;
@@ -41,10 +43,6 @@ public class FallingTreeByPush : MonoBehaviour
 
     void Update()
     {
-        // -------------------------------- //
-        //          쓰러지는 타이밍          //
-        // -------------------------------- //
-
         // update current rotation
         _curRotation = this.transform.rotation;
 
@@ -54,7 +52,8 @@ public class FallingTreeByPush : MonoBehaviour
         // falling down tree (you can't push any more)
         if (_rotatedAngle > _fallingAngle)
         {
-            _isFalling = true;
+            _isFallingEnd = true;
+
             if (!_isFallingSoundPlayed)
             {
                 _isFallingSoundPlayed = true;
@@ -63,37 +62,41 @@ public class FallingTreeByPush : MonoBehaviour
         }
 
         // 나무가 쓰러지는 타이밍에 레이어를 한번만 바꿔준다.
-        if (_isFalling && !_isChangedLayer)
+        if (!_isChangedLayer && _isFallingEnd)
+        {
+            _isChangedLayer = true;
             ChangeLayer();
+        }
     }
 
     void FixedUpdate()
     {
-        if (_isPushed)
-            FallDown();
+        if (_isPushed && !_isFallingEnd)
+            PushByPlayer();
     }
 
-    public void FallDown()
+    public void PushByPlayer()
     {
-        if (_isFalling)
-            return;
+        if (_isConstraint)
+        {
+            _rigid.constraints = RigidbodyConstraints2D.None;
+            _isConstraint = false;
+        }
 
         // 힘(N)을 입력하면 강체의 질량과 DT를 고려해서 속도를 변경한다.
-        _rigid.AddForceAtPosition(Vector2.right * _dir * _power, _forcePoint.position, ForceMode2D.Force);
+        _rigid.AddForceAtPosition(Vector2.right * _pushDir * _power, _forcePoint.position, ForceMode2D.Force);
     }
 
     public void StartPush(float dir)
     {
-        _rigid.constraints = RigidbodyConstraints2D.None;
-
         _isPushed = true;
-        _dir = dir;
+        _pushDir = dir;
     }
 
     public void StopPush()
     {
         _isPushed = false;
-        _dir = 0f;
+        _pushDir = 0f;
     }
 
     private int ChangeToIndex(int v)
@@ -114,15 +117,13 @@ public class FallingTreeByPush : MonoBehaviour
     {
         Transform parent = this.transform.parent;
 
-        /*
-        parent.gameObject.layer = ChangeToIndex(_targetLayerMask.value);
-        foreach (Transform child in parent)
-            child.gameObject.layer = ChangeToIndex(_targetLayerMask.value);
-        */
-
         parent.transform.GetChild(0).gameObject.layer = ChangeToIndex(_targetLayerMask.value);
         parent.transform.GetChild(1).gameObject.layer = ChangeToIndex(_targetLayerMask.value);
+    }
 
-        _isChangedLayer = true;
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            _soundList.PlaySFX("SE_FallingTree_Landing");
     }
 }

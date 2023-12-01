@@ -344,8 +344,8 @@ MonoBehaviour:
   _fallingAngle: 10
   _rotatedAngle: 0
   _isPushed: 0
-  _isFalling: 0
-  _dir: 1
+  _isFallingEnd: 0
+  _pushDir: 0
   _soundList: {fileID: 7983575211267847095}
 --- !u!60 &1007129551
 PolygonCollider2D:
@@ -382,12 +382,13 @@ PolygonCollider2D:
       - {x: -0.44116005, y: -6.299046}
       - {x: -0.52657956, y: -6.337462}
       - {x: -0.72984004, y: -6.174657}
-      - {x: -0.86117464, y: -6.2751784}
+      - {x: -0.8975619, y: -6.4025364}
       - {x: -0.90357095, y: -5.9342813}
       - {x: -1.0851927, y: -6.3354025}
       - {x: -1.2175826, y: -6.0300136}
-      - {x: -1.3014821, y: -6.1725287}
+      - {x: -1.3469666, y: -6.2998867}
       - {x: -1.6129051, y: -6.012385}
+      - {x: -1.7181635, y: -6.46355}
       - {x: -1.7417445, y: -6.3016005}
       - {x: -1.4503977, y: -3.8036823}
       - {x: -1.8237916, y: -2.368212}
@@ -430,7 +431,7 @@ MonoBehaviour:
   - _key: SE_FallingTree_Landing
     _clip: {fileID: 8300000, guid: 90c11a540eb862f4d9c9e21a059cd558, type: 3}
     _volumeType: 0
-    _volumeA: 1
+    _volumeA: 0.7
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
