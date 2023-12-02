@@ -11,8 +11,8 @@ public class FallingTreeByPush : MonoBehaviour
     [SerializeField] private LayerMask _targetLayerMask;
     [SerializeField] private Transform _forcePoint;
 
-    [SerializeField] private float _power = 40f;
-    [SerializeField] private float _fallingAngle = 20f;
+    [SerializeField] private float _power;
+    [SerializeField] private float _fallingAngle;
     [SerializeField] private float _rotatedAngle;
 
     [SerializeField] private bool _isPushed;
@@ -27,7 +27,11 @@ public class FallingTreeByPush : MonoBehaviour
     private bool _isConstraint = true;
     private bool _isChangedLayer;
 
-    public bool IsFallingEnd { get { return _isFallingEnd; } }
+    public bool IsFallingEnd
+    {
+        get { return _isFallingEnd; }
+        set { _isFallingEnd = value; }
+    }
 
     [SerializeField] SoundList _soundList;
 
@@ -80,7 +84,7 @@ public class FallingTreeByPush : MonoBehaviour
     {
         if (_isConstraint)
         {
-            _rigid.constraints = RigidbodyConstraints2D.None;
+            // _rigid.constraints = RigidbodyConstraints2D.None;
             _isConstraint = false;
         }
 

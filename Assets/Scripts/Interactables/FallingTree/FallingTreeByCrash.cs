@@ -9,20 +9,24 @@ public class FallingTreeByCrash : MonoBehaviour
 {
     [SerializeField] private LayerMask _targetLayerMask;
 
-    [SerializeField] private float _fallingAngle = 20f;
+    [SerializeField] private float _fallingAngle;
     [SerializeField] private float _rotatedAngle;
-    [SerializeField] private bool _isCrashed;
 
-    private bool _isChangedLayer;
+    [SerializeField] private bool _isOnceCrashed;
+    [SerializeField] private bool _isFallingEnd;
+    [SerializeField] private float _pushDir;
 
     private Rigidbody2D _rigid;
 
     private Quaternion _startRotation;
     private Quaternion _curRotation;
 
+    private bool _isChangedLayer;
+
     [SerializeField] SoundList _soundList;
 
-    bool _isFalling = false;
+    bool _isFallingSoundPlayed;
+    bool _isLandingSoundPlayed;
 
     void Start()
     {
@@ -41,25 +45,26 @@ public class FallingTreeByCrash : MonoBehaviour
 
         // falling down tree (you can't push any more)
         if (_rotatedAngle > _fallingAngle)
-            _isCrashed = true;
+        {
+            _isFallingEnd = true;
+
+            if (!_isFallingSoundPlayed)
+            {
+                _isFallingSoundPlayed = true;
+                _soundList.PlaySFX("SE_FallingTree_Break");
+            }
+        }
 
         // 나무가 쓰러지는 타이밍에 레이어를 한번만 바꿔준다.
-        if (_isCrashed && !_isChangedLayer)
+        if (!_isChangedLayer && _isFallingEnd)
+        {
+            _isChangedLayer = true;
             ChangeLayer();
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // 큰 돌이랑 충돌 시 쓰러짐
-        if (!_isFalling && collision.gameObject.GetComponent<RollingStone>())
-            ExcuteCrash();
+        }
     }
 
     public void ExcuteCrash()
     {
-        _isFalling = true;
-        _rigid.constraints = RigidbodyConstraints2D.None;
-        _soundList.PlaySFX("SE_FallingTree_Break");
         _soundList.PlaySFX("SE_FallingTree_Collision");
     }
 
@@ -85,5 +90,26 @@ public class FallingTreeByCrash : MonoBehaviour
         parent.transform.GetChild(1).gameObject.layer = ChangeToIndex(_targetLayerMask.value);
 
         _isChangedLayer = true;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 큰 돌이랑 충돌 시 쓰러짐
+        if (!_isOnceCrashed && collision.gameObject.GetComponent<RollingStone>())
+        {
+            _isOnceCrashed = true;
+            ExcuteCrash();
+        }
+
+        if (!_isLandingSoundPlayed)
+        {
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                Debug.Log("들어옴?");
+
+                _soundList.PlaySFX("SE_FallingTree_Landing");
+                _isLandingSoundPlayed = true;
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 646087599043860266}
   - component: {fileID: 646087599043860267}
   - component: {fileID: 1271686746}
+  - component: {fileID: 403962038}
   m_Layer: 9
   m_Name: Bottom
   m_TagString: Untagged
@@ -92,7 +93,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 646087599043860265}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -111,6 +112,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.3743834, y: 1.8610044}
   m_EdgeRadius: 0
+--- !u!60 &403962038
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646087599043860265}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 4.73, y: 2.11}
+    newSize: {x: 4.79, y: 2.76}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 1.0966362, y: 0.4105114}
+      - {x: 1.4443823, y: -0.22373927}
+      - {x: -1.4363813, y: -0.23678929}
+      - {x: -1.2431705, y: 0.16274016}
+      - {x: -1.1702291, y: 0.8081115}
+      - {x: 1.0738252, y: 0.8024068}
 --- !u!1 &646087600557381138
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,7 +172,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 646087600557381138}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.57, y: 3.81, z: 0}
+  m_LocalPosition: {x: 0.58, y: 3.69, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -211,7 +243,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 3
+  m_Mass: 300
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -219,7 +251,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 7
+  m_Constraints: 0
 --- !u!60 &1007129551
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -248,10 +280,10 @@ PolygonCollider2D:
     - - {x: 0.8000674, y: -0.4215542}
       - {x: 1.750767, y: 1.4433467}
       - {x: 0.7652298, y: -1.1373932}
-      - {x: 0.47808632, y: -6.529288}
-      - {x: 0.2630455, y: -6.429683}
-      - {x: 0.0035316963, y: -6.423849}
-      - {x: -0.21100146, y: -6.434466}
+      - {x: 0.45305082, y: -6.4544883}
+      - {x: 0.14976113, y: -6.4185696}
+      - {x: -0.013498779, y: -6.3566217}
+      - {x: -0.25001496, y: -6.197143}
       - {x: -0.44116005, y: -6.299046}
       - {x: -0.52657956, y: -6.337462}
       - {x: -0.72984004, y: -6.174657}
@@ -261,7 +293,8 @@ PolygonCollider2D:
       - {x: -1.2175826, y: -6.0300136}
       - {x: -1.3014821, y: -6.1725287}
       - {x: -1.6129051, y: -6.012385}
-      - {x: -1.7344223, y: -6.184531}
+      - {x: -1.7401841, y: -6.452857}
+      - {x: -1.7234439, y: -5.8345613}
       - {x: -1.4503977, y: -3.8036823}
       - {x: -1.8237916, y: -2.368212}
       - {x: -1.3491089, y: -3.1423156}
@@ -286,9 +319,11 @@ MonoBehaviour:
   _targetLayerMask:
     serializedVersion: 2
     m_Bits: 1
-  _fallingAngle: 20
+  _fallingAngle: 10
   _rotatedAngle: 0
-  _isCrashed: 0
+  _isOnceCrashed: 0
+  _isFallingEnd: 0
+  _pushDir: 0
   _soundList: {fileID: 4166935448788283434}
 --- !u!114 &4166935448788283434
 MonoBehaviour:
@@ -336,7 +371,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 646087600954455177}
-  - component: {fileID: 646087600954455178}
   - component: {fileID: 646087600954455179}
   m_Layer: 9
   m_Name: Gimmick_FallingTreeByCrush
@@ -362,22 +396,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &646087600954455178
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646087600954455176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9946fe49b9947fd40959238ab25af42b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interactionMarkerPoint: {fileID: 0}
-  _isInteractable: 1
-  _interactionType: 1
-  FallingTreeByPush: {fileID: 0}
 --- !u!210 &646087600954455179
 SortingGroup:
   m_ObjectHideFlags: 0

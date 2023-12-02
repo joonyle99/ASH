@@ -17,9 +17,7 @@ public class PlayerBehaviour : StateMachineBase
 
     [SerializeField] LayerMask _wallLayer;
     [SerializeField] Transform _wallCheckRayTrans;
-    [SerializeField] Transform _wallCheckBoxTrans;
     [SerializeField] float _wallCheckRayLength;
-    [SerializeField] Vector2 _wallCheckBoxSize;
     [SerializeField] float _upwardRayLength;
 
     [Header("Dive Check")]
@@ -230,9 +228,9 @@ public class PlayerBehaviour : StateMachineBase
     }
     private void ChangeInAirState()
     {
-        if (!IsGrounded && !StateIs<InAirState>())
+        if (!IsGrounded)
         {
-            if (!StateIs<WallState>() && !StateIs<DashState>() && !StateIs<DiveState>() && !StateIs<ShootingState>() && !StateIs<HurtState>() && !StateIs<DieState>())
+            if(StateIs<IdleState>() || StateIs<RunState>() || StateIs<JumpState>())
                 ChangeState<InAirState>();
         }
     }
@@ -278,8 +276,6 @@ public class PlayerBehaviour : StateMachineBase
 
     public void OnHitbyPuddle(float damage)
     {
-        Debug.Log("물 웅덩이에 닿음 ");
-
         //애니메이션, 체력 닳기 등 하면 됨.
         //애니메이션 종료 후 spawnpoint에서 생성
 
@@ -486,15 +482,13 @@ public class PlayerBehaviour : StateMachineBase
             _groundCheckTrans.position + Vector3.down * _groundCheckLength);
 
         // Draw Upward Ray
-        Gizmos.color = Color.cyan;
+        Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position - _paddingVec,
             transform.position - _paddingVec + Vector3.up * _upwardRayLength);
-
 
         // Draw Wall Check
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(_wallCheckRayTrans.position, _wallCheckRayTrans.position + PlayerLookDir3D * _wallCheckRayLength);
-        // Gizmos.DrawWireCube(_wallCheckBoxTrans.position, _wallCheckBoxSize);
 
         // Draw Dive Check
         Gizmos.color = Color.white;

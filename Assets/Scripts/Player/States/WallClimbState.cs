@@ -39,7 +39,6 @@ public class WallClimbState : WallState
             if (Player.UpwardHit)
                 return;
 
-            // Player.Rigidbody.velocity = wallPerPendVec * _wallClimbSpeed;
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
         // 아래로 내려가기
@@ -51,7 +50,6 @@ public class WallClimbState : WallState
                 return;
             }
 
-            // Player.Rigidbody.velocity = - wallPerPendVec * _wallClimbSpeed;
             transform.position -= Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
         // 가만히 있으면 Wall Grab State로 상태 전이
