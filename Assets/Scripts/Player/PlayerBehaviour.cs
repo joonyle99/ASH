@@ -127,6 +127,8 @@ public class PlayerBehaviour : StateMachineBase
         /*
         InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
         */
+
+        CurHp = _maxHp;
     }
 
     private void OnEnable()

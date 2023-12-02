@@ -105,8 +105,6 @@ public class FallingTreeByCrash : MonoBehaviour
         {
             if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-                Debug.Log("µé¾î¿È?");
-
                 _soundList.PlaySFX("SE_FallingTree_Landing");
                 _isLandingSoundPlayed = true;
             }

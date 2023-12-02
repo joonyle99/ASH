@@ -24,7 +24,6 @@ public class FallingTreeByPush : MonoBehaviour
     private Quaternion _startRotation;
     private Quaternion _curRotation;
 
-    private bool _isConstraint = true;
     private bool _isChangedLayer;
 
     public bool IsFallingEnd
@@ -82,12 +81,6 @@ public class FallingTreeByPush : MonoBehaviour
 
     public void PushByPlayer()
     {
-        if (_isConstraint)
-        {
-            // _rigid.constraints = RigidbodyConstraints2D.None;
-            _isConstraint = false;
-        }
-
         // 힘(N)을 입력하면 강체의 질량과 DT를 고려해서 속도를 변경한다.
         _rigid.AddForceAtPosition(Vector2.right * _pushDir * _power, _forcePoint.position, ForceMode2D.Force);
     }
