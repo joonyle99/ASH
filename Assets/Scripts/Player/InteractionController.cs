@@ -58,7 +58,7 @@ public class InteractionController : MonoBehaviour
                 if (_player.IsInteractable)
                 {
                     _interactionTarget.Interact();  // IsInteracting = true
-                    _player.Interact(); // Change Interaction State
+                    //_player.Interact(); // Change Interaction State
                 }
             }
 

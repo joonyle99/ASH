@@ -1,64 +1,40 @@
+using Unity.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class IdleState : PlayerState
 {
-    [Header("Idle Setting")]
-
-    [Space]
-
-    [SerializeField] float _angle = 0f;
+    [Header("Idle Settings")]
     [SerializeField] float _belowForce = 150;         // ¾Æ·¡·Î °¡ÇØÁÖ´Â Èû
-
-    Vector2 _groundNormal;                            // ¶¥ÀÇ ¹ý¼±º¤ÅÍ
-    Vector3 _groundHitPoint;                          // ¶¥ÀÇ Hit Point
 
     protected override void OnEnter()
     {
-        // ¶¥ÀÇ ¹ý¼±º¤ÅÍ
-        _groundNormal = Player.GroundHit.normal;
-
-        // ¶¥ÀÇ Hit Point
-        _groundHitPoint = Player.GroundHit.point;
     }
 
     protected override void OnUpdate()
     {
-        // Run State
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
         {
             ChangeState<RunState>();
             return;
         }
 
-        // ÇÃ·¹ÀÌ¾î¿Í ¶¥ »çÀÌÀÇ °¢µµ °è»ê
-        _angle = Vector2.Angle(_groundNormal, Player.PlayerLookDir2D);
     }
 
     protected override void OnFixedUpdate()
     {
+        Vector2 _groundNormal = Player.GroundHit.normal;
+        float groundAngle = Mathf.Abs(Mathf.Atan2(_groundNormal.y, _groundNormal.x) * Mathf.Rad2Deg - 90);
+
         // ±â¿ï¾îÁø ¶¥¿¡¼­ ¹Ì²ô·³ ¹æÁö
-        if (Mathf.Abs(90f - _angle) > 10f)
+        if (groundAngle < Player.SlopeThreshold)
         {
-            // Debug.Log("±â¿ï¾îÁø ¶¥ÀÔ´Ï´Ù");
             Player.Rigidbody.AddForce(-_groundNormal * _belowForce);
-        }
-        else
-        {
-            // Debug.Log("ÆòÆòÇÑ ¶¥ÀÔ´Ï´Ù");
-            Player.Rigidbody.AddForce(-_groundNormal * _belowForce / 3f);
         }
     }
 
     protected override void OnExit()
     {
-
     }
 
-    // private void OnDrawGizmosSelected()
-    private void OnDrawGizmos()
-    {
-        // ¶¥ÀÇ ¹ý¼±º¤ÅÍ ±×¸®±â
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(_groundHitPoint, _groundHitPoint + new Vector3(_groundNormal.x, _groundNormal.y, 0f));
-    }
 }

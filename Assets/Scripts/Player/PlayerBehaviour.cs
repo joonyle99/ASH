@@ -95,6 +95,8 @@ public class PlayerBehaviour : StateMachineBase
 
     #endregion
 
+    [Tooltip("이 각도를 초과한 경사에선 서있지 못함")][SerializeField] float _slopeThreshold = 45f;
+    public float SlopeThreshold { get { return _slopeThreshold; } }
     public SoundList SoundList { get { return _soundList; } }
 
     private void Awake()
