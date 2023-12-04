@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 351016200}
   - component: {fileID: 351016201}
+  - component: {fileID: 6595848048559911720}
   m_Layer: 0
   m_Name: ParticlesOnDestroy
   m_TagString: Untagged
@@ -49,7 +50,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06cc5dcf6a1f45b42a68c42c91dbce79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resetRotation: 1
+  _setRotationToIdentity: 1
+  _particles: []
+--- !u!114 &6595848048559911720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351016199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1024364934
 GameObject:
   m_ObjectHideFlags: 0
@@ -9993,6 +10007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a102dab3bed23ae4cb912aa786ab36f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zRotation: 0
 --- !u!1 &1853203779
 GameObject:
   m_ObjectHideFlags: 0
@@ -19776,7 +19791,8 @@ GameObject:
   - component: {fileID: 3837802176941800685}
   - component: {fileID: 3969225227170957643}
   - component: {fileID: 7537142565806814644}
-  m_Layer: 0
+  - component: {fileID: 7333671589761644017}
+  m_Layer: 12
   m_Name: "\uAD74\uB7EC\uAC00\uB294\uB3CC(RollingStone)"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19814,7 +19830,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 300
+  m_Mass: 5
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -20077,6 +20093,18 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 0.8
     _pitchB: 0
+--- !u!114 &7333671589761644017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284470426582743002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1284470427263961506
 GameObject:
   m_ObjectHideFlags: 0

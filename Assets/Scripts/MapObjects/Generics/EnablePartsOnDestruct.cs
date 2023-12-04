@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActivatePartsOnDestroy : MonoBehaviour
+[RequireComponent(typeof(DestructEventCaller))]
+public class EnablePartsOnDestruct : MonoBehaviour, IDestructionListener
 {
     [SerializeField] Transform[] _parts;
 
-    private void OnDestroy()
+    public void OnDestruction()
     {
         foreach (var part in _parts)
         {

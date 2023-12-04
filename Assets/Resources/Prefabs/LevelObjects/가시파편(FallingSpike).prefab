@@ -9776,6 +9776,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1342790943}
   - component: {fileID: 1342790942}
+  - component: {fileID: 2917034095216302607}
   m_Layer: 12
   m_Name: OnDestroyParticles
   m_TagString: Untagged
@@ -9814,7 +9815,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06cc5dcf6a1f45b42a68c42c91dbce79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resetRotation: 1
+  _setRotationToIdentity: 1
+  _particles:
+  - {fileID: 559935811}
+  - {fileID: 992260751}
+  - {fileID: 1460661714}
+  - {fileID: 1361107577}
+--- !u!114 &2917034095216302607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342790941}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1361107575
 GameObject:
   m_ObjectHideFlags: 0
@@ -19600,6 +19618,7 @@ GameObject:
   - component: {fileID: 244775010}
   - component: {fileID: 244775011}
   - component: {fileID: 877286543}
+  - component: {fileID: 5307873480781048502}
   m_Layer: 12
   m_Name: "\uAC00\uC2DC\uD30C\uD3B8(FallingSpike)"
   m_TagString: Untagged
@@ -19810,6 +19829,18 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
+--- !u!114 &5307873480781048502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3797027538955047029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3797027539000872478
 GameObject:
   m_ObjectHideFlags: 0

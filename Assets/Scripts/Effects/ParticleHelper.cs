@@ -17,12 +17,19 @@ public class ParticleHelper : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    public void SetEmisionRotation(Vector3 rotation)
+    public void SetEmissionRotation(Vector3 rotation)
     {
         if (_particleSystem == null)
             _particleSystem = GetComponent<ParticleSystem>();
         var shape = _particleSystem.shape;
         shape.rotation = rotation;
     }
-    
+    public void AddEmissionRotation(float degree)
+    {
+        if (_particleSystem == null)
+            _particleSystem = GetComponent<ParticleSystem>();
+        var shape = _particleSystem.shape;
+        shape.rotation = new Vector3(shape.rotation.x, shape.rotation.y, shape.rotation.z + degree);
+    }
+
 }

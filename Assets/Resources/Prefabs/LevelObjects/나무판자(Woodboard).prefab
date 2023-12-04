@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 358471053}
   - component: {fileID: 358471054}
   - component: {fileID: 358471055}
+  - component: {fileID: 117015770436665674}
   m_Layer: 0
   m_Name: OnDestroyParticles
   m_TagString: Untagged
@@ -50,7 +51,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06cc5dcf6a1f45b42a68c42c91dbce79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resetRotation: 1
+  _setRotationToIdentity: 1
+  _particles:
+  - {fileID: 500403808}
+  - {fileID: 899552067}
+  - {fileID: 1356807529}
 --- !u!114 &358471055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,6 +71,18 @@ MonoBehaviour:
   _parts:
   - {fileID: 1543862801}
   - {fileID: 501136742}
+--- !u!114 &117015770436665674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 358471052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &451651377
 GameObject:
   m_ObjectHideFlags: 0
@@ -15153,6 +15170,7 @@ GameObject:
   - component: {fileID: 3727003582996162478}
   - component: {fileID: 1275728597}
   - component: {fileID: 1818791268}
+  - component: {fileID: 3928986873163516}
   m_Layer: 0
   m_Name: "\uB098\uBB34\uD310\uC790(Woodboard)"
   m_TagString: Untagged
@@ -15274,3 +15292,15 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 1
+--- !u!114 &3928986873163516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4901691467634328931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

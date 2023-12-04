@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DestroyOnCollision : MonoBehaviour
+[RequireComponent(typeof(DestructEventCaller))]
+public class DestructOnCollision : MonoBehaviour
 {
     public enum ObjectType
     {
@@ -22,16 +23,16 @@ public class DestroyOnCollision : MonoBehaviour
         if ((stone = collision.transform.GetComponent<RollingStone>()) != null)
         {
             if (IsKillableBy(ObjectType.RollingStone) && stone.Type == RollingStone.StoneType.RollingStone)
-                Destroy(gameObject);
+                Destruction.Destruct(gameObject);
             else if (IsKillableBy(ObjectType.StillStone) && stone.Type == RollingStone.StoneType.StillStone)
-                Destroy(gameObject);
+                Destruction.Destruct(gameObject);
         }
         //³ª¹«
         else if (IsKillableBy(ObjectType.FallingTree) &&
             (collision.transform.GetComponent<FallingTreeByCrash>() != null ||
             collision.transform.GetComponent<FallingTreeByPush>() != null))
         {
-            Destroy(gameObject);
+            Destruction.Destruct(gameObject);
         }
     }
     public void OnTriggerEnter2D(Collider2D collision)
@@ -42,14 +43,14 @@ public class DestroyOnCollision : MonoBehaviour
         if ((stone = collision.transform.GetComponent<RollingStone>()) != null)
         {
             if (IsKillableBy(ObjectType.RollingStone) && stone.Type == RollingStone.StoneType.RollingStone)
-                Destroy(gameObject);
+                Destruction.Destruct(gameObject);
             else if (IsKillableBy(ObjectType.StillStone) && stone.Type == RollingStone.StoneType.StillStone)
-                Destroy(gameObject);
+                Destruction.Destruct(gameObject);
         }
         //°¡½Ã¹ç
         if (IsKillableBy(ObjectType.Spikes) && collision.transform.GetComponent<Spikes>() != null)
         {
-            Destroy(gameObject);
+            Destruction.Destruct(gameObject);
         }
     }
 }

@@ -33,7 +33,7 @@ public class RollingStone : InteractableObject
         {
             _playerInteractor.SetActive(value);
             if (value)
-                gameObject.layer = LayerMask.NameToLayer("ExceptPlayer");
+                gameObject.layer = LayerMask.NameToLayer("Default");
             else
                 gameObject.layer = LayerMask.NameToLayer("Default");
         }

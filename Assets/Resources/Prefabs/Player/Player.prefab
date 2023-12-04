@@ -301,7 +301,6 @@ GameObject:
   - component: {fileID: 2070142170}
   - component: {fileID: 3064736143565219573}
   - component: {fileID: 623491974}
-  - component: {fileID: 1004548109}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -666,8 +665,7 @@ MonoBehaviour:
     _exitParams: []
   _targetObject: {fileID: 0}
   _curInteractionType: 0
-  _rollingPower: 1000
-  _rollingMaxSpeed: 0.8
+  _rollingPower: 45
 --- !u!114 &3064736143565219573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -750,20 +748,6 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
---- !u!114 &1004548109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1322454706829173486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d314f2de87de5f419af4e4a8d5b214b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 20
-  power: 0
 --- !u!1 &2040072695455763983
 GameObject:
   m_ObjectHideFlags: 0
