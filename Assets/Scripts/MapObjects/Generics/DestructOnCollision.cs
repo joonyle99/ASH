@@ -29,8 +29,7 @@ public class DestructOnCollision : MonoBehaviour
         }
         //³ª¹«
         else if (IsKillableBy(ObjectType.FallingTree) &&
-            (collision.transform.GetComponent<FallingTreeByCrash>() != null ||
-            collision.transform.GetComponent<FallingTreeByPush>() != null))
+            collision.transform.GetComponent<FallingTreeTrunk>() != null)
         {
             Destruction.Destruct(gameObject);
         }
