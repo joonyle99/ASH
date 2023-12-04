@@ -9,7 +9,6 @@ public class RunState : PlayerState
 
     [SerializeField] bool _isPlayerOnSlope;
     [SerializeField] float _movePower;
-    [SerializeField] float _moveDirLength = 2.5f;
     [SerializeField] float _angleWithGround;
     [SerializeField] float _maxSpeed = 8f;
     [SerializeField] float _acceleration = 15f;
@@ -41,7 +40,7 @@ public class RunState : PlayerState
         }
 
         // Change to Wall Grab State
-        if (Player.IsTouchedWall && Player.IsLookForceSync && Mathf.RoundToInt(Player.RawInputs.Movement.y) > 0)
+        if (Player.IsTouchedWall && Player.IsDirSync && Mathf.RoundToInt(Player.RawInputs.Movement.y) > 0)
         {
             ChangeState<WallGrabState>();
             return;

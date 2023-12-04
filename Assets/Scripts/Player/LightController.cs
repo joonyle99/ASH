@@ -1,33 +1,40 @@
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class LightController : MonoBehaviour
 {
-    [SerializeField] private GameObject _flashLight;
+    [SerializeField] private GameObject _light;
     [SerializeField] private GameObject _cane;
 
     [Space]
 
-    [SerializeField] private bool _isChangeableToLightState;
+    [SerializeField] private bool _isLightableState;
     [SerializeField] private bool _isLightWorking;
-    [SerializeField] private float _rotateSpeed = 30f;
-    [SerializeField] private float _maxAngle = 35f;
+    [SerializeField] private float _rotateSpeed;
+    [SerializeField] private float _maxAngle;
     [SerializeField] private float _curAngle;
+    [SerializeField] private float _lightAngleValue;
     [SerializeField] private bool _isRotatingUp;
-    [SerializeField] private float _isNormalizedAngle;
 
     public float PlayerDir { get => this.transform.localScale.x; }
 
+    PlayerBehaviour _player;
+
+    private void Awake()
+    {
+
+        _player = GetComponent<PlayerBehaviour>();
+    }
     void Update()
     {
-        PlayerBehaviour playerBehaviour = this.GetComponent<PlayerBehaviour>();
-        _isChangeableToLightState = playerBehaviour.StateIs<IdleState>() || playerBehaviour.StateIs<RunState>();
+        _isLightableState = _player.StateIs<IdleState>() || _player.StateIs<RunState>();
 
         if (_isLightWorking)
         {
-            if (!_isChangeableToLightState)
+            if (!_isLightableState)
             {
                 TurnOffLight();
-                _isLightWorking = _flashLight.activeSelf;
+                _isLightWorking = _light.activeSelf;
             }
         }
 
@@ -36,48 +43,48 @@ public class LightController : MonoBehaviour
         // Light Source ON / OFF
         if (Input.GetKeyDown(KeyCode.L))
         {
-            if (_isChangeableToLightState)
+            if (_isLightableState)
                 _isLightWorking = !_isLightWorking;
         }
 
         // -35 ~ 35를 0 ~ 1로 정규화
-        _isNormalizedAngle = (_curAngle + _maxAngle) / (2 * _maxAngle);
+        _lightAngleValue = (_curAngle + _maxAngle) / (2 * _maxAngle);
 
         // Animator Parameter
-        playerBehaviour.Animator.SetBool("IsLightWorking", _isLightWorking);
-        playerBehaviour.Animator.SetFloat("LightAngle", _isNormalizedAngle);
+        _player.Animator.SetBool("IsLightWorking", _isLightWorking);
+        _player.Animator.SetFloat("LightAngleValue", _lightAngleValue);
 
         // Light Source Up / Down Rotations
         if (_isLightWorking)
         {
-            _flashLight.transform.Rotate(Vector3.forward, (PlayerDir > 0f ? _rotateSpeed : -_rotateSpeed) * inputState.Vertical * Time.deltaTime);
+            _light.transform.Rotate(Vector3.forward, (PlayerDir > 0f ? _rotateSpeed : -_rotateSpeed) * inputState.Vertical * Time.deltaTime);
 
             // 상한선 하한선 정하기
 
             // 상한선
-            if (_flashLight.transform.localEulerAngles.z > _maxAngle && _flashLight.transform.localEulerAngles.z < 90f)
+            if (_light.transform.localEulerAngles.z > _maxAngle && _light.transform.localEulerAngles.z < 90f)
             {
-                _flashLight.transform.localEulerAngles = new Vector3(_flashLight.transform.localEulerAngles.x,
-                    _flashLight.transform.localEulerAngles.y, _maxAngle);
+                _light.transform.localEulerAngles = new Vector3(_light.transform.localEulerAngles.x,
+                    _light.transform.localEulerAngles.y, _maxAngle);
                 _curAngle = _maxAngle;
             }
             // 0 ~ maxAngle
-            else if (_flashLight.transform.localEulerAngles.z > 0f && _flashLight.transform.localEulerAngles.z < _maxAngle)
+            else if (_light.transform.localEulerAngles.z > 0f && _light.transform.localEulerAngles.z < _maxAngle)
             {
-                _curAngle = _flashLight.transform.localEulerAngles.z;
+                _curAngle = _light.transform.localEulerAngles.z;
                 _isRotatingUp = true;
             }
             // 하한선
-            else if (_flashLight.transform.localEulerAngles.z > 270f && _flashLight.transform.localEulerAngles.z < 360f - _maxAngle)
+            else if (_light.transform.localEulerAngles.z > 270f && _light.transform.localEulerAngles.z < 360f - _maxAngle)
             {
-                _flashLight.transform.localEulerAngles = new Vector3(_flashLight.transform.localEulerAngles.x,
-                    _flashLight.transform.localEulerAngles.y, 360f - _maxAngle);
+                _light.transform.localEulerAngles = new Vector3(_light.transform.localEulerAngles.x,
+                    _light.transform.localEulerAngles.y, 360f - _maxAngle);
                 _curAngle = -_maxAngle;
             }
             // -maxAngle ~ 0
-            else if (_flashLight.transform.localEulerAngles.z > 360f - _maxAngle && _flashLight.transform.localEulerAngles.z < 360f)
+            else if (_light.transform.localEulerAngles.z > 360f - _maxAngle && _light.transform.localEulerAngles.z < 360f)
             {
-                _curAngle = -(360f - _flashLight.transform.localEulerAngles.z);
+                _curAngle = -(360f - _light.transform.localEulerAngles.z);
                 _isRotatingUp = false;
             }
         }
@@ -85,35 +92,36 @@ public class LightController : MonoBehaviour
 
     public void TurnOnLight()
     {
-        Vector3 originLocalPosition = _flashLight.transform.localPosition;
-        Quaternion originLocalRotation = _flashLight.transform.localRotation;
-        Vector3 originLocalScale = _flashLight.transform.localScale;
+        Vector3 originLocalPosition = _light.transform.localPosition;
+        Quaternion originLocalRotation = _light.transform.localRotation;
+        Vector3 originLocalScale = _light.transform.localScale;
 
         // 빛을 켠다
-        _flashLight.SetActive(true);
+        _light.SetActive(true);
+        _player.SoundList.PlaySFX("SE_LightSkill");
 
         // 지팡이의 자식으로 붙힌다.
-        _flashLight.transform.SetParent(_cane.transform.GetChild(0).transform);
+        _light.transform.SetParent(_cane.transform.GetChild(0).transform);
 
-        _flashLight.transform.localPosition = originLocalPosition;
-        _flashLight.transform.localRotation = originLocalRotation;
-        _flashLight.transform.localScale = originLocalScale;
+        _light.transform.localPosition = originLocalPosition;
+        _light.transform.localRotation = originLocalRotation;
+        _light.transform.localScale = originLocalScale;
     }
 
     public void TurnOffLight()
     {
-        Vector3 originLocalPosition = _flashLight.transform.localPosition;
-        Quaternion originLocalRotation = _flashLight.transform.localRotation;
-        Vector3 originLocalScale = _flashLight.transform.localScale;
+        Vector3 originLocalPosition = _light.transform.localPosition;
+        Quaternion originLocalRotation = _light.transform.localRotation;
+        Vector3 originLocalScale = _light.transform.localScale;
 
         // 플레이어 자식으로 붙힌다.
-        _flashLight.transform.SetParent(transform);
+        _light.transform.SetParent(transform);
 
-        _flashLight.transform.localPosition = originLocalPosition;
-        _flashLight.transform.localRotation = originLocalRotation;
-        _flashLight.transform.localScale = originLocalScale;
+        _light.transform.localPosition = originLocalPosition;
+        _light.transform.localRotation = originLocalRotation;
+        _light.transform.localScale = originLocalScale;
 
         // 빛을 끈다
-        _flashLight.SetActive(false);
+        _light.SetActive(false);
     }
 }

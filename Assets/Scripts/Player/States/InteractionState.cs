@@ -23,8 +23,7 @@ public class InteractionState : PlayerState
 
     #region ROLL
 
-    [SerializeField] private float _rollingPower = 5f;
-    [SerializeField] private float _rollingMaxSpeed = 0.8f;
+    [SerializeField] private float _rollingPower;
 
     #endregion
 
@@ -42,51 +41,31 @@ public class InteractionState : PlayerState
         switch (_curInteractionType)
         {
             case InteractionType.Push:
-                Player.Animator.SetBool("IsPush", true);
-                break;
             case InteractionType.Roll:
                 Player.Animator.SetBool("IsPush", true);
-
-                // rollingPower 설정
-                Rigidbody2D targetRigid = _targetObject.GetComponent<Rigidbody2D>();
-
-                if (targetRigid == null)
-                    return;
-
-                // 플레이어의 GravitySclae이 1이 아닌 5로 설정되어있다. 이 값을 고려해서 힘을 줘야한다.
-                //_rollingPower = targetRigid.mass * 1.1f * Player.Rigidbody.gravityScale;
-
                 break;
         }
     }
 
-    /// <summary>
-    /// Game Logic
-    /// </summary>
     protected override void OnUpdate()
     {
         // Debug.Log("OnUpdate Interaction State");
-        return;
+
         switch (_curInteractionType)
         {
             case InteractionType.Push:
                 break;
             case InteractionType.Roll:
-
-                if (Mathf.Abs(Player.Rigidbody.velocity.x) > _rollingMaxSpeed)
-                    Player.Rigidbody.velocity = new Vector2(_rollingMaxSpeed * Mathf.Sign(Player.Rigidbody.velocity.x),
-                        Player.Rigidbody.velocity.y);
-
                 break;
         }
     }
+
     /// <summary>
     /// Physics
     /// </summary>
     protected override void OnFixedUpdate()
     {
         // Debug.Log("OnFixedUpdate Interaction State");
-
 
         switch (_curInteractionType)
         {
@@ -121,7 +100,7 @@ public class InteractionState : PlayerState
     {
         if (targetObject == null)
         {
-            Debug.Log("Target Object가 없습니다");
+            Debug.LogWarning("Target Object is null");
             return;
         }
 

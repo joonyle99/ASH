@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(IAttackListener), typeof(Rigidbody2D))]
+// [RequireComponent(typeof(IAttackListener), typeof(Rigidbody2D))]
 public class AttackableEntity : MonoBehaviour
 {
     [SerializeField] bool _allowsBasicAttack = true;
 
-    IAttackListener _attackListener;
+    IAttackListener [] _attackListeners;
+
     private void Awake()
     {
-        _attackListener = GetComponent<IAttackListener>();
+        _attackListeners = GetComponents<IAttackListener>();
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         var basicAttackHitbox = collision.GetComponent<PlayerBasicAttackHitbox>();
@@ -24,7 +27,10 @@ public class AttackableEntity : MonoBehaviour
 
     void OnHittedByBasicAttack()
     {
-        _attackListener.OnHitted(true);
+        foreach(var listener in  _attackListeners)
+        {
+            listener.OnHitted(true);
+        }
     }
 
 }

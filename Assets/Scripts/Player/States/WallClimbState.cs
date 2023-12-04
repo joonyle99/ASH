@@ -7,14 +7,15 @@ public class WallClimbState : WallState
 
     [Range(0f, 20f)] [SerializeField] float _wallClimbSpeed = 4.0f;
 
-    private float prevGravity;
+    private float _prevGravity;
 
     protected override void OnEnter()
     {
         base.OnEnter();
 
-        prevGravity = Player.Rigidbody.gravityScale;
+        _prevGravity = Player.Rigidbody.gravityScale;
         Player.Rigidbody.gravityScale = 0f;
+        Player.Rigidbody.velocity = Vector2.zero;
 
         Animator.SetBool("IsClimb", true);
     }
@@ -28,14 +29,17 @@ public class WallClimbState : WallState
         if (Player.IsMoveUpKey)
         {
             // Wall End Jump
-            if (!Player.IsTouchedWall)
+            if (!Player.IsTouchedWall && Player.transform.position.y > wallHitPos.y)
             {
-                Player.Rigidbody.velocity = Vector2.zero;
                 ChangeState<JumpState>();
                 return;
             }
 
-            Player.Rigidbody.velocity = wallPerPendVec * _wallClimbSpeed;
+            // 머리 위에 뭐가 있으면 이동을 못함
+            if (Player.UpwardHit)
+                return;
+
+            transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
         // 아래로 내려가기
         else if (Player.IsMoveDownKey)
@@ -46,7 +50,7 @@ public class WallClimbState : WallState
                 return;
             }
 
-            Player.Rigidbody.velocity = - wallPerPendVec * _wallClimbSpeed;
+            transform.position -= Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
         // 가만히 있으면 Wall Grab State로 상태 전이
         else
@@ -65,7 +69,7 @@ public class WallClimbState : WallState
 
     protected override void OnExit()
     {
-        Player.Rigidbody.gravityScale = prevGravity;
+        Player.Rigidbody.gravityScale = _prevGravity;
 
         Animator.SetBool("IsClimb", false);
 

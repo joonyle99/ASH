@@ -37,6 +37,15 @@ public class DestroyOnCollision : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D collision)
     {
 
+        //±¼·¯°¡´Â µ¹
+        RollingStone stone;
+        if ((stone = collision.transform.GetComponent<RollingStone>()) != null)
+        {
+            if (IsKillableBy(ObjectType.RollingStone) && stone.Type == RollingStone.StoneType.RollingStone)
+                Destroy(gameObject);
+            else if (IsKillableBy(ObjectType.StillStone) && stone.Type == RollingStone.StoneType.StillStone)
+                Destroy(gameObject);
+        }
         //°¡½Ã¹ç
         if (IsKillableBy(ObjectType.Spikes) && collision.transform.GetComponent<Spikes>() != null)
         {

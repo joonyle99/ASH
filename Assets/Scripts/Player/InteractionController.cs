@@ -54,12 +54,14 @@ public class InteractionController : MonoBehaviour
         {
             if (InputManager.Instance.InteractionKey.KeyDown)
             {
+                // 상호작용 가능한 State
                 if (_player.IsInteractable)
                 {
-                    _interactionTarget.Interact();
-                    _player.Interact();
+                    _interactionTarget.Interact();  // IsInteracting = true
+                    _player.Interact(); // Change Interaction State
                 }
             }
+
             if (_interactionTarget.IsInteracting)
                 _interactionTarget.UpdateInteracting();
         }

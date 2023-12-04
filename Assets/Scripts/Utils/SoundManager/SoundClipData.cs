@@ -72,7 +72,7 @@ public class SoundClipDataDrawer : PropertyDrawer
             //volume
             {
                 var volumeTypeProperty = property.FindPropertyRelative("_volumeType");
-                Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Volume MonsterType"));
+                Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Volume Type"));
                 Rect fieldRect = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width, HEIGHT));
                 EditorGUI.PropertyField(fieldRect, volumeTypeProperty, GUIContent.none);
                 position.y += HEIGHT + 2;
@@ -96,7 +96,7 @@ public class SoundClipDataDrawer : PropertyDrawer
             //pitch
             {
                 var pitchTypeProperty = property.FindPropertyRelative("_pitchType");
-                Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Pitch MonsterType"));
+                Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Pitch Type"));
                 Rect fieldRect = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width, HEIGHT));
                 EditorGUI.PropertyField(fieldRect, pitchTypeProperty, GUIContent.none);
                 position.y += HEIGHT + 2;

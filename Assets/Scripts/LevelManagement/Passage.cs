@@ -18,6 +18,7 @@ public class Passage : TriggerZone
     public InputSetterScriptableObject EnterInputSetter => _enterInputSetter;
     public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
 
+    [SerializeField] bool _canEnter = true;
 
     bool _isPlayerExiting;
     void Awake()
@@ -27,7 +28,7 @@ public class Passage : TriggerZone
     }
     public override void OnActivatorEnter(TriggerActivator activator)
     {
-        if (_isPlayerExiting)
+        if (_isPlayerExiting || !_canEnter)
             return;
         StartCoroutine(ExitSceneCoroutine());
     }

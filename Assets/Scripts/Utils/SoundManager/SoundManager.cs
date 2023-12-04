@@ -45,6 +45,10 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
 
         _pitchedAudioSources[pitch].PlayOneShot(clip, volumeMultiplier);        // 새로운 사운드 출력
     }
+    public void PlaySFX(SoundClipData soundData, float volumeMultiplier = 1f)
+    {
+        PlaySFXPitched(soundData.Clip, soundData.Pitch, volumeMultiplier);
+    }
     public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f, bool replayIfSameClip = false)
     {
         if (replayIfSameClip && clip == _bgmPlayer.clip)

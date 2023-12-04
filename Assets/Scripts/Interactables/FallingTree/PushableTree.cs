@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PushableTree : InteractableObject
 {
@@ -9,7 +10,7 @@ public class PushableTree : InteractableObject
 
     protected override void OnInteract()
     {
-        // Debug.Log("나무와의 상호작용 실행");
+
     }
 
     public override void UpdateInteracting()
@@ -17,10 +18,10 @@ public class PushableTree : InteractableObject
         InputState inputState = InputManager.Instance.GetState();
 
         // 상호작용 종료 타이밍
-        if (InputManager.Instance.InteractionKey.KeyUp || FallingTreeByPush.IsFalling)
+        if (InputManager.Instance.InteractionKey.KeyUp || FallingTreeByPush.IsFallingEnd)
         {
-            // 상호작용 해제 타이밍 (나무가 이미 쓰러진 경우)
-            if (FallingTreeByPush.IsFalling)
+            // 나무가 이미 쓰러진 경우
+            if (FallingTreeByPush.IsFallingEnd)
             {
                 // 더이상 상호작용 못하게 막는다
                 IsInteractable = false;
@@ -33,43 +34,17 @@ public class PushableTree : InteractableObject
             return;
         }
 
-        if (Mathf.Abs(inputState.Horizontal) < 0.1f)
-        {
-            // -------------------------------------------- //
-            //      나무를 밀지 않고 가만히 있는 코드         //
-            // -------------------------------------------- //
+        // 플레이어가 왼쪽이면 + 플레이어가 오른쪽이면 -
+        float pushDir = Mathf.Sign(FallingTreeByPush.transform.position.x - SceneContext.Current.Player.transform.position.x);
 
-            // Debug.Log("나무를 가만히 잡고만 있는다");
+        // 같은 방향인지 계산
+        bool isSyncDir = Mathf.Abs(pushDir - inputState.Horizontal) < 0.01f;
 
-            FallingTreeByPush.StopPush();
-        }
+        // 같은 방향인 경우에만 민다.
+        if (isSyncDir)
+            FallingTreeByPush.StartPush(pushDir);
         else
-        {
+            FallingTreeByPush.StopPush();
 
-            // -------------------------------------------- //
-            //      실제로 플레이어가 나무를 미는 코드         //
-            // -------------------------------------------- //
-
-            // Debug.Log("나무를 민다");
-
-            // Push Dir 설정
-            float pushDir = Mathf.Sign(FallingTreeByPush.transform.position.x - SceneContext.Current.Player.transform.position.x);
-
-            if (pushDir > 0f)
-            {
-                if (inputState.Horizontal > 0f)
-                {
-                    // Top Tree 부분을 민다.
-                    FallingTreeByPush.StartPush(pushDir);
-                }
-            }
-            else if (pushDir < 0f)
-            {
-                if (inputState.Horizontal < 0f)
-                {
-                    FallingTreeByPush.StartPush(pushDir);
-                }
-            }
-        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -7,94 +8,126 @@ using UnityEngine;
 /// </summary>
 public class FallingTreeByPush : MonoBehaviour
 {
+    [SerializeField] private LayerMask _targetLayerMask;
+    [SerializeField] private Transform _forcePoint;
+
+    [SerializeField] private float _power;
+    [SerializeField] private float _fallingAngle;
+    [SerializeField] private float _rotatedAngle;
+
+    [SerializeField] private bool _isPushed;
+    [SerializeField] private bool _isFallingEnd;
+    [SerializeField] private float _pushDir;
+
     private Rigidbody2D _rigid;
 
-    [SerializeField] private Transform forcePointTransform;
+    private Quaternion _startRotation;
+    private Quaternion _curRotation;
 
-    [SerializeField] private float _power = 40f;
-    [SerializeField] private float _fallingAngle = 20f;
-    [SerializeField] private float _rotatedAngle = 0f;
+    private bool _isChangedLayer;
 
-    [SerializeField] private bool _isPushed = false;
-    [SerializeField] private bool _isFalling = false;
-    [SerializeField] private float _dir = 0f;
+    public bool IsFallingEnd
+    {
+        get { return _isFallingEnd; }
+        set { _isFallingEnd = value; }
+    }
 
-    private Quaternion startRotation;
-    private Quaternion curRotation;
+    [SerializeField] SoundList _soundList;
 
-    public bool IsFalling { get { return _isFalling; } }
+    bool _isFallingSoundPlayed;
+    bool _isLandingSoundPlayed;
 
     void Start()
     {
         _rigid = GetComponent<Rigidbody2D>();
 
         // set start rotation
-        startRotation = this.transform.rotation;
+        _startRotation = this.transform.rotation;
     }
 
     void Update()
     {
         // update current rotation
-        curRotation = this.transform.rotation;
+        _curRotation = this.transform.rotation;
 
         // calculate rotated angle
-        _rotatedAngle = Quaternion.Angle(startRotation, curRotation);
+        _rotatedAngle = Quaternion.Angle(_startRotation, _curRotation);
 
         // falling down tree (you can't push any more)
         if (_rotatedAngle > _fallingAngle)
-            _isFalling = true;
-
-        if (!_isPushed && _isFalling)
         {
-            // 나무의 레이어를 Ground Layer로 변경해준다.
+            _isFallingEnd = true;
+
+            if (!_isFallingSoundPlayed)
+            {
+                _isFallingSoundPlayed = true;
+                _soundList.PlaySFX("SE_FallingTree_Break");
+            }
+        }
+
+        // 나무가 쓰러지는 타이밍에 레이어를 한번만 바꿔준다.
+        if (!_isChangedLayer && _isFallingEnd)
+        {
+            _isChangedLayer = true;
             ChangeLayer();
         }
     }
 
     void FixedUpdate()
     {
-        if (_isPushed)
-        {
-            FallDown();
-        }
+        if (_isPushed && !_isFallingEnd)
+            PushByPlayer();
     }
 
-    public void FallDown()
+    public void PushByPlayer()
     {
-        // if already falling return
-        if (_isFalling)
-            return;
-
-        // rigidbody의 제약조건 해제 (한번만 하고싶은데..)
-        _rigid.constraints = RigidbodyConstraints2D.None;
-
-        // falling tree
         // 힘(N)을 입력하면 강체의 질량과 DT를 고려해서 속도를 변경한다.
-        _rigid.AddForceAtPosition(Vector2.right * _dir * _power, forcePointTransform.position, ForceMode2D.Force);
+        _rigid.AddForceAtPosition(Vector2.right * _pushDir * _power, _forcePoint.position, ForceMode2D.Force);
     }
 
     public void StartPush(float dir)
     {
         _isPushed = true;
-        _dir = dir;
+        _pushDir = dir;
     }
 
     public void StopPush()
     {
         _isPushed = false;
-        _dir = 0f;
+        _pushDir = 0f;
+    }
+
+    private int ChangeToIndex(int v)
+    {
+        int value = 1;
+        int index = 0;
+
+        while (v != value)
+        {
+            value <<= 1;
+            index++;
+        }
+
+        return index;
     }
 
     private void ChangeLayer()
     {
-        string layerName = "Ground";
+        Transform parent = this.transform.parent;
 
-        // 상위 오브젝트의 레이어 변경
-        GameObject parent = this.transform.parent.gameObject;
-        parent.layer = LayerMask.NameToLayer(layerName);
+        parent.transform.GetChild(0).gameObject.layer = ChangeToIndex(_targetLayerMask.value);
+        parent.transform.GetChild(1).gameObject.layer = ChangeToIndex(_targetLayerMask.value);
+    }
 
-        // 그 자식 오브젝트의 레이어 변경
-        parent.transform.GetChild(0).gameObject.layer = LayerMask.NameToLayer(layerName);
-        parent.transform.GetChild(1).gameObject.layer = LayerMask.NameToLayer(layerName);
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!_isLandingSoundPlayed)
+        {
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                _soundList.PlaySFX("SE_FallingTree_Landing");
+                _isLandingSoundPlayed = true;
+            }
+        }
     }
 }
