@@ -81,8 +81,7 @@ public class PlayerBehaviour : StateMachineBase
     public int CurHp { get { return _curHp; } set { _curHp = value; } }
 
     public Collider2D MainCollider { get { return _mainCollider; } }
-    public RaycastHit2D GroundHit { get; set; }
-    public RaycastHit2D GroundHitWithRayCast { get; set; }
+    public RaycastHit2D GroundHit { get; private set; }
     public RaycastHit2D UpwardHit { get; set; }
     public RaycastHit2D WallHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
@@ -98,6 +97,8 @@ public class PlayerBehaviour : StateMachineBase
     [Tooltip("이 각도를 초과한 경사에선 서있지 못함")][SerializeField] float _slopeThreshold = 45f;
     public float SlopeThreshold { get { return _slopeThreshold; } }
     public SoundList SoundList { get { return _soundList; } }
+    PlayerMovementController _movementController;
+    public PlayerMovementController MovementController { get { return _movementController; } }
 
     private void Awake()
     {
@@ -108,6 +109,7 @@ public class PlayerBehaviour : StateMachineBase
         _jumpController = GetComponent<PlayerJumpController>();
         _attackController = GetComponent<PlayerAttackController>();
         _interactionController = GetComponent<InteractionController>();
+        _movementController = GetComponent<PlayerMovementController>();
 
         // State
         _dashState = GetComponent<DashState>();
@@ -184,17 +186,6 @@ public class PlayerBehaviour : StateMachineBase
         GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
         IsGrounded = GroundHit.collider != null;
         _groundHitCollider = GroundHit.collider;
-
-        // Check Ground with RayCast
-        GroundHitWithRayCast = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
-
-        if (GroundHitWithRayCast)
-        {
-            if (PlayerLookDir2D.x > 0f)
-                GroundAlignedMoveDir = (-1) * Vector2.Perpendicular(GroundHitWithRayCast.normal).normalized;
-            else
-                GroundAlignedMoveDir = Vector2.Perpendicular(GroundHitWithRayCast.normal).normalized;
-        }
 
         // Check Upward
         UpwardHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
