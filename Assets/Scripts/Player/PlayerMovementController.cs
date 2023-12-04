@@ -17,7 +17,6 @@ public class PlayerMovementController : MonoBehaviour
         _player = GetComponent<PlayerBehaviour>();
     }
 
-
     void FixedUpdate()
     {
         if (!_player.IsGrounded || _player.RawInputs.Movement.x == 0)
@@ -31,17 +30,19 @@ public class PlayerMovementController : MonoBehaviour
             moveDir = Vector2.Perpendicular(groundNormal);
 
         Vector2 targetVelocity = moveDir * _maxSpeed;
-        Vector2 velocityNeeded = targetVelocity - _player.Rigidbody.velocity;
+        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(_player.Rigidbody.velocity, moveDir) * moveDir;
         float accelRate = (velocityNeeded.magnitude > 0.01f) ? _acceleration : _decceleration;
 
         _moveForce = velocityNeeded * accelRate;
-
         _player.Rigidbody.AddForce(_moveForce);
     }
     private void OnDrawGizmosSelected()
     {
         // 플레이어가 이동하는 방향
-        Gizmos.color = Color.magenta;
+        Gizmos.color = Color.cyan;
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(_moveForce.x, _moveForce.y, 0));
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(_player.Rigidbody.velocity.x, _player.Rigidbody.velocity.y, 0));
     }
 }

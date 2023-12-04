@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RollingStone : InteractableObject
 {
-
+    [SerializeField] bool _clampSpeed = false;
     [SerializeField] float _maxRollSpeed;
     [SerializeField] float _pushPower;
 
@@ -46,13 +46,18 @@ public class RollingStone : InteractableObject
     }
     public override void UpdateInteracting()
     {
-        _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower);
-        _rigidbody.velocity = Vector2.ClampMagnitude(_rigidbody.velocity, _maxRollSpeed);
-
+        //TODO : 플레이어가 돌에서 떨어졌을 때
         if (IsInteractionKeyUp || IsPlayerStateChanged || Player.RawInputs.Movement.x * _moveDirection < 0)
         {
-             ExitInteraction();
+            ExitInteraction();
         }
+    }
+    public override void FixedUpdateInteracting()
+    {
+        _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower);
+        if(_clampSpeed)
+            _rigidbody.velocity = Vector2.ClampMagnitude(_rigidbody.velocity, _maxRollSpeed);
+
     }
     protected override void OnInteractionExit()
     {

@@ -81,6 +81,14 @@ public class InteractionController : MonoBehaviour
                 OnInteractionExit();
         }
     }
+    private void FixedUpdate()
+    {
+        if (_interactionTarget != null)
+        {
+            if (_interactionTarget.IsInteracting)
+                _interactionTarget.FixedUpdateInteracting();
+        }
+    }
 
     void SetTargetToClosestInteractable()
     {

@@ -60,7 +60,7 @@ public class PlayerBehaviour : StateMachineBase
 
     #region Properties
 
-    public bool IsGrounded { get; private set; }
+    public bool IsGrounded { get { return GroundHit; } }
     public bool IsTouchedWall { get; private set; }
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<RunState>() || StateIs<InAirState>(); } }
     public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
@@ -183,10 +183,9 @@ public class PlayerBehaviour : StateMachineBase
         #region Check Ground & Wall
 
         // Check Ground
-        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
-        IsGrounded = GroundHit.collider != null;
+        //GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
+        GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
         _groundHitCollider = GroundHit.collider;
-
         // Check Upward
         UpwardHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
 
@@ -463,6 +462,7 @@ public class PlayerBehaviour : StateMachineBase
 
     private void OnDrawGizmosSelected()
     {
+        /*
         // Draw Ground Check
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
@@ -485,5 +485,9 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.color = Color.white;
         Gizmos.DrawLine(_groundCheckTrans.position + _paddingVec,
             _groundCheckTrans.position + _paddingVec + Vector3.down * _diveCheckLength);
+        */
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(_groundCheckTrans.position,
+            _groundCheckTrans.position + Vector3.down * _groundCheckLength);
     }
 }
