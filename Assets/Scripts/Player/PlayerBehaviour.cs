@@ -69,7 +69,7 @@ public class PlayerBehaviour : StateMachineBase
     public int RecentDir { get; set; }
     public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
-    public bool IsDirSync { get { return Math.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.1f; } }
+    public bool IsDirSync { get { return PlayerLookDir2D.x == RawInputs.Horizontal; } }
     public bool IsMoveYKey { get { return Math.Abs(Mathf.RoundToInt(RawInputs.Movement.y)) > 0f; } }
     public bool IsMoveUpKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) > 0f; } }
     public bool IsMoveDownKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) < 0f; } }
@@ -309,10 +309,6 @@ public class PlayerBehaviour : StateMachineBase
         SceneContext.Current.InstantRespawn();
     }
 
-    public void Interact()
-    {
-        ChangeState<InteractionState>();
-    }
 
     /*
     public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)

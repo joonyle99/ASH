@@ -4,36 +4,29 @@ using UnityEngine;
 
 public class RollingStone : InteractableObject
 {
-    public enum StoneType { RollingStone, StillStone}
-    Rigidbody2D _rigidbody;
 
     [SerializeField] float _maxRollSpeed;
-    [SerializeField] float _maxInteractionDistance = 0.1f;
-    [SerializeField] float _pushPower = 0.1f;
-    [SerializeField] StoneType _type = StoneType.RollingStone;
-
-    public StoneType Type { get { return _type; } }
-    Collider2D _collider;
-
-    AttackableEntity _attackableComponent;
+    [SerializeField] float _pushPower;
 
     [SerializeField] SoundList _soundList;
     [SerializeField] float _pushSoundInterval;
 
+    Rigidbody2D _rigidbody;
+    AttackableEntity _attackableComponent;
+
     bool _isPushSoundPlaying = false;
+    float _moveDirection = 0;
 
     public bool IsBreakable { get { return _attackableComponent == null; } }
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _collider = GetComponent<Collider2D>();
         _attackableComponent = GetComponent<AttackableEntity>();
     }
     protected override void OnInteract()
     {
-        //TODO : Joint 생성
-        //SceneContext.Current.Player.AddJoint<DistanceJoint2D>(_rigidbody, 300);
-
+        Player.MovementController.enabled = true;
+        _moveDirection = Player.PlayerLookDir2D.x;
     }
     IEnumerator PlayPushSoundCoroutine(string key, float interval)
     {
@@ -53,18 +46,16 @@ public class RollingStone : InteractableObject
     }
     public override void UpdateInteracting()
     {
-        _rigidbody.AddForce(SceneContext.Current.Player.RawInputs.Movement * _pushPower);
-        if (_rigidbody.velocity.sqrMagnitude > _maxRollSpeed * _maxRollSpeed)
+        _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower);
+        _rigidbody.velocity = Vector2.ClampMagnitude(_rigidbody.velocity, _maxRollSpeed);
+
+        if (IsInteractionKeyUp || IsPlayerStateChanged || Player.RawInputs.Movement.x * _moveDirection < 0)
         {
-            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxRollSpeed;
-        }
-        //TODO : 플레이어와 떨어질 때 joint 끊기
-        if (Physics2D.Distance(_collider, SceneContext.Current.Player.MainCollider).distance > _maxInteractionDistance
-            ||  InputManager.Instance.InteractionKey.State == KeyState.KeyUp)
-        {
-            //SceneContext.Current.Player.RemoveJoint();
-             FinishInteraction();
+             ExitInteraction();
         }
     }
-
+    protected override void OnInteractionExit()
+    {
+        Player.MovementController.enabled = false;
+    }
 }

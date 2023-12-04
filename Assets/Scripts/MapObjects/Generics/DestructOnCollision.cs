@@ -22,9 +22,9 @@ public class DestructOnCollision : MonoBehaviour
         RollingStone stone;
         if ((stone = collision.transform.GetComponent<RollingStone>()) != null)
         {
-            if (IsKillableBy(ObjectType.RollingStone) && stone.Type == RollingStone.StoneType.RollingStone)
+            if (IsKillableBy(ObjectType.RollingStone) && !stone.IsBreakable)
                 Destruction.Destruct(gameObject);
-            else if (IsKillableBy(ObjectType.StillStone) && stone.Type == RollingStone.StoneType.StillStone)
+            else if (IsKillableBy(ObjectType.StillStone) && stone.IsBreakable)
                 Destruction.Destruct(gameObject);
         }
         //³ª¹«
@@ -42,9 +42,9 @@ public class DestructOnCollision : MonoBehaviour
         RollingStone stone;
         if ((stone = collision.transform.GetComponent<RollingStone>()) != null)
         {
-            if (IsKillableBy(ObjectType.RollingStone) && stone.Type == RollingStone.StoneType.RollingStone)
+            if (IsKillableBy(ObjectType.RollingStone) && !stone.IsBreakable)
                 Destruction.Destruct(gameObject);
-            else if (IsKillableBy(ObjectType.StillStone) && stone.Type == RollingStone.StoneType.StillStone)
+            else if (IsKillableBy(ObjectType.StillStone) && stone.IsBreakable)
                 Destruction.Destruct(gameObject);
         }
         //°¡½Ã¹ç

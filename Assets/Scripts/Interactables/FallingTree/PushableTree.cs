@@ -29,7 +29,7 @@ public class PushableTree : InteractableObject
 
             // 상호작용 종료
             FallingTreeByPush.StopPush();
-            FinishInteraction();
+            ExitInteraction();
 
             return;
         }

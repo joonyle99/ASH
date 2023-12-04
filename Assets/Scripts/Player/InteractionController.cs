@@ -42,6 +42,16 @@ public class InteractionController : MonoBehaviour
         else
             _interactionMarker.EnableAt(newTarget);
     }
+    void OnInteractionStart()
+    {
+        // 상호작용 종료 시 플레이어를 Idle State로 만들어준다
+        _player.ChangeState<InteractionState>();
+    }
+    public void OnInteractionExit()
+    {
+        // 상호작용 종료 시 플레이어를 Idle State로 만들어준다
+        _player.ChangeState<IdleState>();
+    }
 
     private void Update()
     {
@@ -57,13 +67,18 @@ public class InteractionController : MonoBehaviour
                 // 상호작용 가능한 State
                 if (_player.IsInteractable)
                 {
-                    _interactionTarget.Interact();  // IsInteracting = true
-                    //_player.Interact(); // Change Interaction State
+                    OnInteractionStart();
+                    _interactionTarget.Interact();
                 }
             }
 
             if (_interactionTarget.IsInteracting)
                 _interactionTarget.UpdateInteracting();
+        }
+        else
+        {
+            if (_player.StateIs<InteractionState>())
+                OnInteractionExit();
         }
     }
 

@@ -20,7 +20,7 @@ public class PlayerMovementController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!_player.IsGrounded)
+        if (!_player.IsGrounded || _player.RawInputs.Movement.x == 0)
             return;
 
         Vector2 groundNormal = _player.GroundHit.normal;

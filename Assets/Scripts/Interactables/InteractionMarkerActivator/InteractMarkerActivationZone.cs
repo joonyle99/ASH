@@ -10,7 +10,7 @@ public class InteractMarkerActivationZone : TriggerZone
     void Awake()
     {
         if(_interactableObject == null )
-        _interactableObject = GetComponentInParent<InteractableObject>();
+            _interactableObject = GetComponentInParent<InteractableObject>();
     }
     public override void OnPlayerEnter(PlayerBehaviour player)
     {
