@@ -20,6 +20,7 @@ public class RunState : PlayerState
         {
             if (Player.CanDash && Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
             {
+                GetComponent<DashState>().SetDashDir(Player.RawInputs.Movement.x);
                 ChangeState<DashState>();
                 return;
             }

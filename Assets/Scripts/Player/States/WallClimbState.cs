@@ -9,6 +9,8 @@ public class WallClimbState : WallState
 
     private float _prevGravity;
 
+    bool IsAboveWall { get { return Player.transform.position.y > wallHitPos.y; } }
+
     protected override void OnEnter()
     {
         base.OnEnter();
@@ -19,6 +21,7 @@ public class WallClimbState : WallState
 
         Animator.SetBool("IsClimb", true);
     }
+
     protected override void OnUpdate()
     {
         // base.OnUpdate();
@@ -29,14 +32,19 @@ public class WallClimbState : WallState
         if (Player.IsMoveUpKey)
         {
             // Wall End Jump
-            if (!Player.IsTouchedWall && Player.transform.position.y > wallHitPos.y)
+            if (!Player.IsTouchedWall && IsAboveWall)
             {
                 ChangeState<JumpState>();
                 return;
             }
 
+<<<<<<< Updated upstream
             // 머리 위에 뭐가 있으면 이동을 못함
             if (Player.UpwardHit)
+=======
+            // 머리 위에 땅이 있으면 이동을 못함
+            if (Player.UpwardGroundHit)
+>>>>>>> Stashed changes
                 return;
 
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;

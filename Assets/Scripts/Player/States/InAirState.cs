@@ -29,6 +29,20 @@ public class InAirState : PlayerState
             return;
         }
 
+<<<<<<< Updated upstream
+=======
+        // Change to Dash State
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (Player.CanDash && Player.IsMoveXKey)
+            {
+                GetComponent<DashState>().SetDashDir(Player.RawInputs.Movement.x);
+                ChangeState<DashState>();
+                return;
+            }
+        }
+
+>>>>>>> Stashed changes
         // Change to Wall Grab State
         if (Player.IsTouchedWall && Player.IsDirSync)
         {

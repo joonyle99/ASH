@@ -61,7 +61,7 @@ public class PlayerBehaviour : StateMachineBase
     #region Properties
 
     public bool IsGrounded { get { return GroundHit; } }
-    public bool IsTouchedWall { get; private set; }
+    public bool IsTouchedWall { get { return WallHit; } }
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<RunState>() || StateIs<InAirState>(); } }
     public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
     public bool CanDash { get; set; }
@@ -69,11 +69,23 @@ public class PlayerBehaviour : StateMachineBase
     public int RecentDir { get; set; }
     public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
+<<<<<<< Updated upstream
     public bool IsDirSync { get { return PlayerLookDir2D.x == RawInputs.Horizontal; } }
     public bool IsMoveYKey { get { return Math.Abs(Mathf.RoundToInt(RawInputs.Movement.y)) > 0f; } }
     public bool IsMoveUpKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) > 0f; } }
     public bool IsMoveDownKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) < 0f; } }
     public bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
+=======
+    public bool IsDirSync { get { return Mathf.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.01f; } }
+    public bool IsOppositeDirSync { get { return Mathf.Abs(PlayerLookDir2D.x + RawInputs.Horizontal) < 0.01f; } }
+    public bool IsMoveXKey { get { return Math.Abs(RawInputs.Movement.x) > 0.01f; } }
+    public bool IsMoveRightKey { get { return RawInputs.Movement.x > 0.01f; } }
+    public bool IsMoveLeftKey { get { return RawInputs.Movement.x < -0.01f; } }
+    public bool IsMoveYKey { get { return Math.Abs(RawInputs.Movement.y) > 0.01f; } }
+    public bool IsMoveUpKey { get { return RawInputs.Movement.y > 0.01f; } }
+    public bool IsMoveDownKey { get { return RawInputs.Movement.y < -0.01f; } }
+    public bool IsMove { get { return Mathf.Abs(Rigidbody.velocity.x) > 0.1f; } }
+>>>>>>> Stashed changes
     public bool IsWallJump { get; set; }
     public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
     public float GroundDistance { get; set; }
@@ -183,8 +195,7 @@ public class PlayerBehaviour : StateMachineBase
         #region Check Ground & Wall
 
         // Check Ground
-        // GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
-        GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
+        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
         _groundHitCollider = GroundHit.collider;
 
         // Check Upward
@@ -192,7 +203,6 @@ public class PlayerBehaviour : StateMachineBase
 
         // Check Wall
         WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
-        IsTouchedWall = WallHit.collider != null;
         _wallHitCollider = WallHit.collider;
 
         // Check Dive Hit
@@ -463,15 +473,16 @@ public class PlayerBehaviour : StateMachineBase
 
     private void OnDrawGizmosSelected()
     {
-        /*
         // Draw Ground Check
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
+        /*
         // Draw Ground Check With RayCast
         Gizmos.color = Color.red;
         Gizmos.DrawLine(_groundCheckTrans.position,
             _groundCheckTrans.position + Vector3.down * _groundCheckLength);
+        */
 
         // Draw Upward Ray
         Gizmos.color = Color.red;
@@ -486,9 +497,5 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.color = Color.white;
         Gizmos.DrawLine(_groundCheckTrans.position + _paddingVec,
             _groundCheckTrans.position + _paddingVec + Vector3.down * _diveCheckLength);
-        */
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(_groundCheckTrans.position,
-            _groundCheckTrans.position + Vector3.down * _groundCheckLength);
     }
 }

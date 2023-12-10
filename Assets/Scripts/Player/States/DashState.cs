@@ -67,9 +67,6 @@ public class DashState : PlayerState
         // 중력 0으로 설정
         Player.Rigidbody.gravityScale = 0;
 
-        // 대쉬 방향 설정
-        _dashDir = new Vector2(Player.RawInputs.Movement.x, 0f).normalized;
-
         // Dash를 시작한 시간
         _timeStartedDash = Time.time;
     }
@@ -84,5 +81,11 @@ public class DashState : PlayerState
 
         // 기존 중력으로 되돌리기
         Player.Rigidbody.gravityScale = _orginGravity;
+    }
+
+    public void SetDashDir(float xDirection)
+    {
+        // 대쉬 방향 설정
+        _dashDir = new Vector2(xDirection, 0f).normalized;
     }
 }
