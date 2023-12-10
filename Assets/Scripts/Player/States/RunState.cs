@@ -11,21 +11,23 @@ public class RunState : PlayerState
 
     protected override void OnUpdate()
     {
-        if (Mathf.RoundToInt(Player.RawInputs.Movement.x) == 0)
+        if (!Player.IsMoveXKey)
         {
             ChangeState<IdleState>();
             return;
         }
+
         if (Input.GetKeyDown(KeyCode.F))
         {
-            if (Player.CanDash && Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
+            if (Player.CanDash && Player.IsMoveXKey)
             {
                 GetComponent<DashState>().SetDashDir(Player.RawInputs.Movement.x);
                 ChangeState<DashState>();
                 return;
             }
         }
-        if (Player.IsTouchedWall && Player.IsDirSync && Mathf.RoundToInt(Player.RawInputs.Movement.y) > 0)
+
+        if (Player.IsTouchedWall && Player.IsDirSync && Player.IsMoveUpKey)
         {
             ChangeState<WallGrabState>();
             return;

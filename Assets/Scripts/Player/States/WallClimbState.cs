@@ -13,8 +13,6 @@ public class WallClimbState : WallState
 
     protected override void OnEnter()
     {
-        base.OnEnter();
-
         _prevGravity = Player.Rigidbody.gravityScale;
         Player.Rigidbody.gravityScale = 0f;
         Player.Rigidbody.velocity = Vector2.zero;
@@ -24,11 +22,7 @@ public class WallClimbState : WallState
 
     protected override void OnUpdate()
     {
-        // base.OnUpdate();
-
-        // Debug.Log("Climb");
-
-        // ���� �ö󰡱�
+        // 위로 올라가기
         if (Player.IsMoveUpKey)
         {
             // Wall End Jump
@@ -37,14 +31,14 @@ public class WallClimbState : WallState
                 ChangeState<JumpState>();
                 return;
             }
-
-            // �Ӹ� ���� ���� ������ �̵��� ����
+            
+            // 占쌈몌옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占싱듸옙占쏙옙 占쏙옙占쏙옙
             if (Player.UpwardGroundHit)
                 return;
 
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // �Ʒ��� ��������
+        // 占싣뤄옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙
         else if (Player.IsMoveDownKey)
         {
             if (!Player.IsTouchedWall)
@@ -55,7 +49,7 @@ public class WallClimbState : WallState
 
             transform.position -= Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // ������ ������ Wall Grab State�� ���� ����
+        // 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 Wall Grab State占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
         else
         {
             ChangeState<WallGrabState>();
@@ -75,7 +69,5 @@ public class WallClimbState : WallState
         Player.Rigidbody.gravityScale = _prevGravity;
 
         Animator.SetBool("IsClimb", false);
-
-        base.OnExit();
     }
 }

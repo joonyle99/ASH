@@ -17,10 +17,12 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     [SerializeField] float _respawnDelay = 0.5f;
     public override IEnumerator ExitEffectCoroutine()
     {
-        Camera.main.GetComponent<CameraController>().DisableCameraFollow();
+        CameraControlToken token = new CameraControlToken(CameraPriority.SceneChange);
+        yield return new WaitUntil(() => token.IsAvailable);
+        token.Camera.DisableCameraFollow();
+        token.Release();
 
         yield return FadeCoroutine(_transitionDuration, FadeType.Darken);
-        yield return null;
     }
 
     public override IEnumerator EnterEffectCoroutine()
@@ -31,10 +33,12 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         {
             yield break;
         }
-        Camera.main.GetComponent<CameraController>().SnapFollow();
-        yield return StartCoroutine(entrance.PlayerExitCoroutine());
+        CameraControlToken token = new CameraControlToken(CameraPriority.SceneChange);
+        yield return new WaitUntil(() => token.IsAvailable);
+        token.Camera.SnapFollow();
+        token.Release();
 
-        yield return null;
+        yield return StartCoroutine(entrance.PlayerExitCoroutine());
     }
 
     IEnumerator RespawnEffectCoroutine(Vector3 spawnPosition)

@@ -86,7 +86,7 @@ public class PlayerBehaviour : StateMachineBase
 
     public Collider2D MainCollider { get { return _mainCollider; } }
     public RaycastHit2D GroundHit { get; private set; }
-    public RaycastHit2D UpwardHit { get; set; }
+    public RaycastHit2D UpwardGroundHit { get; set; }
     public RaycastHit2D WallHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
 
@@ -191,7 +191,7 @@ public class PlayerBehaviour : StateMachineBase
         _groundHitCollider = GroundHit.collider;
 
         // Check Upward
-        UpwardHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
+        UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
 
         // Check Wall
         WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
