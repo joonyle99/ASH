@@ -11,8 +11,6 @@ public class WallClimbState : WallState
 
     protected override void OnEnter()
     {
-        base.OnEnter();
-
         _prevGravity = Player.Rigidbody.gravityScale;
         Player.Rigidbody.gravityScale = 0f;
         Player.Rigidbody.velocity = Vector2.zero;
@@ -21,10 +19,6 @@ public class WallClimbState : WallState
     }
     protected override void OnUpdate()
     {
-        // base.OnUpdate();
-
-        // Debug.Log("Climb");
-
         // 위로 올라가기
         if (Player.IsMoveUpKey)
         {
@@ -36,7 +30,7 @@ public class WallClimbState : WallState
             }
 
             // 머리 위에 뭐가 있으면 이동을 못함
-            if (Player.UpwardHit)
+            if (Player.UpwardGroundHit)
                 return;
 
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
@@ -72,7 +66,5 @@ public class WallClimbState : WallState
         Player.Rigidbody.gravityScale = _prevGravity;
 
         Animator.SetBool("IsClimb", false);
-
-        base.OnExit();
     }
 }

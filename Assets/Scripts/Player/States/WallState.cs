@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WallState : PlayerState
@@ -19,31 +17,20 @@ public class WallState : PlayerState
 
     protected override void OnEnter()
     {
-        // 플레이어가 벽을 잡고있지 않은 경우
-        if (!Player.WallHit)
-            return;
-
-        Player.Animator.SetTrigger("Wall");
-        Player.Animator.SetBool("IsWall", true);
-
-        // 벽의 법선벡터
-        wallNormalVec = Player.WallHit.normal;
-
         // 벽의 위치
         wallHitPos = Player.WallHit.transform.position;
 
         // 벽의 Hit 위치
         wallHitPointPos = Player.WallHit.point;
 
+        // 벽의 법선벡터
+        wallNormalVec = Player.WallHit.normal;
+
         // 벽의 노말 벡터의 수직한 벡터 계산
         if (wallHitPointPos.x > Player.transform.position.x)
             wallPerPendVec = (-1) * Vector2.Perpendicular(wallNormalVec).normalized;
         else
             wallPerPendVec = Vector2.Perpendicular(wallNormalVec).normalized;
-
-        // Debug.Log("WallState Enter");
-
-        // Player.transform.position = new Vector3(wallHitPos.x, Player.transform.position.y);
     }
 
     protected override void OnUpdate()
@@ -57,7 +44,7 @@ public class WallState : PlayerState
 
     protected override void OnExit()
     {
-        Player.Animator.SetBool("IsWall", false);
+
     }
 
     private void OnDrawGizmosSelected()

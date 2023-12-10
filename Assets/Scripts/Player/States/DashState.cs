@@ -43,6 +43,7 @@ public class DashState : PlayerState
             }
         }
     }
+
     protected override void OnFixedUpdate()
     {
 
