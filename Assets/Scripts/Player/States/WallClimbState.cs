@@ -9,6 +9,8 @@ public class WallClimbState : WallState
 
     private float _prevGravity;
 
+    bool IsAboveWall { get { return Player.transform.position.y > wallHitPos.y; } }
+
     protected override void OnEnter()
     {
         _prevGravity = Player.Rigidbody.gravityScale;
@@ -17,25 +19,26 @@ public class WallClimbState : WallState
 
         Animator.SetBool("IsClimb", true);
     }
+
     protected override void OnUpdate()
     {
-        // À§·Î ¿Ã¶ó°¡±â
+        // ìœ„ë¡œ ì˜¬ë¼ê°€ê¸°
         if (Player.IsMoveUpKey)
         {
             // Wall End Jump
-            if (!Player.IsTouchedWall && Player.transform.position.y > wallHitPos.y)
+            if (!Player.IsTouchedWall && IsAboveWall)
             {
                 ChangeState<JumpState>();
                 return;
             }
-
-            // ¸Ó¸® À§¿¡ ¹¹°¡ ÀÖÀ¸¸é ÀÌµ¿À» ¸øÇÔ
+            
+            // å ìŒˆëªŒì˜™ å ì™ì˜™å ì™ì˜™ å ì™ì˜™å ì™ì˜™ å ì™ì˜™å ì™ì˜™å ì™ì˜™ å ì‹±ë“¸ì˜™å ì™ì˜™ å ì™ì˜™å ì™ì˜™
             if (Player.UpwardGroundHit)
                 return;
 
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // ¾Æ·¡·Î ³»·Á°¡±â
+        // å ì‹£ë¤„ì˜™å ì™ì˜™ å ì™ì˜™å ì™ì˜™å ì™ì˜™å ì™ì˜™
         else if (Player.IsMoveDownKey)
         {
             if (!Player.IsTouchedWall)
@@ -46,7 +49,7 @@ public class WallClimbState : WallState
 
             transform.position -= Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // °¡¸¸È÷ ÀÖÀ¸¸é Wall Grab State·Î »óÅÂ ÀüÀÌ
+        // å ì™ì˜™å ì™ì˜™å ì™ì˜™ å ì™ì˜™å ì™ì˜™å ì™ì˜™ Wall Grab Stateå ì™ì˜™ å ì™ì˜™å ì™ì˜™ å ì™ì˜™å ì™ì˜™
         else
         {
             ChangeState<WallGrabState>();

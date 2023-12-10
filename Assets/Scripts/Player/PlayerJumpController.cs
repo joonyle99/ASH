@@ -95,8 +95,8 @@ public class PlayerJumpController : MonoBehaviour
                 return;
             }
 
-            // 벽타기 상태에서 "바라보는 방향 = 키 입력 방향" 이라면 점프 불가
-            if (_player.StateIs<WallState>() && (_player.RecentDir == Mathf.RoundToInt(_player.RawInputs.Movement.x)))
+            // 벽타기 상태에서 바라보는 방향과 반대 방향으로 방향키를 누르지 않으면 점프 x
+            if (_player.StateIs<WallState>() && !_player.IsOppositeDirSync)
             {
                 _isJumpQueued = false;
                 return;
@@ -184,7 +184,8 @@ public class PlayerJumpController : MonoBehaviour
     /// </summary>
     public void ExcuteEndWallJump()
     {
-        _remainingJumpCount--;
+        // 한번에 2개의 점프가 깎인다.
+        _remainingJumpCount = 0;
 
         Vector2 endWallJumpForce = new Vector2(_player.Rigidbody.velocity.x, _wallEndJumpPower);
 
