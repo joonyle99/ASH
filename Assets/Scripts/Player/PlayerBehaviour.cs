@@ -98,7 +98,7 @@ public class PlayerBehaviour : StateMachineBase
 
     #endregion
 
-    [Tooltip("�� ������ �ʰ��� ��翡�� ������ ����")][SerializeField] float _slopeThreshold = 45f;
+    [Tooltip("이 각도를 초과한 경사에선 서있지 못함")][SerializeField] float _slopeThreshold = 45f;
     public float SlopeThreshold { get { return _slopeThreshold; } }
     public SoundList SoundList { get { return _soundList; } }
     PlayerMovementController _movementController;
@@ -126,7 +126,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Start();
 
-        // ��� BGM ���
+        // 배경 BGM 출력
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
 
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
@@ -273,8 +273,8 @@ public class PlayerBehaviour : StateMachineBase
 
     public void OnHitbyPuddle(float damage)
     {
-        //�ִϸ��̼�, ü�� ��� �� �ϸ� ��.
-        //�ִϸ��̼� ���� �� spawnpoint���� ����
+        //애니메이션, 체력 닳기 등 하면 됨.
+        //애니메이션 종료 후 spawnpoint에서 생성
 
         if (CurHp == 1)
         {
@@ -292,7 +292,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         // TODO
 
-        Debug.Log(damage + " ����� ����");
+        Debug.Log(damage + " 데미지 입음");
     }
 
     public void TriggerInstantRespawn(float damage)
@@ -315,7 +315,7 @@ public class PlayerBehaviour : StateMachineBase
     /*
     public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)
     {
-        Debug.Log("���� ���׿� ����");
+        Debug.Log("박쥐 점액에 맞음");
         OnHit(damage, vec);
     }
     */
@@ -334,30 +334,30 @@ public class PlayerBehaviour : StateMachineBase
     /*
     public IEnumerator Alive()
     {
-        Debug.Log("��Ȱ !!");
+        Debug.Log("부활 !!");
 
-        // �ʱ� ����
+        // 초기 설정
         ChangeState<IdleState>();
         CurHp = _maxHp;
         RecentDir = 1;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
 
-        // �ݶ��̴� Ȱ��ȭ
+        // 콜라이더 활성화
         this.GetComponent<Collider2D>().enabled = true;
 
-        // ��ƼŬ ���� & ����
+        // 파티클 생성 & 시작
         ParticleSystem myEffect = Instantiate(respawnEffect, transform.position, Quaternion.identity, transform);
-        myEffect.Play();  // �ݺ��Ǵ� ����Ʈ
+        myEffect.Play();  // 반복되는 이펙트
 
-        // �ڽ� ������Ʈ�� ��� ���� ������Ʈ�� �����´�
+        // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
 
-        // �ʱ� ���İ� ����
+        // 초기 알파값 저장
         float[] startAlphas = new float[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
             startAlphas[i] = renderers[i].color.a;
 
-        // ��� ���� ������Ʈ�� ���鼭 Fade In
+        // 모든 렌더 컴포넌트를 돌면서 Fade In
         float t = 0;
         while (t < _reviveFadeInDuration)
         {
@@ -375,7 +375,7 @@ public class PlayerBehaviour : StateMachineBase
             yield return null;
         }
 
-        // ��ƼŬ ���� & �ı�
+        // 파티클 종료 & 파괴
         myEffect.Stop();
         Destroy(myEffect.gameObject);
 

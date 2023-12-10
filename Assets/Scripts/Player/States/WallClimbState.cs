@@ -22,7 +22,6 @@ public class WallClimbState : WallState
 
     protected override void OnUpdate()
     {
-        // 위로 올라가기
         if (Player.IsMoveUpKey)
         {
             // Wall End Jump
@@ -31,14 +30,12 @@ public class WallClimbState : WallState
                 ChangeState<JumpState>();
                 return;
             }
-            
-            // 占쌈몌옙 占쏙옙占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 占싱듸옙占쏙옙 占쏙옙占쏙옙
+
             if (Player.UpwardGroundHit)
                 return;
 
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // 占싣뤄옙占쏙옙 占쏙옙占쏙옙占쏙옙占쏙옙
         else if (Player.IsMoveDownKey)
         {
             if (!Player.IsTouchedWall)
@@ -49,7 +46,6 @@ public class WallClimbState : WallState
 
             transform.position -= Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // 占쏙옙占쏙옙占쏙옙 占쏙옙占쏙옙占쏙옙 Wall Grab State占쏙옙 占쏙옙占쏙옙 占쏙옙占쏙옙
         else
         {
             ChangeState<WallGrabState>();

@@ -11,23 +11,11 @@ public class JumpState : PlayerState
         Player.Animator.SetBool("IsJump", true);
 
         // Wall Jump
-        if (Player.PreviousState is WallState && Player.RawInputs.IsPressingJump)
-        {
-            Debug.Log("WallJump");
-            _jumpController.ExecuteWallJump();
-        }
+        if (Player.PreviousState is WallState && Player.RawInputs.IsPressingJump) _jumpController.ExecuteWallJump();
         // End Wall Jump
-        else if (Player.PreviousState is WallState && !Player.RawInputs.IsPressingJump)
-        {
-            Debug.Log("EndWallJump");
-            _jumpController.ExcuteEndWallJump();
-        }
+        else if (Player.PreviousState is WallState && !Player.RawInputs.IsPressingJump) _jumpController.ExcuteEndWallJump();
         // Jump
-        else
-        {
-            Debug.Log("BasicJump");
-            _jumpController.ExcuteBasicJump();
-        }
+        else _jumpController.ExcuteBasicJump();
     }
 
     protected override void OnUpdate()

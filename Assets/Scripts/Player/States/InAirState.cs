@@ -39,7 +39,7 @@ public class InAirState : PlayerState
                 return;
             }
         }
-        
+
         // Change to Wall Grab State
         if (Player.IsTouchedWall && Player.IsDirSync)
         {
