@@ -29,21 +29,21 @@ public class InAirState : PlayerState
             return;
         }
 
+        // Change to Dash State
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (Player.CanDash && Player.IsMoveXKey)
+            {
+                ChangeState<DashState>();
+                return;
+            }
+        }
+
         // Change to Wall Grab State
         if (Player.IsTouchedWall && Player.IsDirSync)
         {
             ChangeState<WallGrabState>();
             return;
-        }
-
-        // Change to Dash State
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            if (Player.CanDash && Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
-            {
-                ChangeState<DashState>();
-                return;
-            }
         }
 
         /*
