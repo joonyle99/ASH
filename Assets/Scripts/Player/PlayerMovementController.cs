@@ -39,10 +39,14 @@ public class PlayerMovementController : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         // 플레이어가 이동하는 방향
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(_moveForce.x, _moveForce.y, 0));
+        if (Application.isPlaying)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(transform.position, transform.position + new Vector3(_moveForce.x, _moveForce.y, 0));
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(_player.Rigidbody.velocity.x, _player.Rigidbody.velocity.y, 0));
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, transform.position + new Vector3(_player.Rigidbody.velocity.x, _player.Rigidbody.velocity.y, 0));
+
+        }
     }
 }
