@@ -183,9 +183,10 @@ public class PlayerBehaviour : StateMachineBase
         #region Check Ground & Wall
 
         // Check Ground
-        //GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
+        // GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
         GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
         _groundHitCollider = GroundHit.collider;
+
         // Check Upward
         UpwardHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
 
