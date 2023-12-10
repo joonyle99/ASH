@@ -53,7 +53,7 @@ public class PlayerJumpController : MonoBehaviour
     void FixedUpdate()
     {
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
-        if (_isLongJumping)
+        if (_isLongJumping && _remainingJumpCount >= _maxJumpCount - 1)
         {
             // Debug.Log("롱 점프 되는중 ~~");
             _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity);
