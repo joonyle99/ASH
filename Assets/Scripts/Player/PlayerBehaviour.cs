@@ -70,10 +70,13 @@ public class PlayerBehaviour : StateMachineBase
     public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
     public bool IsDirSync { get { return PlayerLookDir2D.x == RawInputs.Horizontal; } }
-    public bool IsMoveYKey { get { return Math.Abs(Mathf.RoundToInt(RawInputs.Movement.y)) > 0f; } }
-    public bool IsMoveUpKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) > 0f; } }
-    public bool IsMoveDownKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) < 0f; } }
-    public bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
+    public bool IsMoveXKey { get { return Math.Abs(RawInputs.Movement.x) > 0.01f; } }
+    public bool IsMoveRightKey { get { return RawInputs.Movement.x > 0.01f; } }
+    public bool IsMoveLeftKey { get { return RawInputs.Movement.x < -0.01f; } }
+    public bool IsMoveYKey { get { return Math.Abs(RawInputs.Movement.y) > 0.01f; } }
+    public bool IsMoveUpKey { get { return RawInputs.Movement.y > 0.01f; } }
+    public bool IsMoveDownKey { get { return RawInputs.Movement.y < -0.01f; } }
+    public bool IsMove { get { return Mathf.Abs(Rigidbody.velocity.x) > 0.1f; } }
     public bool IsWallJump { get; set; }
     public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
     public float GroundDistance { get; set; }
@@ -82,7 +85,7 @@ public class PlayerBehaviour : StateMachineBase
 
     public Collider2D MainCollider { get { return _mainCollider; } }
     public RaycastHit2D GroundHit { get; private set; }
-    public RaycastHit2D UpwardHit { get; set; }
+    public RaycastHit2D UpwardGroundHit { get; set; }
     public RaycastHit2D WallHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
 
@@ -188,7 +191,7 @@ public class PlayerBehaviour : StateMachineBase
         _groundHitCollider = GroundHit.collider;
 
         // Check Upward
-        UpwardHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
+        UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
 
         // Check Wall
         WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);

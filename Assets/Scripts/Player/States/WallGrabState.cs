@@ -12,6 +12,7 @@ public class WallGrabState : WallState
 
     protected override void OnEnter()
     {
+        // Wall Normal, Perpendicular 정보를 받음
         base.OnEnter();
 
         _prevGravity = Player.Rigidbody.gravityScale;
@@ -25,12 +26,8 @@ public class WallGrabState : WallState
 
     protected override void OnUpdate()
     {
-        base.OnUpdate();
-
-        // Debug.Log("Grab");
-
         // Wall Climb State
-        if (Mathf.RoundToInt(Player.RawInputs.Movement.y) != 0)
+        if (Player.IsMoveYKey)
         {
             ChangeState<WallClimbState>();
             return;
@@ -51,7 +48,5 @@ public class WallGrabState : WallState
         Player.Rigidbody.gravityScale = _prevGravity;
 
         Animator.SetBool("IsGrab", false);
-
-        base.OnExit();
     }
 }
