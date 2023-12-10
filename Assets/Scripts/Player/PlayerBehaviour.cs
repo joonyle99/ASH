@@ -69,13 +69,6 @@ public class PlayerBehaviour : StateMachineBase
     public int RecentDir { get; set; }
     public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
-<<<<<<< Updated upstream
-    public bool IsDirSync { get { return PlayerLookDir2D.x == RawInputs.Horizontal; } }
-    public bool IsMoveYKey { get { return Math.Abs(Mathf.RoundToInt(RawInputs.Movement.y)) > 0f; } }
-    public bool IsMoveUpKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) > 0f; } }
-    public bool IsMoveDownKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) < 0f; } }
-    public bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
-=======
     public bool IsDirSync { get { return Mathf.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.01f; } }
     public bool IsOppositeDirSync { get { return Mathf.Abs(PlayerLookDir2D.x + RawInputs.Horizontal) < 0.01f; } }
     public bool IsMoveXKey { get { return Math.Abs(RawInputs.Movement.x) > 0.01f; } }
@@ -85,7 +78,6 @@ public class PlayerBehaviour : StateMachineBase
     public bool IsMoveUpKey { get { return RawInputs.Movement.y > 0.01f; } }
     public bool IsMoveDownKey { get { return RawInputs.Movement.y < -0.01f; } }
     public bool IsMove { get { return Mathf.Abs(Rigidbody.velocity.x) > 0.1f; } }
->>>>>>> Stashed changes
     public bool IsWallJump { get; set; }
     public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
     public float GroundDistance { get; set; }
@@ -101,12 +93,12 @@ public class PlayerBehaviour : StateMachineBase
     public Vector2 GroundAlignedMoveDir { get; set; }
 
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
-    public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.Instance¿Í µ¿ÀÏ
+    public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.Instanceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public SkinnedMeshRenderer CapeRenderer { get { return _capeRenderer; } }
 
     #endregion
 
-    [Tooltip("ÀÌ °¢µµ¸¦ ÃÊ°úÇÑ °æ»ç¿¡¼± ¼­ÀÖÁö ¸øÇÔ")][SerializeField] float _slopeThreshold = 45f;
+    [Tooltip("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ï¿½ï¿½ ï¿½ï¿½ç¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")][SerializeField] float _slopeThreshold = 45f;
     public float SlopeThreshold { get { return _slopeThreshold; } }
     public SoundList SoundList { get { return _soundList; } }
     PlayerMovementController _movementController;
@@ -134,7 +126,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Start();
 
-        // ¹è°æ BGM Ãâ·Â
+        // ï¿½ï¿½ï¿½ BGM ï¿½ï¿½ï¿½
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
 
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
@@ -281,8 +273,8 @@ public class PlayerBehaviour : StateMachineBase
 
     public void OnHitbyPuddle(float damage)
     {
-        //¾Ö´Ï¸ÞÀÌ¼Ç, Ã¼·Â ´â±â µî ÇÏ¸é µÊ.
-        //¾Ö´Ï¸ÞÀÌ¼Ç Á¾·á ÈÄ spawnpoint¿¡¼­ »ý¼º
+        //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½, Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½ï¿½.
+        //ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ spawnpointï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         if (CurHp == 1)
         {
@@ -300,7 +292,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         // TODO
 
-        Debug.Log(damage + " ´ë¹ÌÁö ÀÔÀ½");
+        Debug.Log(damage + " ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
     }
 
     public void TriggerInstantRespawn(float damage)
@@ -323,7 +315,7 @@ public class PlayerBehaviour : StateMachineBase
     /*
     public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)
     {
-        Debug.Log("¹ÚÁã Á¡¾×¿¡ ¸ÂÀ½");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×¿ï¿½ ï¿½ï¿½ï¿½ï¿½");
         OnHit(damage, vec);
     }
     */
@@ -342,30 +334,30 @@ public class PlayerBehaviour : StateMachineBase
     /*
     public IEnumerator Alive()
     {
-        Debug.Log("ºÎÈ° !!");
+        Debug.Log("ï¿½ï¿½È° !!");
 
-        // ÃÊ±â ¼³Á¤
+        // ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½
         ChangeState<IdleState>();
         CurHp = _maxHp;
         RecentDir = 1;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
 
-        // ÄÝ¶óÀÌ´õ È°¼ºÈ­
+        // ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ È°ï¿½ï¿½È­
         this.GetComponent<Collider2D>().enabled = true;
 
-        // ÆÄÆ¼Å¬ »ý¼º & ½ÃÀÛ
+        // ï¿½ï¿½Æ¼Å¬ ï¿½ï¿½ï¿½ï¿½ & ï¿½ï¿½ï¿½ï¿½
         ParticleSystem myEffect = Instantiate(respawnEffect, transform.position, Quaternion.identity, transform);
-        myEffect.Play();  // ¹Ýº¹µÇ´Â ÀÌÆåÆ®
+        myEffect.Play();  // ï¿½Ýºï¿½ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
 
-        // ÀÚ½Ä ¿ÀºêÁ§Æ®ÀÇ ¸ðµç ·»´õ ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿Â´Ù
+        // ï¿½Ú½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
 
-        // ÃÊ±â ¾ËÆÄ°ª ÀúÀå
+        // ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½
         float[] startAlphas = new float[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
             startAlphas[i] = renderers[i].color.a;
 
-        // ¸ðµç ·»´õ ÄÄÆ÷³ÍÆ®¸¦ µ¹¸é¼­ Fade In
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½é¼­ Fade In
         float t = 0;
         while (t < _reviveFadeInDuration)
         {
@@ -383,7 +375,7 @@ public class PlayerBehaviour : StateMachineBase
             yield return null;
         }
 
-        // ÆÄÆ¼Å¬ Á¾·á & ÆÄ±«
+        // ï¿½ï¿½Æ¼Å¬ ï¿½ï¿½ï¿½ï¿½ & ï¿½Ä±ï¿½
         myEffect.Stop();
         Destroy(myEffect.gameObject);
 

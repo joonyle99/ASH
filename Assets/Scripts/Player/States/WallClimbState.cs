@@ -28,7 +28,7 @@ public class WallClimbState : WallState
 
         // Debug.Log("Climb");
 
-        // À§·Î ¿Ã¶ó°¡±â
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¶ó°¡±ï¿½
         if (Player.IsMoveUpKey)
         {
             // Wall End Jump
@@ -38,18 +38,13 @@ public class WallClimbState : WallState
                 return;
             }
 
-<<<<<<< Updated upstream
-            // ¸Ó¸® À§¿¡ ¹¹°¡ ÀÖÀ¸¸é ÀÌµ¿À» ¸øÇÔ
-            if (Player.UpwardHit)
-=======
-            // ¸Ó¸® À§¿¡ ¶¥ÀÌ ÀÖÀ¸¸é ÀÌµ¿À» ¸øÇÔ
+            // ï¿½Ó¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (Player.UpwardGroundHit)
->>>>>>> Stashed changes
                 return;
 
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // ¾Æ·¡·Î ³»·Á°¡±â
+        // ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         else if (Player.IsMoveDownKey)
         {
             if (!Player.IsTouchedWall)
@@ -60,7 +55,7 @@ public class WallClimbState : WallState
 
             transform.position -= Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // °¡¸¸È÷ ÀÖÀ¸¸é Wall Grab State·Î »óÅÂ ÀüÀÌ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Wall Grab Stateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         else
         {
             ChangeState<WallGrabState>();
