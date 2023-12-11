@@ -6,11 +6,11 @@ public class InAirState : PlayerState
 
     [Space]
 
-    [SerializeField] float _inAirMoveAcceleration = 30f;          // °øÁß¿¡¼­ ÁÂ¿ì·Î ¿òÁ÷ÀÌ´Â ½ºÇÇµå
-    [SerializeField] float _maxInAirMoveSpeed = 6f;         // °øÁß¿¡¼­ ÁÂ¿ì·Î ¿òÁ÷ÀÌ´Â ÃÖ´ë ½ºÇÇµå
-    [SerializeField] float _fastDropThreshhold = 4f;    // »¡¸® ¶³¾îÁö±â ½ÃÀÛÇÏ´Â ³ôÀÌ
-    [SerializeField] float _fastDropPower = 1.2f;        // »¡¸® ¶³¾îÁö´Â Èû
-    [SerializeField] float _maxDropSpeed = 60f;        // ¶³¾îÁö´Â ¼Óµµ ÃÖ´ë°ª
+    [SerializeField] float _inAirMoveAcceleration = 30f;          // ê³µì¤‘ì—ì„œ ì¢Œìš°ë¡œ ì›€ì§ì´ëŠ” ìŠ¤í”¼ë“œ
+    [SerializeField] float _maxInAirMoveSpeed = 6f;         // ê³µì¤‘ì—ì„œ ì¢Œìš°ë¡œ ì›€ì§ì´ëŠ” ìµœëŒ€ ìŠ¤í”¼ë“œ
+    [SerializeField] float _fastDropThreshhold = 4f;    // ë¹¨ë¦¬ ë–¨ì–´ì§€ê¸° ì‹œì‘í•˜ëŠ” ë†’ì´
+    [SerializeField] float _fastDropPower = 1.2f;        // ë¹¨ë¦¬ ë–¨ì–´ì§€ëŠ” í˜
+    [SerializeField] float _maxDropSpeed = 60f;        // ë–¨ì–´ì§€ëŠ” ì†ë„ ìµœëŒ€ê°’
 
     protected override void OnEnter()
     {
@@ -22,7 +22,7 @@ public class InAirState : PlayerState
         // Change to Idle State
         if (Player.IsGrounded)
         {
-            // °øÁß¿¡¼­ ¹Ù´Ú¿¡ ´êÀ¸¸é ³ª´Â »ç¿îµå
+            // ê³µì¤‘ì—ì„œ ë°”ë‹¥ì— ë‹¿ìœ¼ë©´ ë‚˜ëŠ” ì‚¬ìš´ë“œ
             Player.PlaySound_SE_Jump_02();
 
             ChangeState<IdleState>();
@@ -34,6 +34,7 @@ public class InAirState : PlayerState
         {
             if (Player.CanDash && Player.IsMoveXKey)
             {
+                GetComponent<DashState>().SetDashDir(Player.RawInputs.Movement.x);
                 ChangeState<DashState>();
                 return;
             }
@@ -59,42 +60,42 @@ public class InAirState : PlayerState
         }
         */
 
-        // Wall Jump¿¡¼­ In Air State·Î ³Ñ¾î¿Â °æ¿ì
+        // Wall Jumpì—ì„œ In Air Stateë¡œ ë„˜ì–´ì˜¨ ê²½ìš°
         if (Player.IsWallJump)
         {
-            // ÇÃ·¹ÀÌ¾îÀÇ velocity¸¦ ±×´ë·Î °¡Áö°í °£´Ù
+            // í”Œë ˆì´ì–´ì˜ velocityë¥¼ ê·¸ëŒ€ë¡œ ê°€ì§€ê³  ê°„ë‹¤
             Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, Player.Rigidbody.velocity.y);
             Player.IsWallJump = false;
         }
-        // Basic Jump¿¡¼­ In Air State·Î ³Ñ¾î¿Â °æ¿ì
+        // Basic Jumpì—ì„œ In Air Stateë¡œ ë„˜ì–´ì˜¨ ê²½ìš°
         else
         {
-            // °øÁß¿¡¼­ÀÇ ÃÖ´ë ÀÌµ¿¼Óµµ¸¦ Á¦ÇÑÇÑ´Ù
+            // ê³µì¤‘ì—ì„œì˜ ìµœëŒ€ ì´ë™ì†ë„ë¥¼ ì œí•œí•œë‹¤
             if (Mathf.Abs(Player.Rigidbody.velocity.x) > _maxInAirMoveSpeed)
                 Player.Rigidbody.velocity = new Vector2(Mathf.Sign(Player.Rigidbody.velocity.x) * _maxInAirMoveSpeed, Player.Rigidbody.velocity.y);
         }
 
-        // ÇÑ°èÁ¡ Áö³ª¸é ´õ »¡¸® ¶³¾îÁü
+        // í•œê³„ì  ì§€ë‚˜ë©´ ë” ë¹¨ë¦¬ ë–¨ì–´ì§
         if (Player.Rigidbody.velocity.y < _fastDropThreshhold)
         {
-            // ¶³¾îÁö´Â ¼Óµµ¿¡ ÃÖ´ë°ª ºÎ¿©
+            // ë–¨ì–´ì§€ëŠ” ì†ë„ì— ìµœëŒ€ê°’ ë¶€ì—¬
             if (Player.Rigidbody.velocity.y < (-1) * _maxDropSpeed)
                 Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, (-1) * _maxDropSpeed);
         }
     }
     protected override void OnFixedUpdate()
     {
-        // Basic Jump¿¡¼­ In Air State·Î ³Ñ¾î¿Â °æ¿ì
+        // Basic Jumpì—ì„œ In Air Stateë¡œ ë„˜ì–´ì˜¨ ê²½ìš°
         if (!Player.IsWallJump)
         {
-            // °øÁß¿¡¼­ ÁÂ¿ì·Î ¿òÁ÷ÀÏ ¼ö ÀÖ´Ù.
+            // ê³µì¤‘ì—ì„œ ì¢Œìš°ë¡œ ì›€ì§ì¼ ìˆ˜ ìˆë‹¤.
             Player.Rigidbody.AddForce(Vector2.right * Player.RawInputs.Movement.x * _inAirMoveAcceleration);
         }
 
-        // ÇÑ°èÁ¡ Áö³ª¸é ´õ »¡¸® ¶³¾îÁü
+        // í•œê³„ì  ì§€ë‚˜ë©´ ë” ë¹¨ë¦¬ ë–¨ì–´ì§
         if (Player.Rigidbody.velocity.y < _fastDropThreshhold)
         {
-            // °¡¼Ó ³«ÇÏ
+            // ê°€ì† ë‚™í•˜
             Player.Rigidbody.AddForce(_fastDropPower * Physics2D.gravity);
         }
     }

@@ -9,6 +9,8 @@ public class WallClimbState : WallState
 
     private float _prevGravity;
 
+    bool IsAboveWall { get { return Player.transform.position.y > wallHitPos.y; } }
+
     protected override void OnEnter()
     {
         _prevGravity = Player.Rigidbody.gravityScale;
@@ -17,25 +19,23 @@ public class WallClimbState : WallState
 
         Animator.SetBool("IsClimb", true);
     }
+
     protected override void OnUpdate()
     {
-        // 위로 올라가기
         if (Player.IsMoveUpKey)
         {
             // Wall End Jump
-            if (!Player.IsTouchedWall && Player.transform.position.y > wallHitPos.y)
+            if (!Player.IsTouchedWall && IsAboveWall)
             {
                 ChangeState<JumpState>();
                 return;
             }
 
-            // 머리 위에 뭐가 있으면 이동을 못함
             if (Player.UpwardGroundHit)
                 return;
 
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // 아래로 내려가기
         else if (Player.IsMoveDownKey)
         {
             if (!Player.IsTouchedWall)
@@ -46,7 +46,6 @@ public class WallClimbState : WallState
 
             transform.position -= Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
-        // 가만히 있으면 Wall Grab State로 상태 전이
         else
         {
             ChangeState<WallGrabState>();

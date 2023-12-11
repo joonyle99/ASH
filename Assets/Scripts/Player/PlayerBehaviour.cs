@@ -61,7 +61,7 @@ public class PlayerBehaviour : StateMachineBase
     #region Properties
 
     public bool IsGrounded { get { return GroundHit; } }
-    public bool IsTouchedWall { get; private set; }
+    public bool IsTouchedWall { get { return WallHit; } }
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<RunState>() || StateIs<InAirState>(); } }
     public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
     public bool CanDash { get; set; }
@@ -69,7 +69,8 @@ public class PlayerBehaviour : StateMachineBase
     public int RecentDir { get; set; }
     public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
-    public bool IsDirSync { get { return PlayerLookDir2D.x == RawInputs.Horizontal; } }
+    public bool IsDirSync { get { return Mathf.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.01f; } }
+    public bool IsOppositeDirSync { get { return Mathf.Abs(PlayerLookDir2D.x + RawInputs.Horizontal) < 0.01f; } }
     public bool IsMoveXKey { get { return Math.Abs(RawInputs.Movement.x) > 0.01f; } }
     public bool IsMoveRightKey { get { return RawInputs.Movement.x > 0.01f; } }
     public bool IsMoveLeftKey { get { return RawInputs.Movement.x < -0.01f; } }
@@ -92,12 +93,12 @@ public class PlayerBehaviour : StateMachineBase
     public Vector2 GroundAlignedMoveDir { get; set; }
 
     public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
-    public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.Instance¿Í µ¿ÀÏ
+    public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.Instanceï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public SkinnedMeshRenderer CapeRenderer { get { return _capeRenderer; } }
 
     #endregion
 
-    [Tooltip("ÀÌ °¢µµ¸¦ ÃÊ°úÇÑ °æ»ç¿¡¼± ¼­ÀÖÁö ¸øÇÔ")][SerializeField] float _slopeThreshold = 45f;
+    [Tooltip("ì´ ê°ë„ë¥¼ ì´ˆê³¼í•œ ê²½ì‚¬ì—ì„  ì„œìˆì§€ ëª»í•¨")][SerializeField] float _slopeThreshold = 45f;
     public float SlopeThreshold { get { return _slopeThreshold; } }
     public SoundList SoundList { get { return _soundList; } }
     PlayerMovementController _movementController;
@@ -125,7 +126,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Start();
 
-        // ¹è°æ BGM Ãâ·Â
+        // ë°°ê²½ BGM ì¶œë ¥
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
 
         InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
@@ -186,8 +187,7 @@ public class PlayerBehaviour : StateMachineBase
         #region Check Ground & Wall
 
         // Check Ground
-        // GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
-        GroundHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
+        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
         _groundHitCollider = GroundHit.collider;
 
         // Check Upward
@@ -195,7 +195,6 @@ public class PlayerBehaviour : StateMachineBase
 
         // Check Wall
         WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
-        IsTouchedWall = WallHit.collider != null;
         _wallHitCollider = WallHit.collider;
 
         // Check Dive Hit
@@ -274,8 +273,8 @@ public class PlayerBehaviour : StateMachineBase
 
     public void OnHitbyPuddle(float damage)
     {
-        //¾Ö´Ï¸ŞÀÌ¼Ç, Ã¼·Â ´â±â µî ÇÏ¸é µÊ.
-        //¾Ö´Ï¸ŞÀÌ¼Ç Á¾·á ÈÄ spawnpoint¿¡¼­ »ı¼º
+        //ì• ë‹ˆë©”ì´ì…˜, ì²´ë ¥ ë‹³ê¸° ë“± í•˜ë©´ ë¨.
+        //ì• ë‹ˆë©”ì´ì…˜ ì¢…ë£Œ í›„ spawnpointì—ì„œ ìƒì„±
 
         if (CurHp == 1)
         {
@@ -293,7 +292,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         // TODO
 
-        Debug.Log(damage + " ´ë¹ÌÁö ÀÔÀ½");
+        Debug.Log(damage + " ë°ë¯¸ì§€ ì…ìŒ");
     }
 
     public void TriggerInstantRespawn(float damage)
@@ -316,7 +315,7 @@ public class PlayerBehaviour : StateMachineBase
     /*
     public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)
     {
-        Debug.Log("¹ÚÁã Á¡¾×¿¡ ¸ÂÀ½");
+        Debug.Log("ë°•ì¥ ì ì•¡ì— ë§ìŒ");
         OnHit(damage, vec);
     }
     */
@@ -335,30 +334,30 @@ public class PlayerBehaviour : StateMachineBase
     /*
     public IEnumerator Alive()
     {
-        Debug.Log("ºÎÈ° !!");
+        Debug.Log("ë¶€í™œ !!");
 
-        // ÃÊ±â ¼³Á¤
+        // ì´ˆê¸° ì„¤ì •
         ChangeState<IdleState>();
         CurHp = _maxHp;
         RecentDir = 1;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
 
-        // Äİ¶óÀÌ´õ È°¼ºÈ­
+        // ì½œë¼ì´ë” í™œì„±í™”
         this.GetComponent<Collider2D>().enabled = true;
 
-        // ÆÄÆ¼Å¬ »ı¼º & ½ÃÀÛ
+        // íŒŒí‹°í´ ìƒì„± & ì‹œì‘
         ParticleSystem myEffect = Instantiate(respawnEffect, transform.position, Quaternion.identity, transform);
-        myEffect.Play();  // ¹İº¹µÇ´Â ÀÌÆåÆ®
+        myEffect.Play();  // ë°˜ë³µë˜ëŠ” ì´í™íŠ¸
 
-        // ÀÚ½Ä ¿ÀºêÁ§Æ®ÀÇ ¸ğµç ·»´õ ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿Â´Ù
+        // ìì‹ ì˜¤ë¸Œì íŠ¸ì˜ ëª¨ë“  ë Œë” ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜¨ë‹¤
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
 
-        // ÃÊ±â ¾ËÆÄ°ª ÀúÀå
+        // ì´ˆê¸° ì•ŒíŒŒê°’ ì €ì¥
         float[] startAlphas = new float[renderers.Length];
         for (int i = 0; i < renderers.Length; i++)
             startAlphas[i] = renderers[i].color.a;
 
-        // ¸ğµç ·»´õ ÄÄÆ÷³ÍÆ®¸¦ µ¹¸é¼­ Fade In
+        // ëª¨ë“  ë Œë” ì»´í¬ë„ŒíŠ¸ë¥¼ ëŒë©´ì„œ Fade In
         float t = 0;
         while (t < _reviveFadeInDuration)
         {
@@ -376,7 +375,7 @@ public class PlayerBehaviour : StateMachineBase
             yield return null;
         }
 
-        // ÆÄÆ¼Å¬ Á¾·á & ÆÄ±«
+        // íŒŒí‹°í´ ì¢…ë£Œ & íŒŒê´´
         myEffect.Stop();
         Destroy(myEffect.gameObject);
 
@@ -466,15 +465,16 @@ public class PlayerBehaviour : StateMachineBase
 
     private void OnDrawGizmosSelected()
     {
-        /*
         // Draw Ground Check
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
+        /*
         // Draw Ground Check With RayCast
         Gizmos.color = Color.red;
         Gizmos.DrawLine(_groundCheckTrans.position,
             _groundCheckTrans.position + Vector3.down * _groundCheckLength);
+        */
 
         // Draw Upward Ray
         Gizmos.color = Color.red;
@@ -489,9 +489,5 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.color = Color.white;
         Gizmos.DrawLine(_groundCheckTrans.position + _paddingVec,
             _groundCheckTrans.position + _paddingVec + Vector3.down * _diveCheckLength);
-        */
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(_groundCheckTrans.position,
-            _groundCheckTrans.position + Vector3.down * _groundCheckLength);
     }
 }

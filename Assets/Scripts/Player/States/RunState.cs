@@ -21,6 +21,7 @@ public class RunState : PlayerState
         {
             if (Player.CanDash && Player.IsMoveXKey)
             {
+                GetComponent<DashState>().SetDashDir(Player.RawInputs.Movement.x);
                 ChangeState<DashState>();
                 return;
             }
