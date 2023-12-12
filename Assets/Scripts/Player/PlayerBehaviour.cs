@@ -305,7 +305,8 @@ public class PlayerBehaviour : StateMachineBase
 
     void InstantRespawn()
     {
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
+        ChangeState<InstantRespawnState>(true);
         SceneContext.Current.InstantRespawn();
     }
 

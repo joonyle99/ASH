@@ -156,7 +156,6 @@ public sealed class LanternSceneContext : SceneContext
     IEnumerator LastConnectionCameraCoroutine(LanternRelation relation)
     {
         _StopCheckingConnections = true;
-        print(Time.time);
         CameraControlToken token = new CameraControlToken(CameraPriority.LightDoorOpen);
         yield return new WaitUntil(() => token.IsAvailable);
 

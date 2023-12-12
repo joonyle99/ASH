@@ -12,21 +12,44 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     ProCamera2D _proCamera;
     ProCamera2DShake _shakeComponent;
 
-    public MonoBehaviour owner { get; set; }
+    public float OffsetX
+    {
+        get { return _proCamera.OffsetX; }
+        set { _proCamera.OffsetX = value;}
+    }
+    public float OffsetY
+    {
+        get { return _proCamera.OffsetY; }
+        set { _proCamera.OffsetY = value; }
+    }
+    struct InitialSettings
+    {
+        public Vector2 Offset;
+        public Vector2 FollowSmoothness;
+    }
+    InitialSettings _initialSettings;
+
+    void Awake()
+    {
+        _proCamera = GetComponent<ProCamera2D>();
+        _shakeComponent = _proCamera.GetComponent<ProCamera2DShake>();
+        _initialSettings.Offset = new Vector2(OffsetX, OffsetY);
+        _initialSettings.FollowSmoothness = new Vector2(_proCamera.HorizontalFollowSmoothness, _proCamera.VerticalFollowSmoothness);
+    }
     public void OnSceneContextBuilt()
     {
         CameraControlToken.ClearQueue();
         _proCamera.enabled = true;
         _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
     }
-    public void StartFollow(Transform target)
+    public void StartFollow(Transform target, bool removeExisting = true)
     {
-        _proCamera.RemoveAllCameraTargets();
+        if (removeExisting)
+            _proCamera.RemoveAllCameraTargets();
         _proCamera.AddCameraTarget(target);
     }
     public void DisableCameraFollow()
     {
-        //_proCamera.enabled = false;
         _proCamera.HorizontalFollowSmoothness = 100f;
         _proCamera.VerticalFollowSmoothness = 100f;
     }
@@ -45,15 +68,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.VerticalFollowSmoothness = originalSmoothnessY;
 
     }
-    private void Awake()
-    {
-        _proCamera = GetComponent<ProCamera2D>();
-        _shakeComponent = _proCamera.GetComponent<ProCamera2DShake>();
-    }
-    // Update is called once per frame
-    void Update()
-    {
-    }
     public void StartShake(ShakePreset preset)
     {
         _shakeComponent.Shake(preset);
@@ -70,6 +84,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void ResetCameraSettings()
     {
         StartFollow(SceneContext.Current.Player.transform);
+
+        OffsetX = _initialSettings.Offset.x;
+        OffsetY = _initialSettings.Offset.y;
+        _proCamera.HorizontalFollowSmoothness = _initialSettings.FollowSmoothness.x;
+        _proCamera.VerticalFollowSmoothness = _initialSettings.FollowSmoothness.y;
     }
 
 
