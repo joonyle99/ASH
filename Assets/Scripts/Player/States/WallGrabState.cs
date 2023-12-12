@@ -38,5 +38,7 @@ public class WallGrabState : WallState
         Player.Rigidbody.gravityScale = _prevGravity;
 
         Animator.SetBool("IsGrab", false);
+
+        base.OnExit();
     }
 }
