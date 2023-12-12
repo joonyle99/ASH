@@ -77,7 +77,6 @@ public class PlayerBehaviour : StateMachineBase
     public bool IsMoveYKey { get { return Math.Abs(RawInputs.Movement.y) > 0.01f; } }
     public bool IsMoveUpKey { get { return RawInputs.Movement.y > 0.01f; } }
     public bool IsMoveDownKey { get { return RawInputs.Movement.y < -0.01f; } }
-    public bool IsMove { get { return Mathf.Abs(Rigidbody.velocity.x) > 0.1f; } }
     public bool IsWallJump { get; set; }
     public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
     public float GroundDistance { get; set; }
@@ -167,7 +166,6 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
         Animator.SetFloat("GroundDistance", GroundDistance);
-        Animator.SetBool("IsMove", IsMove);
         Animator.SetFloat("InputHorizontal", RawInputs.Horizontal);
         Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
         Animator.SetBool("IsDirSync", IsDirSync);

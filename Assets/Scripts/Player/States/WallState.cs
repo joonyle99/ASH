@@ -17,6 +17,9 @@ public class WallState : PlayerState
 
     protected override void OnEnter()
     {
+        Player.Animator.SetTrigger("Wall");
+        Player.Animator.SetBool("IsWall", true);
+
         // 벽의 위치
         wallHitPos = Player.WallHit.transform.position;
 
@@ -44,7 +47,7 @@ public class WallState : PlayerState
 
     protected override void OnExit()
     {
-
+        Player.Animator.SetBool("IsWall", false);
     }
 
     private void OnDrawGizmosSelected()

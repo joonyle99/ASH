@@ -13,6 +13,8 @@ public class WallClimbState : WallState
 
     protected override void OnEnter()
     {
+        base.OnEnter();
+
         _prevGravity = Player.Rigidbody.gravityScale;
         Player.Rigidbody.gravityScale = 0f;
         Player.Rigidbody.velocity = Vector2.zero;
@@ -65,5 +67,7 @@ public class WallClimbState : WallState
         Player.Rigidbody.gravityScale = _prevGravity;
 
         Animator.SetBool("IsClimb", false);
+
+        base.OnExit();
     }
 }
