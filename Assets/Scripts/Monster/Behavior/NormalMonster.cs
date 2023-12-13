@@ -12,8 +12,6 @@ public abstract class NormalMonster : MonsterBehavior
     protected override void Start()
     {
         base.Start();
-
-        SetUp();
     }
     protected override void Update()
     {
@@ -26,14 +24,13 @@ public abstract class NormalMonster : MonsterBehavior
 
     public override void SetUp()
     {
-        base.SetUp();
-
         // 타입 노말
         MonsterType = MONSTER_TYPE.Normal;
     }
 
     public override void OnDamage(int damage)
     {
+        Debug.Log("Normal의 OnDamage()");
         base.OnDamage(damage);
     }
 
@@ -44,6 +41,7 @@ public abstract class NormalMonster : MonsterBehavior
 
     public override void Die()
     {
+        Debug.Log("Normal의 Die()");
         base.Die();
     }
 }

@@ -958,15 +958,13 @@ MonoBehaviour:
   _aggressiveType: 0
   _chaseType: 0
   _runawayType: 0
-  _wayPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  _wayPointBox: {fileID: 0}
+  _wayPoints: []
   _curTargetPosition: {fileID: 0}
   _nextTargetPosition: {fileID: 0}
   _curWayPointIndex: 0
+  _distanceWithTarget: 1
+  _moveDir: {x: 0, y: 0, z: 0}
   _targetWaitTime: 3
   _elapsedWaitTime: 0
   _isWaiting: 0
@@ -974,6 +972,7 @@ MonoBehaviour:
   _isAttack: 0
   _targetAttackTime: 2.5
   _elapsedAttackTime: 0
+  _elapsedFadeOutTime: 0
   _targetFadeOutTime: 3
   _batSkillPrefab: {fileID: 2007017996437501280, guid: e98a801d4e584ec4ca7b2591c541fa95, type: 3}
   _skillSprites:

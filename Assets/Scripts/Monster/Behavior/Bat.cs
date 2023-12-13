@@ -13,6 +13,7 @@ public class Bat : NormalMonster
     [Header("Bat")]
     [Space]
 
+    [SerializeField] private Transform _wayPointBox;
     [SerializeField] private List<Transform> _wayPoints;
     [SerializeField] private Transform _curTargetPosition;
     [SerializeField] private Transform _nextTargetPosition;
@@ -30,7 +31,7 @@ public class Bat : NormalMonster
     [SerializeField] private float _targetFadeOutTime = 3f;
 
     [SerializeField] private BatSkillParticle _batSkillPrefab;
-    [SerializeField] private Sprite [] _skillSprites;
+    [SerializeField] private Sprite[] _skillSprites;
     [SerializeField] private int _particleCount = 3;
     [SerializeField] private Transform _shootPosition;
     [SerializeField] private float _shootingPower;
@@ -56,9 +57,15 @@ public class Bat : NormalMonster
         // 초기 세팅
         SetUp();
 
+        for (int i = 0; i < _wayPointBox.childCount; ++i)
+            _wayPoints.Add(_wayPointBox.GetChild(i));
+
         // 초기 목적지 설정
         _curTargetPosition = _wayPoints[_curWayPointIndex];
         _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
+
+        Debug.Log("OnDamage");
+        OnDamage(2000);
     }
 
     protected override void Update()
@@ -177,6 +184,7 @@ public class Bat : NormalMonster
 
     public override void OnDamage(int damage)
     {
+        Debug.Log("Bat의 OnDamage()");
         base.OnDamage(damage);
     }
 
@@ -189,6 +197,7 @@ public class Bat : NormalMonster
 
     public override void Die()
     {
+        Debug.Log("Bat의 Die()");
         base.Die();
 
         // 사라지기 시작

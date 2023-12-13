@@ -13,6 +13,7 @@ public class Slime : NormalMonster
     [Header("Slime")]
     [Space]
 
+    [SerializeField] private Transform _wayPointBox;
     [SerializeField] private List<Transform> _wayPoints;
     [SerializeField] private Transform _curTargetPosition;
     [SerializeField] private Transform _nextTargetPosition;
@@ -40,6 +41,9 @@ public class Slime : NormalMonster
 
         // 초기 세팅
         SetUp();
+
+        for (int i = 0; i < _wayPointBox.childCount; ++i)
+            _wayPoints.Add(_wayPointBox.GetChild(i));
 
         // 초기 목적지
         _curTargetPosition = _wayPoints[_curWayPointIndex];

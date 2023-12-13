@@ -4,35 +4,40 @@ using UnityEngine;
 
 public enum MONSTER_SIZE
 {
-    Small = 0,
+    Null = 0,
+    Small,
     Medium,
     Large
 }
 
 public enum MONSTER_TYPE
 {
-    Normal = 0,
+    Null = 0,
+    Normal,
     SemiBoss,
     Boss
 }
 
 public enum ACTION_TYPE
 {
-    Ground = 0,
+    Null = 0,
+    Ground,
     Floating,
     Crawl
 }
 
 public enum RESPONE_TYPE
 {
-    Time = 0,
+    Null = 0,
+    Time,
     Reentry,
     None
 }
 
 public enum AGGRESSIVE_TYPE
 {
-    Peace = 0,
+    Null = 0,
+    Peace,
     SightAggressive,
     TerritoryAggressive,
     AttackAggressive,
@@ -41,14 +46,16 @@ public enum AGGRESSIVE_TYPE
 
 public enum CHASE_TYPE
 {
-    Peace = 0,
+    Null = 0,
+    Peace,
     Territory,
     AllTerritory
 }
 
 public enum RUNAWAY_TYPE
 {
-    Aggressive = 0,
+    Null = 0,
+    Aggressive,
     Peace,
     Coward
 }
@@ -214,24 +221,19 @@ public abstract class MonsterBehavior : StateMachineBase
     }
 
     // 몬스터 속성 세팅
-    public virtual void SetUp()
-    {
-        ID = 0;
-        MonsterName = "NULL";
-        MaxHp = 100;
-        CurHp = 0;
-        MoveSpeed = 10;
-    }
+    public abstract void SetUp();
 
     // 데미지 피격
     public virtual void OnDamage(int damage)
     {
+        Debug.Log("MonsterBehavior의 OnDamage()");
         CurHp -= damage;
 
         if (CurHp <= 0)
         {
             CurHp = 0;
-            Die();
+            Die();  // 최하위 자식의 Die()을 호출한다.
+                    // Polymorphism (다형성)
         }
     }
 
@@ -244,8 +246,10 @@ public abstract class MonsterBehavior : StateMachineBase
     // 사망
     public virtual void Die()
     {
+        Debug.Log("MonsterBehavior의 Die()");
+
         // 충돌 비활성화
-        if(_collider2D)
+        if (_collider2D)
             _collider2D.enabled = false;
 
         Dead = true;
