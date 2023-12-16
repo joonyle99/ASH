@@ -23,12 +23,15 @@ public class Bat : NormalMonster
     [SerializeField] private float _targetWaitTime = 2f;
     [SerializeField] private float _elapsedWaitTime;
     [SerializeField] private bool _isWaiting;
+
+    [Space]
+
     [SerializeField] private Vector2 _attackBoxSize;
     [SerializeField] private bool _isAttack;
     [SerializeField] private float _targetAttackTime = 1.5f;
     [SerializeField] private float _elapsedAttackTime;
-    [SerializeField] private float _elapsedFadeOutTime;
-    [SerializeField] private float _targetFadeOutTime = 3f;
+
+    [Space]
 
     [SerializeField] private BatSkillParticle _batSkillPrefab;
     [SerializeField] private Sprite[] _skillSprites;
@@ -54,18 +57,12 @@ public class Bat : NormalMonster
     {
         base.Start();
 
-        // 초기 세팅
-        SetUp();
-
         for (int i = 0; i < _wayPointBox.childCount; ++i)
             _wayPoints.Add(_wayPointBox.GetChild(i));
 
         // 초기 목적지 설정
         _curTargetPosition = _wayPoints[_curWayPointIndex];
         _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
-
-        Debug.Log("OnDamage");
-        OnDamage(2000);
     }
 
     protected override void Update()
@@ -123,9 +120,6 @@ public class Bat : NormalMonster
                 _isAttack = true;
 
                 Animator.SetTrigger("Attack");
-
-                // SprinkleParticle();
-                // PlaySound_SE_Bat();
             }
         }
         // 공격 쿨타임 계산
@@ -147,61 +141,21 @@ public class Bat : NormalMonster
     {
         // 기본 초기화
         base.SetUp();
-
-        // 박쥐의 ID 설정
-        ID = 1002;
-
-        // 박쥐의 이름 설정
-        MonsterName = "박쥐";
-
-        // 박쥐의 최대 체력
-        MaxHp = 100;
-
-        // 박쥐의 현재 체력
-        CurHp = MaxHp;
-
-        // 박쥐의 이동속도
-        MoveSpeed = 5;
-
-        // 크기
-        MonsterSize = MONSTER_SIZE.Small;
-
-        // 박쥐의 활동 종류
-        ActionType = ACTION_TYPE.Floating;
-
-        // 리젠
-        ResponseType = RESPONE_TYPE.None;
-
-        // 선공
-        AggressiveType = AGGRESSIVE_TYPE.TerritoryAggressive;
-
-        // 추적
-        ChaseType = CHASE_TYPE.Territory;
-
-        // 도망
-        RunawayType = RUNAWAY_TYPE.Aggressive;
     }
 
     public override void OnDamage(int damage)
     {
-        Debug.Log("Bat의 OnDamage()");
         base.OnDamage(damage);
     }
 
-    public override void KnockBack(Vector2 vec)
+    public override void KnockBack(Vector2 force)
     {
-        base.KnockBack(vec);
-
-        Rigidbody.velocity = vec;
+        base.KnockBack(force);
     }
 
     public override void Die()
     {
-        Debug.Log("Bat의 Die()");
         base.Die();
-
-        // 사라지기 시작
-        StartCoroutine(FadeOutObject());
     }
 
     public void SprinkleParticle()
@@ -214,46 +168,11 @@ public class Bat : NormalMonster
             particle.Shoot(Random.Range(-_shootingVariant, _shootingVariant) + angle, _shootingPower);
         }
 
-        // TODO : 소리가 가끔 씹히는데 사운드가 길어서 그런가?
         PlaySound_SE_Bat();
-    }
-
-    public IEnumerator FadeOutObject()
-    {
-        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-
-        // 초기 알파값 저장
-        float[] startAlphaArray = new float[spriteRenderers.Length];
-        for (int i = 0; i < spriteRenderers.Length; i++)
-            startAlphaArray[i] = spriteRenderers[i].color.a;
-
-        // 모든 렌더 컴포넌트를 돌면서 Fade Out
-        while (_elapsedFadeOutTime < _targetFadeOutTime)
-        {
-            _elapsedFadeOutTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeOutTime / 2;
-
-            for (int i = 0; i < spriteRenderers.Length; i++)
-            {
-                // 현재 스프라이트 렌더러의 알파값을 변경
-                Color targetColor = spriteRenderers[i].color;
-                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
-                spriteRenderers[i].color = targetColor;
-            }
-
-            yield return null;
-        }
-
-        // 오브젝트 삭제
-        Destroy(gameObject);
-
-        yield return null;
     }
 
     public void PlaySound_SE_Bat()
     {
-        Debug.Log("박쥐 공격 사운드 재생");
-
         GetComponent<SoundList>().PlaySFX("SE_Bat");
     }
 

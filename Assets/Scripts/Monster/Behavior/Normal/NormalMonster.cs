@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -24,24 +25,21 @@ public abstract class NormalMonster : MonsterBehavior
 
     public override void SetUp()
     {
-        // 타입 노말
-        MonsterType = MONSTER_TYPE.Normal;
+        base.SetUp();
     }
 
     public override void OnDamage(int damage)
     {
-        Debug.Log("Normal의 OnDamage()");
         base.OnDamage(damage);
     }
 
-    public override void KnockBack(Vector2 vec)
+    public override void KnockBack(Vector2 force)
     {
-        base.KnockBack(vec);
+        base.KnockBack(force);
     }
 
     public override void Die()
     {
-        Debug.Log("Normal의 Die()");
         base.Die();
     }
 }
