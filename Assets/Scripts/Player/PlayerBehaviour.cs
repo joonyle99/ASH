@@ -233,16 +233,13 @@ public class PlayerBehaviour : StateMachineBase
         }
     }
 
-    public void AddJoint<T>(Rigidbody2D bodyToAttach, float breakForce) where T : Joint2D
+    public void DisableHorizontalMovement()
     {
-        _joint = gameObject.AddComponent<HingeJoint2D>();
-        _joint.connectedBody = bodyToAttach;
-        _joint.enableCollision = true;
-        _joint.breakForce = breakForce;
+        Rigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
     }
-    public void RemoveJoint()
+    public void EnableHorizontalMovement()
     {
-        Destroy(_joint);
+        Rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
     }
 
     void OnBasicAttackPressed()

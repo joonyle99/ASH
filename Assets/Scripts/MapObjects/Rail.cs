@@ -9,7 +9,15 @@ public class Rail : MonoBehaviour
     [SerializeField] Transform[] _points;
     [SerializeField] int _currentSegmentID = 0;
     float _currentSegmentLength;
-    // Update is called once per frame
+    
+    public bool IsAtEndOfRail 
+    { 
+        get
+        {
+            return _currentSegmentID == 0 && _sliderJoint.limitState == JointLimitState2D.LowerLimit ||
+                _currentSegmentID == _points.Length - 2 && _sliderJoint.limitState == JointLimitState2D.UpperLimit;
+        }
+    }
     private void Awake()
     {
         SetSegmentID(0);
