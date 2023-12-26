@@ -8,14 +8,17 @@ using UnityEditor;
 
 public class Chain : InteractableObject
 {
-    [SerializeField] Joint2D _firstChainPiece;
+    [Range(2,10)][SerializeField] int _pieceCount;
     [SerializeField] float _pieceOffset;
 
     [SerializeField] Rail _rail;
     [SerializeField] ChainHandle _handle;
     [SerializeField] DistanceJoint2D _jointWithPlayer;
+    [SerializeField] Rigidbody2D _firstChainPiece;
+    [SerializeField] Joint2D _midChainPiece;
+    [SerializeField] Joint2D _lastChainPiece;
 
-    Rigidbody2D[] _chainBodies;
+    [SerializeField] Rigidbody2D[] _chainBodies;
 
     private void Awake()
     {
@@ -72,22 +75,35 @@ public class Chain : InteractableObject
         var joints = GetComponentsInChildren<Joint2D>();
         return joints[joints.Length - 1];
     }
-    //Only In Editor
-    public void AddChain()
-    {
-        var lastPiece = GetLastPiece();
-        var newPiece = Instantiate(_firstChainPiece, transform);
-        newPiece.transform.position = lastPiece.transform.position + _pieceOffset * AngleToVector(lastPiece.transform.rotation.eulerAngles.z);
-        newPiece.connectedBody = lastPiece.attachedRigidbody;
-    }
     Vector3 AngleToVector(float degree)
     {
         return new Vector3(Mathf.Cos(degree * Mathf.Deg2Rad), Mathf.Sin(degree * Mathf.Deg2Rad), 0);
     }
     //Only In Editor
-    public void RemoveChain()
+    public void Submit()
     {
-        DestroyImmediate(GetLastPiece().gameObject);
+        foreach (var child in transform.GetComponentsInChildren<Rigidbody2D>())
+        {
+            if (child.transform != transform && child.transform != _firstChainPiece.transform &&
+                child.transform != _midChainPiece.transform && child.transform != _lastChainPiece.transform)
+            {
+                DestroyImmediate(child.gameObject);
+            }
+        }
+        var upperPiece = _firstChainPiece;
+        for (int i = 0; i < _pieceCount - 2; i++)
+        {
+            var newPiece = Instantiate(_midChainPiece, transform);
+            newPiece.gameObject.SetActive(true);
+            newPiece.transform.position = upperPiece.transform.position + _pieceOffset * AngleToVector(upperPiece.transform.rotation.eulerAngles.z);
+            newPiece.connectedBody = upperPiece;
+            upperPiece = newPiece.attachedRigidbody;
+        }
+        _lastChainPiece.transform.position = upperPiece.transform.position + _pieceOffset * AngleToVector(upperPiece.transform.rotation.eulerAngles.z);
+        _lastChainPiece.connectedBody = upperPiece;
+        _lastChainPiece.transform.SetAsLastSibling();
+
+        _chainBodies = GetComponentsInChildren<Rigidbody2D>();
     }
 
 }
@@ -102,14 +118,8 @@ public class ChainEditor : Editor
         base.OnInspectorGUI();
 
         Chain t = (Chain)target;
-        if (GUILayout.Button("+1"))
-        {
-            t.AddChain();
-        }
-        if (GUILayout.Button("-1"))
-        {
-            t.RemoveChain();
-        }
+        if (GUILayout.Button("Submit"))
+            t.Submit();
     }
 }
 #endif
