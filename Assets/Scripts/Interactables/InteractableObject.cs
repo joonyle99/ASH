@@ -10,15 +10,23 @@ public enum InteractionAnimationType
     Roll,
     Pull,
 }
+public enum InteractionStateChangeType
+{
+    DontChange = 0, 
+    InteractionState = 1,
+    
+}
 public abstract class InteractableObject : MonoBehaviour
 {
     [SerializeField] Transform _interactionMarkerPoint;
     [SerializeField] bool _isInteractable = true;
     [SerializeField] InteractionAnimationType _animationType;
+    [SerializeField] InteractionStateChangeType _stateChange = InteractionStateChangeType.InteractionState;
     // TODO : 플레이어 상태 및 입력 override 하는 기능
 
     protected PlayerBehaviour Player { get { return SceneContext.Current.Player; } }
     public InteractionAnimationType AnimationType { get { return _animationType; } }
+    public InteractionStateChangeType StateChange { get { return _stateChange; } }
     public Vector3 InteractionMarkerPoint
     {
         get

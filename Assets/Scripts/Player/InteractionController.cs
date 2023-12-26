@@ -44,13 +44,14 @@ public class InteractionController : MonoBehaviour
     }
     void OnInteractionStart()
     {
-        // 상호작용 종료 시 플레이어를 Idle State로 만들어준다
-        _player.ChangeState<InteractionState>();
+        if (_interactionTarget.StateChange == InteractionStateChangeType.InteractionState)
+            _player.ChangeState<InteractionState>();
+        
     }
     public void OnInteractionExit()
     {
-        // 상호작용 종료 시 플레이어를 Idle State로 만들어준다
-        _player.ChangeState<IdleState>();
+        if (_player.StateIs<InteractionState>())
+            _player.ChangeState<IdleState>();
     }
 
     private void Update()
