@@ -36,7 +36,7 @@ public class CameraControlToken
     {
         if (resetCameraStateIfNothingQueued && _tokenQueue.IsEmpty)
         {
-            Camera.ResetCameraSettings();
+            Camera?.ResetCameraSettings();
         }
         _tokenQueue.Remove(this);
         ChangeCurrentOwningToken(_tokenQueue.Dequeue());

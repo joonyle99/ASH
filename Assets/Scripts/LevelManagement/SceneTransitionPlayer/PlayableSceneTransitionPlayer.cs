@@ -21,7 +21,7 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     {
         CameraControlToken token = new CameraControlToken(CameraPriority.SceneChange);
         yield return new WaitUntil(() => token.IsAvailable);
-        token.Camera.DisableCameraFollow();
+        token.Camera?.DisableCameraFollow();
         token.Release();
 
         yield return FadeCoroutine(_transitionDuration, FadeType.Darken);
@@ -37,7 +37,7 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         }
         CameraControlToken token = new CameraControlToken(CameraPriority.SceneChange);
         yield return new WaitUntil(() => token.IsAvailable);
-        token.Camera.SnapFollow();
+        token.Camera?.SnapFollow();
         token.Release();
 
         yield return StartCoroutine(entrance.PlayerExitCoroutine());

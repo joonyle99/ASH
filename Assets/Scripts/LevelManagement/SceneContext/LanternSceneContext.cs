@@ -160,14 +160,14 @@ public sealed class LanternSceneContext : SceneContext
         yield return new WaitUntil(() => token.IsAvailable);
 
         //랜턴으로 카메라 이동 후 대기
-        token.Camera.StartFollow(relation.A.transform == _lightDoor ? relation.B.LightPoint : relation.A.LightPoint);
+        token.Camera?.StartFollow(relation.A.transform == _lightDoor ? relation.B.LightPoint : relation.A.LightPoint);
         InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
         yield return new WaitForSecondsRealtime(_cameraLastLanternStayDuration);
         //레이저 발사
-        token.Camera.StartConstantShake(_beamShootingPreset);
+        token.Camera?.StartConstantShake(_beamShootingPreset);
         StartCoroutine(ConnectionCoroutine(relation));
         _lastConnectionCameraPoint.position = relation.Beam.CurrentShootingPosition;
-        token.Camera.StartFollow(_lastConnectionCameraPoint);
+        token.Camera?.StartFollow(_lastConnectionCameraPoint);
         while (!relation.Beam.IsShootingDone)
         {
             _lastConnectionCameraPoint.position = relation.Beam.CurrentShootingPosition;
@@ -178,7 +178,7 @@ public sealed class LanternSceneContext : SceneContext
         yield return new WaitForSeconds(_lastBeamDuration);
         relation.Beam.gameObject.SetActive(false);
         //빔 사라진 후 문열기 시작
-        token.Camera.StopConstantShake(0.1f);
+        token.Camera?.StopConstantShake(0.1f);
         yield return new WaitForSecondsRealtime(_doorOpenDelay);
         _lightDoor.Open();
         StartCoroutine(PlayOpenSoundCoroutine());
@@ -187,7 +187,7 @@ public sealed class LanternSceneContext : SceneContext
             yield return null;
         }
         //문 열림 끝남
-        token.Camera.StopConstantShake(_cameraDoorStayDuration);
+        token.Camera?.StopConstantShake(_cameraDoorStayDuration);
         yield return new WaitForSecondsRealtime(_cameraDoorStayDuration);
         token.Release();
         InputManager.Instance.ChangeToDefaultSetter();
