@@ -13,7 +13,7 @@ public enum InteractionAnimationType
 public abstract class InteractableObject : MonoBehaviour
 {
     [SerializeField] Transform _interactionMarkerPoint;
-    [SerializeField] bool _isInteractable;
+    [SerializeField] bool _isInteractable = true;
     [SerializeField] InteractionAnimationType _animationType;
     // TODO : 플레이어 상태 및 입력 override 하는 기능
 

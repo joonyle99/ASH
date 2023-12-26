@@ -18,7 +18,7 @@ public class Rail : MonoBehaviour
     {
         if (_currentSegmentID > 0 && _sliderJoint.jointTranslation <= -_currentSegmentLength/2 + 0.001f)
             SetSegmentID(_currentSegmentID - 1);
-        else if (_currentSegmentID < _points.Length - 1 && _sliderJoint.jointTranslation >= _currentSegmentLength/2 + 0.001f)
+        else if (_currentSegmentID < _points.Length - 2 && _sliderJoint.jointTranslation >= _currentSegmentLength/2 + 0.001f)
             SetSegmentID(_currentSegmentID + 1);
     }
 

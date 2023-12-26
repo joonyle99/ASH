@@ -6,18 +6,38 @@ using UnityEditor.ShaderGraph.Internal;
 using UnityEditor;
 #endif
 
-public class Chain : MonoBehaviour
+public class Chain : InteractableObject
 {
-    [SerializeField] HingeJoint2D _firstChainPiece;
+    [SerializeField] Joint2D _firstChainPiece;
     [SerializeField] float _pieceOffset;
 
+    [SerializeField] Joint2D _jointWithPlayer;
+    [SerializeField] ChainHandle _handle;
 
 
-    
-    //Only In Editor
-    HingeJoint2D GetLastPiece()
+
+    protected override void OnInteract()
     {
-        var joints = GetComponentsInChildren<HingeJoint2D>();
+        _handle.ConnectTo(SceneContext.Current.Player.HandRigidBody);
+        _jointWithPlayer.connectedBody = SceneContext.Current.Player.HandRigidBody;
+        _jointWithPlayer.enabled = true;
+        SceneContext.Current.Player.MovementController.enabled = true;
+    }
+    protected override void OnInteractionExit()
+    {
+        _handle.Disconnect();
+        _jointWithPlayer.enabled = false;
+    }
+    public override void UpdateInteracting()
+    {
+        if (IsInteractionKeyUp)
+            ExitInteraction();
+    }
+
+    //Only In Editor
+    Joint2D GetLastPiece()
+    {
+        var joints = GetComponentsInChildren<Joint2D>();
         return joints[joints.Length - 1];
     }
     //Only In Editor
@@ -37,6 +57,7 @@ public class Chain : MonoBehaviour
     {
         DestroyImmediate(GetLastPiece().gameObject);
     }
+
 }
 
 

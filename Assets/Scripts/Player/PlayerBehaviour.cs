@@ -41,6 +41,8 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] Collider2D _mainCollider;
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
 
+    [SerializeField] Rigidbody2D _hand;
+
     // Controller
     PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
@@ -103,6 +105,7 @@ public class PlayerBehaviour : StateMachineBase
     PlayerMovementController _movementController;
     public PlayerMovementController MovementController { get { return _movementController; } }
 
+    public Rigidbody2D HandRigidBody { get { return _hand; } }
     private void Awake()
     {
         // Collider
@@ -212,7 +215,7 @@ public class PlayerBehaviour : StateMachineBase
 
     private void UpdateImageFlip()
     {
-        if (StateIs<RunState>() || StateIs<InAirState>())
+        if (StateIs<RunState>() || StateIs<InAirState>() || MovementController.isActiveAndEnabled)
         {
             if (!IsDirSync && Mathf.Abs(RawInputs.Horizontal) > 0.01f)
             {
