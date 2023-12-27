@@ -1,38 +1,43 @@
+using System.Collections;
 using UnityEngine;
 
 #region Enum
 
 public enum MONSTER_SIZE
 {
-    Small = 0,
+    Null = 0,
+    Small,
     Medium,
     Large
 }
 
 public enum MONSTER_TYPE
 {
-    Normal = 0,
+    Null = 0,
+    Normal,
     SemiBoss,
     Boss
 }
 
 public enum ACTION_TYPE
 {
-    Ground = 0,
+    Null = 0,
+    Ground,
     Floating,
     Crawl
 }
 
 public enum RESPONE_TYPE
 {
-    Time = 0,
-    Reentry,
-    None
+    Null = 0,
+    Time,
+    Reentry
 }
 
 public enum AGGRESSIVE_TYPE
 {
-    Peace = 0,
+    Null = 0,
+    Peace,
     SightAggressive,
     TerritoryAggressive,
     AttackAggressive,
@@ -41,14 +46,16 @@ public enum AGGRESSIVE_TYPE
 
 public enum CHASE_TYPE
 {
-    Peace = 0,
+    Null = 0,
+    Peace,
     Territory,
     AllTerritory
 }
 
 public enum RUNAWAY_TYPE
 {
-    Aggressive = 0,
+    Null = 0,
+    Aggressive,
     Peace,
     Coward
 }
@@ -62,8 +69,8 @@ public abstract class MonsterBehavior : StateMachineBase
 {
     #region Attribute
 
-    [Header("Monster Behavior")]
-    [Space]
+    [Header("Monster Behavior")] [Space] [SerializeField]
+    private MonsterData _monsterData;
 
     [SerializeField] private Collider2D _collider2D;
     public Collider2D MonsterCollider2D { get => _collider2D; }
@@ -184,28 +191,51 @@ public abstract class MonsterBehavior : StateMachineBase
         protected set => _runawayType = value;
     }
 
+    [Space]
+
+    [SerializeField] private float _elapsedFadeOutTime;
+    [SerializeField] private float _targetFadeOutTime = 3f;
 
     #endregion
 
     #region Function
 
+    /// <summary>
+    /// 컴포넌트로 붙어있는 스크립트가 실행될 때 한 번 실행된다.
+    /// 활성화 되어있지 않아도 실행된다.
+    /// </summary>
     protected virtual void Awake()
     {
         // Component
         _collider2D = this.GetComponent<Collider2D>();
 
-        if(!_collider2D)
+        if (!_collider2D)
             Debug.Log("Monster has not Collider2D Component");
+
+        // 몬스터 속성 설정
+        SetUp();
     }
 
     protected override void Start()
     {
         base.Start();
+
+        // 박쥐의 현재 체력
+        CurHp = MaxHp;
     }
 
     protected override void Update()
     {
         base.Update();
+
+        if (CurHp == 0)
+            Dead = true;
+
+        if (Dead)
+        {
+            Die();
+            Dead = false;
+        }
     }
 
     protected override void FixedUpdate()
@@ -216,39 +246,101 @@ public abstract class MonsterBehavior : StateMachineBase
     // 몬스터 속성 세팅
     public virtual void SetUp()
     {
-        ID = 0;
-        MonsterName = "NULL";
-        MaxHp = 100;
-        CurHp = 0;
-        MoveSpeed = 10;
+        // 몬스터의 ID 설정
+        ID = _monsterData.ID;
+
+        // 몬스터의 이름 설정
+        MonsterName = _monsterData.MonsterName;
+
+        // 몬스터의 타입 설정
+        MonsterType = _monsterData.MonsterType;
+
+        // 몬스터의 최대 체력
+        MaxHp = _monsterData.MaxHp;
+
+        // 몬스터의 이동속도 설정
+        MoveSpeed = _monsterData.MoveSpeed;
+
+        // 몬스터의 크기 타입
+        MonsterSize = _monsterData.MonsterSize;
+
+        // 몬스터의 활동 종류 타입
+        ActionType = _monsterData.ActionType;
+
+        // 몬스터의 리젠 타입
+        ResponseType = _monsterData.ResponseType;
+
+        // 몬스터의 선공 타입
+        AggressiveType = _monsterData.AggressiveType;
+
+        // 몬스터의 추적 타입
+        ChaseType = _monsterData.ChaseType;
+
+        // 몬스터의 도망 타입
+        RunawayType = _monsterData.RunawayType;
     }
 
     // 데미지 피격
     public virtual void OnDamage(int damage)
     {
+        Debug.Log("MonsterBehavior의 OnDamage()");
         CurHp -= damage;
 
         if (CurHp <= 0)
-        {
             CurHp = 0;
-            Die();
-        }
     }
 
     // 넉백
-    public virtual void KnockBack(Vector2 vec)
+    public virtual void KnockBack(Vector2 force)
     {
-
+        Rigidbody.AddForce(force, ForceMode2D.Impulse);
     }
 
     // 사망
-    public virtual void Die()
+    public virtual void Die()   // 최하위 자식의 Die()을 호출한다.
+                                // Polymorphism (다형성)
     {
+        Debug.Log("MonsterBehavior의 Die()");
+
         // 충돌 비활성화
-        if(_collider2D)
+        if (_collider2D)
             _collider2D.enabled = false;
 
-        Dead = true;
+        // 사라지기 시작
+        StartCoroutine(FadeOutObject());
+    }
+
+    public IEnumerator FadeOutObject()
+    {
+        // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+
+        // 초기 알파값 저장
+        float[] startAlphaArray = new float[spriteRenderers.Length];
+        for (int i = 0; i < spriteRenderers.Length; i++)
+            startAlphaArray[i] = spriteRenderers[i].color.a;
+
+        // 모든 렌더 컴포넌트를 돌면서 Fade Out
+        while (_elapsedFadeOutTime < _targetFadeOutTime)
+        {
+            _elapsedFadeOutTime += Time.deltaTime;
+            float normalizedTime = _elapsedFadeOutTime / 2;
+
+            for (int i = 0; i < spriteRenderers.Length; i++)
+            {
+                // 현재 스프라이트 렌더러의 알파값을 변경
+                Color targetColor = spriteRenderers[i].color;
+                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
+                spriteRenderers[i].color = targetColor;
+            }
+
+            yield return null;
+        }
+
+        // 오브젝트 삭제
+        Destroy(gameObject);
+
+        yield return null;
     }
 
     #endregion

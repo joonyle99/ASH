@@ -13,6 +13,7 @@ public class Slime : NormalMonster
     [Header("Slime")]
     [Space]
 
+    [SerializeField] private Transform _wayPointBox;
     [SerializeField] private List<Transform> _wayPoints;
     [SerializeField] private Transform _curTargetPosition;
     [SerializeField] private Transform _nextTargetPosition;
@@ -22,8 +23,6 @@ public class Slime : NormalMonster
     [SerializeField] private float _upperPower = 10f;
     [SerializeField] private float _volumeMul;
     [SerializeField] private float _power;
-    [SerializeField] private float _elapsedFadeOutTime;
-    [SerializeField] private float _targetFadeOutTime = 3f;
 
     #endregion
 
@@ -38,8 +37,8 @@ public class Slime : NormalMonster
     {
         base.Start();
 
-        // 초기 세팅
-        SetUp();
+        for (int i = 0; i < _wayPointBox.childCount; ++i)
+            _wayPoints.Add(_wayPointBox.GetChild(i));
 
         // 초기 목적지
         _curTargetPosition = _wayPoints[_curWayPointIndex];
@@ -64,39 +63,6 @@ public class Slime : NormalMonster
     {
         // 기본 초기화
         base.SetUp();
-
-        // 슬라임의 ID 설정
-        ID = 1001;
-
-        // 슬라임의 이름 설정
-        MonsterName = "종양 슬라임";
-
-        // 슬라임의 최대 체력
-        MaxHp = 200;
-
-        // 슬라임의 현재 체력
-        CurHp = MaxHp;
-
-        // 박쥐의 이동속도
-        MoveSpeed = 3;
-
-        // 크기
-        MonsterSize = MONSTER_SIZE.Small;
-
-        // 슬라임의 활동 종류
-        ActionType = ACTION_TYPE.Floating;
-
-        // 리젠
-        ResponseType = RESPONE_TYPE.None;
-
-        // 선공
-        AggressiveType = AGGRESSIVE_TYPE.Peace;
-
-        // 추적
-        ChaseType = CHASE_TYPE.AllTerritory;
-
-        // 도망
-        RunawayType = RUNAWAY_TYPE.Aggressive;
     }
 
     public override void OnDamage(int damage)
@@ -104,39 +70,14 @@ public class Slime : NormalMonster
         base.OnDamage(damage);
     }
 
-    public override void KnockBack(Vector2 vec)
+    public override void KnockBack(Vector2 force)
     {
-        Rigidbody.velocity = vec;
+        base.KnockBack(force);
     }
 
     public override void Die()
     {
         base.Die();
-
-        // 사라지기 시작
-        StartCoroutine(FadeOutObject());
-    }
-
-    private IEnumerator FadeOutObject()
-    {
-        // 초기 알파값 저장
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        float startAlpha = spriteRenderer.color.a;
-
-        // 서서히 알파값 감소
-        while (_elapsedFadeOutTime < _targetFadeOutTime)
-        {
-            _elapsedFadeOutTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeOutTime / 2;
-            Color color = spriteRenderer.color;
-            color.a = Mathf.Lerp(startAlpha, 0f, normalizedTime);
-            spriteRenderer.color = color;
-            yield return null;
-        }
-
-        // 오브젝트 삭제
-        Destroy(gameObject);
-        yield return null;
     }
 
     /// <summary>
@@ -158,10 +99,11 @@ public class Slime : NormalMonster
             // 땅에 닿았을 때 힘을 줘볼까?
             if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
+                // TODO : 튀어오르는 시스템 변경
                 float dir = Mathf.Sign(_curTargetPosition.position.x - transform.position.x);
                 Vector2 moveVector = new Vector2(dir * MoveSpeed, _upperPower);
                 _moveDir = moveVector.normalized;
-                Rigidbody.velocity = moveVector;
+                Rigidbody.AddForce(moveVector, ForceMode2D.Impulse);
             }
         }
         // 플레이어와 충돌했을 때
