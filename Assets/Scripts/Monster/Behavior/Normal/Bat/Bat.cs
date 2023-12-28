@@ -13,23 +13,8 @@ public class Bat : NormalMonster
     [Header("Bat")]
     [Space]
 
-    [SerializeField] private Transform _wayPointBox;
-    [SerializeField] private List<Transform> _wayPoints;
-    [SerializeField] private Transform _curTargetPosition;
-    [SerializeField] private Transform _nextTargetPosition;
-    [SerializeField] private int _curWayPointIndex = 0;
-    [SerializeField] private float _distanceWithTarget = 1f;
-    [SerializeField] private Vector3 _moveDir;
-    [SerializeField] private float _targetWaitTime = 2f;
-    [SerializeField] private float _elapsedWaitTime;
-    [SerializeField] private bool _isWaiting;
-
-    [Space]
-
-    [SerializeField] private Vector2 _attackBoxSize;
-    [SerializeField] private bool _isAttack;
-    [SerializeField] private float _targetAttackTime = 1.5f;
-    [SerializeField] private float _elapsedAttackTime;
+    [SerializeField] private WayPointPatrol _wayPointPatrol;
+    [SerializeField] private AttackEvaluator _attackEvaluator;
 
     [Space]
 
@@ -41,9 +26,6 @@ public class Bat : NormalMonster
     [SerializeField] private float _shootingAngle;
     [SerializeField] private float _shootingVariant;
 
-    private int _damage;
-    private float _power;
-
     #endregion
 
     #region Function
@@ -51,88 +33,56 @@ public class Bat : NormalMonster
     protected override void Awake()
     {
         base.Awake();
+
+        _wayPointPatrol = GetComponent<WayPointPatrol>();
+        _attackEvaluator = GetComponent<AttackEvaluator>();
     }
 
     protected override void Start()
     {
         base.Start();
-
-        for (int i = 0; i < _wayPointBox.childCount; ++i)
-            _wayPoints.Add(_wayPointBox.GetChild(i));
-
-        // 초기 목적지 설정
-        _curTargetPosition = _wayPoints[_curWayPointIndex];
-        _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
     }
 
     protected override void Update()
     {
         base.Update();
 
-        // 대기 상태
-        if (_isWaiting)
-        {
-            _elapsedWaitTime += Time.deltaTime;
-
-            if (_elapsedWaitTime > _targetWaitTime)
-            {
-                _elapsedWaitTime = 0f;
-                _isWaiting = false;
-            }
-        }
-        // 이동중
-        else
+        /////////////////////
+        // WayPoint Patrol //
+        /////////////////////
+        if (!_wayPointPatrol.IsWaiting)
         {
             // 목적지에 도착
-            if (Vector3.Distance(_curTargetPosition.position,
-                    this.transform.position) < _distanceWithTarget)
+            if (Vector3.Distance(_wayPointPatrol.CurTargetPosition.position,
+                    this.transform.position) < _wayPointPatrol.DistanceWithTarget)
             {
-                _isWaiting = true;
-
+                _wayPointPatrol.IsWaiting = true;
                 Rigidbody.velocity = Vector2.zero;
 
-                _curWayPointIndex++;
-                _curTargetPosition = _nextTargetPosition;
-                _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
+                _wayPointPatrol.ChangeWayPoint();
             }
-            // 목적지에 도착하지 못함
             else
             {
                 // 이동하면서 목적지를 향한 방향을 계속해서 탐지
-                _moveDir = (_curTargetPosition.position - transform.position).normalized;
+                _wayPointPatrol.MoveDir = (_wayPointPatrol.CurTargetPosition.position - transform.position).normalized;
 
                 // 목적지로 등속 이동
-                Rigidbody.velocity = _moveDir * MoveSpeed;
+                Rigidbody.velocity = _wayPointPatrol.MoveDir * MoveSpeed;
             }
         }
 
-        // 공격 상태 아니라면
-        if (!_isAttack)
+        //////////////////////
+        // Attack Evaluator //
+        //////////////////////
+        if (_attackEvaluator.IsAttackable)
         {
             // 탐지 범위 안에 들어왔는지 확인
-            Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _attackBoxSize, 0f, LayerMask.GetMask("Player"));
+            Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _attackEvaluator.AttackBoxSize, 0f, _attackEvaluator.TargetLayer);
+
             if (targetCollider != null)
             {
-                // Debug.Log("탐지 범위에 플레이어가 들어왔으니 공격한다.");
-                // Debug.Log(targetCollider.gameObject.name);
-
-                // 공격한다
-                _isAttack = true;
-
                 Animator.SetTrigger("Attack");
-            }
-        }
-        // 공격 쿨타임 계산
-        else
-        {
-            _elapsedAttackTime += Time.deltaTime;
-
-            if (_elapsedAttackTime > _targetAttackTime)
-            {
-                // Debug.Log("다시 공격이 가능해진다");
-
-                _elapsedAttackTime = 0f;
-                _isAttack = false;
+                _attackEvaluator.IsAttackable = false;
             }
         }
     }
@@ -192,17 +142,6 @@ public class Bat : NormalMonster
             // collision.gameObject.GetComponent<PlayerBehaviour>().OnHit(damage, vec);
         }
         */
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        // 공격 범위
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(this.transform.position, _attackBoxSize);
-
-        // 이동 방향
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(this.transform.position, this.transform.position + _moveDir * 2f);
     }
 
     #endregion

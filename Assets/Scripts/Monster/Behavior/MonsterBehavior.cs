@@ -1,67 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-#region Enum
-
-public enum MONSTER_SIZE
-{
-    Null = 0,
-    Small,
-    Medium,
-    Large
-}
-
-public enum MONSTER_TYPE
-{
-    Null = 0,
-    Normal,
-    SemiBoss,
-    Boss
-}
-
-public enum ACTION_TYPE
-{
-    Null = 0,
-    Ground,
-    Floating,
-    Crawl
-}
-
-public enum RESPONE_TYPE
-{
-    Null = 0,
-    Time,
-    Reentry
-}
-
-public enum AGGRESSIVE_TYPE
-{
-    Null = 0,
-    Peace,
-    SightAggressive,
-    TerritoryAggressive,
-    AttackAggressive,
-    Boss
-}
-
-public enum CHASE_TYPE
-{
-    Null = 0,
-    Peace,
-    Territory,
-    AllTerritory
-}
-
-public enum RUNAWAY_TYPE
-{
-    Null = 0,
-    Aggressive,
-    Peace,
-    Coward
-}
-
-#endregion
-
 /// <summary>
 /// 몬스터의 기본 행동을 정의
 /// </summary>
@@ -142,50 +81,50 @@ public abstract class MonsterBehavior : StateMachineBase
     [Space]
 
     // 추가 프로퍼티
-    [SerializeField] private MONSTER_SIZE _monsterSize;
-    public MONSTER_SIZE MonsterSize // 몬스터 크기 구분
+    [SerializeField] private MonsterDefine.SIZE _monsterSize;
+    public MonsterDefine.SIZE MonsterSize // 몬스터 크기 구분
     {
         get => _monsterSize;
         protected set => _monsterSize = value;
     }
 
-    [SerializeField] private MONSTER_TYPE _monsterType;
-    public MONSTER_TYPE MonsterType // 몬스터 종류
+    [SerializeField] private MonsterDefine.TYPE _monsterType;
+    public MonsterDefine.TYPE MonsterType // 몬스터 종류
     {
         get => _monsterType;
         protected set => _monsterType = value;
     }
 
-    [SerializeField] private ACTION_TYPE _actionType;
-    public ACTION_TYPE ActionType // 몬스터 활동 종류
+    [SerializeField] private MonsterDefine.ACTION _actionType;
+    public MonsterDefine.ACTION ActionType // 몬스터 활동 종류
     {
         get => _actionType;
         protected set => _actionType = value;
     }
 
-    [SerializeField] private RESPONE_TYPE _responseType;
-    public RESPONE_TYPE ResponseType // 리젠 방식 구분
+    [SerializeField] private MonsterDefine.RESPONE _responseType;
+    public MonsterDefine.RESPONE ResponseType // 리젠 방식 구분
     {
         get => _responseType;
         protected set => _responseType = value;
     }
 
-    [SerializeField] private AGGRESSIVE_TYPE _aggressiveType;
-    public AGGRESSIVE_TYPE AggressiveType // 선공 여부
+    [SerializeField] private MonsterDefine.AGGRESSIVE _aggressiveType;
+    public MonsterDefine.AGGRESSIVE AggressiveType // 선공 여부
     {
         get => _aggressiveType;
         protected set => _aggressiveType = value;
     }
 
-    [SerializeField] private CHASE_TYPE _chaseType;
-    public CHASE_TYPE ChaseType // 추적 방식 구분
+    [SerializeField] private MonsterDefine.CHASE _chaseType;
+    public MonsterDefine.CHASE ChaseType // 추적 방식 구분
     {
         get => _chaseType;
         protected set => _chaseType = value;
     }
 
-    [SerializeField] private RUNAWAY_TYPE _runawayType;
-    public RUNAWAY_TYPE RunawayType // 도망 여부
+    [SerializeField] private MonsterDefine.RUNAWAY _runawayType;
+    public MonsterDefine.RUNAWAY RunawayType // 도망 여부
     {
         get => _runawayType;
         protected set => _runawayType = value;
@@ -195,6 +134,8 @@ public abstract class MonsterBehavior : StateMachineBase
 
     [SerializeField] private float _elapsedFadeOutTime;
     [SerializeField] private float _targetFadeOutTime = 3f;
+
+    private bool _isDieTrigger;
 
     #endregion
 
@@ -231,10 +172,10 @@ public abstract class MonsterBehavior : StateMachineBase
         if (CurHp == 0)
             Dead = true;
 
-        if (Dead)
+        if (Dead && !_isDieTrigger)
         {
             Die();
-            Dead = false;
+            _isDieTrigger = true;
         }
     }
 
