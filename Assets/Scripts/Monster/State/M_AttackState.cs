@@ -10,16 +10,25 @@ public class M_AttackState : MonsterState
     [SerializeField] private float _shootingAngle;
     [SerializeField] private float _shootingVariant;
 
+    private bool _isEnd;
+
     protected override void OnEnter()
     {
         Animator.SetTrigger("Attack");
+
+        _isEnd = false;
 
         StartCoroutine(Monster.AttackEvaluators.AttackableTimer());
     }
 
     protected override void OnUpdate()
     {
-
+        if (_isEnd)
+        {
+            _isEnd = false;
+            ChangeState<M_IdleState>();
+            return;
+        }
     }
 
     protected override void OnFixedUpdate()
@@ -29,7 +38,7 @@ public class M_AttackState : MonsterState
 
     protected override void OnExit()
     {
-
+        _isEnd = false;
     }
 
     public void SprinkleParticle_AnimEvent()
@@ -47,6 +56,6 @@ public class M_AttackState : MonsterState
 
     public void EndAttack_AnimEvent()
     {
-        ChangeState<M_IdleState>();
+        _isEnd = true;
     }
 }

@@ -5,8 +5,6 @@ public class M_DieState : MonsterState
 {
     protected override void OnEnter()
     {
-        Debug.Log("Enter Die State");
-
         Animator.SetTrigger("Die");
 
         Monster.Die();

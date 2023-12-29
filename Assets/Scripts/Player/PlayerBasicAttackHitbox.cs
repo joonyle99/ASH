@@ -11,7 +11,7 @@ public class PlayerBasicAttackHitbox : MonoBehaviour
 
     private void Awake()
     {
-        _player = GetComponent<PlayerBehaviour>();
+        _player = transform.root.GetComponent<PlayerBehaviour>();
     }
 
     /// <summary>
