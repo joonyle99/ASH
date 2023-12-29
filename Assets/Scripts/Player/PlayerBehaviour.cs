@@ -234,7 +234,6 @@ public class PlayerBehaviour : StateMachineBase
         if (CurHp <= 0 && !IsDead)
         {
             CurHp = 0;
-            IsDead = true;
             ChangeState<DieState>();
         }
     }
@@ -283,6 +282,7 @@ public class PlayerBehaviour : StateMachineBase
         // Apply Damage
         CurHp -= damage;
 
+        // Player Hurt Sound
         PlaySound_SE_Hurt_02();
 
         // Change Die State

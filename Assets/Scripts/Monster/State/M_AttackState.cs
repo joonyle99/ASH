@@ -32,7 +32,7 @@ public class M_AttackState : MonsterState
 
     }
 
-    public void SprinkleParticle()
+    public void SprinkleParticle_AnimEvent()
     {
         for (int i = 0; i < _particleCount; i++)
         {

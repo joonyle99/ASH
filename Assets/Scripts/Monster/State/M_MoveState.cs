@@ -14,6 +14,7 @@ public class M_MoveState : MonsterState
         {
             Monster.Rigidbody.velocity = Vector2.zero;
 
+            // 다음 목표 지점으로
             Monster.WayPointPatrol.ChangeWayPoint();
             StartCoroutine(Monster.WayPointPatrol.WaitingTimer());
 

@@ -59,7 +59,7 @@ public class Slime : NormalMonster
         }
     }
 
-    public override void SetUp()
+    protected override void SetUp()
     {
         // 기본 초기화
         base.SetUp();

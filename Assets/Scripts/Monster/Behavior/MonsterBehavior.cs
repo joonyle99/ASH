@@ -70,7 +70,7 @@ public abstract class MonsterBehavior : StateMachineBase
     public bool IsDead
     {
         get => _isDead;
-        protected set => _isDead = value;
+        set => _isDead = value;
     }
 
     [SerializeField] private bool _isInAir;
@@ -139,8 +139,6 @@ public abstract class MonsterBehavior : StateMachineBase
         protected set => _runawayType = value;
     }
 
-    [Space]
-
     [SerializeField] private float _elapsedFadeOutTime;
     [SerializeField] private float _targetFadeOutTime = 3f;
 
@@ -162,22 +160,24 @@ public abstract class MonsterBehavior : StateMachineBase
     {
         base.Start();
 
-        // 몬스터 속성 설정
+        // 몬스터 기본 설정
         SetUp();
-
-        // 박쥐의 현재 체력
-        CurHp = MaxHp;
     }
 
     protected override void Update()
     {
         base.Update();
 
-        if (CurHp <= 0 && !IsDead)
+        CheckDieState();
+
+        if (IsDead)
+            return;
+
+        // 공격 범위 안에 타겟이 들어오면
+        if (AttackEvaluators.IsTargetWithinAttackRange())
         {
-            CurHp = 0;
-            IsDead = true;
-            Die();
+            if (StateIs<M_IdleState>() || StateIs<M_MoveState>())
+                ChangeState<M_AttackState>();
         }
     }
 
@@ -186,8 +186,7 @@ public abstract class MonsterBehavior : StateMachineBase
         base.FixedUpdate();
     }
 
-    // 몬스터 속성 세팅
-    public virtual void SetUp()
+    protected virtual void SetUp()
     {
         // 몬스터의 ID 설정
         ID = _monsterData.ID;
@@ -200,6 +199,9 @@ public abstract class MonsterBehavior : StateMachineBase
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
+
+        // 박쥐의 현재 체력
+        CurHp = MaxHp;
 
         // 몬스터의 이동속도 설정
         MoveSpeed = _monsterData.MoveSpeed;
@@ -223,6 +225,17 @@ public abstract class MonsterBehavior : StateMachineBase
         RunawayType = _monsterData.RunawayType;
     }
 
+    private void CheckDieState()
+    {
+        if (CurHp <= 0 && !IsDead)
+        {
+            Debug.Log("Update의 Die");
+
+            CurHp = 0;
+            ChangeState<M_DieState>();
+        }
+    }
+
     public virtual void KnockBack(Vector2 forceVector)
     {
         Rigidbody.velocity = Vector2.zero;
@@ -234,30 +247,31 @@ public abstract class MonsterBehavior : StateMachineBase
         if (IsDead)
             return;
 
-        // Apply Damage
         CurHp -= damage;
-
-        // Apply Knock Back
         KnockBack(forceVector);
-
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
-        // Change Die State
         if (CurHp <= 0)
         {
             CurHp = 0;
-            Die();
+            ChangeState<M_DieState>();
+
+            Debug.Log("OnHit의 Die");
+
+            return;
         }
+
+        Debug.Log("OnHit의 Hurt");
+
+        ChangeState<M_HurtState>();
     }
 
-    // 사망
-    public virtual void Die()   // 최하위 자식의 Die()을 호출한다.
-                                // Polymorphism (다형성)
+    public virtual void Die()
     {
         // 사망 처리
         IsDead = true;
 
-        // 히트 박스 비활성화
+        // Hit Box 비활성화
         GameObject hitBox = GetComponentInChildren<MonsterBodyHit>().gameObject;
         hitBox.SetActive(false);
 
@@ -293,7 +307,7 @@ public abstract class MonsterBehavior : StateMachineBase
         }
 
         // 오브젝트 삭제
-        if(transform.parent)
+        if (transform.parent)
             Destroy(transform.parent.gameObject);
         else
             Destroy(gameObject);

@@ -6,7 +6,6 @@ public class DieState : PlayerState
     protected override void OnEnter()
     {
         Animator.SetTrigger("Die");
-        Animator.SetBool("IsDead", true);
 
         Player.IsDead = true;
 
@@ -27,7 +26,7 @@ public class DieState : PlayerState
 
     protected override void OnExit()
     {
-        Animator.SetBool("IsDead", false);
+
     }
 
     private IEnumerator Alive()

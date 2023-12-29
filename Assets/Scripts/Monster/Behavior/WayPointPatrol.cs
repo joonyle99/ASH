@@ -17,8 +17,6 @@ public class WayPointPatrol : MonoBehaviour
     [SerializeField] private Vector3 _moveDir;
     [SerializeField] private bool _isWaiting;
 
-    #region Property
-
     public Vector3 MoveDir
     {
         get { return _moveDir; }
@@ -30,8 +28,6 @@ public class WayPointPatrol : MonoBehaviour
         get { return _isWaiting; }
         set { _isWaiting = value; }
     }
-
-    #endregion
 
     void Start()
     {

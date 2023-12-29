@@ -23,7 +23,7 @@ public abstract class NormalMonster : MonsterBehavior
         base.FixedUpdate();
     }
 
-    public override void SetUp()
+    protected override void SetUp()
     {
         base.SetUp();
     }

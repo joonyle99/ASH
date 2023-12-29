@@ -8,7 +8,6 @@ public class HurtState : PlayerState
     protected override void OnEnter()
     {
         Animator.SetTrigger("Hurt");
-        Animator.SetBool("IsHurt", true);
 
         SceneContext.Current.Player.IsHurtable = false;
 
@@ -27,7 +26,7 @@ public class HurtState : PlayerState
 
     protected override void OnExit()
     {
-        Animator.SetBool("IsHurt", false);
+
     }
 
     private IEnumerator InvincibilityTimer()
