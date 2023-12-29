@@ -7,11 +7,12 @@ public class PlayerBasicAttackHitbox : MonoBehaviour
     [SerializeField] private PlayerBehaviour _player;
 
     [SerializeField] private int _attackDamage = 20;
-    [SerializeField] private float _attackPower;
+    [SerializeField] private float _attackPowerX;
+    [SerializeField] private float _attackPowerY;
 
     private void Awake()
     {
-        _player = GetComponent<PlayerBehaviour>();
+        _player = transform.root.GetComponent<PlayerBehaviour>();
     }
 
     /// <summary>
@@ -26,7 +27,7 @@ public class PlayerBasicAttackHitbox : MonoBehaviour
             return;
 
         float dir = Mathf.Sign(collision.transform.position.x - transform.root.position.x);
-        Vector2 forceVector = new Vector2(_attackPower * dir, _attackPower);
+        Vector2 forceVector = new Vector2(_attackPowerX * dir, _attackPowerY);
 
         monsterBehavior.OnHit(_attackDamage, forceVector);
     }

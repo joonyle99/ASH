@@ -168,10 +168,10 @@ public abstract class MonsterBehavior : StateMachineBase
     {
         base.Update();
 
-        CheckDieState();
-
         if (IsDead)
             return;
+
+        CheckDieState();
 
         // 공격 범위 안에 타겟이 들어오면
         if (AttackEvaluators.IsTargetWithinAttackRange())
@@ -227,12 +227,14 @@ public abstract class MonsterBehavior : StateMachineBase
 
     private void CheckDieState()
     {
-        if (CurHp <= 0 && !IsDead)
+        if (CurHp <= 0)
         {
-            Debug.Log("Update의 Die");
+            Debug.Log("Die in Check Die State");
 
             CurHp = 0;
             ChangeState<M_DieState>();
+
+            return;
         }
     }
 
@@ -256,12 +258,8 @@ public abstract class MonsterBehavior : StateMachineBase
             CurHp = 0;
             ChangeState<M_DieState>();
 
-            Debug.Log("OnHit의 Die");
-
             return;
         }
-
-        Debug.Log("OnHit의 Hurt");
 
         ChangeState<M_HurtState>();
     }
