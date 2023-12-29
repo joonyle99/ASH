@@ -1,19 +1,18 @@
 using UnityEngine;
 
-/// <summary>
-/// 몬스터의 기본 Idle
-/// </summary>
 public class M_IdleState : MonsterState
 {
     protected override void OnEnter()
     {
-        // Base Idle State Enter
+
     }
 
     protected override void OnUpdate()
     {
-
+        if (!Monster.WayPointPatrol.IsWaiting)
+            ChangeState<M_MoveState>();
     }
+
     protected override void OnFixedUpdate()
     {
 
@@ -21,6 +20,6 @@ public class M_IdleState : MonsterState
 
     protected override void OnExit()
     {
-        // Base Idle State Exit
+
     }
 }

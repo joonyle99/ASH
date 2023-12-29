@@ -37,8 +37,6 @@ public class PlayerAttackController : MonoBehaviour
 
     public void CastBasicAttack()
     {
-        Debug.Log("attack");
-
         if (!IsBasicAttacking)
         {
             // Basic SprinkleParticle Hitbox 활성화

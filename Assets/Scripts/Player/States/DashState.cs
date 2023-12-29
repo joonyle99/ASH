@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class DashState : PlayerState
@@ -6,19 +7,15 @@ public class DashState : PlayerState
 
     [Space]
 
-    [Range(0f, 50f)] [SerializeField] float _dashSpeed = 20f;
-    [Range(0f, 5f)] [SerializeField] float _dashLength = 0.2f;
-    [Range(0f, 5f)] [SerializeField] float _coolTime = 0.3f;
+    [SerializeField] float _dashSpeed = 20f;
+    [SerializeField] float _targetDashTime = 0.2f;
+    [SerializeField] float _elapsedDashTime;
 
     private Vector2 _dashDir;
     private bool _isDashing;
-    private float _timeStartedDash;
-    private float _timeEndeddDash;
     private float _orginGravity;
 
     public bool IsDashing { get { return _isDashing; } }
-    public float TimeEndedDash { get { return _timeEndeddDash; } }
-    public float CoolTime { get { return _coolTime; } }
 
     protected override void OnEnter()
     {
@@ -35,11 +32,13 @@ public class DashState : PlayerState
             // 가속도 때문에 Update()에서 속도를 계속해서 고정해준다.
             Player.Rigidbody.velocity = _dashDir * _dashSpeed;
 
+            _elapsedDashTime += Time.deltaTime;
+
             // 대쉬가 끝나는 조건
-            if (Time.time >= _timeStartedDash + _dashLength)
+            if (_elapsedDashTime > _targetDashTime)
             {
+                _elapsedDashTime = 0f;
                 Player.ChangeState<InAirState>();
-                return;
             }
         }
     }
@@ -66,19 +65,13 @@ public class DashState : PlayerState
         Player.CanDash = false;
 
         // 중력 0으로 설정
-        Player.Rigidbody.gravityScale = 0;
-
-        // Dash를 시작한 시간
-        _timeStartedDash = Time.time;
+        Player.Rigidbody.gravityScale = 0f;
     }
 
     private void FinishDash()
     {
         // 대쉬 종료 시 속성 설정
         _isDashing = false;
-
-        // 대쉬가 끝나는 순간의 시간
-        _timeEndeddDash = Time.time;
 
         // 기존 중력으로 되돌리기
         Player.Rigidbody.gravityScale = _orginGravity;

@@ -8,11 +8,20 @@ public abstract class MonsterBehavior : StateMachineBase
 {
     #region Attribute
 
-    [Header("Monster Behavior")] [Space] [SerializeField]
-    private MonsterData _monsterData;
+    [Header("Monster Behavior")]
+    [Space]
 
-    [SerializeField] private Collider2D _collider2D;
-    public Collider2D MonsterCollider2D { get => _collider2D; }
+    [SerializeField] private MonsterData _monsterData;
+    [SerializeField] private WayPointPatrol _wayPointPatrol;
+    public WayPointPatrol WayPointPatrol
+    {
+        get { return _wayPointPatrol; }
+    }
+    [SerializeField] private AttackEvaluator _attackEvaluator;
+    public AttackEvaluator AttackEvaluators
+    {
+        get { return _attackEvaluator; }
+    }
 
     // 고유 식별 번호 ID
     [SerializeField] private int _id;
@@ -43,7 +52,7 @@ public abstract class MonsterBehavior : StateMachineBase
     public int CurHp
     {
         get => _curHp;
-        protected set => _curHp = value;
+        set => _curHp = value;
     }
 
     // 이동속도
@@ -58,7 +67,7 @@ public abstract class MonsterBehavior : StateMachineBase
 
     // 그 외 속성들
     [SerializeField] private bool _isDead;
-    public bool Dead
+    public bool IsDead
     {
         get => _isDead;
         protected set => _isDead = value;
@@ -135,8 +144,6 @@ public abstract class MonsterBehavior : StateMachineBase
     [SerializeField] private float _elapsedFadeOutTime;
     [SerializeField] private float _targetFadeOutTime = 3f;
 
-    private bool _isDieTrigger;
-
     #endregion
 
     #region Function
@@ -147,19 +154,16 @@ public abstract class MonsterBehavior : StateMachineBase
     /// </summary>
     protected virtual void Awake()
     {
-        // Component
-        _collider2D = this.GetComponent<Collider2D>();
-
-        if (!_collider2D)
-            Debug.Log("Monster has not Collider2D Component");
-
-        // 몬스터 속성 설정
-        SetUp();
+        _wayPointPatrol = GetComponent<WayPointPatrol>();
+        _attackEvaluator = GetComponent<AttackEvaluator>();
     }
 
     protected override void Start()
     {
         base.Start();
+
+        // 몬스터 속성 설정
+        SetUp();
 
         // 박쥐의 현재 체력
         CurHp = MaxHp;
@@ -169,13 +173,11 @@ public abstract class MonsterBehavior : StateMachineBase
     {
         base.Update();
 
-        if (CurHp == 0)
-            Dead = true;
-
-        if (Dead && !_isDieTrigger)
+        if (CurHp <= 0 && !IsDead)
         {
+            CurHp = 0;
+            IsDead = true;
             Die();
-            _isDieTrigger = true;
         }
     }
 
@@ -221,31 +223,43 @@ public abstract class MonsterBehavior : StateMachineBase
         RunawayType = _monsterData.RunawayType;
     }
 
-    // 데미지 피격
-    public virtual void OnDamage(int damage)
+    public virtual void KnockBack(Vector2 forceVector)
     {
-        Debug.Log("MonsterBehavior의 OnDamage()");
-        CurHp -= damage;
-
-        if (CurHp <= 0)
-            CurHp = 0;
+        Rigidbody.velocity = Vector2.zero;
+        Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
     }
 
-    // 넉백
-    public virtual void KnockBack(Vector2 force)
+    public virtual void OnHit(int damage, Vector2 forceVector)
     {
-        Rigidbody.AddForce(force, ForceMode2D.Impulse);
+        if (IsDead)
+            return;
+
+        // Apply Damage
+        CurHp -= damage;
+
+        // Apply Knock Back
+        KnockBack(forceVector);
+
+        GetComponent<SoundList>().PlaySFX("SE_Hurt");
+
+        // Change Die State
+        if (CurHp <= 0)
+        {
+            CurHp = 0;
+            Die();
+        }
     }
 
     // 사망
     public virtual void Die()   // 최하위 자식의 Die()을 호출한다.
                                 // Polymorphism (다형성)
     {
-        Debug.Log("MonsterBehavior의 Die()");
+        // 사망 처리
+        IsDead = true;
 
-        // 충돌 비활성화
-        if (_collider2D)
-            _collider2D.enabled = false;
+        // 히트 박스 비활성화
+        GameObject hitBox = GetComponentInChildren<MonsterBodyHit>().gameObject;
+        hitBox.SetActive(false);
 
         // 사라지기 시작
         StartCoroutine(FadeOutObject());
@@ -279,7 +293,10 @@ public abstract class MonsterBehavior : StateMachineBase
         }
 
         // 오브젝트 삭제
-        Destroy(gameObject);
+        if(transform.parent)
+            Destroy(transform.parent.gameObject);
+        else
+            Destroy(gameObject);
 
         yield return null;
     }

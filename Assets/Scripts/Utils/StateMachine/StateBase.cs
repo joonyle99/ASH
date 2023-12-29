@@ -44,7 +44,6 @@ public abstract class StateBase : MonoBehaviour
     {
         return StateMachine.GetComponent<T>();
     }
-
 }
 
 [System.Serializable]

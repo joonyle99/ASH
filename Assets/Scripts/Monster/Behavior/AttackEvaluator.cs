@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class AttackEvaluator : MonoBehaviour
@@ -9,38 +10,32 @@ public class AttackEvaluator : MonoBehaviour
     [SerializeField] private Vector2 _attackBoxSize;
     [SerializeField] private float _targetWaitTime = 1.5f;
     [SerializeField] private float _elapsedWaitTime;
-    [SerializeField] private bool _isAttackable;
+    [SerializeField] private bool _isAttackable = true;
 
-    public LayerMask TargetLayer
+    public IEnumerator AttackableTimer()
     {
-        get { return _targetLayer; }
-        set { _targetLayer = value; }
+        _isAttackable = false;
+
+        yield return new WaitForSeconds(_targetWaitTime);
+
+        _isAttackable = true;
     }
 
-    public Vector2 AttackBoxSize
-    {
-        get { return _attackBoxSize; }
-        set { _attackBoxSize = value; }
-    }
-
-    public bool IsAttackable
-    {
-        get { return _isAttackable; }
-        set { _isAttackable = value; }
-    }
-
-    void Update()
+    public bool IsTargetWithinAttackRange()
     {
         if (!_isAttackable)
-        {
-            _elapsedWaitTime += Time.deltaTime;
+            return false;
 
-            if (_elapsedWaitTime > _targetWaitTime)
-            {
-                _elapsedWaitTime = 0f;
-                _isAttackable = true;
-            }
+        // 탐지 범위 안에 들어왔는지 확인
+        Collider2D playerCollider = Physics2D.OverlapBox(transform.position, _attackBoxSize, 0f, _targetLayer);
+        if (playerCollider != null)
+        {
+            PlayerBehaviour player = playerCollider.GetComponent<PlayerBehaviour>();
+            if (!player.IsDead)
+                return true;
         }
+
+        return false;
     }
 
     private void OnDrawGizmosSelected()

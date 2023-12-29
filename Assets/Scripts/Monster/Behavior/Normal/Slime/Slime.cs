@@ -65,14 +65,14 @@ public class Slime : NormalMonster
         base.SetUp();
     }
 
-    public override void OnDamage(int damage)
+    public override void KnockBack(Vector2 forceVector)
     {
-        base.OnDamage(damage);
+        base.KnockBack(forceVector);
     }
 
-    public override void KnockBack(Vector2 force)
+    public override void OnHit(int damage, Vector2 forceVector)
     {
-        base.KnockBack(force);
+        base.OnHit(damage, forceVector);
     }
 
     public override void Die()

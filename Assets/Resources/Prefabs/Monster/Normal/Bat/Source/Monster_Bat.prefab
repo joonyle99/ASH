@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 958416933}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: ShootingPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,6 +31,71 @@ Transform:
   m_Father: {fileID: 4560143282416633408}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1823102731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1823102732}
+  - component: {fileID: 1823102733}
+  - component: {fileID: 1823102734}
+  m_Layer: 11
+  m_Name: Monster Body Hit
+  m_TagString: HitBox
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1823102732
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823102731}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4560143282416633408}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &1823102733
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823102731}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.6746797}
+  serializedVersion: 2
+  m_Radius: 1.2710607
+--- !u!114 &1823102734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823102731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9416f7e7a68fbf42b28ccbdd52cbbe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _monster: {fileID: 0}
+  _damage: 4
+  _forceXPower: 10
+  _forceYPower: 13
 --- !u!1 &136328079707086901
 GameObject:
   m_ObjectHideFlags: 0
@@ -830,7 +895,9 @@ GameObject:
   - component: {fileID: 3377598699165364114}
   - component: {fileID: 302960501}
   - component: {fileID: 6689085311920635568}
-  - component: {fileID: 3377598699165364115}
+  - component: {fileID: 1792855176896669292}
+  - component: {fileID: 2946367012058447393}
+  - component: {fileID: 1902722018590359629}
   - component: {fileID: 3377598700503893094}
   - component: {fileID: 3377598699763521767}
   m_Layer: 3
@@ -868,6 +935,7 @@ Transform:
   - {fileID: 8324708298148451070}
   - {fileID: 1401324554909505931}
   - {fileID: 958416933}
+  - {fileID: 1823102732}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -920,14 +988,14 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 1
   m_LinearDrag: 5
   m_AngularDrag: 0.5
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!114 &3377598699165364114
 MonoBehaviour:
@@ -943,9 +1011,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 6699358011930249956}
   _animator: {fileID: 2911353049971048348}
-  _initialState: {fileID: 3377598699165364115}
+  _initialState: {fileID: 1792855176896669292}
   _monsterData: {fileID: 11400000, guid: 8e99bafb1cb583d42ad075bff16cd758, type: 2}
-  _collider2D: {fileID: 0}
+  _wayPointPatrol: {fileID: 0}
+  _attackEvaluator: {fileID: 0}
   _id: 0
   _monsterName: 
   _maxHp: 0
@@ -963,18 +1032,6 @@ MonoBehaviour:
   _runawayType: 0
   _elapsedFadeOutTime: 0
   _targetFadeOutTime: 3
-  _wayPointPatrol: {fileID: 0}
-  _attackEvaluator: {fileID: 0}
-  _batSkillPrefab: {fileID: 2007017996437501280, guid: e98a801d4e584ec4ca7b2591c541fa95, type: 3}
-  _skillSprites:
-  - {fileID: 21300000, guid: 2d692088c0a13ff4e88a2104b604a989, type: 3}
-  - {fileID: 21300000, guid: cc6708380c0138c46bd1899b0de85d58, type: 3}
-  - {fileID: 21300000, guid: 0d993cde1ffc7ef478d3e3880403fac1, type: 3}
-  _particleCount: 10
-  _shootPosition: {fileID: 958416933}
-  _shootingPower: 200
-  _shootingAngle: 90
-  _shootingVariant: 1000
 --- !u!114 &302960501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -992,9 +1049,8 @@ MonoBehaviour:
   _curTargetPosition: {fileID: 0}
   _nextTargetPosition: {fileID: 0}
   _curWayPointIndex: 0
-  _distanceWithTarget: 0.1
+  _targetDistance: 0.1
   _targetWaitTime: 3
-  _elapsedWaitTime: 0
   _moveDir: {x: 0, y: 0, z: 0}
   _isWaiting: 0
 --- !u!114 &6689085311920635568
@@ -1012,11 +1068,11 @@ MonoBehaviour:
   _targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _attackBoxSize: {x: 0, y: 0}
-  _targetWaitTime: 1.5
+  _attackBoxSize: {x: 8, y: 6}
+  _targetWaitTime: 3
   _elapsedWaitTime: 0
-  _isAttackable: 0
---- !u!114 &3377598699165364115
+  _isAttackable: 1
+--- !u!114 &1792855176896669292
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1025,12 +1081,52 @@ MonoBehaviour:
   m_GameObject: {fileID: 3423012739203243555}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3525f236d9b35624b94669dedcaf0b9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 636f9d698cd2638429d90de15e2ed1c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _animatorParameters:
     _enterParams: []
     _exitParams: []
+--- !u!114 &2946367012058447393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3423012739203243555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0da91cbf240d7748989eed413da2f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorParameters:
+    _enterParams: []
+    _exitParams: []
+--- !u!114 &1902722018590359629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3423012739203243555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94304f546d2630249a16f5a0819192e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animatorParameters:
+    _enterParams: []
+    _exitParams: []
+  _batSkillPrefab: {fileID: 2007017996437501280, guid: e98a801d4e584ec4ca7b2591c541fa95, type: 3}
+  _shootPosition: {fileID: 958416933}
+  _skillSprites:
+  - {fileID: 21300000, guid: 2d692088c0a13ff4e88a2104b604a989, type: 3}
+  - {fileID: 21300000, guid: cc6708380c0138c46bd1899b0de85d58, type: 3}
+  - {fileID: 21300000, guid: 0d993cde1ffc7ef478d3e3880403fac1, type: 3}
+  _particleCount: 8
+  _shootingPower: 6
+  _shootingAngle: 60
+  _shootingVariant: 30
 --- !u!114 &3377598700503893094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1048,6 +1144,14 @@ MonoBehaviour:
     _clip: {fileID: 8300000, guid: b31dde847f9269d438f631494e274831, type: 3}
     _volumeType: 0
     _volumeA: 0.3
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: SE_Hurt
+    _clip: {fileID: 8300000, guid: 3ae94ecee806e984a8ef72c269bb8200, type: 3}
+    _volumeType: 0
+    _volumeA: 1
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
