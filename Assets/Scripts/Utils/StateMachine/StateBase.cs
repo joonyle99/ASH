@@ -36,15 +36,21 @@ public abstract class StateBase : MonoBehaviour
     protected abstract void OnUpdate();
     protected virtual void OnFixedUpdate() { }
     protected abstract void OnExit();
+
     public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
     {
         return StateMachine.ChangeState<NextState>(ignoreSameState);
     }
-    public new T GetComponent<T>() where T : Component
+
+    public bool StateIs<State>() where State : StateBase
     {
-        return StateMachine.GetComponent<T>();
+        return StateMachine.CurrentState is State;
     }
 
+    //public new T GetComponent<T>() where T : Component
+    //{
+    //    return StateMachine.GetComponent<T>();
+    //}
 }
 
 [System.Serializable]

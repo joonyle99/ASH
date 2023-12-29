@@ -35,6 +35,6 @@ public class IdleState : PlayerState
 
     protected override void OnExit()
     {
-    }
 
+    }
 }

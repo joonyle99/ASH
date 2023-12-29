@@ -33,8 +33,8 @@ public class FireBullet : MonoBehaviour
             Vector2 vec = new Vector2(_power * dir, _power / 2f);
 
             // 데미지와 넉백
-            collision.GetComponent<MonsterBehavior>().OnDamage(_damage);
-            collision.GetComponent<MonsterBehavior>().KnockBack(vec);
+            // collision.GetComponent<MonsterBehavior>().OnDamage(_damage);
+            // collision.GetComponent<MonsterBehavior>().KnockBack(vec);
 
             Destroy(gameObject);
         }

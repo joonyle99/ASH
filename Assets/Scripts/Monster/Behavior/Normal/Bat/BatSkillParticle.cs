@@ -5,43 +5,53 @@ using UnityEngine;
 public class BatSkillParticle : MonoBehaviour
 {
     [SerializeField] LayerMask _groundLayer;
-    SpriteRenderer _spriteRenderer;
-    Rigidbody2D _rigidbody;
 
-    public int damage;
-    public float power;
+    private SpriteRenderer _spriteRenderer;
+    private Rigidbody2D _rigidbody;
+
+    [SerializeField] private int _damage;
+    [SerializeField] private float _forceXPower;
+    [SerializeField] private float _forceYPower;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
     }
+
     public void SetSprite(Sprite sprite)
     {
         _spriteRenderer.sprite = sprite;
     }
+
     public void Shoot(float angle, float power)
     {
-        angle = Mathf.Deg2Rad * (angle + 90);
-        var force = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * power;
-        _rigidbody.AddForce(force);
+        float afterAngle = Mathf.Deg2Rad * (angle + 90);
+        Vector3 throwForce = new Vector3(Mathf.Cos(afterAngle), Mathf.Sin(afterAngle), 0) * power;
+
+        _rigidbody.AddForce(throwForce, ForceMode2D.Impulse);
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if ((1 << collision.gameObject.layer & _groundLayer) > 0)
+        if ((1 << collision.gameObject.layer & _groundLayer.value) > 0)
         {
             Destroy(gameObject);
             return;
         }
-        var player = collision.transform.GetComponent<PlayerBehaviour>();
-        if (player)
+
+        PlayerBehaviour player = collision.transform.GetComponent<PlayerBehaviour>();
+
+        if (player != null)
         {
-            if (player.CurHp == 0)
+            if (player.IsDead)
                 return;
 
-            float dir = Mathf.Sign(collision.transform.position.x - transform.position.x);
-            Vector2 vec = new Vector2(power * dir, power);
-            // player.OnHitByBatSkill(this, damage, vec);
+            float dir = Mathf.Sign(player.transform.position.x - transform.position.x);
+            Vector2 forceVector = new Vector2(_forceXPower * dir, _forceYPower);
+
+            player.OnHit(_damage, forceVector);
+
             Destroy(gameObject);
         }
     }

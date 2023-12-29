@@ -1,15 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// µÕ½Ç µÕ½Ç ¶°ÀÖ´Â Idle
-/// </summary>
 public class Floating_Idle : M_IdleState
 {
     protected override void OnEnter()
     {
         base.OnEnter();
+        Debug.Log("Floating_Idle Enter");
     }
 
     protected override void OnUpdate()
@@ -20,5 +16,6 @@ public class Floating_Idle : M_IdleState
     protected override void OnExit()
     {
         base.OnExit();
+        Debug.Log("Floating_Idle Exit");
     }
 }

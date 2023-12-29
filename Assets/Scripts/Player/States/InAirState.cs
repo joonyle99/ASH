@@ -14,7 +14,7 @@ public class InAirState : PlayerState
 
     protected override void OnEnter()
     {
-
+        Player.Animator.SetBool("IsInAir", true);
     }
 
     protected override void OnUpdate()
@@ -102,6 +102,7 @@ public class InAirState : PlayerState
 
     protected override void OnExit()
     {
+        Player.Animator.SetBool("IsInAir", false);
         Player.Animator.SetBool("IsJump", false);
     }
 }

@@ -23,19 +23,19 @@ public abstract class NormalMonster : MonsterBehavior
         base.FixedUpdate();
     }
 
-    public override void SetUp()
+    protected override void SetUp()
     {
         base.SetUp();
     }
 
-    public override void OnDamage(int damage)
+    public override void KnockBack(Vector2 forceVector)
     {
-        base.OnDamage(damage);
+        base.KnockBack(forceVector);
     }
 
-    public override void KnockBack(Vector2 force)
+    public override void OnHit(int damage, Vector2 forceVector)
     {
-        base.KnockBack(force);
+        base.OnHit(damage, forceVector);
     }
 
     public override void Die()

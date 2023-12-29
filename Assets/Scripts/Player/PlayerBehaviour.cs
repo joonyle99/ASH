@@ -26,11 +26,18 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] float _diveCheckLength;
     [SerializeField] float _diveThreshholdHeight;
 
-    [Header("Player Settings")]
+    [Header("Player")]
     [Space]
 
     [SerializeField] int _maxHp;
     [SerializeField] int _curHp;
+    [SerializeField] bool _isHurtable = true;
+    [SerializeField] bool _isDead;
+    [SerializeField] bool _isGodMode;
+    [SerializeField] bool _isCanDash = true;
+
+    [Tooltip("이 각도를 초과한 경사에선 서있지 못함")]
+    [SerializeField] float _slopeThreshold = 45f;
 
     [Header("Viewr")]
     [Space]
@@ -40,16 +47,13 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] Collider2D _DiveHitCollider;
     [SerializeField] Collider2D _mainCollider;
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
-
     [SerializeField] Rigidbody2D _hand;
 
     // Controller
     PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
     InteractionController _interactionController;
-
-    // State
-    DashState _dashState;
+    PlayerMovementController _movementController;
 
     //Joint for interactable
     Joint2D _joint;
@@ -62,50 +66,56 @@ public class PlayerBehaviour : StateMachineBase
 
     #region Properties
 
-    public bool IsGrounded { get { return GroundHit; } }
-    public bool IsTouchedWall { get { return WallHit; } }
+    // Can Property
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<RunState>() || StateIs<InAirState>(); } }
     public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
-    public bool CanDash { get; set; }
+    public bool CanDash { get { return _isCanDash; } set { _isCanDash = value; } }
 
-    public int RecentDir { get; set; }
-    public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
-    public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
-    public bool IsDirSync { get { return Mathf.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.01f; } }
-    public bool IsOppositeDirSync { get { return Mathf.Abs(PlayerLookDir2D.x + RawInputs.Horizontal) < 0.01f; } }
+    // Condition Property
+    public bool IsGrounded { get { return GroundHit; } }
+    public bool IsTouchedWall { get { return WallHit; } }
+    public bool IsWallJump { get; set; }
+    public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
+    public bool IsHurtable { get { return _isHurtable; } set { _isHurtable = value; } }
+    public bool IsDead { get { return _isDead; } set { _isDead = value; } }
+    public bool IsGodMode { get { return _isGodMode; } set { _isGodMode = value; } }
+    public int CurHp { get { return _curHp; } set { _curHp = value; } }
+
+    // Check Property
+    public float GroundDistance { get; set; }
+    public float DiveThreshholdHeight { get { return _diveThreshholdHeight; } private set { _diveThreshholdHeight = value; } }
+    public float SlopeThreshold { get { return _slopeThreshold; } }
+
+    // Input Property
+    public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
     public bool IsMoveXKey { get { return Math.Abs(RawInputs.Movement.x) > 0.01f; } }
     public bool IsMoveRightKey { get { return RawInputs.Movement.x > 0.01f; } }
     public bool IsMoveLeftKey { get { return RawInputs.Movement.x < -0.01f; } }
     public bool IsMoveYKey { get { return Math.Abs(RawInputs.Movement.y) > 0.01f; } }
     public bool IsMoveUpKey { get { return RawInputs.Movement.y > 0.01f; } }
     public bool IsMoveDownKey { get { return RawInputs.Movement.y < -0.01f; } }
-    public bool IsWallJump { get; set; }
-    public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
-    public float GroundDistance { get; set; }
-    public float DiveThreshholdHeight { get { return _diveThreshholdHeight; } private set { _diveThreshholdHeight = value; } }
-    public int CurHp { get { return _curHp; } set { _curHp = value; } }
 
+    // Direction Property
+    public int RecentDir { get; set; }
+    public bool IsDirSync { get { return Mathf.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.01f; } }
+    public bool IsOppositeDirSync { get { return Mathf.Abs(PlayerLookDir2D.x + RawInputs.Horizontal) < 0.01f; } }
+    public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
+    public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
+
+    // Etc
+    public LayerMask GroundLayerMask { get { return _groundLayer; } }
     public Collider2D MainCollider { get { return _mainCollider; } }
     public RaycastHit2D GroundHit { get; private set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
     public RaycastHit2D WallHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
-
-    public Vector2 GroundAlignedMoveDir { get; set; }
-
-    public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
-    public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.Instance�� ����
-    public SkinnedMeshRenderer CapeRenderer { get { return _capeRenderer; } }
+    public InteractionController InteractionController { get { return _interactionController; } }
+    public PlayerMovementController MovementController { get { return _movementController; } }
+    public Rigidbody2D HandRigidBody { get { return _hand; } }
+    public SoundList SoundList { get { return _soundList; } }
 
     #endregion
 
-    [Tooltip("이 각도를 초과한 경사에선 서있지 못함")][SerializeField] float _slopeThreshold = 45f;
-    public float SlopeThreshold { get { return _slopeThreshold; } }
-    public SoundList SoundList { get { return _soundList; } }
-    PlayerMovementController _movementController;
-    public PlayerMovementController MovementController { get { return _movementController; } }
-
-    public Rigidbody2D HandRigidBody { get { return _hand; } }
     private void Awake()
     {
         // Collider
@@ -117,28 +127,8 @@ public class PlayerBehaviour : StateMachineBase
         _interactionController = GetComponent<InteractionController>();
         _movementController = GetComponent<PlayerMovementController>();
 
-        // State
-        _dashState = GetComponent<DashState>();
-
         // SoundList
         _soundList = GetComponent<SoundList>();
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-
-        // 배경 BGM 출력
-        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
-
-        InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
-        InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
-
-        /*
-        InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
-        */
-
-        CurHp = _maxHp;
     }
 
     private void OnEnable()
@@ -153,11 +143,22 @@ public class PlayerBehaviour : StateMachineBase
         {
             InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
             InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
-
-            /*
-            InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
-            */
+            // InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
         }
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
+        // 배경 BGM 출력
+        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
+
+        InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
+        InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
+        // InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
+
+        CurHp = _maxHp;
     }
 
     protected override void Update()
@@ -183,6 +184,9 @@ public class PlayerBehaviour : StateMachineBase
         // Change In Air State
         ChangeInAirState();
 
+        // Check Dead State
+        CheckDieState();
+
         #endregion
 
         #region Check Ground & Wall
@@ -204,13 +208,6 @@ public class PlayerBehaviour : StateMachineBase
         _DiveHitCollider = DiveHit.collider;
 
         #endregion
-
-        #region Skill CoolTime
-
-        // Dash CoolTime
-        CoolTime_Dash();
-
-        #endregion
     }
 
     private void UpdateImageFlip()
@@ -230,6 +227,14 @@ public class PlayerBehaviour : StateMachineBase
         {
             if(StateIs<IdleState>() || StateIs<RunState>() || StateIs<JumpState>())
                 ChangeState<InAirState>();
+        }
+    }
+    private void CheckDieState()
+    {
+        if (CurHp <= 0 && !IsDead)
+        {
+            CurHp = 0;
+            ChangeState<DieState>();
         }
     }
 
@@ -257,18 +262,48 @@ public class PlayerBehaviour : StateMachineBase
             _attackController.CastShootingAttack();
     }
 
-    void CoolTime_Dash()
+    public void KnockBack(Vector2 forceVector)
     {
-        if (!_dashState.IsDashing)
-        {
-            if (Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
-            {
-                if (IsGrounded || StateIs<WallState>())
-                    CanDash = true;
-            }
-        }
+        Rigidbody.velocity = Vector2.zero;
+        Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
     }
+    public void OnHit(int damage, Vector2 forceVector)
+    {
+        // 무적이거나 사망 상태라면 OnHit return
+        if (IsGodMode || IsDead)
+            return;
 
+        // 피격 가능한 불가능한 상태이면 OnHit return
+        if (!IsHurtable)
+            return;
+
+        // Debug.Log("In OnHit()");
+
+        // Apply Damage
+        CurHp -= damage;
+
+        // Player Hurt Sound
+        PlaySound_SE_Hurt_02();
+
+        // Change Die State
+        if (CurHp <= 0)
+        {
+            // Debug.Log("Apply Die");
+
+            CurHp = 0;
+            ChangeState<DieState>();
+
+            return;
+        }
+
+        // Debug.Log("Apply Hurt");
+
+        // Apply Knock Back
+        KnockBack(forceVector);
+
+        // Change Hurt State
+        ChangeState<HurtState>();
+    }
     public void OnHitbyPuddle(float damage)
     {
         //애니메이션, 체력 닳기 등 하면 됨.
@@ -285,7 +320,6 @@ public class PlayerBehaviour : StateMachineBase
 
         InstantRespawn();
     }
-
     public void OnHitByPhysicalObject(float damage, Rigidbody2D other)
     {
         // TODO
@@ -302,85 +336,14 @@ public class PlayerBehaviour : StateMachineBase
 
         InstantRespawn();
     }
-
-    void InstantRespawn()
+    public void InstantRespawn()
     {
         //this.gameObject.SetActive(false);
         ChangeState<InstantRespawnState>(true);
         SceneContext.Current.InstantRespawn();
     }
 
-
-    /*
-    public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)
-    {
-        Debug.Log("박쥐 점액에 맞음");
-        OnHit(damage, vec);
-    }
-    */
-
-    /*
-    public void OnHit(int damage, Vector2 vec)
-    {
-        CurHp -= damage;
-        Rigidbody.velocity = vec;
-        RecentDir = (int)Mathf.Sign(-vec.x);
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
-        ChangeState<HurtState>();
-    }
-    */
-
-    /*
-    public IEnumerator Alive()
-    {
-        Debug.Log("부활 !!");
-
-        // 초기 설정
-        ChangeState<IdleState>();
-        CurHp = _maxHp;
-        RecentDir = 1;
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
-
-        // 콜라이더 활성화
-        this.GetComponent<Collider2D>().enabled = true;
-
-        // 파티클 생성 & 시작
-        ParticleSystem myEffect = Instantiate(respawnEffect, transform.position, Quaternion.identity, transform);
-        myEffect.Play();  // 반복되는 이펙트
-
-        // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
-        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
-
-        // 초기 알파값 저장
-        float[] startAlphas = new float[renderers.Length];
-        for (int i = 0; i < renderers.Length; i++)
-            startAlphas[i] = renderers[i].color.a;
-
-        // 모든 렌더 컴포넌트를 돌면서 Fade In
-        float t = 0;
-        while (t < _reviveFadeInDuration)
-        {
-            t += Time.deltaTime;
-            float normalizedTime = t / _reviveFadeInDuration;
-
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                Color color = renderers[i].color;
-                color.a = Mathf.Lerp(startAlphas[i], 1f, normalizedTime);
-                renderers[i].color = color;
-                CapeRenderer.sharedMaterial.SetFloat("_Opacity", normalizedTime);
-            }
-
-            yield return null;
-        }
-
-        // 파티클 종료 & 파괴
-        myEffect.Stop();
-        Destroy(myEffect.gameObject);
-
-        yield return null;
-    }
-    */
+    #region Sound
 
     public void PlaySound_SE_Run()
     {
@@ -434,7 +397,7 @@ public class PlayerBehaviour : StateMachineBase
 
     public void PlaySound_SE_Hurt_01()
     {
-        _soundList.PlaySFX("SE_Hurt_01");
+        // _soundList.PlaySFX("SE_Hurt_01");
     }
 
     public void PlaySound_SE_Hurt_02()
@@ -461,6 +424,8 @@ public class PlayerBehaviour : StateMachineBase
     {
         _soundList.PlaySFX("SE_Healing_02");
     }
+
+    #endregion
 
     private void OnDrawGizmosSelected()
     {

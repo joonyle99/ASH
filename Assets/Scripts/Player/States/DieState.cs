@@ -3,49 +3,20 @@ using UnityEngine;
 
 public class DieState : PlayerState
 {
-    public Transform respawnPoint;
-    [Range(0f, 10f)] public float disapearTime;
-    [Range(0f, 10f)] public float reviveDelay;
-    private SpriteRenderer[] renderers;
-    private float[] startAlphas;
-    private float time;
-
-
     protected override void OnEnter()
     {
-        time = 0f;
-        Animator.SetBool("IsDead", true);
-        // Player.PlaySound_SE_Die_01();
-        this.GetComponent<Collider2D>().enabled = false;
-        renderers = GetComponentsInChildren<SpriteRenderer>(false);
-        startAlphas = new float[renderers.Length];
-        for (int i = 0; i < renderers.Length; i++)
-            startAlphas[i] = renderers[i].color.a;
+        Animator.SetTrigger("Die");
+
+        Player.IsDead = true;
+
+        // StartCoroutine(Alive());
+
+        // Player.InstantRespawn();
     }
 
     protected override void OnUpdate()
     {
-        if (time < disapearTime)
-        {
-            time += Time.deltaTime;
-            float normalizedTime = time / disapearTime;
 
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                Color color = renderers[i].color;
-                color.a = Mathf.Lerp(startAlphas[i], 0f, normalizedTime);
-                renderers[i].color = color;
-                Player.CapeRenderer.material.SetFloat("_Opacity", 1 - normalizedTime);
-            }
-        }
-        else
-        {
-            Player.PlaySound_SE_Die_02();
-            Animator.SetBool("IsDead", false);
-            gameObject.SetActive(false);
-            //TEMP
-            SceneContext.Current.InstantRespawn();
-        }
     }
 
     protected override void OnFixedUpdate()
@@ -57,5 +28,56 @@ public class DieState : PlayerState
     {
 
     }
-}
 
+    private IEnumerator Alive()
+    {
+        Debug.Log("Alive");
+
+        /*
+        // 초기 설정
+        ChangeState<IdleState>();
+        CurHp = _maxHp;
+        RecentDir = 1;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
+
+        // 콜라이더 활성화
+        this.GetComponent<Collider2D>().enabled = true;
+
+        // 파티클 생성 & 시작
+        ParticleSystem myEffect = Instantiate(respawnEffect, transform.position, Quaternion.identity, transform);
+        myEffect.Play();  // 반복되는 이펙트
+
+        // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
+
+        // 초기 알파값 저장
+        float[] startAlphas = new float[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+            startAlphas[i] = renderers[i].color.a;
+
+        // 모든 렌더 컴포넌트를 돌면서 Fade In
+        float t = 0;
+        while (t < _reviveFadeInDuration)
+        {
+            t += Time.deltaTime;
+            float normalizedTime = t / _reviveFadeInDuration;
+
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Color color = renderers[i].color;
+                color.a = Mathf.Lerp(startAlphas[i], 1f, normalizedTime);
+                renderers[i].color = color;
+                CapeRenderer.sharedMaterial.SetFloat("_Opacity", normalizedTime);
+            }
+
+            yield return null;
+        }
+
+        // 파티클 종료 & 파괴
+        myEffect.Stop();
+        Destroy(myEffect.gameObject);
+        */
+
+        yield return null;
+    }
+}

@@ -1,16 +1,22 @@
+using System.Collections;
 using UnityEngine;
 
-public class M_WalkState : MonsterState
+public class M_DieState : MonsterState
 {
     protected override void OnEnter()
     {
-        Debug.Log("Enter M_Idle");
+        Debug.Log("Enter Die State");
+
+        Animator.SetTrigger("Die");
+
+        Monster.Die();
     }
 
     protected override void OnUpdate()
     {
 
     }
+
     protected override void OnFixedUpdate()
     {
 
@@ -18,6 +24,6 @@ public class M_WalkState : MonsterState
 
     protected override void OnExit()
     {
-        Debug.Log("Enter M_Idle");
+
     }
 }

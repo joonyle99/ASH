@@ -1,8 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class MonsterState : StateBase
 {
-    public MonsterBehavior Monster { get { return StateMachine as MonsterBehavior; } } // Monster State에서 Monster Behaviour 객체를 생성
+    // MonsterBehavior을 가져오는 프로퍼티
+    public MonsterBehavior Monster
+    {
+        get { return StateMachine as MonsterBehavior; }
+    }
 }
+
+/*
+public abstract class MonsterState<T> : StateBase where T : MonsterBehavior
+{
+    // MonsterBehavior을 가져오는 프로퍼티
+    public T Monster
+    {
+        get { return StateMachine as T; }
+    }
+}
+*/

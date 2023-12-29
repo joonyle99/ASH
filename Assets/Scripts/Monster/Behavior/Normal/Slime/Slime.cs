@@ -59,20 +59,20 @@ public class Slime : NormalMonster
         }
     }
 
-    public override void SetUp()
+    protected override void SetUp()
     {
         // 기본 초기화
         base.SetUp();
     }
 
-    public override void OnDamage(int damage)
+    public override void KnockBack(Vector2 forceVector)
     {
-        base.OnDamage(damage);
+        base.KnockBack(forceVector);
     }
 
-    public override void KnockBack(Vector2 force)
+    public override void OnHit(int damage, Vector2 forceVector)
     {
-        base.KnockBack(force);
+        base.OnHit(damage, forceVector);
     }
 
     public override void Die()

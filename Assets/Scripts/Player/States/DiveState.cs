@@ -66,8 +66,8 @@ public class DiveState : PlayerState
 
                 Debug.Log("Å¸°Ý !!!");
 
-                enemy.GetComponent<MonsterBehavior>().OnDamage(_explosionDamage);
-                enemy.GetComponent<MonsterBehavior>().KnockBack(knockBackVector);
+                // enemy.GetComponent<MonsterBehavior>().OnDamage(_explosionDamage);
+                // enemy.GetComponent<MonsterBehavior>().KnockBack(knockBackVector);
             }
 
             // Boom Particle
