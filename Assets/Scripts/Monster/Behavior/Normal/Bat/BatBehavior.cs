@@ -1,7 +1,13 @@
 using UnityEngine;
 
-public class M_AttackState : MonsterState
+/// <summary>
+/// 박쥐 몬스터 클래스
+/// </summary>
+public class BatBehavior : NormalMonster
 {
+    [Header("Bat Behavior")]
+    [Space]
+
     [SerializeField] private BatSkillParticle _batSkillPrefab;
     [SerializeField] private Transform _shootPosition;
     [SerializeField] private Sprite[] _skillSprites;
@@ -10,35 +16,39 @@ public class M_AttackState : MonsterState
     [SerializeField] private float _shootingAngle;
     [SerializeField] private float _shootingVariant;
 
-    private bool _isEnd;
-
-    protected override void OnEnter()
+    protected override void Awake()
     {
-        Animator.SetTrigger("Attack");
-
-        _isEnd = false;
-
-        StartCoroutine(Monster.AttackEvaluators.AttackableTimer());
+        base.Awake();
     }
 
-    protected override void OnUpdate()
+    protected override void Start()
     {
-        if (_isEnd)
-        {
-            _isEnd = false;
-            ChangeState<M_IdleState>();
-            return;
-        }
+        base.Start();
     }
 
-    protected override void OnFixedUpdate()
+    protected override void Update()
     {
-
+        base.Update();
     }
 
-    protected override void OnExit()
+    protected override void SetUp()
     {
-        _isEnd = false;
+        base.SetUp();
+    }
+
+    public override void KnockBack(Vector2 forceVector)
+    {
+        base.KnockBack(forceVector);
+    }
+
+    public override void OnHit(int damage, Vector2 forceVector)
+    {
+        base.OnHit(damage, forceVector);
+    }
+
+    public override void Die()
+    {
+        base.Die();
     }
 
     public void SprinkleParticle_AnimEvent()
@@ -52,10 +62,5 @@ public class M_AttackState : MonsterState
         }
 
         GetComponent<SoundList>().PlaySFX("SE_Bat");
-    }
-
-    public void EndAttack_AnimEvent()
-    {
-        _isEnd = true;
     }
 }

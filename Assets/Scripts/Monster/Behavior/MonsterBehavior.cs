@@ -4,24 +4,42 @@ using UnityEngine;
 /// <summary>
 /// 몬스터의 기본 행동을 정의
 /// </summary>
-public abstract class MonsterBehavior : StateMachineBase
+public abstract class MonsterBehavior : MonoBehaviour
 {
     #region Attribute
 
     [Header("Monster Behavior")]
     [Space]
 
+    [SerializeField] private Rigidbody2D _rigidBody;
+    public Rigidbody2D RigidBody
+    {
+        get { return _rigidBody; }
+    }
+
+    [SerializeField] private Animator _animator;
+    public Animator Animator
+    {
+        get { return _animator; }
+    }
+
+    [Space]
+
     [SerializeField] private MonsterData _monsterData;
+
     [SerializeField] private WayPointPatrol _wayPointPatrol;
     public WayPointPatrol WayPointPatrol
     {
         get { return _wayPointPatrol; }
     }
+
     [SerializeField] private AttackEvaluator _attackEvaluator;
     public AttackEvaluator AttackEvaluators
     {
         get { return _attackEvaluator; }
     }
+
+    [Space]
 
     // 고유 식별 번호 ID
     [SerializeField] private int _id;
@@ -139,35 +157,42 @@ public abstract class MonsterBehavior : StateMachineBase
         protected set => _runawayType = value;
     }
 
-    [SerializeField] private float _elapsedFadeOutTime;
+    [Header("FadeOut")]
+    [Space]
+
     [SerializeField] private float _targetFadeOutTime = 3f;
+    [SerializeField] private float _elapsedFadeOutTime = 0f;
+
+    [Header("Blink")]
+    [Space]
+
+    [SerializeField] private int _countOfBlink = 5;
+    [SerializeField] private float _blinkDuration = 0.1f;
 
     #endregion
 
     #region Function
 
-    /// <summary>
-    /// 컴포넌트로 붙어있는 스크립트가 실행될 때 한 번 실행된다.
-    /// 활성화 되어있지 않아도 실행된다.
-    /// </summary>
     protected virtual void Awake()
     {
+        _rigidBody = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
+
         _wayPointPatrol = GetComponent<WayPointPatrol>();
         _attackEvaluator = GetComponent<AttackEvaluator>();
     }
 
-    protected override void Start()
+    protected virtual void Start()
     {
-        base.Start();
-
-        // 몬스터 기본 설정
+        // 몬스터 속성 설정
         SetUp();
+
+        // 박쥐의 체력 초기화
+        CurHp = MaxHp;
     }
 
-    protected override void Update()
+    protected virtual void Update()
     {
-        base.Update();
-
         if (IsDead)
             return;
 
@@ -176,14 +201,16 @@ public abstract class MonsterBehavior : StateMachineBase
         // 공격 범위 안에 타겟이 들어오면
         if (AttackEvaluators.IsTargetWithinAttackRange())
         {
-            if (StateIs<M_IdleState>() || StateIs<M_MoveState>())
-                ChangeState<M_AttackState>();
+            var stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+
+            if (stateInfo.IsName("Idle") || stateInfo.IsName("Move"))
+                Animator.SetTrigger("Attack");
         }
     }
 
-    protected override void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
-        base.FixedUpdate();
+
     }
 
     protected virtual void SetUp()
@@ -199,9 +226,6 @@ public abstract class MonsterBehavior : StateMachineBase
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
-
-        // 박쥐의 현재 체력
-        CurHp = MaxHp;
 
         // 몬스터의 이동속도 설정
         MoveSpeed = _monsterData.MoveSpeed;
@@ -225,23 +249,10 @@ public abstract class MonsterBehavior : StateMachineBase
         RunawayType = _monsterData.RunawayType;
     }
 
-    private void CheckDieState()
-    {
-        if (CurHp <= 0)
-        {
-            Debug.Log("Die in Check Die State");
-
-            CurHp = 0;
-            ChangeState<M_DieState>();
-
-            return;
-        }
-    }
-
     public virtual void KnockBack(Vector2 forceVector)
     {
-        Rigidbody.velocity = Vector2.zero;
-        Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
+        RigidBody.velocity = Vector2.zero;
+        RigidBody.AddForce(forceVector, ForceMode2D.Impulse);
     }
 
     public virtual void OnHit(int damage, Vector2 forceVector)
@@ -256,12 +267,12 @@ public abstract class MonsterBehavior : StateMachineBase
         if (CurHp <= 0)
         {
             CurHp = 0;
-            ChangeState<M_DieState>();
+            Animator.SetTrigger("Die");
 
             return;
         }
 
-        ChangeState<M_HurtState>();
+        Animator.SetTrigger("Hurt");
     }
 
     public virtual void Die()
@@ -271,16 +282,18 @@ public abstract class MonsterBehavior : StateMachineBase
 
         // Hit Box 비활성화
         GameObject hitBox = GetComponentInChildren<MonsterBodyHit>().gameObject;
-        hitBox.SetActive(false);
+
+        if (hitBox != null)
+            hitBox.SetActive(false);
 
         // 사라지기 시작
-        StartCoroutine(FadeOutObject());
+        StartCoroutine(FadeOutDestroy());
     }
 
-    public IEnumerator FadeOutObject()
+    private IEnumerator FadeOutDestroy()
     {
         // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
-        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
         // 초기 알파값 저장
         float[] startAlphaArray = new float[spriteRenderers.Length];
@@ -291,7 +304,7 @@ public abstract class MonsterBehavior : StateMachineBase
         while (_elapsedFadeOutTime < _targetFadeOutTime)
         {
             _elapsedFadeOutTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeOutTime / 2;
+            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
 
             for (int i = 0; i < spriteRenderers.Length; i++)
             {
@@ -305,12 +318,58 @@ public abstract class MonsterBehavior : StateMachineBase
         }
 
         // 오브젝트 삭제
-        if (transform.parent)
-            Destroy(transform.parent.gameObject);
+        if (transform.root)
+            Destroy(transform.root.gameObject);
         else
             Destroy(gameObject);
 
         yield return null;
+    }
+
+    private IEnumerator AlphaBlink()
+    {
+        // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        // TODO : Count 기반이 아닌 Hurt인 시간 동안 Blink
+        for (int n = 0; n < _countOfBlink; n++)
+        {
+            // 모든 Sprite를 돌면서 깜빡임 효과를 적용
+            foreach (SpriteRenderer renderer in spriteRenderers)
+            {
+                // 현재 색상을 투명하게 설정
+                Color transparentColor = renderer.color;
+                transparentColor.a = 0.5f; // 약간 투명하게 설정
+                renderer.color = transparentColor;
+            }
+
+            yield return new WaitForSeconds(_blinkDuration);
+
+            // 모든 Sprite를 돌면서 원래 색상으로 복구
+            foreach (SpriteRenderer renderer in spriteRenderers)
+            {
+                // 현재 색상을 원래대로 설정
+                Color originalColor = renderer.color;
+                originalColor.a = 1f; // 완전 불투명하게 설정
+                renderer.color = originalColor;
+            }
+
+            yield return new WaitForSeconds(_blinkDuration);
+        }
+    }
+
+    public void StartBlink()
+    {
+        StartCoroutine(AlphaBlink());
+    }
+
+    private void CheckDieState()
+    {
+        if (CurHp <= 0)
+        {
+            CurHp = 0;
+            Animator.SetTrigger("Die");
+        }
     }
 
     #endregion
