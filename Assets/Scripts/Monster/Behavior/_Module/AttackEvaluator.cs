@@ -12,7 +12,12 @@ public class AttackEvaluator : MonoBehaviour
     [SerializeField] private float _elapsedWaitTime;
     [SerializeField] private bool _isAttackable = true;
 
-    public IEnumerator AttackableTimer()
+    public void StartAttackableTimer()
+    {
+        StartCoroutine(AttackableTimer());
+    }
+
+    private IEnumerator AttackableTimer()
     {
         _isAttackable = false;
 

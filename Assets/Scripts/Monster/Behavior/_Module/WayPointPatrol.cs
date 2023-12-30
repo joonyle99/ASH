@@ -64,7 +64,12 @@ public class WayPointPatrol : MonoBehaviour
         _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
     }
 
-    public IEnumerator WaitingTimer()
+    public void StartWaitingTimer()
+    {
+        StartCoroutine(WaitingTimer());
+    }
+
+    private IEnumerator WaitingTimer()
     {
         _isWaiting = true;
 

@@ -330,8 +330,8 @@ MonoBehaviour:
   - {fileID: 2851137424601544839}
   - {fileID: 4033287982258850529}
   m_Bounds:
-    m_Center: {x: -0.2443862, y: 1.9700072, z: 0}
-    m_Extent: {x: 2.2678056, y: 2.3100004, z: 0}
+    m_Center: {x: -0.24438548, y: 1.9700062, z: 0}
+    m_Extent: {x: 2.2678075, y: 2.3099985, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -409,8 +409,6 @@ GameObject:
   - component: {fileID: 8858366127600596034}
   - component: {fileID: 1307060683}
   - component: {fileID: 1307060684}
-  - component: {fileID: 1307060686}
-  - component: {fileID: 1307060685}
   - component: {fileID: 524276232}
   - component: {fileID: 1219356418243289732}
   m_Layer: 3
@@ -495,61 +493,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &1307060686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9009718034006463997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0471a297465cd164c8fe5d62c0e215ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rigidbody: {fileID: 1307060684}
-  _animator: {fileID: 8858366127600596034}
-  _initialState: {fileID: 1307060685}
-  _collider2D: {fileID: 0}
-  _id: 0
-  _monsterName: 
-  _maxHp: 0
-  _curHp: 0
-  _moveSpeed: 0
-  _isDead: 0
-  _isInAir: 0
-  _isReturn: 0
-  _monsterSize: 0
-  _monsterType: 0
-  _actionType: 0
-  _responseType: 0
-  _aggressiveType: 0
-  _chaseType: 0
-  _runawayType: 0
-  _wayPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  _curTargetPosition: {fileID: 0}
-  _nextTargetPosition: {fileID: 0}
-  _curWayPointIndex: 0
-  _upperPower: 10
-  _volumeMul: 1
-  _power: 0.05
---- !u!114 &1307060685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9009718034006463997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3525f236d9b35624b94669dedcaf0b9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
 --- !u!114 &524276232
 MonoBehaviour:
   m_ObjectHideFlags: 0
