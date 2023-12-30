@@ -139,7 +139,6 @@ public abstract class MonsterBehavior : StateMachineBase
         protected set => _runawayType = value;
     }
 
-    [SerializeField] private float _elapsedFadeOutTime;
     [SerializeField] private float _targetFadeOutTime = 3f;
 
     #endregion
@@ -274,24 +273,27 @@ public abstract class MonsterBehavior : StateMachineBase
         hitBox.SetActive(false);
 
         // 사라지기 시작
-        StartCoroutine(FadeOutObject());
+        StartCoroutine(FadeOutDestroy());
     }
 
-    public IEnumerator FadeOutObject()
+    // 재사용 하기
+    public IEnumerator FadeOutDestroy()
     {
         // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
-        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
         // 초기 알파값 저장
         float[] startAlphaArray = new float[spriteRenderers.Length];
         for (int i = 0; i < spriteRenderers.Length; i++)
             startAlphaArray[i] = spriteRenderers[i].color.a;
 
+        float elapsedFadeOutTime = 0f;
+
         // 모든 렌더 컴포넌트를 돌면서 Fade Out
-        while (_elapsedFadeOutTime < _targetFadeOutTime)
+        while (elapsedFadeOutTime < _targetFadeOutTime)
         {
-            _elapsedFadeOutTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeOutTime / 2;
+            elapsedFadeOutTime += Time.deltaTime;
+            float normalizedTime = elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
 
             for (int i = 0; i < spriteRenderers.Length; i++)
             {
@@ -305,8 +307,8 @@ public abstract class MonsterBehavior : StateMachineBase
         }
 
         // 오브젝트 삭제
-        if (transform.parent)
-            Destroy(transform.parent.gameObject);
+        if (transform.root)
+            Destroy(transform.root.gameObject);
         else
             Destroy(gameObject);
 

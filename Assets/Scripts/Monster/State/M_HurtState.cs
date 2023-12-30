@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class M_HurtState : MonsterState
 {
+    [SerializeField] private int _countOfTwinkles = 5;
+    [SerializeField] private float _twinkleDuration = 0.1f;
+
     private bool _isEnd;
 
     protected override void OnEnter()
@@ -37,15 +40,9 @@ public class M_HurtState : MonsterState
     private IEnumerator TwinkleEffect()
     {
         // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
-        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
-        // 깜빡이는 효과를 몇 번 반복할지 결정
-        int numberOfTwinkles = 5;
-
-        // 깜빡이는 한 사이클의 지속 시간
-        float twinkleDuration = 0.1f;
-
-        for (int n = 0; n < numberOfTwinkles; n++)
+        for (int n = 0; n < _countOfTwinkles; n++)
         {
             // 모든 렌더러를 돌면서 깜빡임 효과를 적용
             foreach (SpriteRenderer renderer in spriteRenderers)
@@ -57,7 +54,7 @@ public class M_HurtState : MonsterState
             }
 
             // 반 지속 시간 동안 대기
-            yield return new WaitForSeconds(twinkleDuration);
+            yield return new WaitForSeconds(_twinkleDuration);
 
             // 모든 렌더러를 돌면서 원래 색상으로 복구
             foreach (SpriteRenderer renderer in spriteRenderers)
@@ -69,46 +66,7 @@ public class M_HurtState : MonsterState
             }
 
             // 반 지속 시간 동안 대기
-            yield return new WaitForSeconds(twinkleDuration);
-        }
-
-        // 효과가 끝난 후 추가 동작이 필요하면 여기에 코드를 추가
-    }
-
-    private IEnumerator TwinkleEffect2()
-    {
-        // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
-        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-
-        // 깜빡이는 효과를 몇 번 반복할지 결정
-        int numberOfTwinkles = 5;
-        // 깜빡이는 한 사이클의 지속 시간
-        float twinkleDuration = 0.1f;
-
-        // 원래 색상 저장
-        Color[] originalColors = new Color[spriteRenderers.Length];
-        for (int i = 0; i < spriteRenderers.Length; i++)
-            originalColors[i] = spriteRenderers[i].color;
-
-        for (int t = 0; t < numberOfTwinkles; t++)
-        {
-            // 모든 렌더러를 돌면서 흰색으로 변경
-            foreach (SpriteRenderer renderer in spriteRenderers)
-            {
-                renderer.color = Color.white;
-            }
-
-            // 반 지속 시간 동안 대기
-            yield return new WaitForSeconds(twinkleDuration);
-
-            // 모든 렌더러를 돌면서 원래 색상으로 복구
-            for (int i = 0; i < spriteRenderers.Length; i++)
-            {
-                spriteRenderers[i].color = originalColors[i];
-            }
-
-            // 반 지속 시간 동안 대기
-            yield return new WaitForSeconds(twinkleDuration);
+            yield return new WaitForSeconds(_twinkleDuration);
         }
 
         // 효과가 끝난 후 추가 동작이 필요하면 여기에 코드를 추가
