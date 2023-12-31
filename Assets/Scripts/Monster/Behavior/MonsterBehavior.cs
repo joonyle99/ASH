@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Animations;
 using UnityEngine;
 
 /// <summary>
@@ -9,6 +10,17 @@ public abstract class MonsterBehavior : MonoBehaviour
     #region Attribute
 
     [Header("Monster Behavior")]
+    [Space]
+
+    // State
+    [SerializeField] private Monster_StateBase _initialState;
+    [SerializeField] private Monster_StateBase _currentState;
+    public Monster_StateBase CurrentState
+    {
+        get { return _currentState; }
+        set { _currentState = value; }
+    }
+
     [Space]
 
     [SerializeField] private Rigidbody2D _rigidBody;
@@ -33,12 +45,37 @@ public abstract class MonsterBehavior : MonoBehaviour
         get { return _wayPointPatrol; }
     }
 
-    [SerializeField] private AttackEvaluator _attackEvaluator;
-    public AttackEvaluator AttackEvaluators
+    [SerializeField] private BasicAttackEvaluator _basicAttackEvaluator;
+    public BasicAttackEvaluator BasicAttackEvaluator
     {
-        get { return _attackEvaluator; }
+        get { return _basicAttackEvaluator; }
     }
 
+    [Space]
+
+    // 그 외 속성들
+    [SerializeField] private bool _isDead;
+    public bool IsDead
+    {
+        get => _isDead;
+        set => _isDead = value;
+    }
+
+    [SerializeField] private bool _isInAir;
+    public bool InAir
+    {
+        get => _isInAir;
+        protected set => _isInAir = value;
+    }
+
+    [SerializeField] private bool _isReturn;
+    public bool IsReturn
+    {
+        get => _isReturn;
+        protected set => _isReturn = value;
+    }
+
+    [Header("Monster Data")]
     [Space]
 
     // 고유 식별 번호 ID
@@ -81,32 +118,6 @@ public abstract class MonsterBehavior : MonoBehaviour
         protected set => _moveSpeed = value;
     }
 
-    [Space]
-
-    // 그 외 속성들
-    [SerializeField] private bool _isDead;
-    public bool IsDead
-    {
-        get => _isDead;
-        set => _isDead = value;
-    }
-
-    [SerializeField] private bool _isInAir;
-    public bool InAir
-    {
-        get => _isInAir;
-        protected set => _isInAir = value;
-    }
-
-    [SerializeField] private bool _isReturn;
-    public bool IsReturn
-    {
-        get => _isReturn;
-        protected set => _isReturn = value;
-    }
-
-    [Space]
-
     // 추가 프로퍼티
     [SerializeField] private MonsterDefine.SIZE _monsterSize;
     public MonsterDefine.SIZE MonsterSize // 몬스터 크기 구분
@@ -115,46 +126,11 @@ public abstract class MonsterBehavior : MonoBehaviour
         protected set => _monsterSize = value;
     }
 
-    [SerializeField] private MonsterDefine.TYPE _monsterType;
-    public MonsterDefine.TYPE MonsterType // 몬스터 종류
+    [SerializeField] private MonsterDefine.MONSTER_TYPE _monsterType;
+    public MonsterDefine.MONSTER_TYPE MonsterType // 몬스터 타입
     {
         get => _monsterType;
         protected set => _monsterType = value;
-    }
-
-    [SerializeField] private MonsterDefine.ACTION _actionType;
-    public MonsterDefine.ACTION ActionType // 몬스터 활동 종류
-    {
-        get => _actionType;
-        protected set => _actionType = value;
-    }
-
-    [SerializeField] private MonsterDefine.RESPONE _responseType;
-    public MonsterDefine.RESPONE ResponseType // 리젠 방식 구분
-    {
-        get => _responseType;
-        protected set => _responseType = value;
-    }
-
-    [SerializeField] private MonsterDefine.AGGRESSIVE _aggressiveType;
-    public MonsterDefine.AGGRESSIVE AggressiveType // 선공 여부
-    {
-        get => _aggressiveType;
-        protected set => _aggressiveType = value;
-    }
-
-    [SerializeField] private MonsterDefine.CHASE _chaseType;
-    public MonsterDefine.CHASE ChaseType // 추적 방식 구분
-    {
-        get => _chaseType;
-        protected set => _chaseType = value;
-    }
-
-    [SerializeField] private MonsterDefine.RUNAWAY _runawayType;
-    public MonsterDefine.RUNAWAY RunawayType // 도망 여부
-    {
-        get => _runawayType;
-        protected set => _runawayType = value;
     }
 
     [Header("FadeOut")]
@@ -179,7 +155,19 @@ public abstract class MonsterBehavior : MonoBehaviour
         _animator = GetComponent<Animator>();
 
         _wayPointPatrol = GetComponent<WayPointPatrol>();
-        _attackEvaluator = GetComponent<AttackEvaluator>();
+        _basicAttackEvaluator = GetComponent<BasicAttackEvaluator>();
+
+        // State 세팅
+        int initialPathHash = Animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
+        StateMachineBehaviour[] initialStates = Animator.GetBehaviours(initialPathHash, 0);
+
+        foreach (var initialState in initialStates)
+        {
+            if (initialState as Monster_StateBase)
+                _initialState = initialState as Monster_StateBase;
+        }
+
+        _currentState = _initialState;
     }
 
     protected virtual void Start()
@@ -199,7 +187,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         CheckDieState();
 
         // 공격 범위 안에 타겟이 들어오면
-        if (AttackEvaluators.IsTargetWithinAttackRange())
+        if (BasicAttackEvaluator.IsTargetWithinAttackRange())
         {
             var stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
 
@@ -232,21 +220,6 @@ public abstract class MonsterBehavior : MonoBehaviour
 
         // 몬스터의 크기 타입
         MonsterSize = _monsterData.MonsterSize;
-
-        // 몬스터의 활동 종류 타입
-        ActionType = _monsterData.ActionType;
-
-        // 몬스터의 리젠 타입
-        ResponseType = _monsterData.ResponseType;
-
-        // 몬스터의 선공 타입
-        AggressiveType = _monsterData.AggressiveType;
-
-        // 몬스터의 추적 타입
-        ChaseType = _monsterData.ChaseType;
-
-        // 몬스터의 도망 타입
-        RunawayType = _monsterData.RunawayType;
     }
 
     public virtual void KnockBack(Vector2 forceVector)

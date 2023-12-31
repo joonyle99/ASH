@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Way Point Patrol 기능 모듈
+/// Monster에 붙히는 용도로 사용
+/// 정해진 Way Point를 배회한다.
+/// </summary>
 public class WayPointPatrol : MonoBehaviour
 {
     [Header("WayPoint Patrol")]
@@ -29,7 +34,7 @@ public class WayPointPatrol : MonoBehaviour
         set { _isWaiting = value; }
     }
 
-    void Start()
+    void Awake()
     {
         for (int i = 0; i < _wayPointBox.childCount; ++i)
         {

@@ -1,9 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
-public class AttackEvaluator : MonoBehaviour
+/// <summary>
+/// Attack 기능 모듈
+/// Monster에 붙히는 용도로 사용
+/// </summary>
+public class BasicAttackEvaluator : MonoBehaviour
 {
-    [Header("Attack Evaluator")]
+    [Header("Basic Attack Evaluator")]
     [Space]
 
     [SerializeField] private LayerMask _targetLayer;
