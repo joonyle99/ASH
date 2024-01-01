@@ -27,7 +27,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         Dialogue dialogue = new Dialogue(data);
         //Disable Inputs
         if (data.InputSetter != null)
+        {
             InputManager.Instance.ChangeInputSetter(data.InputSetter);
+        }
 
         //Start Dialogue
         View.OpenPanel();
