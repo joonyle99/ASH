@@ -24,7 +24,7 @@ public class PlayerMovementController : MonoBehaviour
 
         Vector2 groundNormal = _player.GroundHit.normal;
         Vector2 moveDir;
-        if (_player.PlayerLookDir2D.x > 0f)
+        if (_player.RawInputs.Movement.x > 0f)
             moveDir = (-1) * Vector2.Perpendicular(groundNormal);
         else
             moveDir = Vector2.Perpendicular(groundNormal);

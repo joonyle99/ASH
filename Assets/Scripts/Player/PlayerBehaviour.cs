@@ -97,8 +97,8 @@ public class PlayerBehaviour : StateMachineBase
 
     // Direction Property
     public int RecentDir { get; set; }
-    public bool IsDirSync { get { return Mathf.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.01f; } }
-    public bool IsOppositeDirSync { get { return Mathf.Abs(PlayerLookDir2D.x + RawInputs.Horizontal) < 0.01f; } }
+    public bool IsDirSync { get { return Mathf.Abs(PlayerLookDir2D.x - RawInputs.Movement.x) < 0.01f; } }
+    public bool IsOppositeDirSync { get { return Mathf.Abs(PlayerLookDir2D.x + RawInputs.Movement.x) < 0.01f; } }
     public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
 
@@ -170,7 +170,7 @@ public class PlayerBehaviour : StateMachineBase
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
         Animator.SetFloat("GroundDistance", GroundDistance);
-        Animator.SetFloat("InputHorizontal", RawInputs.Horizontal);
+        Animator.SetFloat("InputHorizontal", RawInputs.Movement.x);
         Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
         Animator.SetBool("IsDirSync", IsDirSync);
 
@@ -214,7 +214,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         if (StateIs<RunState>() || StateIs<InAirState>() || MovementController.isActiveAndEnabled)
         {
-            if (!IsDirSync && Mathf.Abs(RawInputs.Horizontal) > 0.01f)
+            if (!IsDirSync && Mathf.Abs(RawInputs.Movement.x) > 0.01f)
             {
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
