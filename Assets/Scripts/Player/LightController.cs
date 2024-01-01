@@ -38,7 +38,7 @@ public class LightController : MonoBehaviour
             }
         }
 
-        InputState inputState = InputManager.Instance.GetState();
+        InputState inputState = InputManager.Instance.State;
 
         // Light Source ON / OFF
         if (Input.GetKeyDown(KeyCode.L))

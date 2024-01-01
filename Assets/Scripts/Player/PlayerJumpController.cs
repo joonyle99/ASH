@@ -62,6 +62,10 @@ public class PlayerJumpController : MonoBehaviour
 
     void Update()
     {
+        if (InputManager.Instance.State.JumpKey.KeyDown)
+        {
+            OnJumpPressed();
+        }
         _coyoteAvailable = (_timeAfterPlatformLeft <= _coyoteTime);
         _canJump = (_remainingJumpCount > 0 && _coyoteAvailable);
 
@@ -75,7 +79,7 @@ public class PlayerJumpController : MonoBehaviour
             _longJumpTime += Time.deltaTime;
 
             // 롱점프 시간이 지나거나 점프 버튼을 때면 롱점프는 종료된다.
-            if ((_longJumpTime >= _longJumpDuration) || !_player.RawInputs.IsPressingJump)
+            if ((_longJumpTime >= _longJumpDuration) || !InputManager.Instance.State.JumpKey.Pressing)
                 _isLongJumping = false;
         }
 
