@@ -7,7 +7,7 @@ public class Monster_StateBase : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         Monster = animator.GetComponent<MonsterBehavior>();
-        Monster.CurrentState = this;
+        Monster.UpdateState(this);
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -17,5 +17,6 @@ public class Monster_StateBase : StateMachineBehaviour
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+
     }
 }
