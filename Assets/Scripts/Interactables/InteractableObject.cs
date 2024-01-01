@@ -40,7 +40,7 @@ public abstract class InteractableObject : MonoBehaviour
     public bool IsInteractable { get { return _isInteractable; } protected set { _isInteractable = value; } }
     public bool IsInteracting { get; private set; }
 
-    protected bool IsInteractionKeyUp { get { return InputManager.Instance.InteractionKey.KeyUp; } }
+    protected bool IsInteractionKeyUp =>  InputManager.Instance.State.InteractionKey.KeyUp;
     protected bool IsPlayerStateChanged { get { return !Player.StateIs<InteractionState>(); } }
     protected abstract void OnInteract();
     public virtual void UpdateInteracting() { }

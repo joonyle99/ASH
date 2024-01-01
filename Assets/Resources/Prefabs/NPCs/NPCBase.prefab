@@ -100,7 +100,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactionMarkerPoint: {fileID: 5562433878957099126}
-  _interactable: 0
+  _isInteractable: 1
+  _animationType: 0
+  _stateChange: 1
   _data: {fileID: 11400000, guid: 7ac6ea4e0636e904ca4913861b10c868, type: 2}
 --- !u!1 &5562433878957099125
 GameObject:
@@ -144,7 +146,7 @@ GameObject:
   - component: {fileID: 5562433879305355062}
   - component: {fileID: 5562433879305355063}
   - component: {fileID: 4778974427087567412}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: InteractableZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -204,3 +206,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9192b4ea5acf7241b68c579c1caae69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interactableObject: {fileID: 0}

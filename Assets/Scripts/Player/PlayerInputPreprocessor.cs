@@ -20,7 +20,7 @@ public class PlayerInputPreprocessor : MonoBehaviour
 
     void Update()
     {
-        InputState inputs = InputManager.Instance.GetState();
+        InputState inputs = InputManager.Instance.State;
 
         float adaptSpeed = _player.IsGrounded ? _inputAdaptSpeed : _inputAdaptSpeedInAir;
         if (_player.Rigidbody.velocity.x * inputs.Movement.x < 0) //현재 속도와 입력 방향이 반대일 때 반응속도 증폭
