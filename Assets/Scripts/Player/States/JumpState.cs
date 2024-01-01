@@ -11,9 +11,9 @@ public class JumpState : PlayerState
         Player.Animator.SetBool("IsJump", true);
 
         // Wall Jump
-        if (Player.PreviousState is WallState && Player.RawInputs.IsPressingJump) _jumpController.ExecuteWallJump();
+        if (Player.PreviousState is WallState && InputManager.Instance.State.JumpKey.Pressing) _jumpController.ExecuteWallJump();
         // End Wall Jump
-        else if (Player.PreviousState is WallState && !Player.RawInputs.IsPressingJump) _jumpController.ExcuteEndWallJump();
+        else if (Player.PreviousState is WallState && !InputManager.Instance.State.JumpKey.Pressing) _jumpController.ExcuteEndWallJump();
         // Jump
         else _jumpController.ExcuteBasicJump();
     }

@@ -11,7 +11,6 @@ public class MoveStraightInputSetter : InputSetterScriptableObject
     public override InputState GetState()
     {
         InputState state = new InputState();
-        state.IsPressingJump = false;
         state.Movement = new Vector2(_direction == Direction.Left ? -1 : 1, 0);
         return state;
     }

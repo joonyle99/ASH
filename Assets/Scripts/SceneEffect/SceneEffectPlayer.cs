@@ -15,15 +15,19 @@ public class SceneEffectPlayer : MonoBehaviour, ITriggerListener
     {
         if (activator.Type != ActivatorType.Player)
             return;
+        PlayEnterSequence();
+    }
+    public void OnExitReported(TriggerActivator activator, TriggerReporter reporter) { }
+    public void OnStayReported(TriggerActivator activator, TriggerReporter reporter) { }
+
+    public void PlayEnterSequence()
+    {
         if (_playEnterEffectOnce && _enterEffectPlayed)
             return;
 
         _enterEffectPlayed = true;
         StartCoroutine(PlaySequenceCoroutine(_enterSequence));
     }
-    public void OnExitReported(TriggerActivator activator, TriggerReporter reporter) { }
-    public void OnStayReported(TriggerActivator activator, TriggerReporter reporter) { }
-
     IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
     {
         for(int i=0; i<sequence.Count; i++)

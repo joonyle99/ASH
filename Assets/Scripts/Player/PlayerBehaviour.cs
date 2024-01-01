@@ -87,7 +87,7 @@ public class PlayerBehaviour : StateMachineBase
     public float SlopeThreshold { get { return _slopeThreshold; } }
 
     // Input Property
-    public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
+    public InputState RawInputs { get { return InputManager.Instance.State; } }
     public bool IsMoveXKey { get { return Math.Abs(RawInputs.Movement.x) > 0.01f; } }
     public bool IsMoveRightKey { get { return RawInputs.Movement.x > 0.01f; } }
     public bool IsMoveLeftKey { get { return RawInputs.Movement.x < -0.01f; } }
@@ -137,15 +137,6 @@ public class PlayerBehaviour : StateMachineBase
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
     }
 
-    private void OnDestroy()
-    {
-        if (InputManager.Instance != null)
-        {
-            InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
-            InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
-            // InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
-        }
-    }
 
     protected override void Start()
     {
@@ -154,16 +145,18 @@ public class PlayerBehaviour : StateMachineBase
         // 배경 BGM 출력
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
 
-        InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
-        InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
-        // InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
-
         CurHp = _maxHp;
     }
 
     protected override void Update()
     {
         base.Update();
+
+
+        if (InputManager.Instance.State.BasicAttackKey.KeyDown)
+            OnBasicAttackPressed();
+        if (InputManager.Instance.State.ShootingAttackKey.KeyDown)
+            OnShootingAttackPressed();
 
         #region Animaotr Parameter
 
