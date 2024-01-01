@@ -6,7 +6,6 @@ public struct InputState
 {
     public bool IsPressingJump;
     public Vector2 Movement;
-    public float Horizontal;
     public float Vertical;
 }
 

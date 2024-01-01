@@ -25,21 +25,17 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             state.Movement.x -= 1;
-            state.Horizontal -= 1;
         }
         if (Input.GetKey(KeyCode.RightArrow))
         {
             state.Movement.x += 1;
-            state.Horizontal += 1;
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            state.Movement.y += 1;
             state.Vertical += 1;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            state.Movement.y -= 1;
             state.Vertical -= 1;
         }
 
