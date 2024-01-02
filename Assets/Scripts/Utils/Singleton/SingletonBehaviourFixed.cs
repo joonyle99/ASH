@@ -20,7 +20,11 @@ namespace HappyTools
                     instance = (T)FindObjectOfType(typeof(T));
 
                     if (instance == null)
-                        Debug.LogWarning("No object of " + typeof(T).Name + " is no found");
+                    {
+                        Debug.LogWarning("No object of " + typeof(T).Name + " is not found, therefore created");
+                        var go = new GameObject(typeof(T).Name);
+                        instance = go.AddComponent<T>();
+                    }
                 }
                 return instance;
             }

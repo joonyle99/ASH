@@ -142,7 +142,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Start();
 
-        // 배경 BGM 출력
+        // 배경 BGM 출력 (옮겨야함)
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
 
         CurHp = _maxHp;
