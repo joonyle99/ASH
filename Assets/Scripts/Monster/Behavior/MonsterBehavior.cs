@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Animations;
 using UnityEngine;
 
 /// <summary>
@@ -8,153 +9,105 @@ public abstract class MonsterBehavior : MonoBehaviour
 {
     #region Attribute
 
-    [Header("Monster Behavior")]
+    [Header("State")]
     [Space]
 
-    [SerializeField] private Rigidbody2D _rigidBody;
-    public Rigidbody2D RigidBody
-    {
-        get { return _rigidBody; }
-    }
+    // State
+    [SerializeField] private Monster_StateBase _initialState;
+    [SerializeField] private Monster_StateBase _currentState;
+    [SerializeField] private Monster_StateBase _previousState;
 
-    [SerializeField] private Animator _animator;
-    public Animator Animator
-    {
-        get { return _animator; }
-    }
-
+    [Header("Module")]
     [Space]
-
-    [SerializeField] private MonsterData _monsterData;
-
     [SerializeField] private WayPointPatrol _wayPointPatrol;
     public WayPointPatrol WayPointPatrol
     {
         get { return _wayPointPatrol; }
     }
-
+    [SerializeField] private NavMeshMove _navMeshMove;
+    public NavMeshMove NavMeshMove
+    {
+        get { return _navMeshMove; }
+    }
+    [SerializeField] private PatrolEvaluator _patrolEvaluator;
+    public PatrolEvaluator PatrolEvaluator
+    {
+        get { return _patrolEvaluator; }
+    }
+    [SerializeField] private ChaseEvaluator _chaseEvaluator;
+    public ChaseEvaluator ChaseEvaluator
+    {
+        get { return _chaseEvaluator; }
+    }
     [SerializeField] private AttackEvaluator _attackEvaluator;
-    public AttackEvaluator AttackEvaluators
+    public AttackEvaluator AttackEvaluator
     {
         get { return _attackEvaluator; }
     }
 
+    [Header("Condition")]
     [Space]
 
-    // 고유 식별 번호 ID
-    [SerializeField] private int _id;
-    public int ID
-    {
-        get => _id;
-        protected set => _id = value;
-    }
-
-    // 몬스터 이름
-    [SerializeField] private string _monsterName;
-    public string MonsterName
-    {
-        get => _monsterName;
-        protected set => _monsterName = value;
-    }
-
-    // 최대 체력
-    [SerializeField] private int _maxHp;
-    public int MaxHp
-    {
-        get => _maxHp;
-        protected set => _maxHp = value;
-    }
-
-    // 현재 체력
-    [SerializeField] private int _curHp;
-    public int CurHp
-    {
-        get => _curHp;
-        set => _curHp = value;
-    }
-
-    // 이동속도
-    [SerializeField] private float _moveSpeed;
-    public float MoveSpeed
-    {
-        get => _moveSpeed;
-        protected set => _moveSpeed = value;
-    }
-
-    [Space]
-
-    // 그 외 속성들
+    // 상태
     [SerializeField] private bool _isDead;
     public bool IsDead
     {
         get => _isDead;
         set => _isDead = value;
     }
-
-    [SerializeField] private bool _isInAir;
-    public bool InAir
+    [SerializeField] private bool _isGodMode;
+    public bool IsGodMode
     {
-        get => _isInAir;
-        protected set => _isInAir = value;
+        get => _isGodMode;
+        set => _isGodMode = value;
     }
 
-    [SerializeField] private bool _isReturn;
-    public bool IsReturn
-    {
-        get => _isReturn;
-        protected set => _isReturn = value;
-    }
-
+    [Header("Data")]
     [Space]
 
-    // 추가 프로퍼티
+    [SerializeField] private MonsterData _monsterData;
+
+    [SerializeField] private int _id;
+    public int ID
+    {
+        get => _id;
+        protected set => _id = value;
+    }
+    [SerializeField] private string _monsterName;
+    public string MonsterName
+    {
+        get => _monsterName;
+        protected set => _monsterName = value;
+    }
+    [SerializeField] private int _maxHp;
+    public int MaxHp
+    {
+        get => _maxHp;
+        protected set => _maxHp = value;
+    }
+    [SerializeField] private int _curHp;
+    public int CurHp
+    {
+        get => _curHp;
+        set => _curHp = value;
+    }
+    [SerializeField] private float _moveSpeed;
+    public float MoveSpeed
+    {
+        get => _moveSpeed;
+        protected set => _moveSpeed = value;
+    }
     [SerializeField] private MonsterDefine.SIZE _monsterSize;
     public MonsterDefine.SIZE MonsterSize // 몬스터 크기 구분
     {
         get => _monsterSize;
         protected set => _monsterSize = value;
     }
-
-    [SerializeField] private MonsterDefine.TYPE _monsterType;
-    public MonsterDefine.TYPE MonsterType // 몬스터 종류
+    [SerializeField] private MonsterDefine.MONSTER_TYPE _monsterType;
+    public MonsterDefine.MONSTER_TYPE MonsterType // 몬스터 타입
     {
         get => _monsterType;
         protected set => _monsterType = value;
-    }
-
-    [SerializeField] private MonsterDefine.ACTION _actionType;
-    public MonsterDefine.ACTION ActionType // 몬스터 활동 종류
-    {
-        get => _actionType;
-        protected set => _actionType = value;
-    }
-
-    [SerializeField] private MonsterDefine.RESPONE _responseType;
-    public MonsterDefine.RESPONE ResponseType // 리젠 방식 구분
-    {
-        get => _responseType;
-        protected set => _responseType = value;
-    }
-
-    [SerializeField] private MonsterDefine.AGGRESSIVE _aggressiveType;
-    public MonsterDefine.AGGRESSIVE AggressiveType // 선공 여부
-    {
-        get => _aggressiveType;
-        protected set => _aggressiveType = value;
-    }
-
-    [SerializeField] private MonsterDefine.CHASE _chaseType;
-    public MonsterDefine.CHASE ChaseType // 추적 방식 구분
-    {
-        get => _chaseType;
-        protected set => _chaseType = value;
-    }
-
-    [SerializeField] private MonsterDefine.RUNAWAY _runawayType;
-    public MonsterDefine.RUNAWAY RunawayType // 도망 여부
-    {
-        get => _runawayType;
-        protected set => _runawayType = value;
     }
 
     [Header("FadeOut")]
@@ -169,26 +122,32 @@ public abstract class MonsterBehavior : MonoBehaviour
     [SerializeField] private int _countOfBlink = 5;
     [SerializeField] private float _blinkDuration = 0.1f;
 
+    public Rigidbody2D RigidBody { get; private set; }
+    public Animator Animator { get; private set; }
+
     #endregion
 
     #region Function
 
     protected virtual void Awake()
     {
-        _rigidBody = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
+        RigidBody = GetComponent<Rigidbody2D>();
+        Animator = GetComponent<Animator>();
 
         _wayPointPatrol = GetComponent<WayPointPatrol>();
+        _navMeshMove = GetComponent<NavMeshMove>();
+        _patrolEvaluator = GetComponent<PatrolEvaluator>();
+        _chaseEvaluator = GetComponent<ChaseEvaluator>();
         _attackEvaluator = GetComponent<AttackEvaluator>();
+
+        // State 세팅
+        InitState();
     }
 
     protected virtual void Start()
     {
         // 몬스터 속성 설정
         SetUp();
-
-        // 박쥐의 체력 초기화
-        CurHp = MaxHp;
     }
 
     protected virtual void Update()
@@ -196,16 +155,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         if (IsDead)
             return;
 
-        CheckDieState();
-
-        // 공격 범위 안에 타겟이 들어오면
-        if (AttackEvaluators.IsTargetWithinAttackRange())
-        {
-            var stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
-
-            if (stateInfo.IsName("Idle") || stateInfo.IsName("Move"))
-                Animator.SetTrigger("Attack");
-        }
+        CheckDie();
     }
 
     protected virtual void FixedUpdate()
@@ -226,27 +176,13 @@ public abstract class MonsterBehavior : MonoBehaviour
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
+        CurHp = MaxHp;
 
         // 몬스터의 이동속도 설정
         MoveSpeed = _monsterData.MoveSpeed;
 
         // 몬스터의 크기 타입
         MonsterSize = _monsterData.MonsterSize;
-
-        // 몬스터의 활동 종류 타입
-        ActionType = _monsterData.ActionType;
-
-        // 몬스터의 리젠 타입
-        ResponseType = _monsterData.ResponseType;
-
-        // 몬스터의 선공 타입
-        AggressiveType = _monsterData.AggressiveType;
-
-        // 몬스터의 추적 타입
-        ChaseType = _monsterData.ChaseType;
-
-        // 몬스터의 도망 타입
-        RunawayType = _monsterData.RunawayType;
     }
 
     public virtual void KnockBack(Vector2 forceVector)
@@ -259,6 +195,11 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         if (IsDead)
             return;
+
+        if (IsGodMode)
+            return;
+
+        Debug.Log("Monster OnHit");
 
         CurHp -= damage;
         KnockBack(forceVector);
@@ -287,44 +228,9 @@ public abstract class MonsterBehavior : MonoBehaviour
             hitBox.SetActive(false);
 
         // 사라지기 시작
-        StartCoroutine(FadeOutDestroy());
+        StartDestroy();
     }
 
-    private IEnumerator FadeOutDestroy()
-    {
-        // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
-        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
-
-        // 초기 알파값 저장
-        float[] startAlphaArray = new float[spriteRenderers.Length];
-        for (int i = 0; i < spriteRenderers.Length; i++)
-            startAlphaArray[i] = spriteRenderers[i].color.a;
-
-        // 모든 렌더 컴포넌트를 돌면서 Fade Out
-        while (_elapsedFadeOutTime < _targetFadeOutTime)
-        {
-            _elapsedFadeOutTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
-
-            for (int i = 0; i < spriteRenderers.Length; i++)
-            {
-                // 현재 스프라이트 렌더러의 알파값을 변경
-                Color targetColor = spriteRenderers[i].color;
-                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
-                spriteRenderers[i].color = targetColor;
-            }
-
-            yield return null;
-        }
-
-        // 오브젝트 삭제
-        if (transform.root)
-            Destroy(transform.root.gameObject);
-        else
-            Destroy(gameObject);
-
-        yield return null;
-    }
 
     private IEnumerator AlphaBlink()
     {
@@ -363,13 +269,88 @@ public abstract class MonsterBehavior : MonoBehaviour
         StartCoroutine(AlphaBlink());
     }
 
-    private void CheckDieState()
+
+    private IEnumerator FadeOutDestroy()
+    {
+        // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        // 초기 알파값 저장
+        float[] startAlphaArray = new float[spriteRenderers.Length];
+        for (int i = 0; i < spriteRenderers.Length; i++)
+            startAlphaArray[i] = spriteRenderers[i].color.a;
+
+        // 모든 렌더 컴포넌트를 돌면서 Fade Out
+        while (_elapsedFadeOutTime < _targetFadeOutTime)
+        {
+            _elapsedFadeOutTime += Time.deltaTime;
+            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
+
+            for (int i = 0; i < spriteRenderers.Length; i++)
+            {
+                // 현재 스프라이트 렌더러의 알파값을 변경
+                Color targetColor = spriteRenderers[i].color;
+                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
+                spriteRenderers[i].color = targetColor;
+            }
+
+            yield return null;
+        }
+
+        // 오브젝트 삭제
+        if (transform.root)
+            Destroy(transform.root.gameObject);
+        else
+            Destroy(gameObject);
+
+        yield return null;
+    }
+
+    public void StartDestroy()
+    {
+        StartCoroutine(FadeOutDestroy());
+    }
+
+    private void CheckDie()
     {
         if (CurHp <= 0)
         {
             CurHp = 0;
             Animator.SetTrigger("Die");
         }
+    }
+
+
+    private void InitState()
+    {
+        // Entry State의 정보 가져오기
+        int initialPathHash = Animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
+        StateMachineBehaviour[] initialStates = Animator.GetBehaviours(initialPathHash, 0);
+        foreach (var initialState in initialStates)
+        {
+            if (initialState as Monster_StateBase)
+                _initialState = initialState as Monster_StateBase;
+        }
+
+        // Animation State 정보 초기화
+        _currentState = _initialState;
+        _previousState = _initialState;
+    }
+
+    public void UpdateState(Monster_StateBase state)
+    {
+        _previousState = _currentState;
+        _currentState = state;
+    }
+
+    public bool CurrentStateIs<State>() where State : Monster_StateBase
+    {
+        return _currentState is State;
+    }
+
+    public bool PreviousStateIs<State>() where State : Monster_StateBase
+    {
+        return _previousState is State;
     }
 
     #endregion
