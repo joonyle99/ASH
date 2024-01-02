@@ -64,6 +64,9 @@ public class DashState : PlayerState
         _isDashing = true;
         Player.CanDash = false;
 
+        // 대쉬 동안 무적
+        Player.IsGodMode = true;
+
         // 중력 0으로 설정
         Player.Rigidbody.gravityScale = 0f;
     }
@@ -72,6 +75,9 @@ public class DashState : PlayerState
     {
         // 대쉬 종료 시 속성 설정
         _isDashing = false;
+
+        // 무적 종료
+        Player.IsGodMode = false;
 
         // 기존 중력으로 되돌리기
         Player.Rigidbody.gravityScale = _orginGravity;
