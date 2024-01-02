@@ -2,12 +2,12 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Basic Attack 모듈
+/// Attack 모듈
 /// Monster에 붙히는 용도로 사용
 /// </summary>
-public class BasicAttackEvaluator : MonoBehaviour
+public class AttackEvaluator : MonoBehaviour
 {
-    [Header("Basic Attack Evaluator")]
+    [Header("Attack Evaluator")]
     [Space]
 
     [SerializeField] private LayerMask _targetLayer;
@@ -21,12 +21,12 @@ public class BasicAttackEvaluator : MonoBehaviour
             return false;
 
         // 탐지 범위 안에 들어왔는지 확인
-        Collider2D playerCollider = Physics2D.OverlapBox(transform.position, _attackBoxSize, 0f, _targetLayer);
-        if (playerCollider != null)
+        Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _attackBoxSize, 0f, _targetLayer);
+        if (targetCollider != null)
         {
             // 플레이어인지 확인
-            PlayerBehaviour player = playerCollider.GetComponent<PlayerBehaviour>();
-            if (!player.IsDead)
+            PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
+            if (player != null && !player.IsDead)
                 return true;
         }
 

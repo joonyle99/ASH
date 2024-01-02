@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Floating Patrol 모듈
-/// Monster에 붙히는 용도로 사용
+/// WayPoint Patrol 모듈
+/// Monster에 붙혀서 사용
 /// Way Point를 방문한다.
 /// </summary>
-public class FloatingPatrol : MonoBehaviour
+public class WayPointPatrol : MonoBehaviour
 {
-    [Header("Floating Patrol")]
+    [Header("WayPoint Patrol")]
     [Space]
 
     [SerializeField] private Transform _wayPointBox;

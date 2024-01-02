@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 /// <summary>
@@ -29,6 +30,19 @@ public class Bat : NormalMonster
     protected override void Update()
     {
         base.Update();
+
+        if (IsDead)
+            return;
+
+        // Change to Attack State
+        if (AttackEvaluator.IsTargetWithinAttackRange())
+        {
+            if (CurrentStateIs<PatrolState>() || CurrentStateIs<ChaseState>())
+            {
+                Animator.SetTrigger("Attack");
+                return;
+            }
+        }
     }
 
     protected override void SetUp()

@@ -19,21 +19,30 @@ public abstract class MonsterBehavior : MonoBehaviour
 
     [Header("Module")]
     [Space]
-
-    [SerializeField] private FloatingPatrol _floatingPatrol;
-    public FloatingPatrol FloatingPatrol
+    [SerializeField] private WayPointPatrol _wayPointPatrol;
+    public WayPointPatrol WayPointPatrol
     {
-        get { return _floatingPatrol; }
+        get { return _wayPointPatrol; }
     }
-    [SerializeField] private GroundPatrol _groundPatrol;
-    public GroundPatrol GroundPatrol
+    [SerializeField] private NavMeshMove _navMeshMove;
+    public NavMeshMove NavMeshMove
     {
-        get { return _groundPatrol; }
+        get { return _navMeshMove; }
     }
-    [SerializeField] private BasicAttackEvaluator _basicAttackEvaluator;
-    public BasicAttackEvaluator BasicAttackEvaluator
+    [SerializeField] private PatrolEvaluator _patrolEvaluator;
+    public PatrolEvaluator PatrolEvaluator
     {
-        get { return _basicAttackEvaluator; }
+        get { return _patrolEvaluator; }
+    }
+    [SerializeField] private ChaseEvaluator _chaseEvaluator;
+    public ChaseEvaluator ChaseEvaluator
+    {
+        get { return _chaseEvaluator; }
+    }
+    [SerializeField] private AttackEvaluator _attackEvaluator;
+    public AttackEvaluator AttackEvaluator
+    {
+        get { return _attackEvaluator; }
     }
 
     [Header("Condition")]
@@ -45,6 +54,12 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         get => _isDead;
         set => _isDead = value;
+    }
+    [SerializeField] private bool _isGodMode;
+    public bool IsGodMode
+    {
+        get => _isGodMode;
+        set => _isGodMode = value;
     }
 
     [Header("Data")]
@@ -119,8 +134,11 @@ public abstract class MonsterBehavior : MonoBehaviour
         RigidBody = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
 
-        _floatingPatrol = GetComponent<FloatingPatrol>();
-        _basicAttackEvaluator = GetComponent<BasicAttackEvaluator>();
+        _wayPointPatrol = GetComponent<WayPointPatrol>();
+        _navMeshMove = GetComponent<NavMeshMove>();
+        _patrolEvaluator = GetComponent<PatrolEvaluator>();
+        _chaseEvaluator = GetComponent<ChaseEvaluator>();
+        _attackEvaluator = GetComponent<AttackEvaluator>();
 
         // State 세팅
         InitState();
@@ -130,9 +148,6 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         // 몬스터 속성 설정
         SetUp();
-
-        // 박쥐의 체력 초기화
-        CurHp = MaxHp;
     }
 
     protected virtual void Update()
@@ -140,20 +155,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         if (IsDead)
             return;
 
-        CheckDieState();
-
-        // 공격 범위 안에 타겟이 들어오면
-        if (BasicAttackEvaluator.IsTargetWithinAttackRange())
-        {
-            if(CurrentStateIs<Monster_IdleState>() || CurrentStateIs<Monster_MoveState>())
-                Animator.SetTrigger("Attack");
-
-            /*
-            var stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
-            if (stateInfo.IsName("Idle") || stateInfo.IsName("Move"))
-                Animator.SetTrigger("Attack");
-            */
-        }
+        CheckDie();
     }
 
     protected virtual void FixedUpdate()
@@ -174,6 +176,7 @@ public abstract class MonsterBehavior : MonoBehaviour
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
+        CurHp = MaxHp;
 
         // 몬스터의 이동속도 설정
         MoveSpeed = _monsterData.MoveSpeed;
@@ -192,6 +195,11 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         if (IsDead)
             return;
+
+        if (IsGodMode)
+            return;
+
+        Debug.Log("Monster OnHit");
 
         CurHp -= damage;
         KnockBack(forceVector);
@@ -220,8 +228,9 @@ public abstract class MonsterBehavior : MonoBehaviour
             hitBox.SetActive(false);
 
         // 사라지기 시작
-        StartCoroutine(FadeOutDestroy());
+        StartDestroy();
     }
+
 
     private IEnumerator AlphaBlink()
     {
@@ -260,6 +269,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         StartCoroutine(AlphaBlink());
     }
 
+
     private IEnumerator FadeOutDestroy()
     {
         // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
@@ -296,7 +306,12 @@ public abstract class MonsterBehavior : MonoBehaviour
         yield return null;
     }
 
-    private void CheckDieState()
+    public void StartDestroy()
+    {
+        StartCoroutine(FadeOutDestroy());
+    }
+
+    private void CheckDie()
     {
         if (CurHp <= 0)
         {
@@ -304,6 +319,7 @@ public abstract class MonsterBehavior : MonoBehaviour
             Animator.SetTrigger("Die");
         }
     }
+
 
     private void InitState()
     {

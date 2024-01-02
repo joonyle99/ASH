@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 몬스터의 공통 MoveState
 /// </summary>
-public class Monster_MoveState : Monster_StateBase
+public class ChaseState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -14,25 +14,16 @@ public class Monster_MoveState : Monster_StateBase
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        /*
-        // 도착
-        if (Monster.WayPointPatrol.IsArrived())
+        // Not Found
+        if (!Monster.ChaseEvaluator.IsTargetWithinChaseRange())
         {
-            Monster.RigidBody.velocity = Vector2.zero;
-
-            // 다음 목표 지점으로
-            Monster.WayPointPatrol.ChangeWayPoint();
-            Monster.WayPointPatrol.StartWaitingTimer();
-
-            animator.SetTrigger("Idle");
+            animator.SetTrigger("Patrol");
+            return;
         }
-        // 이동
-        else
-        {
-            Monster.WayPointPatrol.SetMoveDir();
-            Monster.RigidBody.velocity = Monster.WayPointPatrol.MoveDir * Monster.MoveSpeed;
-        }
-        */
+
+        // Move to Target
+        Monster.NavMeshMove.SetDestination(Monster.ChaseEvaluator.TargetTrans);
+        Monster.NavMeshMove.MoveToTarget();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
