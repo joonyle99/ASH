@@ -9,15 +9,15 @@ public class PlayerAttackController : MonoBehaviour
     [Header("Attack Setting")]
     [Space]
 
-    [SerializeField] private LayerMask _layerMask;
+    [SerializeField] private LayerMask _targetLayerMask;
     [SerializeField] private Transform _attackHitBoxTrans;
     [SerializeField] private float _hitBoxRadius;
 
     [Space]
 
     [SerializeField] private int _attackDamage = 20;
-    [SerializeField] private float _attackPowerX;
-    [SerializeField] private float _attackPowerY;
+    [SerializeField] private float _attackPowerX = 7f;
+    [SerializeField] private float _attackPowerY = 10f;
 
     [Space]
 
@@ -61,25 +61,25 @@ public class PlayerAttackController : MonoBehaviour
 
     public void AttackProcess()
     {
-        Debug.Log("Attack Process");
-
         _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
-        RaycastHit2D rayHit = Physics2D.CircleCast(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero, 0f, _layerMask);
+        RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero, 0f, _targetLayerMask);
 
-        // check invalid
-        if (!rayHit) return;
-        MonsterBodyHit monsterBodyHit = rayHit.collider.GetComponent<MonsterBodyHit>();
-        if (!monsterBodyHit) return;
-        MonsterBehavior monsterBehavior = rayHit.collider.GetComponentInParent<MonsterBehavior>();
-        if (!monsterBehavior) return;
+        foreach (var rayCastHit in rayCastHits)
+        {
+            // check invalid
+            MonsterBodyHit monsterBodyHit = rayCastHit.collider.GetComponent<MonsterBodyHit>();
+            if (!monsterBodyHit) return;
+            MonsterBehavior monsterBehavior = rayCastHit.collider.GetComponentInParent<MonsterBehavior>();
+            if (!monsterBehavior) return;
 
-        // set forceVector
-        Transform monsterTrans = rayHit.collider.transform;
-        float dir = Mathf.Sign(monsterTrans.position.x - transform.position.x);
-        Vector2 forceVector = new Vector2(_attackPowerX * dir, _attackPowerY);
+            // set forceVector
+            Transform monsterTrans = rayCastHit.collider.transform;
+            float dir = Mathf.Sign(monsterTrans.position.x - transform.position.x);
+            Vector2 forceVector = new Vector2(_attackPowerX * dir, _attackPowerY);
 
-        // OnHit() message to monsterBehavior
-        monsterBehavior.OnHit(_attackDamage, forceVector);
+            // OnHit() message to monsterBehavior
+            monsterBehavior.OnHit(_attackDamage, forceVector);
+        }
     }
 
     public void CastShootingAttack()
