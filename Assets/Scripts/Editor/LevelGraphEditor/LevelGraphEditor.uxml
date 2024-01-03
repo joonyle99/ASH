@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <uie:Toolbar>
         <uie:ObjectField label="Level Graph Asset" name="LevelGraphAsset" allow-scene-objects="false" type="LevelGraph.LevelGraphData, Assembly-CSharp" />
+        <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveButton" />
     </uie:Toolbar>
     <CustomEditors.SplitView fixed-pane-initial-dimension="250">
         <ui:VisualElement name="NodeInspector" style="min-width: 250px; width: auto;" />

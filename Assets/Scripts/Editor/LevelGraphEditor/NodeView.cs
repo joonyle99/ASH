@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 using System.Drawing.Printing;
 using UnityEditor.UIElements;
 using Unity.VisualScripting;
+using static UnityEngine.RectTransform;
 
 namespace LevelGraph
 {
@@ -39,10 +40,13 @@ namespace LevelGraph
         public SceneData Data { get; private set; }
 
         public List<PortData> PortDatas = new List<PortData>();
-        
-        public NodeView(SceneData data)
+
+        LevelGraphData _graphData;
+        public NodeView(SceneData data, LevelGraphData graphData)
         {
             Data = data;
+            _graphData = graphData;
+
             if (data == null)
                 return;
 
@@ -64,6 +68,24 @@ namespace LevelGraph
             {
                 for(int i=0; i<PortDatas.Count; i++)
                 {
+                    if (PortDatas[i].PassageName != Data.PassageNames[i])
+                    {
+                        for(int j=0; j<_graphData.Edges.Count; j++)
+                        {
+                            if (_graphData.Edges[j].EntranceScene == Data && _graphData.Edges[j].EntrancePassage == PortDatas[i].PassageName)
+                            {
+                                var edge = _graphData.Edges[j];
+                                edge.EntrancePassage = Data.PassageNames[i];
+                                _graphData.Edges[j] = edge;
+                            }
+                            if (_graphData.Edges[j].ExitScene == Data && _graphData.Edges[j].ExitPassgage == PortDatas[i].PassageName)
+                            {
+                                var edge = _graphData.Edges[j];
+                                edge.ExitPassgage = Data.PassageNames[i];
+                                _graphData.Edges[j] = edge;
+                            }
+                        }
+                    }
                     PortDatas[i].PassageName = Data.PassageNames[i];
                 }
             }

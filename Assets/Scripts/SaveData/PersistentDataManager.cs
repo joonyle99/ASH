@@ -64,7 +64,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     }
     public static bool Has<T>(string groupName, string key) where T : new()
     {
-        return Instance._dataGroups[groupName].ContainsKey(key);
+        return Instance._dataGroups.ContainsKey(groupName) && Instance._dataGroups[groupName].ContainsKey(key);
     }
     public static T Get<T>(string key) where T : new()
     {

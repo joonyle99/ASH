@@ -2,11 +2,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
-using Unity.VisualScripting;
-using System.Drawing.Printing;
-using Com.LuisPedroFonseca.ProCamera2D;
-using System.ComponentModel;
-using System;
 
 namespace LevelGraph
 {
@@ -14,6 +9,7 @@ namespace LevelGraph
     {
         LevelGraphView _levelGraphView;
         ObjectField _levelGraphAssetField;
+        Button _saveButton;
 
         [MenuItem("Window/Level Graph Editor")]
         public static void ShowWindow()
@@ -34,6 +30,14 @@ namespace LevelGraph
 
             _levelGraphAssetField = rootVisualElement.Query<ObjectField>(name: "LevelGraphAsset");
             _levelGraphAssetField.RegisterValueChangedCallback(OnLevelGraphAssetChanged);
+
+            _saveButton = rootVisualElement.Query<Button>(name: "SaveButton");
+            _saveButton.clickable.clicked += OnSaveButtonClicked;
+        }
+
+        void OnSaveButtonClicked()
+        {
+            AssetDatabase.SaveAssets();
         }
 
         private void OnLevelGraphAssetChanged(ChangeEvent<UnityEngine.Object> evt)
