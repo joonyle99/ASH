@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase
 {
+    #region Attribute
+
     [Header("Ground Check")]
     [Space]
 
@@ -31,7 +34,7 @@ public class PlayerBehaviour : StateMachineBase
 
     [SerializeField] int _maxHp;
     [SerializeField] int _curHp;
-    [SerializeField] bool _isHurtable = true;
+    [SerializeField] bool _isHurt;
     [SerializeField] bool _isDead;
     [SerializeField] bool _isGodMode;
     [SerializeField] bool _isCanDash = true;
@@ -49,6 +52,22 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
     [SerializeField] Rigidbody2D _hand;
 
+    [Header("Blink / God Mode")]
+    [Space]
+
+    [SerializeField] Material _whiteMaterial;
+    [SerializeField] float _godModeTime = 1.5f;
+    [SerializeField] float _blinkDuration = 0.1f;
+    SpriteRenderer[] _spriteRenderers;
+    Material[] _originalMaterials;
+    Coroutine _blinkRoutine;
+
+    [Header("FadeOut")]
+    [Space]
+
+    [SerializeField] float _targetFadeOutTime = 3f;
+    [SerializeField] float _elapsedFadeOutTime = 0f;
+
     // Controller
     PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
@@ -61,8 +80,7 @@ public class PlayerBehaviour : StateMachineBase
     // Sound List
     SoundList _soundList;
 
-    // Padding Vector
-    readonly Vector3 _paddingVec = new Vector3(0.1f, 0f, 0f);
+    #endregion
 
     #region Properties
 
@@ -76,7 +94,7 @@ public class PlayerBehaviour : StateMachineBase
     public bool IsTouchedWall { get { return WallHit; } }
     public bool IsWallJump { get; set; }
     public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
-    public bool IsHurtable { get { return _isHurtable; } set { _isHurtable = value; } }
+    public bool IsHurt { get { return _isHurt; } set { _isHurt = value; } }
     public bool IsDead { get { return _isDead; } set { _isDead = value; } }
     public bool IsGodMode { get { return _isGodMode; } set { _isGodMode = value; } }
     public int CurHp { get { return _curHp; } set { _curHp = value; } }
@@ -116,6 +134,8 @@ public class PlayerBehaviour : StateMachineBase
 
     #endregion
 
+    #region Function
+
     private void Awake()
     {
         // Collider
@@ -127,58 +147,40 @@ public class PlayerBehaviour : StateMachineBase
         _interactionController = GetComponent<InteractionController>();
         _movementController = GetComponent<PlayerMovementController>();
 
+        SaveOriginalMaterial();
+
         // SoundList
         _soundList = GetComponent<SoundList>();
     }
-
     private void OnEnable()
     {
+        // TODO : 마지막 죽은 방향으로 되살아나는거 만들어야함 Alive() 함수 이용
         RecentDir = 1;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
     }
-
-
     protected override void Start()
     {
         base.Start();
 
-        // 배경 BGM 출력 (옮겨야함)
+        // init player
+        InitPlayer();
+
+        // play bgm
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
-
-        CurHp = _maxHp;
     }
-
     protected override void Update()
     {
         base.Update();
 
+        if (IsDead)
+            return;
+
+        #region Input
 
         if (InputManager.Instance.State.BasicAttackKey.KeyDown)
             OnBasicAttackPressed();
         if (InputManager.Instance.State.ShootingAttackKey.KeyDown)
             OnShootingAttackPressed();
-
-        #region Animaotr Parameter
-
-        Animator.SetBool("IsGround", IsGrounded);
-        Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
-        Animator.SetFloat("GroundDistance", GroundDistance);
-        Animator.SetFloat("InputHorizontal", RawInputs.Movement.x);
-        Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
-        Animator.SetBool("IsDirSync", IsDirSync);
-
-        #endregion
-
-        #region Basic Behavior
-
-        // Player Flip
-        UpdateImageFlip();
-
-        // Change In Air State
-        ChangeInAirState();
-
-        // Check Dead State
-        CheckDieState();
 
         #endregion
 
@@ -201,8 +203,37 @@ public class PlayerBehaviour : StateMachineBase
         _DiveHitCollider = DiveHit.collider;
 
         #endregion
+
+        #region Basic Behavior
+
+        // Player Flip
+        UpdateImageFlip();
+
+        // Change In Air State
+        ChangeInAirState();
+
+        // Check Dead State
+        CheckDie();
+
+        #endregion
+
+        #region Animaotr Parameter
+
+        Animator.SetBool("IsGround", IsGrounded);
+        Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
+        Animator.SetFloat("GroundDistance", GroundDistance);
+        Animator.SetFloat("InputHorizontal", RawInputs.Movement.x);
+        Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
+        Animator.SetBool("IsDirSync", IsDirSync);
+
+        #endregion
     }
 
+    // basic
+    private void InitPlayer()
+    {
+        CurHp = _maxHp;
+    }
     private void UpdateImageFlip()
     {
         if (StateIs<RunState>() || StateIs<InAirState>() || MovementController.isActiveAndEnabled)
@@ -222,9 +253,9 @@ public class PlayerBehaviour : StateMachineBase
                 ChangeState<InAirState>();
         }
     }
-    private void CheckDieState()
+    private void CheckDie()
     {
-        if (CurHp <= 0 && !IsDead)
+        if (CurHp <= 0)
         {
             CurHp = 0;
             ChangeState<DieState>();
@@ -240,21 +271,23 @@ public class PlayerBehaviour : StateMachineBase
         Rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
     }
 
+    // key pressed event
     void OnBasicAttackPressed()
     {
         if (CanBasicAttack)
             _attackController.CastBasicAttack();
-    }
-    void OnHealingPressed()
-    {
-
     }
     void OnShootingAttackPressed()
     {
         if (CanShootingAttack)
             _attackController.CastShootingAttack();
     }
+    void OnHealingPressed()
+    {
 
+    }
+
+    // about hit
     public void KnockBack(Vector2 forceVector)
     {
         Rigidbody.velocity = Vector2.zero;
@@ -262,36 +295,22 @@ public class PlayerBehaviour : StateMachineBase
     }
     public void OnHit(int damage, Vector2 forceVector)
     {
-        // 무적이거나 사망 상태라면 OnHit return
-        if (IsGodMode || IsDead)
+        // return condition
+        if (IsHurt || IsGodMode || IsDead)
             return;
 
-        // 피격 가능한 불가능한 상태이면 OnHit return
-        if (!IsHurtable)
-            return;
-
-        // Debug.Log("In OnHit()");
-
-        // Apply Damage
         CurHp -= damage;
-
-        // Player Hurt Sound
         PlaySound_SE_Hurt_02();
 
         // Change Die State
         if (CurHp <= 0)
         {
-            // Debug.Log("Apply Die");
-
             CurHp = 0;
             ChangeState<DieState>();
 
             return;
         }
 
-        // Debug.Log("Apply Hurt");
-
-        // Apply Knock Back
         KnockBack(forceVector);
 
         // Change Hurt State
@@ -320,6 +339,161 @@ public class PlayerBehaviour : StateMachineBase
         Debug.Log(damage + " 데미지 입음");
     }
 
+    // effect
+    private void SaveSpriteRenderers()
+    {
+        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+    }
+    private void SaveOriginalMaterial()
+    {
+        SaveSpriteRenderers();
+
+        _originalMaterials = new Material[_spriteRenderers.Length];
+
+        for (int i = 0; i < _originalMaterials.Length; i++)
+            _originalMaterials[i] = _spriteRenderers[i].material;
+    }
+    private void InitMaterial()
+    {
+        for (int i = 0; i < _spriteRenderers.Length; i++)
+            _spriteRenderers[i].material = _originalMaterials[i];
+    }
+    private IEnumerator Blink()
+    {
+        while (IsGodMode)
+        {
+            // turn to white material
+            for (int i = 0; i < _originalMaterials.Length; i++)
+                _spriteRenderers[i].material = _whiteMaterial;
+
+            yield return new WaitForSeconds(_blinkDuration);
+
+            // turn to original material
+            for (int i = 0; i < _originalMaterials.Length; i++)
+                _spriteRenderers[i].material = _originalMaterials[i];
+
+            yield return new WaitForSeconds(_blinkDuration);
+        }
+    }
+    public void StartBlink()
+    {
+        if (this._blinkRoutine != null)
+        {
+            InitMaterial();
+            StopCoroutine(this._blinkRoutine);
+        }
+        this._blinkRoutine = StartCoroutine(Blink());
+    }
+    private IEnumerator GodModeTimer()
+    {
+        IsGodMode = true;
+        yield return new WaitForSeconds(_godModeTime);
+        IsGodMode = false;
+    }
+    public void StartGodMode()
+    {
+        StartCoroutine(GodModeTimer());
+    }
+    private IEnumerator FadeOutDestroy()
+    {
+        // Bring 모든 SpriteRenderer를 가져온다 from All Child Objects
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        // 초기 알파값 저장
+        float[] startAlphaArray = new float[spriteRenderers.Length];
+        for (int i = 0; i < spriteRenderers.Length; i++)
+            startAlphaArray[i] = spriteRenderers[i].color.a;
+
+        // 모든 렌더 컴포넌트를 돌면서 Fade Out
+        while (_elapsedFadeOutTime < _targetFadeOutTime)
+        {
+            _elapsedFadeOutTime += Time.deltaTime;
+            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
+
+            for (int i = 0; i < spriteRenderers.Length; i++)
+            {
+                // 현재 스프라이트 렌더러의 알파값을 변경
+                Color targetColor = spriteRenderers[i].color;
+                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
+                spriteRenderers[i].color = targetColor;
+            }
+
+            yield return null;
+        }
+
+        // 오브젝트 삭제
+        if (transform.root)
+            Destroy(transform.root.gameObject);
+        else
+            Destroy(gameObject);
+
+        yield return null;
+    }
+    public void StartDestroy()
+    {
+        StartCoroutine(FadeOutDestroy());
+    }
+
+    // die / alive
+    public void Die()
+    {
+        // 플레이어 사망 시 종료 옵션
+
+
+        // 파스스 사라지는 연출
+
+    }
+    private IEnumerator Alive()
+    {
+        Debug.Log("Alive");
+
+        /*
+        // 초기 설정
+        ChangeState<IdleState>();
+        CurHp = _maxHp;
+        RecentDir = 1;
+        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
+
+        // 콜라이더 활성화
+        this.GetComponent<Collider2D>().enabled = true;
+
+        // 파티클 생성 & 시작
+        ParticleSystem myEffect = Instantiate(respawnEffect, transform.position, Quaternion.identity, transform);
+        myEffect.Play();  // 반복되는 이펙트
+
+        // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
+
+        // 초기 알파값 저장
+        float[] startAlphas = new float[renderers.Length];
+        for (int i = 0; i < renderers.Length; i++)
+            startAlphas[i] = renderers[i].color.a;
+
+        // 모든 렌더 컴포넌트를 돌면서 Fade In
+        float t = 0;
+        while (t < _reviveFadeInDuration)
+        {
+            t += Time.deltaTime;
+            float normalizedTime = t / _reviveFadeInDuration;
+
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Color color = renderers[i].color;
+                color.a = Mathf.Lerp(startAlphas[i], 1f, normalizedTime);
+                renderers[i].color = color;
+                CapeRenderer.sharedMaterial.SetFloat("_Opacity", normalizedTime);
+            }
+
+            yield return null;
+        }
+
+        // 파티클 종료 & 파괴
+        myEffect.Stop();
+        Destroy(myEffect.gameObject);
+        */
+
+        yield return null;
+    }
     public void TriggerInstantRespawn(float damage)
     {
         if (CurHp == 1)
@@ -335,6 +509,14 @@ public class PlayerBehaviour : StateMachineBase
         ChangeState<InstantRespawnState>(true);
         SceneContext.Current.InstantRespawn();
     }
+
+    // anim event
+    public void EndHurt_AnimEvent()
+    {
+        ChangeState<IdleState>();
+    }
+
+    #endregion
 
     #region Sound
 
@@ -426,17 +608,10 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
-        /*
-        // Draw Ground Check With RayCast
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(_groundCheckTrans.position,
-            _groundCheckTrans.position + Vector3.down * _groundCheckLength);
-        */
-
         // Draw Upward Ray
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position - _paddingVec,
-            transform.position - _paddingVec + Vector3.up * _upwardRayLength);
+        Gizmos.DrawLine(transform.position - UtilDefine.PaddingVector,
+            transform.position - UtilDefine.PaddingVector + Vector3.up * _upwardRayLength);
 
         // Draw Wall Check
         Gizmos.color = Color.blue;
@@ -444,7 +619,7 @@ public class PlayerBehaviour : StateMachineBase
 
         // Draw Dive Check
         Gizmos.color = Color.white;
-        Gizmos.DrawLine(_groundCheckTrans.position + _paddingVec,
-            _groundCheckTrans.position + _paddingVec + Vector3.down * _diveCheckLength);
+        Gizmos.DrawLine(_groundCheckTrans.position + UtilDefine.PaddingVector,
+            _groundCheckTrans.position + UtilDefine.PaddingVector + Vector3.down * _diveCheckLength);
     }
 }

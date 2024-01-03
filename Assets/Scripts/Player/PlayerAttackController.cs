@@ -1,65 +1,107 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using Utils;
+using Gizmos = UnityEngine.Gizmos;
 
 public class PlayerAttackController : MonoBehaviour
 {
     [Header("Attack Setting")]
+    [Space]
 
-    [SerializeField] Transform _basicAttackHitbox;               // 공격 타격 박스
+    [SerializeField] private LayerMask _monsterLayerMask;
+    [SerializeField] private LayerMask _attackableEntityLayerMask;
+    [SerializeField] private Transform _attackHitBoxTrans;
+    [SerializeField] private float _hitBoxRadius;
 
-    [Range(0f, 5f)]
-    [SerializeField] float _attackCountRefreshTime = 1.5f;       // 공격 초기화 시간
+    [Space]
 
-    int _basicAttackCount;                      // 공격 카운트
-    float _timeAfterLastBasicAttack;            // 마지막으로 공격한 시간
+    [SerializeField] private int _attackDamage = 20;
+    [SerializeField] private float _attackPowerX = 7f;
+    [SerializeField] private float _attackPowerY = 10f;
 
-    PlayerBehaviour _player;
+    [Space]
 
-    /*
-    [SerializeField] Slider slider;
-    public int speed = 100;
-    public float minPos;
-    public float maxPos;
-    public RectTransform pass;
-    */
+    [SerializeField] private float _targetAttackTime = 1.5f;
+    [SerializeField] private float _elapsedAttackTime;
+    [SerializeField] private int _basicAttackCount;
+    [SerializeField] private bool _isBasicAttacking;
+    public bool IsBasicAttacking
+    {
+        get { return _isBasicAttacking; }
+        set { _isBasicAttacking = value; }
+    }
 
-    public bool IsBasicAttacking { get; private set; }
+    private PlayerBehaviour _player;
 
     private void Awake()
     {
         _player = GetComponent<PlayerBehaviour>();
     }
-    private void OnEnable()
-    {
-        AnimEvent_FinishBaseAttackAnim();
-    }
 
     public void CastBasicAttack()
     {
+        // you can attack when attack animation is done
         if (!IsBasicAttacking)
         {
-            // Basic SprinkleParticle Hitbox 활성화
-            _basicAttackHitbox.gameObject.SetActive(true);
-
-            // 사운드 재생
-            _player.PlaySound_SE_Attack();
-
-            // 마지막 공격 시간을 저장
-            _timeAfterLastBasicAttack = Time.time;
-
-            // 공격 횟수 증가
-            _basicAttackCount++;
-
-            // 공격 상태값 설정
             IsBasicAttacking = true;
+            _elapsedAttackTime = 0f;
+            _basicAttackCount++;
 
             _player.Animator.SetTrigger("Attack");
             _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
 
-            // 공격 횟수를 애니메이션 종속으로,,
+            _player.PlaySound_SE_Attack();
+
             if (_basicAttackCount >= 3)
                 _basicAttackCount = 0;
+
+            MonsterAttackProcess();
+            AttackableEntityProcess();
+        }
+    }
+
+    public void MonsterAttackProcess()
+    {
+        _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
+        RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero,
+            0f, _monsterLayerMask);
+
+        foreach (var rayCastHit in rayCastHits)
+        {
+            // check monster attack invalid
+            MonsterBodyHit monsterBodyHit = rayCastHit.collider.GetComponent<MonsterBodyHit>();
+            if (monsterBodyHit)
+            {
+                MonsterBehavior monsterBehavior = rayCastHit.collider.GetComponentInParent<MonsterBehavior>();
+                if (monsterBehavior)
+                {
+                    Transform monsterTrans = rayCastHit.collider.transform;
+
+                    // set forceVector
+                    float dir = Mathf.Sign(monsterTrans.position.x - transform.position.x);
+                    Vector2 forceVector = new Vector2(_attackPowerX * dir, _attackPowerY);
+
+                    // message to monsterBehavior
+                    monsterBehavior.OnHit(_attackDamage, forceVector);
+                }
+            }
+        }
+    }
+
+    public void AttackableEntityProcess()
+    {
+        // TODO : attackableEntity의 레이어만 골라서 한다
+        _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
+        RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero,
+            0f, _attackableEntityLayerMask);
+
+        foreach (var rayCastHit in rayCastHits)
+        {
+            // check attackable entity invalid
+            AttackableEntity attackableEntity = rayCastHit.collider.GetComponent<AttackableEntity>();
+            if (attackableEntity)
+                attackableEntity.OnHittedByBasicAttack();
         }
     }
 
@@ -70,61 +112,31 @@ public class PlayerAttackController : MonoBehaviour
 
     private void Update()
     {
-        // 1초 후 다시 처음으로
-        if (Time.time >= _timeAfterLastBasicAttack + _attackCountRefreshTime)
+        // reset attackCount
+        if (_basicAttackCount > 0)
         {
-            _basicAttackCount = 0;
-            _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
+            _elapsedAttackTime += Time.deltaTime;
+
+            if (_elapsedAttackTime > _targetAttackTime)
+            {
+                _elapsedAttackTime = 0f;
+                _basicAttackCount = 0;
+                _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
+            }
         }
     }
 
     public void AnimEvent_FinishBaseAttackAnim()
     {
-        // 공격 상태값 설정
+        // now you can cast attack
         IsBasicAttacking = false;
 
-        // Basic SprinkleParticle Hitbox 비활성화
-        _basicAttackHitbox.gameObject.SetActive(false);
+        _hitBoxRadius = 0f;
     }
 
-    /*
-    public void PlayerBlenAnim(int num)
+    private void OnDrawGizmosSelected()
     {
-        _player.Animator.SetFloat("Blend", num);
-        _player.Animator.SetTrigger("SprinkleParticle");
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(_attackHitBoxTrans.position, _hitBoxRadius);
     }
-
-    public void SetAttack()
-    {
-        slider.value = 0;
-        minPos = pass.anchoredPosition.x;
-        maxPos = pass.sizeDelta.x + minPos;
-        StartCoroutine(ComboAtk());
-    }
-
-    IEnumerator MoveSlider()
-    {
-        while (!(Input.GetKeyDown(KeyCode.Space) || slider.value >= slider.maxValue))
-        {
-            slider.value += Time.deltaTime * speed;
-            yield return null;
-        }
-    }
-
-    IEnumerator ComboAtk()
-    {
-        yield return null;
-
-        while (!(Input.GetKeyDown(KeyCode.Space) || slider.value == slider.maxValue))
-        {
-            slider.value += Time.deltaTime * speed;
-            yield return null;
-        }
-
-        if (slider.value >= minPos && slider.value <= maxPos)
-        {
-            PlayerBlenAnim(0);
-        }
-    }
-    */
 }

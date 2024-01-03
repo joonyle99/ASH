@@ -31,13 +31,14 @@ public class Bat : NormalMonster
     {
         base.Update();
 
+        // 몬스터 사망 시 Update X
         if (IsDead)
             return;
 
         // Change to Attack State
         if (AttackEvaluator.IsTargetWithinAttackRange())
         {
-            if (CurrentStateIs<PatrolState>() || CurrentStateIs<ChaseState>())
+            if (CurrentStateIs<FloatingPatrolState>() || CurrentStateIs<ChaseState>())
             {
                 Animator.SetTrigger("Attack");
                 return;

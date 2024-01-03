@@ -44,7 +44,7 @@ public class BatSkillParticle : MonoBehaviour
 
         if (player != null)
         {
-            if (player.IsDead)
+            if (player.IsGodMode || player.IsDead)
                 return;
 
             float dir = Mathf.Sign(player.transform.position.x - transform.position.x);

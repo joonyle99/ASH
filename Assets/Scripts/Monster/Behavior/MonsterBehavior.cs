@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -9,16 +10,20 @@ public abstract class MonsterBehavior : MonoBehaviour
 {
     #region Attribute
 
+    // ETC
+    public Rigidbody2D RigidBody { get; private set; }
+    public Animator Animator { get; private set; }
+
     [Header("State")]
     [Space]
 
-    // State
     [SerializeField] private Monster_StateBase _initialState;
     [SerializeField] private Monster_StateBase _currentState;
     [SerializeField] private Monster_StateBase _previousState;
 
     [Header("Module")]
     [Space]
+
     [SerializeField] private WayPointPatrol _wayPointPatrol;
     public WayPointPatrol WayPointPatrol
     {
@@ -29,10 +34,10 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         get { return _navMeshMove; }
     }
-    [SerializeField] private PatrolEvaluator _patrolEvaluator;
-    public PatrolEvaluator PatrolEvaluator
+    [SerializeField] private FloatingPatrolEvaluator _floatingPatrolEvaluator;
+    public FloatingPatrolEvaluator FloatingPatrolEvaluator
     {
-        get { return _patrolEvaluator; }
+        get { return _floatingPatrolEvaluator; }
     }
     [SerializeField] private ChaseEvaluator _chaseEvaluator;
     public ChaseEvaluator ChaseEvaluator
@@ -48,7 +53,18 @@ public abstract class MonsterBehavior : MonoBehaviour
     [Header("Condition")]
     [Space]
 
-    // 상태
+    [SerializeField] private bool _isHit;
+    public bool IsHit
+    {
+        get => _isHit;
+        set => _isHit = value;
+    }
+    [SerializeField] private bool _isHurt;
+    public bool IsHurt
+    {
+        get => _isHurt;
+        set => _isHurt = value;
+    }
     [SerializeField] private bool _isDead;
     public bool IsDead
     {
@@ -62,10 +78,12 @@ public abstract class MonsterBehavior : MonoBehaviour
         set => _isGodMode = value;
     }
 
-    [Header("Data")]
+    [Header("Monster Data")]
     [Space]
 
     [SerializeField] private MonsterData _monsterData;
+
+    [Space]
 
     [SerializeField] private int _id;
     public int ID
@@ -98,17 +116,26 @@ public abstract class MonsterBehavior : MonoBehaviour
         protected set => _moveSpeed = value;
     }
     [SerializeField] private MonsterDefine.SIZE _monsterSize;
-    public MonsterDefine.SIZE MonsterSize // 몬스터 크기 구분
+    public MonsterDefine.SIZE MonsterSize
     {
         get => _monsterSize;
         protected set => _monsterSize = value;
     }
     [SerializeField] private MonsterDefine.MONSTER_TYPE _monsterType;
-    public MonsterDefine.MONSTER_TYPE MonsterType // 몬스터 타입
+    public MonsterDefine.MONSTER_TYPE MonsterType
     {
         get => _monsterType;
         protected set => _monsterType = value;
     }
+
+    [Header("Blink")]
+    [Space]
+
+    [SerializeField] private Material _whiteMaterial;
+    [SerializeField] private float _blinkDuration = 0.1f;
+    private SpriteRenderer[] _spriteRenderers;
+    private Material[] _originalMaterials;
+    private Coroutine _blinkRoutine;
 
     [Header("FadeOut")]
     [Space]
@@ -116,40 +143,33 @@ public abstract class MonsterBehavior : MonoBehaviour
     [SerializeField] private float _targetFadeOutTime = 3f;
     [SerializeField] private float _elapsedFadeOutTime = 0f;
 
-    [Header("Blink")]
-    [Space]
-
-    [SerializeField] private int _countOfBlink = 5;
-    [SerializeField] private float _blinkDuration = 0.1f;
-
-    public Rigidbody2D RigidBody { get; private set; }
-    public Animator Animator { get; private set; }
-
     #endregion
 
     #region Function
 
     protected virtual void Awake()
     {
+        // Basic Component
         RigidBody = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
 
+        // Module
         _wayPointPatrol = GetComponent<WayPointPatrol>();
         _navMeshMove = GetComponent<NavMeshMove>();
-        _patrolEvaluator = GetComponent<PatrolEvaluator>();
+        _floatingPatrolEvaluator = GetComponent<FloatingPatrolEvaluator>();
         _chaseEvaluator = GetComponent<ChaseEvaluator>();
         _attackEvaluator = GetComponent<AttackEvaluator>();
 
-        // State 세팅
+        SaveOriginalMaterial();
+
+        // Init State
         InitState();
     }
-
     protected virtual void Start()
     {
         // 몬스터 속성 설정
         SetUp();
     }
-
     protected virtual void Update()
     {
         if (IsDead)
@@ -157,12 +177,10 @@ public abstract class MonsterBehavior : MonoBehaviour
 
         CheckDie();
     }
-
     protected virtual void FixedUpdate()
     {
 
     }
-
     protected virtual void SetUp()
     {
         // 몬스터의 ID 설정
@@ -188,23 +206,27 @@ public abstract class MonsterBehavior : MonoBehaviour
     public virtual void KnockBack(Vector2 forceVector)
     {
         RigidBody.velocity = Vector2.zero;
+
+        // Monster의 Mass에 따른 forceVector 보정
+        float ratio = RigidBody.mass / 1.0f;
+        forceVector *= ratio;
+
         RigidBody.AddForce(forceVector, ForceMode2D.Impulse);
     }
-
     public virtual void OnHit(int damage, Vector2 forceVector)
     {
-        if (IsDead)
+        if (IsGodMode || IsDead)
             return;
 
-        if (IsGodMode)
-            return;
-
-        Debug.Log("Monster OnHit");
-
+        // Damage
         CurHp -= damage;
+
+        // Hit
+        StartHitTimer();
         KnockBack(forceVector);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
+        // Change to Die State
         if (CurHp <= 0)
         {
             CurHp = 0;
@@ -213,66 +235,116 @@ public abstract class MonsterBehavior : MonoBehaviour
             return;
         }
 
+        // Change to Hurt State
         Animator.SetTrigger("Hurt");
     }
-
     public virtual void Die()
     {
-        // 사망 처리
         IsDead = true;
 
-        // Hit Box 비활성화
-        GameObject hitBox = GetComponentInChildren<MonsterBodyHit>().gameObject;
-
-        if (hitBox != null)
-            hitBox.SetActive(false);
+        // Disable Hit Box
+        SetActiveHitBox(false);
 
         // 사라지기 시작
         StartDestroy();
     }
 
-
-    private IEnumerator AlphaBlink()
+    // hitBox
+    public void SetActiveHitBox(bool isBool)
     {
-        // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
-        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        // Disable Hit Box
+        GameObject hitBox = GetComponentInChildren<MonsterBodyHit>(true).gameObject;
 
-        // TODO : Count 기반이 아닌 Hurt인 시간 동안 Blink
-        for (int n = 0; n < _countOfBlink; n++)
+        if (hitBox != null)
+            hitBox.SetActive(isBool);
+    }
+    public void SetDisableHitBox(bool isBool)
+    {
+        MonsterBodyHit hitBox = GetComponentInChildren<MonsterBodyHit>();
+
+        if (hitBox != null)
+            hitBox.IsDisableHitBox = isBool;
+    }
+    public void SetTriggerHitBox(bool isBool)
+    {
+        // Disable Hit Box
+        GameObject hitBox = GetComponentInChildren<MonsterBodyHit>(true).gameObject;
+
+        if (hitBox != null)
         {
-            // 모든 Sprite를 돌면서 깜빡임 효과를 적용
-            foreach (SpriteRenderer renderer in spriteRenderers)
-            {
-                // 현재 색상을 투명하게 설정
-                Color transparentColor = renderer.color;
-                transparentColor.a = 0.5f; // 약간 투명하게 설정
-                renderer.color = transparentColor;
-            }
+            Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
+            hitBoxCollider.isTrigger = isBool;
+            hitBox.layer = isBool ? LayerMask.NameToLayer("Monster") : LayerMask.NameToLayer("Default");
+        }
+    }
+
+    // basic
+    private void CheckDie()
+    {
+        if (CurHp <= 0)
+        {
+            CurHp = 0;
+            Animator.SetTrigger("Die");
+        }
+    }
+    private IEnumerator HitTimer()
+    {
+        IsHit = true;
+        yield return new WaitForSeconds(0.01f);
+        IsHit = false;
+    }
+    public void StartHitTimer()
+    {
+        StartCoroutine(HitTimer());
+    }
+
+    // effect
+    private void SaveSpriteRenderers()
+    {
+        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+    }
+    private void SaveOriginalMaterial()
+    {
+        SaveSpriteRenderers();
+
+        _originalMaterials = new Material[_spriteRenderers.Length];
+        for (int i = 0; i < _originalMaterials.Length; i++)
+            _originalMaterials[i] = _spriteRenderers[i].material;
+    }
+    private void InitMaterial()
+    {
+        for (int i = 0; i < _spriteRenderers.Length; i++)
+            _spriteRenderers[i].material = _originalMaterials[i];
+    }
+    private IEnumerator Blink()
+    {
+        while (IsHurt)
+        {
+            // turn to white material
+            for (int i = 0; i < _originalMaterials.Length; i++)
+                _spriteRenderers[i].material = _whiteMaterial;
 
             yield return new WaitForSeconds(_blinkDuration);
 
-            // 모든 Sprite를 돌면서 원래 색상으로 복구
-            foreach (SpriteRenderer renderer in spriteRenderers)
-            {
-                // 현재 색상을 원래대로 설정
-                Color originalColor = renderer.color;
-                originalColor.a = 1f; // 완전 불투명하게 설정
-                renderer.color = originalColor;
-            }
+            // turn to original material
+            for (int i = 0; i < _originalMaterials.Length; i++)
+                _spriteRenderers[i].material = _originalMaterials[i];
 
             yield return new WaitForSeconds(_blinkDuration);
         }
     }
-
     public void StartBlink()
     {
-        StartCoroutine(AlphaBlink());
+        if (this._blinkRoutine != null)
+        {
+            InitMaterial();
+            StopCoroutine(this._blinkRoutine);
+        }
+        this._blinkRoutine = StartCoroutine(Blink());
     }
-
-
     private IEnumerator FadeOutDestroy()
     {
-        // 자식 오브젝트의 모든 SpriteRenderer를 가져온다
+        // Bring 모든 SpriteRenderer를 가져온다 from All Child Objects
         SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
         // 초기 알파값 저장
@@ -305,25 +377,15 @@ public abstract class MonsterBehavior : MonoBehaviour
 
         yield return null;
     }
-
     public void StartDestroy()
     {
         StartCoroutine(FadeOutDestroy());
     }
 
-    private void CheckDie()
-    {
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-            Animator.SetTrigger("Die");
-        }
-    }
-
-
+    // state
     private void InitState()
     {
-        // Entry State의 정보 가져오기
+        // Bring Entry State
         int initialPathHash = Animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
         StateMachineBehaviour[] initialStates = Animator.GetBehaviours(initialPathHash, 0);
         foreach (var initialState in initialStates)
@@ -332,22 +394,19 @@ public abstract class MonsterBehavior : MonoBehaviour
                 _initialState = initialState as Monster_StateBase;
         }
 
-        // Animation State 정보 초기화
+        // Init Animation State
         _currentState = _initialState;
         _previousState = _initialState;
     }
-
     public void UpdateState(Monster_StateBase state)
     {
         _previousState = _currentState;
         _currentState = state;
     }
-
     public bool CurrentStateIs<State>() where State : Monster_StateBase
     {
         return _currentState is State;
     }
-
     public bool PreviousStateIs<State>() where State : Monster_StateBase
     {
         return _previousState is State;

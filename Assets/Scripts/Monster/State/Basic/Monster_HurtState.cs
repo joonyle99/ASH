@@ -1,14 +1,15 @@
 using UnityEngine;
 
-/// <summary>
-/// 몬스터의 공통 HurtState
-/// </summary>
 public class Monster_HurtState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
+        // Start Hurt
+        Monster.IsHurt = true;
+
+        // Start Alpha Blink
         Monster.StartBlink();
     }
 
@@ -21,6 +22,10 @@ public class Monster_HurtState : Monster_StateBase
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
+        // End Hurt
+        Monster.IsHurt = false;
+
+        // Change to Idle State
         animator.SetTrigger("Idle");
     }
 }
