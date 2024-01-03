@@ -1,17 +1,16 @@
 using UnityEngine;
 
-/// <summary>
-/// 몬스터의 공통 AttackState
-/// </summary>
 public class Monster_AttackState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex) ;
 
-        Monster.AttackEvaluator.StartAttackableTimer();
-
+        // Start God Mode
         Monster.IsGodMode = true;
+
+        // Start Attack CoolTime
+        Monster.AttackEvaluator.StartAttackableTimer();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -23,6 +22,7 @@ public class Monster_AttackState : Monster_StateBase
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
+        // End God Mode
         Monster.IsGodMode = false;
 
         animator.SetTrigger("Idle");
