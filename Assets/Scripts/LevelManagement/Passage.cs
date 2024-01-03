@@ -19,6 +19,7 @@ public class Passage : TriggerZone
     public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
 
     [SerializeField] bool _canEnter = true;
+    [SerializeField] float _exitTimeOut = 1f;
 
     bool _isPlayerExiting;
     void Awake()
@@ -59,6 +60,12 @@ public class Passage : TriggerZone
             InputManager.Instance.ChangeToDefaultSetter();
 
         //Wait until player exits zone
+        float eTime = 0f;
+        while(_isPlayerExiting && eTime < _exitTimeOut)
+        {
+            yield return null;
+            eTime += Time.deltaTime;
+        }
         yield return new WaitUntil(() => !_isPlayerExiting);
         yield return new WaitForSeconds(0.3f);
         InputManager.Instance.ChangeToDefaultSetter();
