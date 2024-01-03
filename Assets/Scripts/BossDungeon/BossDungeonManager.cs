@@ -12,7 +12,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     public string DataGroupName => _dataGroupName;
     public string DoorDataID => "openDoor";
     BossKey[] _bossKeys; 
-    void Awake()
+    new void Awake()
     {
         base.Awake();
         PersistentDataManager.TryAddDataGroup(_dataGroupName);

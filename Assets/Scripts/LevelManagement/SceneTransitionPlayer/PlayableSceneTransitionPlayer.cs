@@ -14,7 +14,7 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     [SerializeField] float _transitionDuration = 0.5f;
 
     [Header("Respawn")]
-    [SerializeField] float _respawnFadeDuration = 0.5f;
+    //[SerializeField] float _respawnFadeDuration = 0.5f;
     [SerializeField] float _respawnDelay = 0.5f;
     [SerializeField] float _capeFlyDuration = 1f;
     public override IEnumerator ExitEffectCoroutine()
