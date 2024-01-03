@@ -44,6 +44,13 @@ public class PreserveState : MonoBehaviour
     }
     private void OnDestroy()
     {
-        Save();
+        try
+        {
+            Save();
+        }
+        catch(Exception e)
+        {
+            Debug.LogError(e.ToString());
+        }
     }
 }
