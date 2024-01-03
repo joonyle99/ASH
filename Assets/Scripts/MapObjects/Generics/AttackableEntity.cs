@@ -16,21 +16,13 @@ public class AttackableEntity : MonoBehaviour
         _attackListeners = GetComponents<IAttackListener>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void OnHittedByBasicAttack()
     {
-        var basicAttackHitbox = collision.GetComponent<PlayerBasicAttackHitbox>();
-        if (_allowsBasicAttack && basicAttackHitbox)
-        {
-            OnHittedByBasicAttack();
-        }
-    }
+        if (!_allowsBasicAttack)
+            return;
 
-    void OnHittedByBasicAttack()
-    {
         foreach(var listener in  _attackListeners)
-        {
             listener.OnHitted(true);
-        }
     }
 
 }

@@ -9,7 +9,8 @@ public class PlayerAttackController : MonoBehaviour
     [Header("Attack Setting")]
     [Space]
 
-    [SerializeField] private LayerMask _targetLayerMask;
+    [SerializeField] private LayerMask _monsterLayerMask;
+    [SerializeField] private LayerMask _attackableEntityLayerMask;
     [SerializeField] private Transform _attackHitBoxTrans;
     [SerializeField] private float _hitBoxRadius;
 
@@ -55,30 +56,52 @@ public class PlayerAttackController : MonoBehaviour
             if (_basicAttackCount >= 3)
                 _basicAttackCount = 0;
 
-            AttackProcess();
+            MonsterAttackProcess();
+            AttackableEntityProcess();
         }
     }
 
-    public void AttackProcess()
+    public void MonsterAttackProcess()
     {
         _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
-        RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero, 0f, _targetLayerMask);
+        RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero,
+            0f, _monsterLayerMask);
 
         foreach (var rayCastHit in rayCastHits)
         {
-            // check invalid
+            // check monster attack invalid
             MonsterBodyHit monsterBodyHit = rayCastHit.collider.GetComponent<MonsterBodyHit>();
-            if (!monsterBodyHit) return;
-            MonsterBehavior monsterBehavior = rayCastHit.collider.GetComponentInParent<MonsterBehavior>();
-            if (!monsterBehavior) return;
+            if (monsterBodyHit)
+            {
+                MonsterBehavior monsterBehavior = rayCastHit.collider.GetComponentInParent<MonsterBehavior>();
+                if (monsterBehavior)
+                {
+                    Transform monsterTrans = rayCastHit.collider.transform;
 
-            // set forceVector
-            Transform monsterTrans = rayCastHit.collider.transform;
-            float dir = Mathf.Sign(monsterTrans.position.x - transform.position.x);
-            Vector2 forceVector = new Vector2(_attackPowerX * dir, _attackPowerY);
+                    // set forceVector
+                    float dir = Mathf.Sign(monsterTrans.position.x - transform.position.x);
+                    Vector2 forceVector = new Vector2(_attackPowerX * dir, _attackPowerY);
 
-            // OnHit() message to monsterBehavior
-            monsterBehavior.OnHit(_attackDamage, forceVector);
+                    // message to monsterBehavior
+                    monsterBehavior.OnHit(_attackDamage, forceVector);
+                }
+            }
+        }
+    }
+
+    public void AttackableEntityProcess()
+    {
+        // TODO : attackableEntity의 레이어만 골라서 한다
+        _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
+        RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero,
+            0f, _attackableEntityLayerMask);
+
+        foreach (var rayCastHit in rayCastHits)
+        {
+            // check attackable entity invalid
+            AttackableEntity attackableEntity = rayCastHit.collider.GetComponent<AttackableEntity>();
+            if (attackableEntity)
+                attackableEntity.OnHittedByBasicAttack();
         }
     }
 
