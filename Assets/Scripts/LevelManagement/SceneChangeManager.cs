@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChangeManager>
+public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManager>
 {
     public bool IsChanging { get; private set; } = false;
 
