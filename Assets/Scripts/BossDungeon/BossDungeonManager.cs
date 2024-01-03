@@ -5,13 +5,26 @@ using UnityEngine;
 
 public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeonManager>, ISceneContextBuildListener
 {
+    [SerializeField] int _currentKeyCount = 0;
     [SerializeField] int _maxKeyCount = 3;
     [SerializeField] string _dataGroupName = "BossDungeon1";
+
+    public string DataGroupName => _dataGroupName;
+    public string DoorDataID => "openDoor";
     BossKey[] _bossKeys; 
     void Awake()
     {
         base.Awake();
         PersistentDataManager.TryAddDataGroup(_dataGroupName);
+        for(int i=0; i<_maxKeyCount; i++)
+        {
+            if (PersistentDataManager.Get<bool>(_dataGroupName, "bossKey" + i))
+            {
+                _currentKeyCount++;
+                if (_currentKeyCount == _maxKeyCount)
+                    PersistentDataManager.Set<bool>(_dataGroupName, DoorDataID, true);
+            }
+        }
     }
     public void OnSceneContextBuilt()
     {
@@ -27,5 +40,8 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     public void OnKeyObtained(BossKey key)
     {
         PersistentDataManager.Set<bool>(_dataGroupName, "bossKey" + key.ID, true);
+        _currentKeyCount++;
+        if (_currentKeyCount == _maxKeyCount)
+            PersistentDataManager.Set<bool>(_dataGroupName, DoorDataID, true);
     }
 }
