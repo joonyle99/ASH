@@ -35,6 +35,8 @@ public abstract class NormalMonster : MonsterBehavior
     public override void OnHit(int damage, Vector2 forceVector)
     {
         base.OnHit(damage, forceVector);
+
+        // Debug.Log("NormalMonster OnHit");
     }
 
     public override void Die()

@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class HurtState : PlayerState
 {
-    [SerializeField] private float _godModeTime = 1f;
 
     protected override void OnEnter()
     {
         Animator.SetTrigger("Hurt");
 
-        SceneContext.Current.Player.IsHurtable = false;
+        Player.IsHurt = true;
 
-        StartCoroutine(InvincibilityTimer());
+        Player.StartGodMode();
+        Player.StartBlink();
     }
 
     protected override void OnUpdate()
@@ -26,21 +26,6 @@ public class HurtState : PlayerState
 
     protected override void OnExit()
     {
-
-    }
-
-    private IEnumerator InvincibilityTimer()
-    {
-        SceneContext.Current.Player.IsGodMode = true;
-
-        yield return new WaitForSeconds(_godModeTime);
-
-        SceneContext.Current.Player.IsGodMode = false;
-    }
-
-    public void EndHurt_AnimEvent()
-    {
-        SceneContext.Current.Player.IsHurtable = true;
-        ChangeState<IdleState>();
+        Player.IsHurt = false;
     }
 }
