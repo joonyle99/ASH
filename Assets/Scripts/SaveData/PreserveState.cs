@@ -65,7 +65,8 @@ public class PreserveState : MonoBehaviour, IDestructionListener
         {
             try
             {
-                PersistentDataManager.Set(_groupName, _transformKey, new TransformState(transform));
+                if (PersistentDataManager.HasDataGroup(_groupName))
+                    PersistentDataManager.Set(_groupName, _transformKey, new TransformState(transform));
             }
             catch (Exception e)
             {
