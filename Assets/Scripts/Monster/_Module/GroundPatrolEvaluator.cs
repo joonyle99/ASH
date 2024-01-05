@@ -9,6 +9,8 @@ public class GroundPatrolEvaluator : MonoBehaviour
 
     [SerializeField] private MonsterBehavior _monster;
 
+    [Space]
+
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private Transform _wallCheckPointUp;
     [SerializeField] private Transform _wallCheckPointDown;
@@ -16,9 +18,9 @@ public class GroundPatrolEvaluator : MonoBehaviour
 
     void Update()
     {
-        RaycastHit2D upHit = Physics2D.Raycast(_wallCheckPointUp.position, Vector2.right * _monster.RecentDir, _wallCheckDistance, _layerMask);
-        RaycastHit2D downHit = Physics2D.Raycast(_wallCheckPointDown.position, Vector2.right * _monster.RecentDir, _wallCheckDistance, _layerMask);
-        if (upHit || downHit)
+        RaycastHit2D upRayHit = Physics2D.Raycast(_wallCheckPointUp.position, Vector2.right * _monster.RecentDir, _wallCheckDistance, _layerMask);
+        RaycastHit2D downRayHit = Physics2D.Raycast(_wallCheckPointDown.position, Vector2.right * _monster.RecentDir, _wallCheckDistance, _layerMask);
+        if (upRayHit || downRayHit)
             _monster.UpdateImageFlip();
     }
 

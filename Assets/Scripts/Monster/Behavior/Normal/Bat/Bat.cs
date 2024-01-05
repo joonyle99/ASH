@@ -21,31 +21,24 @@ public class Bat : NormalMonster
     {
         base.Awake();
     }
-
     protected override void Start()
     {
         base.Start();
     }
-
     protected override void Update()
     {
         base.Update();
 
-        // 몬스터 사망 시 Update X
         if (IsDead)
             return;
 
         // Change to Attack State
         if (AttackEvaluator.IsTargetWithinAttackRange())
         {
-            if (CurrentStateIs<FloatingPatrolState>() || CurrentStateIs<ChaseState>())
-            {
+            if (CurrentStateIs<FloatingPatrolState>() || CurrentStateIs<FloatingChaseState>())
                 Animator.SetTrigger("Attack");
-                return;
-            }
         }
     }
-
     protected override void SetUp()
     {
         base.SetUp();
@@ -55,12 +48,10 @@ public class Bat : NormalMonster
     {
         base.KnockBack(forceVector);
     }
-
     public override void OnHit(int damage, Vector2 forceVector)
     {
         base.OnHit(damage, forceVector);
     }
-
     public override void Die()
     {
         base.Die();

@@ -15,9 +15,14 @@ public class Turtle_HideState : Monster_StateBase
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
+        // reset hide time
         if (Monster.IsHit)
+        {
+            Monster.SetIsHit(false);
             _elapsedHideTime = 0f;
+        }
 
+        // show after hide time done
         _elapsedHideTime += Time.deltaTime;
         if (_elapsedHideTime > _targetHideTime)
         {

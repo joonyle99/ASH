@@ -26,10 +26,12 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
+            state.Movement.y += 1;
             state.Vertical += 1;
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
+            state.Movement.y -= 1;
             state.Vertical -= 1;
         }
 
@@ -41,9 +43,4 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
 
         return state;
     }
-
-    public override void Update()
-    {
-    }
-
 }
