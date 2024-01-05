@@ -17,40 +17,61 @@ struct TransformState
     }
 }
 
-public class PreserveState : MonoBehaviour
+public class PreserveState : MonoBehaviour, IDestructionListener
 {
     [SerializeField] string _groupName;
     [SerializeField] string _ID;
 
     [SerializeField] bool _preserveTransform = true;
+    [SerializeField] bool _preserveDestruction = true;
 
     string _transformKey => _ID + "_transformState";
+    string _destructionKey => _ID + "_destructed";
 
-    private void Start()
-    {
-        if (_preserveTransform && PersistentDataManager.Has<TransformState>(_groupName, _transformKey))
-        {
-            var transformState = PersistentDataManager.Get<TransformState>(_groupName, _transformKey);
-            transform.localPosition = transformState.Position;
-            transform.localRotation = transformState.Rotation;
-            transform.localScale = transformState.Scale;
-        }
-    }
-    void Save()
+    private void Awake()
     {
         if (_preserveTransform)
-            PersistentDataManager.Set(_groupName, _transformKey, new TransformState(transform));
-
+            LoadState<TransformState>(_groupName, _transformKey, transformState =>
+            {
+                transform.localPosition = transformState.Position;
+                transform.localRotation = transformState.Rotation;
+                transform.localScale = transformState.Scale;
+            });
+        if (_preserveDestruction)
+            LoadState<bool>(_groupName, _destructionKey, destruct =>
+            {
+                if (destruct)
+                    Destroy(gameObject);
+            });
+    }
+    public static void LoadState<T>(string groupName, string key, Action<T> loadAction) where T : new()
+    {
+        if (PersistentDataManager.Has<T>(groupName, key))
+        {
+            var state = PersistentDataManager.Get<T>(groupName, key);
+            loadAction.Invoke(state);
+        }
+    }
+    public void OnDestruction()
+    {
+        if (_preserveDestruction)
+        {
+            PersistentDataManager.Set(_groupName, _destructionKey, true);
+        }
     }
     private void OnDestroy()
     {
-        try
+        if (_preserveTransform)
         {
-            Save();
-        }
-        catch(Exception e)
-        {
-            Debug.LogError(e.ToString());
+            try
+            {
+                PersistentDataManager.Set(_groupName, _transformKey, new TransformState(transform));
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+            }
         }
     }
+
 }
