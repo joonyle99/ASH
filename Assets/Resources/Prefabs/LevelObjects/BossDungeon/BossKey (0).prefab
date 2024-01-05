@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7313869744643112893}
   - component: {fileID: 7313869744643112882}
   - component: {fileID: 7313869744643112883}
+  - component: {fileID: 133534356}
   m_Layer: 0
   m_Name: BossKey (0)
   m_TagString: Untagged
@@ -100,7 +101,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ca389a3479619a4c9282df4488b5a56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ID: 0
 --- !u!58 &7313869744643112893
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -142,3 +142,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &133534356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7313869744643112880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: BossDungeon1
+  _ID: 0
+  _preserveTransform: 0
+  _preserveDestruction: 1

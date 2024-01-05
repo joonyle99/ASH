@@ -9,7 +9,7 @@ public class BossDoor : InteractableObject
     
     protected override void OnInteract()
     {
-        if (PersistentDataManager.Get<bool>(BossDungeonManager.Instance.DataGroupName, BossDungeonManager.Instance.DoorDataID))
+        if (BossDungeonManager.Instance.AllKeysCollected)
         {
             OpenDoor();
         }

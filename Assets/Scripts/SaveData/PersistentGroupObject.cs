@@ -19,5 +19,5 @@ public class PersistentGroupObject : MonoBehaviour
     {
         if(_removeOnDestroy)
             PersistentDataManager.RemoveDataGroup(_groupName);
-    }   
+    }
 }
