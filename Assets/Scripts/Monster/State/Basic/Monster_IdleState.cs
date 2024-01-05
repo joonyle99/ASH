@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Monster_IdleState : Monster_StateBase
 {
+    [SerializeField] private float _targetStayTime = 2f;
+    [SerializeField] private float _elapsedStayTime;
+
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
@@ -11,10 +14,13 @@ public class Monster_IdleState : Monster_StateBase
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        /*
-        if(!Monster.WayPointPatrol.IsWaiting)
-            animator.SetTrigger("Move");
-        */
+        _elapsedStayTime += Time.deltaTime;
+
+        if (_elapsedStayTime > _targetStayTime)
+        {
+            _elapsedStayTime = 0f;
+            animator.SetTrigger("Patrol");
+        }
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

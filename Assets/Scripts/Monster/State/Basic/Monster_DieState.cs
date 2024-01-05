@@ -7,6 +7,7 @@ public class Monster_DieState : Monster_StateBase
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
         // Start Die Process
+        // Polymorphism
         Monster.Die();
     }
 

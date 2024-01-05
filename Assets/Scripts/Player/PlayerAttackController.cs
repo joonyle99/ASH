@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
-using Utils;
+﻿using UnityEngine;
 using Gizmos = UnityEngine.Gizmos;
 
 public class PlayerAttackController : MonoBehaviour
@@ -22,8 +19,8 @@ public class PlayerAttackController : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private float _targetAttackTime = 1.5f;
-    [SerializeField] private float _elapsedAttackTime;
+    [SerializeField] private float _targetAttackTransTime = 1.5f;
+    [SerializeField] private float _elapsedAttackTransTime;
     [SerializeField] private int _basicAttackCount;
     [SerializeField] private bool _isBasicAttacking;
     public bool IsBasicAttacking
@@ -45,7 +42,7 @@ public class PlayerAttackController : MonoBehaviour
         if (!IsBasicAttacking)
         {
             IsBasicAttacking = true;
-            _elapsedAttackTime = 0f;
+            _elapsedAttackTransTime = 0f;
             _basicAttackCount++;
 
             _player.Animator.SetTrigger("Attack");
@@ -55,13 +52,10 @@ public class PlayerAttackController : MonoBehaviour
 
             if (_basicAttackCount >= 3)
                 _basicAttackCount = 0;
-
-            MonsterAttackProcess();
-            AttackableEntityProcess();
         }
     }
 
-    public void MonsterAttackProcess()
+    public void MonsterAttackProcess_AnimEvent()
     {
         _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
         RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero,
@@ -89,9 +83,8 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
-    public void AttackableEntityProcess()
+    public void AttackableEntityProcess_AnimEvent()
     {
-        // TODO : attackableEntity의 레이어만 골라서 한다
         _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
         RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero,
             0f, _attackableEntityLayerMask);
@@ -115,11 +108,11 @@ public class PlayerAttackController : MonoBehaviour
         // reset attackCount
         if (_basicAttackCount > 0)
         {
-            _elapsedAttackTime += Time.deltaTime;
+            _elapsedAttackTransTime += Time.deltaTime;
 
-            if (_elapsedAttackTime > _targetAttackTime)
+            if (_elapsedAttackTransTime > _targetAttackTransTime)
             {
-                _elapsedAttackTime = 0f;
+                _elapsedAttackTransTime = 0f;
                 _basicAttackCount = 0;
                 _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
             }

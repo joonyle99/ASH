@@ -4,48 +4,55 @@ using UnityEngine;
 
 public class FloatingPatrolEvaluator : MonoBehaviour
 {
-    [Header("Patrol Evaluator")]
+    [Header("Floating Patrol Evaluator")]
     [Space]
 
-    [SerializeField] private BoxCollider2D patrolArea;
+    [SerializeField] private BoxCollider2D _patrolArea;
     private Bounds _patrolBounds;
 
     [SerializeField] private Vector3 _targetPosition;
     public Vector3 TargetPosition { get { return _targetPosition; } }
 
-    [SerializeField] private float targetTime = 3f;
-    [SerializeField] private float elapsedTime;
+    [SerializeField] private float _targetTime = 7f;
+    [SerializeField] private float _elapsedTime;
 
-    [SerializeField] private GameObject checkPrefab;
-    [SerializeField] private GameObject targetPoint;
+    // Test
+    [SerializeField] private GameObject _checkPrefab;
+    [SerializeField] private GameObject _patrolTargetPoint;
 
     void Awake()
     {
-        _patrolBounds = patrolArea.bounds;
+        _patrolBounds = _patrolArea.bounds;
 
         // init
-        SetTargetPos();
-        targetPoint = Instantiate(checkPrefab, _targetPosition, Quaternion.identity);
+        Init();
     }
 
     public void UpdatePatrolPoint()
     {
-        elapsedTime += Time.deltaTime;
+        _elapsedTime += Time.deltaTime;
 
-        if (elapsedTime >= targetTime || Vector3.Distance(transform.position, _targetPosition) < 1f)
+        if (_elapsedTime > _targetTime || Vector3.Distance(transform.position, _targetPosition) < 1f)
         {
-            elapsedTime = 0f;
+            _elapsedTime = 0f;
 
             // Delete Debug Object
-            if (targetPoint)
-                Destroy(targetPoint);
+            if (_patrolTargetPoint)
+                Destroy(_patrolTargetPoint);
 
             // Set Destination
             SetTargetPos();
 
             // Create Debug Object
-            targetPoint = Instantiate(checkPrefab, _targetPosition, Quaternion.identity);
+            _patrolTargetPoint = Instantiate(_patrolTargetPoint, _targetPosition, Quaternion.identity, transform.parent);
+            _patrolTargetPoint.name = "Patrol Target Point";
         }
+    }
+
+    public void Init()
+    {
+        SetTargetPos();
+        _patrolTargetPoint = Instantiate(_checkPrefab, _targetPosition, Quaternion.identity);
     }
 
     public void SetTargetPos()
@@ -58,6 +65,6 @@ public class FloatingPatrolEvaluator : MonoBehaviour
     {
         // 순회 범위
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(patrolArea.transform.position, _patrolBounds.size);
+        Gizmos.DrawWireCube(_patrolArea.transform.position, _patrolBounds.size);
     }
 }

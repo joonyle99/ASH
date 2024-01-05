@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Threading;
+using TMPro;
 using UnityEditor.Animations;
 using UnityEngine;
 
@@ -10,25 +11,23 @@ public abstract class MonsterBehavior : MonoBehaviour
 {
     #region Attribute
 
-    // ETC
+    // Basic Component
     public Rigidbody2D RigidBody { get; private set; }
     public Animator Animator { get; private set; }
 
     [Header("State")]
     [Space]
 
-    [SerializeField] private Monster_StateBase _initialState;
     [SerializeField] private Monster_StateBase _currentState;
+
+    [Space]
+
+    [SerializeField] private Monster_StateBase _initialState;
     [SerializeField] private Monster_StateBase _previousState;
 
     [Header("Module")]
     [Space]
 
-    [SerializeField] private WayPointPatrol _wayPointPatrol;
-    public WayPointPatrol WayPointPatrol
-    {
-        get { return _wayPointPatrol; }
-    }
     [SerializeField] private NavMeshMove _navMeshMove;
     public NavMeshMove NavMeshMove
     {
@@ -39,10 +38,15 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         get { return _floatingPatrolEvaluator; }
     }
-    [SerializeField] private ChaseEvaluator _chaseEvaluator;
-    public ChaseEvaluator ChaseEvaluator
+    [SerializeField] private GroundPatrolEvaluator _groundPatrolEvaluator;
+    public GroundPatrolEvaluator GroundPatrolEvaluator
     {
-        get { return _chaseEvaluator; }
+        get { return _groundPatrolEvaluator; }
+    }
+    [SerializeField] private FloatingChaseEvaluator _floatingChaseEvaluator;
+    public FloatingChaseEvaluator FloatingChaseEvaluator
+    {
+        get { return _floatingChaseEvaluator; }
     }
     [SerializeField] private AttackEvaluator _attackEvaluator;
     public AttackEvaluator AttackEvaluator
@@ -53,6 +57,13 @@ public abstract class MonsterBehavior : MonoBehaviour
     [Header("Condition")]
     [Space]
 
+    [SerializeField] private int _defaultDir = 1;
+    [SerializeField] private int _recentDir;
+    public int RecentDir
+    {
+        get => _recentDir;
+        set => _recentDir = value;
+    }
     [SerializeField] private bool _isHit;
     public bool IsHit
     {
@@ -131,8 +142,8 @@ public abstract class MonsterBehavior : MonoBehaviour
     [Header("Blink")]
     [Space]
 
-    [SerializeField] private Material _whiteMaterial;
-    [SerializeField] private float _blinkDuration = 0.1f;
+    [SerializeField] private Material _blinkMaterial;
+    private float _blinkDuration = 0.08f;
     private SpriteRenderer[] _spriteRenderers;
     private Material[] _originalMaterials;
     private Coroutine _blinkRoutine;
@@ -154,12 +165,13 @@ public abstract class MonsterBehavior : MonoBehaviour
         Animator = GetComponent<Animator>();
 
         // Module
-        _wayPointPatrol = GetComponent<WayPointPatrol>();
         _navMeshMove = GetComponent<NavMeshMove>();
         _floatingPatrolEvaluator = GetComponent<FloatingPatrolEvaluator>();
-        _chaseEvaluator = GetComponent<ChaseEvaluator>();
+        _groundPatrolEvaluator = GetComponent<GroundPatrolEvaluator>();
+        _floatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         _attackEvaluator = GetComponent<AttackEvaluator>();
 
+        // Save Material for Blink Effect
         SaveOriginalMaterial();
 
         // Init State
@@ -169,6 +181,9 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         // 몬스터 속성 설정
         SetUp();
+
+        // 바라보는 방향 설정
+        _recentDir = _defaultDir;
     }
     protected virtual void Update()
     {
@@ -222,7 +237,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         CurHp -= damage;
 
         // Hit
-        StartHitTimer();
+        SetIsHit(true);
         KnockBack(forceVector);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
@@ -243,14 +258,14 @@ public abstract class MonsterBehavior : MonoBehaviour
         IsDead = true;
 
         // Disable Hit Box
-        SetActiveHitBox(false);
+        SetActiveHitBoxGameObject(false);
 
         // 사라지기 시작
         StartDestroy();
     }
 
-    // hitBox
-    public void SetActiveHitBox(bool isBool)
+    // hitBox & Collider
+    public void SetActiveHitBoxGameObject(bool isBool)
     {
         // Disable Hit Box
         GameObject hitBox = GetComponentInChildren<MonsterBodyHit>(true).gameObject;
@@ -274,11 +289,20 @@ public abstract class MonsterBehavior : MonoBehaviour
         {
             Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
             hitBoxCollider.isTrigger = isBool;
-            hitBox.layer = isBool ? LayerMask.NameToLayer("Monster") : LayerMask.NameToLayer("Default");
+            hitBox.layer = isBool ? LayerMask.NameToLayer("MontserHitBox") : LayerMask.NameToLayer("Default");
         }
+    }
+    public void SetIsHit(bool isHit)
+    {
+        IsHit = isHit;
     }
 
     // basic
+    public void UpdateImageFlip()
+    {
+        RecentDir *= -1;
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+    }
     private void CheckDie()
     {
         if (CurHp <= 0)
@@ -286,16 +310,6 @@ public abstract class MonsterBehavior : MonoBehaviour
             CurHp = 0;
             Animator.SetTrigger("Die");
         }
-    }
-    private IEnumerator HitTimer()
-    {
-        IsHit = true;
-        yield return new WaitForSeconds(0.01f);
-        IsHit = false;
-    }
-    public void StartHitTimer()
-    {
-        StartCoroutine(HitTimer());
     }
 
     // effect
@@ -311,7 +325,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         for (int i = 0; i < _originalMaterials.Length; i++)
             _originalMaterials[i] = _spriteRenderers[i].material;
     }
-    private void InitMaterial()
+    private void ResetMaterial()
     {
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
@@ -322,7 +336,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         {
             // turn to white material
             for (int i = 0; i < _originalMaterials.Length; i++)
-                _spriteRenderers[i].material = _whiteMaterial;
+                _spriteRenderers[i].material = _blinkMaterial;
 
             yield return new WaitForSeconds(_blinkDuration);
 
@@ -337,43 +351,36 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         if (this._blinkRoutine != null)
         {
-            InitMaterial();
+            ResetMaterial();
             StopCoroutine(this._blinkRoutine);
         }
         this._blinkRoutine = StartCoroutine(Blink());
     }
     private IEnumerator FadeOutDestroy()
     {
-        // Bring 모든 SpriteRenderer를 가져온다 from All Child Objects
-        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        SpriteRenderer[] currentSpriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
-        // 초기 알파값 저장
-        float[] startAlphaArray = new float[spriteRenderers.Length];
-        for (int i = 0; i < spriteRenderers.Length; i++)
-            startAlphaArray[i] = spriteRenderers[i].color.a;
+        float[] startAlphaArray = new float[currentSpriteRenderers.Length];
+        for (int i = 0; i < currentSpriteRenderers.Length; i++)
+            startAlphaArray[i] = currentSpriteRenderers[i].color.a;
 
-        // 모든 렌더 컴포넌트를 돌면서 Fade Out
         while (_elapsedFadeOutTime < _targetFadeOutTime)
         {
             _elapsedFadeOutTime += Time.deltaTime;
             float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
 
-            for (int i = 0; i < spriteRenderers.Length; i++)
+            for (int i = 0; i < currentSpriteRenderers.Length; i++)
             {
-                // 현재 스프라이트 렌더러의 알파값을 변경
-                Color targetColor = spriteRenderers[i].color;
+                Color targetColor = currentSpriteRenderers[i].color;
                 targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
-                spriteRenderers[i].color = targetColor;
+                currentSpriteRenderers[i].color = targetColor;
             }
 
             yield return null;
         }
 
-        // 오브젝트 삭제
-        if (transform.root)
-            Destroy(transform.root.gameObject);
-        else
-            Destroy(gameObject);
+        if (transform.root) Destroy(transform.root.gameObject);
+        else Destroy(gameObject);
 
         yield return null;
     }

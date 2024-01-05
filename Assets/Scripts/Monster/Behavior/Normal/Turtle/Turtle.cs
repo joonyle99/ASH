@@ -3,11 +3,6 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class Turtle : NormalMonster
 {
-    [Header("Turtle")]
-    [Space]
-
-    [SerializeField] private LayerMask _layerMask;
-
     protected override void Awake()
     {
         base.Awake();
@@ -19,6 +14,7 @@ public class Turtle : NormalMonster
     protected override void Update()
     {
         base.Update();
+
     }
     protected override void FixedUpdate()
     {
@@ -39,7 +35,7 @@ public class Turtle : NormalMonster
             return;
 
         // Hit
-        StartHitTimer();
+        SetIsHit(true);
         KnockBack(forceVector);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
@@ -50,9 +46,13 @@ public class Turtle : NormalMonster
     {
         IsDead = true;
 
+        // hitbox collider :  Trigger -> Collision
         SetTriggerHitBox(false);
 
-        this.GetComponentInParent<Collider2D>().enabled = false;
-        this.gameObject.layer = LayerMask.NameToLayer("Default");
+        // disable monster collider
+        GetComponent<Collider2D>().enabled = false;
+
+        // turn to player groundable layer
+        gameObject.layer = LayerMask.NameToLayer("Default");
     }
 }

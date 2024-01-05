@@ -172,6 +172,12 @@ public class PlayerBehaviour : StateMachineBase
     {
         base.Update();
 
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            // 사망 후 부활
+            TriggerInstantRespawn(100);
+        }
+
         if (IsDead)
             return;
 

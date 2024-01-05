@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChaseEvaluator : MonoBehaviour
+public class FloatingChaseEvaluator : MonoBehaviour
 {
-    [Header("Chase Evaluator")]
+    [Header("Floating Chase Evaluator")]
     [Space]
 
     [SerializeField] private LayerMask _targetLayer;
@@ -15,8 +15,9 @@ public class ChaseEvaluator : MonoBehaviour
     [SerializeField] private Transform _targetTrans;
     public Transform TargetTrans { get { return _targetTrans; } }
 
+    // Test
     [SerializeField] private GameObject checkPrefab;
-    [SerializeField] private GameObject targetPoint;
+    [SerializeField] private GameObject _chaseTargetPoint;
 
     void Awake()
     {
@@ -37,18 +38,21 @@ public class ChaseEvaluator : MonoBehaviour
                 SetTargetTrans(player.transform);
 
                 // Create Debug Object
-                if (!targetPoint)
-                    targetPoint = Instantiate(checkPrefab, _targetTrans.position, Quaternion.identity);
+                if (!_chaseTargetPoint)
+                {
+                    _chaseTargetPoint = Instantiate(checkPrefab, _targetTrans.position, Quaternion.identity, transform.parent);
+                    _chaseTargetPoint.name = "Chase Target Point";
+                }
                 else
-                    targetPoint.transform.position = player.transform.position;
+                    _chaseTargetPoint.transform.position = player.transform.position;
 
                 return true;
             }
         }
 
         // Delete Debug Object
-        if (targetPoint)
-            Destroy(targetPoint);
+        if (_chaseTargetPoint)
+            Destroy(_chaseTargetPoint);
 
         return false;
     }

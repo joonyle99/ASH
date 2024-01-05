@@ -14,7 +14,7 @@ public class FloatingPatrolState : Monster_StateBase
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
         // change to Chase
-        if (Monster.ChaseEvaluator.IsTargetWithinChaseRange())
+        if (Monster.FloatingChaseEvaluator.IsTargetWithinChaseRange())
         {
             animator.SetTrigger("Chase");
             return;
@@ -25,7 +25,7 @@ public class FloatingPatrolState : Monster_StateBase
 
         // Move to Target
         Monster.NavMeshMove.SetDestination(Monster.FloatingPatrolEvaluator.TargetPosition);
-        Monster.NavMeshMove.MoveToTarget();
+        Monster.NavMeshMove.MoveToDestination();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
