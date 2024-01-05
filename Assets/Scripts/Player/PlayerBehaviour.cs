@@ -34,6 +34,9 @@ public class PlayerBehaviour : StateMachineBase
 
     [SerializeField] int _maxHp;
     [SerializeField] int _curHp;
+
+    [Space]
+
     [SerializeField] bool _isHurt;
     [SerializeField] bool _isDead;
     [SerializeField] bool _isGodMode;
@@ -48,6 +51,9 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] Collider2D _groundHitCollider;
     [SerializeField] Collider2D _wallHitCollider;
     [SerializeField] Collider2D _DiveHitCollider;
+
+    [Space]
+
     [SerializeField] Collider2D _mainCollider;
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
     [SerializeField] Rigidbody2D _hand;
@@ -58,6 +64,7 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] Material _whiteMaterial;
     [SerializeField] float _godModeTime = 1.5f;
     [SerializeField] float _blinkDuration = 0.1f;
+
     SpriteRenderer[] _spriteRenderers;
     Material[] _originalMaterials;
     Coroutine _blinkRoutine;
@@ -154,9 +161,10 @@ public class PlayerBehaviour : StateMachineBase
     }
     private void OnEnable()
     {
-        // TODO : 마지막 죽은 방향으로 되살아나는거 만들어야함 Alive() 함수 이용
+        /*
         RecentDir = 1;
         transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
+        */
     }
     protected override void Start()
     {
@@ -345,7 +353,7 @@ public class PlayerBehaviour : StateMachineBase
         Debug.Log(damage + " 데미지 입음");
     }
 
-    // effect
+    // blink
     private void SaveSpriteRenderers()
     {
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
@@ -390,6 +398,8 @@ public class PlayerBehaviour : StateMachineBase
         }
         this._blinkRoutine = StartCoroutine(Blink());
     }
+
+    // god mode
     private IEnumerator GodModeTimer()
     {
         IsGodMode = true;
@@ -400,106 +410,8 @@ public class PlayerBehaviour : StateMachineBase
     {
         StartCoroutine(GodModeTimer());
     }
-    private IEnumerator FadeOutDestroy()
-    {
-        // Bring 모든 SpriteRenderer를 가져온다 from All Child Objects
-        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
-        // 초기 알파값 저장
-        float[] startAlphaArray = new float[spriteRenderers.Length];
-        for (int i = 0; i < spriteRenderers.Length; i++)
-            startAlphaArray[i] = spriteRenderers[i].color.a;
-
-        // 모든 렌더 컴포넌트를 돌면서 Fade Out
-        while (_elapsedFadeOutTime < _targetFadeOutTime)
-        {
-            _elapsedFadeOutTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
-
-            for (int i = 0; i < spriteRenderers.Length; i++)
-            {
-                // 현재 스프라이트 렌더러의 알파값을 변경
-                Color targetColor = spriteRenderers[i].color;
-                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
-                spriteRenderers[i].color = targetColor;
-            }
-
-            yield return null;
-        }
-
-        // 오브젝트 삭제
-        if (transform.root)
-            Destroy(transform.root.gameObject);
-        else
-            Destroy(gameObject);
-
-        yield return null;
-    }
-    public void StartDestroy()
-    {
-        StartCoroutine(FadeOutDestroy());
-    }
-
-    // die / alive
-    public void Die()
-    {
-        // 플레이어 사망 시 종료 옵션
-
-
-        // 파스스 사라지는 연출
-
-    }
-    private IEnumerator Alive()
-    {
-        Debug.Log("Alive");
-
-        /*
-        // 초기 설정
-        ChangeState<IdleState>();
-        CurHp = _maxHp;
-        RecentDir = 1;
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
-
-        // 콜라이더 활성화
-        this.GetComponent<Collider2D>().enabled = true;
-
-        // 파티클 생성 & 시작
-        ParticleSystem myEffect = Instantiate(respawnEffect, transform.position, Quaternion.identity, transform);
-        myEffect.Play();  // 반복되는 이펙트
-
-        // 자식 오브젝트의 모든 렌더 컴포넌트를 가져온다
-        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
-
-        // 초기 알파값 저장
-        float[] startAlphas = new float[renderers.Length];
-        for (int i = 0; i < renderers.Length; i++)
-            startAlphas[i] = renderers[i].color.a;
-
-        // 모든 렌더 컴포넌트를 돌면서 Fade In
-        float t = 0;
-        while (t < _reviveFadeInDuration)
-        {
-            t += Time.deltaTime;
-            float normalizedTime = t / _reviveFadeInDuration;
-
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                Color color = renderers[i].color;
-                color.a = Mathf.Lerp(startAlphas[i], 1f, normalizedTime);
-                renderers[i].color = color;
-                CapeRenderer.sharedMaterial.SetFloat("_Opacity", normalizedTime);
-            }
-
-            yield return null;
-        }
-
-        // 파티클 종료 & 파괴
-        myEffect.Stop();
-        Destroy(myEffect.gameObject);
-        */
-
-        yield return null;
-    }
+    // respawn
     public void TriggerInstantRespawn(float damage)
     {
         if (CurHp == 1)

@@ -8,8 +8,6 @@ public class DieState : PlayerState
         Animator.SetTrigger("Die");
 
         Player.IsDead = true;
-
-        Player.Die();
     }
 
     protected override void OnUpdate()
