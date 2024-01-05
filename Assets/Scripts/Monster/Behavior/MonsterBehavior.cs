@@ -39,6 +39,11 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         get { return _floatingPatrolEvaluator; }
     }
+    [SerializeField] private GroundPatrolEvaluator _groundPatrolEvaluator;
+    public GroundPatrolEvaluator GroundPatrolEvaluator
+    {
+        get { return _groundPatrolEvaluator; }
+    }
     [SerializeField] private ChaseEvaluator _chaseEvaluator;
     public ChaseEvaluator ChaseEvaluator
     {
@@ -53,6 +58,13 @@ public abstract class MonsterBehavior : MonoBehaviour
     [Header("Condition")]
     [Space]
 
+    [SerializeField] private int _defaultDir = 1;
+    [SerializeField] private int _recentDir;
+    public int RecentDir
+    {
+        get => _recentDir;
+        set => _recentDir = value;
+    }
     [SerializeField] private bool _isHit;
     public bool IsHit
     {
@@ -157,6 +169,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         _wayPointPatrol = GetComponent<WayPointPatrol>();
         _navMeshMove = GetComponent<NavMeshMove>();
         _floatingPatrolEvaluator = GetComponent<FloatingPatrolEvaluator>();
+        _groundPatrolEvaluator = GetComponent<GroundPatrolEvaluator>();
         _chaseEvaluator = GetComponent<ChaseEvaluator>();
         _attackEvaluator = GetComponent<AttackEvaluator>();
 
@@ -169,6 +182,9 @@ public abstract class MonsterBehavior : MonoBehaviour
     {
         // 몬스터 속성 설정
         SetUp();
+
+        // 바라보는 방향 설정
+        _recentDir = _defaultDir;
     }
     protected virtual void Update()
     {
@@ -279,6 +295,13 @@ public abstract class MonsterBehavior : MonoBehaviour
     }
 
     // basic
+    public void UpdateImageFlip()
+    {
+        Debug.Log("Update Flip");
+
+        RecentDir *= -1;
+        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+    }
     private void CheckDie()
     {
         if (CurHp <= 0)

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FloatingPatrolEvaluator : MonoBehaviour
 {
-    [Header("Patrol Evaluator")]
+    [Header("Floating Patrol Evaluator")]
     [Space]
 
     [SerializeField] private BoxCollider2D patrolArea;
@@ -16,6 +16,7 @@ public class FloatingPatrolEvaluator : MonoBehaviour
     [SerializeField] private float targetTime = 3f;
     [SerializeField] private float elapsedTime;
 
+    // Test
     [SerializeField] private GameObject checkPrefab;
     [SerializeField] private GameObject targetPoint;
 

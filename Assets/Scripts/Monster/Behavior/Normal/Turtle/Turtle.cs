@@ -3,11 +3,6 @@ using static UnityEngine.Rendering.DebugUI;
 
 public class Turtle : NormalMonster
 {
-    [Header("Turtle")]
-    [Space]
-
-    [SerializeField] private LayerMask _layerMask;
-
     protected override void Awake()
     {
         base.Awake();
