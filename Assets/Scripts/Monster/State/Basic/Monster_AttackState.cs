@@ -9,6 +9,9 @@ public class Monster_AttackState : Monster_StateBase
         // Start God Mode
         Monster.IsGodMode = true;
 
+        // Start Super Armor Flash
+        Monster.StartSuperArmorFlash();
+
         // Start Attack CoolTime
         Monster.AttackEvaluator.StartAttackableTimer();
     }

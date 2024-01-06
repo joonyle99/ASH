@@ -142,11 +142,13 @@ public abstract class MonsterBehavior : MonoBehaviour
     [Header("Blink")]
     [Space]
 
-    [SerializeField] private Material _blinkMaterial;
+    [SerializeField] private Material _whiteFlashMaterial;
+    [SerializeField] private Material _superArmorMaterial;
     private float _blinkDuration = 0.08f;
     private SpriteRenderer[] _spriteRenderers;
     private Material[] _originalMaterials;
-    private Coroutine _blinkRoutine;
+    private Coroutine _whiteFlashRoutine;
+    private Coroutine _superArmorRoutine;
 
     [Header("FadeOut")]
     [Space]
@@ -171,7 +173,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         _floatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         _attackEvaluator = GetComponent<AttackEvaluator>();
 
-        // Save Material for Blink Effect
+        // Save Material for WhiteFlash Effect
         SaveOriginalMaterial();
 
         // Init State
@@ -330,13 +332,13 @@ public abstract class MonsterBehavior : MonoBehaviour
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
     }
-    private IEnumerator Blink()
+    private IEnumerator WhiteFlash()
     {
         while (IsHurt)
         {
             // turn to white material
             for (int i = 0; i < _originalMaterials.Length; i++)
-                _spriteRenderers[i].material = _blinkMaterial;
+                _spriteRenderers[i].material = _whiteFlashMaterial;
 
             yield return new WaitForSeconds(_blinkDuration);
 
@@ -347,14 +349,40 @@ public abstract class MonsterBehavior : MonoBehaviour
             yield return new WaitForSeconds(_blinkDuration);
         }
     }
-    public void StartBlink()
+    public void StartWhiteFlash()
     {
-        if (this._blinkRoutine != null)
+        if (this._whiteFlashRoutine != null)
         {
             ResetMaterial();
-            StopCoroutine(this._blinkRoutine);
+            StopCoroutine(this._whiteFlashRoutine);
         }
-        this._blinkRoutine = StartCoroutine(Blink());
+        this._whiteFlashRoutine = StartCoroutine(WhiteFlash());
+    }
+    private IEnumerator SuperArmorFlash()
+    {
+        while (IsGodMode)
+        {
+            // turn to white material
+            for (int i = 0; i < _originalMaterials.Length; i++)
+                _spriteRenderers[i].material = _superArmorMaterial;
+
+            yield return new WaitForSeconds(_blinkDuration);
+
+            // turn to original material
+            for (int i = 0; i < _originalMaterials.Length; i++)
+                _spriteRenderers[i].material = _originalMaterials[i];
+
+            yield return new WaitForSeconds(_blinkDuration);
+        }
+    }
+    public void StartSuperArmorFlash()
+    {
+        if (this._superArmorRoutine != null)
+        {
+            ResetMaterial();
+            StopCoroutine(this._superArmorRoutine);
+        }
+        this._superArmorRoutine = StartCoroutine(SuperArmorFlash());
     }
     private IEnumerator FadeOutDestroy()
     {
