@@ -10,7 +10,7 @@ public class Monster_HurtState : Monster_StateBase
         Monster.IsHurt = true;
 
         // Start Alpha Blink
-        Monster.StartBlink();
+        Monster.StartWhiteFlash();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
