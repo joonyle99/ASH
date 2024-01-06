@@ -16,7 +16,18 @@ public class ParticleHelper : MonoBehaviour
     {
         gameObject.SetActive(true);
     }
-
+    public void SetStartSize(Vector3 size)
+    {
+        var main = _particleSystem.main;
+        main.startSizeX = size.x;
+        main.startSizeY = size.y;
+        main.startSizeZ = size.z;
+    }
+    public void SetStartRotation(float rotationZ)
+    {
+        var main = _particleSystem.main;
+        main.startRotation = rotationZ;
+    }
     public void SetEmissionRotation(Vector3 rotation)
     {
         if (_particleSystem == null)
