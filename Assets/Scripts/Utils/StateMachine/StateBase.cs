@@ -28,7 +28,7 @@ public abstract class StateBase : MonoBehaviour
     {
         _animatorParameters.InvokeExit(StateMachine.Animator);
         OnExit();
-        StateMachine = null;
+        //StateMachine = null;
     }
 
     protected virtual void SetAnimsOnEnter() {}

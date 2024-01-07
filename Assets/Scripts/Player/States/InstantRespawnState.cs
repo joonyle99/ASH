@@ -15,9 +15,9 @@ public class InstantRespawnState : PlayerState
     }
     protected override void OnEnter()
     {
+        Player.Rigidbody.simulated = false;
         Player.enabled = false;
         Animator.speed = 0;
-        Player.Rigidbody.simulated = false;
         InputManager.Instance.ChangeInputSetter(_stayStillSetter);
         StartCoroutine(DieCoroutine());
     }
@@ -45,7 +45,6 @@ public class InstantRespawnState : PlayerState
     IEnumerator SpawnCoroutine()
     {
         Player.enabled = true;
-        Player.Rigidbody.simulated = true;
         Player.Rigidbody.velocity = Vector2.zero;
         Animator.speed = 1;
 
@@ -67,6 +66,7 @@ public class InstantRespawnState : PlayerState
             color.a = 1;
             renderer.color = color;
         }
+        Player.Rigidbody.simulated = true;
         ChangeState<IdleState>();
     }
     public void Respawn()
