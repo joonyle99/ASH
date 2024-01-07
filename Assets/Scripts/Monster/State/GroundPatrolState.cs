@@ -12,6 +12,9 @@ public class GroundPatrolState : Monster_StateBase
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
+        if (Monster.GroundPatrolEvaluator.IsCheckWall())
+            Monster.UpdateImageFlip();
+
         // 자기가 바라보는 방향으로 직진
         Monster.RigidBody.velocity = Monster.RecentDir * Vector2.right * Monster.MoveSpeed;
     }

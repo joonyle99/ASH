@@ -51,8 +51,5 @@ public class Turtle : NormalMonster
 
         // disable monster collider
         GetComponent<Collider2D>().enabled = false;
-
-        // turn to player groundable layer
-        gameObject.layer = LayerMask.NameToLayer("Default");
     }
 }

@@ -16,12 +16,12 @@ public class GroundPatrolEvaluator : MonoBehaviour
     [SerializeField] private Transform _wallCheckPointDown;
     [SerializeField] private float _wallCheckDistance = 1f;
 
-    void Update()
+    public bool IsCheckWall()
     {
         RaycastHit2D upRayHit = Physics2D.Raycast(_wallCheckPointUp.position, Vector2.right * _monster.RecentDir, _wallCheckDistance, _layerMask);
         RaycastHit2D downRayHit = Physics2D.Raycast(_wallCheckPointDown.position, Vector2.right * _monster.RecentDir, _wallCheckDistance, _layerMask);
-        if (upRayHit || downRayHit)
-            _monster.UpdateImageFlip();
+
+        return upRayHit || downRayHit;
     }
 
     private void OnDrawGizmosSelected()
