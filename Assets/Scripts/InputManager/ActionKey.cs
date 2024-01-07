@@ -21,6 +21,7 @@ public struct ActionKey
     public void Update(KeyCode code)
     {
         State = KeyState.None;
+
         if (Input.GetKey(code))
             State = KeyState.Pressing;
         if (Input.GetKeyDown(code))
