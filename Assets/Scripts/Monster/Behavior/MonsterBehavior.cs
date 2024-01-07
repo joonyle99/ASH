@@ -299,7 +299,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         {
             Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
             hitBoxCollider.isTrigger = isBool;
-            hitBox.layer = isBool ? LayerMask.NameToLayer("MontserHitBox") : LayerMask.NameToLayer("Default");
+            hitBox.layer = isBool ? LayerMask.NameToLayer("Monster") : LayerMask.NameToLayer("Default");
         }
     }
     public void SetIsHit(bool isHit)

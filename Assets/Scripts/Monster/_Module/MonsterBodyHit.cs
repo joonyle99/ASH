@@ -14,7 +14,8 @@ public class MonsterBodyHit : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("DangerousGimmick"))
+        var spike = collision.GetComponent<Spikes>();
+        if (spike)
         {
             var monster = GetComponentInParent<MonsterBehavior>();
             monster.Animator.SetTrigger("Die");
