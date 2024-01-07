@@ -3,6 +3,7 @@ using System.Threading;
 using TMPro;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// 몬스터의 기본 행동을 정의
@@ -226,9 +227,16 @@ public abstract class MonsterBehavior : MonoBehaviour
 
         // Monster의 Mass에 따른 forceVector 보정
         float ratio = RigidBody.mass / 1.0f;
-        forceVector *= ratio;
+        Vector2 newForceVector = forceVector * ratio;
 
-        RigidBody.AddForce(forceVector, ForceMode2D.Impulse);
+        var navMesh = GetComponent<NavMeshAgent>();
+
+        // navMesh의 KnockBack
+        if (navMesh)
+            navMesh.velocity = forceVector / 2.0f;
+        // rigidbody의 KnockBack
+        else
+            RigidBody.AddForce(newForceVector, ForceMode2D.Impulse);
     }
     public virtual void OnHit(int damage, Vector2 forceVector)
     {
