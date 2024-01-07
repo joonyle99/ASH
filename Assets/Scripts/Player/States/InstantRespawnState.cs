@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
+
 public class InstantRespawnState : PlayerState
 {
     [SerializeField] InputSetterScriptableObject _stayStillSetter;
@@ -67,6 +69,7 @@ public class InstantRespawnState : PlayerState
             renderer.color = color;
         }
         Player.Rigidbody.simulated = true;
+        Player.Alive();
         ChangeState<IdleState>();
     }
     public void Respawn()

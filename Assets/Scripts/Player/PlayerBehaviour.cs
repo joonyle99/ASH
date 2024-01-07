@@ -159,13 +159,6 @@ public class PlayerBehaviour : StateMachineBase
         // SoundList
         _soundList = GetComponent<SoundList>();
     }
-    private void OnEnable()
-    {
-        /*
-        RecentDir = 1;
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
-        */
-    }
     protected override void Start()
     {
         base.Start();
@@ -179,12 +172,6 @@ public class PlayerBehaviour : StateMachineBase
     protected override void Update()
     {
         base.Update();
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            // 사망 후 부활
-            TriggerInstantRespawn(100);
-        }
 
         if (IsDead)
             return;
@@ -247,6 +234,7 @@ public class PlayerBehaviour : StateMachineBase
     private void InitPlayer()
     {
         CurHp = _maxHp;
+        RecentDir = Math.Sign(transform.localScale.x);
     }
     private void UpdateImageFlip()
     {
@@ -421,15 +409,18 @@ public class PlayerBehaviour : StateMachineBase
 
         InstantRespawn();
     }
-    void InstantRespawn()
+    public void InstantRespawn()
     {
-        //this.gameObject.SetActive(false);
         ChangeState<InstantRespawnState>(true);
         SceneContext.Current.InstantRespawn();
     }
+    public void Alive()
+    {
+        _curHp = _maxHp;
+    }
 
     // anim event
-    public void EndHurt_AnimEvent()
+    public void FinishState_AnimEvent()
     {
         ChangeState<IdleState>();
     }
@@ -526,14 +517,14 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
+        // Draw Wall Check
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(_wallCheckRayTrans.position, _wallCheckRayTrans.position + PlayerLookDir3D * _wallCheckRayLength);
+
         // Draw Upward Ray
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position - UtilDefine.PaddingVector,
             transform.position - UtilDefine.PaddingVector + Vector3.up * _upwardRayLength);
-
-        // Draw Wall Check
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(_wallCheckRayTrans.position, _wallCheckRayTrans.position + PlayerLookDir3D * _wallCheckRayLength);
 
         // Draw Dive Check
         Gizmos.color = Color.white;
