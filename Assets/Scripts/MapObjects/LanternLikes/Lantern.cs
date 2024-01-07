@@ -143,6 +143,11 @@ public class Lantern : LanternLike, ILightCaptureListener
         _isExplodeDone = false;
         StopAllCoroutines();
     }
+    public void OnDarkBeamCollision()
+    {
+        TurnLightOff();
+        _currentLightFill = 0f;
+    }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {

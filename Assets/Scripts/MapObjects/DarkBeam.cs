@@ -10,15 +10,11 @@ public class DarkBeam : MonoBehaviour, ITriggerListener
     [SerializeField] float _damage;
     [SerializeField] float _maxLength;
     [SerializeField] LayerMask _obstacleLayer;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] LayerMask _lanternLayer;
 
-    // Update is called once per frame
     void Update()
     {
+        //Set Length
         float rotation = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
         Vector3 direction = new Vector3(Mathf.Cos(rotation), Mathf.Sin(rotation), 0);
         var hit = Physics2D.Raycast(transform.position, direction, _maxLength, _obstacleLayer);
@@ -30,6 +26,12 @@ public class DarkBeam : MonoBehaviour, ITriggerListener
 
         _triggerBox.offset = length * Vector3.right / 2;
         _triggerBox.size = new Vector2(length, _triggerBox.size.y);
+
+        var hits = Physics2D.RaycastAll(transform.position, direction, length, _lanternLayer);
+        foreach(var lanternHit in hits)
+        {
+            lanternHit.transform.GetComponent<Lantern>().OnDarkBeamCollision();
+        }
     }
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
