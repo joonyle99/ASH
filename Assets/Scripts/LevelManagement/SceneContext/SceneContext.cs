@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// 현재 씬에 대한 동작은 모두 담당함. 
+/// 현재 씬에 대한 동작은 모두 담당함.
 /// 씬의 주요 오브젝트에 대한 레퍼런스를 갖고 있음
 /// </summary>
 public class SceneContext : MonoBehaviour
@@ -107,7 +107,4 @@ public class SceneContext : MonoBehaviour
         }
         return buildResult;
     }
-    
-
-
 }
