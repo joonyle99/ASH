@@ -2,27 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DarkBeam : MonoBehaviour
+public class DarkBeam : MonoBehaviour, ITriggerListener
 {
-    [SerializeField] ParticleHelper _beamParticle;
+    [SerializeField] BoxCollider2D _triggerBox;
+    [SerializeField] DarkBeamEffect _effect;
 
-    [SerializeField] LayerMask _obstacleLayer;
-    [SerializeField] float _rotation;
+    [SerializeField] float _damage;
     [SerializeField] float _maxLength;
+    [SerializeField] LayerMask _obstacleLayer;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
-        _beamParticle.SetStartRotation(_rotation);
+        float rotation = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
+        Vector3 direction = new Vector3(Mathf.Cos(rotation), Mathf.Sin(rotation), 0);
+        var hit = Physics2D.Raycast(transform.position, direction, _maxLength, _obstacleLayer);
+        float length = _maxLength;
+        if (hit.transform != null)
+            length = hit.distance;
+
+        _effect.RecreateMesh(length);
+
+        _triggerBox.offset = length * Vector3.right / 2;
+        _triggerBox.size = new Vector2(length, _triggerBox.size.y);
     }
-    void ShootRay()
+    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
-        float rotation = transform.rotation.eulerAngles.z;
-        var hit = Physics2D.Raycast(transform.position, new Vector2(Mathf.Cos(rotation), Mathf.Sin(rotation)), _maxLength, _obstacleLayer);
-        if (hit.collider == null)
-            SetParticleLength(_maxLength);
-    }
-    void SetParticleLength(float length)
-    {
-        _beamParticle.SetStartSize(new Vector3(length, 1, 0));
+        if (activator.Type == ActivatorType.Player)
+        {
+            activator.GetComponent<PlayerBehaviour>().TriggerInstantRespawn(_damage);
+        }
     }
 }

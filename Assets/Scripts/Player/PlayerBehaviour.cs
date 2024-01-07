@@ -503,7 +503,7 @@ public class PlayerBehaviour : StateMachineBase
 
         InstantRespawn();
     }
-    public void InstantRespawn()
+    void InstantRespawn()
     {
         //this.gameObject.SetActive(false);
         ChangeState<InstantRespawnState>(true);
