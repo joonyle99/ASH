@@ -27,23 +27,23 @@ public class LightController : MonoBehaviour
     }
     void Update()
     {
-        _isLightableState = _player.StateIs<IdleState>() || _player.StateIs<RunState>();
-
-        if (_isLightWorking)
-        {
-            if (!_isLightableState)
-            {
-                TurnOffLight();
-                _isLightWorking = _light.activeSelf;
-            }
-        }
-
         InputState inputState = InputManager.Instance.State;
 
-        // Light Source ON / OFF
-        if (Input.GetKeyDown(KeyCode.L))
+        _isLightableState = _player.StateIs<IdleState>() || _player.StateIs<RunState>();
+
+        // Auto Turn Off Light
+        if (!_isLightableState && _isLightWorking)
         {
-            if (_isLightableState)
+            TurnOffLight();
+            _isLightWorking = false;
+
+            return;
+        }
+
+        // Light Source ON / OFF
+        if (_isLightableState)
+        {
+            if (inputState.LightKey.KeyDown)
                 _isLightWorking = !_isLightWorking;
         }
 

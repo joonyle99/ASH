@@ -10,6 +10,7 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
     [SerializeField] KeyCode _basicAttackKeyCode = KeyCode.A;
     [SerializeField] KeyCode _shootingAttackKeyCode = KeyCode.S;
     [SerializeField] KeyCode _interactionKeyCode = KeyCode.E;
+    [SerializeField] KeyCode _lightingKeyCode = KeyCode.L;
 
     public override InputState GetState()
     {
@@ -40,6 +41,7 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
         state.DashKey.Update(_dashKeyCode);
         state.BasicAttackKey.Update(_basicAttackKeyCode);
         state.ShootingAttackKey.Update(_shootingAttackKeyCode);
+        state.LightKey.Update(_lightingKeyCode);
 
         return state;
     }
