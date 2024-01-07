@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7569820491429216708}
   - component: {fileID: 7569820491429216706}
   - component: {fileID: 7569820491429216709}
-  - component: {fileID: 988961526}
   m_Layer: 11
   m_Name: Monster Body Hit_Turtle
   m_TagString: Untagged
@@ -47,7 +46,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.111777306, y: 3.9995313}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -58,7 +57,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 6.661278, y: 3.9961555}
+  m_Size: {x: 6, y: 4}
   m_EdgeRadius: 0
 --- !u!114 &7569820491429216709
 MonoBehaviour:
@@ -76,29 +75,3 @@ MonoBehaviour:
   _forceXPower: 7
   _forceYPower: 10
   _isDisableHitBox: 0
---- !u!61 &988961526
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7569820491429216711}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.2916119, y: 3.4261098}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 6.33184, y: 4.061632}
-  m_EdgeRadius: 0
