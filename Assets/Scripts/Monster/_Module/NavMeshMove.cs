@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 
-/// <summary>
-/// NavMesh Patrol 모듈
-/// Monster에 붙혀서 사용
-/// </summary>
 public class NavMeshMove : MonoBehaviour
 {
     [Header("NavMesh Move")]
@@ -23,6 +20,7 @@ public class NavMeshMove : MonoBehaviour
         _agent.updateUpAxis = false;
     }
 
+
     public void SetDestination(Transform trans)
     {
         _destPosition = trans.position;
@@ -33,10 +31,9 @@ public class NavMeshMove : MonoBehaviour
         _destPosition = vec;
     }
 
-    public void MoveToTarget()
+    public void MoveToDestination()
     {
         _agent.SetDestination(_destPosition);
-        // _agent.Move();
     }
 
     public void SetStopAgent(bool isStop)
