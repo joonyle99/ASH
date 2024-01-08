@@ -11,11 +11,18 @@ public static class MonsterDefine
         Large
     }
 
-    public enum MONSTER_TYPE
+    public enum MONSTER_LEVEL
     {
         Null = 0,
         Normal,
         SemiBoss,
         Boss
+    }
+
+    public enum MONSTER_BEHAV
+    {
+        Null = 0,
+        Ground,
+        Fly
     }
 }

@@ -1,19 +1,16 @@
 using UnityEngine;
 
-public class Monster_AttackState : Monster_StateBase
+public class Monster_DieState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        base.OnStateEnter(animator, stateInfo, layerIndex) ;
+        base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // Start God Mode
-        Monster.IsGodMode = true;
+        // Start Die
+        Monster.IsDead = true;
 
-        // Start Super Armor Flash
-        Monster.StartSuperArmorFlash();
-
-        // Start Attack CoolTime
-        Monster.AttackEvaluator.StartAttackableTimer();
+        // Polymorphism
+        Monster.Die();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -25,9 +22,9 @@ public class Monster_AttackState : Monster_StateBase
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        // End God Mode
-        Monster.IsGodMode = false;
+        // End Die
+        Monster.IsDead = false;
 
-        animator.SetTrigger("Idle");
+        Monster.EndState();
     }
 }

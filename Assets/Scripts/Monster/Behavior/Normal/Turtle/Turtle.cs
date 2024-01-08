@@ -35,7 +35,7 @@ public class Turtle : NormalMonster
             return;
 
         // Hit
-        SetIsHit(true);
+        StartIsHitTimer();
         KnockBack(forceVector);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 

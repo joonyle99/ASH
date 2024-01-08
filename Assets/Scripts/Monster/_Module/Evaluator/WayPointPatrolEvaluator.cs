@@ -7,7 +7,7 @@ using UnityEngine;
 /// Monster에 붙혀서 사용
 /// Way Point를 방문한다.
 /// </summary>
-public class WayPointPatrol : MonoBehaviour
+public class WayPointPatrolEvaluator : MonoBehaviour
 {
     [Header("WayPoint Patrol")]
     [Space]

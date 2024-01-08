@@ -377,7 +377,7 @@ GameObject:
   - component: {fileID: 7423043734368032601}
   - component: {fileID: 1515515474331757967}
   - component: {fileID: 1515515474669220110}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Monster_Bat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -518,6 +518,7 @@ MonoBehaviour:
   _attackEvaluator: {fileID: 0}
   _defaultDir: 1
   _recentDir: 0
+  _isInAir: 0
   _isHit: 0
   _isHurt: 0
   _isDead: 0
@@ -529,7 +530,13 @@ MonoBehaviour:
   _curHp: 0
   _moveSpeed: 0
   _monsterSize: 0
-  _monsterType: 0
+  _monsterLevel: 0
+  _monsterBehav: 0
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _groundCheckTrans: {fileID: 0}
+  _groundCheckBoxSize: {x: 0, y: 0}
   _batSkillPrefab: {fileID: 2007017996437501280, guid: e98a801d4e584ec4ca7b2591c541fa95, type: 3}
   _shootPosition: {fileID: 4312079356565234124}
   _skillSprites:
@@ -3203,21 +3210,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2433773195143610723, guid: 8d76f3a741eccb24d9090603869bbaa6, type: 3}
-      propertyPath: m_Radius
-      value: 1.27
-      objectReference: {fileID: 0}
-    - target: {fileID: 2433773195143610723, guid: 8d76f3a741eccb24d9090603869bbaa6, type: 3}
-      propertyPath: m_Offset.y
-      value: -0.67
-      objectReference: {fileID: 0}
     - target: {fileID: 2433773195143610725, guid: 8d76f3a741eccb24d9090603869bbaa6, type: 3}
       propertyPath: m_Name
-      value: Monster Body Hit_Bat
-      objectReference: {fileID: 0}
-    - target: {fileID: 2433773195143610725, guid: 8d76f3a741eccb24d9090603869bbaa6, type: 3}
-      propertyPath: m_TagString
-      value: Untagged
+      value: MonsterHitBox_Bat
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d76f3a741eccb24d9090603869bbaa6, type: 3}

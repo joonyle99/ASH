@@ -42,10 +42,17 @@ public class MonsterData : ScriptableObject
         protected set => _monsterSize = value;
     }
 
-    [SerializeField] private MonsterDefine.MONSTER_TYPE _monsterType;
-    public MonsterDefine.MONSTER_TYPE MonsterType // 몬스터 타입
+    [SerializeField] private MonsterDefine.MONSTER_LEVEL _monsterLevel;
+    public MonsterDefine.MONSTER_LEVEL MonsterLevel // 몬스터 타입
     {
-        get => _monsterType;
-        protected set => _monsterType = value;
+        get => _monsterLevel;
+        protected set => _monsterLevel = value;
+    }
+
+    [SerializeField] private MonsterDefine.MONSTER_BEHAV _monsterBehav;
+    public MonsterDefine.MONSTER_BEHAV MonsterBehav // 몬스터 행동
+    {
+        get => _monsterBehav;
+        protected set => _monsterBehav = value;
     }
 }

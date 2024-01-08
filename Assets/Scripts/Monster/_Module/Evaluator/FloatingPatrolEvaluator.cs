@@ -16,7 +16,7 @@ public class FloatingPatrolEvaluator : MonoBehaviour
     [SerializeField] private float _targetTime = 7f;
     [SerializeField] private float _elapsedTime;
 
-    // Test
+    // Test Code
     [SerializeField] private GameObject _checkPrefab;
     [SerializeField] private GameObject _patrolTargetPoint;
 

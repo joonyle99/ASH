@@ -15,7 +15,7 @@ public class FloatingChaseEvaluator : MonoBehaviour
     [SerializeField] private Transform _targetTrans;
     public Transform TargetTrans { get { return _targetTrans; } }
 
-    // Test
+    // Test Code
     [SerializeField] private GameObject checkPrefab;
     [SerializeField] private GameObject _chaseTargetPoint;
 
