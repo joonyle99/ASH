@@ -101,8 +101,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7cd6d4bb1dcefd43b49f9676cfac231, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetStayTime: 1.5
-  _elapsedStayTime: 0
+  _targetIdleTime: 2
+  _elapsedIdleTime: 0
 --- !u!1107 &-1629894275335678276
 AnimatorStateMachine:
   serializedVersion: 6
@@ -152,7 +152,8 @@ AnimatorState:
   m_Name: Patrol
   m_Speed: 1
   m_CycleOffset: 0
-  m_Transitions: []
+  m_Transitions:
+  - {fileID: 8065093993510249769}
   m_StateMachineBehaviours:
   - {fileID: 5672990609344794940}
   m_Position: {x: 50, y: 50, z: 0}
@@ -415,6 +416,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99dc662fe8f5f9b48af0c05eca2474ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _targetPatrolTime: 0
+  _elapsedPatrolTime: 0
 --- !u!1102 &6980918681415527243
 AnimatorState:
   serializedVersion: 6
@@ -470,3 +473,28 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1101 &8065093993510249769
+AnimatorStateTransition:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: Idle
+    m_EventTreshold: 0
+  m_DstStateMachine: {fileID: 0}
+  m_DstState: {fileID: 7359803218784963154}
+  m_Solo: 0
+  m_Mute: 0
+  m_IsExit: 0
+  serializedVersion: 3
+  m_TransitionDuration: 0
+  m_TransitionOffset: 0
+  m_ExitTime: 1
+  m_HasExitTime: 0
+  m_HasFixedDuration: 1
+  m_InterruptionSource: 0
+  m_OrderedInterruption: 1
+  m_CanTransitionToSelf: 1
