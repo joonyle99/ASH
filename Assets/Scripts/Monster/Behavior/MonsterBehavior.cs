@@ -140,18 +140,22 @@ public abstract class MonsterBehavior : MonoBehaviour
         protected set => _monsterType = value;
     }
 
-    // Blink
-    private Material _whiteFlashMaterial;
-    private Material _superArmorMaterial;
+    [Header("Blink")]
+    [Space]
+
+    [SerializeField] private Material _whiteFlashMaterial;
+    [SerializeField] private Material _superArmorMaterial;
     private float _blinkDuration = 0.08f;
     private SpriteRenderer[] _spriteRenderers;
     private Material[] _originalMaterials;
     private Coroutine _whiteFlashRoutine;
     private Coroutine _superArmorRoutine;
 
-    // Fade Out
-    private float _targetFadeOutTime = 3f;
-    private float _elapsedFadeOutTime = 0f;
+    [Header("FadeOut")]
+    [Space]
+
+    [SerializeField] private float _targetFadeOutTime = 3f;
+    [SerializeField] private float _elapsedFadeOutTime = 0f;
 
     #endregion
 
@@ -170,8 +174,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         _floatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         _attackEvaluator = GetComponent<AttackEvaluator>();
 
-        // Material
-        LoadBlinkMaterial();
+        // Save Material for WhiteFlash Effect
         SaveOriginalMaterial();
 
         // Init State
@@ -320,13 +323,6 @@ public abstract class MonsterBehavior : MonoBehaviour
     }
 
     // effect
-    private void LoadBlinkMaterial()
-    {
-        _whiteFlashMaterial =
-            Resources.Load<Material>("Materials/WhiteFlashMaterial");
-        _superArmorMaterial =
-            Resources.Load<Material>("Materials/SuperArmorFlashMaterial");
-    }
     private void SaveSpriteRenderers()
     {
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
