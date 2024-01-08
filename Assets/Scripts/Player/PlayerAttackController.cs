@@ -6,7 +6,7 @@ public class PlayerAttackController : MonoBehaviour
     [Header("Attack Setting")]
     [Space]
 
-    [SerializeField] private LayerMask _monsterLayerMask;
+    [SerializeField] private LayerMask _monsterHitBoxLayerMask;
     [SerializeField] private LayerMask _attackableEntityLayerMask;
     [SerializeField] private Transform _attackHitBoxTrans;
     [SerializeField] private float _hitBoxRadius;
@@ -59,7 +59,7 @@ public class PlayerAttackController : MonoBehaviour
     {
         _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
         RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero,
-            0f, _monsterLayerMask);
+            0f, _monsterHitBoxLayerMask);
 
         foreach (var rayCastHit in rayCastHits)
         {

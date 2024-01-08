@@ -1,26 +1,39 @@
+using System.Linq;
 using UnityEngine;
 
-public class FloatingChaseState : Monster_StateBase
+public class Monster_IdleState : Monster_StateBase
 {
+    [SerializeField] private float _targetIdleTime;
+    [SerializeField] private float _elapsedIdleTime;
+
+    private bool hasPatrolParameter;
+
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+
+        hasPatrolParameter = animator.parameters.Any(param => param.name == "Patrol");
+
+        _targetIdleTime = Random.Range(1f, 2f);
+        _elapsedIdleTime = 0f;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        // Not Found
-        if (!Monster.FloatingChaseEvaluator.IsTargetWithinChaseRange())
+        if (!hasPatrolParameter)
+            return;
+
+        // change to patrol
+        _elapsedIdleTime += Time.deltaTime;
+        if (_elapsedIdleTime > _targetIdleTime)
         {
+            _elapsedIdleTime = 0f;
             animator.SetTrigger("Patrol");
+
             return;
         }
-
-        // Move to Target
-        Monster.NavMeshMove.SetDestination(Monster.FloatingChaseEvaluator.TargetTrans);
-        Monster.NavMeshMove.MoveToDestination();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

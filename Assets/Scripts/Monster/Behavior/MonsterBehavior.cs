@@ -65,6 +65,12 @@ public abstract class MonsterBehavior : MonoBehaviour
         get => _recentDir;
         set => _recentDir = value;
     }
+    [SerializeField] private bool _isInAir;
+    public bool IsInAir
+    {
+        get => _isInAir;
+        set => _isInAir = value;
+    }
     [SerializeField] private bool _isHit;
     public bool IsHit
     {
@@ -133,12 +139,26 @@ public abstract class MonsterBehavior : MonoBehaviour
         get => _monsterSize;
         protected set => _monsterSize = value;
     }
-    [SerializeField] private MonsterDefine.MONSTER_TYPE _monsterType;
-    public MonsterDefine.MONSTER_TYPE MonsterType
+    [SerializeField] private MonsterDefine.MONSTER_LEVEL _monsterLevel;
+    public MonsterDefine.MONSTER_LEVEL MonsterLevel
     {
-        get => _monsterType;
-        protected set => _monsterType = value;
+        get => _monsterLevel;
+        protected set => _monsterLevel = value;
     }
+    [SerializeField] private MonsterDefine.MONSTER_BEHAV _monsterBehav;
+    public MonsterDefine.MONSTER_BEHAV MonsterBehav
+    {
+        get => _monsterBehav;
+        protected set => _monsterBehav = value;
+    }
+
+    [Header("Ground Check")]
+    [Space]
+
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private Transform _groundCheckTrans;
+    [SerializeField] private Vector2 _groundCheckBoxSize;
+    public RaycastHit2D GroundRayHit;
 
     // Blink
     private Material _whiteFlashMaterial;
@@ -150,7 +170,7 @@ public abstract class MonsterBehavior : MonoBehaviour
     private Coroutine _superArmorRoutine;
 
     // Fade Out
-    private float _targetFadeOutTime = 3f;
+    private float _targetFadeOutTime = 2f;
     private float _elapsedFadeOutTime = 0f;
 
     #endregion
@@ -190,6 +210,44 @@ public abstract class MonsterBehavior : MonoBehaviour
         if (IsDead)
             return;
 
+        /*
+        // ground behavior
+        if (_monsterBehav == MonsterDefine.MONSTER_BEHAV.Ground)
+        {
+            if (!_isInAir)
+            {
+                GroundRayHit = Physics2D.BoxCast(_groundCheckTrans.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
+                    _groundLayer);
+                if (!GroundRayHit)
+                {
+                    // Ground -> Air
+                    _isInAir = true;
+                    Animator.SetTrigger("InAir");
+                }
+            }
+            else
+            {
+                // Check Ground
+                GroundRayHit = Physics2D.BoxCast(_groundCheckTrans.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
+                    _groundLayer);
+                if (GroundRayHit)
+                {
+                    // Air -> Ground
+                    _isInAir = false;
+                    Animator.SetTrigger("Idle");
+                }
+            }
+
+            // change direction
+            if (GroundPatrolEvaluator.IsCheckWall())
+                UpdateImageFlip();
+        }
+        // fly behavior
+        else if (_monsterBehav == MonsterDefine.MONSTER_BEHAV.Fly)
+            _isInAir = true;
+
+        */
+
         CheckDie();
     }
     protected virtual void FixedUpdate()
@@ -204,9 +262,6 @@ public abstract class MonsterBehavior : MonoBehaviour
         // 몬스터의 이름 설정
         MonsterName = _monsterData.MonsterName;
 
-        // 몬스터의 타입 설정
-        MonsterType = _monsterData.MonsterType;
-
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
         CurHp = MaxHp;
@@ -216,6 +271,12 @@ public abstract class MonsterBehavior : MonoBehaviour
 
         // 몬스터의 크기 타입
         MonsterSize = _monsterData.MonsterSize;
+
+        // 몬스터의 레벨
+        MonsterLevel = _monsterData.MonsterLevel;
+
+        // 몬스터의 행동 타입
+        MonsterBehav = _monsterData.MonsterBehav;
     }
 
     public virtual void KnockBack(Vector2 forceVector)
@@ -244,7 +305,7 @@ public abstract class MonsterBehavior : MonoBehaviour
         CurHp -= damage;
 
         // Hit
-        SetIsHit(true);
+        StartIsHitTimer();
         KnockBack(forceVector);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
@@ -262,8 +323,6 @@ public abstract class MonsterBehavior : MonoBehaviour
     }
     public virtual void Die()
     {
-        IsDead = true;
-
         // Disable Hit Box
         SetActiveHitBoxGameObject(false);
 
@@ -296,12 +355,8 @@ public abstract class MonsterBehavior : MonoBehaviour
         {
             Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
             hitBoxCollider.isTrigger = isBool;
-            hitBox.layer = isBool ? LayerMask.NameToLayer("Monster") : LayerMask.NameToLayer("Default");
+            hitBox.layer = isBool ? LayerMask.NameToLayer("MonsterHitBox") : LayerMask.NameToLayer("Default");
         }
-    }
-    public void SetIsHit(bool isHit)
-    {
-        IsHit = isHit;
     }
 
     // basic
@@ -317,6 +372,20 @@ public abstract class MonsterBehavior : MonoBehaviour
             CurHp = 0;
             Animator.SetTrigger("Die");
         }
+    }
+    private IEnumerator IsHitTimer()
+    {
+        IsHit = true;
+        yield return new WaitForSeconds(0.1f);
+        IsHit = false;
+    }
+    public void StartIsHitTimer()
+    {
+        StartCoroutine(IsHitTimer());
+    }
+    public void EndState()
+    {
+        Animator.SetTrigger("Idle");
     }
 
     // effect
@@ -457,6 +526,17 @@ public abstract class MonsterBehavior : MonoBehaviour
     public bool PreviousStateIs<State>() where State : Monster_StateBase
     {
         return _previousState is State;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // ground behavior
+        if (_monsterBehav == MonsterDefine.MONSTER_BEHAV.Ground)
+        {
+            // Draw Ground Check
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(_groundCheckTrans.position, new Vector3(_groundCheckBoxSize.x, _groundCheckBoxSize.y, 0f));
+        }
     }
 
     #endregion
