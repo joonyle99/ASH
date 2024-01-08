@@ -7,14 +7,17 @@ public class GroundPatrolEvaluator : MonoBehaviour
     [Header("Ground Patrol Evaluator")]
     [Space]
 
-    [SerializeField] private MonsterBehavior _monster;
-
-    [Space]
-
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private Transform _wallCheckPointUp;
     [SerializeField] private Transform _wallCheckPointDown;
     [SerializeField] private float _wallCheckDistance = 1f;
+
+    private MonsterBehavior _monster;
+
+    private void Awake()
+    {
+        _monster = GetComponent<MonsterBehavior>();
+    }
 
     public bool IsCheckWall()
     {
@@ -26,6 +29,9 @@ public class GroundPatrolEvaluator : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if (!_monster)
+            return;
+
         Gizmos.color = Color.red;
         Gizmos.DrawRay(_wallCheckPointUp.position, Vector3.right * _monster.RecentDir * _wallCheckDistance);
         Gizmos.DrawRay(_wallCheckPointDown.position, Vector3.right * _monster.RecentDir * _wallCheckDistance);
