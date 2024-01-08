@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -155,16 +156,18 @@ public sealed class LanternSceneContext : SceneContext
     IEnumerator LastConnectionCameraCoroutine(LanternRelation relation)
     {
         _StopCheckingConnections = true;
-        var cameraController = Camera.main.GetComponent<CameraController>();
+        CameraControlToken token = new CameraControlToken(CameraPriority.LightDoorOpen);
+        yield return new WaitUntil(() => token.IsAvailable);
+
         //랜턴으로 카메라 이동 후 대기
-        cameraController.StartFollow(relation.A.transform == _lightDoor ? relation.B.LightPoint : relation.A.LightPoint);
+        token.Camera?.StartFollow(relation.A.transform == _lightDoor ? relation.B.LightPoint : relation.A.LightPoint);
         InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
         yield return new WaitForSecondsRealtime(_cameraLastLanternStayDuration);
         //레이저 발사
-        cameraController.StartConstantShake(_beamShootingPreset);
+        token.Camera?.StartConstantShake(_beamShootingPreset);
         StartCoroutine(ConnectionCoroutine(relation));
         _lastConnectionCameraPoint.position = relation.Beam.CurrentShootingPosition;
-        cameraController.StartFollow(_lastConnectionCameraPoint);
+        token.Camera?.StartFollow(_lastConnectionCameraPoint);
         while (!relation.Beam.IsShootingDone)
         {
             _lastConnectionCameraPoint.position = relation.Beam.CurrentShootingPosition;
@@ -175,7 +178,7 @@ public sealed class LanternSceneContext : SceneContext
         yield return new WaitForSeconds(_lastBeamDuration);
         relation.Beam.gameObject.SetActive(false);
         //빔 사라진 후 문열기 시작
-        cameraController.StopConstantShake(0.1f);
+        token.Camera?.StopConstantShake(0.1f);
         yield return new WaitForSecondsRealtime(_doorOpenDelay);
         _lightDoor.Open();
         StartCoroutine(PlayOpenSoundCoroutine());
@@ -184,9 +187,9 @@ public sealed class LanternSceneContext : SceneContext
             yield return null;
         }
         //문 열림 끝남
-        cameraController.StopConstantShake(_cameraDoorStayDuration);
+        token.Camera?.StopConstantShake(_cameraDoorStayDuration);
         yield return new WaitForSecondsRealtime(_cameraDoorStayDuration);
-        cameraController.StartFollow(Player.transform);
+        token.Release();
         InputManager.Instance.ChangeToDefaultSetter();
     }
     IEnumerator PlayOpenSoundCoroutine()
@@ -199,7 +202,7 @@ public sealed class LanternSceneContext : SceneContext
     }
     IEnumerator ConnectionCoroutine(LanternRelation relation)
     {
-            _soundList.PlaySFX("SE_Lantern_Line");
+        _soundList.PlaySFX("SE_Lantern_Line");
         relation.Beam.gameObject.SetActive(true);
         yield return new WaitUntil(()=>relation.Beam.IsShootingDone);
         relation.A.OnBeamConnected(relation.Beam);

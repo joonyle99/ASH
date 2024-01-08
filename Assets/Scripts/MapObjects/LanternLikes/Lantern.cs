@@ -87,7 +87,7 @@ public class Lantern : LanternLike, ILightCaptureListener
     }
     void Update()
     {
-        if (!_isExplodeDone || !IsLightOn)
+        if (!IsLightOn || (IsLightOn && !_isExplodeDone))
             return;
         _idleTime += Time.deltaTime;
         if (_idleTime > _idleInterval)
@@ -142,6 +142,11 @@ public class Lantern : LanternLike, ILightCaptureListener
         IsLightOn = false;
         _isExplodeDone = false;
         StopAllCoroutines();
+    }
+    public void OnDarkBeamCollision()
+    {
+        TurnLightOff();
+        _currentLightFill = 0f;
     }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)

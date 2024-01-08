@@ -36,7 +36,7 @@ public class LightSource : MonoBehaviour
 
     void ShootRays()
     {
-        HashSet<Transform> hittedTransforms = new HashSet<Transform>();
+        HashSet<Collider2D> hittedColliders = new HashSet<Collider2D>();
 
         float minAngle = ((lookDir > 0 ? transform.rotation.eulerAngles.z : 180f + transform.rotation.eulerAngles.z) - _angle / 2) * Mathf.Deg2Rad;
         float maxAngle = ((lookDir > 0 ? transform.rotation.eulerAngles.z : 180f + transform.rotation.eulerAngles.z) + _angle / 2) * Mathf.Deg2Rad;
@@ -47,13 +47,13 @@ public class LightSource : MonoBehaviour
             var hit = Physics2D.Raycast(transform.position, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)), _radius, _rayCastLayers);
             if (hit)
             {
-                hittedTransforms.Add(hit.transform);
+                hittedColliders.Add(hit.collider);
             }
         }
 
-        foreach (Transform t in hittedTransforms)
+        foreach (var col in hittedColliders)
         {
-            var capturer = t.GetComponent<LightCapturer>();
+            var capturer = col.GetComponent<LightCapturer>();
             if (capturer != null)
                 capturer.OnLightHitted(this);
         }

@@ -3,49 +3,18 @@ using UnityEngine;
 
 public class DieState : PlayerState
 {
-    public Transform respawnPoint;
-    [Range(0f, 10f)] public float disapearTime;
-    [Range(0f, 10f)] public float reviveDelay;
-    private SpriteRenderer[] renderers;
-    private float[] startAlphas;
-    private float time;
-
-
     protected override void OnEnter()
     {
-        time = 0f;
-        Animator.SetBool("IsDead", true);
-        // Player.PlaySound_SE_Die_01();
-        this.GetComponent<Collider2D>().enabled = false;
-        renderers = GetComponentsInChildren<SpriteRenderer>(false);
-        startAlphas = new float[renderers.Length];
-        for (int i = 0; i < renderers.Length; i++)
-            startAlphas[i] = renderers[i].color.a;
+        Player.IsDead = true;
+
+        Animator.SetTrigger("Die");
+        Animator.SetBool("IsDead", Player.IsDead);
     }
 
     protected override void OnUpdate()
     {
-        if (time < disapearTime)
-        {
-            time += Time.deltaTime;
-            float normalizedTime = time / disapearTime;
-
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                Color color = renderers[i].color;
-                color.a = Mathf.Lerp(startAlphas[i], 0f, normalizedTime);
-                renderers[i].color = color;
-                Player.CapeRenderer.material.SetFloat("_Opacity", 1 - normalizedTime);
-            }
-        }
-        else
-        {
-            Player.PlaySound_SE_Die_02();
-            Animator.SetBool("IsDead", false);
-            gameObject.SetActive(false);
-            //TEMP
-            SceneContext.Current.InstantRespawn();
-        }
+        if(Input.GetKeyDown(KeyCode.R))
+            Player.InstantRespawn();
     }
 
     protected override void OnFixedUpdate()
@@ -55,7 +24,7 @@ public class DieState : PlayerState
 
     protected override void OnExit()
     {
-
+        Player.IsDead = false;
+        Animator.SetBool("IsDead", Player.IsDead);
     }
 }
-

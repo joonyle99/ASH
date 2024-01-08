@@ -53,7 +53,7 @@ public class PlayerJumpController : MonoBehaviour
     void FixedUpdate()
     {
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
-        if (_isLongJumping)
+        if (_isLongJumping && _remainingJumpCount >= _maxJumpCount - 1)
         {
             // Debug.Log("롱 점프 되는중 ~~");
             _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity);
@@ -62,6 +62,10 @@ public class PlayerJumpController : MonoBehaviour
 
     void Update()
     {
+        if (InputManager.Instance.State.JumpKey.KeyDown)
+        {
+            OnJumpPressed();
+        }
         _coyoteAvailable = (_timeAfterPlatformLeft <= _coyoteTime);
         _canJump = (_remainingJumpCount > 0 && _coyoteAvailable);
 
@@ -75,7 +79,7 @@ public class PlayerJumpController : MonoBehaviour
             _longJumpTime += Time.deltaTime;
 
             // 롱점프 시간이 지나거나 점프 버튼을 때면 롱점프는 종료된다.
-            if ((_longJumpTime >= _longJumpDuration) || !_player.RawInputs.IsPressingJump)
+            if ((_longJumpTime >= _longJumpDuration) || !InputManager.Instance.State.JumpKey.Pressing)
                 _isLongJumping = false;
         }
 
@@ -95,8 +99,8 @@ public class PlayerJumpController : MonoBehaviour
                 return;
             }
 
-            // 벽타기 상태에서 "바라보는 방향 = 키 입력 방향" 이라면 점프 불가
-            if (_player.StateIs<WallState>() && (_player.RecentDir == Mathf.RoundToInt(_player.RawInputs.Movement.x)))
+            // 벽타기 상태에서 바라보는 방향과 반대 방향으로 방향키를 누르지 않으면 점프 x
+            if (_player.StateIs<WallState>() && !_player.IsOppositeDirSync)
             {
                 _isJumpQueued = false;
                 return;
@@ -184,7 +188,8 @@ public class PlayerJumpController : MonoBehaviour
     /// </summary>
     public void ExcuteEndWallJump()
     {
-        _remainingJumpCount--;
+        // 한번에 2개의 점프가 깎인다.
+        _remainingJumpCount = 0;
 
         Vector2 endWallJumpForce = new Vector2(_player.Rigidbody.velocity.x, _wallEndJumpPower);
 

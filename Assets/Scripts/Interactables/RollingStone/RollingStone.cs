@@ -1,57 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 public class RollingStone : InteractableObject
 {
-    public enum StoneType { RollingStone, StillStone}
-    Rigidbody2D _rigidbody;
-
-    [SerializeField] GameObject _playerInteractor;
+    [SerializeField] bool _clampSpeed = false;
     [SerializeField] float _maxRollSpeed;
-    [SerializeField] float _maxInteractionDistance = 0.1f;
-    [SerializeField] StoneType _type = StoneType.RollingStone;
-
-    public StoneType Type { get { return _type; } }
-    Collider2D _collider;
-
-    AttackableEntity _attackableComponent;
+    [SerializeField] float _pushPower;
 
     [SerializeField] SoundList _soundList;
     [SerializeField] float _pushSoundInterval;
 
+    Rigidbody2D _rigidbody;
+    AttackableEntity _attackableComponent;
+
     bool _isPushSoundPlaying = false;
+    float _moveDirection = 0;
 
     public bool IsBreakable { get { return _attackableComponent == null; } }
-    bool _immovable
-    {
-        get { return _playerInteractor.activeSelf; }
-        set
-        {
-            _playerInteractor.SetActive(value);
-            if (value)
-                gameObject.layer = LayerMask.NameToLayer("ExceptPlayer");
-            else
-                gameObject.layer = LayerMask.NameToLayer("Default");
-        }
-    }
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _collider = GetComponent<Collider2D>();
         _attackableComponent = GetComponent<AttackableEntity>();
-        _immovable = true;
     }
     protected override void OnInteract()
     {
-        _immovable = false;
-
-        //TODO : Joint 생성
-        //SceneContext.Current.Player.AddJoint<DistanceJoint2D>(_rigidbody, 300);
-
+        Player.MovementController.enabled = true;
+        _moveDirection = Player.PlayerLookDir2D.x;
     }
     IEnumerator PlayPushSoundCoroutine(string key, float interval)
     {
@@ -71,46 +46,21 @@ public class RollingStone : InteractableObject
     }
     public override void UpdateInteracting()
     {
-
-        if (_rigidbody.velocity.sqrMagnitude > _maxRollSpeed * _maxRollSpeed)
+        //TODO : 플레이어가 돌에서 떨어졌을 때
+        if (IsInteractionKeyUp || IsPlayerStateChanged || Player.RawInputs.Movement.x * _moveDirection < 0)
         {
-            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxRollSpeed;
-        }
-        //TODO : 플레이어와 떨어질 때 joint 끊기
-        if (Physics2D.Distance(_collider, SceneContext.Current.Player.MainCollider).distance > _maxInteractionDistance
-            ||  InputManager.Instance.InteractionKey.State == KeyState.KeyUp)
-        {
-            _immovable = true;
-
-            //SceneContext.Current.Player.RemoveJoint();
-
-             FinishInteraction();
+            ExitInteraction();
         }
     }
-
-#if UNITY_EDITOR
-    public void ApplyShape()
+    public override void FixedUpdateInteracting()
     {
-        _playerInteractor.GetComponent<PolygonCollider2D>().points
-            = GetComponent<PolygonCollider2D>().points;
+        _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower);
+        if(_clampSpeed)
+            _rigidbody.velocity = Vector2.ClampMagnitude(_rigidbody.velocity, _maxRollSpeed);
 
     }
-#endif
-}
-
-#if UNITY_EDITOR
-[CustomEditor(typeof(RollingStone))]
-public class CubeGenerateButton : Editor
-{
-    public override void OnInspectorGUI()
+    protected override void OnInteractionExit()
     {
-        base.OnInspectorGUI();
-
-        RollingStone t = (RollingStone)target;
-        if (GUILayout.Button("Apply Shape"))
-        {
-            t.ApplyShape();
-        }
+        Player.MovementController.enabled = false;
     }
 }
-#endif

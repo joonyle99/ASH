@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8059696521937449123}
   - component: {fileID: 3627304428464479304}
   - component: {fileID: 3627304428464479307}
+  - component: {fileID: 7281114898406234693}
   m_Layer: 0
   m_Name: "\uBB34\uB108\uC9C0\uB294\uAE38(BreakableGround)"
   m_TagString: Untagged
@@ -179,6 +180,18 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 0.6
     _pitchB: 1
+--- !u!114 &7281114898406234693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3750174903733972274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8059696520790063089
 GameObject:
   m_ObjectHideFlags: 0
@@ -5080,7 +5093,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8059696521577888092
 Transform:
   m_ObjectHideFlags: 0
@@ -14838,6 +14851,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8059696522245359738}
   - component: {fileID: 8059696522245359717}
+  - component: {fileID: 978881074637029155}
   m_Layer: 0
   m_Name: ParticlesOnDestroy
   m_TagString: Untagged
@@ -14875,4 +14889,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06cc5dcf6a1f45b42a68c42c91dbce79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resetRotation: 1
+  _setRotationToIdentity: 1
+  _particles:
+  - {fileID: 8059696521577888095}
+  - {fileID: 8059696520790063091}
+  - {fileID: 8059696521583498082}
+--- !u!114 &978881074637029155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8059696522245359739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

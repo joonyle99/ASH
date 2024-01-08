@@ -1,50 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class PushableTree : InteractableObject
 {
-    public FallingTreeByPush FallingTreeByPush;
+    [SerializeField] FallingTreeTrunk _treeTrunk;
+    [SerializeField] float _interactionOverAngle = 15;
+    [SerializeField] float _pushPower = 100;
+    [SerializeField] Transform _forcePoint;
 
+    float _moveDirection = 0;
     protected override void OnInteract()
     {
-
+        _moveDirection = Player.RecentDir;
     }
 
     public override void UpdateInteracting()
     {
-        InputState inputState = InputManager.Instance.GetState();
-
-        // 상호작용 종료 타이밍
-        if (InputManager.Instance.InteractionKey.KeyUp || FallingTreeByPush.IsFallingEnd)
+        if (IsInteractionKeyUp || IsPlayerStateChanged || _treeTrunk.FallenAngle > _interactionOverAngle)
         {
-            // 나무가 이미 쓰러진 경우
-            if (FallingTreeByPush.IsFallingEnd)
+            if (_treeTrunk.FallenAngle > _interactionOverAngle)
             {
-                // 더이상 상호작용 못하게 막는다
                 IsInteractable = false;
             }
-
-            // 상호작용 종료
-            FallingTreeByPush.StopPush();
-            FinishInteraction();
-
+            ExitInteraction();
             return;
         }
-
-        // 플레이어가 왼쪽이면 + 플레이어가 오른쪽이면 -
-        float pushDir = Mathf.Sign(FallingTreeByPush.transform.position.x - SceneContext.Current.Player.transform.position.x);
-
-        // 같은 방향인지 계산
-        bool isSyncDir = Mathf.Abs(pushDir - inputState.Horizontal) < 0.01f;
-
-        // 같은 방향인 경우에만 민다.
-        if (isSyncDir)
-            FallingTreeByPush.StartPush(pushDir);
-        else
-            FallingTreeByPush.StopPush();
-
+    }
+    public override void FixedUpdateInteracting()
+    {
+        _treeTrunk.Rigidbody.AddForceAtPosition(new Vector2(_moveDirection, 0) * _pushPower, _forcePoint.position, ForceMode2D.Force);
     }
 }

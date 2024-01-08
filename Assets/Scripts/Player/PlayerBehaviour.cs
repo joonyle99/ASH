@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase
 {
+    #region Attribute
+
     [Header("Ground Check")]
     [Space]
 
@@ -26,11 +29,21 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] float _diveCheckLength;
     [SerializeField] float _diveThreshholdHeight;
 
-    [Header("Player Settings")]
+    [Header("Player")]
     [Space]
 
     [SerializeField] int _maxHp;
     [SerializeField] int _curHp;
+
+    [Space]
+
+    [SerializeField] bool _isHurt;
+    [SerializeField] bool _isDead;
+    [SerializeField] bool _isGodMode;
+    [SerializeField] bool _isCanDash = true;
+
+    [Tooltip("Ïù¥ Í∞ÅÎèÑÎ•º Ï¥àÍ≥ºÌïú Í≤ΩÏÇ¨ÏóêÏÑ† ÏÑúÏûàÏßÄ Î™ªÌï®")]
+    [SerializeField] float _slopeThreshold = 45f;
 
     [Header("Viewr")]
     [Space]
@@ -38,16 +51,35 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] Collider2D _groundHitCollider;
     [SerializeField] Collider2D _wallHitCollider;
     [SerializeField] Collider2D _DiveHitCollider;
+
+    [Space]
+
     [SerializeField] Collider2D _mainCollider;
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
+    [SerializeField] Rigidbody2D _hand;
+
+    [Header("Blink / God Mode")]
+    [Space]
+
+    [SerializeField] Material _whiteMaterial;
+    [SerializeField] float _godModeTime = 1.5f;
+    [SerializeField] float _blinkDuration = 0.1f;
+
+    SpriteRenderer[] _spriteRenderers;
+    Material[] _originalMaterials;
+    Coroutine _blinkRoutine;
+
+    [Header("FadeOut")]
+    [Space]
+
+    [SerializeField] float _targetFadeOutTime = 3f;
+    [SerializeField] float _elapsedFadeOutTime = 0f;
 
     // Controller
     PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
     InteractionController _interactionController;
-
-    // State
-    DashState _dashState;
+    PlayerMovementController _movementController;
 
     //Joint for interactable
     Joint2D _joint;
@@ -55,47 +87,61 @@ public class PlayerBehaviour : StateMachineBase
     // Sound List
     SoundList _soundList;
 
-    // Padding Vector
-    readonly Vector3 _paddingVec = new Vector3(0.1f, 0f, 0f);
+    #endregion
 
     #region Properties
 
-    public bool IsGrounded { get; private set; }
-    public bool IsTouchedWall { get; private set; }
+    // Can Property
     public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<RunState>() || StateIs<InAirState>(); } }
     public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
-    public bool CanDash { get; set; }
+    public bool CanDash { get { return _isCanDash; } set { _isCanDash = value; } }
 
-    public int RecentDir { get; set; }
-    public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
-    public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
-    public bool IsDirSync { get { return Math.Abs(PlayerLookDir2D.x - RawInputs.Horizontal) < 0.1f; } }
-    public bool IsMoveYKey { get { return Math.Abs(Mathf.RoundToInt(RawInputs.Movement.y)) > 0f; } }
-    public bool IsMoveUpKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) > 0f; } }
-    public bool IsMoveDownKey { get { return Mathf.RoundToInt(RawInputs.Movement.y) < 0f; } }
-    public bool IsMove { get { return Mathf.Abs(this.Rigidbody.velocity.x) > 0.1f; } }
+    // Condition Property
+    public bool IsGrounded { get { return GroundHit; } }
+    public bool IsTouchedWall { get { return WallHit; } }
     public bool IsWallJump { get; set; }
     public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
-    public float GroundDistance { get; set; }
-    public float DiveThreshholdHeight { get { return _diveThreshholdHeight; } private set { _diveThreshholdHeight = value; } }
+    public bool IsHurt { get { return _isHurt; } set { _isHurt = value; } }
+    public bool IsDead { get { return _isDead; } set { _isDead = value; } }
+    public bool IsGodMode { get { return _isGodMode; } set { _isGodMode = value; } }
     public int CurHp { get { return _curHp; } set { _curHp = value; } }
 
+    // Check Property
+    public float GroundDistance { get; set; }
+    public float DiveThreshholdHeight { get { return _diveThreshholdHeight; } private set { _diveThreshholdHeight = value; } }
+    public float SlopeThreshold { get { return _slopeThreshold; } }
+
+    // Input Property
+    public InputState RawInputs { get { return InputManager.Instance.State; } }
+    public bool IsMoveXKey { get { return Math.Abs(RawInputs.Movement.x) > 0.01f; } }
+    public bool IsMoveRightKey { get { return RawInputs.Movement.x > 0.01f; } }
+    public bool IsMoveLeftKey { get { return RawInputs.Movement.x < -0.01f; } }
+    public bool IsMoveYKey { get { return Math.Abs(RawInputs.Movement.y) > 0.01f; } }
+    public bool IsMoveUpKey { get { return RawInputs.Movement.y > 0.01f; } }
+    public bool IsMoveDownKey { get { return RawInputs.Movement.y < -0.01f; } }
+
+    // Direction Property
+    public int RecentDir { get; set; }
+    public bool IsDirSync { get { return Mathf.Abs(PlayerLookDir2D.x - RawInputs.Movement.x) < 0.01f; } }
+    public bool IsOppositeDirSync { get { return Mathf.Abs(PlayerLookDir2D.x + RawInputs.Movement.x) < 0.01f; } }
+    public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
+    public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
+
+    // Etc
+    public LayerMask GroundLayerMask { get { return _groundLayer; } }
     public Collider2D MainCollider { get { return _mainCollider; } }
-    public RaycastHit2D GroundHit { get; set; }
-    public RaycastHit2D GroundHitWithRayCast { get; set; }
-    public RaycastHit2D UpwardHit { get; set; }
+    public RaycastHit2D GroundHit { get; private set; }
+    public RaycastHit2D UpwardGroundHit { get; set; }
     public RaycastHit2D WallHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
-
-    public Vector2 GroundAlignedMoveDir { get; set; }
-
-    public InputState RawInputs { get { return InputManager.Instance.GetState(); } }
-    public InteractionController InteractionController { get { return _interactionController; } }   // InputManager.InstanceøÕ µø¿œ
-    public SkinnedMeshRenderer CapeRenderer { get { return _capeRenderer; } }
+    public InteractionController InteractionController { get { return _interactionController; } }
+    public PlayerMovementController MovementController { get { return _movementController; } }
+    public Rigidbody2D HandRigidBody { get { return _hand; } }
+    public SoundList SoundList { get { return _soundList; } }
 
     #endregion
 
-    public SoundList SoundList { get { return _soundList; } }
+    #region Function
 
     private void Awake()
     {
@@ -106,63 +152,56 @@ public class PlayerBehaviour : StateMachineBase
         _jumpController = GetComponent<PlayerJumpController>();
         _attackController = GetComponent<PlayerAttackController>();
         _interactionController = GetComponent<InteractionController>();
+        _movementController = GetComponent<PlayerMovementController>();
 
-        // State
-        _dashState = GetComponent<DashState>();
+        SaveOriginalMaterial();
 
         // SoundList
         _soundList = GetComponent<SoundList>();
     }
-
     protected override void Start()
     {
         base.Start();
 
-        // πË∞Ê BGM √‚∑¬
+        // init player
+        InitPlayer();
+
+        // play bgm
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
-
-        InputManager.Instance.JumpPressedEvent += _jumpController.OnJumpPressed; //TODO : subscribe
-        InputManager.Instance.BasicAttackPressedEvent += OnBasicAttackPressed; //TODO : subscribe
-
-        /*
-        InputManager.Instance.ShootingAttackPressedEvent += OnShootingAttackPressed; //TODO : subscribe
-        */
-
-        CurHp = _maxHp;
     }
-
-    private void OnEnable()
-    {
-        RecentDir = 1;
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
-    }
-
-    private void OnDestroy()
-    {
-        if (InputManager.Instance != null)
-        {
-            InputManager.Instance.JumpPressedEvent -= _jumpController.OnJumpPressed; //TODO : unsubscribe
-            InputManager.Instance.BasicAttackPressedEvent -= OnBasicAttackPressed; //TODO : unsubscribe
-
-            /*
-            InputManager.Instance.ShootingAttackPressedEvent -= OnShootingAttackPressed; //TODO : unsubscribe
-            */
-        }
-    }
-
     protected override void Update()
     {
         base.Update();
 
-        #region Animaotr Parameter
+        if (IsDead)
+            return;
 
-        Animator.SetBool("IsGround", IsGrounded);
-        Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
-        Animator.SetFloat("GroundDistance", GroundDistance);
-        Animator.SetBool("IsMove", IsMove);
-        Animator.SetFloat("InputHorizontal", RawInputs.Horizontal);
-        Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
-        Animator.SetBool("IsDirSync", IsDirSync);
+        #region Input
+
+        if (InputManager.Instance.State.BasicAttackKey.KeyDown)
+            OnBasicAttackPressed();
+        if (InputManager.Instance.State.ShootingAttackKey.KeyDown)
+            OnShootingAttackPressed();
+
+        #endregion
+
+        #region Check Ground & Wall
+
+        // Check Ground
+        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
+        _groundHitCollider = GroundHit.collider;
+
+        // Check Upward
+        UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
+
+        // Check Wall
+        WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
+        _wallHitCollider = WallHit.collider;
+
+        // Check Dive Hit
+        DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckLength, _groundLayer);
+        GroundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
+        _DiveHitCollider = DiveHit.collider;
 
         #endregion
 
@@ -174,54 +213,34 @@ public class PlayerBehaviour : StateMachineBase
         // Change In Air State
         ChangeInAirState();
 
-        #endregion
-
-        #region Check Ground & Wall
-
-        // Check Ground
-        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
-        IsGrounded = GroundHit.collider != null;
-        _groundHitCollider = GroundHit.collider;
-
-        // Check Ground with RayCast
-        GroundHitWithRayCast = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckLength, _groundLayer);
-
-        if (GroundHitWithRayCast)
-        {
-            if (PlayerLookDir2D.x > 0f)
-                GroundAlignedMoveDir = (-1) * Vector2.Perpendicular(GroundHitWithRayCast.normal).normalized;
-            else
-                GroundAlignedMoveDir = Vector2.Perpendicular(GroundHitWithRayCast.normal).normalized;
-        }
-
-        // Check Upward
-        UpwardHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
-
-        // Check Wall
-        WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
-        IsTouchedWall = WallHit.collider != null;
-        _wallHitCollider = WallHit.collider;
-
-        // Check Dive Hit
-        DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckLength, _groundLayer);
-        GroundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
-        _DiveHitCollider = DiveHit.collider;
+        // Check Dead State
+        CheckDie();
 
         #endregion
 
-        #region Skill CoolTime
+        #region Animaotr Parameter
 
-        // Dash CoolTime
-        CoolTime_Dash();
+        Animator.SetBool("IsGround", IsGrounded);
+        Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
+        Animator.SetFloat("GroundDistance", GroundDistance);
+        Animator.SetFloat("InputHorizontal", RawInputs.Movement.x);
+        Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
+        Animator.SetBool("IsDirSync", IsDirSync);
 
         #endregion
     }
 
+    // basic
+    private void InitPlayer()
+    {
+        CurHp = _maxHp;
+        RecentDir = Math.Sign(transform.localScale.x);
+    }
     private void UpdateImageFlip()
     {
-        if (StateIs<RunState>() || StateIs<InAirState>())
+        if (StateIs<RunState>() || StateIs<InAirState>() || MovementController.isActiveAndEnabled)
         {
-            if (!IsDirSync && Mathf.Abs(RawInputs.Horizontal) > 0.01f)
+            if (!IsDirSync && Mathf.Abs(RawInputs.Movement.x) > 0.01f)
             {
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
@@ -236,50 +255,73 @@ public class PlayerBehaviour : StateMachineBase
                 ChangeState<InAirState>();
         }
     }
-
-    public void AddJoint<T>(Rigidbody2D bodyToAttach, float breakForce) where T : Joint2D
+    private void CheckDie()
     {
-        _joint = gameObject.AddComponent<HingeJoint2D>();
-        _joint.connectedBody = bodyToAttach;
-        _joint.enableCollision = true;
-        _joint.breakForce = breakForce;
-    }
-    public void RemoveJoint()
-    {
-        Destroy(_joint);
+        if (CurHp <= 0)
+        {
+            CurHp = 0;
+            ChangeState<DieState>();
+        }
     }
 
+    public void DisableHorizontalMovement()
+    {
+        Rigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
+    }
+    public void EnableHorizontalMovement()
+    {
+        Rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
+    }
+
+    // key pressed event
     void OnBasicAttackPressed()
     {
         if (CanBasicAttack)
             _attackController.CastBasicAttack();
-    }
-    void OnHealingPressed()
-    {
-
     }
     void OnShootingAttackPressed()
     {
         if (CanShootingAttack)
             _attackController.CastShootingAttack();
     }
-
-    void CoolTime_Dash()
+    void OnHealingPressed()
     {
-        if (!_dashState.IsDashing)
-        {
-            if (Time.time >= _dashState.TimeEndedDash + _dashState.CoolTime)
-            {
-                if (IsGrounded || StateIs<WallState>())
-                    CanDash = true;
-            }
-        }
+
     }
 
+    // about hit
+    public void KnockBack(Vector2 forceVector)
+    {
+        Rigidbody.velocity = Vector2.zero;
+        Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
+    }
+    public void OnHit(int damage, Vector2 forceVector)
+    {
+        // return condition
+        if (IsHurt || IsGodMode || IsDead)
+            return;
+
+        CurHp -= damage;
+        PlaySound_SE_Hurt_02();
+
+        // Change Die State
+        if (CurHp <= 0)
+        {
+            CurHp = 0;
+            ChangeState<DieState>();
+
+            return;
+        }
+
+        KnockBack(forceVector);
+
+        // Change Hurt State
+        ChangeState<HurtState>();
+    }
     public void OnHitbyPuddle(float damage)
     {
-        //æ÷¥œ∏ﬁ¿Ãº«, √º∑¬ ¥‚±‚ µÓ «œ∏È µ .
-        //æ÷¥œ∏ﬁ¿Ãº« ¡æ∑· »ƒ spawnpointø°º≠ ª˝º∫
+        //Ïï†ÎãàÎ©îÏù¥ÏÖò, Ï≤¥Î†• Îã≥Í∏∞ Îì± ÌïòÎ©¥ Îê®.
+        //Ïï†ÎãàÎ©îÏù¥ÏÖò Ï¢ÖÎ£å ÌõÑ spawnpointÏóêÏÑú ÏÉùÏÑ±
 
         if (CurHp == 1)
         {
@@ -292,14 +334,72 @@ public class PlayerBehaviour : StateMachineBase
 
         InstantRespawn();
     }
-
     public void OnHitByPhysicalObject(float damage, Rigidbody2D other)
     {
         // TODO
 
-        Debug.Log(damage + " ¥ÎπÃ¡ˆ ¿‘¿Ω");
+        Debug.Log(damage + " Îç∞ÎØ∏ÏßÄ ÏûÖÏùå");
     }
 
+    // blink
+    private void SaveSpriteRenderers()
+    {
+        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+    }
+    private void SaveOriginalMaterial()
+    {
+        SaveSpriteRenderers();
+
+        _originalMaterials = new Material[_spriteRenderers.Length];
+
+        for (int i = 0; i < _originalMaterials.Length; i++)
+            _originalMaterials[i] = _spriteRenderers[i].material;
+    }
+    private void InitMaterial()
+    {
+        for (int i = 0; i < _spriteRenderers.Length; i++)
+            _spriteRenderers[i].material = _originalMaterials[i];
+    }
+    private IEnumerator Blink()
+    {
+        while (IsGodMode)
+        {
+            // turn to white material
+            for (int i = 0; i < _originalMaterials.Length; i++)
+                _spriteRenderers[i].material = _whiteMaterial;
+
+            yield return new WaitForSeconds(_blinkDuration);
+
+            // turn to original material
+            for (int i = 0; i < _originalMaterials.Length; i++)
+                _spriteRenderers[i].material = _originalMaterials[i];
+
+            yield return new WaitForSeconds(_blinkDuration);
+        }
+    }
+    public void StartBlink()
+    {
+        if (this._blinkRoutine != null)
+        {
+            InitMaterial();
+            StopCoroutine(this._blinkRoutine);
+        }
+        this._blinkRoutine = StartCoroutine(Blink());
+    }
+
+    // god mode
+    private IEnumerator GodModeTimer()
+    {
+        IsGodMode = true;
+        yield return new WaitForSeconds(_godModeTime);
+        IsGodMode = false;
+    }
+    public void StartGodMode()
+    {
+        StartCoroutine(GodModeTimer());
+    }
+
+    // respawn
     public void TriggerInstantRespawn(float damage)
     {
         if (CurHp == 1)
@@ -309,88 +409,25 @@ public class PlayerBehaviour : StateMachineBase
 
         InstantRespawn();
     }
-
-    void InstantRespawn()
+    public void InstantRespawn()
     {
-        this.gameObject.SetActive(false);
+        ChangeState<InstantRespawnState>(true);
         SceneContext.Current.InstantRespawn();
     }
-
-    public void Interact()
+    public void Alive()
     {
-        ChangeState<InteractionState>();
+        _curHp = _maxHp;
     }
 
-    /*
-    public void OnHitByBatSkill(BatSkillParticle particle, int damage, Vector2 vec)
+    // anim event
+    public void FinishState_AnimEvent()
     {
-        Debug.Log("π⁄¡„ ¡°æ◊ø° ∏¬¿Ω");
-        OnHit(damage, vec);
-    }
-    */
-
-    /*
-    public void OnHit(int damage, Vector2 vec)
-    {
-        CurHp -= damage;
-        Rigidbody.velocity = vec;
-        RecentDir = (int)Mathf.Sign(-vec.x);
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
-        ChangeState<HurtState>();
-    }
-    */
-
-    /*
-    public IEnumerator Alive()
-    {
-        Debug.Log("∫Œ»∞ !!");
-
-        // √ ±‚ º≥¡§
         ChangeState<IdleState>();
-        CurHp = _maxHp;
-        RecentDir = 1;
-        transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
-
-        // ƒ›∂Û¿Ã¥ı »∞º∫»≠
-        this.GetComponent<Collider2D>().enabled = true;
-
-        // ∆ƒ∆º≈¨ ª˝º∫ & Ω√¿€
-        ParticleSystem myEffect = Instantiate(respawnEffect, transform.position, Quaternion.identity, transform);
-        myEffect.Play();  // π›∫πµ«¥¬ ¿Ã∆Â∆Æ
-
-        // ¿⁄Ωƒ ø¿∫Í¡ß∆Æ¿« ∏µÁ ∑ª¥ı ƒƒ∆˜≥Õ∆Æ∏¶ ∞°¡Æø¬¥Ÿ
-        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(false);
-
-        // √ ±‚ æÀ∆ƒ∞™ ¿˙¿Â
-        float[] startAlphas = new float[renderers.Length];
-        for (int i = 0; i < renderers.Length; i++)
-            startAlphas[i] = renderers[i].color.a;
-
-        // ∏µÁ ∑ª¥ı ƒƒ∆˜≥Õ∆Æ∏¶ µπ∏Èº≠ Fade In
-        float t = 0;
-        while (t < _reviveFadeInDuration)
-        {
-            t += Time.deltaTime;
-            float normalizedTime = t / _reviveFadeInDuration;
-
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                Color color = renderers[i].color;
-                color.a = Mathf.Lerp(startAlphas[i], 1f, normalizedTime);
-                renderers[i].color = color;
-                CapeRenderer.sharedMaterial.SetFloat("_Opacity", normalizedTime);
-            }
-
-            yield return null;
-        }
-
-        // ∆ƒ∆º≈¨ ¡æ∑· & ∆ƒ±´
-        myEffect.Stop();
-        Destroy(myEffect.gameObject);
-
-        yield return null;
     }
-    */
+
+    #endregion
+
+    #region Sound
 
     public void PlaySound_SE_Run()
     {
@@ -444,7 +481,7 @@ public class PlayerBehaviour : StateMachineBase
 
     public void PlaySound_SE_Hurt_01()
     {
-        _soundList.PlaySFX("SE_Hurt_01");
+        // _soundList.PlaySFX("SE_Hurt_01");
     }
 
     public void PlaySound_SE_Hurt_02()
@@ -472,29 +509,26 @@ public class PlayerBehaviour : StateMachineBase
         _soundList.PlaySFX("SE_Healing_02");
     }
 
+    #endregion
+
     private void OnDrawGizmosSelected()
     {
         // Draw Ground Check
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
-        // Draw Ground Check With RayCast
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(_groundCheckTrans.position,
-            _groundCheckTrans.position + Vector3.down * _groundCheckLength);
-
-        // Draw Upward Ray
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position - _paddingVec,
-            transform.position - _paddingVec + Vector3.up * _upwardRayLength);
-
         // Draw Wall Check
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(_wallCheckRayTrans.position, _wallCheckRayTrans.position + PlayerLookDir3D * _wallCheckRayLength);
 
+        // Draw Upward Ray
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position - UtilDefine.PaddingVector,
+            transform.position - UtilDefine.PaddingVector + Vector3.up * _upwardRayLength);
+
         // Draw Dive Check
         Gizmos.color = Color.white;
-        Gizmos.DrawLine(_groundCheckTrans.position + _paddingVec,
-            _groundCheckTrans.position + _paddingVec + Vector3.down * _diveCheckLength);
+        Gizmos.DrawLine(_groundCheckTrans.position + UtilDefine.PaddingVector,
+            _groundCheckTrans.position + UtilDefine.PaddingVector + Vector3.down * _diveCheckLength);
     }
 }

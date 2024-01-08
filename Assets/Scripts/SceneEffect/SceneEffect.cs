@@ -1,0 +1,122 @@
+using UnityEngine;
+
+using Com.LuisPedroFonseca.ProCamera2D;
+using UnityEngine.UIElements;
+using System.Text.RegularExpressions;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+[System.Serializable]
+public class SceneEffect
+{
+    public enum EffectType
+    {
+        Dialogue,
+        CameraShake,
+        ConstantCameraShake,
+        StopConstantCameraShake,
+        WaitForSeconds,
+        ChangeInputSetter,
+        ChangeToDefaultInputSetter,
+    }
+    public EffectType Type { get { return _type; } }
+    public bool IsCameraEffect { get { return _type == EffectType.CameraShake || _type == EffectType.ConstantCameraShake || _type == EffectType.StopConstantCameraShake; } }
+
+    [SerializeField][HideInInspector] EffectType _type = EffectType.Dialogue;
+    [SerializeField][HideInInspector] public DialogueData DialogueData = null;
+    [SerializeField][HideInInspector] public ShakePreset ShakeData = null;
+    [SerializeField][HideInInspector] public ConstantShakePreset ConstantShakeData = null;
+    [SerializeField][HideInInspector] public float Time = 0f;
+    [SerializeField][HideInInspector] public InputSetterScriptableObject InputSetter = null;
+}
+
+#if UNITY_EDITOR
+[CustomPropertyDrawer(typeof(SceneEffect))]
+public class SceneEffectDrawer : PropertyDrawer
+{
+    int HEIGHT = 18;
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        EditorGUI.BeginProperty(position, label, property);
+
+        int indent = EditorGUI.indentLevel;
+
+        Rect foldoutRect = EditorGUI.IndentedRect(new Rect(position.x, position.y, position.width, HEIGHT));
+        position.y += HEIGHT + 2;
+        property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(foldoutRect, property.isExpanded, label);
+        if (property.isExpanded)
+        {
+            EditorGUI.indentLevel++;
+            var typeProperty = property.FindPropertyRelative("_type");
+
+            Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Effect Type"));
+            Rect fieldRect = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width, HEIGHT));
+            EditorGUI.PropertyField(fieldRect, typeProperty, GUIContent.none);
+            position.y += HEIGHT + 2;
+
+            switch((SceneEffect.EffectType)typeProperty.enumValueIndex)
+            {
+                case SceneEffect.EffectType.Dialogue:
+                    DrawField("DialogueData", position, property);
+                    break;
+                case SceneEffect.EffectType.CameraShake:
+                    DrawField("ShakeData", position, property);
+                    break;
+                case SceneEffect.EffectType.ConstantCameraShake:
+                    DrawField("ConstantShakeData", position, property);
+                    break;
+                case SceneEffect.EffectType.StopConstantCameraShake:
+                    DrawField("Time", position, property, "Smooth Time");
+                    break;
+                case SceneEffect.EffectType.ChangeInputSetter:
+                    DrawField("InputSetter", position, property);
+                    break;
+                case SceneEffect.EffectType.ChangeToDefaultInputSetter:
+                    position.y -= HEIGHT + 2;
+                    break;
+                case SceneEffect.EffectType.WaitForSeconds:
+                    DrawField("Time", position, property);
+                    break;
+            }
+            position.y += HEIGHT + 2;
+        }
+        EditorGUI.indentLevel = indent;
+        EditorGUI.EndFoldoutHeaderGroup();
+        EditorGUI.EndProperty();
+    }
+
+    void DrawField(string fieldName, Rect position, SerializedProperty property, string inspectorName = "")
+    {
+        if (inspectorName == "") inspectorName = SplitCamelCase(fieldName);
+        Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent(inspectorName));
+        Rect fieldRect = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width, HEIGHT));
+        EditorGUI.PropertyField(fieldRect, property.FindPropertyRelative(fieldName), GUIContent.none);
+    }
+    public static string SplitCamelCase(string str)
+    {
+        return Regex.Replace(
+            Regex.Replace(
+                str,
+                @"(\P{Ll})(\P{Ll}\p{Ll})",
+                "$1 $2"
+            ),
+            @"(\p{Ll})(\P{Ll})",
+            "$1 $2"
+        );
+    }
+    public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+    {
+        if (property.isExpanded)
+        {
+            if ((SceneEffect.EffectType)property.FindPropertyRelative("_type").enumValueIndex == SceneEffect.EffectType.ChangeToDefaultInputSetter)
+                return (HEIGHT + 2) * 2;
+            else
+                return (HEIGHT + 2) * 3;
+        }
+        else
+            return (HEIGHT + 2);
+    }
+}
+#endif

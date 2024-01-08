@@ -27,7 +27,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         Dialogue dialogue = new Dialogue(data);
         //Disable Inputs
         if (data.InputSetter != null)
+        {
             InputManager.Instance.ChangeInputSetter(data.InputSetter);
+        }
 
         //Start Dialogue
         View.OpenPanel();
@@ -39,11 +41,11 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             while (!View.IsCurrentLineOver)
             {
                 yield return null;
-                if (InputManager.Instance.InteractionKey.State == KeyState.KeyDown)
+                if (InputManager.Instance.State.InteractionKey.KeyDown)
                     View.FastForward();
             }
             yield return null;
-            yield return new WaitUntil(() => InputManager.Instance.InteractionKey.State == KeyState.KeyDown);
+            yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
             yield return StartCoroutine(View.ClearTextCoroutine(_waitTimeAfterScriptEnd));
             dialogue.MoveNext();

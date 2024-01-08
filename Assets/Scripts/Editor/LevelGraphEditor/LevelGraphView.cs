@@ -6,8 +6,6 @@ using UnityEngine.UIElements;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.UIElements;
-using static UnityEditor.Rendering.CameraUI;
-using UnityEngine.Windows;
 using System.Drawing.Printing;
 
 namespace LevelGraph
@@ -176,7 +174,7 @@ namespace LevelGraph
 
         void CreateNodeView(ExploreSceneData node)
         {
-            NodeView nodeView = new NodeView(node);
+            NodeView nodeView = new NodeView(node, _graphData);
             AddElement(nodeView);
         }
         void CreateNode(System.Type type)
@@ -217,5 +215,6 @@ namespace LevelGraph
             AssetDatabase.RemoveObjectFromAsset(node.Data);
             AssetDatabase.SaveAssets();
         }
+
     }
 }

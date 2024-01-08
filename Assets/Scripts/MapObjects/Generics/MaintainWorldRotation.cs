@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class MaintainWorldRotation : MonoBehaviour
 {
+    [SerializeField] float zRotation = 0;
     void Update()
     {
-        transform.rotation = Quaternion.identity;       
+        transform.rotation = Quaternion.Euler(new Vector3(0,0, zRotation));       
     }
 }

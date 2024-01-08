@@ -2,6 +2,7 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Utils;
 
 /*
  * 이 클래스가 담당하는 것: 씬 전환/재시작 시 fade 등의 화면 전환 효과 
@@ -13,14 +14,17 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     [SerializeField] float _transitionDuration = 0.5f;
 
     [Header("Respawn")]
-    [SerializeField] float _respawnFadeDuration = 0.5f;
+    //[SerializeField] float _respawnFadeDuration = 0.5f;
     [SerializeField] float _respawnDelay = 0.5f;
+    [SerializeField] float _capeFlyDuration = 1f;
     public override IEnumerator ExitEffectCoroutine()
     {
-        Camera.main.GetComponent<CameraController>().DisableCameraFollow();
+        CameraControlToken token = new CameraControlToken(CameraPriority.SceneChange);
+        yield return new WaitUntil(() => token.IsAvailable);
+        token.Camera?.DisableCameraFollow();
+        token.Release();
 
         yield return FadeCoroutine(_transitionDuration, FadeType.Darken);
-        yield return null;
     }
 
     public override IEnumerator EnterEffectCoroutine()
@@ -31,26 +35,39 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         {
             yield break;
         }
-        Camera.main.GetComponent<CameraController>().SnapFollow();
-        yield return StartCoroutine(entrance.PlayerExitCoroutine());
+        CameraControlToken token = new CameraControlToken(CameraPriority.SceneChange);
+        yield return new WaitUntil(() => token.IsAvailable);
+        token.Camera?.SnapFollow();
+        token.Release();
 
-        yield return null;
+        yield return StartCoroutine(entrance.PlayerExitCoroutine());
     }
 
-    IEnumerator RespawnEffectCoroutine(Vector3 spawnPosition)
+    IEnumerator InstantRespawnEffectCoroutine(Vector3 spawnPosition)
     {
-        yield return FadeCoroutine(_respawnFadeDuration, FadeType.Darken);
-        SceneContext.Current.Player.gameObject.SetActive(false);
+        var respawnState = SceneContext.Current.Player.GetComponent<InstantRespawnState>();
+        yield return new WaitForSeconds(respawnState.DieDuration);
+        //yield return FadeCoroutine(_respawnFadeDuration, FadeType.Darken);
         yield return new WaitForSeconds(_respawnDelay);
+
+        float eTime = 0f;
+        var originalPosition = SceneContext.Current.Player.transform.position;
+        while (eTime < _capeFlyDuration)
+        {
+            SceneContext.Current.Player.transform.position = Vector3.Lerp(originalPosition, spawnPosition, Curves.EaseOut(eTime/_capeFlyDuration));
+            yield return null;
+            eTime += Time.deltaTime;
+        }
         SceneContext.Current.Player.transform.position = spawnPosition;
-        SceneContext.Current.Player.gameObject.SetActive(true);
-        yield return FadeCoroutine(_respawnFadeDuration, FadeType.Lighten);
+
+        //yield return FadeCoroutine(_respawnFadeDuration, FadeType.Lighten);
+        respawnState.Respawn();
     }
 
     // TODO : Global 플레이어 상태 관리 오브젝트로 옮겨야함
     public void PlayInstantRespawnEffect(Vector3 spawnPosition)
     {
-        StartCoroutine(RespawnEffectCoroutine(spawnPosition));
+        StartCoroutine(InstantRespawnEffectCoroutine(spawnPosition));
     }
 
 

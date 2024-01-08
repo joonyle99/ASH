@@ -42,6 +42,17 @@ public class InteractionController : MonoBehaviour
         else
             _interactionMarker.EnableAt(newTarget);
     }
+    void OnInteractionStart()
+    {
+        if (_interactionTarget.StateChange == InteractionStateChangeType.InteractionState)
+            _player.ChangeState<InteractionState>();
+        
+    }
+    public void OnInteractionExit()
+    {
+        if (_player.StateIs<InteractionState>())
+            _player.ChangeState<IdleState>();
+    }
 
     private void Update()
     {
@@ -52,18 +63,31 @@ public class InteractionController : MonoBehaviour
 
         if (_interactionTarget != null)
         {
-            if (InputManager.Instance.InteractionKey.KeyDown)
+            if (InputManager.Instance.State.InteractionKey.KeyDown)
             {
                 // 상호작용 가능한 State
                 if (_player.IsInteractable)
                 {
-                    _interactionTarget.Interact();  // IsInteracting = true
-                    _player.Interact(); // Change Interaction State
+                    OnInteractionStart();
+                    _interactionTarget.Interact();
                 }
             }
 
             if (_interactionTarget.IsInteracting)
                 _interactionTarget.UpdateInteracting();
+        }
+        else
+        {
+            if (_player.StateIs<InteractionState>())
+                OnInteractionExit();
+        }
+    }
+    private void FixedUpdate()
+    {
+        if (_interactionTarget != null)
+        {
+            if (_interactionTarget.IsInteracting)
+                _interactionTarget.FixedUpdateInteracting();
         }
     }
 
