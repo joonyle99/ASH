@@ -9,6 +9,7 @@ public class IdleState : PlayerState
 
     protected override void OnEnter()
     {
+
     }
 
     protected override void OnUpdate()

@@ -13,6 +13,7 @@ public struct InputState
     public ActionKey DashKey;
     public ActionKey BasicAttackKey;
     public ActionKey ShootingAttackKey;
+    public ActionKey LightKey;
 }
 
 public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
