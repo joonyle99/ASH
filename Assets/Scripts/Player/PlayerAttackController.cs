@@ -94,9 +94,11 @@ public class PlayerAttackController : MonoBehaviour
         {
             // check attackable entity invalid
             var listener = rayCastHit.rigidbody.GetComponent<IAttackListener>();
-
-            Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
-            listener.OnHitted(new AttackInfo(_attackDamage, forceVector, AttackType.BasicAttack));
+            if (listener != null)
+            {
+                Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
+                listener.OnHitted(new AttackInfo(_attackDamage, forceVector, AttackType.BasicAttack));
+            }
         }
     }
 
