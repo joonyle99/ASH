@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class Monster_IdleState : Monster_StateBase
 {
-    [SerializeField] private float _targetIdleTime;
-    [SerializeField] private float _elapsedIdleTime;
+    [SerializeField] protected float _targetIdleTime;
+    [SerializeField] protected float _elapsedIdleTime;
 
-    private bool hasPatrolParameter;
+    [SerializeField] protected bool hasPatrolParameter;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -14,7 +14,7 @@ public class Monster_IdleState : Monster_StateBase
 
         hasPatrolParameter = animator.parameters.Any(param => param.name == "Patrol");
 
-        _targetIdleTime = Random.Range(1f, 2f);
+        _targetIdleTime = Random.Range(1f, 1.5f);
         _elapsedIdleTime = 0f;
     }
 
@@ -22,17 +22,17 @@ public class Monster_IdleState : Monster_StateBase
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        if (!hasPatrolParameter)
-            return;
-
-        // change to patrol
-        _elapsedIdleTime += Time.deltaTime;
-        if (_elapsedIdleTime > _targetIdleTime)
+        if (hasPatrolParameter)
         {
-            _elapsedIdleTime = 0f;
-            animator.SetTrigger("Patrol");
+            // change to patrol
+            _elapsedIdleTime += Time.deltaTime;
+            if (_elapsedIdleTime > _targetIdleTime)
+            {
+                _elapsedIdleTime = 0f;
+                animator.SetTrigger("Patrol");
 
-            return;
+                return;
+            }
         }
     }
 

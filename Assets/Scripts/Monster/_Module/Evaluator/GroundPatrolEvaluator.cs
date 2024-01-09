@@ -15,7 +15,7 @@ public class GroundPatrolEvaluator : MonoBehaviour
     [SerializeField] private Transform _wallCheckTrans;
     [SerializeField] private Vector2 _WallCheckBoxSize;
 
-    public bool IsCheckWall()
+    public bool IsWallCheck()
     {
         return Physics2D.BoxCast(_wallCheckTrans.position, _WallCheckBoxSize, 0f, Vector2.zero, 0f,
             _layerMask);

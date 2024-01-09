@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class GroundPatrolState : Monster_MoveState
@@ -6,9 +7,13 @@ public class GroundPatrolState : Monster_MoveState
     [SerializeField] private float _targetGroundPatrolTime;
     [SerializeField] private float _elapsedGroundPatrolTime;
 
+    [SerializeField] private bool hasIdleParameter;
+
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+
+        hasIdleParameter = animator.parameters.Any(param => param.name == "Idle");
 
         _targetGroundPatrolTime = Random.Range(5f, 15f);
         _elapsedGroundPatrolTime = 0f;
@@ -18,14 +23,17 @@ public class GroundPatrolState : Monster_MoveState
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        // change to idle state
-        _elapsedGroundPatrolTime += Time.deltaTime;
-        if (_elapsedGroundPatrolTime > _targetGroundPatrolTime)
+        if (hasIdleParameter)
         {
-            _elapsedGroundPatrolTime = 0f;
-            animator.SetTrigger("Idle");
+            // change to idle state
+            _elapsedGroundPatrolTime += Time.deltaTime;
+            if (_elapsedGroundPatrolTime > _targetGroundPatrolTime)
+            {
+                _elapsedGroundPatrolTime = 0f;
+                animator.SetTrigger("Idle");
 
-            return;
+                return;
+            }
         }
 
         // move
