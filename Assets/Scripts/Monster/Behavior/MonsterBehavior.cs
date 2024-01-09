@@ -65,6 +65,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _recentDir;
         set => _recentDir = value;
     }
+    [SerializeField] private bool _isGround;
+    public bool IsGround
+    {
+        get => _isGround;
+        set => _isGround = value;
+    }
     [SerializeField] private bool _isInAir;
     public bool IsInAir
     {
@@ -171,7 +177,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     // Fade Out
     private float _targetFadeOutTime = 2f;
-    private float _elapsedFadeOutTime = 0f;
+    private float _elapsedFadeOutTime;
 
     #endregion
 
@@ -213,24 +219,27 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // ground behavior
         if (_monsterBehav == MonsterDefine.MONSTER_BEHAV.Ground)
         {
+            GroundRayHit = Physics2D.BoxCast(_groundCheckTrans.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
+                _groundLayer);
+
+            // TODO : isGround와 isInAir를 어떻게 할지
+
             if (!_isInAir)
             {
-                GroundRayHit = Physics2D.BoxCast(_groundCheckTrans.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
-                    _groundLayer);
                 if (!GroundRayHit)
                 {
                     // Ground -> Air
+                    _isGround = false;
                     _isInAir = true;
                     Animator.SetTrigger("InAir");
                 }
             }
             else
             {
-                GroundRayHit = Physics2D.BoxCast(_groundCheckTrans.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
-                    _groundLayer);
                 if (GroundRayHit)
                 {
                     // Air -> Ground
+                    _isGround = true;
                     _isInAir = false;
                     Animator.SetTrigger("Idle");
                 }
@@ -242,7 +251,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         }
         // fly behavior
         else if (_monsterBehav == MonsterDefine.MONSTER_BEHAV.Fly)
+        {
+            _isGround = false;
             _isInAir = true;
+        }
 
         CheckDie();
     }
@@ -284,11 +296,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         Vector2 newForceVector = forceVector * ratio;
 
         var navMesh = GetComponent<NavMeshAgent>();
-
-        // navMesh의 KnockBack
         if (navMesh)
             navMesh.velocity = forceVector / 2.0f;
-        // rigidbody의 KnockBack
         else
             RigidBody.AddForce(newForceVector, ForceMode2D.Impulse);
     }

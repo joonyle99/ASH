@@ -978,7 +978,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -243.56
+      value: -321.29
       objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1019,22 +1019,6 @@ PrefabInstance:
     - target: {fileID: 1322454706829173486, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 2936927172621461496, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2936927172621461496, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5733063111376558414, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _monsterLayerMask.m_Bits
-      value: 65536
-      objectReference: {fileID: 0}
-    - target: {fileID: 5733063111376558414, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _monsterHitBoxLayerMask.m_Bits
-      value: 65536
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
@@ -1173,12 +1157,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1515515473483279166, guid: 869a0f4268e9a0a4a940f0f79eeaf0aa, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7423043734368032601, guid: 869a0f4268e9a0a4a940f0f79eeaf0aa, type: 3}
-      propertyPath: _attackPointTrans
-      value: 
-      objectReference: {fileID: 2056098469}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 869a0f4268e9a0a4a940f0f79eeaf0aa, type: 3}
 --- !u!1 &735638689
@@ -2352,11 +2332,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &2056098469 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 333116236259798953, guid: 869a0f4268e9a0a4a940f0f79eeaf0aa, type: 3}
-  m_PrefabInstance: {fileID: 711071342}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2074730095 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
@@ -2559,7 +2534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2141627196
 Transform:
   m_ObjectHideFlags: 0
@@ -2626,6 +2601,7 @@ MonoBehaviour:
   _attackEvaluator: {fileID: 0}
   _defaultDir: -1
   _recentDir: 0
+  _isGround: 0
   _isInAir: 0
   _isHit: 0
   _isHurt: 0
@@ -2727,10 +2703,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac8415d5c1e901e498af7e828d66ba5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _monster: {fileID: 2141627201}
-  _layerMask:
+  _wallChecklayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   _wallCheckTrans: {fileID: 1056203979}
   _WallCheckBoxSize: {x: 0.29, y: 1.36}
 --- !u!114 &2141627207
@@ -2748,7 +2723,7 @@ MonoBehaviour:
   _targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _attackPointTrans: {fileID: 1222218390}
+  _attackPointTrans: {fileID: 0}
   _attackBoxSize: {x: 6.42, y: 2.21}
   _targetWaitTime: 3
   _isAttackable: 1
@@ -3707,6 +3682,10 @@ PrefabInstance:
       propertyPath: _WallCheckBoxSize.y
       value: 0.93
       objectReference: {fileID: 0}
+    - target: {fileID: 3957186173606064801, guid: df7a2dab1b7a2b24e879548191042de8, type: 3}
+      propertyPath: _wallChecklayerMask.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3957186173727004974, guid: df7a2dab1b7a2b24e879548191042de8, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.39
@@ -3714,6 +3693,10 @@ PrefabInstance:
     - target: {fileID: 4650453171838025195, guid: df7a2dab1b7a2b24e879548191042de8, type: 3}
       propertyPath: m_Name
       value: Monster_Turtle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4650453171838025195, guid: df7a2dab1b7a2b24e879548191042de8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5783082967282034056, guid: df7a2dab1b7a2b24e879548191042de8, type: 3}
       propertyPath: m_RootOrder

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundPatrolEvaluator : MonoBehaviour
@@ -7,18 +5,16 @@ public class GroundPatrolEvaluator : MonoBehaviour
     [Header("Ground Patrol Evaluator")]
     [Space]
 
-    [SerializeField] private MonsterBehavior _monster;
-
-    [Space]
-
-    [SerializeField] private LayerMask _layerMask;
+    [SerializeField] private LayerMask _wallChecklayerMask;
     [SerializeField] private Transform _wallCheckTrans;
     [SerializeField] private Vector2 _WallCheckBoxSize;
 
     public bool IsWallCheck()
     {
-        return Physics2D.BoxCast(_wallCheckTrans.position, _WallCheckBoxSize, 0f, Vector2.zero, 0f,
-            _layerMask);
+        var rayHit = Physics2D.BoxCast(_wallCheckTrans.position, _WallCheckBoxSize, 0f, Vector2.zero, 0f,
+            _wallChecklayerMask);
+
+        return rayHit;
     }
 
     private void OnDrawGizmosSelected()
