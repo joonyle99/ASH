@@ -3,56 +3,23 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MonsterData", menuName = "Scriptable Object/MonsterData", order = 1)]
 public class MonsterData : ScriptableObject
 {
-    // 고유 식별 번호 ID
-    [SerializeField] private int _id;
-    public int ID
-    {
-        get => _id;
-        protected set => _id = value;
-    }
-
     // 몬스터 이름
     [SerializeField] private string _monsterName;
-    public string MonsterName
-    {
-        get => _monsterName;
-        protected set => _monsterName = value;
-    }
+    public string MonsterName => _monsterName;
 
     // 최대 체력
     [SerializeField] private int _maxHp;
-    public int MaxHp
-    {
-        get => _maxHp;
-        protected set => _maxHp = value;
-    }
+    public int MaxHp => _maxHp;
 
-    // 이동속도
+    // 이동 속도
     [SerializeField] private float _moveSpeed;
-    public float MoveSpeed
-    {
-        get => _moveSpeed;
-        protected set => _moveSpeed = value;
-    }
+    public float MoveSpeed => _moveSpeed;
 
-    [SerializeField] private MonsterDefine.SIZE _monsterSize;
-    public MonsterDefine.SIZE MonsterSize // 몬스터 크기
-    {
-        get => _monsterSize;
-        protected set => _monsterSize = value;
-    }
+    // 점프 파워
+    [SerializeField] private Vector2 _jumpForce;
+    public Vector2 JumpForce => _jumpForce;
 
-    [SerializeField] private MonsterDefine.MONSTER_LEVEL _monsterLevel;
-    public MonsterDefine.MONSTER_LEVEL MonsterLevel // 몬스터 타입
-    {
-        get => _monsterLevel;
-        protected set => _monsterLevel = value;
-    }
-
+    // 몬스터 행동 타입
     [SerializeField] private MonsterDefine.MONSTER_BEHAV _monsterBehav;
-    public MonsterDefine.MONSTER_BEHAV MonsterBehav // 몬스터 행동
-    {
-        get => _monsterBehav;
-        protected set => _monsterBehav = value;
-    }
+    public MonsterDefine.MONSTER_BEHAV MonsterBehav => _monsterBehav;
 }

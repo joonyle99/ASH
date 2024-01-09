@@ -24,7 +24,5 @@ public class Monster_DieState : Monster_StateBase
 
         // End Die
         Monster.IsDead = false;
-
-        Monster.EndState();
     }
 }

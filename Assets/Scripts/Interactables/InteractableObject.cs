@@ -41,7 +41,7 @@ public abstract class InteractableObject : MonoBehaviour
     public bool IsInteracting { get; private set; }
 
     protected bool IsInteractionKeyUp =>  InputManager.Instance.State.InteractionKey.KeyUp;
-    protected bool IsPlayerStateChanged { get { return !Player.StateIs<InteractionState>(); } }
+    protected bool IsPlayerStateChanged { get { return !Player.CurrentStateIs<InteractionState>(); } }
     protected abstract void OnInteract();
     public virtual void UpdateInteracting() { }
     public virtual void FixedUpdateInteracting(){}

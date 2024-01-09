@@ -30,7 +30,7 @@ public class PlayerCoolTimeManager : MonoBehaviour
 
             if (_elapsedDashCoolTime > _targetDashCoolTime)
             {
-                if (player.IsGrounded || player.StateIs<WallState>())
+                if (player.IsGrounded || player.CurrentStateIs<WallState>())
                 {
                     _elapsedDashCoolTime = 0f;
                     player.CanDash = true;

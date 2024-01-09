@@ -7,7 +7,7 @@ public class RotateParticlesOnHit : MonoBehaviour, IAttackListener
     [SerializeField] EnableParticlesOnDestruct _particle;
     [SerializeField] float hitFromLeftAngle;
     [SerializeField] float hitFromRightAngle;
-    public void OnHitted(AttackInfo attackInfo)
+    public void OnHit(AttackInfo attackInfo)
     {
         if (SceneContext.Current.Player.transform.position.x > transform.position.x)
             _particle.AddEmissionRotations(hitFromRightAngle);

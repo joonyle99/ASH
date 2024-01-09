@@ -27,7 +27,5 @@ public class Monster_AttackState : Monster_StateBase
 
         // End God Mode
         Monster.IsGodMode = false;
-
-        Monster.EndState();
     }
 }

@@ -29,7 +29,7 @@ public class LightController : MonoBehaviour
     {
         InputState inputState = InputManager.Instance.State;
 
-        _isLightableState = _player.StateIs<IdleState>() || _player.StateIs<RunState>();
+        _isLightableState = _player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<RunState>();
 
         // Auto Turn Off Light
         if (!_isLightableState && _isLightWorking)

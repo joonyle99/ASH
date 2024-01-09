@@ -13,7 +13,7 @@ public class LaserFlower : MonoBehaviour, IAttackListener
     {
         _hp = _maxHp;
     }
-    public void OnHitted(AttackInfo attackInfo)
+    public void OnHit(AttackInfo attackInfo)
     {
         if (attackInfo.Type == AttackType.BasicAttack)
         {

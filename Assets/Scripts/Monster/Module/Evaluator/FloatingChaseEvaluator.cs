@@ -55,7 +55,6 @@ public class FloatingChaseEvaluator : MonoBehaviour
 
         return false;
     }
-
     public void SetTargetTrans(Transform trans)
     {
         TargetTrans = trans;

@@ -70,7 +70,7 @@ public class PlayerJumpController : MonoBehaviour
         _canJump = (_remainingJumpCount > 0 && _coyoteAvailable);
 
         // Reset jump count
-        if (_player.StateIs<IdleState>() || _player.StateIs<WallState>())
+        if (_player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<WallState>())
             ResetJumpCount();
 
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
@@ -84,7 +84,7 @@ public class PlayerJumpController : MonoBehaviour
         }
 
         // Jump time check
-        if(_player.IsGrounded || _player.StateIs<WallState>())
+        if(_player.IsGrounded || _player.CurrentStateIs<WallState>())
             _timeAfterPlatformLeft = 0f;
         else
             _timeAfterPlatformLeft += Time.deltaTime; // 발판을 떠난 후 경과 시간 증가
@@ -93,14 +93,14 @@ public class PlayerJumpController : MonoBehaviour
         if (_isJumpQueued)
         {
             // Player의 Current State가 Jump State로 진입할 수 없는 상태라면 점프 불가
-            if (_player.StateIs<DashState>() || _player.StateIs<DiveState>() || _player.StateIs<ShootingState>() || _player.StateIs<HurtState>() || _player.StateIs<DieState>() || _player.StateIs<HealingState>())
+            if (_player.CurrentStateIs<DashState>() || _player.CurrentStateIs<DiveState>() || _player.CurrentStateIs<ShootingState>() || _player.CurrentStateIs<HurtState>() || _player.CurrentStateIs<DieState>() || _player.CurrentStateIs<HealingState>())
             {
                 _isJumpQueued = false;
                 return;
             }
 
             // 벽타기 상태에서 바라보는 방향과 반대 방향으로 방향키를 누르지 않으면 점프 x
-            if (_player.StateIs<WallState>() && !_player.IsOppositeDirSync)
+            if (_player.CurrentStateIs<WallState>() && !_player.IsOppositeDirSync)
             {
                 _isJumpQueued = false;
                 return;
@@ -139,7 +139,7 @@ public class PlayerJumpController : MonoBehaviour
         _isStartJump = (_remainingJumpCount == _maxJumpCount);
         _remainingJumpCount--;
 
-        if (_player.StateIs<InAirState>())
+        if (_player.CurrentStateIs<InAirState>())
             _player.Animator.SetTrigger("DoubleJump");
 
         _player.ChangeState<JumpState>();

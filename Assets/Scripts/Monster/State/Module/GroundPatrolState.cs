@@ -2,7 +2,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-public class GroundPatrolState : Monster_MoveState
+public class GroundPatrolState : Monster_StateBase
 {
     [SerializeField] private float _targetGroundPatrolTime;
     [SerializeField] private float _elapsedGroundPatrolTime;
@@ -36,8 +36,15 @@ public class GroundPatrolState : Monster_MoveState
             }
         }
 
-        // move
-        Monster.RigidBody.velocity = Monster.RecentDir * Vector2.right * Monster.MoveSpeed;
+        if (Monster.GroundChaseEvaluator)
+        {
+            // change to chase
+            if (Monster.GroundChaseEvaluator.IsTargetWithinChaseRange())
+                Monster.SetRecentDir(Monster.GroundChaseEvaluator.ChaseDir);
+        }
+
+        if(Monster.MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk)
+            Monster.RigidBody.velocity = Monster.RecentDir * Vector2.right * Monster.MoveSpeed;
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

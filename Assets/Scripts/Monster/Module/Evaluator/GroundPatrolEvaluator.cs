@@ -5,14 +5,14 @@ public class GroundPatrolEvaluator : MonoBehaviour
     [Header("Ground Patrol Evaluator")]
     [Space]
 
-    [SerializeField] private LayerMask _wallChecklayerMask;
+    [SerializeField] private LayerMask _wallCheckLayer;
     [SerializeField] private Transform _wallCheckTrans;
     [SerializeField] private Vector2 _WallCheckBoxSize;
 
     public bool IsWallCheck()
     {
         var rayHit = Physics2D.BoxCast(_wallCheckTrans.position, _WallCheckBoxSize, 0f, Vector2.zero, 0f,
-            _wallChecklayerMask);
+            _wallCheckLayer);
 
         return rayHit;
     }

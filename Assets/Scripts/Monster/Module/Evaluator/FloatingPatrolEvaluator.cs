@@ -26,7 +26,6 @@ public class FloatingPatrolEvaluator : MonoBehaviour
         if (Vector3.Distance(transform.position, TargetPosition) < 1f)
             SetTargetPos();
     }
-
     public void SetTargetPos()
     {
         // Delete Debug Object
