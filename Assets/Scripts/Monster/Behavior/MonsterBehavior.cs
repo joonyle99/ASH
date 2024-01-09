@@ -210,7 +210,6 @@ public abstract class MonsterBehavior : MonoBehaviour
         if (IsDead)
             return;
 
-        /*
         // ground behavior
         if (_monsterBehav == MonsterDefine.MONSTER_BEHAV.Ground)
         {
@@ -227,7 +226,6 @@ public abstract class MonsterBehavior : MonoBehaviour
             }
             else
             {
-                // Check Ground
                 GroundRayHit = Physics2D.BoxCast(_groundCheckTrans.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
                     _groundLayer);
                 if (GroundRayHit)
@@ -239,14 +237,12 @@ public abstract class MonsterBehavior : MonoBehaviour
             }
 
             // change direction
-            if (GroundPatrolEvaluator.IsCheckWall())
+            if (GroundPatrolEvaluator.IsWallCheck())
                 UpdateImageFlip();
         }
         // fly behavior
         else if (_monsterBehav == MonsterDefine.MONSTER_BEHAV.Fly)
             _isInAir = true;
-
-        */
 
         CheckDie();
     }
