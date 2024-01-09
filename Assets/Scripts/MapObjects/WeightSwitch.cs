@@ -40,6 +40,17 @@ public class WeightSwitch : MonoBehaviour
 
     void TurnOn()
     {
+        //켜지는순간 올라간 물체 정지
+        Collider2D[] colliders = new Collider2D[4];
+        int count = _buttonCollider.GetContacts(colliders);
+        for(int i=0; i<count; i++)
+        {
+            if (!colliders[i].attachedRigidbody)
+                continue;
+            colliders[i].attachedRigidbody.velocity = Vector3.zero;
+            colliders[i].attachedRigidbody.angularVelocity= 0f;
+        }
+
         _isOn = true;
         foreach (var listener in _toggleListeners)
             listener.TurnOn();
