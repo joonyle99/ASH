@@ -48,9 +48,9 @@ public class Bat : NormalMonster
     {
         base.KnockBack(forceVector);
     }
-    public override void OnHit(int damage, Vector2 forceVector)
+    public override void OnHitted(AttackInfo attackInfo)
     {
-        base.OnHit(damage, forceVector);
+        base.OnHitted(attackInfo);
     }
     public override void Die()
     {

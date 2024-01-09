@@ -55,8 +55,9 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
+    //TODO: 삭제
     public void MonsterAttackProcess_AnimEvent()
-    {
+    {/*
         _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
         RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero,
             0f, _monsterHitBoxLayerMask);
@@ -80,7 +81,7 @@ public class PlayerAttackController : MonoBehaviour
                     monsterBehavior.OnHit(_attackDamage, forceVector);
                 }
             }
-        }
+        }*/
     }
 
     public void AttackableEntityProcess_AnimEvent()
@@ -92,9 +93,10 @@ public class PlayerAttackController : MonoBehaviour
         foreach (var rayCastHit in rayCastHits)
         {
             // check attackable entity invalid
-            AttackableEntity attackableEntity = rayCastHit.collider.GetComponent<AttackableEntity>();
-            if (attackableEntity)
-                attackableEntity.OnHittedByBasicAttack();
+            var listener = rayCastHit.rigidbody.GetComponent<IAttackListener>();
+
+            Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
+            listener.OnHitted(new AttackInfo(_attackDamage, forceVector, AttackType.BasicAttack));
         }
     }
 

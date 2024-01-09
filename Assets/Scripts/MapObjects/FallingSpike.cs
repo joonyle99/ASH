@@ -17,9 +17,9 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
     {
         _rigidbody = GetComponent<Rigidbody2D>();
     }
-    public void OnHitted(bool isBasicAttack)
+    public void OnHitted(AttackInfo attackInfo)
     {
-        if (isBasicAttack)
+        if (attackInfo.Type == AttackType.BasicAttack)
             Destroy(gameObject);
     }
     private void OnCollisionEnter2D(Collision2D collision)

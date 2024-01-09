@@ -8,7 +8,7 @@ using UnityEngine.AI;
 /// <summary>
 /// 몬스터의 기본 행동을 정의
 /// </summary>
-public abstract class MonsterBehavior : MonoBehaviour
+public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
     #region Attribute
 
@@ -292,17 +292,18 @@ public abstract class MonsterBehavior : MonoBehaviour
         else
             RigidBody.AddForce(newForceVector, ForceMode2D.Impulse);
     }
-    public virtual void OnHit(int damage, Vector2 forceVector)
+
+    public virtual void OnHitted(AttackInfo attackInfo)
     {
         if (IsGodMode || IsDead)
             return;
 
         // Damage
-        CurHp -= damage;
+        CurHp -= (int)attackInfo.Damage;
 
         // Hit
         StartIsHitTimer();
-        KnockBack(forceVector);
+        KnockBack(attackInfo.Force);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
         // Change to Die State
@@ -534,6 +535,7 @@ public abstract class MonsterBehavior : MonoBehaviour
             Gizmos.DrawWireCube(_groundCheckTrans.position, new Vector3(_groundCheckBoxSize.x, _groundCheckBoxSize.y, 0f));
         }
     }
+
 
     #endregion
 }

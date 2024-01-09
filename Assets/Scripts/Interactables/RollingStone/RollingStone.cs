@@ -12,7 +12,7 @@ public class RollingStone : InteractableObject
     [SerializeField] float _pushSoundInterval;
 
     Rigidbody2D _rigidbody;
-    AttackableEntity _attackableComponent;
+    IAttackListener _attackableComponent;
 
     bool _isPushSoundPlaying = false;
     float _moveDirection = 0;
@@ -21,7 +21,7 @@ public class RollingStone : InteractableObject
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _attackableComponent = GetComponent<AttackableEntity>();
+        _attackableComponent = GetComponent<IAttackListener>();
     }
     protected override void OnInteract()
     {

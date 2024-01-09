@@ -29,14 +29,14 @@ public class Turtle : NormalMonster
     {
         base.KnockBack(forceVector);
     }
-    public override void OnHit(int damage, Vector2 forceVector)
+    public override void OnHitted(AttackInfo attackInfo)
     {
         if (IsDead)
             return;
 
         // Hit
         StartIsHitTimer();
-        KnockBack(forceVector);
+        KnockBack(attackInfo.Force);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
         if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundPatrolState>())

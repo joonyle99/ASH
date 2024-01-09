@@ -24,7 +24,6 @@ public class WaypointPath : MonoBehaviour
             _distances[i] = Vector3.Distance(_wayPoints[i].position, _wayPoints[i + 1].position);
             _totalDistance += _distances[i];
         }
-        print(_distances);
     }
     public Vector3 GetPosition(float travelDistance)
     {
