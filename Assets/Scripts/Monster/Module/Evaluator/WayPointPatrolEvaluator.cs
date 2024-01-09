@@ -2,36 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// WayPoint Patrol 모듈
-/// Monster에 붙혀서 사용
-/// Way Point를 방문한다.
-/// </summary>
 public class WayPointPatrolEvaluator : MonoBehaviour
 {
-    [Header("WayPoint Patrol")]
+    [Header("WayPoint Patrol Evaluator")]
     [Space]
 
     [SerializeField] private Transform _wayPointBox;
-    [SerializeField] private List<Transform> _wayPoints;
-    [SerializeField] private Transform _curTargetPosition;
-    [SerializeField] private Transform _nextTargetPosition;
-    [SerializeField] private int _curWayPointIndex = 0;
-    [SerializeField] private float _targetDistance = 0.1f;
     [SerializeField] private float _targetWaitTime = 2f;
-    [SerializeField] private Vector3 _moveDir;
     [SerializeField] private bool _isWaiting;
-
-    public Vector3 MoveDir
-    {
-        get { return _moveDir; }
-        set { _moveDir = value; }
-    }
-
     public bool IsWaiting
     {
         get { return _isWaiting; }
         set { _isWaiting = value; }
+    }
+
+    private List<Transform> _wayPoints;
+    private Transform _curTargetPosition;
+    private Transform _nextTargetPosition;
+    private int _curWayPointIndex;
+    private Vector3 _moveDir;
+    public Vector3 MoveDir
+    {
+        get { return _moveDir; }
+        set { _moveDir = value; }
     }
 
     void Awake()
@@ -54,17 +47,18 @@ public class WayPointPatrolEvaluator : MonoBehaviour
         // 이동 방향 설정
         _moveDir = (_curTargetPosition.position - transform.position).normalized;
     }
-
-    public bool IsArrived()
+    public bool ArrivedAtDestProcess()
     {
         // 목적지에 도착여부 확인
         if (Vector3.Distance(_curTargetPosition.position,
-                transform.position) < _targetDistance)
+                transform.position) < 0.01f)
+        {
+            StartCoroutine(WaitingTimer());
             return true;
-        else
-            return false;
-    }
+        }
 
+        return false;
+    }
     public void ChangeWayPoint()
     {
         // 목적지 변경
@@ -72,7 +66,6 @@ public class WayPointPatrolEvaluator : MonoBehaviour
         _curTargetPosition = _nextTargetPosition;
         _nextTargetPosition = _wayPoints[(_curWayPointIndex + 1) % _wayPoints.Count];
     }
-
     private IEnumerator WaitingTimer()
     {
         _isWaiting = true;
@@ -80,15 +73,10 @@ public class WayPointPatrolEvaluator : MonoBehaviour
         _isWaiting = false;
     }
 
-    public void StartWaitingTimer()
-    {
-        StartCoroutine(WaitingTimer());
-    }
-
     private void OnDrawGizmosSelected()
     {
         // 이동 방향
         Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(this.transform.position, this.transform.position + _moveDir * 2f);
+        Gizmos.DrawLine(transform.position, transform.position + _moveDir * 2f);
     }
 }
