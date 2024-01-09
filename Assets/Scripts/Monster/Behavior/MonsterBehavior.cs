@@ -78,12 +78,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _recentDir;
         set => _recentDir = value;
     }
-    [SerializeField] private bool _isGround;
-    public bool IsGround
-    {
-        get => _isGround;
-        set => _isGround = value;
-    }
     [SerializeField] private bool _isInAir;
     public bool IsInAir
     {
@@ -218,33 +212,28 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (IsDead)
             return;
 
-        /*
         // ground behavior
-        if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk)
+        if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk || MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundJump)
         {
+            // ground raycast
             GroundRayHit = Physics2D.BoxCast(_groundCheckTrans.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
                 _groundLayer);
 
-            // Ground -> Air
+            // OnEnter Idle (1Frame)
             if (IsInAir)
             {
-                if (!GroundRayHit)
-                {
-                    IsGround = false;
-                    IsInAir = true;
-                    Animator.SetTrigger("InAir");
-                }
-            }
-            // Air -> Ground
-            else
-            {
                 if (GroundRayHit)
-                {
-                    IsGround = true;
-                    IsInAir = false;
                     Animator.SetTrigger("Idle");
-                }
             }
+            // OnEnter InAir (1Frame)
+            else if (!IsInAir)
+            {
+                if (!GroundRayHit)
+                    Animator.SetTrigger("InAir");
+            }
+
+            // set IsInAir
+            IsInAir = !GroundRayHit;
 
             // flip after wall check
             if (GroundPatrolEvaluator.IsWallCheck())
@@ -253,10 +242,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // fly behavior
         else if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.Fly)
         {
-            IsGround = false;
             IsInAir = true;
         }
-        */
 
         IsCheckDie();
     }
@@ -526,7 +513,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private void OnDrawGizmosSelected()
     {
         // ground behavior
-        if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk)
+        if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk || MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundJump)
         {
             // Draw Ground Check
             Gizmos.color = Color.red;

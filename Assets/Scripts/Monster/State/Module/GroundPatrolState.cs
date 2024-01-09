@@ -40,14 +40,11 @@ public class GroundPatrolState : Monster_StateBase
         {
             // change to chase
             if (Monster.GroundChaseEvaluator.IsTargetWithinChaseRange())
-            {
                 Monster.SetRecentDir(Monster.GroundChaseEvaluator.ChaseDir);
-                return;
-            }
         }
 
-        // move
-        Monster.RigidBody.velocity = Monster.RecentDir * Vector2.right * Monster.MoveSpeed;
+        if(Monster.MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk)
+            Monster.RigidBody.velocity = Monster.RecentDir * Vector2.right * Monster.MoveSpeed;
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

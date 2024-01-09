@@ -14,7 +14,7 @@ public class Monster_IdleState : Monster_StateBase
 
         hasPatrolParameter = animator.parameters.Any(param => param.name == "Patrol");
 
-        _targetIdleTime = Random.Range(0.5f, 2f);
+        _targetIdleTime = Random.Range(0f, 1f);
         _elapsedIdleTime = 0f;
     }
 
