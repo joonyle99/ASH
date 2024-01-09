@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Gizmos = UnityEngine.Gizmos;
 
 public class PlayerAttackController : MonoBehaviour
@@ -89,10 +90,12 @@ public class PlayerAttackController : MonoBehaviour
         _hitBoxRadius = _attackHitBoxTrans.GetComponent<CircleCollider2D>().radius;
         RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _hitBoxRadius, Vector2.zero,
             0f, _attackableEntityLayer);
+        List<Rigidbody2D> handledBodies = new List<Rigidbody2D>();
 
         foreach (var rayCastHit in rayCastHits)
         {
-            // check attackable entity invalid
+            if (!rayCastHit.rigidbody || handledBodies.Contains(rayCastHit.rigidbody))
+                continue;
             var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
             foreach(var listener in listeners)
             {
