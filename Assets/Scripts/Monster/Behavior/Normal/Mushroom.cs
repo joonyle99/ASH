@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Bear : SemiBossMonster
+public class Mushroom : MonsterBehavior
 {
     protected override void Awake()
     {
@@ -27,9 +27,9 @@ public class Bear : SemiBossMonster
         base.KnockBack(forceVector);
     }
 
-    public override void OnHitted(AttackInfo attackInfo)
+    public override void OnHit(AttackInfo attackInfo)
     {
-        base.OnHitted(attackInfo);
+        base.OnHit(attackInfo);
     }
 
     public override void Die()

@@ -303,7 +303,6 @@ GameObject:
   - component: {fileID: 8597292765040709485}
   - component: {fileID: 217139139750414663}
   - component: {fileID: 1315810198230770270}
-  - component: {fileID: 1629297722}
   - component: {fileID: 3064736143565219573}
   - component: {fileID: 623491974}
   - component: {fileID: 11382521}
@@ -447,17 +446,9 @@ MonoBehaviour:
   _isGodMode: 0
   _isCanDash: 1
   _slopeThreshold: 45
-  _groundHitCollider: {fileID: 0}
-  _wallHitCollider: {fileID: 0}
-  _DiveHitCollider: {fileID: 0}
-  _mainCollider: {fileID: 7029766030481114618}
   _capeRenderer: {fileID: 6990369637176003982}
-  _hand: {fileID: 7533154066349335788}
-  _whiteMaterial: {fileID: 2100000, guid: 1ec9b99f109bb8d4db4d72fce3b6963a, type: 2}
+  _handRigidbody: {fileID: 0}
   _godModeTime: 1.5
-  _blinkDuration: 0.08
-  _targetFadeOutTime: 3
-  _elapsedFadeOutTime: 0
 --- !u!114 &1592143213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,8 +484,8 @@ MonoBehaviour:
   _attackDamage: 20
   _attackPowerX: 6
   _attackPowerY: 7
-  _targetAttackTransTime: 1.5
-  _elapsedAttackTransTime: 0
+  _targetNextBasicAttackTime: 1.5
+  _elapsedNextBasicAttackTime: 0
   _basicAttackCount: 0
   _isBasicAttacking: 0
 --- !u!114 &1322454706829155599
@@ -748,24 +739,6 @@ MonoBehaviour:
   _stayStillSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
   _dieDuration: 0.3
   _spawnDuration: 0.3
---- !u!114 &1629297722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1322454706829173486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aac3f60fbb1f8a44bcca92042684eb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
-  _stayStillSetter: {fileID: 11400000, guid: e3a2b65bbd1c5b348a6d1e68f5914f23, type: 2}
-  _dieDuration: 1
-  _spawnDuration: 1
 --- !u!114 &3064736143565219573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1075,7 +1048,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2936927172621461497}
-  - component: {fileID: 2936927172621461498}
   m_Layer: 10
   m_Name: BasicAttackHitbox
   m_TagString: Untagged
@@ -1098,22 +1070,6 @@ Transform:
   m_Father: {fileID: 1322454706829173480}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &2936927172621461498
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2936927172621461496}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.7
 --- !u!1 &3345995244144674306
 GameObject:
   m_ObjectHideFlags: 0

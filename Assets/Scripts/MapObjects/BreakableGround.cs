@@ -14,7 +14,7 @@ public class BreakableGround : MonoBehaviour
         if (_isBreaking)
             return;
             PlayerBehaviour player = collision.transform.GetComponent<PlayerBehaviour>();
-        if (player != null && player.StateIs<DiveState>())
+        if (player != null && player.CurrentStateIs<DiveState>())
         {
             StartBreaking();
             return;

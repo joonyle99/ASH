@@ -1,7 +1,6 @@
-using System.Collections;
 using UnityEngine;
 
-public class JumppingPatrolState : Monster_MoveState
+public class Player_HurtState : Player_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

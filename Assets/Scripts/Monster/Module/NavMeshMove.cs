@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,8 +6,8 @@ public class NavMeshMove : MonoBehaviour
     [Header("NavMesh Move")]
     [Space]
 
-    [SerializeField] private NavMeshAgent _agent;
-    [SerializeField] private Vector3 _destPosition;
+    private NavMeshAgent _agent;
+    private Vector3 _destPosition;
 
     void Awake()
     {
@@ -21,22 +17,18 @@ public class NavMeshMove : MonoBehaviour
         _agent.updateUpAxis = false;
     }
 
-
     public void SetDestination(Transform trans)
     {
         _destPosition = trans.position;
     }
-
-    public void SetDestination(Vector3 vec)
+    public void SetDestination(Vector3 pos)
     {
-        _destPosition = vec;
+        _destPosition = pos;
     }
-
     public void MoveToDestination()
     {
         _agent.SetDestination(_destPosition);
     }
-
     public void SetStopAgent(bool isStop)
     {
         _agent.isStopped = isStop;

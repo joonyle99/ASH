@@ -1,25 +1,20 @@
 using UnityEngine;
 
-/// <summary>
-/// 일반 몬스터 클래스
-/// </summary>
-public abstract class NormalMonster : MonsterBehavior
+public class Bear : MonsterBehavior
 {
     protected override void Awake()
     {
         base.Awake();
     }
+
     protected override void Start()
     {
         base.Start();
     }
+
     protected override void Update()
     {
         base.Update();
-    }
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
     }
 
     protected override void SetUp()
@@ -32,9 +27,9 @@ public abstract class NormalMonster : MonsterBehavior
         base.KnockBack(forceVector);
     }
 
-    public override void OnHitted(AttackInfo attackInfo)
+    public override void OnHit(AttackInfo attackInfo)
     {
-        base.OnHitted(attackInfo);
+        base.OnHit(attackInfo);
     }
 
     public override void Die()

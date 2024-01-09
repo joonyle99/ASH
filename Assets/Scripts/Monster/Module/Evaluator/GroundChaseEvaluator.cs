@@ -1,32 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class FloatingChaseEvaluator : MonoBehaviour
+public class GroundChaseEvaluator : MonoBehaviour
 {
-    [Header("Floating Chase Evaluator")]
+    [Header("Ground Chase Evaluator")]
     [Space]
 
     [SerializeField] private LayerMask _targetLayer;
-
-    [SerializeField] private BoxCollider2D _chaseArea;
-    private Bounds _chaseBounds;
+    [SerializeField] private Vector2 _chaseBoxSize;
 
     public Transform TargetTrans { get; private set; }
 
-    // Test Code
+    [SerializeField] private int _chaseDir = 1;
+    public int ChaseDir
+    {
+        get => _chaseDir;
+        private set => _chaseDir = value;
+    }
+
+        // Test Code
     [SerializeField] private GameObject checkPrefab;
     private GameObject _chaseTargetPoint;
-
-    void Awake()
-    {
-        _chaseBounds = _chaseArea.bounds;
-    }
 
     public bool IsTargetWithinChaseRange()
     {
         // Detect Collider
-        Collider2D targetCollider = Physics2D.OverlapBox(_chaseArea.transform.position, _chaseBounds.size, 0f, _targetLayer);
+        Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _chaseBoxSize, 0f, _targetLayer);
         if (targetCollider)
         {
             // Check Player
@@ -35,6 +34,9 @@ public class FloatingChaseEvaluator : MonoBehaviour
             {
                 // Set Destination
                 SetTargetTrans(player.transform);
+
+                // Set Direction
+                SetChaseDir(player.transform);
 
                 // Create Debug Object
                 if (!_chaseTargetPoint)
@@ -55,15 +57,20 @@ public class FloatingChaseEvaluator : MonoBehaviour
 
         return false;
     }
+
     public void SetTargetTrans(Transform trans)
     {
         TargetTrans = trans;
     }
 
+    public void SetChaseDir(Transform trans)
+    {
+        _chaseDir = Math.Sign(trans.position.x - transform.position.x);
+    }
+
     private void OnDrawGizmosSelected()
     {
-        // 추격 탐지 범위
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(_chaseArea.transform.position, _chaseBounds.size);
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(transform.position, new Vector3(_chaseBoxSize.x, _chaseBoxSize.y, 0f));
     }
 }

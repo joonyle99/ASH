@@ -20,5 +20,5 @@ public class AttackInfo
 }
 public interface IAttackListener
 {
-    public void OnHitted(AttackInfo attackInfo);
+    public void OnHit(AttackInfo attackInfo);
 }

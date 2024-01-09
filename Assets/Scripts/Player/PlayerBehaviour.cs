@@ -92,15 +92,15 @@ public class PlayerBehaviour : StateMachineBase
     #region Properties
 
     // Can Property
-    public bool CanBasicAttack { get { return StateIs<IdleState>() || StateIs<RunState>() || StateIs<InAirState>(); } }
-    public bool CanShootingAttack { get { return StateIs<IdleState>(); } }
+    public bool CanBasicAttack { get { return CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>(); } }
+    public bool CanShootingAttack { get { return CurrentStateIs<IdleState>(); } }
     public bool CanDash { get { return _isCanDash; } set { _isCanDash = value; } }
 
     // Condition Property
     public bool IsGrounded { get { return GroundHit; } }
     public bool IsTouchedWall { get { return WallHit; } }
     public bool IsWallJump { get; set; }
-    public bool IsInteractable { get { return StateIs<IdleState>() || StateIs<RunState>(); } }
+    public bool IsInteractable { get { return CurrentStateIs<IdleState>() || CurrentStateIs<RunState>(); } }
     public bool IsHurt { get { return _isHurt; } set { _isHurt = value; } }
     public bool IsDead { get { return _isDead; } set { _isDead = value; } }
     public bool IsGodMode { get { return _isGodMode; } set { _isGodMode = value; } }
@@ -238,7 +238,7 @@ public class PlayerBehaviour : StateMachineBase
     }
     private void UpdateImageFlip()
     {
-        if (StateIs<RunState>() || StateIs<InAirState>() || MovementController.isActiveAndEnabled)
+        if (CurrentStateIs<RunState>() || CurrentStateIs<InAirState>() || MovementController.isActiveAndEnabled)
         {
             if (!IsDirSync && Mathf.Abs(RawInputs.Movement.x) > 0.01f)
             {
@@ -251,7 +251,7 @@ public class PlayerBehaviour : StateMachineBase
     {
         if (!IsGrounded)
         {
-            if(StateIs<IdleState>() || StateIs<RunState>() || StateIs<JumpState>())
+            if(CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();
         }
     }

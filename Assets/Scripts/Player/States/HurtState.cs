@@ -12,6 +12,7 @@ public class HurtState : PlayerState
 
         Player.StartGodMode();
         Player.StartBlink();
+        // Player.StartWhiteFlash();
     }
 
     protected override void OnUpdate()

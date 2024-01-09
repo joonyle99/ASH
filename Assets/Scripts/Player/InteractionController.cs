@@ -50,7 +50,7 @@ public class InteractionController : MonoBehaviour
     }
     public void OnInteractionExit()
     {
-        if (_player.StateIs<InteractionState>())
+        if (_player.CurrentStateIs<InteractionState>())
             _player.ChangeState<IdleState>();
     }
 
@@ -78,7 +78,7 @@ public class InteractionController : MonoBehaviour
         }
         else
         {
-            if (_player.StateIs<InteractionState>())
+            if (_player.CurrentStateIs<InteractionState>())
                 OnInteractionExit();
         }
     }

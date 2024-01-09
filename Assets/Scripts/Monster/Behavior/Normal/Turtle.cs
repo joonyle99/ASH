@@ -1,7 +1,7 @@
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
-public class Turtle : NormalMonster
+public class Turtle : MonsterBehavior
 {
     protected override void Awake()
     {
@@ -29,13 +29,13 @@ public class Turtle : NormalMonster
     {
         base.KnockBack(forceVector);
     }
-    public override void OnHitted(AttackInfo attackInfo)
+    public override void OnHit(AttackInfo attackInfo)
     {
         if (IsDead)
             return;
 
         // Hit
-        StartIsHitTimer();
+        StartHitTimer();
         KnockBack(attackInfo.Force);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
@@ -46,7 +46,7 @@ public class Turtle : NormalMonster
     {
         IsDead = true;
 
-        // hitbox collider :  Trigger -> Collision
+        // Trigger -> Collision
         SetTriggerHitBox(false);
 
         // disable monster collider

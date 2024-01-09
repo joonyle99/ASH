@@ -1,7 +1,7 @@
 using System.Threading;
 using UnityEngine;
 
-public class Frog : NormalMonster
+public class Frog : MonsterBehavior
 {
     [Header("Frog")]
     [Space]
@@ -29,7 +29,7 @@ public class Frog : NormalMonster
         // Change to Attack State
         if (AttackEvaluator.IsTargetWithinAttackRange())
         {
-            if (CurrentStateIs<FloatingPatrolState>() || CurrentStateIs<FloatingChaseState>())
+            if (CurrentStateIs<GroundPatrolState>())
                 Animator.SetTrigger("Attack");
         }
     }
@@ -44,9 +44,9 @@ public class Frog : NormalMonster
         base.KnockBack(forceVector);
     }
 
-    public override void OnHitted(AttackInfo attackInfo)
+    public override void OnHit(AttackInfo attackInfo)
     {
-        base.OnHitted(attackInfo);
+        base.OnHit(attackInfo);
     }
 
     public override void Die()

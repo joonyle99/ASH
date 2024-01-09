@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 박쥐 몬스터 클래스
 /// </summary>
-public class Bat : NormalMonster
+public class Bat : MonsterBehavior
 {
     [Header("Bat")]
     [Space]
@@ -12,10 +12,10 @@ public class Bat : NormalMonster
     [SerializeField] private BatSkillParticle _batSkillPrefab;
     [SerializeField] private Transform _shootPosition;
     [SerializeField] private Sprite[] _skillSprites;
-    [SerializeField] private int _particleCount;
-    [SerializeField] private float _shootingPower;
-    [SerializeField] private float _shootingAngle;
-    [SerializeField] private float _shootingVariant;
+    private int _particleCount = 8;
+    private float _shootingPower = 6f;
+    private float _shootingAngle = 60f;
+    private float _shootingVariant = 30f;
 
     protected override void Awake()
     {
@@ -48,9 +48,9 @@ public class Bat : NormalMonster
     {
         base.KnockBack(forceVector);
     }
-    public override void OnHitted(AttackInfo attackInfo)
+    public override void OnHit(AttackInfo attackInfo)
     {
-        base.OnHitted(attackInfo);
+        base.OnHit(attackInfo);
     }
     public override void Die()
     {

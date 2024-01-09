@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class MonsterBodyHit : MonoBehaviour
 {
@@ -7,12 +6,6 @@ public class MonsterBodyHit : MonoBehaviour
     [SerializeField] private int _bodyAttackDamage = 5;
     [SerializeField] private float _forceXPower = 7f;
     [SerializeField] private float _forceYPower = 9f;
-    [SerializeField] private bool _isDisableHitBox;
-    public bool IsDisableHitBox
-    {
-        get { return _isDisableHitBox;}
-        set { _isDisableHitBox = value; }
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -27,9 +20,6 @@ public class MonsterBodyHit : MonoBehaviour
     // 대상이 콜라이더에 계속 들어와있을 경우를 고려해 TriggerStay 사용
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (_isDisableHitBox)
-            return;
-
         // 대상과의 충돌
         if ((collision.gameObject.layer | _targetLayer) > 0)
         {
