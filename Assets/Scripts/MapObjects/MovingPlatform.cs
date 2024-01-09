@@ -8,11 +8,19 @@ public class MovingPlatform : ToggleableObject
     [SerializeField] WaypointPath _path;
     Rigidbody2D _rigidbody;
     float _travelDistance = 0f;
+    PreserveState _statePreserver;
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _statePreserver = GetComponent<PreserveState>();
+        if (_statePreserver)
+            _travelDistance = _statePreserver.Load("travelDistance", 0f);
     }
-
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+            _statePreserver.Save("travelDistance", _travelDistance);
+    }
     protected override void OnTurnedOff()
     {
     }
