@@ -13,7 +13,7 @@ public class Monster_StateBase : StateMachineBehaviour
         if (Monster.NavMeshMove)
         {
             // NavMesh Agent Stop
-            if (Monster.CurrentStateIs<Monster_MoveState>() || Monster.CurrentStateIs<Monster_AttackState>() ||
+            if (Monster.CurrentStateIs<Monster_AttackState>() ||
                 Monster.CurrentStateIs<Monster_HurtState>() ||
                 Monster.CurrentStateIs<Monster_DieState>())
                 Monster.NavMeshMove.SetStopAgent(true);
@@ -30,7 +30,7 @@ public class Monster_StateBase : StateMachineBehaviour
         if (Monster.NavMeshMove)
         {
             // NavMesh Agent Resume
-            if (Monster.CurrentStateIs<Monster_MoveState>() || Monster.CurrentStateIs<Monster_AttackState>() ||
+            if (Monster.CurrentStateIs<Monster_AttackState>() ||
                 Monster.CurrentStateIs<Monster_HurtState>() ||
                 Monster.CurrentStateIs<Monster_DieState>())
                 Monster.NavMeshMove.SetStopAgent(false);

@@ -11,6 +11,7 @@ public class AttackEvaluator : MonoBehaviour
     [Space]
 
     [SerializeField] private LayerMask _targetLayer;
+    [SerializeField] private Transform _attackPointTrans;
     [SerializeField] private Vector2 _attackBoxSize;
     [SerializeField] private float _targetWaitTime = 3f;
     [SerializeField] private bool _isAttackable = true;
@@ -21,7 +22,7 @@ public class AttackEvaluator : MonoBehaviour
             return false;
 
         // 탐지 범위 안에 들어왔는지 확인
-        Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _attackBoxSize, 0f, _targetLayer);
+        Collider2D targetCollider = Physics2D.OverlapBox(_attackPointTrans.position, _attackBoxSize, 0f, _targetLayer);
         if (targetCollider != null)
         {
             // 플레이어인지 확인
@@ -49,6 +50,6 @@ public class AttackEvaluator : MonoBehaviour
     {
         // 공격 범위
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(this.transform.position, _attackBoxSize);
+        Gizmos.DrawWireCube(_attackPointTrans.position, _attackBoxSize);
     }
 }
