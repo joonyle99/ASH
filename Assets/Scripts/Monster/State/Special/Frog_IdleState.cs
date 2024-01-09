@@ -1,8 +1,11 @@
 using System.Linq;
 using UnityEngine;
 
-public class Frog_IdleState : Monster_IdleState
+public class Frog_IdleState : Monster_StateBase
 {
+    [SerializeField] protected float _targetIdleTime;
+    [SerializeField] protected float _elapsedIdleTime;
+
     [SerializeField] protected bool hasJumpParameter;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -10,6 +13,9 @@ public class Frog_IdleState : Monster_IdleState
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
         hasJumpParameter = animator.parameters.Any(param => param.name == "Jump");
+
+        _targetIdleTime = Random.Range(0.5f, 1.5f);
+        _elapsedIdleTime = 0f;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

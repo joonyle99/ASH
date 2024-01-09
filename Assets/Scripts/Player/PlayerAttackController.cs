@@ -7,7 +7,6 @@ public class PlayerAttackController : MonoBehaviour
     [Header("Attack Setting")]
     [Space]
 
-    [SerializeField] private LayerMask _monsterHitBoxLayer;
     [SerializeField] private LayerMask _attackableEntityLayer;
     [SerializeField] private Transform _attackHitBoxTrans;
     [SerializeField] private float _hitBoxRadius;
@@ -96,8 +95,11 @@ public class PlayerAttackController : MonoBehaviour
         {
             if (!rayCastHit.rigidbody || handledBodies.Contains(rayCastHit.rigidbody))
                 continue;
+
             var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
-            foreach(var listener in listeners)
+            handledBodies.Add(rayCastHit.rigidbody);
+
+            foreach (var listener in listeners)
             {
                 Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
                 listener.OnHitted(new AttackInfo(_attackDamage, forceVector, AttackType.BasicAttack));
