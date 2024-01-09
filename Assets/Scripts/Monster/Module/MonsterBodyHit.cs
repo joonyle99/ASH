@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class MonsterBodyHit : MonoBehaviour
 {
+    [SerializeField] private LayerMask _targetLayer;
     [SerializeField] private int _bodyAttackDamage = 5;
     [SerializeField] private float _forceXPower = 7f;
     [SerializeField] private float _forceYPower = 9f;
@@ -28,12 +30,13 @@ public class MonsterBodyHit : MonoBehaviour
         if (_isDisableHitBox)
             return;
 
-        // 플레이어와 충돌
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        // 대상과의 충돌
+        if ((collision.gameObject.layer | _targetLayer) > 0)
         {
+            // 플레이어와 충돌
             PlayerBehaviour player = collision.gameObject.GetComponent<PlayerBehaviour>();
 
-            if (player == null)
+            if (!player)
                 return;
 
             if (player.IsHurt || player.IsGodMode || player.IsDead)

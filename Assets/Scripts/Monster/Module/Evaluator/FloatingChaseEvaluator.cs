@@ -12,12 +12,11 @@ public class FloatingChaseEvaluator : MonoBehaviour
     [SerializeField] private BoxCollider2D _chaseArea;
     private Bounds _chaseBounds;
 
-    [SerializeField] private Transform _targetTrans;
-    public Transform TargetTrans { get { return _targetTrans; } }
+    public Transform TargetTrans { get; private set; }
 
     // Test Code
     [SerializeField] private GameObject checkPrefab;
-    [SerializeField] private GameObject _chaseTargetPoint;
+    private GameObject _chaseTargetPoint;
 
     void Awake()
     {
@@ -28,11 +27,11 @@ public class FloatingChaseEvaluator : MonoBehaviour
     {
         // Detect Collider
         Collider2D targetCollider = Physics2D.OverlapBox(_chaseArea.transform.position, _chaseBounds.size, 0f, _targetLayer);
-        if (targetCollider != null)
+        if (targetCollider)
         {
             // Check Player
             PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
-            if (player != null && !player.IsDead)
+            if (player && !player.IsDead)
             {
                 // Set Destination
                 SetTargetTrans(player.transform);
@@ -40,7 +39,7 @@ public class FloatingChaseEvaluator : MonoBehaviour
                 // Create Debug Object
                 if (!_chaseTargetPoint)
                 {
-                    _chaseTargetPoint = Instantiate(checkPrefab, _targetTrans.position, Quaternion.identity, transform.parent);
+                    _chaseTargetPoint = Instantiate(checkPrefab, TargetTrans.position, Quaternion.identity, transform.parent);
                     _chaseTargetPoint.name = "Chase Target Point";
                 }
                 else
@@ -59,7 +58,7 @@ public class FloatingChaseEvaluator : MonoBehaviour
 
     public void SetTargetTrans(Transform trans)
     {
-        _targetTrans = trans;
+        TargetTrans = trans;
     }
 
     private void OnDrawGizmosSelected()

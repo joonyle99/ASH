@@ -1,10 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// Attack ¸ğµâ
-/// Monster¿¡ ºÙÈ÷´Â ¿ëµµ·Î »ç¿ë
-/// </summary>
 public class AttackEvaluator : MonoBehaviour
 {
     [Header("Attack Evaluator")]
@@ -21,26 +17,24 @@ public class AttackEvaluator : MonoBehaviour
         if (!_isAttackable)
             return false;
 
-        // Å½Áö ¹üÀ§ ¾È¿¡ µé¾î¿Ô´ÂÁö È®ÀÎ
+        // íƒì§€ ë²”ìœ„ ì•ˆì— ë“¤ì–´ì™”ëŠ”ì§€ í™•ì¸
         Collider2D targetCollider = Physics2D.OverlapBox(_attackPointTrans.position, _attackBoxSize, 0f, _targetLayer);
-        if (targetCollider != null)
+        if (targetCollider)
         {
-            // ÇÃ·¹ÀÌ¾îÀÎÁö È®ÀÎ
+            // í”Œë ˆì´ì–´ì¸ì§€ í™•ì¸
             PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
-            if (player != null && !player.IsDead)
+            if (player && !player.IsDead)
                 return true;
         }
 
         return false;
     }
-
     private IEnumerator AttackableTimer()
     {
         _isAttackable = false;
         yield return new WaitForSeconds(_targetWaitTime);
         _isAttackable = true;
     }
-
     public void StartAttackableTimer()
     {
         StartCoroutine(AttackableTimer());
@@ -48,7 +42,7 @@ public class AttackEvaluator : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        // °ø°İ ¹üÀ§
+        // ê³µê²© ë²”ìœ„
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(_attackPointTrans.position, _attackBoxSize);
     }
