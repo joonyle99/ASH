@@ -7,7 +7,8 @@ public class GroundChaseEvaluator : MonoBehaviour
     [Space]
 
     [SerializeField] private LayerMask _targetLayer;
-    [SerializeField] private Vector2 _chaseBoxSize;
+    [SerializeField] private BoxCollider2D _chaseCheckCollider;
+    private Vector2 _chaseCheckBoxSize;
 
     public Transform TargetTrans { get; private set; }
 
@@ -18,14 +19,19 @@ public class GroundChaseEvaluator : MonoBehaviour
         private set => _chaseDir = value;
     }
 
-        // Test Code
+    // Test Code
     [SerializeField] private GameObject checkPrefab;
     private GameObject _chaseTargetPoint;
+
+    private void Awake()
+    {
+        _chaseCheckBoxSize = _chaseCheckCollider.bounds.size;
+    }
 
     public bool IsTargetWithinChaseRange()
     {
         // Detect Collider
-        Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _chaseBoxSize, 0f, _targetLayer);
+        Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _chaseCheckBoxSize, 0f, _targetLayer);
         if (targetCollider)
         {
             // Check Player
@@ -66,11 +72,5 @@ public class GroundChaseEvaluator : MonoBehaviour
     public void SetChaseDir(Transform trans)
     {
         _chaseDir = Math.Sign(trans.position.x - transform.position.x);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(transform.position, new Vector3(_chaseBoxSize.x, _chaseBoxSize.y, 0f));
     }
 }

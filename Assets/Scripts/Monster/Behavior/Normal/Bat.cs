@@ -1,9 +1,6 @@
 using System.Threading;
 using UnityEngine;
 
-/// <summary>
-/// 박쥐 몬스터 클래스
-/// </summary>
 public class Bat : MonsterBehavior
 {
     [Header("Bat")]
@@ -28,16 +25,6 @@ public class Bat : MonsterBehavior
     protected override void Update()
     {
         base.Update();
-
-        if (IsDead)
-            return;
-
-        // Change to Attack State
-        if (AttackEvaluator.IsTargetWithinAttackRange())
-        {
-            if (CurrentStateIs<FloatingPatrolState>() || CurrentStateIs<FloatingChaseState>())
-                Animator.SetTrigger("Attack");
-        }
     }
     protected override void SetUp()
     {
