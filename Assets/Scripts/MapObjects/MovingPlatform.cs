@@ -11,11 +11,11 @@ public class MovingPlatform : ToggleableObject
     bool _isMoving = false;
     PreserveState _statePreserver;
 
-    CameraController _cameraController;
+
+    SceneEffectEvent _recentEvent;
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
-        _cameraController = Camera.main.GetComponent<CameraController>();
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
             _travelDistance = _statePreserver.Load("travelDistance", 0f);
@@ -28,14 +28,16 @@ public class MovingPlatform : ToggleableObject
     protected override void OnTurnedOff()
     {
         if (!_isMoving)
-            _cameraController.StartFollow(transform, false);
+            _recentEvent = SceneEffectManager.Instance.PushSceneEvent(new SceneEvents.FollowObjects(SceneEffectEvent.EventPriority.MovingObjects,
+                                                        SceneEffectEvent.MergePolicy.PlayTogether, transform));
         _isMoving = true;
     }
 
     protected override void OnTurnedOn()
     {
         if (!_isMoving)
-            _cameraController.StartFollow(transform, false);
+            _recentEvent = SceneEffectManager.Instance.PushSceneEvent(new SceneEvents.FollowObjects(SceneEffectEvent.EventPriority.MovingObjects,
+                                                        SceneEffectEvent.MergePolicy.PlayTogether, transform));
         _isMoving = true;
     }
 
@@ -67,7 +69,7 @@ public class MovingPlatform : ToggleableObject
     void OnStop()
     {
         _isMoving = false;
-        _cameraController.RemoveFollowTarget(transform);
+        SceneEffectManager.Instance.RemoveSceneEvent(_recentEvent);
     }
 
 }
