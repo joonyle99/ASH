@@ -103,6 +103,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _isHit;
         set => _isHit = value;
     }
+    [SerializeField] private bool _isHurt;
+    public bool IsHurt
+    {
+        get => _isHurt;
+        set => _isHurt = value;
+    }
     [SerializeField] private bool _isDead;
     public bool IsDead
     {
@@ -200,11 +206,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         NavMeshMove = GetComponent<NavMeshMove>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
 
+        // ground check
         if (_groundCheckCollider)
             _groundCheckBoxSize = _groundCheckCollider.bounds.size;
 
         // Material
-        LoadBlinkMaterial();
+        LoadFlashMaterial();
         SaveOriginalMaterial();
 
         // Init State
@@ -260,6 +267,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             {
                 if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<Monster_MoveState>())
                 {
+                    if (IsHurt)
+                        return;
+
+                    // 이곳 Update()는 Animator.SetTrigger("Attack")에 의한 OnStateMachineEnter()이전에 호출된다.
+                    // 따라서 각 State가 아닌 여기서 IsSuperArmor의 값을 즉각 변경하고, 종료 처리만 각 State에서 한다.
+                    IsSuperArmor = true;
+
                     AttackEvaluator.StartAttackCooldownTimer();
                     Animator.SetTrigger("Attack");
                 }
@@ -291,7 +305,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         var navMesh = GetComponent<NavMeshAgent>();
         if (navMesh)
-            navMesh.velocity = forceVector / 2.0f;
+            navMesh.velocity = forceVector / 1.5f;
         else
         {
             // 속도 초기화
@@ -308,23 +322,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             return;
 
         // Hit Process
-        StartHitTimer();
-        KnockBack(attackInfo.Force);
-        DamageHit(attackInfo);
-        GetComponent<SoundList>().PlaySFX("SE_Hurt");
+        HitProcess(attackInfo);
 
-        // 체력이 0이하가 되면 Die
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-            Animator.SetTrigger("Die");
-
-            return;
-        }
-
-        // 슈퍼아머라면 Hurt 애니메이션을 재생하지 않음
-        if (!IsSuperArmor)
-            Animator.SetTrigger("Hurt");
+        // Check Hurt or Die Process
+        CheckHurtOrDieProcess();
     }
     public virtual void Die()
     {
@@ -354,16 +355,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             hitBox.layer = LayerMask.NameToLayer("Default");
         }
     }
-    private IEnumerator HitTimer()
-    {
-        IsHit = true;
-        yield return new WaitForSeconds(0.05f);
-        IsHit = false;
-    }
-    public void StartHitTimer()
-    {
-        StartCoroutine(HitTimer());
-    }
 
     // basic
     public void SetRecentDir(int targetDir)
@@ -383,9 +374,39 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         CurHp -= (int)attackInfo.Damage;
         StartWhiteFlash();
     }
+    public void HitProcess(AttackInfo attackInfo)
+    {
+        StartHitTimer();
+        DamageHit(attackInfo);
+        KnockBack(attackInfo.Force);
+        GetComponent<SoundList>().PlaySFX("SE_Hurt");
+    }
+    public void CheckHurtOrDieProcess()
+    {
+        if (CurHp <= 0)
+        {
+            IsDead = true;
 
-    // blink
-    private void LoadBlinkMaterial()
+            CurHp = 0;
+            Animator.SetTrigger("Die");
+
+            return;
+        }
+
+        // 슈퍼아머 : hurt 애니메이션 실행 x
+        if (IsSuperArmor)
+            return;
+
+        // IsHurt = true를 각 State에서 설정하면
+        // OnStateMachineEnter()이전에 호출되는 OUpdate()문에서 갱신되지 않아 여기서 설정한다.
+        // 종료만 각 State에서 진행한다.
+        IsHurt = true;
+
+        Animator.SetTrigger("Hurt");
+    }
+
+    // flash
+    private void LoadFlashMaterial()
     {
         _whiteFlashMaterial =
             Resources.Load<Material>("Materials/WhiteFlashMaterial");
@@ -400,14 +421,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         for (int i = 0; i < _originalMaterials.Length; i++)
             _originalMaterials[i] = _spriteRenderers[i].material;
     }
-    private void ResetMaterial()
+    private void ResetOriginalMaterial()
     {
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
     }
     private IEnumerator WhiteFlash()
     {
-        for (int n = 0; n < _blinkCount; ++n)
+        while (IsHurt)
         {
             // turn to white material
             for (int i = 0; i < _originalMaterials.Length; i++)
@@ -426,7 +447,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         if (this._whiteFlashRoutine != null)
         {
-            ResetMaterial();
+            ResetOriginalMaterial();
             StopCoroutine(this._whiteFlashRoutine);
         }
         this._whiteFlashRoutine = StartCoroutine(WhiteFlash());
@@ -452,10 +473,22 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         if (this._superArmorRoutine != null)
         {
-            ResetMaterial();
+            ResetOriginalMaterial();
             StopCoroutine(this._superArmorRoutine);
         }
         this._superArmorRoutine = StartCoroutine(SuperArmorFlash());
+    }
+
+    // hit
+    private IEnumerator HitTimer()
+    {
+        IsHit = true;
+        yield return new WaitForSeconds(0.05f);
+        IsHit = false;
+    }
+    public void StartHitTimer()
+    {
+        StartCoroutine(HitTimer());
     }
 
     // die

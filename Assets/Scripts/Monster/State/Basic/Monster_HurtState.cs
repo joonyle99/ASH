@@ -15,5 +15,7 @@ public class Monster_HurtState : Monster_StateBase
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
+
+        Monster.IsHurt = false;
     }
 }

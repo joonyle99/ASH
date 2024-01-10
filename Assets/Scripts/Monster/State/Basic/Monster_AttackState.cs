@@ -6,8 +6,6 @@ public class Monster_AttackState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex) ;
 
-        Monster.IsSuperArmor = true;
-
         Monster.StartSuperArmorFlash();
     }
 
