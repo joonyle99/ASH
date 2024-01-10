@@ -8,20 +8,21 @@ public class GroundChaseEvaluator : MonoBehaviour
 
     [SerializeField] private LayerMask _targetLayer;
     [SerializeField] private BoxCollider2D _chaseCheckCollider;
-    private Vector2 _chaseCheckBoxSize;
-
-    public Transform TargetTrans { get; private set; }
-
     [SerializeField] private int _chaseDir = 1;
     public int ChaseDir
     {
         get => _chaseDir;
         private set => _chaseDir = value;
     }
+    [SerializeField] private bool _isChasable;
+    public bool IsChasable
+    {
+        get => _isChasable;
+        set => _isChasable = value;
+    }
 
-    // Test Code
-    [SerializeField] private GameObject checkPrefab;
-    private GameObject _chaseTargetPoint;
+    private Vector2 _chaseCheckBoxSize;
+    public Transform TargetTrans { get; private set; }
 
     private void Awake()
     {
@@ -30,6 +31,9 @@ public class GroundChaseEvaluator : MonoBehaviour
 
     public bool IsTargetWithinChaseRange()
     {
+        if (!IsChasable)
+            return false;
+
         // Detect Collider
         Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _chaseCheckBoxSize, 0f, _targetLayer);
         if (targetCollider)
@@ -44,31 +48,16 @@ public class GroundChaseEvaluator : MonoBehaviour
                 // Set Direction
                 SetChaseDir(player.transform);
 
-                // Create Debug Object
-                if (!_chaseTargetPoint)
-                {
-                    _chaseTargetPoint = Instantiate(checkPrefab, TargetTrans.position, Quaternion.identity, transform.parent);
-                    _chaseTargetPoint.name = "Chase Target Point";
-                }
-                else
-                    _chaseTargetPoint.transform.position = player.transform.position;
-
                 return true;
             }
         }
 
-        // Delete Debug Object
-        if (_chaseTargetPoint)
-            Destroy(_chaseTargetPoint);
-
         return false;
     }
-
     public void SetTargetTrans(Transform trans)
     {
         TargetTrans = trans;
     }
-
     public void SetChaseDir(Transform trans)
     {
         _chaseDir = Math.Sign(trans.position.x - transform.position.x);

@@ -260,7 +260,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             {
                 if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<Monster_MoveState>())
                 {
-                    AttackEvaluator.StartAttackableTimer();
+                    AttackEvaluator.StartAttackCooldownTimer();
                     Animator.SetTrigger("Attack");
                 }
             }

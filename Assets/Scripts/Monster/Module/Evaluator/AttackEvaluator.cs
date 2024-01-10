@@ -9,7 +9,19 @@ public class AttackEvaluator : MonoBehaviour
     [SerializeField] private LayerMask _targetLayer;
     [SerializeField] private BoxCollider2D _attackCheckBoxCollider;
     [SerializeField] private float _targetWaitTime = 5f;
-    [SerializeField] private bool _isAttackable = true;
+    [SerializeField] private bool _isDuringCooldown;
+    public bool IsDuringCooldown
+    {
+        get => _isDuringCooldown;
+        set => _isDuringCooldown = value;
+    }
+    [SerializeField] private bool _isAttackable;
+    public bool IsAttackable
+    {
+        get => _isAttackable;
+        set => _isAttackable = value;
+    }
+
     private Vector2 _attackCheckBoxSize;
 
     private void Awake()
@@ -19,7 +31,7 @@ public class AttackEvaluator : MonoBehaviour
 
     public bool IsTargetWithinAttackRange()
     {
-        if (!_isAttackable)
+        if (IsDuringCooldown || !IsAttackable)
             return false;
 
         // 탐지 범위 안에 들어왔는지 확인
@@ -34,14 +46,14 @@ public class AttackEvaluator : MonoBehaviour
 
         return false;
     }
-    private IEnumerator AttackableTimer()
+    private IEnumerator AttackCooldownTimer()
     {
-        _isAttackable = false;
+        IsDuringCooldown = true;
         yield return new WaitForSeconds(_targetWaitTime);
-        _isAttackable = true;
+        IsDuringCooldown = false;
     }
-    public void StartAttackableTimer()
+    public void StartAttackCooldownTimer()
     {
-        StartCoroutine(AttackableTimer());
+        StartCoroutine(AttackCooldownTimer());
     }
 }

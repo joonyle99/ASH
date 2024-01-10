@@ -43,6 +43,18 @@ public class Frog : MonsterBehavior
     public override void OnHit(AttackInfo attackInfo)
     {
         base.OnHit(attackInfo);
+
+        if (AttackEvaluator)
+        {
+            if (!AttackEvaluator.IsAttackable)
+                AttackEvaluator.IsAttackable = true;
+        }
+
+        if (GroundChaseEvaluator)
+        {
+            if (!GroundChaseEvaluator.IsChasable)
+                GroundChaseEvaluator.IsChasable = true;
+        }
     }
     public override void Die()
     {
