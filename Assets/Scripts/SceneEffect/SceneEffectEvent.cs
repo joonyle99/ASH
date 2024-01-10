@@ -11,8 +11,25 @@ public class SceneEventComparator : IComparer<SceneEffectEvent>
         return 1;
     }
 }
+[System.Serializable]
 public class SceneEffectEvent
 {
+    public bool Enabled
+    {
+        get {  return _enabled; }
+        set
+        {
+            if (value != _enabled)
+            {
+                if (value)
+                    OnEnter();
+                else
+                    OnExit();
+                _enabled = value;
+            }
+        }
+    }
+    bool _enabled = false;
     public enum MergePolicy
     {
         OverrideWithRecent, PlayTogether
@@ -30,6 +47,7 @@ public class SceneEffectEvent
 
 namespace SceneEvents
 {
+    [System.Serializable]
     public class FollowObjects : SceneEffectEvent
     {
         Transform[] _targets;
@@ -41,11 +59,11 @@ namespace SceneEvents
         }
         public override void OnEnter()
         {
-            SceneEffectManager.Instance.Camera.AddFollowTargets(_targets);
+            SceneContext.Current.SceneEffectManager.Camera.AddFollowTargets(_targets);
         }
         public override void OnExit()
         {
-            SceneEffectManager.Instance.Camera.RemoveFollowTargets(_targets);
+            SceneContext.Current.SceneEffectManager.Camera.RemoveFollowTargets(_targets);
         }
     }
 }

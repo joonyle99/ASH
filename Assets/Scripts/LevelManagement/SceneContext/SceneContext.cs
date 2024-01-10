@@ -12,6 +12,7 @@ public class SceneContext : MonoBehaviour
     public static SceneContext Current { get; private set; }
 
     public SceneTransitionPlayer SceneTransitionPlayer { get; private set; }
+    public SceneEffectManager SceneEffectManager { get; private set; }
     public PlayerBehaviour Player { get; private set; }
 
     public Passage EntrancePassage { get; private set; }
@@ -52,6 +53,9 @@ public class SceneContext : MonoBehaviour
 
         SceneTransitionPlayer = FindFirstObjectByType<PlayableSceneTransitionPlayer>();
         UpdateBuildResult(SceneTransitionPlayer);
+
+        SceneEffectManager = FindFirstObjectByType<SceneEffectManager>();
+        UpdateBuildResult(SceneEffectManager);
 
         Player = FindFirstObjectByType<PlayerBehaviour>();
         UpdateBuildResult(Player);

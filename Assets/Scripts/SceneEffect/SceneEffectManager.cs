@@ -5,64 +5,75 @@ using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
-public class SceneEffectManager : SingletonBehaviour<SceneEffectManager>, ISceneContextBuildListener
+public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
 {
-    List<SceneEffectEvent> _sceneEvents = new List<SceneEffectEvent>();
+    enum State { Idle, SceneEvent, Cutscene }
+    State _currentState = State.Idle;
+    [SerializeField]List<SceneEffectEvent> _sceneEvents = new List<SceneEffectEvent>();
 
     List<Cutscene> _cutSceneQueue = new List<Cutscene>();
 
-    RangeInt _activeSceneEventRange = new RangeInt(0,0);
     public CameraController Camera { get; private set; }
 
     SceneEventComparator _eventComparator = new SceneEventComparator();
-    public void EnterIdleState()
-    {
-        Camera.ResetCameraSettings();
-    }
-
     public void OnSceneContextBuilt()
     {
         Camera = UnityEngine.Camera.main.GetComponent<CameraController>();
-        EnterIdleState();
+        if (_currentState == State.Idle )
+            EnterIdleState();
+    }
+    public void EnterIdleState()
+    {
+        _currentState = State.Idle;
+        Camera.ResetCameraSettings();
     }
 
+    void UpdateCurrentSceneEffect()
+    {
+        _currentState = State.SceneEvent;
+        _sceneEvents[0].Enabled = true;
+        SceneEffectEvent.EventPriority priority = _sceneEvents[0].Priority;
+        int sceneEventDisableStartIndex = 1;
+        if (_sceneEvents[0].MergePolicyWithSamePriority == SceneEffectEvent.MergePolicy.PlayTogether)
+        {
+            for (int i = 1; i < _sceneEvents.Count; i++)
+            {
+                if (_sceneEvents[i].Priority == priority)
+                {
+                    _sceneEvents[i].Enabled = true;
+                    sceneEventDisableStartIndex++;
+                }
+                else
+                    break;
+                if (_sceneEvents[i].MergePolicyWithSamePriority == SceneEffectEvent.MergePolicy.OverrideWithRecent)
+                {
+                    break;
+                }
+            }
+        }
+        for (int i = sceneEventDisableStartIndex; i < _sceneEvents.Count; i++)
+            _sceneEvents[i].Enabled = false;
+    }
     public SceneEffectEvent PushSceneEvent(SceneEffectEvent sceneEvent)
     {
         int index = _sceneEvents.BinarySearch(sceneEvent, _eventComparator);
         if (index < 0)
             index = 0;
         _sceneEvents.Insert(index, sceneEvent);
-        UpdateActiveSceneEventRange();
-        if (_activeSceneEventRange.Contains(index))
-            sceneEvent.OnEnter();
+
+        if (_currentState != State.Cutscene)
+            UpdateCurrentSceneEffect();
         return sceneEvent;
     }
     void Update()
     {
-        foreach (var sceneEvent in _sceneEvents)
+        if ( _currentState == State.SceneEvent)
         {
-            sceneEvent.OnUpdate();
-        }
-    }
-    void UpdateActiveSceneEventRange()
-    {
-        if (_sceneEvents.Count == 0)
-        {
-            _activeSceneEventRange = new RangeInt(0, 0);
-            return;
-        }
-        _activeSceneEventRange.Start = 0;
-        _activeSceneEventRange.End = 1;
-
-        SceneEffectEvent.EventPriority priority = _sceneEvents[0].Priority;
-        for (int i=1; i< _sceneEvents.Count; i++)
-        {
-            if (_sceneEvents[i].Priority != priority)
-                return;
-            if (_sceneEvents[i].MergePolicyWithSamePriority == SceneEffectEvent.MergePolicy.PlayTogether)
-                _activeSceneEventRange.End++;
-            else
-                return;
+            foreach (var sceneEvent in _sceneEvents)
+            {
+                if (sceneEvent.Enabled)
+                    sceneEvent.OnUpdate();
+            }
         }
     }
     public void RemoveSceneEvent(SceneEffectEvent sceneEvent)
@@ -70,13 +81,46 @@ public class SceneEffectManager : SingletonBehaviour<SceneEffectManager>, IScene
         int index = _sceneEvents.FindIndex(0, _sceneEvents.Count, x => x == sceneEvent);
         if (index >= 0)
         {
-            if (_activeSceneEventRange.Contains(index))
-                sceneEvent.OnExit();
-            UpdateActiveSceneEventRange();
+            _sceneEvents.RemoveAt(index);
+            if (sceneEvent.Enabled)
+                sceneEvent.Enabled = false;
+            if (_currentState != State.Cutscene)
+            {
+                if (_sceneEvents.Count > 0)
+                    UpdateCurrentSceneEffect();
+                else
+                    EnterIdleState();
+            }
         }
     }
 
-        class Cutscene { }
+    public void PushCutscene(Cutscene cutscene)
+    {
+        _cutSceneQueue.Add(cutscene);
+        foreach (var sceneEvent in _sceneEvents)
+            sceneEvent.Enabled = false;
+        _currentState = State.Cutscene;
+
+        if (_cutSceneQueue.Count == 1)
+        {
+            StartFirstCutscene();
+        }
+    }
+    void StartFirstCutscene()
+    {
+        var cutscene = _cutSceneQueue[0];
+        cutscene.Play(this, () =>
+        {
+            _cutSceneQueue.Remove(cutscene);
+            if (_cutSceneQueue.Count > 0)
+                StartFirstCutscene();
+            else if (_sceneEvents.Count > 0)
+                UpdateCurrentSceneEffect();
+            else
+                EnterIdleState();
+        });
+    }
+
     //Idle : 그냥 평시, 아무런 카메라효과도 없는 default 상태. 카메라가 플레이어 쫓아다님. 이 상태는 사전정의될수있음
 
     //MajorEvent : 평시와 컷씬 사이로, 오브젝트들은 전부 작동하지만 카메라효과가 일부 적용된 상태. 카메라 focus가 바뀌거나
