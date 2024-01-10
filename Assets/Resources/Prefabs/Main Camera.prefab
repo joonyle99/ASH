@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7946246578197397877}
   - component: {fileID: 1986313841}
   - component: {fileID: 79121818037108792}
+  - component: {fileID: 643434365837365631}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -31,7 +32,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3829097960754704901}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -70,7 +71,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 6289375
+    m_Bits: 6291423
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -204,6 +205,28 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
   StartConstantShakePreset: {fileID: 0}
   CurrentConstantShakePreset: {fileID: 0}
+--- !u!114 &643434365837365631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3829097960754704901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60d259ae680f345ccb8abad710dd1263, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pc2D: {fileID: 71106182603244374}
+  _serializedAxis: 0
+  ZoomOutBorder: 0.5
+  ZoomInBorder: 0.5
+  ZoomInSmoothness: 1
+  ZoomOutSmoothness: 1
+  MaxZoomInAmount: 1
+  MaxZoomOutAmount: 10
+  DisableWhenOneTarget: 1
+  CompensateForCameraPosition: 0
 --- !u!1 &7219351680063161431
 GameObject:
   m_ObjectHideFlags: 0

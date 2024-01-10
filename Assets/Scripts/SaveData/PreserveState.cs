@@ -44,7 +44,18 @@ public class PreserveState : MonoBehaviour, IDestructionListener
                     Destroy(gameObject);
             });
     }
-    public static void LoadState<T>(string groupName, string key, Action<T> loadAction) where T : new()
+    public void Save<T>(string additionalKey, T value) where T : new()
+    {
+        PersistentDataManager.Set(_groupName, _ID + additionalKey, value);
+    }
+    public T Load<T>(string additionalKey, T defaultValue) where T : new()
+    {
+        if (PersistentDataManager.Has<T>(_groupName, _ID + additionalKey))
+            return PersistentDataManager.Get<T>(_groupName, _ID + additionalKey);
+        else
+            return defaultValue;
+    }
+    static void LoadState<T>(string groupName, string key, Action<T> loadAction) where T : new()
     {
         if (PersistentDataManager.Has<T>(groupName, key))
         {

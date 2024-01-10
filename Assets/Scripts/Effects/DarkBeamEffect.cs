@@ -63,4 +63,10 @@ public class DarkBeamEffect : MonoBehaviour
         _meshFilter.mesh = mesh;
 
     }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        float rot = transform.rotation.eulerAngles.z * Mathf.Deg2Rad;
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(Mathf.Cos(rot), Mathf.Sin(rot)) * 3);
+    }
 }

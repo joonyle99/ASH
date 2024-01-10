@@ -5,12 +5,13 @@ using UnityEngine;
 using Com.LuisPedroFonseca.ProCamera2D;
 using JetBrains.Annotations;
 using Unity.VisualScripting.Antlr3.Runtime;
-
+using System.Net;
 
 public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
     ProCamera2D _proCamera;
     ProCamera2DShake _shakeComponent;
+    ProCamera2DZoomToFitTargets _fitComponent;
 
     public float OffsetX
     {
@@ -33,6 +34,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         _proCamera = GetComponent<ProCamera2D>();
         _shakeComponent = _proCamera.GetComponent<ProCamera2DShake>();
+        _fitComponent = _proCamera.GetComponent <ProCamera2DZoomToFitTargets>();
         _initialSettings.Offset = new Vector2(OffsetX, OffsetY);
         _initialSettings.FollowSmoothness = new Vector2(_proCamera.HorizontalFollowSmoothness, _proCamera.VerticalFollowSmoothness);
     }
@@ -45,8 +47,12 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void StartFollow(Transform target, bool removeExisting = true)
     {
         if (removeExisting)
-            _proCamera.RemoveAllCameraTargets();
+            _proCamera.RemoveAllCameraTargets();            
         _proCamera.AddCameraTarget(target);
+    }
+    public void RemoveFollowTarget(Transform target)
+    {
+        _proCamera.RemoveCameraTarget(target);
     }
     public void DisableCameraFollow()
     {

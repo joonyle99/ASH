@@ -6,7 +6,9 @@ public class Monster_DieState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // Start Die Process
+        // Start Die
+        Monster.IsDead = true;
+
         // Polymorphism
         Monster.Die();
     }
@@ -19,5 +21,8 @@ public class Monster_DieState : Monster_StateBase
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
+
+        // End Die
+        Monster.IsDead = false;
     }
 }

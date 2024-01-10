@@ -66,6 +66,7 @@ public class DashState : PlayerState
 
         // 대쉬 동안 무적
         Player.IsGodMode = true;
+        // Player.StartSuperArmorFlash();
 
         // 중력 0으로 설정
         Player.Rigidbody.gravityScale = 0f;

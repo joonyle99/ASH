@@ -8,7 +8,7 @@ using UnityEngine.AI;
 /// <summary>
 /// 몬스터의 기본 행동을 정의
 /// </summary>
-public abstract class MonsterBehavior : MonoBehaviour
+public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
     #region Attribute
 
@@ -20,50 +20,69 @@ public abstract class MonsterBehavior : MonoBehaviour
     [Space]
 
     [SerializeField] private Monster_StateBase _currentState;
-
-    [Space]
-
-    [SerializeField] private Monster_StateBase _initialState;
-    [SerializeField] private Monster_StateBase _previousState;
+    private Monster_StateBase _initialState;
+    private Monster_StateBase _previousState;
 
     [Header("Module")]
     [Space]
 
-    [SerializeField] private NavMeshMove _navMeshMove;
-    public NavMeshMove NavMeshMove
+    [SerializeField] private GroundPatrolEvaluator _groundPatrolEvaluator;
+    public GroundPatrolEvaluator GroundPatrolEvaluator
     {
-        get { return _navMeshMove; }
+        get => _groundPatrolEvaluator;
+        private set => _groundPatrolEvaluator = value;
+    }
+    [SerializeField] private GroundChaseEvaluator _groundChaseEvaluator;
+    public GroundChaseEvaluator GroundChaseEvaluator
+    {
+        get => _groundChaseEvaluator;
+        private set => _groundChaseEvaluator = value;
     }
     [SerializeField] private FloatingPatrolEvaluator _floatingPatrolEvaluator;
     public FloatingPatrolEvaluator FloatingPatrolEvaluator
     {
-        get { return _floatingPatrolEvaluator; }
-    }
-    [SerializeField] private GroundPatrolEvaluator _groundPatrolEvaluator;
-    public GroundPatrolEvaluator GroundPatrolEvaluator
-    {
-        get { return _groundPatrolEvaluator; }
+        get => _floatingPatrolEvaluator;
+        private set => _floatingPatrolEvaluator = value;
     }
     [SerializeField] private FloatingChaseEvaluator _floatingChaseEvaluator;
     public FloatingChaseEvaluator FloatingChaseEvaluator
     {
-        get { return _floatingChaseEvaluator; }
+        get => _floatingChaseEvaluator;
+        private set => _floatingChaseEvaluator = value;
+    }
+    [SerializeField] private NavMeshMove _navMeshMove;
+    public NavMeshMove NavMeshMove
+    {
+        get => _navMeshMove;
+        private set => _navMeshMove = value;
     }
     [SerializeField] private AttackEvaluator _attackEvaluator;
     public AttackEvaluator AttackEvaluator
     {
-        get { return _attackEvaluator; }
+        get => _attackEvaluator;
+        private set => _attackEvaluator = value;
     }
 
     [Header("Condition")]
     [Space]
 
     [SerializeField] private int _defaultDir = 1;
+    public int DefaultDir
+    {
+        get => _defaultDir;
+        private set => _defaultDir = value;
+    }
     [SerializeField] private int _recentDir;
     public int RecentDir
     {
         get => _recentDir;
         set => _recentDir = value;
+    }
+    [SerializeField] private bool _isInAir;
+    public bool IsInAir
+    {
+        get => _isInAir;
+        set => _isInAir = value;
     }
     [SerializeField] private bool _isHit;
     public bool IsHit
@@ -97,12 +116,6 @@ public abstract class MonsterBehavior : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private int _id;
-    public int ID
-    {
-        get => _id;
-        protected set => _id = value;
-    }
     [SerializeField] private string _monsterName;
     public string MonsterName
     {
@@ -127,35 +140,39 @@ public abstract class MonsterBehavior : MonoBehaviour
         get => _moveSpeed;
         protected set => _moveSpeed = value;
     }
-    [SerializeField] private MonsterDefine.SIZE _monsterSize;
-    public MonsterDefine.SIZE MonsterSize
+    [SerializeField] private Vector2 _jumpForce;
+    public Vector2 JumpForce
     {
-        get => _monsterSize;
-        protected set => _monsterSize = value;
+        get => _jumpForce;
+        protected set => _jumpForce = value;
     }
-    [SerializeField] private MonsterDefine.MONSTER_TYPE _monsterType;
-    public MonsterDefine.MONSTER_TYPE MonsterType
+    [SerializeField] private MonsterDefine.MONSTER_BEHAV _monsterBehav;
+    public MonsterDefine.MONSTER_BEHAV MonsterBehav
     {
-        get => _monsterType;
-        protected set => _monsterType = value;
+        get => _monsterBehav;
+        protected set => _monsterBehav = value;
     }
 
-    [Header("Blink")]
+    [Header("Ground Check")]
     [Space]
 
-    [SerializeField] private Material _whiteFlashMaterial;
-    [SerializeField] private Material _superArmorMaterial;
-    private float _blinkDuration = 0.08f;
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private Transform _groundCheckTrans;
+    [SerializeField] private Vector2 _groundCheckBoxSize;
+    public RaycastHit2D GroundRayHit;
+
+    // Blink
+    private Material _whiteFlashMaterial;
+    private Material _superArmorMaterial;
+    private readonly float _blinkDuration = 0.08f;
     private SpriteRenderer[] _spriteRenderers;
     private Material[] _originalMaterials;
     private Coroutine _whiteFlashRoutine;
     private Coroutine _superArmorRoutine;
 
-    [Header("FadeOut")]
-    [Space]
-
-    [SerializeField] private float _targetFadeOutTime = 3f;
-    [SerializeField] private float _elapsedFadeOutTime = 0f;
+    // Fade Out
+    private readonly float _targetFadeOutTime = 2f;
+    private float _elapsedFadeOutTime;
 
     #endregion
 
@@ -168,13 +185,15 @@ public abstract class MonsterBehavior : MonoBehaviour
         Animator = GetComponent<Animator>();
 
         // Module
-        _navMeshMove = GetComponent<NavMeshMove>();
-        _floatingPatrolEvaluator = GetComponent<FloatingPatrolEvaluator>();
-        _groundPatrolEvaluator = GetComponent<GroundPatrolEvaluator>();
-        _floatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
-        _attackEvaluator = GetComponent<AttackEvaluator>();
+        GroundPatrolEvaluator = GetComponent<GroundPatrolEvaluator>();
+        GroundChaseEvaluator = GetComponent<GroundChaseEvaluator>();
+        FloatingPatrolEvaluator = GetComponent<FloatingPatrolEvaluator>();
+        FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
+        NavMeshMove = GetComponent<NavMeshMove>();
+        AttackEvaluator = GetComponent<AttackEvaluator>();
 
-        // Save Material for WhiteFlash Effect
+        // Material
+        LoadBlinkMaterial();
         SaveOriginalMaterial();
 
         // Init State
@@ -186,14 +205,47 @@ public abstract class MonsterBehavior : MonoBehaviour
         SetUp();
 
         // 바라보는 방향 설정
-        _recentDir = _defaultDir;
+        RecentDir = DefaultDir;
     }
     protected virtual void Update()
     {
         if (IsDead)
             return;
 
-        CheckDie();
+        // ground behavior
+        if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk || MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundJump)
+        {
+            // ground raycast
+            GroundRayHit = Physics2D.BoxCast(_groundCheckTrans.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
+                _groundLayer);
+
+            // OnEnter Idle (1Frame)
+            if (IsInAir)
+            {
+                if (GroundRayHit)
+                    Animator.SetTrigger("Idle");
+            }
+            // OnEnter InAir (1Frame)
+            else if (!IsInAir)
+            {
+                if (!GroundRayHit)
+                    Animator.SetTrigger("InAir");
+            }
+
+            // set IsInAir
+            IsInAir = !GroundRayHit;
+
+            // flip after wall check
+            if (GroundPatrolEvaluator.IsWallCheck())
+                SetRecentDir(-RecentDir);
+        }
+        // fly behavior
+        else if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.Fly)
+        {
+            IsInAir = true;
+        }
+
+        IsCheckDie();
     }
     protected virtual void FixedUpdate()
     {
@@ -201,72 +253,59 @@ public abstract class MonsterBehavior : MonoBehaviour
     }
     protected virtual void SetUp()
     {
-        // 몬스터의 ID 설정
-        ID = _monsterData.ID;
-
-        // 몬스터의 이름 설정
+        // 몬스터의 이름
         MonsterName = _monsterData.MonsterName;
-
-        // 몬스터의 타입 설정
-        MonsterType = _monsterData.MonsterType;
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
         CurHp = MaxHp;
 
-        // 몬스터의 이동속도 설정
+        // 몬스터의 이동속도
         MoveSpeed = _monsterData.MoveSpeed;
 
-        // 몬스터의 크기 타입
-        MonsterSize = _monsterData.MonsterSize;
-    }
+        // 몬스터의 점프파워
+        JumpForce = _monsterData.JumpForce;
 
+        // 몬스터의 행동 타입
+        MonsterBehav = _monsterData.MonsterBehav;
+    }
     public virtual void KnockBack(Vector2 forceVector)
     {
-        RigidBody.velocity = Vector2.zero;
-
-        // Monster의 Mass에 따른 forceVector 보정
-        float ratio = RigidBody.mass / 1.0f;
-        Vector2 newForceVector = forceVector * ratio;
-
         var navMesh = GetComponent<NavMeshAgent>();
-
-        // navMesh의 KnockBack
         if (navMesh)
             navMesh.velocity = forceVector / 2.0f;
-        // rigidbody의 KnockBack
         else
-            RigidBody.AddForce(newForceVector, ForceMode2D.Impulse);
+        {
+            // 속도 초기화
+            RigidBody.velocity = Vector2.zero;
+
+            // Monster의 Mass에 따른 보정
+            forceVector *= RigidBody.mass / 1.0f;
+            RigidBody.AddForce(forceVector, ForceMode2D.Impulse);
+        }
     }
-    public virtual void OnHit(int damage, Vector2 forceVector)
+    public virtual void OnHit(AttackInfo attackInfo)
     {
         if (IsGodMode || IsDead)
             return;
 
         // Damage
-        CurHp -= damage;
+        CurHp -= (int)attackInfo.Damage;
 
         // Hit
-        SetIsHit(true);
-        KnockBack(forceVector);
+        StartHitTimer();
+        KnockBack(attackInfo.Force);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
         // Change to Die State
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-            Animator.SetTrigger("Die");
-
+        if (IsCheckDie())
             return;
-        }
 
         // Change to Hurt State
         Animator.SetTrigger("Hurt");
     }
     public virtual void Die()
     {
-        IsDead = true;
-
         // Disable Hit Box
         SetActiveHitBoxGameObject(false);
 
@@ -274,62 +313,64 @@ public abstract class MonsterBehavior : MonoBehaviour
         StartDestroy();
     }
 
-    // hitBox & Collider
+    // hitBox
     public void SetActiveHitBoxGameObject(bool isBool)
     {
         // Disable Hit Box
         GameObject hitBox = GetComponentInChildren<MonsterBodyHit>(true).gameObject;
 
-        if (hitBox != null)
+        if (hitBox)
             hitBox.SetActive(isBool);
-    }
-    public void SetDisableHitBox(bool isBool)
-    {
-        MonsterBodyHit hitBox = GetComponentInChildren<MonsterBodyHit>();
-
-        if (hitBox != null)
-            hitBox.IsDisableHitBox = isBool;
     }
     public void SetTriggerHitBox(bool isBool)
     {
         // Disable Hit Box
         GameObject hitBox = GetComponentInChildren<MonsterBodyHit>(true).gameObject;
 
-        if (hitBox != null)
+        if (hitBox)
         {
             Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
             hitBoxCollider.isTrigger = isBool;
-            hitBox.layer = isBool ? LayerMask.NameToLayer("Monster") : LayerMask.NameToLayer("Default");
+            hitBox.layer = isBool ? LayerMask.NameToLayer("MonsterHitBox") : LayerMask.NameToLayer("Default");
         }
-    }
-    public void SetIsHit(bool isHit)
-    {
-        IsHit = isHit;
     }
 
     // basic
-    public void UpdateImageFlip()
+    public void SetRecentDir(int targetDir)
     {
-        RecentDir *= -1;
-        transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        // flip을 시킬지에 대한 값
+        int flipValue = RecentDir * targetDir;
+
+        // 바라보는 방향 변경
+        RecentDir = targetDir;
+
+        // 바라보는 방향으로 Flip
+        transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
-    private void CheckDie()
+    private bool IsCheckDie()
     {
         if (CurHp <= 0)
         {
             CurHp = 0;
             Animator.SetTrigger("Die");
+
+            return true;
         }
+
+        return false;
     }
 
-    // effect
-    private void SaveSpriteRenderers()
+    // blink
+    private void LoadBlinkMaterial()
     {
-        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        _whiteFlashMaterial =
+            Resources.Load<Material>("Materials/WhiteFlashMaterial");
+        _superArmorMaterial =
+            Resources.Load<Material>("Materials/SuperArmorFlashMaterial");
     }
     private void SaveOriginalMaterial()
     {
-        SaveSpriteRenderers();
+        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
         _originalMaterials = new Material[_spriteRenderers.Length];
         for (int i = 0; i < _originalMaterials.Length; i++)
@@ -392,6 +433,20 @@ public abstract class MonsterBehavior : MonoBehaviour
         }
         this._superArmorRoutine = StartCoroutine(SuperArmorFlash());
     }
+
+    // hit
+    private IEnumerator HitTimer()
+    {
+        IsHit = true;
+        yield return new WaitForSeconds(0.1f);
+        IsHit = false;
+    }
+    public void StartHitTimer()
+    {
+        StartCoroutine(HitTimer());
+    }
+
+    // die
     private IEnumerator FadeOutDestroy()
     {
         SpriteRenderer[] currentSpriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
@@ -446,13 +501,24 @@ public abstract class MonsterBehavior : MonoBehaviour
         _previousState = _currentState;
         _currentState = state;
     }
-    public bool CurrentStateIs<State>() where State : Monster_StateBase
+    public bool CurrentStateIs<TState>() where TState : Monster_StateBase
     {
-        return _currentState is State;
+        return _currentState is TState;
     }
-    public bool PreviousStateIs<State>() where State : Monster_StateBase
+    public bool PreviousStateIs<TState>() where TState : Monster_StateBase
     {
-        return _previousState is State;
+        return _previousState is TState;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // ground behavior
+        if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk || MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundJump)
+        {
+            // Draw Ground Check
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(_groundCheckTrans.position, new Vector3(_groundCheckBoxSize.x, _groundCheckBoxSize.y, 0f));
+        }
     }
 
     #endregion

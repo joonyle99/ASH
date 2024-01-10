@@ -1,25 +1,36 @@
+using System.Linq;
 using UnityEngine;
 
 public class Monster_IdleState : Monster_StateBase
 {
-    [SerializeField] private float _targetStayTime = 2f;
-    [SerializeField] private float _elapsedStayTime;
+    [SerializeField] protected float _targetIdleTime;
+    [SerializeField] protected float _elapsedIdleTime;
+
+    [SerializeField] protected bool hasPatrolParameter;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+
+        hasPatrolParameter = animator.parameters.Any(param => param.name == "Patrol");
+
+        _targetIdleTime = Random.Range(0f, 1f);
+        _elapsedIdleTime = 0f;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        _elapsedStayTime += Time.deltaTime;
-
-        if (_elapsedStayTime > _targetStayTime)
+        if (hasPatrolParameter)
         {
-            _elapsedStayTime = 0f;
-            animator.SetTrigger("Patrol");
+            // change to patrol
+            _elapsedIdleTime += Time.deltaTime;
+            if (_elapsedIdleTime > _targetIdleTime)
+            {
+                _elapsedIdleTime = 0f;
+                animator.SetTrigger("Patrol");
+            }
         }
     }
 

@@ -6,44 +6,51 @@ using UnityEditor;
 
 public abstract class StateMachineBase : MonoBehaviour
 {
-    [Header("State Machine Base")]
-
+    [Header("StateMachineBase")]
     [Space]
 
-    [SerializeField] Rigidbody2D _rigidbody;
-    [SerializeField] Animator _animator;
+    [SerializeField] private Rigidbody2D _rigidbody;
+    public Rigidbody2D Rigidbody
+    {
+        get => _rigidbody;
+        private set => _rigidbody = value;
+    }
+    [SerializeField] private Animator _animator;
+    public Animator Animator
+    {
+        get => _animator;
+        private set => _animator = value;
+    }
+
     [SerializeField] StateBase _initialState;
+    public StateBase CurrentState { get; private set; }
+    public StateBase PreviousState { get; private set; }
 
-    public Rigidbody2D Rigidbody => _rigidbody;
-    public Animator Animator => _animator;
-    public StateBase CurrentState { get; set; }
-    public StateBase PreviousState { get; set; }
+    protected virtual void Awake()
+    {
 
-    // Dictionary<MonsterType, Component> _cachedComponents = new Dictionary<MonsterType, Component>();
-
+    }
     protected virtual void Start()
     {
 #if UNITY_EDITOR
         if (_initialState == null)
-            Debug.LogError(string.Format("Initial state of {0} is missing!", this.gameObject.name));
+            Debug.LogError($"Initial state of {this.gameObject.name} is missing!");
 #endif
         CurrentState = _initialState;
         CurrentState.TriggerEnter(this);
     }
-
     protected virtual void Update()
     {
         CurrentState.TriggerUpdate();
     }
-
     protected virtual void FixedUpdate()
     {
         CurrentState.TriggerFixedUpdate();
     }
 
-    public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
+    public TState ChangeState<TState>(bool ignoreSameState = false) where TState : StateBase
     {
-        var nextState = GetComponent<NextState>();
+        var nextState = GetComponent<TState>();
         if (ignoreSameState && nextState == CurrentState)
             return nextState;
         CurrentState.TriggerExit();
@@ -52,29 +59,14 @@ public abstract class StateMachineBase : MonoBehaviour
         CurrentState.TriggerEnter(this);
         return nextState;
     }
-
-    public bool StateIs<State>() where State : StateBase
+    public bool CurrentStateIs<TState>() where TState : StateBase
     {
-        return CurrentState is State;
+        return CurrentState is TState;
     }
-
-    public PrevState GetPreviousStateAs<PrevState>() where PrevState : StateBase
+    public bool PreviousStateIs<TState>() where TState : StateBase
     {
-        if (PreviousState is PrevState)
-            return PreviousState as PrevState;
-        return null;
+        return PreviousState is TState;
     }
-
-    //public new T GetComponent<T>() where T : Component
-    //{
-    //    if (_cachedComponents.ContainsKey(typeof(T)))
-    //        return _cachedComponents[typeof(T)] as T;
-
-    //    var component = base.GetComponent<T>();
-    //    if (component != null)
-    //        _cachedComponents.Add(typeof(T), component);
-    //    return component;
-    //}
 }
 
 #if UNITY_EDITOR
@@ -83,7 +75,6 @@ public class StateMachineBaseEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-
         StateMachineBase stateMachine = (StateMachineBase)target;
         if (stateMachine.CurrentState == null)
             EditorGUILayout.LabelField("Current State : ", "null");

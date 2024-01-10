@@ -3,19 +3,12 @@
 /// </summary>
 public static class MonsterDefine
 {
-    public enum SIZE
+    public enum MONSTER_BEHAV
     {
         Null = 0,
-        Small,
-        Medium,
-        Large
-    }
-
-    public enum MONSTER_TYPE
-    {
-        Null = 0,
-        Normal,
-        SemiBoss,
-        Boss
+        GroundWalk,
+        GroundJump,
+        GroundFloting,
+        Fly,
     }
 }

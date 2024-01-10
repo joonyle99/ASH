@@ -24,8 +24,5 @@ public class Monster_HurtState : Monster_StateBase
 
         // End Hurt
         Monster.IsHurt = false;
-
-        // Change to Idle State
-        animator.SetTrigger("Idle");
     }
 }

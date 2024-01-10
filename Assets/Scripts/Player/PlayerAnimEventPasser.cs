@@ -12,6 +12,6 @@ public class PlayerAnimEventPasser : MonoBehaviour
     }
     public void FinishBaseAttackAnim()
     {
-        _attackState.AnimEvent_FinishBaseAttackAnim();
+        // _attackState.FinishBasicAttack_AnimEvent();
     }
 }
