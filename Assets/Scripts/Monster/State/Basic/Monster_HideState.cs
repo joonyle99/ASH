@@ -1,8 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-public class Turtle_HideState : Monster_StateBase
+public class Monster_HideState : Monster_StateBase
 {
+    [SerializeField] private float _minHideTime = 2f;
+    [SerializeField] private float _maxHideTime = 5f;
     [SerializeField] private float _targetHideTime;
     [SerializeField] private float _elapsedHideTime;
 
@@ -10,7 +12,7 @@ public class Turtle_HideState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        _targetHideTime = Random.Range(2f, 5f);
+        _targetHideTime = Random.Range(_minHideTime, _maxHideTime);
         _elapsedHideTime = 0f;
     }
 

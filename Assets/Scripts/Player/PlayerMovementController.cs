@@ -23,14 +23,12 @@ public class PlayerMovementController : MonoBehaviour
             return;
 
         Vector2 groundNormal = _player.GroundHit.normal;
-        Vector2 moveDir;
-        if (_player.RawInputs.Movement.x > 0f)
-            moveDir = (-1) * Vector2.Perpendicular(groundNormal);
-        else
-            moveDir = Vector2.Perpendicular(groundNormal);
+        Vector2 moveDirection = _player.RawInputs.Movement.x > 0f
+            ? (-1) * Vector2.Perpendicular(groundNormal)
+            : Vector2.Perpendicular(groundNormal);
 
-        Vector2 targetVelocity = moveDir * _maxSpeed;
-        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(_player.Rigidbody.velocity, moveDir) * moveDir;
+        Vector2 targetVelocity = moveDirection * _maxSpeed;
+        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(_player.Rigidbody.velocity, moveDirection) * moveDirection;
         float accelRate = (velocityNeeded.magnitude > 0.01f) ? _acceleration : _decceleration;
 
         _moveForce = velocityNeeded * accelRate;

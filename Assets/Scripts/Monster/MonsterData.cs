@@ -15,6 +15,10 @@ public class MonsterData : ScriptableObject
     [SerializeField] private float _moveSpeed;
     public float MoveSpeed => _moveSpeed;
 
+    // 가속도
+    [SerializeField] private float _acceleration;
+    public float Acceleration => _acceleration;
+
     // 점프 파워
     [SerializeField] private Vector2 _jumpForce;
     public Vector2 JumpForce => _jumpForce;

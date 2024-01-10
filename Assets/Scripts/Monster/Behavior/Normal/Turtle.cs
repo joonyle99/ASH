@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 public class Turtle : MonsterBehavior
@@ -15,10 +16,6 @@ public class Turtle : MonsterBehavior
         base.Update();
 
     }
-    protected override void FixedUpdate()
-    {
-        base.FixedUpdate();
-    }
     protected override void SetUp()
     {
         base.SetUp();
@@ -33,20 +30,19 @@ public class Turtle : MonsterBehavior
         if (IsDead)
             return;
 
-        // Hit
+        // Hit Process
         StartHitTimer();
         KnockBack(attackInfo.Force);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
+        // Change to Hurt State
         if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundPatrolState>())
             Animator.SetTrigger("Hurt");
     }
     public override void Die()
     {
-        IsDead = true;
-
         // Trigger -> Collision
-        SetTriggerHitBox(false);
+        TurnToCollisionHitBox();
 
         // disable monster collider
         GetComponent<Collider2D>().enabled = false;

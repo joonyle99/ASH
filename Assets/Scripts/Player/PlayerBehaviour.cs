@@ -48,15 +48,8 @@ public class PlayerBehaviour : StateMachineBase
     [Header("Viewr")]
     [Space]
 
-    [SerializeField] Collider2D _groundHitCollider;
-    [SerializeField] Collider2D _wallHitCollider;
-    [SerializeField] Collider2D _DiveHitCollider;
-
-    [Space]
-
-    [SerializeField] Collider2D _mainCollider;
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
-    [SerializeField] Rigidbody2D _hand;
+    [SerializeField] Rigidbody2D _handRigidbody;
 
     [Header("Blink / God Mode")]
     [Space]
@@ -76,13 +69,9 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] float _elapsedFadeOutTime = 0f;
 
     // Controller
-    PlayerJumpController _jumpController;
     PlayerAttackController _attackController;
     InteractionController _interactionController;
     PlayerMovementController _movementController;
-
-    //Joint for interactable
-    Joint2D _joint;
 
     // Sound List
     SoundList _soundList;
@@ -128,15 +117,13 @@ public class PlayerBehaviour : StateMachineBase
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
 
     // Etc
-    public LayerMask GroundLayerMask { get { return _groundLayer; } }
-    public Collider2D MainCollider { get { return _mainCollider; } }
     public RaycastHit2D GroundHit { get; private set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
     public RaycastHit2D WallHit { get; set; }
     public RaycastHit2D DiveHit { get; set; }
     public InteractionController InteractionController { get { return _interactionController; } }
     public PlayerMovementController MovementController { get { return _movementController; } }
-    public Rigidbody2D HandRigidBody { get { return _hand; } }
+    public Rigidbody2D HandRigidBody { get { return _handRigidbody; } }
     public SoundList SoundList { get { return _soundList; } }
 
     #endregion
@@ -145,11 +132,7 @@ public class PlayerBehaviour : StateMachineBase
 
     private void Awake()
     {
-        // Collider
-        _mainCollider = GetComponent<Collider2D>();
-
         // Controller
-        _jumpController = GetComponent<PlayerJumpController>();
         _attackController = GetComponent<PlayerAttackController>();
         _interactionController = GetComponent<InteractionController>();
         _movementController = GetComponent<PlayerMovementController>();
@@ -189,19 +172,16 @@ public class PlayerBehaviour : StateMachineBase
 
         // Check Ground
         GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
-        _groundHitCollider = GroundHit.collider;
 
         // Check Upward
         UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
 
         // Check Wall
         WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
-        _wallHitCollider = WallHit.collider;
 
         // Check Dive Hit
         DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckLength, _groundLayer);
         GroundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
-        _DiveHitCollider = DiveHit.collider;
 
         #endregion
 
