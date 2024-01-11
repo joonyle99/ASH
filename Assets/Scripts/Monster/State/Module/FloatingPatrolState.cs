@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class FloatingPatrolState : Monster_MoveState
@@ -12,15 +13,6 @@ public class FloatingPatrolState : Monster_MoveState
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
-
-        if (Monster.FloatingChaseEvaluator)
-        {
-            if (Monster.FloatingChaseEvaluator.IsTargetWithinChaseRange())
-            {
-                animator.SetTrigger("Chase");
-                return;
-            }
-        }
 
         // Patrol Point Update
         Monster.FloatingPatrolEvaluator.UpdatePatrolPoint();

@@ -15,6 +15,30 @@ public class Mushroom : MonsterBehavior
     protected override void Update()
     {
         base.Update();
+
+        if (CautionEvaluator)
+        {
+            if (!CautionEvaluator.IsTargetWithinCautionRange())
+            {
+                if (CurrentStateIs<Monster_HideState>())
+                {
+                    Debug.Log("SetTrigger Idle");
+
+                    Animator.SetTrigger("Idle");
+                    return;
+                }
+            }
+            else
+            {
+                if (CurrentStateIs<Monster_IdleState>())
+                {
+                    Debug.Log("SetTrigger Hide");
+
+                    Animator.SetTrigger("Hide");
+                    return;
+                }
+            }
+        }
     }
 
     protected override void SetUp()

@@ -967,7 +967,7 @@ GameObject:
   - component: {fileID: 2882420339107845083}
   - component: {fileID: 2882420339107845084}
   m_Layer: 16
-  m_Name: MonsterHitBox_Frog
+  m_Name: MonsterHitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1324,6 +1324,7 @@ MonoBehaviour:
   _floatingChaseEvaluator: {fileID: 0}
   _navMeshMove: {fileID: 0}
   _attackEvaluator: {fileID: 0}
+  _cautionEvaluator: {fileID: 0}
   _defaultDir: -1
   _recentDir: 0
   _isGround: 0
@@ -1333,13 +1334,13 @@ MonoBehaviour:
   _isHurt: 0
   _isDead: 0
   _monsterData: {fileID: 11400000, guid: e6aca0f95f82abb4fbc1f113892d1ca5, type: 2}
-  _monsterName: 
+  _name: 
   _maxHp: 0
   _curHp: 0
   _moveSpeed: 0
   _acceleration: 0
   _jumpForce: {x: 0, y: 0}
-  _monsterBehav: 0
+  _moveType: 0
   _groundCheckLayer:
     serializedVersion: 2
     m_Bits: 8
