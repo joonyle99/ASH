@@ -5,6 +5,22 @@ public class Monster_HurtState : Monster_StateBase
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+
+        if (Monster.AttackEvaluator)
+        {
+            if (!Monster.AttackEvaluator.IsAttackable)
+                Monster.AttackEvaluator.IsAttackable = true;
+        }
+
+        if (Monster.GroundChaseEvaluator)
+        {
+            if (!Monster.GroundChaseEvaluator.IsChasable)
+                Monster.GroundChaseEvaluator.IsChasable = true;
+        }
+
+        Monster.IsHurt = true;
+
+        Monster.StartWhiteFlash();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

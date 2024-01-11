@@ -20,7 +20,7 @@ public class Monster_IdleState : Monster_StateBase
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        // change to patrol
+        // patrol
         _elapsedIdleTime += Time.deltaTime;
         if (_elapsedIdleTime > _targetIdleTime)
         {

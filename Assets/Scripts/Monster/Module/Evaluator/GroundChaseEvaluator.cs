@@ -14,6 +14,12 @@ public class GroundChaseEvaluator : MonoBehaviour
         get => _chaseDir;
         private set => _chaseDir = value;
     }
+    [SerializeField] private bool _isChasing;
+    public bool IsChasing
+    {
+        get => _isChasing;
+        private set => _isChasing = value;
+    }
     [SerializeField] private bool _isChasable;
     public bool IsChasable
     {
@@ -32,7 +38,10 @@ public class GroundChaseEvaluator : MonoBehaviour
     public bool IsTargetWithinChaseRange()
     {
         if (!IsChasable)
+        {
+            IsChasing = false;
             return false;
+        }
 
         // Detect Collider
         Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _chaseCheckBoxSize, 0f, _targetLayer);
@@ -48,10 +57,12 @@ public class GroundChaseEvaluator : MonoBehaviour
                 // Set Direction
                 SetChaseDir(player.transform);
 
+                IsChasing = true;
                 return true;
             }
         }
 
+        IsChasing = false;
         return false;
     }
     public void SetTargetTrans(Transform trans)

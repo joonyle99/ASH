@@ -354,7 +354,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7189109065222473829}
   m_Bounds:
-    m_Center: {x: 0.00938952, y: -0.22026587, z: 0}
+    m_Center: {x: 0.009420037, y: -0.22026587, z: 0}
     m_Extent: {x: 0.73589015, y: 0.45805514, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1330,6 +1330,7 @@ MonoBehaviour:
   _isInAir: 0
   _isSuperArmor: 0
   _isHit: 0
+  _isHurt: 0
   _isDead: 0
   _monsterData: {fileID: 11400000, guid: e6aca0f95f82abb4fbc1f113892d1ca5, type: 2}
   _monsterName: 
@@ -1345,7 +1346,7 @@ MonoBehaviour:
   _groundCheckCollider: {fileID: 4687417800941568456}
   _tonguePrefab: {fileID: 5723251706487992014, guid: 53d1ff87c3a6cfd459fe5efee22b35a0, type: 3}
   _mouthTrans: {fileID: 803259526547706384}
-  _tongueLength: 30
+  _tongueLength: 10
   _targetTongueAttackTime: 0.1
 --- !u!114 &4687417800814101121
 MonoBehaviour:
@@ -1380,7 +1381,8 @@ MonoBehaviour:
     m_Bits: 256
   _chaseCheckCollider: {fileID: 4687417801991091178}
   _chaseDir: 1
-  checkPrefab: {fileID: 3731091499289549998, guid: 0c83efa947b57f449b77125d345ca90b, type: 3}
+  _isChasing: 0
+  _isChasable: 0
 --- !u!114 &4687417800814101120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1398,7 +1400,8 @@ MonoBehaviour:
     m_Bits: 256
   _attackCheckBoxCollider: {fileID: 3651701839311028655}
   _targetWaitTime: 5
-  _isAttackable: 1
+  _isDuringCooldown: 0
+  _isAttackable: 0
 --- !u!114 &4687417800814101241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1963,7 +1966,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 5882658842016794676}
   m_Bounds:
-    m_Center: {x: 0.00019907951, y: -0.22370994, z: 0}
+    m_Center: {x: 0.00022959709, y: -0.22370994, z: 0}
     m_Extent: {x: 0.50083005, y: 0.48677993, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

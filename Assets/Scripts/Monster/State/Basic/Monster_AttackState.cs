@@ -4,7 +4,9 @@ public class Monster_AttackState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        base.OnStateEnter(animator, stateInfo, layerIndex) ;
+        base.OnStateEnter(animator, stateInfo, layerIndex);
+
+        Monster.IsSuperArmor = true;
 
         Monster.StartSuperArmorFlash();
     }

@@ -177,7 +177,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     // Blink
     private Material _whiteFlashMaterial;
     private Material _superArmorMaterial;
-    private readonly int _blinkCount = 7;
     private readonly float _blinkDuration = 0.08f;
     private SpriteRenderer[] _spriteRenderers;
     private Material[] _originalMaterials;
@@ -206,7 +205,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         NavMeshMove = GetComponent<NavMeshMove>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
 
-        // ground check
+        // if monsterBehv is ground type, check the ground
         if (_groundCheckCollider)
             _groundCheckBoxSize = _groundCheckCollider.bounds.size;
 
@@ -235,20 +234,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             case MonsterDefine.MONSTER_BEHAV.GroundWalk:
             case MonsterDefine.MONSTER_BEHAV.GroundJump:
 
-                // ground raycast
+                // ground rayCast
                 GroundRayHit = Physics2D.BoxCast(_groundCheckCollider.transform.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
                     _groundCheckLayer);
 
                 // set condition
                 IsGround = GroundRayHit;
                 IsInAir = !GroundRayHit;
-
-                // flip recentDir after wall check
-                if (GroundPatrolEvaluator)
-                {
-                    if (GroundPatrolEvaluator.IsWallCheck())
-                        SetRecentDir(-RecentDir);
-                }
 
                 break;
 
@@ -265,17 +257,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         {
             if (AttackEvaluator.IsTargetWithinAttackRange())
             {
+                AttackEvaluator.StartAttackCooldownTimer();
+                Animator.SetTrigger("Attack");
+
                 if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<Monster_MoveState>())
                 {
-                    if (IsHurt)
-                        return;
 
-                    // 이곳 Update()는 Animator.SetTrigger("Attack")에 의한 OnStateMachineEnter()이전에 호출된다.
-                    // 따라서 각 State가 아닌 여기서 IsSuperArmor의 값을 즉각 변경하고, 종료 처리만 각 State에서 한다.
-                    IsSuperArmor = true;
-
-                    AttackEvaluator.StartAttackCooldownTimer();
-                    Animator.SetTrigger("Attack");
                 }
             }
         }
@@ -368,16 +355,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
-    public void DamageHit(AttackInfo attackInfo)
-    {
-        // Damage
-        CurHp -= (int)attackInfo.Damage;
-        StartWhiteFlash();
-    }
     public void HitProcess(AttackInfo attackInfo)
     {
         StartHitTimer();
-        DamageHit(attackInfo);
+        CurHp -= (int)attackInfo.Damage;
         KnockBack(attackInfo.Force);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
     }
@@ -385,22 +366,16 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         if (CurHp <= 0)
         {
-            IsDead = true;
-
             CurHp = 0;
             Animator.SetTrigger("Die");
 
             return;
         }
 
-        // 슈퍼아머 : hurt 애니메이션 실행 x
+        // superArmor is started when monster attack
+        // superArmor : hurt animation x
         if (IsSuperArmor)
             return;
-
-        // IsHurt = true를 각 State에서 설정하면
-        // OnStateMachineEnter()이전에 호출되는 OUpdate()문에서 갱신되지 않아 여기서 설정한다.
-        // 종료만 각 State에서 진행한다.
-        IsHurt = true;
 
         Animator.SetTrigger("Hurt");
     }
