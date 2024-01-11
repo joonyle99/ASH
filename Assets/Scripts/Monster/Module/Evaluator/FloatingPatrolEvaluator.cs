@@ -39,11 +39,4 @@ public class FloatingPatrolEvaluator : MonoBehaviour
         _patrolTargetPoint = Instantiate(_checkPrefab, TargetPosition, Quaternion.identity, transform.parent);
         _patrolTargetPoint.name = "Patrol Target Point";
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        // 순회 범위
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireCube(_patrolArea.transform.position, _patrolBounds.size);
-    }
 }

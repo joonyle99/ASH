@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Threading;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,7 +14,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     #region Attribute
 
     // Basic Component
-    public Rigidbody2D RigidBody { get; private set; }
+    public Rigidbody2D Rigidbody { get; private set; }
     public Animator Animator { get; private set; }
 
     [Header("State")]
@@ -78,11 +79,23 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _recentDir;
         set => _recentDir = value;
     }
+    [SerializeField] private bool _isGround;
+    public bool IsGround
+    {
+        get => _isGround;
+        set => _isGround = value;
+    }
     [SerializeField] private bool _isInAir;
     public bool IsInAir
     {
         get => _isInAir;
         set => _isInAir = value;
+    }
+    [SerializeField] private bool _isSuperArmor;
+    public bool IsSuperArmor
+    {
+        get => _isSuperArmor;
+        set => _isSuperArmor = value;
     }
     [SerializeField] private bool _isHit;
     public bool IsHit
@@ -101,12 +114,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         get => _isDead;
         set => _isDead = value;
-    }
-    [SerializeField] private bool _isGodMode;
-    public bool IsGodMode
-    {
-        get => _isGodMode;
-        set => _isGodMode = value;
     }
 
     [Header("Monster Data")]
@@ -140,6 +147,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _moveSpeed;
         protected set => _moveSpeed = value;
     }
+    [SerializeField] private float _acceleration;
+    public float Acceleration
+    {
+        get => _acceleration;
+        protected set => _acceleration = value;
+    }
     [SerializeField] private Vector2 _jumpForce;
     public Vector2 JumpForce
     {
@@ -156,9 +169,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Header("Ground Check")]
     [Space]
 
-    [SerializeField] private LayerMask _groundLayer;
-    [SerializeField] private Transform _groundCheckTrans;
-    [SerializeField] private Vector2 _groundCheckBoxSize;
+    [SerializeField] private LayerMask _groundCheckLayer;
+    [SerializeField] private BoxCollider2D _groundCheckCollider;
+    private Vector2 _groundCheckBoxSize;
     public RaycastHit2D GroundRayHit;
 
     // Blink
@@ -181,7 +194,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     protected virtual void Awake()
     {
         // Basic Component
-        RigidBody = GetComponent<Rigidbody2D>();
+        Rigidbody = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
 
         // Module
@@ -192,8 +205,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         NavMeshMove = GetComponent<NavMeshMove>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
 
+        // if monsterBehv is ground type, check the ground
+        if (_groundCheckCollider)
+            _groundCheckBoxSize = _groundCheckCollider.bounds.size;
+
         // Material
-        LoadBlinkMaterial();
+        LoadFlashMaterial();
         SaveOriginalMaterial();
 
         // Init State
@@ -212,44 +229,43 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (IsDead)
             return;
 
-        // ground behavior
-        if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk || MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundJump)
+        switch (MonsterBehav)
         {
-            // ground raycast
-            GroundRayHit = Physics2D.BoxCast(_groundCheckTrans.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
-                _groundLayer);
+            case MonsterDefine.MONSTER_BEHAV.GroundWalk:
+            case MonsterDefine.MONSTER_BEHAV.GroundJump:
 
-            // OnEnter Idle (1Frame)
-            if (IsInAir)
-            {
-                if (GroundRayHit)
-                    Animator.SetTrigger("Idle");
-            }
-            // OnEnter InAir (1Frame)
-            else if (!IsInAir)
-            {
-                if (!GroundRayHit)
-                    Animator.SetTrigger("InAir");
-            }
+                // ground rayCast
+                GroundRayHit = Physics2D.BoxCast(_groundCheckCollider.transform.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
+                    _groundCheckLayer);
 
-            // set IsInAir
-            IsInAir = !GroundRayHit;
+                // set condition
+                IsGround = GroundRayHit;
+                IsInAir = !GroundRayHit;
 
-            // flip after wall check
-            if (GroundPatrolEvaluator.IsWallCheck())
-                SetRecentDir(-RecentDir);
-        }
-        // fly behavior
-        else if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.Fly)
-        {
-            IsInAir = true;
+                break;
+
+            case MonsterDefine.MONSTER_BEHAV.Fly:
+
+                IsGround = false;
+                IsInAir = true;
+
+                break;
         }
 
-        IsCheckDie();
-    }
-    protected virtual void FixedUpdate()
-    {
+        // attack
+        if (AttackEvaluator)
+        {
+            if (AttackEvaluator.IsTargetWithinAttackRange())
+            {
+                AttackEvaluator.StartAttackCooldownTimer();
+                Animator.SetTrigger("Attack");
 
+                if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<Monster_MoveState>())
+                {
+
+                }
+            }
+        }
     }
     protected virtual void SetUp()
     {
@@ -263,6 +279,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 몬스터의 이동속도
         MoveSpeed = _monsterData.MoveSpeed;
 
+        // 몬스터의 가속도
+        Acceleration = _monsterData.Acceleration;
+
         // 몬스터의 점프파워
         JumpForce = _monsterData.JumpForce;
 
@@ -273,65 +292,54 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         var navMesh = GetComponent<NavMeshAgent>();
         if (navMesh)
-            navMesh.velocity = forceVector / 2.0f;
+            navMesh.velocity = forceVector / 1.5f;
         else
         {
             // 속도 초기화
-            RigidBody.velocity = Vector2.zero;
+            Rigidbody.velocity = Vector2.zero;
 
             // Monster의 Mass에 따른 보정
-            forceVector *= RigidBody.mass / 1.0f;
-            RigidBody.AddForce(forceVector, ForceMode2D.Impulse);
+            forceVector *= Rigidbody.mass / 1.0f;
+            Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
         }
     }
     public virtual void OnHit(AttackInfo attackInfo)
     {
-        if (IsGodMode || IsDead)
+        if (IsDead)
             return;
 
-        // Damage
-        CurHp -= (int)attackInfo.Damage;
+        // Hit Process
+        HitProcess(attackInfo);
 
-        // Hit
-        StartHitTimer();
-        KnockBack(attackInfo.Force);
-        GetComponent<SoundList>().PlaySFX("SE_Hurt");
-
-        // Change to Die State
-        if (IsCheckDie())
-            return;
-
-        // Change to Hurt State
-        Animator.SetTrigger("Hurt");
+        // Check Hurt or Die Process
+        CheckHurtOrDieProcess();
     }
     public virtual void Die()
     {
         // Disable Hit Box
-        SetActiveHitBoxGameObject(false);
+        TurnOffHitBox();
 
         // 사라지기 시작
         StartDestroy();
     }
 
     // hitBox
-    public void SetActiveHitBoxGameObject(bool isBool)
+    public void TurnOffHitBox()
     {
-        // Disable Hit Box
-        GameObject hitBox = GetComponentInChildren<MonsterBodyHit>(true).gameObject;
+        GameObject hitBox = GetComponentInChildren<MonsterBodyHit>().gameObject;
 
         if (hitBox)
-            hitBox.SetActive(isBool);
+            hitBox.SetActive(false);
     }
-    public void SetTriggerHitBox(bool isBool)
+    public void TurnToCollisionHitBox()
     {
-        // Disable Hit Box
         GameObject hitBox = GetComponentInChildren<MonsterBodyHit>(true).gameObject;
 
         if (hitBox)
         {
             Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
-            hitBoxCollider.isTrigger = isBool;
-            hitBox.layer = isBool ? LayerMask.NameToLayer("MonsterHitBox") : LayerMask.NameToLayer("Default");
+            hitBoxCollider.isTrigger = false;
+            hitBox.layer = LayerMask.NameToLayer("Default");
         }
     }
 
@@ -347,21 +355,33 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
-    private bool IsCheckDie()
+    public void HitProcess(AttackInfo attackInfo)
+    {
+        StartHitTimer();
+        CurHp -= (int)attackInfo.Damage;
+        KnockBack(attackInfo.Force);
+        GetComponent<SoundList>().PlaySFX("SE_Hurt");
+    }
+    public void CheckHurtOrDieProcess()
     {
         if (CurHp <= 0)
         {
             CurHp = 0;
             Animator.SetTrigger("Die");
 
-            return true;
+            return;
         }
 
-        return false;
+        // superArmor is started when monster attack
+        // superArmor : hurt animation x
+        if (IsSuperArmor)
+            return;
+
+        Animator.SetTrigger("Hurt");
     }
 
-    // blink
-    private void LoadBlinkMaterial()
+    // flash
+    private void LoadFlashMaterial()
     {
         _whiteFlashMaterial =
             Resources.Load<Material>("Materials/WhiteFlashMaterial");
@@ -376,7 +396,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         for (int i = 0; i < _originalMaterials.Length; i++)
             _originalMaterials[i] = _spriteRenderers[i].material;
     }
-    private void ResetMaterial()
+    private void ResetOriginalMaterial()
     {
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
@@ -402,14 +422,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         if (this._whiteFlashRoutine != null)
         {
-            ResetMaterial();
+            ResetOriginalMaterial();
             StopCoroutine(this._whiteFlashRoutine);
         }
         this._whiteFlashRoutine = StartCoroutine(WhiteFlash());
     }
     private IEnumerator SuperArmorFlash()
     {
-        while (IsGodMode)
+        while (IsSuperArmor)
         {
             // turn to white material
             for (int i = 0; i < _originalMaterials.Length; i++)
@@ -428,7 +448,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         if (this._superArmorRoutine != null)
         {
-            ResetMaterial();
+            ResetOriginalMaterial();
             StopCoroutine(this._superArmorRoutine);
         }
         this._superArmorRoutine = StartCoroutine(SuperArmorFlash());
@@ -438,7 +458,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private IEnumerator HitTimer()
     {
         IsHit = true;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.05f);
         IsHit = false;
     }
     public void StartHitTimer()
@@ -508,17 +528,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public bool PreviousStateIs<TState>() where TState : Monster_StateBase
     {
         return _previousState is TState;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        // ground behavior
-        if (MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk || MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundJump)
-        {
-            // Draw Ground Check
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(_groundCheckTrans.position, new Vector3(_groundCheckBoxSize.x, _groundCheckBoxSize.y, 0f));
-        }
     }
 
     #endregion

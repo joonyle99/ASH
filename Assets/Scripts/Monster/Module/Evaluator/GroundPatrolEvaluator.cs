@@ -6,20 +6,19 @@ public class GroundPatrolEvaluator : MonoBehaviour
     [Space]
 
     [SerializeField] private LayerMask _wallCheckLayer;
-    [SerializeField] private Transform _wallCheckTrans;
-    [SerializeField] private Vector2 _WallCheckBoxSize;
+    [SerializeField] private BoxCollider2D _wallCheckCollider;
+    private Vector2 _WallCheckBoxSize;
+
+    private void Awake()
+    {
+        _WallCheckBoxSize = _wallCheckCollider.bounds.size;
+    }
 
     public bool IsWallCheck()
     {
-        var rayHit = Physics2D.BoxCast(_wallCheckTrans.position, _WallCheckBoxSize, 0f, Vector2.zero, 0f,
+        var rayHit = Physics2D.BoxCast(_wallCheckCollider.transform.position, _WallCheckBoxSize, 0f, Vector2.zero, 0f,
             _wallCheckLayer);
 
         return rayHit;
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(_wallCheckTrans.position, new Vector3(_WallCheckBoxSize.x, _WallCheckBoxSize.y, 0f));
     }
 }

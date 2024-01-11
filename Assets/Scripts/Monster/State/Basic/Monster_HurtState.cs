@@ -6,10 +6,20 @@ public class Monster_HurtState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // Start Hurt
+        if (Monster.AttackEvaluator)
+        {
+            if (!Monster.AttackEvaluator.IsAttackable)
+                Monster.AttackEvaluator.IsAttackable = true;
+        }
+
+        if (Monster.GroundChaseEvaluator)
+        {
+            if (!Monster.GroundChaseEvaluator.IsChasable)
+                Monster.GroundChaseEvaluator.IsChasable = true;
+        }
+
         Monster.IsHurt = true;
 
-        // Start Alpha Blink
         Monster.StartWhiteFlash();
     }
 
@@ -22,7 +32,6 @@ public class Monster_HurtState : Monster_StateBase
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        // End Hurt
         Monster.IsHurt = false;
     }
 }
