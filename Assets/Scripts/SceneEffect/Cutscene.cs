@@ -6,18 +6,23 @@ public class Cutscene
     MonoBehaviour _owner;
     IEnumerator _coroutineFunction;
     System.Action _onEndCallback;
-    public Cutscene(IEnumerator coroutineFunction)
+    public bool IsDone { get; private set; } = false;
+    public bool IsStartted { get; private set; } = false;
+    public Cutscene(MonoBehaviour owner, IEnumerator coroutineFunction)
     {
+        _owner = owner;
         _coroutineFunction = coroutineFunction;
     }
-    public void Play(SceneEffectManager sceneEffectManager, System.Action onEndCallback)
+    public void Play(System.Action onEndCallback)
     {
         _onEndCallback = onEndCallback;
-        sceneEffectManager.StartCoroutine(CutsceneCoroutine(sceneEffectManager));
+        _owner.StartCoroutine(CutsceneCoroutine());
     }
-    public IEnumerator CutsceneCoroutine(SceneEffectManager sceneEffectManager)
+    public IEnumerator CutsceneCoroutine()
     {
-        yield return sceneEffectManager.StartCoroutine(_coroutineFunction);
+        IsStartted = true;
+        yield return _owner.StartCoroutine(_coroutineFunction);
+        IsDone = true;
         _onEndCallback.Invoke();
     }
 }

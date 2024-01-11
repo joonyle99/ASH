@@ -19,10 +19,7 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     [SerializeField] float _capeFlyDuration = 1f;
     public override IEnumerator ExitEffectCoroutine()
     {
-        CameraControlToken token = new CameraControlToken(CameraPriority.SceneChange);
-        yield return new WaitUntil(() => token.IsAvailable);
-        token.Camera?.DisableCameraFollow();
-        token.Release();
+        SceneEffectManager.Current.Camera.DisableCameraFollow();
 
         yield return FadeCoroutine(_transitionDuration, FadeType.Darken);
     }

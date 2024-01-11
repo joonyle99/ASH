@@ -59,11 +59,11 @@ namespace SceneEvents
         }
         public override void OnEnter()
         {
-            SceneContext.Current.SceneEffectManager.Camera.AddFollowTargets(_targets);
+            SceneEffectManager.Current.Camera.AddFollowTargets(_targets);
         }
         public override void OnExit()
         {
-            SceneContext.Current.SceneEffectManager.Camera.RemoveFollowTargets(_targets);
+            SceneEffectManager.Current.Camera.RemoveFollowTargets(_targets);
         }
     }
 }

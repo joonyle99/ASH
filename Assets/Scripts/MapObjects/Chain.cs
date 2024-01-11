@@ -45,7 +45,7 @@ public class Chain : InteractableObject
                 _chainBodies[i].MovePosition(dir.normalized * dist + _chainBodies[i + 1].position);
             }
         }
-        if (_rail.IsAtEndOfRail && Vector3.Distance(transform.position, Player.HandRigidBody.transform.position) >= _pieceOffset * (_chainBodies.Length-2))
+        if (Vector3.Distance(transform.position, Player.HandRigidBody.transform.position) >= _pieceOffset * (_chainBodies.Length-2))
         {
             if (Player.RawInputs.Movement.x > 0 && transform.position.x < Player.transform.position.x)
                 Player.DisableHorizontalMovement();
