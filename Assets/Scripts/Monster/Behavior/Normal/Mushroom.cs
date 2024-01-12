@@ -18,11 +18,11 @@ public class Mushroom : MonsterBehavior
 
         if (CautionEvaluator)
         {
-            if (!CautionEvaluator.IsTargetWithinCautionRange())
+            if (!CautionEvaluator.IsTargetWithinRange())
             {
                 if (CurrentStateIs<Monster_HideState>())
                 {
-                    Debug.Log("SetTrigger Idle");
+                    Debug.Log("SetTrigger Idle" + "=> current state is " + CurrentState);
 
                     Animator.SetTrigger("Idle");
                     return;
@@ -32,7 +32,7 @@ public class Mushroom : MonsterBehavior
             {
                 if (CurrentStateIs<Monster_IdleState>())
                 {
-                    Debug.Log("SetTrigger Hide");
+                    Debug.Log("SetTrigger Hide" + "=> current state is " + CurrentState);
 
                     Animator.SetTrigger("Hide");
                     return;

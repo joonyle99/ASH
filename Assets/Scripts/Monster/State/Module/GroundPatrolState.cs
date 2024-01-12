@@ -41,16 +41,16 @@ public class GroundPatrolState : Monster_MoveState
         }
 
         // flip recentDir after wall check
-        if (Monster.GroundPatrolEvaluator)
+        if (Monster.GroundPatrolModule)
         {
-            if (Monster.GroundPatrolEvaluator.IsWallCheck())
+            if (Monster.GroundPatrolModule.IsWallCheck())
                 Monster.SetRecentDir(-Monster.RecentDir);
         }
 
         // set recentDir for chase
         if (Monster.GroundChaseEvaluator)
         {
-            if (Monster.GroundChaseEvaluator.IsTargetWithinChaseRange())
+            if (Monster.GroundChaseEvaluator.IsTargetWithinRange())
                 Monster.SetRecentDir(Monster.GroundChaseEvaluator.ChaseDir);
         }
 

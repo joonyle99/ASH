@@ -28,7 +28,7 @@ public class Bat : MonsterBehavior
 
         if (FloatingChaseEvaluator)
         {
-            if (FloatingChaseEvaluator.IsTargetWithinChaseRange())
+            if (FloatingChaseEvaluator.IsTargetWithinRange())
             {
                 if (CurrentStateIs<FloatingPatrolState>())
                 {
