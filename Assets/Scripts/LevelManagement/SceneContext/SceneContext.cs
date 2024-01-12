@@ -53,6 +53,7 @@ public class SceneContext : MonoBehaviour
         SceneTransitionPlayer = FindFirstObjectByType<PlayableSceneTransitionPlayer>();
         UpdateBuildResult(SceneTransitionPlayer);
 
+
         Player = FindFirstObjectByType<PlayerBehaviour>();
         UpdateBuildResult(Player);
 

@@ -59,11 +59,4 @@ public class FloatingChaseEvaluator : MonoBehaviour
     {
         TargetTrans = trans;
     }
-
-    private void OnDrawGizmosSelected()
-    {
-        // 추격 탐지 범위
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireCube(_chaseArea.transform.position, _chaseBounds.size);
-    }
 }

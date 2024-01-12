@@ -3,12 +3,13 @@
 /// </summary>
 public static class MonsterDefine
 {
-    public enum MONSTER_BEHAV
+    public enum MoveType
     {
         Null = 0,
-        GroundWalk,
-        GroundJump,
-        GroundFloting,
+        Turret,
+        GroundWalking,
+        GroundJumpping,
+        GroundFloating,
         Fly,
     }
 }

@@ -33,12 +33,22 @@ public class Passage : TriggerZone
             return;
         StartCoroutine(ExitSceneCoroutine());
     }
-    IEnumerator ExitSceneCoroutine()
+
+    IEnumerator ExitSceneCutsceneCoroutine()
     {
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
         yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
+    }
+    IEnumerator ExitSceneCoroutine()
+    {
+        Cutscene _exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine());
+        SceneEffectManager.Current.PushCutscene(_exitSceneCutscene);
+
         var nextPassageData = SceneChangeManager.Instance.GetNextPassageData(name);
         string nextSceneName = nextPassageData.SceneName;
+
+        yield return new WaitUntil(() => _exitSceneCutscene.IsDone);
+
         SceneChangeManager.Instance.ChangeToPlayableScene(nextSceneName, nextPassageData.PassageName);
     }
     public override void OnPlayerExit(PlayerBehaviour player)

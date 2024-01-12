@@ -44,6 +44,22 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.enabled = true;
         _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
     }
+    public void AddFollowTarget(Transform target)
+    {
+        _proCamera.AddCameraTarget(target);
+    }
+    public void AddFollowTargets(Transform [] targets)
+    {
+        _proCamera.AddCameraTargets(targets);
+    }
+    public void RemoveFollowTargets(Transform[] targets)
+    {
+        foreach (var target in targets)
+        {
+            if (target != null)
+                _proCamera.RemoveCameraTarget(target);
+        }
+    }
     public void StartFollow(Transform target, bool removeExisting = true)
     {
         if (removeExisting)

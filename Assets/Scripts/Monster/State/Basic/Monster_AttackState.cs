@@ -4,16 +4,11 @@ public class Monster_AttackState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        base.OnStateEnter(animator, stateInfo, layerIndex) ;
+        base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // Start God Mode
-        Monster.IsGodMode = true;
+        Monster.IsSuperArmor = true;
 
-        // Start Super Armor Flash
         Monster.StartSuperArmorFlash();
-
-        // Start Attack CoolTime
-        Monster.AttackEvaluator.StartAttackableTimer();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -25,7 +20,6 @@ public class Monster_AttackState : Monster_StateBase
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        // End God Mode
-        Monster.IsGodMode = false;
+        Monster.IsSuperArmor = false;
     }
 }

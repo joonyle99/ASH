@@ -1,0 +1,140 @@
+using HappyTools;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
+using UnityEngine;
+
+public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
+{
+    public static SceneEffectManager Current { get; private set; }
+    public CameraController Camera { get; private set; }
+    enum State { Idle, SceneEvent, Cutscene }
+    State _currentState = State.Idle;
+    List<SceneEffectEvent> _sceneEvents = new List<SceneEffectEvent>();
+    List<Cutscene> _cutSceneQueue = new List<Cutscene>();
+
+
+    SceneEventComparator _eventComparator = new SceneEventComparator();
+    void Awake()
+    {
+        Current = this;
+        Camera = UnityEngine.Camera.main.GetComponent<CameraController>();
+    }
+    public void OnSceneContextBuilt()
+    {
+        if (_currentState == State.Idle )
+            EnterIdleState();
+    }
+    public void EnterIdleState()
+    {
+        _currentState = State.Idle;
+        Camera.ResetCameraSettings();
+    }
+
+    public void PushCutscene(Cutscene cutscene)
+    {
+        if (_cutSceneQueue.Count == 0)
+            PlayCutscene(cutscene);
+        else
+            _cutSceneQueue.Add(cutscene);
+        DisableAllSceneEvents();
+    }
+    public SceneEffectEvent PushSceneEvent(SceneEffectEvent sceneEvent)
+    {
+        int index = _sceneEvents.BinarySearch(sceneEvent, _eventComparator);
+        if (index < 0)
+            index = 0;
+        _sceneEvents.Insert(index, sceneEvent);
+
+        if (_currentState != State.Cutscene)
+            RefreshSceneEventStates();
+        return sceneEvent;
+    }
+    public void RemoveSceneEvent(SceneEffectEvent sceneEvent)
+    {
+        int index = _sceneEvents.FindIndex(0, _sceneEvents.Count, x => x == sceneEvent);
+        if (index < 0)
+            return;
+        _sceneEvents.RemoveAt(index);
+        if (sceneEvent.Enabled)
+            sceneEvent.Enabled = false;
+        if (_currentState != State.Cutscene)
+        {
+            if (_sceneEvents.Count > 0)
+                RefreshSceneEventStates();
+            else
+                EnterIdleState();
+        }
+    }
+
+    void PlayCutscene(Cutscene cutscene)
+    {
+        _currentState = State.Cutscene;
+        cutscene.Play(CutsceneEndCallback);
+    }
+    void CutsceneEndCallback()
+    {
+        if (_cutSceneQueue.Count > 0)
+        {
+            var nextCutScene = _cutSceneQueue[0];
+            _cutSceneQueue.RemoveAt(0);
+            PlayCutscene(nextCutScene);
+        }
+        else if (_sceneEvents.Count > 0)
+            RefreshSceneEventStates();
+        else
+            EnterIdleState();
+    }
+    void DisableAllSceneEvents()
+    {
+        foreach (var sceneEvent in _sceneEvents)
+            sceneEvent.Enabled = false;
+    }
+    void RefreshSceneEventStates()
+    {
+        if (_sceneEvents.Count == 0)
+            return;
+        _currentState = State.SceneEvent;
+
+        bool enable = true;
+        for(int i = 0; i< _sceneEvents.Count; i++)
+        {
+            _sceneEvents[i].Enabled = enable;
+
+            if (enable && i+1 < _sceneEvents.Count &&
+                (_sceneEvents[i].Priority != _sceneEvents[i + 1].Priority ||
+                _sceneEvents[i].MergePolicyWithSamePriority == SceneEffectEvent.MergePolicy.OverrideWithRecent))
+                enable = false;
+        }
+    }
+    void Update()
+    {
+        if ( _currentState == State.SceneEvent)
+        {
+            foreach (var sceneEvent in _sceneEvents)
+            {
+                if (sceneEvent.Enabled)
+                    sceneEvent.OnUpdate();
+            }
+        }
+    }
+    //Idle : 그냥 평시, 아무런 카메라효과도 없는 default 상태. 카메라가 플레이어 쫓아다님. 이 상태는 사전정의될수있음
+
+    //MajorEvent : 평시와 컷씬 사이로, 오브젝트들은 전부 작동하지만 카메라효과가 일부 적용된 상태. 카메라 focus가 바뀌거나
+    //             shake 되는 등의 효과가 적용될 수 있음
+    //             다른 우선순위가 더 높은 MajorEvent나 컷신으로 override 될 수 있음.
+    //             -여러 MajorEvent 중에선 가장 높은 Event의 설정만 사용함
+    //             -컷씬으로 override된 경우, 컷씬이 종료된 후 돌아옴
+    //             -다른 MajorEvent와 동시에 실행될 수 있는게 있음! (두 움직이는 물체를 모두 카메라 안에 잡아야할 때 등)
+    //             -같은 우선순위인 (혹은 아예같은) MajorEvent일 때, 나중거가 override 해야할 수도 있고, 합쳐야할 수도 있음   
+    //              .
+    //              같은 우선순위일 때 어떻게할지 정의해야함 -> 기본은 override, 설정하면 합치기 가능하게하자.
+    //            - 합치기란 ? 동시에 트는 것일 뿐. 시작순서와 종료순서가 달라도 의도한대로 되어야함.
+
+    //Cutscene : 컷씬 중으로 지정된 오브젝트외 다른 애들은 작동하지 않음, UI도 사라짐. 오로지 컷씬만 재생하며
+    //           다른 상태나 다른 컷신으로 override 될 수 없음 (컷씬 중 다른 컷씬이 호출되지 않음)
+
+    //Cutscene은 코루틴, MajorEvent는 statemachine처럼 관리
+
+}
