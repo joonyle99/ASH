@@ -28,6 +28,10 @@ public class PreserveState : MonoBehaviour, IDestructionListener
     string _transformKey => _ID + "_transformState";
     string _destructionKey => _ID + "_destructed";
 
+#if UNITY_EDITOR
+    public string EditorGroupName { get { return _groupName; } set { _groupName = value; } }
+    public string EditorID { get { return _ID; } set { _ID = value; } }
+#endif
     private void Awake()
     {
         if (_preserveTransform)
