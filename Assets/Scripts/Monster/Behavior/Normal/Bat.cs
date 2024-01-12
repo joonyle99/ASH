@@ -25,6 +25,30 @@ public class Bat : MonsterBehavior
     protected override void Update()
     {
         base.Update();
+
+        if (FloatingChaseEvaluator)
+        {
+            if (FloatingChaseEvaluator.IsTargetWithinChaseRange())
+            {
+                if (CurrentStateIs<FloatingPatrolState>())
+                {
+                    Debug.Log("SetTrigger Chase");
+
+                    Animator.SetTrigger("Chase");
+                    return;
+                }
+            }
+            else
+            {
+                if (CurrentStateIs<FloatingChaseState>())
+                {
+                    Debug.Log("SetTrigger Patrol");
+
+                    Animator.SetTrigger("Patrol");
+                    return;
+                }
+            }
+        }
     }
     protected override void SetUp()
     {

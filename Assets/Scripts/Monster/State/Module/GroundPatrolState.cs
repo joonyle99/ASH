@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class GroundPatrolState : Monster_MoveState
@@ -7,26 +8,36 @@ public class GroundPatrolState : Monster_MoveState
     [SerializeField] private float _targetGroundPatrolTime;
     [SerializeField] private float _elapsedGroundPatrolTime;
 
+    [SerializeField] private bool _hasIdleParam;
+
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        _targetGroundPatrolTime = Random.Range(_minGroundPatrolTime, _maxGroundPatrolTime);
-        _elapsedGroundPatrolTime = 0f;
+        _hasIdleParam = animator.parameters.Any(param => param.name == "Idle");
+
+        if (_hasIdleParam)
+        {
+            _targetGroundPatrolTime = Random.Range(_minGroundPatrolTime, _maxGroundPatrolTime);
+            _elapsedGroundPatrolTime = 0f;
+        }
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        // change to idle state
-        _elapsedGroundPatrolTime += Time.deltaTime;
-        if (_elapsedGroundPatrolTime > _targetGroundPatrolTime)
+        if (_hasIdleParam)
         {
-            _elapsedGroundPatrolTime = 0f;
-            animator.SetTrigger("Idle");
+            // change to idle state
+            _elapsedGroundPatrolTime += Time.deltaTime;
+            if (_elapsedGroundPatrolTime > _targetGroundPatrolTime)
+            {
+                _elapsedGroundPatrolTime = 0f;
+                animator.SetTrigger("Idle");
 
-            return;
+                return;
+            }
         }
 
         // flip recentDir after wall check
@@ -43,7 +54,7 @@ public class GroundPatrolState : Monster_MoveState
                 Monster.SetRecentDir(Monster.GroundChaseEvaluator.ChaseDir);
         }
 
-        if (Monster.MonsterBehav == MonsterDefine.MONSTER_BEHAV.GroundWalk)
+        if (Monster.MoveType == MonsterDefine.MoveType.GroundWalking)
             GroundPatrol();
     }
 

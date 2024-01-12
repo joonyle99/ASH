@@ -63,6 +63,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _attackEvaluator;
         private set => _attackEvaluator = value;
     }
+    [SerializeField] private CautionEvaluator _cautionEvaluator;
+    public CautionEvaluator CautionEvaluator
+    {
+        get => _cautionEvaluator;
+        private set => _cautionEvaluator = value;
+    }
 
     [Header("Condition")]
     [Space]
@@ -123,11 +129,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [Space]
 
-    [SerializeField] private string _monsterName;
-    public string MonsterName
+    [SerializeField] private string _name;
+    public string Name
     {
-        get => _monsterName;
-        protected set => _monsterName = value;
+        get => _name;
+        protected set => _name = value;
     }
     [SerializeField] private int _maxHp;
     public int MaxHp
@@ -159,11 +165,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _jumpForce;
         protected set => _jumpForce = value;
     }
-    [SerializeField] private MonsterDefine.MONSTER_BEHAV _monsterBehav;
-    public MonsterDefine.MONSTER_BEHAV MonsterBehav
+    [SerializeField] private MonsterDefine.MoveType _moveType;
+    public MonsterDefine.MoveType MoveType
     {
-        get => _monsterBehav;
-        protected set => _monsterBehav = value;
+        get => _moveType;
+        protected set => _moveType = value;
     }
 
     [Header("Ground Check")]
@@ -204,6 +210,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         NavMeshMove = GetComponent<NavMeshMove>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
+        CautionEvaluator = GetComponent<CautionEvaluator>();
 
         // if monsterBehv is ground type, check the ground
         if (_groundCheckCollider)
@@ -229,10 +236,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (IsDead)
             return;
 
-        switch (MonsterBehav)
+        switch (MoveType)
         {
-            case MonsterDefine.MONSTER_BEHAV.GroundWalk:
-            case MonsterDefine.MONSTER_BEHAV.GroundJump:
+            case MonsterDefine.MoveType.GroundWalking:
+            case MonsterDefine.MoveType.GroundJumpping:
 
                 // ground rayCast
                 GroundRayHit = Physics2D.BoxCast(_groundCheckCollider.transform.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
@@ -244,7 +251,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
                 break;
 
-            case MonsterDefine.MONSTER_BEHAV.Fly:
+            case MonsterDefine.MoveType.Fly:
 
                 IsGround = false;
                 IsInAir = true;
@@ -259,18 +266,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             {
                 AttackEvaluator.StartAttackCooldownTimer();
                 Animator.SetTrigger("Attack");
-
-                if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<Monster_MoveState>())
-                {
-
-                }
             }
         }
     }
     protected virtual void SetUp()
     {
         // 몬스터의 이름
-        MonsterName = _monsterData.MonsterName;
+        Name = _monsterData.Name;
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
@@ -286,7 +288,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         JumpForce = _monsterData.JumpForce;
 
         // 몬스터의 행동 타입
-        MonsterBehav = _monsterData.MonsterBehav;
+        MoveType = _monsterData.MoveType;
     }
     public virtual void KnockBack(Vector2 forceVector)
     {
