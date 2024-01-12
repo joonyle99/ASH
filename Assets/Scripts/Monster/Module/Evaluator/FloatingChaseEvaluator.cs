@@ -1,32 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FloatingChaseEvaluator : MonoBehaviour
+public class FloatingChaseEvaluator : Evaluator
 {
     [Header("Floating Chase Evaluator")]
     [Space]
-
-    [SerializeField] private LayerMask _targetLayer;
-
-    [SerializeField] private BoxCollider2D _chaseArea;
-    private Bounds _chaseBounds;
-
-    public Transform TargetTrans { get; private set; }
 
     // Test Code
     [SerializeField] private GameObject checkPrefab;
     private GameObject _chaseTargetPoint;
 
-    void Awake()
-    {
-        _chaseBounds = _chaseArea.bounds;
-    }
+    public Transform TargetTrans { get; private set; }
 
-    public bool IsTargetWithinChaseRange()
+    public override bool IsTargetWithinRange()
     {
+        if (IsDuringCoolTime || !IsUsable)
+            return false;
+
         // Detect Collider
-        Collider2D targetCollider = Physics2D.OverlapBox(_chaseArea.transform.position, _chaseBounds.size, 0f, _targetLayer);
+        Collider2D targetCollider = Physics2D.OverlapBox(_checkCollider.transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
         if (targetCollider)
         {
             // Check Player
@@ -55,6 +46,7 @@ public class FloatingChaseEvaluator : MonoBehaviour
 
         return false;
     }
+
     public void SetTargetTrans(Transform trans)
     {
         TargetTrans = trans;

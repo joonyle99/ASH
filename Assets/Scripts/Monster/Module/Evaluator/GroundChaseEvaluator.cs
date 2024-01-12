@@ -1,13 +1,11 @@
 using System;
 using UnityEngine;
 
-public class GroundChaseEvaluator : MonoBehaviour
+public class GroundChaseEvaluator : Evaluator
 {
     [Header("Ground Chase Evaluator")]
     [Space]
 
-    [SerializeField] private LayerMask _targetLayer;
-    [SerializeField] private BoxCollider2D _chaseCheckCollider;
     [SerializeField] private int _chaseDir = 1;
     public int ChaseDir
     {
@@ -27,16 +25,16 @@ public class GroundChaseEvaluator : MonoBehaviour
         set => _isChasable = value;
     }
 
-    private Vector2 _chaseCheckBoxSize;
     public Transform TargetTrans { get; private set; }
 
-    private void Awake()
+    public override bool IsTargetWithinRange()
     {
-        _chaseCheckBoxSize = _chaseCheckCollider.bounds.size;
-    }
+        if (IsDuringCoolTime || !IsUsable)
+        {
+            IsChasing = false;
+            return false;
+        }
 
-    public bool IsTargetWithinChaseRange()
-    {
         if (!IsChasable)
         {
             IsChasing = false;
@@ -44,7 +42,7 @@ public class GroundChaseEvaluator : MonoBehaviour
         }
 
         // Detect Collider
-        Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _chaseCheckBoxSize, 0f, _targetLayer);
+        Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
         if (targetCollider)
         {
             // Check Player
@@ -65,10 +63,12 @@ public class GroundChaseEvaluator : MonoBehaviour
         IsChasing = false;
         return false;
     }
+
     public void SetTargetTrans(Transform trans)
     {
         TargetTrans = trans;
     }
+
     public void SetChaseDir(Transform trans)
     {
         _chaseDir = Math.Sign(trans.position.x - transform.position.x);
