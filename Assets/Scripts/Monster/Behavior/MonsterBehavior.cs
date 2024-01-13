@@ -21,17 +21,22 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Space]
 
     [SerializeField] private Monster_StateBase _currentState;
+    public Monster_StateBase CurrentState
+    {
+        get => _currentState;
+        private set => _currentState = value;
+    }
     private Monster_StateBase _initialState;
     private Monster_StateBase _previousState;
 
     [Header("Module")]
     [Space]
 
-    [SerializeField] private GroundPatrolEvaluator _groundPatrolEvaluator;
-    public GroundPatrolEvaluator GroundPatrolEvaluator
+    [SerializeField] private GroundPatrolModule _groundPatrolModule;
+    public GroundPatrolModule GroundPatrolModule
     {
-        get => _groundPatrolEvaluator;
-        private set => _groundPatrolEvaluator = value;
+        get => _groundPatrolModule;
+        private set => _groundPatrolModule = value;
     }
     [SerializeField] private GroundChaseEvaluator _groundChaseEvaluator;
     public GroundChaseEvaluator GroundChaseEvaluator
@@ -39,11 +44,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _groundChaseEvaluator;
         private set => _groundChaseEvaluator = value;
     }
-    [SerializeField] private FloatingPatrolEvaluator _floatingPatrolEvaluator;
-    public FloatingPatrolEvaluator FloatingPatrolEvaluator
+    [SerializeField] private FloatingPatrolModule _floatingPatrolModule;
+    public FloatingPatrolModule FloatingPatrolModule
     {
-        get => _floatingPatrolEvaluator;
-        private set => _floatingPatrolEvaluator = value;
+        get => _floatingPatrolModule;
+        private set => _floatingPatrolModule = value;
     }
     [SerializeField] private FloatingChaseEvaluator _floatingChaseEvaluator;
     public FloatingChaseEvaluator FloatingChaseEvaluator
@@ -204,9 +209,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         Animator = GetComponent<Animator>();
 
         // Module
-        GroundPatrolEvaluator = GetComponent<GroundPatrolEvaluator>();
+        GroundPatrolModule = GetComponent<GroundPatrolModule>();
         GroundChaseEvaluator = GetComponent<GroundChaseEvaluator>();
-        FloatingPatrolEvaluator = GetComponent<FloatingPatrolEvaluator>();
+        FloatingPatrolModule = GetComponent<FloatingPatrolModule>();
         FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         NavMeshMove = GetComponent<NavMeshMove>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
@@ -262,9 +267,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // attack
         if (AttackEvaluator)
         {
-            if (AttackEvaluator.IsTargetWithinAttackRange())
+            if (AttackEvaluator.IsTargetWithinRange())
             {
-                AttackEvaluator.StartAttackCooldownTimer();
+                AttackEvaluator.StartCoolTimeCoroutine();
                 Animator.SetTrigger("Attack");
             }
         }

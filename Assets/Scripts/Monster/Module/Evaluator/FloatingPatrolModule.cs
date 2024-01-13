@@ -1,23 +1,19 @@
 using UnityEngine;
 
-public class FloatingPatrolEvaluator : MonoBehaviour
+public class FloatingPatrolModule : MonoBehaviour
 {
-    [Header("Floating Patrol Evaluator")]
+    [Header("Floating Patrol Module")]
     [Space]
 
     [SerializeField] private BoxCollider2D _patrolArea;
-    private Bounds _patrolBounds;
-
     public Vector3 TargetPosition { get; private set; }
 
     // Test Code
     [SerializeField] private GameObject _checkPrefab;
     private GameObject _patrolTargetPoint;
 
-    void Awake()
+    void Start()
     {
-        _patrolBounds = _patrolArea.bounds;
-
         SetTargetPos();
     }
 
@@ -32,8 +28,9 @@ public class FloatingPatrolEvaluator : MonoBehaviour
         if (_patrolTargetPoint)
             Destroy(_patrolTargetPoint);
 
-        TargetPosition = new Vector3(Random.Range(_patrolBounds.min.x, _patrolBounds.max.x),
-            Random.Range(_patrolBounds.min.y, _patrolBounds.max.y));
+        Bounds patrolBounds = _patrolArea.bounds;
+        TargetPosition = new Vector3(Random.Range(patrolBounds.min.x, patrolBounds.max.x),
+            Random.Range(patrolBounds.min.y, patrolBounds.max.y));
 
         // Create Debug Object
         _patrolTargetPoint = Instantiate(_checkPrefab, TargetPosition, Quaternion.identity, transform.parent);

@@ -40,7 +40,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void OnSceneContextBuilt()
     {
-        CameraControlToken.ClearQueue();
         _proCamera.enabled = true;
         _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
     }

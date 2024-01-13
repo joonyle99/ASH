@@ -3,6 +3,7 @@ using UnityEngine;
 using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine.UIElements;
 using System.Text.RegularExpressions;
+using UnityEngine.Events;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -20,6 +21,7 @@ public class SceneEffect
         WaitForSeconds,
         ChangeInputSetter,
         ChangeToDefaultInputSetter,
+        FunctionCall,
     }
     public EffectType Type { get { return _type; } }
     public bool IsCameraEffect { get { return _type == EffectType.CameraShake || _type == EffectType.ConstantCameraShake || _type == EffectType.StopConstantCameraShake; } }
@@ -30,6 +32,7 @@ public class SceneEffect
     [SerializeField][HideInInspector] public ConstantShakePreset ConstantShakeData = null;
     [SerializeField][HideInInspector] public float Time = 0f;
     [SerializeField][HideInInspector] public InputSetterScriptableObject InputSetter = null;
+    [SerializeField][HideInInspector] public UnityEvent Function;
 }
 
 #if UNITY_EDITOR
@@ -79,6 +82,9 @@ public class SceneEffectDrawer : PropertyDrawer
                 case SceneEffect.EffectType.WaitForSeconds:
                     DrawField("Time", position, property);
                     break;
+                case SceneEffect.EffectType.FunctionCall:
+                    DrawField("Function", position, property);
+                    break;
             }
             position.y += HEIGHT + 2;
         }
@@ -110,8 +116,11 @@ public class SceneEffectDrawer : PropertyDrawer
     {
         if (property.isExpanded)
         {
-            if ((SceneEffect.EffectType)property.FindPropertyRelative("_type").enumValueIndex == SceneEffect.EffectType.ChangeToDefaultInputSetter)
+            var effectType = (SceneEffect.EffectType)property.FindPropertyRelative("_type").enumValueIndex;
+            if (effectType == SceneEffect.EffectType.ChangeToDefaultInputSetter)
                 return (HEIGHT + 2) * 2;
+            else if (effectType == SceneEffect.EffectType.FunctionCall)
+                return (HEIGHT + 2) * 7;
             else
                 return (HEIGHT + 2) * 3;
         }

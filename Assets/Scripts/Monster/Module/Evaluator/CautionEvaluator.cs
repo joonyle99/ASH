@@ -1,27 +1,21 @@
 using System.Collections;
 using UnityEngine;
 
-public class CautionEvaluator : MonoBehaviour
+/// <summary>
+/// 경계 태세 판독기
+/// </summary>
+public class CautionEvaluator : Evaluator
 {
-    [Header("Caution Evaluator")]
-    [Space]
-
-    [SerializeField] private LayerMask _targetLayer;
-    [SerializeField] private BoxCollider2D _cautionCheckBoxCollider;
-    private Vector2 _cautionCheckBoxSize;
-
-    private void Awake()
+    public override bool IsTargetWithinRange()
     {
-        _cautionCheckBoxSize = _cautionCheckBoxCollider.bounds.size;
-    }
+        if (IsDuringCoolTime || !IsUsable)
+            return false;
 
-    public bool IsTargetWithinCautionRange()
-    {
-        // 탐지 범위 안에 들어왔는지 확인
-        Collider2D targetCollider = Physics2D.OverlapBox(_cautionCheckBoxCollider.transform.position, _cautionCheckBoxSize, 0f, _targetLayer);
+        // check target within range
+        Collider2D targetCollider = Physics2D.OverlapBox(_checkCollider.transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
         if (targetCollider)
         {
-            // 플레이어인지 확인
+            // check player
             PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
             if (player && !player.IsDead)
                 return true;

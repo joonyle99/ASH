@@ -1,44 +1,21 @@
 using System.Collections;
 using UnityEngine;
 
-public class AttackEvaluator : MonoBehaviour
+/// <summary>
+/// 공격 판정기
+/// </summary>
+public class AttackEvaluator : Evaluator
 {
-    [Header("Attack Evaluator")]
-    [Space]
-
-    [SerializeField] private LayerMask _targetLayer;
-    [SerializeField] private BoxCollider2D _attackCheckBoxCollider;
-    [SerializeField] private float _targetWaitTime = 5f;
-    [SerializeField] private bool _isDuringCooldown;
-    public bool IsDuringCooldown
+    public override bool IsTargetWithinRange()
     {
-        get => _isDuringCooldown;
-        set => _isDuringCooldown = value;
-    }
-    [SerializeField] private bool _isAttackable;
-    public bool IsAttackable
-    {
-        get => _isAttackable;
-        set => _isAttackable = value;
-    }
-
-    private Vector2 _attackCheckBoxSize;
-
-    private void Awake()
-    {
-        _attackCheckBoxSize = _attackCheckBoxCollider.bounds.size;
-    }
-
-    public bool IsTargetWithinAttackRange()
-    {
-        if (IsDuringCooldown || !IsAttackable)
+        if (IsDuringCoolTime || !IsUsable)
             return false;
 
-        // 탐지 범위 안에 들어왔는지 확인
-        Collider2D targetCollider = Physics2D.OverlapBox(_attackCheckBoxCollider.transform.position, _attackCheckBoxSize, 0f, _targetLayer);
+        // check target within range
+        Collider2D targetCollider = Physics2D.OverlapBox(_checkCollider.transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
         if (targetCollider)
         {
-            // 플레이어인지 확인
+            // check player
             PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
             if (player && !player.IsDead)
                 return true;
@@ -46,14 +23,15 @@ public class AttackEvaluator : MonoBehaviour
 
         return false;
     }
-    private IEnumerator AttackCooldownTimer()
+
+    public override IEnumerator CoolTimeCoroutine()
     {
-        IsDuringCooldown = true;
-        yield return new WaitForSeconds(_targetWaitTime);
-        IsDuringCooldown = false;
+        var coolTimeCoroutine = base.CoolTimeCoroutine();
+        yield return coolTimeCoroutine;
     }
-    public void StartAttackCooldownTimer()
+
+    public override void StartCoolTimeCoroutine()
     {
-        StartCoroutine(AttackCooldownTimer());
+        base.StartCoolTimeCoroutine();
     }
 }

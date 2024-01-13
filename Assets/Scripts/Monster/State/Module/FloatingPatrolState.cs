@@ -7,7 +7,7 @@ public class FloatingPatrolState : Monster_MoveState
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        Monster.FloatingPatrolEvaluator.SetTargetPos();
+        Monster.FloatingPatrolModule.SetTargetPos();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -15,10 +15,10 @@ public class FloatingPatrolState : Monster_MoveState
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
         // Patrol Point Update
-        Monster.FloatingPatrolEvaluator.UpdatePatrolPoint();
+        Monster.FloatingPatrolModule.UpdatePatrolPoint();
 
         // Move to Target
-        Monster.NavMeshMove.SetDestination(Monster.FloatingPatrolEvaluator.TargetPosition);
+        Monster.NavMeshMove.SetDestination(Monster.FloatingPatrolModule.TargetPosition);
         Monster.NavMeshMove.MoveToDestination();
     }
 

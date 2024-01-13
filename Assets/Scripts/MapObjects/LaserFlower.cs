@@ -20,7 +20,6 @@ public class LaserFlower : MonoBehaviour, IAttackListener
             if(--_hp <= 0)
                 Close();
         }
-        print(_hp);
     }
     void Open()
     {

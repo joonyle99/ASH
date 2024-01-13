@@ -8,8 +8,8 @@ public class Monster_HurtState : Monster_StateBase
 
         if (Monster.AttackEvaluator)
         {
-            if (!Monster.AttackEvaluator.IsAttackable)
-                Monster.AttackEvaluator.IsAttackable = true;
+            if (!Monster.AttackEvaluator.IsUsable)
+                Monster.AttackEvaluator.IsUsable = true;
         }
 
         if (Monster.GroundChaseEvaluator)
