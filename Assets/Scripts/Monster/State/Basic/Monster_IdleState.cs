@@ -14,6 +14,8 @@ public class Monster_IdleState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
+        //Debug.Log("StateMachineBehaviour callbacks - Idle State's OnStateEnter()");
+
         _hasPatrolParam = animator.parameters.Any(param => param.name == "Patrol");
 
         if (_hasPatrolParam)

@@ -6,18 +6,6 @@ public class Monster_HurtState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        if (Monster.AttackEvaluator)
-        {
-            if (!Monster.AttackEvaluator.IsAttackable)
-                Monster.AttackEvaluator.IsAttackable = true;
-        }
-
-        if (Monster.GroundChaseEvaluator)
-        {
-            if (!Monster.GroundChaseEvaluator.IsChasable)
-                Monster.GroundChaseEvaluator.IsChasable = true;
-        }
-
         Monster.IsHurt = true;
 
         Monster.StartWhiteFlash();

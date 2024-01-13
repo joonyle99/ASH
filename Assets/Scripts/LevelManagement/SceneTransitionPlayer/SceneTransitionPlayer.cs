@@ -10,14 +10,6 @@ public class SceneTransitionPlayer : MonoBehaviour, ISceneContextBuildListener
 
     protected float FadeDuration { get { return _fadeDuration; } }
 
-    public void PlayExitEffect()
-    {
-        StartCoroutine(ExitEffectCoroutine());
-    }
-    public void PlayEnterEffect()
-    {
-        StartCoroutine(EnterEffectCoroutine());
-    }
     public virtual IEnumerator ExitEffectCoroutine()
     {
         yield return FadeCoroutine(_fadeDuration, FadeType.Darken);
@@ -29,7 +21,7 @@ public class SceneTransitionPlayer : MonoBehaviour, ISceneContextBuildListener
     }
     public void OnSceneContextBuilt()
     {
-        PlayEnterEffect();
+        SceneEffectManager.Current.PushCutscene(new Cutscene(this, EnterEffectCoroutine()));
     }
 
 

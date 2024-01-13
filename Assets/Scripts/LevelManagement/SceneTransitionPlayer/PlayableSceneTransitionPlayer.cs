@@ -32,10 +32,7 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         {
             yield break;
         }
-        CameraControlToken token = new CameraControlToken(CameraPriority.SceneChange);
-        yield return new WaitUntil(() => token.IsAvailable);
-        token.Camera?.SnapFollow();
-        token.Release();
+        SceneEffectManager.Current.Camera.SnapFollow();
 
         yield return StartCoroutine(entrance.PlayerExitCoroutine());
     }

@@ -8,7 +8,16 @@ using UnityEngine;
 public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
 {
     public static SceneEffectManager Current { get; private set; }
-    public CameraController Camera { get; private set; }
+    public CameraController Camera
+    {
+        get
+        {
+            if (_currentCamera == null)
+                _currentCamera = UnityEngine.Camera.main.GetComponent<CameraController>();
+            return _currentCamera;
+        }
+    }
+    CameraController _currentCamera;
     enum State { Idle, SceneEvent, Cutscene }
     State _currentState = State.Idle;
     List<SceneEffectEvent> _sceneEvents = new List<SceneEffectEvent>();
@@ -19,7 +28,6 @@ public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
     void Awake()
     {
         Current = this;
-        Camera = UnityEngine.Camera.main.GetComponent<CameraController>();
     }
     public void OnSceneContextBuilt()
     {

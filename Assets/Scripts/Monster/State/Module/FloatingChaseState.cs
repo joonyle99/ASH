@@ -13,8 +13,8 @@ public class FloatingChaseState : Monster_MoveState
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
         // Move to Target
-        Monster.NavMeshMove.SetDestination(Monster.FloatingChaseEvaluator.TargetTrans);
-        Monster.NavMeshMove.MoveToDestination();
+        Monster.NavMeshMoveModule.SetDestination(Monster.FloatingChaseEvaluator.TargetTrans);
+        Monster.NavMeshMoveModule.MoveToDestination();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

@@ -30,7 +30,7 @@ public class DarkBeam : MonoBehaviour, ITriggerListener
         var hits = Physics2D.RaycastAll(transform.position, direction, length, _lanternLayer);
         foreach(var lanternHit in hits)
         {
-            lanternHit.transform.GetComponent<Lantern>().OnDarkBeamCollision();
+            lanternHit.transform.GetComponent<Lantern>()?.OnDarkBeamCollision();
         }
     }
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
