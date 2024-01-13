@@ -568,11 +568,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentState: {fileID: 0}
-  _groundPatrolEvaluator: {fileID: 0}
+  _groundPatrolModule: {fileID: 0}
+  _floatingPatrolModule: {fileID: 0}
+  _navMeshMoveModule: {fileID: 0}
   _groundChaseEvaluator: {fileID: 0}
-  _floatingPatrolEvaluator: {fileID: 0}
   _floatingChaseEvaluator: {fileID: 0}
-  _navMeshMove: {fileID: 0}
   _attackEvaluator: {fileID: 0}
   _cautionEvaluator: {fileID: 0}
   _defaultDir: 1
@@ -626,7 +626,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _patrolArea: {fileID: 6928436648196894210}
-  _checkPrefab: {fileID: 3731091499289549998, guid: 0c83efa947b57f449b77125d345ca90b, type: 3}
 --- !u!114 &1515515474669220107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -642,8 +641,10 @@ MonoBehaviour:
   _targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _chaseArea: {fileID: 6928436647838012003}
-  checkPrefab: {fileID: 3731091499289549998, guid: 0c83efa947b57f449b77125d345ca90b, type: 3}
+  _checkCollider: {fileID: 6928436647838012003}
+  _targetCheckCoolTime: 0
+  _isDuringCoolTime: 0
+  _isUsable: 1
 --- !u!114 &7423043734368032601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -659,10 +660,10 @@ MonoBehaviour:
   _targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _attackCheckBoxCollider: {fileID: 262875073}
-  _targetWaitTime: 5
-  _isDuringCooldown: 0
-  _isAttackable: 1
+  _checkCollider: {fileID: 262875073}
+  _targetCheckCoolTime: 5
+  _isDuringCoolTime: 0
+  _isUsable: 1
 --- !u!114 &1515515474331757967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2277,7 +2278,7 @@ MonoBehaviour:
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 383124e98d4ffbb42b811e1da1beb3e8, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: cf9101c7319154b42a69aff3cbc2c05e, type: 2}
 --- !u!114 &6928436647158689136
 MonoBehaviour:
   m_ObjectHideFlags: 0

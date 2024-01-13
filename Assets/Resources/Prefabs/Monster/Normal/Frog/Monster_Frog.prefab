@@ -1121,7 +1121,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3651701839311028689}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.26, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1152,7 +1152,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 8.524128, y: 2.286177}
+  m_Size: {x: 20, y: 4.5}
   m_EdgeRadius: 0
 --- !u!1 &4480648794812995866
 GameObject:
@@ -1318,11 +1318,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentState: {fileID: 0}
-  _groundPatrolEvaluator: {fileID: 0}
+  _groundPatrolModule: {fileID: 0}
+  _floatingPatrolModule: {fileID: 0}
+  _navMeshMoveModule: {fileID: 0}
   _groundChaseEvaluator: {fileID: 0}
-  _floatingPatrolEvaluator: {fileID: 0}
   _floatingChaseEvaluator: {fileID: 0}
-  _navMeshMove: {fileID: 0}
   _attackEvaluator: {fileID: 0}
   _cautionEvaluator: {fileID: 0}
   _defaultDir: -1
@@ -1380,10 +1380,12 @@ MonoBehaviour:
   _targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _chaseCheckCollider: {fileID: 4687417801991091178}
+  _checkCollider: {fileID: 4687417801991091178}
+  _targetCheckCoolTime: 0
+  _isDuringCoolTime: 0
+  _isUsable: 0
   _chaseDir: 1
   _isChasing: 0
-  _isChasable: 0
 --- !u!114 &4687417800814101120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1399,10 +1401,10 @@ MonoBehaviour:
   _targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _attackCheckBoxCollider: {fileID: 3651701839311028655}
-  _targetWaitTime: 5
-  _isDuringCooldown: 0
-  _isAttackable: 0
+  _checkCollider: {fileID: 3651701839311028655}
+  _targetCheckCoolTime: 7
+  _isDuringCoolTime: 0
+  _isUsable: 0
 --- !u!114 &4687417800814101241
 MonoBehaviour:
   m_ObjectHideFlags: 0
