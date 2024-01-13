@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -5,6 +6,13 @@ using UnityEngine;
 /// </summary>
 public class AttackEvaluator : Evaluator
 {
+    private MonsterBehavior _monster;
+
+    private void Awake()
+    {
+        _monster = GetComponent<MonsterBehavior>();
+    }
+
     public override bool IsTargetWithinRange()
     {
         if (IsDuringCoolTime || !IsUsable)
@@ -17,7 +25,13 @@ public class AttackEvaluator : Evaluator
             // check player
             PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
             if (player && !player.IsDead)
+            {
+                // 공격 전 최종적으로 방향을 바꾼다.
+                int chaseDir = Math.Sign(player.transform.position.x - transform.position.x);
+                _monster.SetRecentDir(chaseDir);
+
                 return true;
+            }
         }
 
         return false;

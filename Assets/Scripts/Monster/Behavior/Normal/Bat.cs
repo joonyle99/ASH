@@ -15,7 +15,7 @@ public class Bat : MonsterBehavior
     private float _shootingVariant = 30f;
 
     // Etc
-    protected int countOfUpdate = 0;
+    private int _countOfUpdate = 0;
 
     protected override void Awake()
     {
@@ -30,9 +30,9 @@ public class Bat : MonsterBehavior
         base.Update();
 
         // TODO : temp code
-        countOfUpdate++;
+        _countOfUpdate++;
 
-        if (countOfUpdate == 1)
+        if (_countOfUpdate == 1)
             return;
 
         if (FloatingChaseEvaluator)

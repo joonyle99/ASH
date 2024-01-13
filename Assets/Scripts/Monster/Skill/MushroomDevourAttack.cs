@@ -1,6 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class FrogTongueAttack : MonoBehaviour
+public class MushroomDevourAttack : MonoBehaviour
 {
     [SerializeField] private int _damage;
     [SerializeField] private float _forceXPower;

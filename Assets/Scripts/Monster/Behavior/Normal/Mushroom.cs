@@ -2,8 +2,14 @@ using UnityEngine;
 
 public class Mushroom : MonsterBehavior
 {
+    [Header("Mushroom")]
+    [Space]
+
+    [SerializeField] private GameObject _devourGameObject;
+
+
     // Etc
-    protected int countOfUpdate = 0;
+    private int _countOfUpdate = 0;
 
     protected override void Awake()
     {
@@ -20,9 +26,9 @@ public class Mushroom : MonsterBehavior
         base.Update();
 
         // TODO : temp code
-        countOfUpdate++;
+        _countOfUpdate++;
 
-        if (countOfUpdate == 1)
+        if (_countOfUpdate == 1)
             return;
 
         if (CautionEvaluator)
@@ -80,5 +86,15 @@ public class Mushroom : MonsterBehavior
     {
         // TODO : temp code
         //Debug.Log("Fire animation events - Hide Animation Start");
+    }
+
+    public void DevourStart_AnimEvent()
+    {
+        _devourGameObject.SetActive(true);
+    }
+
+    public void DevourEnd_AnimEvent()
+    {
+        _devourGameObject.SetActive(false);
     }
 }
