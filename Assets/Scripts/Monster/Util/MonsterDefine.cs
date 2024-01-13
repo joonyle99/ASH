@@ -6,7 +6,7 @@ public static class MonsterDefine
     public enum MoveType
     {
         Null = 0,
-        Turret,
+        GroundTurret,
         GroundWalking,
         GroundJumpping,
         GroundFloating,

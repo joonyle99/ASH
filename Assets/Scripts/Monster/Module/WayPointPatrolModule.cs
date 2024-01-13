@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WayPointPatrolEvaluator : MonoBehaviour
+// TODO : 다시 사용하기 위해서는 리펙토링이 필요 (Module vs Evaluator 정하기)
+public class WayPointPatrolModule : MonoBehaviour
 {
-    [Header("WayPoint Patrol Evaluator")]
+    [Header("WayPoint Patrol Module")]
     [Space]
 
     [SerializeField] private Transform _wayPointBox;

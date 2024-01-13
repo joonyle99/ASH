@@ -18,12 +18,6 @@ public class GroundChaseEvaluator : Evaluator
         get => _isChasing;
         private set => _isChasing = value;
     }
-    [SerializeField] private bool _isChasable;
-    public bool IsChasable
-    {
-        get => _isChasable;
-        set => _isChasable = value;
-    }
 
     public Transform TargetTrans { get; private set; }
 
@@ -32,13 +26,7 @@ public class GroundChaseEvaluator : Evaluator
         if (IsDuringCoolTime || !IsUsable)
         {
             IsChasing = false;
-            return false;
-        }
-
-        if (!IsChasable)
-        {
-            IsChasing = false;
-            return false;
+            return IsChasing;
         }
 
         // Detect Collider
@@ -49,26 +37,22 @@ public class GroundChaseEvaluator : Evaluator
             PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
             if (player && !player.IsDead)
             {
-                // Set Destination
                 SetTargetTrans(player.transform);
-
-                // Set Direction
                 SetChaseDir(player.transform);
+                StartCoolTimeCoroutine();
 
                 IsChasing = true;
-                return true;
+                return IsChasing;
             }
         }
 
         IsChasing = false;
-        return false;
+        return IsChasing;
     }
-
     public void SetTargetTrans(Transform trans)
     {
         TargetTrans = trans;
     }
-
     public void SetChaseDir(Transform trans)
     {
         _chaseDir = Math.Sign(trans.position.x - transform.position.x);

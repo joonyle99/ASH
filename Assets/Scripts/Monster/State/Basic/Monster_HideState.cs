@@ -14,6 +14,8 @@ public class Monster_HideState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
+        //Debug.Log("StateMachineBehaviour callbacks - Hide State's OnStateEnter()");
+
         _hasShowParam = animator.parameters.Any(param => param.name == "Show");
 
         if (_hasShowParam)

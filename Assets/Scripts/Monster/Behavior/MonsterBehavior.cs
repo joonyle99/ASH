@@ -38,29 +38,29 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _groundPatrolModule;
         private set => _groundPatrolModule = value;
     }
-    [SerializeField] private GroundChaseEvaluator _groundChaseEvaluator;
-    public GroundChaseEvaluator GroundChaseEvaluator
-    {
-        get => _groundChaseEvaluator;
-        private set => _groundChaseEvaluator = value;
-    }
     [SerializeField] private FloatingPatrolModule _floatingPatrolModule;
     public FloatingPatrolModule FloatingPatrolModule
     {
         get => _floatingPatrolModule;
         private set => _floatingPatrolModule = value;
     }
+    [SerializeField] private NavMeshMoveModule _navMeshMoveModule;
+    public NavMeshMoveModule NavMeshMoveModule
+    {
+        get => _navMeshMoveModule;
+        private set => _navMeshMoveModule = value;
+    }
+    [SerializeField] private GroundChaseEvaluator _groundChaseEvaluator;
+    public GroundChaseEvaluator GroundChaseEvaluator
+    {
+        get => _groundChaseEvaluator;
+        private set => _groundChaseEvaluator = value;
+    }
     [SerializeField] private FloatingChaseEvaluator _floatingChaseEvaluator;
     public FloatingChaseEvaluator FloatingChaseEvaluator
     {
         get => _floatingChaseEvaluator;
         private set => _floatingChaseEvaluator = value;
-    }
-    [SerializeField] private NavMeshMove _navMeshMove;
-    public NavMeshMove NavMeshMove
-    {
-        get => _navMeshMove;
-        private set => _navMeshMove = value;
     }
     [SerializeField] private AttackEvaluator _attackEvaluator;
     public AttackEvaluator AttackEvaluator
@@ -182,7 +182,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [SerializeField] private LayerMask _groundCheckLayer;
     [SerializeField] private BoxCollider2D _groundCheckCollider;
-    private Vector2 _groundCheckBoxSize;
     public RaycastHit2D GroundRayHit;
 
     // Blink
@@ -210,16 +209,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // Module
         GroundPatrolModule = GetComponent<GroundPatrolModule>();
-        GroundChaseEvaluator = GetComponent<GroundChaseEvaluator>();
         FloatingPatrolModule = GetComponent<FloatingPatrolModule>();
+        NavMeshMoveModule = GetComponent<NavMeshMoveModule>();
+
+        // Evaluator
+        GroundChaseEvaluator = GetComponent<GroundChaseEvaluator>();
         FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
-        NavMeshMove = GetComponent<NavMeshMove>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
         CautionEvaluator = GetComponent<CautionEvaluator>();
-
-        // if monsterBehv is ground type, check the ground
-        if (_groundCheckCollider)
-            _groundCheckBoxSize = _groundCheckCollider.bounds.size;
 
         // Material
         LoadFlashMaterial();
@@ -241,13 +238,15 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (IsDead)
             return;
 
+        // condition
         switch (MoveType)
         {
+            case MonsterDefine.MoveType.GroundTurret:
             case MonsterDefine.MoveType.GroundWalking:
             case MonsterDefine.MoveType.GroundJumpping:
 
                 // ground rayCast
-                GroundRayHit = Physics2D.BoxCast(_groundCheckCollider.transform.position, _groundCheckBoxSize, 0f, Vector2.zero, 0f,
+                GroundRayHit = Physics2D.BoxCast(_groundCheckCollider.transform.position, _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
                     _groundCheckLayer);
 
                 // set condition
@@ -269,6 +268,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         {
             if (AttackEvaluator.IsTargetWithinRange())
             {
+                // Debug.Log("쿨타임 작동 X 범위 안에 들어옴");
+
                 AttackEvaluator.StartCoolTimeCoroutine();
                 Animator.SetTrigger("Attack");
             }
@@ -333,14 +334,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     // hitBox
     public void TurnOffHitBox()
     {
-        GameObject hitBox = GetComponentInChildren<MonsterBodyHit>().gameObject;
+        GameObject hitBox = GetComponentInChildren<MonsterBodyHitModule>().gameObject;
 
         if (hitBox)
             hitBox.SetActive(false);
     }
     public void TurnToCollisionHitBox()
     {
-        GameObject hitBox = GetComponentInChildren<MonsterBodyHit>(true).gameObject;
+        GameObject hitBox = GetComponentInChildren<MonsterBodyHitModule>(true).gameObject;
 
         if (hitBox)
         {

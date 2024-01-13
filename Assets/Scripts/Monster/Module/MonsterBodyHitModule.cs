@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public class MonsterBodyHit : MonoBehaviour
+public class MonsterBodyHitModule : MonoBehaviour
 {
+    [Header("Monster BodyHit Module")]
+    [Space]
+
     [SerializeField] private LayerMask _targetLayer;
     [SerializeField] private int _bodyAttackDamage = 5;
     [SerializeField] private float _forceXPower = 7f;

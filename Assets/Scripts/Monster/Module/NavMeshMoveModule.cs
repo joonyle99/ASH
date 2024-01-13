@@ -1,11 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class NavMeshMove : MonoBehaviour
+public class NavMeshMoveModule : MonoBehaviour
 {
-    [Header("NavMesh Move")]
-    [Space]
-
     private NavMeshAgent _agent;
     private Vector3 _destPosition;
 

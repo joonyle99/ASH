@@ -11,29 +11,44 @@ public abstract class Evaluator : MonoBehaviour
 
     [SerializeField] protected LayerMask _targetLayer;
     [SerializeField] protected BoxCollider2D _checkCollider;
-    [SerializeField] protected float _targetCheckCoolTime;
-    [SerializeField] protected bool _isDuringCoolTime;
+    [SerializeField] private float _targetCheckCoolTime;
+    [SerializeField] private bool _isDuringCoolTime;
     public bool IsDuringCoolTime
     {
         get => _isDuringCoolTime;
         set => _isDuringCoolTime = value;
     }
-    [SerializeField] protected bool _isUsable;
+    [SerializeField] private bool _isUsable;
     public bool IsUsable
     {
         get => _isUsable;
         set => _isUsable = value;
     }
 
+    private Coroutine _coolTimeCoroutine;
+
     public abstract bool IsTargetWithinRange();
     public virtual IEnumerator CoolTimeCoroutine()
     {
+        // Debug.Log("CoolTime 시작");
+
         IsDuringCoolTime = true;
         yield return new WaitForSeconds(_targetCheckCoolTime);
         IsDuringCoolTime = false;
+
+        // Debug.Log("CoolTime 끝");
     }
     public virtual void StartCoolTimeCoroutine()
     {
-        StartCoroutine(CoolTimeCoroutine());
+        if (_targetCheckCoolTime < 0.01f)
+        {
+            Debug.LogWarning("CheckCoolTime을 사용할거면 값을 설정해주세요 ");
+            return;
+        }
+
+        if (this._coolTimeCoroutine != null)
+            StopCoroutine(_coolTimeCoroutine);
+
+        this._coolTimeCoroutine = StartCoroutine(CoolTimeCoroutine());
     }
 }

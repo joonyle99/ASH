@@ -2,13 +2,6 @@ using UnityEngine;
 
 public class FloatingChaseEvaluator : Evaluator
 {
-    [Header("Floating Chase Evaluator")]
-    [Space]
-
-    // Test Code
-    [SerializeField] private GameObject checkPrefab;
-    private GameObject _chaseTargetPoint;
-
     public Transform TargetTrans { get; private set; }
 
     public override bool IsTargetWithinRange()
@@ -24,29 +17,13 @@ public class FloatingChaseEvaluator : Evaluator
             PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
             if (player && !player.IsDead)
             {
-                // Set Destination
                 SetTargetTrans(player.transform);
-
-                // Create Debug Object
-                if (!_chaseTargetPoint)
-                {
-                    _chaseTargetPoint = Instantiate(checkPrefab, TargetTrans.position, Quaternion.identity, transform.parent);
-                    _chaseTargetPoint.name = "Chase Target Point";
-                }
-                else
-                    _chaseTargetPoint.transform.position = player.transform.position;
-
                 return true;
             }
         }
 
-        // Delete Debug Object
-        if (_chaseTargetPoint)
-            Destroy(_chaseTargetPoint);
-
         return false;
     }
-
     public void SetTargetTrans(Transform trans)
     {
         TargetTrans = trans;

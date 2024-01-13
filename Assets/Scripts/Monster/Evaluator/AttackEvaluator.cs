@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -22,16 +21,5 @@ public class AttackEvaluator : Evaluator
         }
 
         return false;
-    }
-
-    public override IEnumerator CoolTimeCoroutine()
-    {
-        var coolTimeCoroutine = base.CoolTimeCoroutine();
-        yield return coolTimeCoroutine;
-    }
-
-    public override void StartCoolTimeCoroutine()
-    {
-        base.StartCoolTimeCoroutine();
     }
 }

@@ -18,8 +18,8 @@ public class FloatingPatrolState : Monster_MoveState
         Monster.FloatingPatrolModule.UpdatePatrolPoint();
 
         // Move to Target
-        Monster.NavMeshMove.SetDestination(Monster.FloatingPatrolModule.TargetPosition);
-        Monster.NavMeshMove.MoveToDestination();
+        Monster.NavMeshMoveModule.SetDestination(Monster.FloatingPatrolModule.TargetPosition);
+        Monster.NavMeshMoveModule.MoveToDestination();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
