@@ -27,6 +27,9 @@ public class GroundPatrolState : Monster_MoveState
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
+        if (Monster.IsInAir)
+            return;
+
         if (_hasIdleParam)
         {
             // change to idle state
