@@ -279,9 +279,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                         GroundRayHit = hit;
                 }
 
+                bool hasGroundContact = groundRayHits.Length > 0;
+
                 // set condition
-                IsGround = GroundRayHit;
-                IsInAir = !GroundRayHit;
+                IsGround = hasGroundContact;
+                IsInAir = !hasGroundContact;
 
                 break;
 
