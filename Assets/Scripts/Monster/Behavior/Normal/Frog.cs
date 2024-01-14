@@ -43,19 +43,33 @@ public class Frog : MonsterBehavior
     public override void OnHit(AttackInfo attackInfo)
     {
         base.OnHit(attackInfo);
+
+        // 선공 당하면 공격 모드 진입
+        if (AttackEvaluator)
+        {
+            if (!AttackEvaluator.IsUsable)
+                AttackEvaluator.IsUsable = true;
+        }
+
+        // 선공 당하면 추격 모드 진입
+        if (GroundChaseEvaluator)
+        {
+            if (!GroundChaseEvaluator.IsUsable)
+                GroundChaseEvaluator.IsUsable = true;
+        }
     }
     public override void Die()
     {
         base.Die();
     }
 
-    public void Jump()
+    public void Jump_AnimEvent()
     {
         Vector2 forceVector = new Vector2(JumpForce.x * RecentDir, JumpForce.y);
         Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
     }
 
-    public void TongueAttack()
+    public void TongueAttack_AnimEvent()
     {
         _tongueInstance = Instantiate(_tonguePrefab, _mouthTrans.position, Quaternion.identity, _mouthTrans);
         _tongueSpriteRenderer = _tongueInstance.GetComponent<SpriteRenderer>();
@@ -81,7 +95,7 @@ public class Frog : MonsterBehavior
         }
     }
 
-    public void DestoryTongue()
+    public void DestoryTongue_AnimEvent()
     {
         if (_tongueAttackCoroutine != null)
             StopCoroutine(ExtendTongue());

@@ -10,13 +10,13 @@ public class Monster_StateBase : StateMachineBehaviour
         Monster = animator.GetComponent<MonsterBehavior>();
         Monster.UpdateState(this);
 
-        if (Monster.NavMeshMove)
+        if (Monster.NavMeshMoveModule)
         {
             // NavMesh Agent Stop
             if (Monster.CurrentStateIs<Monster_AttackState>() ||
                 Monster.CurrentStateIs<Monster_HurtState>() ||
                 Monster.CurrentStateIs<Monster_DieState>())
-                Monster.NavMeshMove.SetStopAgent(true);
+                Monster.NavMeshMoveModule.SetStopAgent(true);
         }
     }
 
@@ -27,13 +27,13 @@ public class Monster_StateBase : StateMachineBehaviour
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (Monster.NavMeshMove)
+        if (Monster.NavMeshMoveModule)
         {
             // NavMesh Agent Resume
             if (Monster.CurrentStateIs<Monster_AttackState>() ||
                 Monster.CurrentStateIs<Monster_HurtState>() ||
                 Monster.CurrentStateIs<Monster_DieState>())
-                Monster.NavMeshMove.SetStopAgent(false);
+                Monster.NavMeshMoveModule.SetStopAgent(false);
         }
     }
 }
