@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Threading;
 using TMPro;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -9,6 +11,7 @@ using UnityEngine.AI;
 /// <summary>
 /// 몬스터의 기본 행동을 정의
 /// </summary>
+[System.Serializable]
 public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
     #region Attribute
@@ -245,9 +248,36 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             case MonsterDefine.MoveType.GroundWalking:
             case MonsterDefine.MoveType.GroundJumpping:
 
-                // ground rayCast
+                /*
                 GroundRayHit = Physics2D.BoxCast(_groundCheckCollider.transform.position, _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
                     _groundCheckLayer);
+                */
+
+                // ground rayCast
+                RaycastHit2D[] groundRayHits = Physics2D.BoxCastAll(_groundCheckCollider.transform.position,
+                    _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
+                    _groundCheckLayer);
+
+                // groundRayHits는 몬스터와 지면이 충돌한 지점에 대한 정보이다.
+                // 이 중, 가장 가까운 지점을 GroundRayHit에 저장한다.
+                foreach (var hit in groundRayHits)
+                {
+                    // hit의 normal이 아래쪽을 향하면 안된다.
+                    if (hit.normal.y < 0)
+                        continue;
+
+                    // 충돌 지점과 이 오브젝트와의 거리가 가장 가까운 놈을 저장
+                    if (GroundRayHit)
+                    {
+                        float newDist = Vector2.Distance(transform.position, hit.point);
+                        float oldDist = Vector2.Distance(transform.position, GroundRayHit.point);
+
+                        if (newDist < oldDist)
+                            GroundRayHit = hit;
+                    }
+                    else
+                        GroundRayHit = hit;
+                }
 
                 // set condition
                 IsGround = GroundRayHit;
