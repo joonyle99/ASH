@@ -103,13 +103,14 @@ public sealed class LanternSceneContext : SceneContext
         Physics2D.RaycastNonAlloc(a.LightPoint.position, rayDirection, hits, MaxRayCastDistance, _beamObstacleLayers);
         foreach (var hit in hits)
         {
-            if (hit.transform == a.transform)
+            if (hit.collider.transform == a.transform)
                 continue;
-            if (hit.transform == b.transform)
+            if (hit.collider.transform == b.transform)
                 return true;
             else
                 return false;
         }
+
         return false;
     }
     bool IsTurnedOnInOrder(LanternLike first, LanternLike second)
