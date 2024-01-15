@@ -9,10 +9,10 @@ public class Monster_StateBase : StateMachineBehaviour
     [Header("Auto Change State")]
     [Space]
 
-    [SerializeField] protected bool _isAutoStateTransition;
+    [SerializeField] protected bool _isAutoStateTransition = false;
     [SerializeField] protected string _targetTransitionParam;
-    [SerializeField] protected float _minStayTime;
-    [SerializeField] protected float _maxStayTime;
+    [SerializeField] protected float _minStayTime = 0f;
+    [SerializeField] protected float _maxStayTime = 0f;
 
     [Space]
 
@@ -26,6 +26,9 @@ public class Monster_StateBase : StateMachineBehaviour
     {
         Monster = animator.GetComponent<MonsterBehavior>();
         Monster.UpdateState(this);
+
+        _targetStayTime = 0f;
+        _elapsedStayTime = 0f;
 
         if (_isAutoStateTransition)
         {

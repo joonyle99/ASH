@@ -12,7 +12,7 @@ public class Monster_HideState : Monster_StateBase
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
         // 거북이인 경우에만
-        if (Monster.Name.Contains(MonsterDefine.Name.가시거북.ToString()))
+        if (Monster.MonsterName.Contains(MonsterDefine.MonsterName.가시거북.ToString()))
         {
             // reset stay time
             if (Monster.IsHit)

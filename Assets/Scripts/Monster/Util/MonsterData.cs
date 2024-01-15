@@ -4,8 +4,8 @@ using UnityEngine;
 public class MonsterData : ScriptableObject
 {
     // 몬스터 이름
-    [SerializeField] private MonsterDefine.Name _name;
-    public MonsterDefine.Name Name => _name;
+    [SerializeField] private MonsterDefine.MonsterName _monsterName;
+    public MonsterDefine.MonsterName MonsterName => _monsterName;
 
     // 최대 체력
     [SerializeField] private int _maxHp;

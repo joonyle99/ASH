@@ -3,7 +3,7 @@
 /// </summary>
 public static class MonsterDefine
 {
-    public enum Name
+    public enum MonsterName
     {
         Null = 0,
 

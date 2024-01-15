@@ -143,11 +143,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [Space]
 
-    [SerializeField] private string _name;
-    public string Name
+    [SerializeField] private string _monsterName;
+    public string MonsterName
     {
-        get => _name;
-        protected set => _name = value;
+        get => _monsterName;
+        protected set => _monsterName = value;
     }
     [SerializeField] private int _maxHp;
     public int MaxHp
@@ -322,7 +322,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     protected virtual void SetUp()
     {
         // 몬스터의 이름
-        Name = _monsterData.Name.ToString();
+        MonsterName = _monsterData.MonsterName.ToString();
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
