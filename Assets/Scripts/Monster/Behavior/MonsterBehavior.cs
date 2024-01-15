@@ -111,6 +111,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _isSuperArmor;
         set => _isSuperArmor = value;
     }
+    [SerializeField] private bool _isGodMode;
+    public bool IsGodMode
+    {
+        get => _isGodMode;
+        set => _isGodMode = value;
+    }
     [SerializeField] private bool _isHit;
     public bool IsHit
     {
@@ -137,11 +143,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [Space]
 
-    [SerializeField] private string _name;
-    public string Name
+    [SerializeField] private string _monsterName;
+    public string MonsterName
     {
-        get => _name;
-        protected set => _name = value;
+        get => _monsterName;
+        protected set => _monsterName = value;
     }
     [SerializeField] private int _maxHp;
     public int MaxHp
@@ -172,6 +178,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         get => _jumpForce;
         protected set => _jumpForce = value;
+    }
+    [SerializeField] private MonsterDefine.RankType _rankType;
+    public MonsterDefine.RankType RankType
+    {
+        get => _rankType;
+        protected set => _rankType = value;
     }
     [SerializeField] private MonsterDefine.MoveType _moveType;
     public MonsterDefine.MoveType MoveType
@@ -310,7 +322,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     protected virtual void SetUp()
     {
         // 몬스터의 이름
-        Name = _monsterData.Name;
+        MonsterName = _monsterData.MonsterName.ToString();
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
@@ -324,6 +336,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // 몬스터의 점프파워
         JumpForce = _monsterData.JumpForce;
+
+        // 몬스터의 랭크
+        RankType = _monsterData.RankType;
 
         // 몬스터의 행동 타입
         MoveType = _monsterData.MoveType;
@@ -345,7 +360,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public virtual void OnHit(AttackInfo attackInfo)
     {
-        if (IsDead)
+        if (IsGodMode || IsDead)
             return;
 
         // Hit Process

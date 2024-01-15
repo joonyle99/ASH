@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FloatingChaseState : Monster_MoveState
+public class Boss_Groggy : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -10,10 +10,6 @@ public class FloatingChaseState : Monster_MoveState
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
-
-        // Move to Target
-        Monster.NavMeshMoveModule.SetDestination(Monster.FloatingChaseEvaluator.TargetTrans);
-        Monster.NavMeshMoveModule.MoveToDestination();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
