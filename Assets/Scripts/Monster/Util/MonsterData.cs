@@ -4,8 +4,8 @@ using UnityEngine;
 public class MonsterData : ScriptableObject
 {
     // 몬스터 이름
-    [SerializeField] private string _name;
-    public string Name => _name;
+    [SerializeField] private MonsterDefine.Name _name;
+    public MonsterDefine.Name Name => _name;
 
     // 최대 체력
     [SerializeField] private int _maxHp;
@@ -22,6 +22,10 @@ public class MonsterData : ScriptableObject
     // 점프 파워
     [SerializeField] private Vector2 _jumpForce;
     public Vector2 JumpForce => _jumpForce;
+
+    // 몬스터 랭크
+    [SerializeField] private MonsterDefine.RankType _rankType;
+    public MonsterDefine.RankType RankType => _rankType;
 
     // 몬스터 행동 타입
     [SerializeField] private MonsterDefine.MoveType _moveType;

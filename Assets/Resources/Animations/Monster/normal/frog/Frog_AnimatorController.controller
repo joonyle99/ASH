@@ -64,6 +64,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 904687e24e2b6fe4b98e9a7019023c52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAutoStateTransition: 0
+  _targetTransitionParam: 
+  _minStayTime: 0
+  _maxStayTime: 0
+  _targetStayTime: 0
+  _elapsedStayTime: 0
 --- !u!114 &-1277587035758110006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -76,6 +82,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cdb5a8fb0acc8c4ea89b17d42356edd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAutoStateTransition: 0
+  _targetTransitionParam: 
+  _minStayTime: 0
+  _maxStayTime: 0
+  _targetStayTime: 0
+  _elapsedStayTime: 0
 --- !u!1107 &-1170482764735898410
 AnimatorStateMachine:
   serializedVersion: 6
@@ -125,11 +137,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99dc662fe8f5f9b48af0c05eca2474ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minGroundPatrolTime: 5
-  _maxGroundPatrolTime: 10
-  _targetGroundPatrolTime: 0
-  _elapsedGroundPatrolTime: 0
-  _hasIdleParam: 0
+  _isAutoStateTransition: 1
+  _targetTransitionParam: Idle
+  _minStayTime: 5
+  _maxStayTime: 10
+  _targetStayTime: 0
+  _elapsedStayTime: 0
 --- !u!1102 &-1073161713574357576
 AnimatorState:
   serializedVersion: 6
@@ -347,6 +360,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b20407005a12ef949b87fcdaee3ebc51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isAutoStateTransition: 0
+  _targetTransitionParam: 
+  _minStayTime: 0
+  _maxStayTime: 0
+  _targetStayTime: 0
+  _elapsedStayTime: 0
 --- !u!114 &5666523979645129969
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -359,11 +378,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7cd6d4bb1dcefd43b49f9676cfac231, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minIdleTime: 1
-  _maxIdleTime: 2
-  _targetIdleTime: 0
-  _elapsedIdleTime: 0
-  _hasPatrolParam: 0
+  _isAutoStateTransition: 1
+  _targetTransitionParam: Patrol
+  _minStayTime: 1
+  _maxStayTime: 2
+  _targetStayTime: 0
+  _elapsedStayTime: 0
 --- !u!1102 &6361337815077287047
 AnimatorState:
   serializedVersion: 6

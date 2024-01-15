@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Bear : MonsterBehavior
 {
+    public float attackCycleTime = 10f;
+    public int normalAttackCount = 0;
+
     protected override void Awake()
     {
         base.Awake();
@@ -29,11 +32,12 @@ public class Bear : MonsterBehavior
 
     public override void OnHit(AttackInfo attackInfo)
     {
-        base.OnHit(attackInfo);
+        //
     }
 
     public override void Die()
     {
-        base.Die();
+        // Disable Hit Box
+        TurnOffHitBox();
     }
 }
