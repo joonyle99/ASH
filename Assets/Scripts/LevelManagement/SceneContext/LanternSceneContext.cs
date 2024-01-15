@@ -15,6 +15,7 @@ public sealed class LanternSceneContext : SceneContext
         public LanternLike A;
         public LanternLike B;
         [HideInInspector] public LightBeam Beam;
+        [HideInInspector] public LightConnectionSparkEffect ConnectionSparkEffect;
         public bool IsConnected => Beam != null && Beam.gameObject.activeInHierarchy;
         public bool IsConnectionDone => IsConnected && Beam.IsShootingDone;
     }
@@ -23,6 +24,7 @@ public sealed class LanternSceneContext : SceneContext
 
     [SerializeField] LightBeam _beamPrefab;
     [SerializeField] LayerMask _beamObstacleLayers;
+    [SerializeField] LightConnectionSparkEffect _sparkEffectPrefab;
     [SerializeField] LightDoor _lightDoor;
     [SerializeField] List<LanternRelation> _lanternRelations;
     [Header("Last Connection Camera Effect")]
@@ -45,6 +47,7 @@ public sealed class LanternSceneContext : SceneContext
     const uint MaxRayCastHitCount = 5;
 
     bool _StopCheckingConnections = false;
+
     public void RecordActivationTime(LanternLike lantern)
     {
         _lanternActivationOrder.Remove(lantern);
@@ -54,6 +57,12 @@ public sealed class LanternSceneContext : SceneContext
     {
         base.Awake();
         Current = this;
+        foreach(var relation in _lanternRelations)
+        {
+            relation.ConnectionSparkEffect = Instantiate(_sparkEffectPrefab);
+            relation.ConnectionSparkEffect.SetConnection(relation.A, relation.B);
+            relation.ConnectionSparkEffect.StartTravel();
+        }
     }
     public bool IsAllRelationsFullyConnected(params LanternLike [] exceptions)
     {
@@ -133,6 +142,7 @@ public sealed class LanternSceneContext : SceneContext
             relation.Beam = Instantiate<LightBeam>(_beamPrefab);
         }
         SetBeamConnections(relation);
+        relation.ConnectionSparkEffect.gameObject.SetActive(false);
         if (relation.A.transform == _lightDoor.transform || relation.B.transform == _lightDoor.transform)
         {
             SceneEffectManager.Current.PushCutscene(new Cutscene(this, LastConnectionCameraCoroutine(relation)));   
@@ -212,6 +222,7 @@ public sealed class LanternSceneContext : SceneContext
         if (!relation.IsConnected)
             return;
         relation.Beam.gameObject.SetActive(false);
+        relation.ConnectionSparkEffect.gameObject.SetActive(true);
         relation.A.OnBeamDisconnected(relation.Beam);
         relation.B.OnBeamDisconnected(relation.Beam);
     }
