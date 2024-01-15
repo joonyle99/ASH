@@ -53,7 +53,7 @@ public class LightController : MonoBehaviour
 
         if (_isLightWorking)
         {
-            _curAngle += (PlayerDir > 0f ? _rotateSpeed : -_rotateSpeed) * inputState.Vertical * Time.deltaTime;
+            _curAngle += _rotateSpeed * inputState.Vertical * Time.deltaTime;
             _curAngle = Mathf.Clamp(_curAngle, -_maxAngle, _maxAngle);
         }
     }
@@ -62,6 +62,7 @@ public class LightController : MonoBehaviour
     {
         // ºûÀ» ÄÒ´Ù
         _light.SetActive(true);
+        _player.SoundList.PlaySFX("SE_LightSkill");
     }
 
     public void TurnOffLight()
