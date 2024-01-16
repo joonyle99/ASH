@@ -32,7 +32,12 @@ public class PlaySoundOnCollision : MonoBehaviour
                                                   && ((x.Velocity * x.Velocity) <= collision.relativeVelocity.sqrMagnitude || x.Velocity <= 0));
             if (matches.Count > 0)
             {
-                _soundList.PlaySFX(matches[0].Key);
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    _soundList.PlaySFX(matches[i].Key);
+                    if (i + 1 < matches.Count && !matches[i + 1].Velocity.Equals(matches[i].Velocity))
+                        break;
+                }
                 if (matches[0].PlayOnce)
                 {
                     _conditions.Remove(matches[0]);
