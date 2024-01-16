@@ -6,6 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public struct CollisionCondition
 {
+    public bool PlayOnce;
     public float Velocity;
     public ObjectType ObjectType;
     public string Key;
@@ -32,6 +33,10 @@ public class PlaySoundOnCollision : MonoBehaviour
             if (matches.Count > 0)
             {
                 _soundList.PlaySFX(matches[0].Key);
+                if (matches[0].PlayOnce)
+                {
+                    _conditions.Remove(matches[0]);
+                }
             }
         }
     }
