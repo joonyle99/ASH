@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 287882996896827616}
   - component: {fileID: 2936480204146796984}
   - component: {fileID: 4192052706219436805}
+  - component: {fileID: 6101784625558487301}
   m_Layer: 12
   m_Name: TreeTrunk
   m_TagString: Untagged
@@ -319,3 +320,21 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
+--- !u!114 &6101784625558487301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795335243596778813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5394a3473b60e8b4db9335414bd390b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundList: {fileID: 4192052706219436805}
+  _logVelocity: 0
+  _conditions:
+  - Velocity: 2.5
+    ObjectType: 1
+    Key: SE_FallingTree_Landing

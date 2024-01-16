@@ -12,9 +12,7 @@ public class FallingTreeTrunk : MonoBehaviour
 
     Rigidbody2D _rigidbody;
 
-    bool _isCrashSoundPlayed = false;
     bool _isFallingSoundPlayed = false;
-    bool _isLandingSoundPlayed = false;
 
     Quaternion _originalRotation;
     public float FallenAngle { get { return Quaternion.Angle(transform.rotation, _originalRotation); } }
@@ -40,22 +38,4 @@ public class FallingTreeTrunk : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // Å« µ¹ÀÌ¶û Ãæµ¹ ½Ã ¾²·¯Áü
-        if (!_isCrashSoundPlayed && collision.gameObject.GetComponent<RollingStone>())
-        {
-            _isCrashSoundPlayed = true;
-            _soundList.PlaySFX("SE_FallingTree_Collision");
-        }
-
-        if (!_isLandingSoundPlayed)
-        {
-            if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
-            {
-                _soundList.PlaySFX("SE_FallingTree_Landing");
-                _isLandingSoundPlayed = true;
-            }
-        }
-    }
 }
