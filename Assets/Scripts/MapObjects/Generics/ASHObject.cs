@@ -2,7 +2,7 @@ using UnityEngine;
 
 public enum ObjectType
 {
-    None, Ground, FallingTree, RollingStoneBig, RollingStoneSmall, SquareStone, Spikes
+    None, Ground, FallingTree, RollingStoneBig, RollingStoneSmall, SquareStone, Spikes, FallingSpike
 }
 
 public class ASHObject : MonoBehaviour

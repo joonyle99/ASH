@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1431431259203371341}
   - component: {fileID: 2541359975106092868}
   - component: {fileID: 4180532797250628873}
+  - component: {fileID: 7355267134501510644}
   m_Layer: 0
   m_Name: OnDestroyParticles
   m_TagString: Untagged
@@ -50,7 +51,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06cc5dcf6a1f45b42a68c42c91dbce79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resetRotation: 1
+  _setRotationToIdentity: 1
+  _particles:
+  - {fileID: 4421889722717533907}
+  - {fileID: 1976276012131661610}
+  - {fileID: 4373889383712826839}
 --- !u!114 &4180532797250628873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,6 +71,18 @@ MonoBehaviour:
   _parts:
   - {fileID: 5343558385294022149}
   - {fileID: 9176941981849869338}
+--- !u!114 &7355267134501510644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1525438858819757901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2890207355980001553
 GameObject:
   m_ObjectHideFlags: 0
@@ -3910,7 +3927,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 192
+      m_Bits: 72
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -4963,8 +4980,9 @@ GameObject:
   - component: {fileID: 5667503407727688031}
   - component: {fileID: 2716240465623208147}
   - component: {fileID: 9178483337969264887}
+  - component: {fileID: 6806038279339457094}
   m_Layer: 7
-  m_Name: Gimmick_Ladder
+  m_Name: "\uC0AC\uB2E4\uB9AC(Ladder)"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5119,6 +5137,18 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 1
+--- !u!114 &6806038279339457094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4074373819498477979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4571142344331163080
 GameObject:
   m_ObjectHideFlags: 0
@@ -8963,7 +8993,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 192
+      m_Bits: 72
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -14027,7 +14057,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 192
+      m_Bits: 72
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
