@@ -9,9 +9,13 @@ public class FollowSceneViewCamera : MonoBehaviour
 {
     void Update()
     {
-        Vector3 sceneViewPos = SceneView.lastActiveSceneView.camera.transform.position;
-        sceneViewPos.z = transform.position.z;
-        transform.position = sceneViewPos;
+        try
+        {
+            Vector3 sceneViewPos = SceneView.lastActiveSceneView.camera.transform.position;
+            sceneViewPos.z = transform.position.z;
+            transform.position = sceneViewPos;
+        }
+        catch { }
     }
 }
 #endif 

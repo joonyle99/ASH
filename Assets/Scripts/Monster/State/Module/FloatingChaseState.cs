@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class FloatingChaseState : Monster_MoveState

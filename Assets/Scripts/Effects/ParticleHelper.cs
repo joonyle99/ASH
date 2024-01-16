@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class ParticleHelper : MonoBehaviour
 {
@@ -11,10 +12,6 @@ public class ParticleHelper : MonoBehaviour
     protected void Awake()
     {
         _particleSystem = GetComponent<ParticleSystem>();
-    }
-    public void Activate()
-    {
-        gameObject.SetActive(true);
     }
     public void SetStartSize(Vector3 size)
     {

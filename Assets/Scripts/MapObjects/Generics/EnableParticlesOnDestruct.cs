@@ -34,7 +34,7 @@ public class EnableParticlesOnDestruct : MonoBehaviour, IDestructionListener
     {
         foreach (ParticleHelper particle in _particles)
         {
-            particle.Activate();
+            particle.gameObject.SetActive(true);
             particle.transform.parent = null;
             if (_setRotationToIdentity)
                 particle.transform.rotation = Quaternion.identity;

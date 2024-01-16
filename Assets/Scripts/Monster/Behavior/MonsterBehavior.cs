@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Threading;
 using TMPro;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
@@ -9,6 +11,7 @@ using UnityEngine.AI;
 /// <summary>
 /// 몬스터의 기본 행동을 정의
 /// </summary>
+[System.Serializable]
 public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
     #region Attribute
@@ -108,6 +111,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _isSuperArmor;
         set => _isSuperArmor = value;
     }
+    [SerializeField] private bool _isGodMode;
+    public bool IsGodMode
+    {
+        get => _isGodMode;
+        set => _isGodMode = value;
+    }
     [SerializeField] private bool _isHit;
     public bool IsHit
     {
@@ -134,11 +143,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [Space]
 
-    [SerializeField] private string _name;
-    public string Name
+    [SerializeField] private string _monsterName;
+    public string MonsterName
     {
-        get => _name;
-        protected set => _name = value;
+        get => _monsterName;
+        protected set => _monsterName = value;
     }
     [SerializeField] private int _maxHp;
     public int MaxHp
@@ -169,6 +178,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         get => _jumpForce;
         protected set => _jumpForce = value;
+    }
+    [SerializeField] private MonsterDefine.RankType _rankType;
+    public MonsterDefine.RankType RankType
+    {
+        get => _rankType;
+        protected set => _rankType = value;
     }
     [SerializeField] private MonsterDefine.MoveType _moveType;
     public MonsterDefine.MoveType MoveType
@@ -245,13 +260,42 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             case MonsterDefine.MoveType.GroundWalking:
             case MonsterDefine.MoveType.GroundJumpping:
 
-                // ground rayCast
+                /*
                 GroundRayHit = Physics2D.BoxCast(_groundCheckCollider.transform.position, _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
                     _groundCheckLayer);
+                */
+
+                // ground rayCast
+                RaycastHit2D[] groundRayHits = Physics2D.BoxCastAll(_groundCheckCollider.transform.position,
+                    _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
+                    _groundCheckLayer);
+
+                // groundRayHits는 몬스터와 지면이 충돌한 지점에 대한 정보이다.
+                // 이 중, 가장 가까운 지점을 GroundRayHit에 저장한다.
+                foreach (var hit in groundRayHits)
+                {
+                    // hit의 normal이 아래쪽을 향하면 안된다.
+                    if (hit.normal.y < 0)
+                        continue;
+
+                    // 충돌 지점과 이 오브젝트와의 거리가 가장 가까운 놈을 저장
+                    if (GroundRayHit)
+                    {
+                        float newDist = Vector2.Distance(transform.position, hit.point);
+                        float oldDist = Vector2.Distance(transform.position, GroundRayHit.point);
+
+                        if (newDist < oldDist)
+                            GroundRayHit = hit;
+                    }
+                    else
+                        GroundRayHit = hit;
+                }
+
+                bool hasGroundContact = groundRayHits.Length > 0;
 
                 // set condition
-                IsGround = GroundRayHit;
-                IsInAir = !GroundRayHit;
+                IsGround = hasGroundContact;
+                IsInAir = !hasGroundContact;
 
                 break;
 
@@ -278,7 +322,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     protected virtual void SetUp()
     {
         // 몬스터의 이름
-        Name = _monsterData.Name;
+        MonsterName = _monsterData.MonsterName.ToString();
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
@@ -292,6 +336,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // 몬스터의 점프파워
         JumpForce = _monsterData.JumpForce;
+
+        // 몬스터의 랭크
+        RankType = _monsterData.RankType;
 
         // 몬스터의 행동 타입
         MoveType = _monsterData.MoveType;
@@ -313,7 +360,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public virtual void OnHit(AttackInfo attackInfo)
     {
-        if (IsDead)
+        if (IsGodMode || IsDead)
             return;
 
         // Hit Process
