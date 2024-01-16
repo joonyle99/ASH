@@ -197,7 +197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_Points.Array.data[0].x
-      value: -125.99999
+      value: -126.00001
       objectReference: {fileID: 0}
     - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_Points.Array.data[1].x
@@ -205,7 +205,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_Points.Array.data[2].x
-      value: 153.09998
+      value: 153.1
       objectReference: {fileID: 0}
     - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_Points.Array.data[3].x
@@ -217,15 +217,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_Points.Array.data[4].x
-      value: -120.2923
+      value: -120.29231
       objectReference: {fileID: 0}
     - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_Points.Array.data[5].x
-      value: -123.29997
+      value: -123.3
       objectReference: {fileID: 0}
     - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_Points.Array.data[6].x
-      value: -125.99999
+      value: -126.00001
       objectReference: {fileID: 0}
     - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_Points.Array.data[7].x
@@ -918,7 +918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -142.29
+      value: -142.3
       objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1053,7 +1053,9 @@ GameObject:
   - component: {fileID: 681443585}
   - component: {fileID: 681443584}
   - component: {fileID: 681443583}
-  m_Layer: 0
+  - component: {fileID: 681443587}
+  - component: {fileID: 681443586}
+  m_Layer: 11
   m_Name: Monster_Bear
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1089,13 +1091,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 681443580}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -153.14, y: 14.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -153.14, y: 13.28, z: 0}
+  m_LocalScale: {x: 0.70832, y: 0.70832, z: 0.70832}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1670789329785915838}
   - {fileID: 1670789329552118115}
   - {fileID: 1870607280}
+  - {fileID: 1384575209}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1124,21 +1127,27 @@ MonoBehaviour:
   _isGround: 0
   _isInAir: 0
   _isSuperArmor: 0
+  _isGodMode: 1
   _isHit: 0
   _isHurt: 0
   _isDead: 0
   _monsterData: {fileID: 11400000, guid: aed43b2a09cf1e245b2b2dc2a6d04688, type: 2}
-  _name: 
+  _monsterName: 
   _maxHp: 0
   _curHp: 0
   _moveSpeed: 0
   _acceleration: 0
   _jumpForce: {x: 0, y: 0}
+  _rankType: 0
   _moveType: 0
   _groundCheckLayer:
     serializedVersion: 2
     m_Bits: 8
   _groundCheckCollider: {fileID: 1870607279}
+  normalAttackCount: 0
+  earthQuakableCount: 0
+  currentAttackType: 0
+  currentAttackNumber: 0
 --- !u!50 &681443584
 Rigidbody2D:
   serializedVersion: 4
@@ -1186,6 +1195,38 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 6.2029495, y: 10.317852}
   m_EdgeRadius: 0
+--- !u!210 &681443586
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681443580}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!114 &681443587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681443580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: SE_Hurt
+    _clip: {fileID: 8300000, guid: 3ae94ecee806e984a8ef72c269bb8200, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!4 &711250349 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6355395281014684382, guid: a3cb3c9e888ac9f4d89c5bcc08aaaaff, type: 3}
@@ -1302,6 +1343,10 @@ PrefabInstance:
     - target: {fileID: 1515515473483279166, guid: a21e5c36e776a8e42a6c0b1023ff75c4, type: 3}
       propertyPath: m_Name
       value: Prefab_Bat
+      objectReference: {fileID: 0}
+    - target: {fileID: 1515515473483279166, guid: a21e5c36e776a8e42a6c0b1023ff75c4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a21e5c36e776a8e42a6c0b1023ff75c4, type: 3}
@@ -1491,6 +1536,83 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4107422015305467968, guid: 53d7cbdc555621946a55c2caf3c6969d, type: 3}
   m_PrefabInstance: {fileID: 514112445}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1384575208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1384575209}
+  - component: {fileID: 1384575211}
+  - component: {fileID: 1384575210}
+  m_Layer: 16
+  m_Name: MonsterHitBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1384575209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384575208}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 681443582}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1384575210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384575208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9416f7e7a68fbf42b28ccbdd52cbbe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  _bodyAttackDamage: 5
+  _forceXPower: 7
+  _forceYPower: 10
+--- !u!61 &1384575211
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1384575208}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.18111038, y: 0.3139267}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 6.2029495, y: 10.317852}
+  m_EdgeRadius: 0
 --- !u!1001 &1394239033
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2651,8 +2773,8 @@ MonoBehaviour:
   - {fileID: 5507861296865562276}
   - {fileID: 8627322419451652469}
   m_Bounds:
-    m_Center: {x: -1.8887103, y: 0.58508635, z: 0}
-    m_Extent: {x: 2.5511477, y: 2.3577404, z: 0}
+    m_Center: {x: -1.8887181, y: 0.58508754, z: 0}
+    m_Extent: {x: 2.5511403, y: 2.357739, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -3003,8 +3125,8 @@ MonoBehaviour:
   - {fileID: 7633700810466012643}
   - {fileID: 3950812302789573437}
   m_Bounds:
-    m_Center: {x: 0.93329346, y: 5.018135, z: 0}
-    m_Extent: {x: 1.5808651, y: 1.5181005, z: 0}
+    m_Center: {x: 0.9332936, y: 5.018136, z: 0}
+    m_Extent: {x: 1.5808654, y: 1.5181005, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -3056,7 +3178,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 2107015989582726885}
   m_Bounds:
-    m_Center: {x: -3.5267987, y: 0.8268637, z: 0}
+    m_Center: {x: -3.5267987, y: 0.82686466, z: 0}
     m_Extent: {x: 0.66521025, y: 0.6457052, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -3334,8 +3456,8 @@ MonoBehaviour:
   - {fileID: 8773380296859152659}
   - {fileID: 2998790915996182865}
   m_Bounds:
-    m_Center: {x: -0.6520078, y: 1.3937547, z: 0}
-    m_Extent: {x: 2.96, y: 2.366905, z: 0}
+    m_Center: {x: -0.65200806, y: 1.3937557, z: 0}
+    m_Extent: {x: 2.9600153, y: 2.3669052, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -3591,8 +3713,8 @@ MonoBehaviour:
   - {fileID: 7857669810919613608}
   - {fileID: 3950812302789573437}
   m_Bounds:
-    m_Center: {x: 3.367447, y: -0.4373157, z: 0}
-    m_Extent: {x: 1.4549999, y: 2.5869298, z: 0}
+    m_Center: {x: 3.3674316, y: -0.437315, z: 0}
+    m_Extent: {x: 1.455, y: 2.5869308, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -3878,8 +4000,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 5069152846697262562}
   m_Bounds:
-    m_Center: {x: 2.1374757, y: -3.285712, z: 0}
-    m_Extent: {x: 1.9046853, y: 0.76886487, z: 0}
+    m_Center: {x: 2.1374755, y: -3.285712, z: 0}
+    m_Extent: {x: 1.9046854, y: 0.76886487, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -3932,8 +4054,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 6153896301396115460}
   m_Bounds:
-    m_Center: {x: -3.1107886, y: 3.2171369, z: 0}
-    m_Extent: {x: 1.5032351, y: 1.75102, z: 0}
+    m_Center: {x: -3.110804, y: 3.217136, z: 0}
+    m_Extent: {x: 1.5032353, y: 1.7510202, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -4177,6 +4299,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Monster_Turtle
       objectReference: {fileID: 0}
+    - target: {fileID: 4650453171838025195, guid: df7a2dab1b7a2b24e879548191042de8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5783082967282034056, guid: df7a2dab1b7a2b24e879548191042de8, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -4239,8 +4365,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7029471327052641456}
   m_Bounds:
-    m_Center: {x: -1.5299113, y: -0.33640552, z: 0}
-    m_Extent: {x: 2.12774, y: 1.636335, z: 0}
+    m_Center: {x: -1.5299265, y: -0.33640552, z: 0}
+    m_Extent: {x: 2.1277401, y: 1.6363353, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -4277,7 +4403,7 @@ MonoBehaviour:
   - {fileID: 6834322111407434552}
   - {fileID: 5069152846697262562}
   m_Bounds:
-    m_Center: {x: 1.7354449, y: -2.0332131, z: 0}
+    m_Center: {x: 1.7354296, y: -2.0332122, z: 0}
     m_Extent: {x: 1.5525548, y: 1.2030749, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -4387,6 +4513,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Monster_Frog
       objectReference: {fileID: 0}
+    - target: {fileID: 4687417800814101244, guid: 6eaf6a54d555e034fae7b331b4c679c0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6eaf6a54d555e034fae7b331b4c679c0, type: 3}
 --- !u!1 &4728521356287571407
@@ -4474,8 +4604,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 1368052608216997106}
   m_Bounds:
-    m_Center: {x: 2.5379596, y: 3.5392268, z: 0}
-    m_Extent: {x: 1.6955302, y: 2.0536003, z: 0}
+    m_Center: {x: 2.53796, y: 3.5392256, z: 0}
+    m_Extent: {x: 1.6955305, y: 2.0536003, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -4565,8 +4695,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 1604488749390943964}
   m_Bounds:
-    m_Center: {x: 0.46475387, y: 3.814406, z: 0}
-    m_Extent: {x: 3.578085, y: 3.0984197, z: 0}
+    m_Center: {x: 0.46473837, y: 3.814407, z: 0}
+    m_Extent: {x: 3.5780854, y: 3.0984204, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -4954,6 +5084,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Monster_Mushroom
       objectReference: {fileID: 0}
+    - target: {fileID: 6245278011087359370, guid: 52ea9e40b0e1a644880cf8ea10fa4e9c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52ea9e40b0e1a644880cf8ea10fa4e9c, type: 3}
 --- !u!212 &6337466782990256529
@@ -5213,8 +5347,8 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 2095418506270186389}
   m_Bounds:
-    m_Center: {x: -0.9284785, y: -3.3868613, z: 0}
-    m_Extent: {x: 2.2061872, y: 0.97856665, z: 0}
+    m_Center: {x: -0.928494, y: -3.3868606, z: 0}
+    m_Extent: {x: 2.2061872, y: 0.9785669, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -5507,7 +5641,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 4265625474998759262}
   m_Bounds:
-    m_Center: {x: 1.4130034, y: -0.114362836, z: 0}
+    m_Center: {x: 1.4129882, y: -0.114362836, z: 0}
     m_Extent: {x: 2.025, y: 1.5433953, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
