@@ -352,7 +352,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42456f672a4da949834c0c4841f842d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playOnce: 1
-  _velocity: 2.5
   _logVelocity: 1
-  _effectPrefab: {fileID: -7316940235884863632, guid: c94afd77663cf324cb010e60f409ca81, type: 3}
+  _conditions:
+  - PlayOnce: 1
+    RotateToNormal: 1
+    Velocity: 2.5
+    ObjectType: 1
+    EffectPrefab: {fileID: -7316940235884863632, guid: c94afd77663cf324cb010e60f409ca81, type: 3}
+  - PlayOnce: 1
+    RotateToNormal: 1
+    Velocity: 2.5
+    ObjectType: 3
+    EffectPrefab: {fileID: -7316940235884863632, guid: c94afd77663cf324cb010e60f409ca81, type: 3}
