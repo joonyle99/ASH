@@ -1232,10 +1232,12 @@ MonoBehaviour:
   _groundCheckCollider: {fileID: 1870607279}
   currentAttack: 0
   nextAttack: 0
-  minTargetCount: 3
-  maxTargetCount: 4
-  nowAttackCount: 0
+  minTargetCount: 1
+  maxTargetCount: 10
+  currentCount: 0
   targetCount: 0
+  currentHurtCount: 0
+  targetHurtCount: 3
   isGroggy: 0
 --- !u!50 &681443584
 Rigidbody2D:
@@ -1676,6 +1678,8 @@ MonoBehaviour:
   _bodyAttackDamage: 5
   _forceXPower: 7
   _forceYPower: 10
+  _isAttackable: 1
+  _isHurtable: 1
 --- !u!61 &1384575211
 BoxCollider2D:
   m_ObjectHideFlags: 0

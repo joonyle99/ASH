@@ -23,6 +23,9 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     public BearAttackType currentAttack;
     public BearAttackType nextAttack;
 
+    [Header("Attack")]
+    [Space]
+
     [Space]
 
     public int minTargetCount;
@@ -30,13 +33,16 @@ public class Bear : MonsterBehavior, ILightCaptureListener
 
     [Space]
 
-    public int currentCount;
     public int targetCount;
+    public int currentCount;
+
+    [Header("Hurt")]
+    [Space]
 
     [Space]
 
-    public int currentHurtCount;
     public int targetHurtCount = 3;
+    public int currentHurtCount;
 
     [Space]
 
@@ -98,8 +104,12 @@ public class Bear : MonsterBehavior, ILightCaptureListener
         // 1. 지진 공격까지 필요한 일반 공격 횟수
         // 2. 다음에 실행할 일반 공격 설정
 
-        SetTargetCount();
-        SetToNormalAttack();
+        // Debug.Log("======== Bear Init ========");
+
+        RandomTargetCount();
+        SetToRandomAttack();
+
+        // Debug.Log("============================");
     }
     public void AttackPreProcess()
     {
@@ -121,11 +131,11 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     public void AttackPostProcess()
     {
         if (currentCount >= targetCount)
-            SetToSpecialAttack();
+            SetToEarthQuake();
         else
-            SetToNormalAttack();
+            SetToRandomAttack();
     }
-    private void SetTargetCount()
+    private void RandomTargetCount()
     {
         if (minTargetCount > maxTargetCount)
             Debug.LogError("minTargetCount > maxTargetCount");
@@ -134,19 +144,26 @@ public class Bear : MonsterBehavior, ILightCaptureListener
         else if (maxTargetCount <= 0)
             Debug.LogError("maxTargetCount <= 0");
 
+        // Debug.Log("RandomTargetCount");
+
         // 4번 ~ 7번 공격 후 지진 공격
         targetCount = Random.Range(minTargetCount, maxTargetCount);
     }
-    private void SetToNormalAttack()
+    private void SetToRandomAttack()
     {
+        // Debug.Log("SetToRandomAttack");
+
         int nextAttackNumber = Random.Range(1, 5); // 1 ~ 4
         nextAttack = (BearAttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
-    private void SetToSpecialAttack()
+    private void SetToEarthQuake()
     {
+        // Debug.Log("SetToEarthQuake");
+
         nextAttack = BearAttackType.EarthQuake;
         Animator.SetInteger("NextAttackNumber", (int)nextAttack);
+        RandomTargetCount();
     }
     public void HurtPreProcess()
     {
