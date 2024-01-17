@@ -1,4 +1,3 @@
-using System.Linq;
 using UnityEngine;
 
 public class FloatingPatrolState : Monster_MoveState

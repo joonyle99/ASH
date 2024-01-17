@@ -1,7 +1,24 @@
+using System.ComponentModel;
 using UnityEngine;
 
 public class Monster_StateBase : StateMachineBehaviour
 {
+    [Header("State Base")]
+    [Space]
+
+    [Header("Auto Change State")]
+    [Space]
+
+    [SerializeField] protected bool _isAutoStateTransition = false;
+    [SerializeField] protected string _targetTransitionParam;
+    [SerializeField] protected float _minStayTime = 0f;
+    [SerializeField] protected float _maxStayTime = 0f;
+
+    [Space]
+
+    [SerializeField] protected float _targetStayTime = 0f;
+    [SerializeField] protected float _elapsedStayTime = 0f;
+
     // Monster Behavior
     public MonsterBehavior Monster { get; private set; }
 
@@ -9,6 +26,16 @@ public class Monster_StateBase : StateMachineBehaviour
     {
         Monster = animator.GetComponent<MonsterBehavior>();
         Monster.UpdateState(this);
+
+        _targetStayTime = 0f;
+        _elapsedStayTime = 0f;
+
+        if (_isAutoStateTransition)
+        {
+            // set random time for auto change state
+            _targetStayTime = Random.Range(_minStayTime, _maxStayTime);
+            _elapsedStayTime = 0f;
+        }
 
         if (Monster.NavMeshMoveModule)
         {
@@ -22,7 +49,18 @@ public class Monster_StateBase : StateMachineBehaviour
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        // auto change to next state
+        if (_isAutoStateTransition)
+        {
+            _elapsedStayTime += Time.deltaTime;
+            if (_elapsedStayTime > _targetStayTime)
+            {
+                _elapsedStayTime = 0f;
+                animator.SetTrigger(_targetTransitionParam);
 
+                return;
+            }
+        }
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
