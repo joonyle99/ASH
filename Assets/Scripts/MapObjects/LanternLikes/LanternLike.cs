@@ -10,7 +10,7 @@ public abstract class LanternLike : MonoBehaviour
     public bool IsLightOn
     {
         get { return _isLightOn; }
-        set 
+        set
         {
             if (value == _isLightOn)
                 return;

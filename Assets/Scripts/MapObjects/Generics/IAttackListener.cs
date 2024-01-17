@@ -11,6 +11,7 @@ public class AttackInfo
     public Vector2 Force = Vector2.zero;
     public AttackType Type = AttackType.BasicAttack;
 
+    // »ý¼ºÀÚ
     public AttackInfo(float damage, Vector2 force, AttackType type)
     {
         Damage = damage;

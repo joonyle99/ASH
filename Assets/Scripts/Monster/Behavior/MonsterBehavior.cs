@@ -11,7 +11,6 @@ using UnityEngine.AI;
 /// <summary>
 /// 몬스터의 기본 행동을 정의
 /// </summary>
-[System.Serializable]
 public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
     #region Attribute
@@ -53,6 +52,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _navMeshMoveModule;
         private set => _navMeshMoveModule = value;
     }
+
+    [Header("Evaluator")]
+    [Space]
+
     [SerializeField] private GroundChaseEvaluator _groundChaseEvaluator;
     public GroundChaseEvaluator GroundChaseEvaluator
     {
@@ -260,11 +263,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             case MonsterDefine.MoveType.GroundWalking:
             case MonsterDefine.MoveType.GroundJumpping:
 
-                /*
-                GroundRayHit = Physics2D.BoxCast(_groundCheckCollider.transform.position, _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
-                    _groundCheckLayer);
-                */
-
                 // ground rayCast
                 RaycastHit2D[] groundRayHits = Physics2D.BoxCastAll(_groundCheckCollider.transform.position,
                     _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
@@ -364,7 +362,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             return;
 
         // Hit Process
-        HitProcess(attackInfo);
+        HitProcess(attackInfo, RankType);
 
         // Check Hurt or Die Process
         CheckHurtOrDieProcess();
@@ -388,7 +386,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public void TurnToCollisionHitBox()
     {
-        GameObject hitBox = GetComponentInChildren<MonsterBodyHitModule>(true).gameObject;
+        GameObject hitBox = GetComponentInChildren<MonsterBodyHitModule>().gameObject;
 
         if (hitBox)
         {
@@ -396,6 +394,40 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             hitBoxCollider.isTrigger = false;
             hitBox.layer = LayerMask.NameToLayer("Default");
         }
+    }
+    public void SetIsAttackableHitBox(bool isBool)
+    {
+        var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHitModule>();
+
+        if (monsterBodyHitModule)
+            monsterBodyHitModule.IsAttackable = isBool;
+    }
+    public void SetIsHurtableHitBox(bool isBool)
+    {
+        var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHitModule>();
+
+        if (monsterBodyHitModule)
+            monsterBodyHitModule.IsHurtable = isBool;
+    }
+    public IEnumerator AttackableHitBox(bool isBool)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        SetIsAttackableHitBox(isBool);
+    }
+    public void StartAttackableHitBox()
+    {
+        StartCoroutine(AttackableHitBox(true));
+    }
+    public IEnumerator HurtableHitBox(bool isBool)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        SetIsHurtableHitBox(isBool);
+    }
+    public void StartHurtableHitBox()
+    {
+        StartCoroutine(HurtableHitBox(true));
     }
 
     // basic
@@ -410,11 +442,20 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
-    public void HitProcess(AttackInfo attackInfo)
+    public void HitProcess(AttackInfo attackInfo, MonsterDefine.RankType rankType)
     {
+        if (rankType is MonsterDefine.RankType.Null)
+            Debug.LogError("Monster RankType is Null");
+
+        if (rankType is MonsterDefine.RankType.Normal)
+        {
+            CurHp -= (int)attackInfo.Damage;
+            KnockBack(attackInfo.Force);
+        }
+        else
+            CurHp -= 10000;
+
         StartHitTimer();
-        CurHp -= (int)attackInfo.Damage;
-        KnockBack(attackInfo.Force);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
     }
     public void CheckHurtOrDieProcess()

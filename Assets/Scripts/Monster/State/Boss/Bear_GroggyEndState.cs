@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Boss_Groggy : Monster_StateBase
+public class Bear_GroggyEndState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -15,5 +15,15 @@ public class Boss_Groggy : Monster_StateBase
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
+
+        var bear = Monster as Bear;
+        if (bear != null)
+        {
+            bear.isGroggy = false;
+            bear.IsGodMode = true;
+
+            // 몬스터의 MonsterBodyHit Attack 기능을 켠다
+            bear.SetIsAttackableHitBox(true);
+        }
     }
 }

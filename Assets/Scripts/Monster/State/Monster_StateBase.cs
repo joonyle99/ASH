@@ -10,7 +10,13 @@ public class Monster_StateBase : StateMachineBehaviour
     [Space]
 
     [SerializeField] protected bool _isAutoStateTransition = false;
+
+    [Space]
+
     [SerializeField] protected string _targetTransitionParam;
+
+    [Space]
+
     [SerializeField] protected float _minStayTime = 0f;
     [SerializeField] protected float _maxStayTime = 0f;
 

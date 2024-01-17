@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public class Monster_AttackState : Monster_StateBase
+// TODO : Bear AttackState가 아닌 Boss AttackState로 일반화 하기
+public class Bear_AttackState : Monster_AttackState
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // 공격이 끊기지 않기 위한 슈퍼아머
-        Monster.IsSuperArmor = true;
-
-        Monster.StartSuperArmorFlash();
+        var bear = Monster as Bear;
+        if (bear != null)
+            bear.AttackPreProcess();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -21,6 +21,8 @@ public class Monster_AttackState : Monster_StateBase
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        Monster.IsSuperArmor = false;
+        var bear = Monster as Bear;
+        if (bear != null)
+            bear.AttackPostProcess();
     }
 }

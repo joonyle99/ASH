@@ -1,130 +1,161 @@
+using System.Threading;
 using UnityEngine;
 
 public enum BearAttackType
 {
     Null = 0,
-    Slash,
+
+    // Normal Attack
+    Slash_Right,
+    Slash_Left,
     BodySlam,
     Stomp,
-    EarthQuake
+
+    // Special Attack
+    EarthQuake = 10
 }
 
-public class Bear : MonsterBehavior
+public class Bear : MonsterBehavior, ILightCaptureListener
 {
     [Header("Bear")]
     [Space]
 
-    public int normalAttackCount;
-    public int earthQuakableCount;
+    public BearAttackType currentAttack;
+    public BearAttackType nextAttack;
 
-    public BearAttackType currentAttackType;
-    public int currentAttackNumber;
+    [Space]
+
+    public int minTargetCount;
+    public int maxTargetCount;
+
+    [Space]
+
+    public int currentCount;
+    public int targetCount;
+
+    [Space]
+
+    public int currentHurtCount;
+    public int targetHurtCount = 3;
+
+    [Space]
+
+    public bool isGroggy;
 
     protected override void Awake()
     {
         base.Awake();
     }
-
     protected override void Start()
     {
         base.Start();
 
-        InitAttack();
+        Init();
     }
-
     protected override void Update()
     {
         base.Update();
     }
-
     protected override void SetUp()
     {
         base.SetUp();
     }
-
     public override void KnockBack(Vector2 forceVector)
     {
         base.KnockBack(forceVector);
     }
-
     public override void OnHit(AttackInfo attackInfo)
     {
-        //
+        base.OnHit(attackInfo);
     }
-
     public override void Die()
     {
         // Disable Hit Box
         TurnOffHitBox();
     }
 
-    public void AttackProcess()
+    public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {
-        // 예외 처리
-        if (currentAttackType == BearAttackType.Null)
-            Debug.LogError("BearAttackType is Null");
+        if (isGroggy)
+            return;
 
-        // 공격 타입에 따른 처리
-        if (currentAttackType != BearAttackType.EarthQuake)
-            NormalAttackProcess();
-        else
-            EarthQuakeAttackProcess();
+        Debug.Log("Bear OnLightEnter");
+
+        // 그로기 상태로 진입
+        Animator.SetTrigger("Groggy");
+    }
+    public void OnLightStay(LightCapturer capturer, LightSource lightSource)
+    {
+        // Debug.Log("Bear OnLightStay");
+    }
+    public void OnLightExit(LightCapturer capturer, LightSource lightSource)
+    {
+        // Debug.Log("Bear OnLightExit");
     }
 
-    private void NormalAttackProcess()
+    public void Init()
     {
-        Debug.Log("Normal Attack Process");
+        // 1. 지진 공격까지 필요한 일반 공격 횟수
+        // 2. 다음에 실행할 일반 공격 설정
 
-        normalAttackCount++;
+        SetTargetCount();
+        SetToNormalAttack();
+    }
+    public void AttackPreProcess()
+    {
+        // 현재 상태 변경
+        currentAttack = nextAttack;
 
-        if (normalAttackCount >= earthQuakableCount)
+        if (currentAttack is BearAttackType.Null || nextAttack is BearAttackType.Null)
         {
-            normalAttackCount = 0;
-
-            // 공격 타입을 '지진 공격'으로 변경
-            SetAttackType(BearAttackType.EarthQuake);
-
+            Debug.LogError("BearAttackType is Null");
             return;
         }
 
-        // 공격 타입을 '일반 공격 중 랜덤'으로 변경
-        SetRandomAttackInNormal();
+        if (currentAttack is BearAttackType.EarthQuake)
+            currentCount = 0;
+        else
+            currentCount++;
+
     }
-
-    private void EarthQuakeAttackProcess()
+    public void AttackPostProcess()
     {
-        Debug.Log("EarthQuake Attack Process");
-
-        // 지진 공격 이후, 공격 초기화
-        InitAttack();
+        if (currentCount >= targetCount)
+            SetToSpecialAttack();
+        else
+            SetToNormalAttack();
     }
-
-    private void InitAttack()
+    private void SetTargetCount()
     {
-        // 다음을 초기화
-        // 1. 지진 공격까지 필요한 일반 공격 횟수
-        // 2. 현재 실행할 일반 공격 설정
+        if (minTargetCount > maxTargetCount)
+            Debug.LogError("minTargetCount > maxTargetCount");
+        else if (minTargetCount < 0)
+            Debug.LogError("minTargetCount < 0");
+        else if (maxTargetCount <= 0)
+            Debug.LogError("maxTargetCount <= 0");
 
-        SetRandomEarthQuakableCount(4, 8); // 4 ~ 7
-        SetRandomAttackInNormal(); // 1 ~ 3
+        // 4번 ~ 7번 공격 후 지진 공격
+        targetCount = Random.Range(minTargetCount, maxTargetCount);
     }
-
-    private void SetRandomEarthQuakableCount(int min, int max)
+    private void SetToNormalAttack()
     {
-        earthQuakableCount = Random.Range(min, max);
+        int nextAttackNumber = Random.Range(1, 5); // 1 ~ 4
+        nextAttack = (BearAttackType)nextAttackNumber;
+        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
-
-    private void SetRandomAttackInNormal()
+    private void SetToSpecialAttack()
     {
-        int currentAttackNum = Random.Range(1, 4);
-
-        currentAttackType = (BearAttackType)currentAttackNum;
-        Animator.SetInteger("CurrentAttackNum", currentAttackNum);
+        nextAttack = BearAttackType.EarthQuake;
+        Animator.SetInteger("NextAttackNumber", (int)nextAttack);
     }
-
-    private void SetAttackType(BearAttackType attackType)
+    public void HurtPreProcess()
     {
-        currentAttackType = attackType;
-        Animator.SetInteger("CurrentAttackNum", (int)attackType);
+        currentHurtCount++;
+        Animator.SetInteger("HurtCount", currentHurtCount);
+    }
+    public void HurtPostProcess()
+    {
+        currentHurtCount = 0;
+        Animator.SetInteger("HurtCount", currentHurtCount);
     }
 }
