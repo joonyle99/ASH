@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 public class Bear_GroggyState : Monster_StateBase
@@ -6,12 +7,8 @@ public class Bear_GroggyState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        var bear = Monster as Bear;
-        if (bear != null)
-        {
-            bear.isGroggy = true;
-            bear.IsGodMode = false; // bear의 GodMode가 풀리면서 OnHit()가 호출된다.
-        }
+        // 무적 해제. 피격될 수 있다.
+        Monster.IsGodMode = false;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

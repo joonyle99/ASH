@@ -120,6 +120,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _isGodMode;
         set => _isGodMode = value;
     }
+    [SerializeField] private bool _isGroggy;
+    public bool IsGroggy
+    {
+        get => _isGroggy;
+        set => _isGroggy = value;
+    }
     [SerializeField] private bool _isHit;
     public bool IsHit
     {
@@ -362,7 +368,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             return;
 
         // Hit Process
-        HitProcess(attackInfo, RankType);
+        HitProcess(attackInfo);
 
         // Check Hurt or Die Process
         CheckHurtOrDieProcess();
@@ -442,20 +448,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
-    public void HitProcess(AttackInfo attackInfo, MonsterDefine.RankType rankType)
+    public void HitProcess(AttackInfo attackInfo)
     {
-        if (rankType is MonsterDefine.RankType.Null)
-            Debug.LogError("Monster RankType is Null");
-
-        if (rankType is MonsterDefine.RankType.Normal)
-        {
-            CurHp -= (int)attackInfo.Damage;
-            KnockBack(attackInfo.Force);
-        }
-        else
-            CurHp -= 10000;
-
         StartHitTimer();
+        CurHp -= (int)attackInfo.Damage;
+        KnockBack(attackInfo.Force);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
     }
     public void CheckHurtOrDieProcess()

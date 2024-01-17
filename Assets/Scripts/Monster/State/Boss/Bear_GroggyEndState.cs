@@ -16,14 +16,10 @@ public class Bear_GroggyEndState : Monster_StateBase
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        var bear = Monster as Bear;
-        if (bear != null)
-        {
-            bear.isGroggy = false;
-            bear.IsGodMode = true;
+        Monster.IsGroggy = false;
+        Monster.IsGodMode = true;
 
-            // 몬스터의 MonsterBodyHit Attack 기능을 켠다
-            bear.SetIsAttackableHitBox(true);
-        }
+        // 몬스터의 MonsterBodyHit Attack 기능을 켠다
+        Monster.SetIsAttackableHitBox(true);
     }
 }

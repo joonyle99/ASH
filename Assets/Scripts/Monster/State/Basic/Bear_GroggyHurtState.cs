@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 public class Bear_GroggyHurtState : Monster_HurtState
@@ -15,9 +16,5 @@ public class Bear_GroggyHurtState : Monster_HurtState
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
-
-        var bear = Monster as Bear;
-        if (bear != null)
-            bear.HurtPreProcess();
     }
 }

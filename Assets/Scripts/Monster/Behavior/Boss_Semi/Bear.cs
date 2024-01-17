@@ -20,11 +20,12 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     [Header("Bear")]
     [Space]
 
-    public BearAttackType currentAttack;
-    public BearAttackType nextAttack;
 
     [Header("Attack")]
     [Space]
+
+    public BearAttackType currentAttack;
+    public BearAttackType nextAttack;
 
     [Space]
 
@@ -39,14 +40,8 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     [Header("Hurt")]
     [Space]
 
-    [Space]
-
     public int targetHurtCount = 3;
     public int currentHurtCount;
-
-    [Space]
-
-    public bool isGroggy;
 
     protected override void Awake()
     {
@@ -56,7 +51,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     {
         base.Start();
 
-        Init();
+        Initialize();
     }
     protected override void Update()
     {
@@ -72,7 +67,26 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     }
     public override void OnHit(AttackInfo attackInfo)
     {
-        base.OnHit(attackInfo);
+        if (IsGodMode || IsDead)
+            return;
+
+        // Hit Process
+        StartHitTimer();
+        IncreaseHurtCount();
+        GetComponent<SoundList>().PlaySFX("SE_Hurt");
+
+        // Die
+        Animator.SetTrigger("Die");
+
+        // Hurt
+        if (currentHurtCount >= targetHurtCount)
+        {
+            Animator.SetTrigger("Hurt");
+            InitializeHurtCount();
+
+            return;
+        }
+
     }
     public override void Die()
     {
@@ -82,7 +96,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {
-        if (isGroggy)
+        if (IsGroggy)
             return;
 
         Debug.Log("Bear OnLightEnter");
@@ -99,12 +113,12 @@ public class Bear : MonsterBehavior, ILightCaptureListener
         // Debug.Log("Bear OnLightExit");
     }
 
-    public void Init()
+    public void Initialize()
     {
+        // Debug.Log("======== Bear Init ========");
+
         // 1. 지진 공격까지 필요한 일반 공격 횟수
         // 2. 다음에 실행할 일반 공격 설정
-
-        // Debug.Log("======== Bear Init ========");
 
         RandomTargetCount();
         SetToRandomAttack();
@@ -113,7 +127,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     }
     public void AttackPreProcess()
     {
-        // 현재 상태 변경
+        // 현재 공격 상태 변경
         currentAttack = nextAttack;
 
         if (currentAttack is BearAttackType.Null || nextAttack is BearAttackType.Null)
@@ -131,7 +145,10 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     public void AttackPostProcess()
     {
         if (currentCount >= targetCount)
+        {
+            RandomTargetCount();
             SetToEarthQuake();
+        }
         else
             SetToRandomAttack();
     }
@@ -163,14 +180,13 @@ public class Bear : MonsterBehavior, ILightCaptureListener
 
         nextAttack = BearAttackType.EarthQuake;
         Animator.SetInteger("NextAttackNumber", (int)nextAttack);
-        RandomTargetCount();
     }
-    public void HurtPreProcess()
+    public void IncreaseHurtCount()
     {
         currentHurtCount++;
         Animator.SetInteger("HurtCount", currentHurtCount);
     }
-    public void HurtPostProcess()
+    public void InitializeHurtCount()
     {
         currentHurtCount = 0;
         Animator.SetInteger("HurtCount", currentHurtCount);

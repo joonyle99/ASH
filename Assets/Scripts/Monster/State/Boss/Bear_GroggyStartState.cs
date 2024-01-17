@@ -6,12 +6,11 @@ public class Bear_GroggyStartState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        var bear = Monster as Bear;
-        if (bear != null)
-        {
-            // 몬스터의 MonsterBodyHit Attack 기능을 끈다.
-            bear.SetIsAttackableHitBox(false);
-        }
+        // 그로기 상태 진입. 더이상 손전등의 영향을 받지 않음
+        Monster.IsGroggy = true;
+
+        // 몬스터의 MonsterBodyHit Attack 기능을 끈다.
+        Monster.SetIsAttackableHitBox(false);
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
