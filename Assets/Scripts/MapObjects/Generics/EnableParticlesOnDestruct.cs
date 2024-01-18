@@ -17,7 +17,7 @@ public class EnableParticlesOnDestruct : MonoBehaviour, IDestructionListener
     {
         _particles = GetComponentsInChildren<ParticleHelper>(true);
 #if UNITY_EDITOR
-        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(gameObject.scene);
+        EditorUtility.SetDirty(this);
 #endif
     }
     public void SetEmissionRotations(Vector3 worldRotation)

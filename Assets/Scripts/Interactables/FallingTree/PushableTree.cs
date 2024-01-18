@@ -14,17 +14,18 @@ public class PushableTree : InteractableObject
     {
         _moveDirection = Player.RecentDir;
     }
-
+    private void Update()
+    {
+        if (_treeTrunk.PushedAngle > _interactionOverAngle)
+        {
+            IsInteractable = false;
+        }
+    }
     public override void UpdateInteracting()
     {
-        if (IsInteractionKeyUp || IsPlayerStateChanged || _treeTrunk.FallenAngle > _interactionOverAngle)
+        if (IsInteractionKeyUp || IsPlayerStateChanged || _treeTrunk.PushedAngle > _interactionOverAngle)
         {
-            if (_treeTrunk.FallenAngle > _interactionOverAngle)
-            {
-                IsInteractable = false;
-            }
             ExitInteraction();
-            return;
         }
     }
     public override void FixedUpdateInteracting()

@@ -65,10 +65,10 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     {
         base.KnockBack(forceVector);
     }
-    public override void OnHit(AttackInfo attackInfo)
+    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         if (IsGodMode || IsDead)
-            return;
+            return IAttackListener.AttackResult.Fail;
 
         // Hit Process
         StartHitTimer();
@@ -84,8 +84,8 @@ public class Bear : MonsterBehavior, ILightCaptureListener
             Animator.SetTrigger("Hurt");
             InitializeHurtCount();
 
-            return;
         }
+        return IAttackListener.AttackResult.Success;
 
     }
     public override void Die()

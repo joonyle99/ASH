@@ -11,10 +11,10 @@ public class RollingStone : InteractableObject
     [SerializeField] SoundList _soundList;
     [SerializeField] float _pushSoundInterval;
 
+    [SerializeField] AudioSource _rollAudio;
     Rigidbody2D _rigidbody;
     IAttackListener _attackableComponent;
 
-    bool _isPushSoundPlaying = false;
     float _moveDirection = 0;
 
     public bool IsBreakable { get { return _attackableComponent == null; } }
@@ -28,20 +28,19 @@ public class RollingStone : InteractableObject
         Player.MovementController.enabled = true;
         _moveDirection = Player.PlayerLookDir2D.x;
     }
-    IEnumerator PlayPushSoundCoroutine(string key, float interval)
-    {
-        _isPushSoundPlaying = true;
-        _soundList.PlaySFX(key);
-        yield return new WaitForSeconds(interval);
-        _isPushSoundPlaying = false;
-    }
 
     private void Update()
     {
         if (_rigidbody.velocity.sqrMagnitude > 0.3f && _rigidbody.GetContacts(new Collider2D[1]) > 0)
         {
-            if (!_isPushSoundPlaying)
-                StartCoroutine(PlayPushSoundCoroutine("Roll", _pushSoundInterval));
+            if (!_rollAudio.isPlaying)
+                _rollAudio.Play();
+        }
+        else
+        {
+
+            if (_rollAudio.isPlaying)
+                _rollAudio.Stop();
         }
     }
     public override void UpdateInteracting()

@@ -17,10 +17,15 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
     {
         _rigidbody = GetComponent<Rigidbody2D>();
     }
-    public void OnHit(AttackInfo attackInfo)
+    public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         if (attackInfo.Type == AttackType.BasicAttack)
+        {
             Destroy(gameObject);
+            return IAttackListener.AttackResult.Success;
+        }
+
+        return IAttackListener.AttackResult.Fail;
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
