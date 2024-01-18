@@ -11,7 +11,6 @@ using UnityEngine.AI;
 /// <summary>
 /// 몬스터의 기본 행동을 정의
 /// </summary>
-[System.Serializable]
 public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
     #region Attribute
@@ -53,6 +52,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _navMeshMoveModule;
         private set => _navMeshMoveModule = value;
     }
+
+    [Header("Evaluator")]
+    [Space]
+
     [SerializeField] private GroundChaseEvaluator _groundChaseEvaluator;
     public GroundChaseEvaluator GroundChaseEvaluator
     {
@@ -116,6 +119,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         get => _isGodMode;
         set => _isGodMode = value;
+    }
+    [SerializeField] private bool _isGroggy;
+    public bool IsGroggy
+    {
+        get => _isGroggy;
+        set => _isGroggy = value;
     }
     [SerializeField] private bool _isHit;
     public bool IsHit
@@ -260,11 +269,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             case MonsterDefine.MoveType.GroundWalking:
             case MonsterDefine.MoveType.GroundJumpping:
 
-                /*
-                GroundRayHit = Physics2D.BoxCast(_groundCheckCollider.transform.position, _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
-                    _groundCheckLayer);
-                */
-
                 // ground rayCast
                 RaycastHit2D[] groundRayHits = Physics2D.BoxCastAll(_groundCheckCollider.transform.position,
                     _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
@@ -389,7 +393,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public void TurnToCollisionHitBox()
     {
-        GameObject hitBox = GetComponentInChildren<MonsterBodyHitModule>(true).gameObject;
+        GameObject hitBox = GetComponentInChildren<MonsterBodyHitModule>().gameObject;
 
         if (hitBox)
         {
@@ -397,6 +401,40 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             hitBoxCollider.isTrigger = false;
             hitBox.layer = LayerMask.NameToLayer("Default");
         }
+    }
+    public void SetIsAttackableHitBox(bool isBool)
+    {
+        var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHitModule>();
+
+        if (monsterBodyHitModule)
+            monsterBodyHitModule.IsAttackable = isBool;
+    }
+    public void SetIsHurtableHitBox(bool isBool)
+    {
+        var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHitModule>();
+
+        if (monsterBodyHitModule)
+            monsterBodyHitModule.IsHurtable = isBool;
+    }
+    public IEnumerator AttackableHitBox(bool isBool)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        SetIsAttackableHitBox(isBool);
+    }
+    public void StartAttackableHitBox()
+    {
+        StartCoroutine(AttackableHitBox(true));
+    }
+    public IEnumerator HurtableHitBox(bool isBool)
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        SetIsHurtableHitBox(isBool);
+    }
+    public void StartHurtableHitBox()
+    {
+        StartCoroutine(HurtableHitBox(true));
     }
 
     // basic

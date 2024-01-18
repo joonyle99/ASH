@@ -1,15 +1,16 @@
 using UnityEngine;
 
-public class Monster_AttackState : Monster_StateBase
+public class Bear_GroggyStartState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // 공격이 끊기지 않기 위한 슈퍼아머
-        Monster.IsSuperArmor = true;
+        // 그로기 상태 진입. 더이상 손전등의 영향을 받지 않음
+        Monster.IsGroggy = true;
 
-        Monster.StartSuperArmorFlash();
+        // 몬스터의 MonsterBodyHit Attack 기능을 끈다.
+        Monster.SetIsAttackableHitBox(false);
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -20,7 +21,5 @@ public class Monster_AttackState : Monster_StateBase
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
-
-        Monster.IsSuperArmor = false;
     }
 }
