@@ -65,8 +65,6 @@ public class PlayerAttackController : MonoBehaviour
             _elapsedNextBasicAttackTime = 0f;
             _basicAttackCount++;
 
-            _basicAttackCount = 1;
-            Time.timeScale = 0.5f;
 
             _player.Animator.SetTrigger("Attack");
             _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
