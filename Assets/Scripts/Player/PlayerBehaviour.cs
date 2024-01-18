@@ -68,6 +68,11 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] float _targetFadeOutTime = 3f;
     [SerializeField] float _elapsedFadeOutTime = 0f;
 
+    [Header("Effects")]
+    [SerializeField] ParticleHelper _walkDustEmitter;
+    [SerializeField] ParticleHelper _walkDirtEmitter;
+    [SerializeField] ParticleHelper _landDustEmitter;
+    [SerializeField] ParticleHelper _landDirtEmitter;
     // Controller
     PlayerAttackController _attackController;
     InteractionController _interactionController;
@@ -412,6 +417,8 @@ public class PlayerBehaviour : StateMachineBase
     public void PlaySound_SE_Run()
     {
         _soundList.PlaySFX("SE_Run");
+        _walkDustEmitter.Emit(1);
+        _walkDirtEmitter.Emit(UnityEngine.Random.Range(0, 3));
     }
 
     public void PlaySound_SE_Jump_01()
@@ -422,6 +429,8 @@ public class PlayerBehaviour : StateMachineBase
     public void PlaySound_SE_Jump_02()
     {
         _soundList.PlaySFX("SE_Jump_02");
+        _landDustEmitter.Emit(2);
+        _landDirtEmitter.Emit(7);
     }
 
     public void PlaySound_SE_DoubleJump()

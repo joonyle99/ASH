@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
@@ -40,4 +41,8 @@ public class ParticleHelper : MonoBehaviour
         shape.rotation = new Vector3(shape.rotation.x, shape.rotation.y, shape.rotation.z + degree);
     }
 
+    public void Emit(int count)
+    {
+        _particleSystem.Emit(count);
+    }
 }
