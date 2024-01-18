@@ -45,4 +45,9 @@ public class ParticleHelper : MonoBehaviour
     {
         _particleSystem.Emit(count);
     }
+
+    public void Play()
+    {
+        _particleSystem.Play();
+    }
 }

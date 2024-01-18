@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Gizmos = UnityEngine.Gizmos;
 
@@ -24,6 +25,9 @@ public class PlayerAttackController : MonoBehaviour
     [SerializeField] private float _elapsedNextBasicAttackTime;
     [SerializeField] private int _basicAttackCount;
     [SerializeField] private bool _isBasicAttacking;
+
+    [Header("Effects")]
+    [SerializeField] ParticleHelper[] _attackEffects;
     public bool IsBasicAttacking
     {
         get => _isBasicAttacking;
@@ -61,10 +65,14 @@ public class PlayerAttackController : MonoBehaviour
             _elapsedNextBasicAttackTime = 0f;
             _basicAttackCount++;
 
+            _basicAttackCount = 1;
+            Time.timeScale = 0.5f;
+
             _player.Animator.SetTrigger("Attack");
             _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
 
             _player.PlaySound_SE_Attack();
+            _attackEffects[_basicAttackCount-1].Play();
 
             if (_basicAttackCount >= 3)
                 _basicAttackCount = 0;

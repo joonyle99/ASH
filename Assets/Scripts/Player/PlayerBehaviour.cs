@@ -73,6 +73,7 @@ public class PlayerBehaviour : StateMachineBase
     [SerializeField] ParticleHelper _walkDirtEmitter;
     [SerializeField] ParticleHelper _landDustEmitter;
     [SerializeField] ParticleHelper _landDirtEmitter;
+
     // Controller
     PlayerAttackController _attackController;
     InteractionController _interactionController;
