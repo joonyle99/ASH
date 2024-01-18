@@ -13,17 +13,20 @@ public class LaserFlower : MonoBehaviour, IAttackListener
     {
         _hp = _maxHp;
     }
-    public void OnHit(AttackInfo attackInfo)
+    public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        if (attackInfo.Type == AttackType.BasicAttack)
+        if (_hp > 0 && attackInfo.Type == AttackType.BasicAttack)
         {
             if(--_hp <= 0)
                 Close();
+            return IAttackListener.AttackResult.Success;
         }
+        return IAttackListener.AttackResult.Fail;
     }
     void Open()
     {
         _darkBeam.gameObject.SetActive(true);
+        _hp = _maxHp;
     }
     void Close()
     {

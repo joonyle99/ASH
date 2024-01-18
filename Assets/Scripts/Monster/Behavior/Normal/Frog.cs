@@ -40,7 +40,7 @@ public class Frog : MonsterBehavior
     {
         base.KnockBack(forceVector);
     }
-    public override void OnHit(AttackInfo attackInfo)
+    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         base.OnHit(attackInfo);
 
@@ -57,6 +57,7 @@ public class Frog : MonsterBehavior
             if (!GroundChaseEvaluator.IsUsable)
                 GroundChaseEvaluator.IsUsable = true;
         }
+        return IAttackListener.AttackResult.Success;
     }
     public override void Die()
     {

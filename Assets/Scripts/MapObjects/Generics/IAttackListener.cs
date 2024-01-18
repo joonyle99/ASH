@@ -20,5 +20,6 @@ public class AttackInfo
 }
 public interface IAttackListener
 {
-    public void OnHit(AttackInfo attackInfo);
+    enum AttackResult { Fail, Success }
+    public AttackResult OnHit(AttackInfo attackInfo);
 }

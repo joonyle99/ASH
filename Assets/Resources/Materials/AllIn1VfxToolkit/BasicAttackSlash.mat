@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!28 &-6706239064320214461
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: _ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.0,"g":0.0,"b":0.0,"a":1.0},"time":0.0},{"color":{"r":0.43396228551864626,"g":0.43396228551864626,"b":0.43396228551864626,"a":1.0},"time":0.6324254274368286},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 2
+  m_Width: 64
+  m_Height: 1
+  m_CompleteImageSize: 256
+  m_MipsStripped: 0
+  m_TextureFormat: 4
+  m_MipCount: 1
+  m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMasterTextureLimit: 0
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_LightmapFormat: 0
+  m_ColorSpace: 0
+  m_PlatformBlob: 
+  image data: 256
+  _typelessdata: 000000ff030303ff060606ff080808ff0b0b0bff0e0e0eff111111ff131313ff161616ff191919ff1c1c1cff1f1f1fff212121ff242424ff272727ff2a2a2aff2c2c2cff2f2f2fff323232ff353535ff383838ff3a3a3aff3d3d3dff404040ff434343ff454545ff484848ff4b4b4bff4e4e4eff515151ff535353ff565656ff595959ff5c5c5cff5e5e5eff616161ff646464ff676767ff6a6a6aff6c6c6cff707070ff767676ff7c7c7cff828282ff898989ff8f8f8fff959595ff9b9b9bffa2a2a2ffa8a8a8ffaeaeaeffb4b4b4ffbababaffc1c1c1ffc7c7c7ffcdcdcdffd3d3d3ffdadadaffe0e0e0ffe6e6e6ffecececfff3f3f3fff9f9f9ffffffffff
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -7,12 +54,21 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ImpactShapeBright
+  m_Name: BasicAttackSlash
   m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
   m_ValidKeywords:
   - ADDITIVECONFIG_ON
+  - ALPHACUTOFF_ON
+  - ALPHAFADEINPUTSTREAM_ON
+  - ALPHAFADETRANSPARENCYTOO_ON
+  - ALPHAFADE_ON
+  - COLORRAMPGRAD_ON
+  - COLORRAMP_ON
   - GLOW_ON
   - PREMULTIPLYCOLOR_ON
+  - SHAPE1CONTRAST_ON
+  - SHAPE1DISTORT_ON
+  - SHAPE2_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -28,7 +84,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ColorRampTexGradient:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: -6706239064320214461}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DistNormalMap:
@@ -36,7 +92,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DistortTex:
-        m_Texture: {fileID: 2800000, guid: fcb027caad6963b4a80539bbce0d10e9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FadeBurnTex:
@@ -44,7 +100,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FadeTex:
-        m_Texture: {fileID: 2800000, guid: 854b25bc08516364da5a786b1cad247e, type: 3}
+        m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _GlowTex:
@@ -52,11 +108,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a3ab385bcb92f644fb58d9abf40c7ff8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 576209e508e9fc14da237253859c8bd0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
-        m_Texture: {fileID: 2800000, guid: 2f6642b43dc405d498acba7e288c068c, type: 3}
+        m_Texture: {fileID: 2800000, guid: c644f12d7def3a543a6c3ec049bb87f9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape1MaskTex:
@@ -64,24 +120,24 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape2DistortTex:
-        m_Texture: {fileID: 2800000, guid: fcb027caad6963b4a80539bbce0d10e9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape2Tex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: c9303dd8a46f0544db290a096bb6f29a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape3DistortTex:
-        m_Texture: {fileID: 2800000, guid: fcb027caad6963b4a80539bbce0d10e9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape3Tex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: d292c9c372b64c345b3d541abc00ec02, type: 3}
+        m_Scale: {x: 0.85, y: 1.3}
         m_Offset: {x: 0, y: 0}
     - _ShapeDistortTex:
-        m_Texture: {fileID: 2800000, guid: fcb027caad6963b4a80539bbce0d10e9, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 6dae2230885031c46b2fd745a5dc8c32, type: 3}
+        m_Scale: {x: 1.28, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TrailWidthGradient:
         m_Texture: {fileID: 0}
@@ -93,15 +149,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 1
+    - _Alpha: 0.73
     - _AlphaBrightness: 0
     - _AlphaContrast: 1
     - _AlphaCutoffValue: 0.25
     - _AlphaFadeAmount: 0
-    - _AlphaFadePow: 0.001
+    - _AlphaFadePow: 1
     - _AlphaFadeSmooth: 1.5
-    - _AlphaStepMax: 0.52449495
-    - _AlphaStepMin: 0.0858586
+    - _AlphaStepMax: 0.075
+    - _AlphaStepMin: 0
     - _BlurIntensity: 4.5
     - _CamDistFadeStepMax: 100
     - _CamDistFadeStepMin: 0
@@ -124,17 +180,17 @@ Material:
     - _DistortionScrollXSpeed: 0
     - _DistortionScrollYSpeed: 0
     - _DstMode: 10
-    - _EditorDrawers: 60
+    - _EditorDrawers: 63
     - _FadeAmount: -0.1
     - _FadeBurnGlow: 5
     - _FadeBurnWidth: 0.01
-    - _FadePower: 2.24
+    - _FadePower: 1
     - _FadeScrollXSpeed: 0
     - _FadeScrollYSpeed: 0
-    - _FadeTransition: 0.75
+    - _FadeTransition: 0.075
     - _FishEyeUvAmount: 0.35
     - _Glow: 0
-    - _GlowGlobal: 7.01
+    - _GlowGlobal: 1
     - _HandDrawnAmount: 10
     - _HandDrawnSpeed: 5
     - _HsvBright: 1
@@ -143,7 +199,7 @@ Material:
     - _LightAmount: 0
     - _MaskPow: 1
     - _OffsetSh1: 1
-    - _OffsetSh2: 1
+    - _OffsetSh2: -5
     - _OffsetSh3: 1
     - _PinchUvAmount: 0.35
     - _PixelateSize: 32
@@ -152,7 +208,7 @@ Material:
     - _RandomSh1Mult: 1
     - _RandomSh2Mult: 1
     - _RandomSh3Mult: 1
-    - _RenderingMode: 1
+    - _RenderingMode: 5
     - _RimAddAmount: 1
     - _RimBias: 0
     - _RimErodesAlpha: 0
@@ -184,7 +240,7 @@ Material:
     - _Shape2DistortYSpeed: 0.1
     - _Shape2RotationOffset: 0
     - _Shape2RotationSpeed: 0
-    - _Shape2XSpeed: 0
+    - _Shape2XSpeed: 0.5
     - _Shape2YSpeed: 0
     - _Shape3AlphaWeight: 2
     - _Shape3Brightness: 0
@@ -195,13 +251,13 @@ Material:
     - _Shape3DistortYSpeed: 0.1
     - _Shape3RotationOffset: 0
     - _Shape3RotationSpeed: 0
-    - _Shape3XSpeed: 0
+    - _Shape3XSpeed: 0.24
     - _Shape3YSpeed: 0
     - _ShapeAlphaWeight: 1
     - _ShapeBrightness: 0
     - _ShapeColorWeight: 1
-    - _ShapeContrast: 0.5
-    - _ShapeDistortAmount: 0.5
+    - _ShapeContrast: 1
+    - _ShapeDistortAmount: 1.29
     - _ShapeDistortXSpeed: 0.1
     - _ShapeDistortYSpeed: 0.1
     - _ShapeRotationOffset: 0
@@ -209,7 +265,7 @@ Material:
     - _ShapeXSpeed: 0
     - _ShapeYSpeed: 0
     - _SoftFactor: 0.5
-    - _SrcMode: 1
+    - _SrcMode: 5
     - _TextureScrollXSpeed: 1
     - _TextureScrollYSpeed: 0
     - _TimingSeed: 0

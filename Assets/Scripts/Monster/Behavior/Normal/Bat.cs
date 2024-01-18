@@ -66,9 +66,9 @@ public class Bat : MonsterBehavior
     {
         base.KnockBack(forceVector);
     }
-    public override void OnHit(AttackInfo attackInfo)
+    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        base.OnHit(attackInfo);
+        return base.OnHit(attackInfo);
     }
     public override void Die()
     {

@@ -28,6 +28,7 @@ public class PlayerAttackController : MonoBehaviour
 
     [Header("Effects")]
     [SerializeField] ParticleHelper[] _attackEffects;
+    [SerializeField] GameObject _basicAttackImpactPrefab;
     public bool IsBasicAttacking
     {
         get => _isBasicAttacking;
@@ -95,10 +96,19 @@ public class PlayerAttackController : MonoBehaviour
             var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
             handledBodies.Add(rayCastHit.rigidbody);
 
+            IAttackListener.AttackResult attackResult = IAttackListener.AttackResult.Fail;
             foreach (var listener in listeners)
             {
                 Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
-                listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.BasicAttack));
+                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.BasicAttack));
+                if (result == IAttackListener.AttackResult.Success)
+                    attackResult = IAttackListener.AttackResult.Success;
+            }
+
+            if (attackResult == IAttackListener.AttackResult.Success)
+            {
+                Instantiate(_basicAttackImpactPrefab, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                // TODO : Play impact sound
             }
         }
     }

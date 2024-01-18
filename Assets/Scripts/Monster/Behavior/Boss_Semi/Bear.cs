@@ -47,9 +47,10 @@ public class Bear : MonsterBehavior
         base.KnockBack(forceVector);
     }
 
-    public override void OnHit(AttackInfo attackInfo)
+    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         //
+        return IAttackListener.AttackResult.Success;
     }
 
     public override void Die()

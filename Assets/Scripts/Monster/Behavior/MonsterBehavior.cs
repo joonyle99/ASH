@@ -358,16 +358,17 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
         }
     }
-    public virtual void OnHit(AttackInfo attackInfo)
+    public virtual IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         if (IsGodMode || IsDead)
-            return;
+            return IAttackListener.AttackResult.Fail;
 
         // Hit Process
         HitProcess(attackInfo);
 
         // Check Hurt or Die Process
         CheckHurtOrDieProcess();
+        return IAttackListener.AttackResult.Success;
     }
     public virtual void Die()
     {
