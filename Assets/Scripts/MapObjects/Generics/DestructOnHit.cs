@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class DestructOnHit : MonoBehaviour, IAttackListener
 {
-    public void OnHit(AttackInfo attackInfo)
+    public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         Destruction.Destruct(gameObject);
+        return IAttackListener.AttackResult.Success;
     }
 }

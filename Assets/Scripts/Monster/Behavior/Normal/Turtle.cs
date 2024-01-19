@@ -25,10 +25,10 @@ public class Turtle : MonsterBehavior
     {
         base.KnockBack(forceVector);
     }
-    public override void OnHit(AttackInfo attackInfo)
+    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         if (IsDead)
-            return;
+            return IAttackListener.AttackResult.Fail;
 
         // Hit Process
         StartHitTimer();
@@ -38,6 +38,7 @@ public class Turtle : MonsterBehavior
         // Change to Hurt State
         if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundPatrolState>())
             Animator.SetTrigger("Hurt");
+        return IAttackListener.AttackResult.Success;
     }
     public override void Die()
     {

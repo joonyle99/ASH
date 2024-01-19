@@ -9,7 +9,7 @@ public class Mushroom : MonsterBehavior
 
 
     // Etc
-    private int _countOfUpdate = 0;
+    // private int _countOfUpdate = 0;
 
     protected override void Awake()
     {
@@ -25,11 +25,13 @@ public class Mushroom : MonsterBehavior
     {
         base.Update();
 
+        /*
         // TODO : temp code
         _countOfUpdate++;
 
         if (_countOfUpdate == 1)
             return;
+        */
 
         if (CautionEvaluator)
         {
@@ -37,7 +39,6 @@ public class Mushroom : MonsterBehavior
             {
                 if (CurrentStateIs<Monster_HideState>())
                 {
-                    //Debug.Log("SetTrigger Idle");
                     Animator.SetTrigger("Idle");
                     return;
                 }
@@ -47,8 +48,6 @@ public class Mushroom : MonsterBehavior
             {
                 if (CurrentStateIs<Monster_IdleState>())
                 {
-                    //Debug.Log("Update - SetTrigger() Hide " + "/ countOfUpdate : " + countOfUpdate.ToString());
-                    //Debug.Log("SetTrigger Hide" + " " + countOfUpdate.ToString());
                     Animator.SetTrigger("Hide");
                     return;
                 }
@@ -66,9 +65,9 @@ public class Mushroom : MonsterBehavior
         base.KnockBack(forceVector);
     }
 
-    public override void OnHit(AttackInfo attackInfo)
+    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        base.OnHit(attackInfo);
+        return base.OnHit(attackInfo);
     }
 
     public override void Die()

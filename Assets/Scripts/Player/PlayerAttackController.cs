@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Gizmos = UnityEngine.Gizmos;
 
@@ -24,6 +25,10 @@ public class PlayerAttackController : MonoBehaviour
     [SerializeField] private float _elapsedNextBasicAttackTime;
     [SerializeField] private int _basicAttackCount;
     [SerializeField] private bool _isBasicAttacking;
+
+    [Header("Effects")]
+    [SerializeField] ParticleHelper[] _attackEffects;
+    [SerializeField] GameObject _basicAttackImpactPrefab;
     public bool IsBasicAttacking
     {
         get => _isBasicAttacking;
@@ -61,10 +66,12 @@ public class PlayerAttackController : MonoBehaviour
             _elapsedNextBasicAttackTime = 0f;
             _basicAttackCount++;
 
+
             _player.Animator.SetTrigger("Attack");
             _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
 
             _player.PlaySound_SE_Attack();
+            _attackEffects[_basicAttackCount-1].Play();
 
             if (_basicAttackCount >= 3)
                 _basicAttackCount = 0;
@@ -89,10 +96,19 @@ public class PlayerAttackController : MonoBehaviour
             var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
             handledBodies.Add(rayCastHit.rigidbody);
 
+            IAttackListener.AttackResult attackResult = IAttackListener.AttackResult.Fail;
             foreach (var listener in listeners)
             {
                 Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
-                listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.BasicAttack));
+                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.BasicAttack));
+                if (result == IAttackListener.AttackResult.Success)
+                    attackResult = IAttackListener.AttackResult.Success;
+            }
+
+            if (attackResult == IAttackListener.AttackResult.Success)
+            {
+                Instantiate(_basicAttackImpactPrefab, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                // TODO : Play impact sound
             }
         }
     }

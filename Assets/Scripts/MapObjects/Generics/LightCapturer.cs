@@ -11,16 +11,7 @@ public class LightCapturer : MonoBehaviour
     bool _wasGettingLightedLastFrame = false;
     LightSource _lastLightSource = null;
     public bool IsGettingLighted { get { return _isGettingLighted; } }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-    }
     private void LateUpdate()
     {
         if (!_isGettingLighted && _wasGettingLightedLastFrame)

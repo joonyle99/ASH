@@ -9,6 +9,7 @@ public class LightController : MonoBehaviour
 
     [SerializeField] private bool _isLightableState;
     [SerializeField] private bool _isLightWorking;
+    [SerializeField] private bool _isLightButtonPressable = true;
     [SerializeField] private float _rotateSpeed;
     [SerializeField] private float _maxAngle;
     [SerializeField] private float _curAngle;
@@ -28,38 +29,49 @@ public class LightController : MonoBehaviour
 
         _isLightableState = _player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<RunState>();
 
-        // Auto Turn Off Light
+        // Auto Light Source Off
         if (!_isLightableState && _isLightWorking)
         {
             TurnOffLight();
-            _isLightWorking = false;
-
-            return;
         }
 
         // Light Source ON / OFF
         if (_isLightableState)
         {
-            if (inputState.LightKey.KeyDown)
-                _isLightWorking = !_isLightWorking;
+            if (inputState.LightKey.KeyDown && _isLightButtonPressable)
+            {
+                if (!_isLightWorking)
+                {
+                    _player.Animator.SetTrigger("TurnOnLight");
+                    _isLightButtonPressable = false;
+                }
+                else
+                {
+                    _player.Animator.SetTrigger("TurnOffLight");
+                    _isLightButtonPressable = false;
+                }
+            }
         }
-
-        // -35 ~ 35를 0 ~ 1로 정규화
-        _lightAngleValue = (_curAngle + _maxAngle) / (2 * _maxAngle);
-
-        // Animator Parameter
-        _player.Animator.SetBool("IsLightWorking", _isLightWorking);
-        _player.Animator.SetFloat("LightAngleValue", _lightAngleValue);
 
         if (_isLightWorking)
         {
             _curAngle += _rotateSpeed * inputState.Vertical * Time.deltaTime;
             _curAngle = Mathf.Clamp(_curAngle, -_maxAngle, _maxAngle);
+
+            // -35 ~ 35를 0 ~ 1로 정규화
+            _lightAngleValue = (_curAngle + _maxAngle) / (2 * _maxAngle);
+            _player.Animator.SetFloat("LightAngleValue", _lightAngleValue);
         }
     }
 
     public void TurnOnLight()
     {
+        if (_isLightWorking)
+            return;
+
+        _isLightWorking = true;
+        _player.Animator.SetBool("IsLightWorking", _isLightWorking);
+
         // 빛을 켠다
         _light.SetActive(true);
         _player.SoundList.PlaySFX("SE_LightSkill");
@@ -67,7 +79,23 @@ public class LightController : MonoBehaviour
 
     public void TurnOffLight()
     {
+        if (!_isLightWorking)
+            return;
+
+        _isLightWorking = false;
+        _player.Animator.SetBool("IsLightWorking", _isLightWorking);
+
+        // 초기화
+        _curAngle = 0f;
+        _lightAngleValue = (_curAngle + _maxAngle) / (2 * _maxAngle);
+        _player.Animator.SetFloat("LightAngleValue", _lightAngleValue);
+
         // 빛을 끈다
         _light.SetActive(false);
+    }
+
+    public void LightButtonPressable()
+    {
+        _isLightButtonPressable = true;
     }
 }

@@ -15,7 +15,7 @@ public class Bat : MonsterBehavior
     private float _shootingVariant = 30f;
 
     // Etc
-    private int _countOfUpdate = 0;
+    // private int _countOfUpdate = 0;
 
     protected override void Awake()
     {
@@ -29,11 +29,13 @@ public class Bat : MonsterBehavior
     {
         base.Update();
 
+        /*
         // TODO : temp code
         _countOfUpdate++;
 
         if (_countOfUpdate == 1)
             return;
+        */
 
         if (FloatingChaseEvaluator)
         {
@@ -41,7 +43,6 @@ public class Bat : MonsterBehavior
             {
                 if (CurrentStateIs<FloatingPatrolState>())
                 {
-                    //Debug.Log("SetTrigger Chase");
                     Animator.SetTrigger("Chase");
                     return;
                 }
@@ -50,7 +51,6 @@ public class Bat : MonsterBehavior
             {
                 if (CurrentStateIs<FloatingChaseState>())
                 {
-                    //Debug.Log("SetTrigger Patrol");
                     Animator.SetTrigger("Patrol");
                     return;
                 }
@@ -66,9 +66,9 @@ public class Bat : MonsterBehavior
     {
         base.KnockBack(forceVector);
     }
-    public override void OnHit(AttackInfo attackInfo)
+    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        base.OnHit(attackInfo);
+        return base.OnHit(attackInfo);
     }
     public override void Die()
     {
