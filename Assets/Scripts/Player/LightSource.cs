@@ -44,10 +44,23 @@ public class LightSource : MonoBehaviour
         for (int i = 0; i < _rayCount; i++)
         {
             float angle = Mathf.Lerp(minAngle, maxAngle, (float)i / (_rayCount - 1));
+
+            /*
             var hit = Physics2D.Raycast(transform.position, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)), _radius, _rayCastLayers);
             if (hit)
             {
                 hittedColliders.Add(hit.collider);
+            }
+            */
+
+            // RaycastAll·Î º¯°æ
+            var hits = Physics2D.RaycastAll(transform.position, new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)), _radius, _rayCastLayers);
+            foreach (var hit in hits)
+            {
+                if(hit)
+                {
+                    hittedColliders.Add(hit.collider);
+                }
             }
         }
 

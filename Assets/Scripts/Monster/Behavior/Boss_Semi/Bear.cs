@@ -76,17 +76,16 @@ public class Bear : MonsterBehavior, ILightCaptureListener
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
         // Die
-        Animator.SetTrigger("Die");
+        // Animator.SetTrigger("Die");
 
         // Hurt
         if (currentHurtCount >= targetHurtCount)
         {
             Animator.SetTrigger("Hurt");
             InitializeHurtCount();
-
         }
-        return IAttackListener.AttackResult.Success;
 
+        return IAttackListener.AttackResult.Success;
     }
     public override void Die()
     {
