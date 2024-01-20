@@ -76,6 +76,8 @@ public class PreserveState : MonoBehaviour, IDestructionListener
     }
     private void OnDestroy()
     {
+        if (!Application.isPlaying)
+            return;
         if (_preserveTransform)
         {
             try

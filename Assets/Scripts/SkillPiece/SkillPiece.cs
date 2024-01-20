@@ -11,6 +11,7 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
         {
             PersistentDataManager.UpdateValue<int>("skillPiece", x => x + 1);
             Destruction.Destruct(gameObject);
+            GameUIManager.OpenSkillPieceObtainPanel();
         }
     }
 }
