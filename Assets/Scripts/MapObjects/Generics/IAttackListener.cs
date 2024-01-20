@@ -3,7 +3,8 @@ using UnityEngine;
 
 public enum AttackType
 {
-    BasicAttack
+    BasicAttack,
+    SkillAttack,
 }
 public class AttackInfo
 {

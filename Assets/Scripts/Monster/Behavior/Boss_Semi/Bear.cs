@@ -1,4 +1,4 @@
-using System.Threading;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum BearAttackType
@@ -20,6 +20,9 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     [Header("Bear")]
     [Space]
 
+    [SerializeField] private LayerMask _skillTargetLayer;
+    [SerializeField] private GameObject ImpactPrefab;
+    [SerializeField] private Vector2 _playerPos;
 
     [Header("Attack")]
     [Space]
@@ -37,6 +40,20 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     public int targetCount;
     public int currentCount;
 
+    [Header("Slash")]
+    [Space]
+
+    [SerializeField] private BoxCollider2D _slashCollider;
+    [SerializeField] private float _attackPowerX = 7f;
+    [SerializeField] private float _attackPowerY = 10f;
+    [SerializeField] private int _attackDamage = 20;
+
+    [Header("Body Slam")]
+    [Space]
+
+    [SerializeField] private BoxCollider2D _bodySlamCollider;
+    [SerializeField] private bool _isBodySlamming;
+
     [Header("Hurt")]
     [Space]
 
@@ -51,11 +68,39 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     {
         base.Start();
 
-        Initialize();
+        RandomTargetCount();
+        SetToRandomAttack();
     }
     protected override void Update()
     {
         base.Update();
+    }
+    private void FixedUpdate()
+    {
+        if (_isBodySlamming)
+        {
+            var rayCastHits = Physics2D.BoxCastAll(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, 0f, Vector2.zero, 0.0f, _skillTargetLayer);
+
+            foreach (var rayCastHit in rayCastHits)
+            {
+                IAttackListener.AttackResult attackResult = IAttackListener.AttackResult.Fail;
+
+                var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
+                foreach (var listener in listeners)
+                {
+                    Vector2 forceVector = new Vector2(_attackPowerX * 2f * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY * 1.5f);
+
+                    var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.SkillAttack));
+                    if (result == IAttackListener.AttackResult.Success)
+                        attackResult = IAttackListener.AttackResult.Success;
+                }
+
+                if (attackResult == IAttackListener.AttackResult.Success)
+                {
+                    Instantiate(ImpactPrefab, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                }
+            }
+        }
     }
     protected override void SetUp()
     {
@@ -75,12 +120,20 @@ public class Bear : MonsterBehavior, ILightCaptureListener
         IncreaseHurtCount();
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
-        // Die
-        // Animator.SetTrigger("Die");
-
         // Hurt
         if (currentHurtCount >= targetHurtCount)
         {
+            CurHp -= 10000;
+
+            // Die
+            if (CurHp <= 0)
+            {
+                CurHp = 0;
+                Animator.SetTrigger("Die");
+
+                return IAttackListener.AttackResult.Success;
+            }
+
             Animator.SetTrigger("Hurt");
             InitializeHurtCount();
         }
@@ -98,8 +151,6 @@ public class Bear : MonsterBehavior, ILightCaptureListener
         if (IsGroggy)
             return;
 
-        Debug.Log("Bear OnLightEnter");
-
         // 그로기 상태로 진입
         Animator.SetTrigger("Groggy");
     }
@@ -112,18 +163,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
         // Debug.Log("Bear OnLightExit");
     }
 
-    public void Initialize()
-    {
-        // Debug.Log("======== Bear Init ========");
-
-        // 1. 지진 공격까지 필요한 일반 공격 횟수
-        // 2. 다음에 실행할 일반 공격 설정
-
-        RandomTargetCount();
-        SetToRandomAttack();
-
-        // Debug.Log("============================");
-    }
+    // base
     public void AttackPreProcess()
     {
         // 현재 공격 상태 변경
@@ -145,8 +185,8 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     {
         if (currentCount >= targetCount)
         {
-            RandomTargetCount();
             SetToEarthQuake();
+            RandomTargetCount();
         }
         else
             SetToRandomAttack();
@@ -169,7 +209,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     {
         // Debug.Log("SetToRandomAttack");
 
-        int nextAttackNumber = Random.Range(1, 5); // 1 ~ 4
+        int nextAttackNumber = Random.Range(3, 4); // 1 ~ 4
         nextAttack = (BearAttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
@@ -189,5 +229,68 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     {
         currentHurtCount = 0;
         Animator.SetInteger("HurtCount", currentHurtCount);
+    }
+
+    // skill
+    public void Slash01_AnimEvent()
+    {
+        var playerPos = SceneContext.Current.Player.transform.position;
+
+        // 스킬 시전 시 플레이어의 위치를 기억
+        if (RecentDir > 0)
+        {
+            if (playerPos.x > transform.position.x)
+                _playerPos = playerPos;
+        }
+        else if (RecentDir < 0)
+        {
+            if (playerPos.x < transform.position.x)
+                _playerPos = playerPos;
+        }
+    }
+    public void Slash02_AnimEvent()
+    {
+        Debug.DrawRay(_playerPos, Vector2.up, Color.red, 0.15f);
+        Debug.DrawRay(_playerPos, Vector2.down, Color.red, 0.15f);
+        Debug.DrawRay(_playerPos, Vector2.right, Color.red, 0.15f);
+        Debug.DrawRay(_playerPos, Vector2.left, Color.red, 0.15f);
+
+        RaycastHit2D[] rayCastHits = Physics2D.BoxCastAll(_playerPos, _slashCollider.bounds.size, 0f, Vector2.zero, 0.0f, _skillTargetLayer);
+        foreach (var rayCastHit in rayCastHits)
+        {
+            IAttackListener.AttackResult attackResult = IAttackListener.AttackResult.Fail;
+
+            var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
+            foreach (var listener in listeners)
+            {
+                Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
+
+                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.SkillAttack));
+                if (result == IAttackListener.AttackResult.Success)
+                    attackResult = IAttackListener.AttackResult.Success;
+            }
+
+            if (attackResult == IAttackListener.AttackResult.Success)
+            {
+                Instantiate(ImpactPrefab, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+            }
+        }
+    }
+    public void BodySlam01_AnimEvent()
+    {
+        var playerPos = SceneContext.Current.Player.transform.position;
+        var dir = System.Math.Sign(playerPos.x - transform.position.x);
+        SetRecentDir(dir);
+    }
+    public void BodySlam02_AnimEvent()
+    {
+        _isBodySlamming = true;
+        Rigidbody.AddForce(300f * Vector2.right * RecentDir, ForceMode2D.Impulse);
+    }
+    public void BodySlam03_AnimEvent()
+    {
+        Debug.Log("Velocity Zero");
+        Rigidbody.velocity = Vector2.zero;
+        _isBodySlamming = false;
     }
 }

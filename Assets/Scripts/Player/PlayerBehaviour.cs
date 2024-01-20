@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEditor.Rendering;
 using UnityEngine;
 
-public class PlayerBehaviour : StateMachineBase
+public class PlayerBehaviour : StateMachineBase, IAttackListener
 {
     #region Attribute
 
@@ -520,5 +520,31 @@ public class PlayerBehaviour : StateMachineBase
         Gizmos.color = Color.white;
         Gizmos.DrawLine(_groundCheckTrans.position + UtilDefine.PaddingVector,
             _groundCheckTrans.position + UtilDefine.PaddingVector + Vector3.down * _diveCheckLength);
+    }
+
+    public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
+    {
+        // return condition
+        if (IsHurt || IsGodMode || IsDead)
+            return IAttackListener.AttackResult.Fail;
+
+        CurHp -= (int)attackInfo.Damage;
+        PlaySound_SE_Hurt_02();
+
+        // Change Die State
+        if (CurHp <= 0)
+        {
+            CurHp = 0;
+            ChangeState<DieState>();
+
+            return IAttackListener.AttackResult.Success;
+        }
+
+        KnockBack(attackInfo.Force);
+
+        // Change Hurt State
+        ChangeState<HurtState>();
+
+        return IAttackListener.AttackResult.Success;
     }
 }
