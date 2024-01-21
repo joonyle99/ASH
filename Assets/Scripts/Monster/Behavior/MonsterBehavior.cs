@@ -372,6 +372,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // Check Hurt or Die Process
         CheckHurtOrDieProcess();
+
         return IAttackListener.AttackResult.Success;
     }
     public virtual void Die()

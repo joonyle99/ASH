@@ -29,6 +29,7 @@ public class PlayerAttackController : MonoBehaviour
     [Header("Effects")]
     [SerializeField] ParticleHelper[] _attackEffects;
     [SerializeField] GameObject _basicAttackImpactPrefab;
+
     public bool IsBasicAttacking
     {
         get => _isBasicAttacking;
