@@ -5,6 +5,7 @@ public enum AttackType
 {
     BasicAttack,
     SkillAttack,
+    GimmickAttack,
 }
 public class AttackInfo
 {
