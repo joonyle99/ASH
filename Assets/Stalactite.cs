@@ -4,25 +4,14 @@ using UnityEngine;
 
 public class Stalactite : MonoBehaviour
 {
-    private Rigidbody2D _rigidbody;
-
     [SerializeField] private LayerMask _targetLayer;
     [SerializeField] private LayerMask _destroyLayer;
-
-    [SerializeField] private float _fallingStartTime;
-    [SerializeField] private float _elapsedTime;
 
     [SerializeField] private float _attackPowerX = 7f;
     [SerializeField] private float _attackPowerY = 10f;
     [SerializeField] private int _attackDamage = 20;
 
     [SerializeField] private GameObject ImpactPrefab;
-
-    private void Awake()
-    {
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _fallingStartTime = Random.Range(0.2f, 1.5f);
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -53,22 +42,5 @@ public class Stalactite : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    public void StartMessage()
-    {
-        Debug.Log(this.gameObject.name + " start to fall");
-
-        StartCoroutine(Falling());
-    }
-
-    private IEnumerator Falling()
-    {
-        // 낙하 전 흔들거리는 연출
-
-        yield return new WaitForSeconds(_fallingStartTime);
-
-        // 연출 종료 후 낙하
-        _rigidbody.constraints = RigidbodyConstraints2D.None;
     }
 }

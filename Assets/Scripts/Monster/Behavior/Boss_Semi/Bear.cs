@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -23,6 +24,10 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     [SerializeField] private LayerMask _skillTargetLayer;
     [SerializeField] private GameObject ImpactPrefab;
     [SerializeField] private Vector2 _playerPos;
+
+    [Space]
+
+    [SerializeField] private BoxCollider2D _mainCollider;
 
     [Header("Attack")]
     [Space]
@@ -58,7 +63,8 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     [Space]
 
     [SerializeField] private BoxCollider2D _stompCollider;
-
+    [SerializeField] private GameObject _stalactitePrefab;
+    [SerializeField] private int _stalactiteCount = 5;
 
     [Header("Hurt")]
     [Space]
@@ -324,12 +330,25 @@ public class Bear : MonsterBehavior, ILightCaptureListener
             }
         }
 
-        // 우선 씬에 있는 모든 종유석을 가져온다.
-        var stalactites = GameObject.FindGameObjectsWithTag("Stalactite");
-        foreach (var stalactite in stalactites)
+        for(int i = 0; i < _stalactiteCount; i++)
         {
-            // 현재 씬에 있는 모든 종유석에게 떨어지라는 메시지를 보낸다.
-            stalactite.GetComponent<Stalactite>().StartMessage();
+            StartCoroutine(CreateObject());
         }
+    }
+
+    public IEnumerator CreateObject()
+    {
+        var fallingStartTime = Random.Range(0.2f, 1.5f);
+
+        yield return new WaitForSeconds(fallingStartTime);
+
+        // 종유석을 랜덤 위치에 생성한다
+        Vector2 randomPos = Vector2.zero;
+        if (Random.value > 0.5f)
+            randomPos = new Vector2(Random.Range(-150f, _mainCollider.bounds.min.x - 3.0f), 18.3f);
+        else
+            randomPos = new Vector2(Random.Range(_mainCollider.bounds.max.x + 3.0f, -125f), 18.3f);
+
+        var stalactite = Instantiate(_stalactitePrefab, randomPos, Quaternion.identity);
     }
 }
