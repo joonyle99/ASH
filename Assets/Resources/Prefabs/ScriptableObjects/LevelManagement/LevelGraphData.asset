@@ -1,5 +1,24 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7888092096887817785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 663b17a57f390764884816d4daac5a17
+  graphPosition: {x: 369.06247, y: -0.0000019073486}
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 8022db8fd7901954bb97eb0dbd31e359, type: 3}
+    scenePath: Assets/Scenes/Test/JH/Boss_1.unity
+  PassageNames:
+  - doorto2
 --- !u!114 &-2869098507112400628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,8 +72,33 @@ MonoBehaviour:
   _nodes:
   - {fileID: -2014745427570758710}
   - {fileID: -2869098507112400628}
+  - {fileID: -7888092096887817785}
+  - {fileID: 6500535830191988829}
   _edges:
   - EntranceScene: {fileID: -2014745427570758710}
     ExitScene: {fileID: -2869098507112400628}
     EntrancePassage: Exit_1
     ExitPassgage: Exit_2
+  - EntranceScene: {fileID: -7888092096887817785}
+    ExitScene: {fileID: 6500535830191988829}
+    EntrancePassage: doorto2
+    ExitPassgage: doorto1
+--- !u!114 &6500535830191988829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 599047ce7d2f62f4c8f4c5b97b07e64d
+  graphPosition: {x: 587.45746, y: 0}
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: aeae6a385217a5a40b752f7b06abf2ad, type: 3}
+    scenePath: Assets/Scenes/Test/JH/Boss_2.unity
+  PassageNames:
+  - doorto1
