@@ -54,6 +54,12 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     [SerializeField] private BoxCollider2D _bodySlamCollider;
     [SerializeField] private bool _isBodySlamming;
 
+    [Header("Stomp")]
+    [Space]
+
+    [SerializeField] private BoxCollider2D _stompCollider;
+
+
     [Header("Hurt")]
     [Space]
 
@@ -209,7 +215,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     {
         // Debug.Log("SetToRandomAttack");
 
-        int nextAttackNumber = Random.Range(3, 4); // 1 ~ 4
+        int nextAttackNumber = Random.Range(4, 5); // 1 ~ 4
         nextAttack = (BearAttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
@@ -292,5 +298,38 @@ public class Bear : MonsterBehavior, ILightCaptureListener
         Debug.Log("Velocity Zero");
         Rigidbody.velocity = Vector2.zero;
         _isBodySlamming = false;
+    }
+    public void Stomp01_AnimEvent()
+    {
+        // 발 구르기는 한 프레임만 RayCast
+        RaycastHit2D[] rayCastHits = Physics2D.BoxCastAll(_stompCollider.transform.position, _stompCollider.bounds.size, 0f, Vector2.zero, 0.0f, _skillTargetLayer);
+
+        foreach (var rayCastHit in rayCastHits)
+        {
+            IAttackListener.AttackResult attackResult = IAttackListener.AttackResult.Fail;
+
+            var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
+            foreach (var listener in listeners)
+            {
+                Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
+
+                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.SkillAttack));
+                if (result == IAttackListener.AttackResult.Success)
+                    attackResult = IAttackListener.AttackResult.Success;
+            }
+
+            if (attackResult == IAttackListener.AttackResult.Success)
+            {
+                Instantiate(ImpactPrefab, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+            }
+        }
+
+        // 우선 씬에 있는 모든 종유석을 가져온다.
+        var stalactites = GameObject.FindGameObjectsWithTag("Stalactite");
+        foreach (var stalactite in stalactites)
+        {
+            // 현재 씬에 있는 모든 종유석에게 떨어지라는 메시지를 보낸다.
+            stalactite.GetComponent<Stalactite>().StartMessage();
+        }
     }
 }
