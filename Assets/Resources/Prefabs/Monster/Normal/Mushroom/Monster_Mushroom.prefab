@@ -32,83 +32,6 @@ Transform:
   m_Father: {fileID: 6245278010981781747}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6245278010740040794
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6245278010740040795}
-  - component: {fileID: 6245278010740040789}
-  - component: {fileID: 6245278010740040788}
-  m_Layer: 16
-  m_Name: MonsterHitBox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &6245278010740040795
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6245278010740040794}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6245278011087359364}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &6245278010740040789
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6245278010740040794}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.06669617, y: -0.27794456}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 2.1784973, y: 1.5114174}
-  m_EdgeRadius: 0
---- !u!114 &6245278010740040788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6245278010740040794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9416f7e7a68fbf42b28ccbdd52cbbe6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _targetLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _bodyAttackDamage: 5
-  _forceXPower: 7
-  _forceYPower: 10
 --- !u!1 &6245278010815958958
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,7 +249,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6245278011087359364
 Transform:
   m_ObjectHideFlags: 0
@@ -342,7 +265,6 @@ Transform:
   - {fileID: 6245278011246148221}
   - {fileID: 6245278011834927647}
   - {fileID: 6245278010981781747}
-  - {fileID: 6245278010740040795}
   - {fileID: 6245278012538675724}
   - {fileID: 6245278012309545934}
   - {fileID: 6245278011878361095}
@@ -411,7 +333,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0
-  m_GravityScale: 1
+  m_GravityScale: 5
   m_Material: {fileID: 6200000, guid: ea4460efb9324b34889b52a932903051, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -442,16 +364,19 @@ MonoBehaviour:
   _isGround: 0
   _isInAir: 0
   _isSuperArmor: 0
+  _isGodMode: 0
+  _isGroggy: 0
   _isHit: 0
   _isHurt: 0
   _isDead: 0
   _monsterData: {fileID: 11400000, guid: a314028ac35e2c044a8819fb6324ff51, type: 2}
-  _name: 
+  _monsterName: 
   _maxHp: 0
   _curHp: 0
   _moveSpeed: 0
   _acceleration: 0
   _jumpForce: {x: 0, y: 0}
+  _rankType: 0
   _moveType: 0
   _groundCheckLayer:
     serializedVersion: 2
@@ -1091,7 +1016,7 @@ GameObject:
   - component: {fileID: 6245278011878361095}
   - component: {fileID: 6245278011878361088}
   m_Layer: 9
-  m_Name: CautionCheckPoint
+  m_Name: CautionCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1110,7 +1035,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6245278011087359364}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &6245278011878361088
 BoxCollider2D:
@@ -1504,7 +1429,7 @@ GameObject:
   - component: {fileID: 6245278012309545934}
   - component: {fileID: 6245278012309545933}
   m_Layer: 9
-  m_Name: AttackCheckPoint
+  m_Name: AttackCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1523,7 +1448,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6245278011087359364}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &6245278012309545933
 BoxCollider2D:
@@ -1594,7 +1519,7 @@ GameObject:
   - component: {fileID: 6245278012538675724}
   - component: {fileID: 6245278012538675725}
   m_Layer: 9
-  m_Name: GroundCheckPoint
+  m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1613,7 +1538,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6245278011087359364}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &6245278012538675725
 BoxCollider2D:
@@ -1695,6 +1620,34 @@ PrefabInstance:
     - target: {fileID: 1662691148554055557, guid: 6664211559f225e46b46e285739658f3, type: 3}
       propertyPath: m_Name
       value: Devour Devour Attack
+      objectReference: {fileID: 0}
+    - target: {fileID: 1662691148554055559, guid: 6664211559f225e46b46e285739658f3, type: 3}
+      propertyPath: _forceXPower
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1662691148554055559, guid: 6664211559f225e46b46e285739658f3, type: 3}
+      propertyPath: _skillDamage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1662691148554055559, guid: 6664211559f225e46b46e285739658f3, type: 3}
+      propertyPath: _skillForceX
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1662691148554055559, guid: 6664211559f225e46b46e285739658f3, type: 3}
+      propertyPath: _skillForceY
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1662691148554055559, guid: 6664211559f225e46b46e285739658f3, type: 3}
+      propertyPath: _hitEffectPrefab
+      value: 
+      objectReference: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+    - target: {fileID: 1662691148554055559, guid: 6664211559f225e46b46e285739658f3, type: 3}
+      propertyPath: _skillAttackType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1662691148554055559, guid: 6664211559f225e46b46e285739658f3, type: 3}
+      propertyPath: _skillTargetLayer.m_Bits
+      value: 256
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6664211559f225e46b46e285739658f3, type: 3}

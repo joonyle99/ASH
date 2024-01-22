@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4707954114646598042}
   - component: {fileID: 1687034788766365448}
   m_Layer: 10
-  m_Name: Wave
+  m_Name: Bear_GroundWaveAttackPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,13 +124,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98d7d1e61d97b1049bb7eed97951347a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetLayer:
+  _skillAttackType: 3
+  _skillTargetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _attackPowerX: 7
-  _attackPowerY: 10
-  _attackDamage: 20
-  ImpactPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
-  _dir: {x: 0, y: 0}
+  _skillDestroyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _skillDamage: 5
+  _skillForceX: 7
+  _skillForceY: 10
+  _hitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+  _moveDir: {x: 0, y: 0}
   _targetDistance: 14
-  _elapsedDistance: 0
+  _elapsedMoveDistance: 0

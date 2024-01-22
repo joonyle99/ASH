@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 262875072}
   - component: {fileID: 262875073}
   m_Layer: 9
-  m_Name: AttackCheckPoint
+  m_Name: AttackCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -580,16 +580,19 @@ MonoBehaviour:
   _isGround: 0
   _isInAir: 0
   _isSuperArmor: 0
+  _isGodMode: 0
+  _isGroggy: 0
   _isHit: 0
   _isHurt: 0
   _isDead: 0
   _monsterData: {fileID: 11400000, guid: 8e99bafb1cb583d42ad075bff16cd758, type: 2}
-  _name: 
+  _monsterName: 
   _maxHp: 0
   _curHp: 0
   _moveSpeed: 0
   _acceleration: 0
   _jumpForce: {x: 0, y: 0}
+  _rankType: 0
   _moveType: 0
   _groundCheckLayer:
     serializedVersion: 2
@@ -719,7 +722,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1515515473483279165
 Transform:
   m_ObjectHideFlags: 0
@@ -1049,6 +1052,8 @@ MonoBehaviour:
   _bodyAttackDamage: 5
   _forceXPower: 7
   _forceYPower: 9
+  _isAttackable: 1
+  _isHurtable: 1
 --- !u!1 &3027515661593111554
 GameObject:
   m_ObjectHideFlags: 0

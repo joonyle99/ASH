@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6190995042310891285}
   - component: {fileID: 6190995042310891283}
   m_Layer: 10
-  m_Name: "\uC885\uC720\uC11D"
+  m_Name: Bear_StalactiteAttackPrefab
   m_TagString: Stalactite
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,16 +95,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562d96777a39c6d478f918bede02a672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetLayer:
+  _skillAttackType: 3
+  _skillTargetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _destroyLayer:
+  _skillDestroyLayer:
     serializedVersion: 2
-    m_Bits: 8
-  _attackPowerX: 7
-  _attackPowerY: 10
-  _attackDamage: 20
-  ImpactPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+    m_Bits: 2056
+  _skillDamage: 5
+  _skillForceX: 7
+  _skillForceY: 10
+  _hitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
 --- !u!1 &5326780676511029834
 GameObject:
   m_ObjectHideFlags: 0

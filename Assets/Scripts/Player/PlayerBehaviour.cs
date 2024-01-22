@@ -262,10 +262,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         if (CanShootingAttack)
             _attackController.CastShootingAttack();
     }
-    void OnHealingPressed()
-    {
-
-    }
 
     // about hit
     public void KnockBack(Vector2 forceVector)
@@ -273,13 +269,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Rigidbody.velocity = Vector2.zero;
         Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
     }
-    public void OnHit(int damage, Vector2 forceVector)
+    public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        // return condition
+        // fail return condition
         if (IsHurt || IsGodMode || IsDead)
-            return;
+            return IAttackListener.AttackResult.Fail;
 
-        CurHp -= damage;
+        CurHp -= (int)attackInfo.Damage;
         PlaySound_SE_Hurt_02();
 
         // Change Die State
@@ -288,13 +284,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
             CurHp = 0;
             ChangeState<DieState>();
 
-            return;
+            return IAttackListener.AttackResult.Success;
         }
 
-        KnockBack(forceVector);
+        KnockBack(attackInfo.Force);
 
         // Change Hurt State
         ChangeState<HurtState>();
+
+        return IAttackListener.AttackResult.Success;
     }
     public void OnHitbyPuddle(float damage)
     {
@@ -512,31 +510,5 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Gizmos.color = Color.white;
         Gizmos.DrawLine(_groundCheckTrans.position + UtilDefine.PaddingVector,
             _groundCheckTrans.position + UtilDefine.PaddingVector + Vector3.down * _diveCheckLength);
-    }
-
-    public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
-    {
-        // return condition
-        if (IsHurt || IsGodMode || IsDead)
-            return IAttackListener.AttackResult.Fail;
-
-        CurHp -= (int)attackInfo.Damage;
-        PlaySound_SE_Hurt_02();
-
-        // Change Die State
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-            ChangeState<DieState>();
-
-            return IAttackListener.AttackResult.Success;
-        }
-
-        KnockBack(attackInfo.Force);
-
-        // Change Hurt State
-        ChangeState<HurtState>();
-
-        return IAttackListener.AttackResult.Success;
     }
 }

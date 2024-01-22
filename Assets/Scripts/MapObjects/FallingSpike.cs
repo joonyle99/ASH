@@ -19,7 +19,7 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
     }
     public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        if (attackInfo.Type == AttackType.BasicAttack)
+        if (attackInfo.Type == AttackType.Player_BasicAttack)
         {
             Destroy(gameObject);
             return IAttackListener.AttackResult.Success;

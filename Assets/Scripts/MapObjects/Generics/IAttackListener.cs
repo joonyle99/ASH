@@ -3,15 +3,19 @@ using UnityEngine;
 
 public enum AttackType
 {
-    BasicAttack,
-    SkillAttack,
+    Player_BasicAttack,
+    Player_SkillAttack,
+    Monster_BodyAttack,
+    Monster_BasicAttack,
+    Monster_SkillAttack,
+
     GimmickAttack,
 }
 public class AttackInfo
 {
     public float Damage = 1f;
     public Vector2 Force = Vector2.zero;
-    public AttackType Type = AttackType.BasicAttack;
+    public AttackType Type = AttackType.Player_BasicAttack;
 
     // »ý¼ºÀÚ
     public AttackInfo(float damage, Vector2 force, AttackType type)
