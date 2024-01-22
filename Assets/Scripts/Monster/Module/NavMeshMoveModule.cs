@@ -26,6 +26,10 @@ public class NavMeshMoveModule : MonoBehaviour
     {
         _agent.SetDestination(_destPosition);
     }
+    public void SetVelocityZero()
+    {
+        _agent.velocity = Vector3.zero;
+    }
     public void SetStopAgent(bool isStop)
     {
         _agent.isStopped = isStop;

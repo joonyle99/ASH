@@ -15,7 +15,7 @@ public class LaserFlower : MonoBehaviour, IAttackListener
     }
     public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        if (_hp > 0 && attackInfo.Type == AttackType.BasicAttack)
+        if (_hp > 0 && attackInfo.Type == AttackType.Player_BasicAttack)
         {
             if(--_hp <= 0)
                 Close();

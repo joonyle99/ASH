@@ -1,4 +1,3 @@
-using System.Threading;
 using UnityEngine;
 
 public class Turtle : MonsterBehavior
@@ -38,6 +37,7 @@ public class Turtle : MonsterBehavior
         // Change to Hurt State
         if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundPatrolState>())
             Animator.SetTrigger("Hurt");
+
         return IAttackListener.AttackResult.Success;
     }
     public override void Die()
@@ -45,7 +45,7 @@ public class Turtle : MonsterBehavior
         // Trigger -> Collision
         TurnToCollisionHitBox();
 
-        // disable monster collider
+        // disable monster main collider
         GetComponent<Collider2D>().enabled = false;
     }
 }

@@ -1,9 +1,8 @@
-using System.ComponentModel;
 using UnityEngine;
 
-public class Monster_StateBase : StateMachineBehaviour
+public abstract class Monster_StateBase : StateMachineBehaviour
 {
-    [Header("State Base")]
+    [Header("Monster_StateBase")]
     [Space]
 
     [Header("Auto Change State")]

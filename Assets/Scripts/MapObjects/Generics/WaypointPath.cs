@@ -11,6 +11,11 @@ public class WaypointPath : MonoBehaviour
 
     float _totalDistance = 0;
     public float TotalDistance => _totalDistance;
+    public Transform this[int i]
+    {
+        get => _wayPoints[i];
+    }
+    public int Count => _wayPoints.Length;
     private void Awake()
     {
         var transforms = GetComponentsInChildren<Transform>();

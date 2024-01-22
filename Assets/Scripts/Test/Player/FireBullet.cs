@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class FireBullet : MonoBehaviour
 {
+    /* 삭제 예정
     [Header("Bullet Setting")]
 
     [Space]
@@ -39,4 +40,5 @@ public class FireBullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    */
 }

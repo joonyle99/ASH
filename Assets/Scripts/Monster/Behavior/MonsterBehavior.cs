@@ -1,10 +1,4 @@
-using System;
 using System.Collections;
-using System.Threading;
-using TMPro;
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -18,6 +12,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     // Basic Component
     public Rigidbody2D Rigidbody { get; private set; }
     public Animator Animator { get; private set; }
+
+    [Header("MonsterBehavior")]
+    [Space]
 
     [Header("State")]
     [Space]
@@ -119,12 +116,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         get => _isGodMode;
         set => _isGodMode = value;
-    }
-    [SerializeField] private bool _isGroggy;
-    public bool IsGroggy
-    {
-        get => _isGroggy;
-        set => _isGroggy = value;
     }
     [SerializeField] private bool _isHit;
     public bool IsHit
@@ -311,13 +302,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 break;
         }
 
-        // attack
+        // range based attack by attack evaluator
         if (AttackEvaluator)
         {
             if (AttackEvaluator.IsTargetWithinRange())
             {
-                // Debug.Log("쿨타임 작동 X 범위 안에 들어옴");
-
                 AttackEvaluator.StartCoolTimeCoroutine();
                 Animator.SetTrigger("Attack");
             }
@@ -350,6 +339,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public virtual void KnockBack(Vector2 forceVector)
     {
         var navMesh = GetComponent<NavMeshAgent>();
+
         if (navMesh)
             navMesh.velocity = forceVector / 1.5f;
         else
@@ -380,8 +370,52 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // Disable Hit Box
         TurnOffHitBox();
 
-        // 사라지기 시작
-        StartDestroy();
+        StartCoroutine(DeathCoroutine());
+    }
+    IEnumerator DeathCoroutine()
+    {
+        yield return StartCoroutine(DeathEffectCoroutine());
+
+        if (transform.root) Destroy(transform.root.gameObject);
+        else Destroy(gameObject);
+    }
+    protected virtual IEnumerator DeathEffectCoroutine()
+    {
+        // Fade Out Effect
+
+        SpriteRenderer[] currentSpriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        float[] startAlphaArray = new float[currentSpriteRenderers.Length];
+        for (int i = 0; i < currentSpriteRenderers.Length; i++)
+            startAlphaArray[i] = currentSpriteRenderers[i].color.a;
+
+        while (_elapsedFadeOutTime < _targetFadeOutTime)
+        {
+            _elapsedFadeOutTime += Time.deltaTime;
+            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
+
+            for (int i = 0; i < currentSpriteRenderers.Length; i++)
+            {
+                Color targetColor = currentSpriteRenderers[i].color;
+                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
+                currentSpriteRenderers[i].color = targetColor;
+            }
+
+            yield return null;
+        }
+    }
+
+    // basic
+    public void SetRecentDir(int targetDir)
+    {
+        // flip을 시킬지에 대한 값
+        int flipValue = RecentDir * targetDir;
+
+        // 바라보는 방향 변경
+        RecentDir = targetDir;
+
+        // 바라보는 방향으로 Flip
+        transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
 
     // hitBox
@@ -436,43 +470,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public void StartHurtableHitBox()
     {
         StartCoroutine(HurtableHitBox(true));
-    }
-
-    // basic
-    public void SetRecentDir(int targetDir)
-    {
-        // flip을 시킬지에 대한 값
-        int flipValue = RecentDir * targetDir;
-
-        // 바라보는 방향 변경
-        RecentDir = targetDir;
-
-        // 바라보는 방향으로 Flip
-        transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
-    }
-    public void HitProcess(AttackInfo attackInfo)
-    {
-        StartHitTimer();
-        CurHp -= (int)attackInfo.Damage;
-        KnockBack(attackInfo.Force);
-        GetComponent<SoundList>().PlaySFX("SE_Hurt");
-    }
-    public void CheckHurtOrDieProcess()
-    {
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-            Animator.SetTrigger("Die");
-
-            return;
-        }
-
-        // superArmor is started when monster attack
-        // superArmor : hurt animation x
-        if (IsSuperArmor)
-            return;
-
-        Animator.SetTrigger("Hurt");
     }
 
     // flash
@@ -549,7 +546,31 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         this._superArmorRoutine = StartCoroutine(SuperArmorFlash());
     }
 
-    // hit
+    // hit & die
+    public void HitProcess(AttackInfo attackInfo)
+    {
+        StartHitTimer();
+        CurHp -= (int)attackInfo.Damage;
+        KnockBack(attackInfo.Force);
+        GetComponent<SoundList>().PlaySFX("SE_Hurt");
+    }
+    public void CheckHurtOrDieProcess()
+    {
+        if (CurHp <= 0)
+        {
+            CurHp = 0;
+            Animator.SetTrigger("Die");
+
+            return;
+        }
+
+        // superArmor is started when monster attack
+        // superArmor : hurt animation x
+        if (IsSuperArmor)
+            return;
+
+        Animator.SetTrigger("Hurt");
+    }
     private IEnumerator HitTimer()
     {
         IsHit = true;
@@ -560,41 +581,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         StartCoroutine(HitTimer());
     }
-
-    // die
-    private IEnumerator FadeOutDestroy()
-    {
-        SpriteRenderer[] currentSpriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
-
-        float[] startAlphaArray = new float[currentSpriteRenderers.Length];
-        for (int i = 0; i < currentSpriteRenderers.Length; i++)
-            startAlphaArray[i] = currentSpriteRenderers[i].color.a;
-
-        while (_elapsedFadeOutTime < _targetFadeOutTime)
-        {
-            _elapsedFadeOutTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
-
-            for (int i = 0; i < currentSpriteRenderers.Length; i++)
-            {
-                Color targetColor = currentSpriteRenderers[i].color;
-                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
-                currentSpriteRenderers[i].color = targetColor;
-            }
-
-            yield return null;
-        }
-
-        if (transform.root) Destroy(transform.root.gameObject);
-        else Destroy(gameObject);
-
-        yield return null;
-    }
-    public void StartDestroy()
-    {
-        StartCoroutine(FadeOutDestroy());
-    }
-
     // state
     private void InitState()
     {

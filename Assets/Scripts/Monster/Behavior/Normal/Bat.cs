@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading;
 using UnityEngine;
 
@@ -6,16 +7,14 @@ public class Bat : MonsterBehavior
     [Header("Bat")]
     [Space]
 
-    [SerializeField] private BatSkillParticle _batSkillPrefab;
+    [SerializeField] private Bat_SprinkleAttack _batSkillPrefab;
     [SerializeField] private Transform _shootPosition;
     [SerializeField] private Sprite[] _skillSprites;
+
     private int _particleCount = 8;
     private float _shootingPower = 6f;
     private float _shootingAngle = 60f;
     private float _shootingVariant = 30f;
-
-    // Etc
-    // private int _countOfUpdate = 0;
 
     protected override void Awake()
     {
@@ -28,14 +27,6 @@ public class Bat : MonsterBehavior
     protected override void Update()
     {
         base.Update();
-
-        /*
-        // TODO : temp code
-        _countOfUpdate++;
-
-        if (_countOfUpdate == 1)
-            return;
-        */
 
         if (FloatingChaseEvaluator)
         {
@@ -70,16 +61,24 @@ public class Bat : MonsterBehavior
     {
         return base.OnHit(attackInfo);
     }
-    public override void Die()
+    protected override IEnumerator DeathEffectCoroutine()
     {
-        base.Die();
+        var effect = GetComponent<DisintegrateEffect>();
+        yield return new WaitForSeconds(0.3f);
+
+        //Stop movement
+        var navMeshMoveModule = GetComponent<NavMeshMoveModule>();
+        navMeshMoveModule.SetVelocityZero();
+
+        effect.Play();
+        yield return new WaitUntil(() => effect.IsEffectDone);
     }
 
     public void SprinkleParticle_AnimEvent()
     {
         for (int i = 0; i < _particleCount; i++)
         {
-            BatSkillParticle particle = Instantiate(_batSkillPrefab, _shootPosition.position, Quaternion.identity);
+            Bat_SprinkleAttack particle = Instantiate(_batSkillPrefab, _shootPosition.position, Quaternion.identity);
             particle.SetSprite(_skillSprites[i % (_skillSprites.Length)]);
             float angle = (i % 2 == 0) ? _shootingAngle : -_shootingAngle;
             particle.Shoot(Random.Range(-_shootingVariant, _shootingVariant) + angle, _shootingPower);

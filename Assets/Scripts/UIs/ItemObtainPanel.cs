@@ -24,7 +24,8 @@ public class ItemObtainPanel : MonoBehaviour
     }
     public void Open(ItemObtainInfo info)
     {
-        _icon.sprite = info.Icon;
+        if (info.Icon != null) 
+            _icon.sprite = info.Icon;
         _mainText.text = info.MainText;
         _detailText.text = info.DetailText;
         gameObject.SetActive(true);
