@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Frog_TongueAttack : Monster_SkillAttack
+public class Bear_Stalactite : Monster_SkillObject
 {
     protected override void OnTriggerEnter2D(Collider2D collision)
     {

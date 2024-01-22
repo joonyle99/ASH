@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class Bat_SprinkleAttack : Monster_SkillAttack
+public class Bat_Sprinkle : Monster_SkillObject
 {
-    [Header("Bat_SprinkleAttack")]
+    [Header("Bat_Sprinkle")]
     [Space]
 
     private Rigidbody2D _rigidbody;

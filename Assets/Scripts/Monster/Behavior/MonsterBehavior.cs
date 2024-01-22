@@ -7,6 +7,18 @@ using UnityEngine.AI;
 /// </summary>
 public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
+    public class MonsterAttackInfo
+    {
+        public float Damage = 1f;
+        public Vector2 Force = Vector2.zero;
+
+        public MonsterAttackInfo(float damage, Vector2 force)
+        {
+            Damage = damage;
+            Force = force;
+        }
+    }
+
     #region Attribute
 
     // Basic Component
@@ -191,6 +203,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _moveType;
         protected set => _moveType = value;
     }
+
+    [Header("Basic Attack")]
+    [Space]
+
+    [SerializeField] protected LayerMask _attackTargetLayer;
+    [SerializeField] protected GameObject _attackHitEffect;
 
     [Header("Ground Check")]
     [Space]
@@ -416,6 +434,22 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
+    }
+    public void BoxCastAttack(Vector2 targetPosition, Vector2 attackBoxSize, MonsterAttackInfo attackinfo, LayerMask targetLayer)
+    {
+        RaycastHit2D[] rayCastHits = Physics2D.BoxCastAll(targetPosition, attackBoxSize, 0f, Vector2.zero, 0.0f, targetLayer);
+        foreach (var rayCastHit in rayCastHits)
+        {
+            var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
+            foreach (var listener in listeners)
+            {
+                var forceVector = new Vector2(attackinfo.Force.x * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), attackinfo.Force.y);
+                var attackResult = listener.OnHit(new AttackInfo(attackinfo.Damage, forceVector, AttackType.Monster_SkillAttack));
+
+                if (attackResult == IAttackListener.AttackResult.Success)
+                    Instantiate(_attackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+            }
+        }
     }
 
     // hitBox

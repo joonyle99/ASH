@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class Bear_GroundWaveAttack : Monster_SkillAttack
+public class Bear_GroundWave : Monster_SkillObject
 {
-    [Header("Bear_GroundWaveAttack")]
+    [Header("Bear_GroundWave")]
     [Space]
 
     [SerializeField] private Vector2 _moveDir = Vector2.zero;
