@@ -1,15 +1,10 @@
 using UnityEngine;
 
-// TODO : Bear AttackState가 아닌 Boss AttackState로 일반화 하기
-public class Bear_AttackState : Monster_AttackState
+public class SemiBoss_GroggyEndState : SemiBoss_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
-
-        var bear = Monster as Bear;
-        if (bear != null)
-            bear.AttackPreProcess();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -21,8 +16,10 @@ public class Bear_AttackState : Monster_AttackState
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        var bear = Monster as Bear;
-        if (bear != null)
-            bear.AttackPostProcess();
+        SemiBoss.IsGroggy = false;
+        SemiBoss.IsGodMode = true;
+
+        // 몬스터의 MonsterBodyHit Attack 기능을 켠다
+        SemiBoss.SetIsAttackableHitBox(true);
     }
 }

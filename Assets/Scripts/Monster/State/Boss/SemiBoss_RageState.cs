@@ -1,7 +1,6 @@
-using System.Threading;
 using UnityEngine;
 
-public class Bear_GroggyHurtState : Monster_HurtState
+public class SemiBoss_RageState : SemiBoss_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -16,5 +15,7 @@ public class Bear_GroggyHurtState : Monster_HurtState
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
+
+        // TODO : 보스가 격노하면 이동속도 / 공격속도 증가
     }
 }

@@ -1026,12 +1026,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9416f7e7a68fbf42b28ccbdd52cbbe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetLayer:
+  _bodyHitTargetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _bodyAttackDamage: 5
-  _forceXPower: 7
-  _forceYPower: 10
+  _bodyHitDamage: 5
+  _bodyHitForceX: 7
+  _bodyHitForceY: 9
+  _fromHitEffectPrefab: {fileID: 0}
+  _toHitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
   _isAttackable: 1
   _isHurtable: 1
 --- !u!1 &3133137046812712839
@@ -1333,7 +1335,6 @@ MonoBehaviour:
   _isInAir: 0
   _isSuperArmor: 0
   _isGodMode: 0
-  _isGroggy: 0
   _isHit: 0
   _isHurt: 0
   _isDead: 0
@@ -1350,7 +1351,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _groundCheckCollider: {fileID: 4687417800941568456}
-  _tonguePrefab: {fileID: 5723251706487992014, guid: 53d1ff87c3a6cfd459fe5efee22b35a0, type: 3}
+  _tonguePrefab: {fileID: 8954216386937463874, guid: 53d1ff87c3a6cfd459fe5efee22b35a0, type: 3}
   _mouthTrans: {fileID: 803259526547706384}
   _tongueLength: 10
   _targetTongueAttackTime: 0.1

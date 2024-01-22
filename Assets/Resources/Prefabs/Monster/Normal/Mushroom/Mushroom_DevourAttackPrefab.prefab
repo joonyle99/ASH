@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1662691148554055556}
   - component: {fileID: 1662691148554055558}
   - component: {fileID: 1662691148554055559}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mushroom_DevourAttackPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,6 +71,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aff4ff8ba1c8da743a6a03b6cd2f38c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 20
-  _forceXPower: 25
-  _forceYPower: 13
+  _skillTargetLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _skillDestroyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  _skillDamage: 0
+  _skillForceX: 0
+  _skillForceY: 0
+  _hitEffectPrefab: {fileID: 0}

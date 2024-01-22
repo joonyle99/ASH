@@ -13,6 +13,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public Rigidbody2D Rigidbody { get; private set; }
     public Animator Animator { get; private set; }
 
+    [Header("MonsterBehavior")]
+    [Space]
+
     [Header("State")]
     [Space]
 
@@ -113,12 +116,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         get => _isGodMode;
         set => _isGodMode = value;
-    }
-    [SerializeField] private bool _isGroggy;
-    public bool IsGroggy
-    {
-        get => _isGroggy;
-        set => _isGroggy = value;
     }
     [SerializeField] private bool _isHit;
     public bool IsHit

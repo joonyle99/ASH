@@ -1,14 +1,12 @@
-using System.Threading;
 using UnityEngine;
 
-public class Bear_GroggyState : Monster_StateBase
+public class SemiBoss_AttackState : SemiBoss_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // 무적 해제. 피격될 수 있다.
-        Monster.IsGodMode = false;
+        SemiBoss.AttackPreProcess();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -19,5 +17,7 @@ public class Bear_GroggyState : Monster_StateBase
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
+
+        SemiBoss.AttackPostProcess();
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener
@@ -61,12 +60,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     SpriteRenderer[] _spriteRenderers;
     Material[] _originalMaterials;
     Coroutine _blinkRoutine;
-
-    [Header("FadeOut")]
-    [Space]
-
-    [SerializeField] float _targetFadeOutTime = 3f;
-    [SerializeField] float _elapsedFadeOutTime = 0f;
 
     [Header("Effects")]
     [SerializeField] ParticleHelper _walkDustEmitter;
@@ -136,7 +129,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     #region Function
 
-    private void Awake()
+    protected override void Awake()
     {
         // Controller
         _attackController = GetComponent<PlayerAttackController>();
