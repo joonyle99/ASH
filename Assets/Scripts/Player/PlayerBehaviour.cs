@@ -250,14 +250,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         }
     }
 
-    public void DisableHorizontalMovement()
-    {
-        Rigidbody.constraints |= RigidbodyConstraints2D.FreezePositionX;
-    }
-    public void EnableHorizontalMovement()
-    {
-        Rigidbody.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
-    }
 
     // key pressed event
     void OnBasicAttackPressed()

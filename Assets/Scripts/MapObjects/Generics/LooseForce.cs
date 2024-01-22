@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LooseForce : MonoBehaviour
 {
-    [SerializeField] [Range(0f,1f)]float _loseAmount;
+    [SerializeField][Range(0f, 1f)] float _loseAmount;
 
     Rigidbody2D _rigidbody;
     private void Awake()
@@ -15,6 +15,7 @@ public class LooseForce : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _rigidbody.velocity *= (1 - _loseAmount);
+        _rigidbody.velocity *= (1 - _loseAmount * Time.deltaTime);
+        _rigidbody.angularVelocity *= (1 - _loseAmount * Time.deltaTime);
     }
 }
