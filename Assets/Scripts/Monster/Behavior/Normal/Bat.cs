@@ -65,7 +65,11 @@ public class Bat : MonsterBehavior
     {
         var effect = GetComponent<DisintegrateEffect>();
         yield return new WaitForSeconds(0.3f);
+
         //Stop movement
+        var navMeshMoveModule = GetComponent<NavMeshMoveModule>();
+        navMeshMoveModule.SetVelocityZero();
+
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
     }

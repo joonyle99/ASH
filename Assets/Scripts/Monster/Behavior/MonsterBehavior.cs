@@ -381,6 +381,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     protected virtual IEnumerator DeathEffectCoroutine()
     {
+        // Fade Out Effect
+
         SpriteRenderer[] currentSpriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
         float[] startAlphaArray = new float[currentSpriteRenderers.Length];
