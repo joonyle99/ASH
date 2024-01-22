@@ -66,11 +66,18 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     [SerializeField] private GameObject _stalactitePrefab;
     [SerializeField] private int _stalactiteCount = 5;
 
+    [Header("Earthquake")]
+    [Space]
+
+    [SerializeField] private BoxCollider2D _earthQuakeCollider;
+    [SerializeField] private WaveSkill _waveSkillPrefab;
+
     [Header("Hurt")]
     [Space]
 
     public int targetHurtCount = 3;
     public int currentHurtCount;
+    public bool IsRage;
 
     protected override void Awake()
     {
@@ -80,12 +87,23 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     {
         base.Start();
 
+        CurHp = MaxHp / 2;
+
         RandomTargetCount();
         SetToRandomAttack();
     }
     protected override void Update()
     {
         base.Update();
+
+        if(!IsRage)
+        {
+            if (CurHp <= MaxHp * 0.5f)
+            {
+                IsRage = true;
+                Animator.SetTrigger("Shout");
+            }
+        }
     }
     private void FixedUpdate()
     {
@@ -215,13 +233,14 @@ public class Bear : MonsterBehavior, ILightCaptureListener
         // Debug.Log("RandomTargetCount");
 
         // 4번 ~ 7번 공격 후 지진 공격
-        targetCount = Random.Range(minTargetCount, maxTargetCount);
+        // targetCount = Random.Range(minTargetCount, maxTargetCount);
+        targetCount = Random.Range(1, 2);
     }
     private void SetToRandomAttack()
     {
         // Debug.Log("SetToRandomAttack");
 
-        int nextAttackNumber = Random.Range(4, 5); // 1 ~ 4
+        int nextAttackNumber = Random.Range(1, 5); // 1 ~ 4
         nextAttack = (BearAttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
@@ -350,5 +369,43 @@ public class Bear : MonsterBehavior, ILightCaptureListener
             randomPos = new Vector2(Random.Range(_mainCollider.bounds.max.x + 3.0f, -125f), 18.3f);
 
         var stalactite = Instantiate(_stalactitePrefab, randomPos, Quaternion.identity);
+    }
+
+    public void Earthquake01_AnimEvent()
+    {
+        // 내려찍기는 한 프레임만 RayCast
+        RaycastHit2D[] rayCastHits = Physics2D.BoxCastAll(_earthQuakeCollider.transform.position, _earthQuakeCollider.bounds.size, 0f, Vector2.zero, 0.0f, _skillTargetLayer);
+
+        foreach (var rayCastHit in rayCastHits)
+        {
+            IAttackListener.AttackResult attackResult = IAttackListener.AttackResult.Fail;
+
+            var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
+            foreach (var listener in listeners)
+            {
+                Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
+
+                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.SkillAttack));
+                if (result == IAttackListener.AttackResult.Success)
+                    attackResult = IAttackListener.AttackResult.Success;
+            }
+
+            if (attackResult == IAttackListener.AttackResult.Success)
+            {
+                Instantiate(ImpactPrefab, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+            }
+        }
+
+        GenerateWave();
+    }
+
+    public void GenerateWave()
+    {
+        // 2개의 지면파를 발생시킨다 (좌 / 우)
+
+        var wave1 = Instantiate(_waveSkillPrefab, _earthQuakeCollider.transform.position, Quaternion.identity);
+        wave1.SetDir(Vector2.right);
+        var wave2 = Instantiate(_waveSkillPrefab, _earthQuakeCollider.transform.position, Quaternion.identity);
+        wave2.SetDir(Vector2.left);
     }
 }
