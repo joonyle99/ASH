@@ -9,30 +9,33 @@ public class DisintegrateEffect : MonoBehaviour
     [SerializeField] float _timeOffsetAfterParticle = 0.2f;
     [SerializeField] ParticleHelper _particle;
 
+    [SerializeField] Range _heightRange;
+
     [ContextMenuItem("Get all", "GetAllSpriteRenderers")]
     [SerializeField] SpriteRenderer [] _spriteRenderers;
 
+    public bool IsEffectDone { get; private set; } = false;
+
     void GetAllSpriteRenderers()
     {
-        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
     }
-    public void Play()
+    public void Play(float delay = 0f)
     {
-        foreach(var renderer in _spriteRenderers)
+        StartCoroutine(ProgressCoroutine(delay));
+    }
+    IEnumerator ProgressCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        foreach (var renderer in _spriteRenderers)
         {
             renderer.material = _disintegrateMaterial;
+            renderer.material.SetFloat("_Progress", 0);
+            renderer.material.SetFloat("_MinY", transform.position.y + _heightRange.Start);
+            renderer.material.SetFloat("_MaxY", transform.position.y + _heightRange.End);
         }
-        StartCoroutine(ProgressCoroutine());
-    }
-    private void Update()
-    {
-        if(Input.GetKeyUp(KeyCode.Q))
-        {
-            Play();
-        }
-    }
-    IEnumerator ProgressCoroutine()
-    {
+        _particle.transform.parent = null;
+        _particle.transform.position = transform.position;
         _particle.gameObject.SetActive(true);
         yield return new WaitForSeconds(_timeOffsetAfterParticle);
         float eTime = 0f;
@@ -42,9 +45,11 @@ public class DisintegrateEffect : MonoBehaviour
             foreach (var renderer in _spriteRenderers)
             {
                 renderer.material.SetFloat("_Progress", eTime / _duration);
+                renderer.material.SetFloat("_MinY", transform.position.y + _heightRange.Start);
+                renderer.material.SetFloat("_MaxY", transform.position.y + _heightRange.End);
             }
             eTime += Time.deltaTime;
         }
-        
+        IsEffectDone = true;
     }
 }

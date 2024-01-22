@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading;
 using UnityEngine;
 
@@ -60,9 +61,13 @@ public class Bat : MonsterBehavior
     {
         return base.OnHit(attackInfo);
     }
-    public override void Die()
+    protected override IEnumerator DeathEffectCoroutine()
     {
-        base.Die();
+        var effect = GetComponent<DisintegrateEffect>();
+        yield return new WaitForSeconds(0.3f);
+        //Stop movement
+        effect.Play();
+        yield return new WaitUntil(() => effect.IsEffectDone);
     }
 
     public void SprinkleParticle_AnimEvent()

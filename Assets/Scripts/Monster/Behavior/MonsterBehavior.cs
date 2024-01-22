@@ -373,8 +373,37 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // Disable Hit Box
         TurnOffHitBox();
 
-        // 사라지기 시작
-        StartDestroy();
+        StartCoroutine(DeathCoroutine());
+    }
+    IEnumerator DeathCoroutine()
+    {
+        yield return StartCoroutine(DeathEffectCoroutine());
+
+        if (transform.root) Destroy(transform.root.gameObject);
+        else Destroy(gameObject);
+    }
+    protected virtual IEnumerator DeathEffectCoroutine()
+    {
+        SpriteRenderer[] currentSpriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        float[] startAlphaArray = new float[currentSpriteRenderers.Length];
+        for (int i = 0; i < currentSpriteRenderers.Length; i++)
+            startAlphaArray[i] = currentSpriteRenderers[i].color.a;
+
+        while (_elapsedFadeOutTime < _targetFadeOutTime)
+        {
+            _elapsedFadeOutTime += Time.deltaTime;
+            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
+
+            for (int i = 0; i < currentSpriteRenderers.Length; i++)
+            {
+                Color targetColor = currentSpriteRenderers[i].color;
+                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
+                currentSpriteRenderers[i].color = targetColor;
+            }
+
+            yield return null;
+        }
     }
 
     // basic
@@ -553,39 +582,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         StartCoroutine(HitTimer());
     }
-    private IEnumerator FadeOutDestroy()
-    {
-        SpriteRenderer[] currentSpriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
-
-        float[] startAlphaArray = new float[currentSpriteRenderers.Length];
-        for (int i = 0; i < currentSpriteRenderers.Length; i++)
-            startAlphaArray[i] = currentSpriteRenderers[i].color.a;
-
-        while (_elapsedFadeOutTime < _targetFadeOutTime)
-        {
-            _elapsedFadeOutTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
-
-            for (int i = 0; i < currentSpriteRenderers.Length; i++)
-            {
-                Color targetColor = currentSpriteRenderers[i].color;
-                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
-                currentSpriteRenderers[i].color = targetColor;
-            }
-
-            yield return null;
-        }
-
-        if (transform.root) Destroy(transform.root.gameObject);
-        else Destroy(gameObject);
-
-        yield return null;
-    }
-    public void StartDestroy()
-    {
-        StartCoroutine(FadeOutDestroy());
-    }
-
     // state
     private void InitState()
     {
