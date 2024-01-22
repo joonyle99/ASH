@@ -10,6 +10,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     Dictionary<string, DataGroup> _dataGroups = new Dictionary<string, DataGroup>();
     DataGroup _globalDataGroup = new DataGroup();
 
+    [SerializeField] SkillOrderData _skillOrderData;
+    public static SkillOrderData SkillOrderData => Instance._skillOrderData;
     public static bool TryAddDataGroup(string groupName)
     {
         if (Instance == null)
