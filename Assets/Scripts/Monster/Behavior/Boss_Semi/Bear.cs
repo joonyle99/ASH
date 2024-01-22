@@ -70,7 +70,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
     [Space]
 
     [SerializeField] private BoxCollider2D _earthQuakeCollider;
-    [SerializeField] private WaveSkill _waveSkillPrefab;
+    [SerializeField] private Bear_GroundWaveAttack _waveSkillPrefab;
 
     [Header("Hurt")]
     [Space]
@@ -120,7 +120,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
                 {
                     Vector2 forceVector = new Vector2(_attackPowerX * 2f * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY * 1.5f);
 
-                    var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.SkillAttack));
+                    var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.Monster_SkillAttack));
                     if (result == IAttackListener.AttackResult.Success)
                         attackResult = IAttackListener.AttackResult.Success;
                 }
@@ -296,7 +296,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
             {
                 Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
 
-                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.SkillAttack));
+                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.Monster_SkillAttack));
                 if (result == IAttackListener.AttackResult.Success)
                     attackResult = IAttackListener.AttackResult.Success;
             }
@@ -338,7 +338,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
             {
                 Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
 
-                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.SkillAttack));
+                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.Monster_SkillAttack));
                 if (result == IAttackListener.AttackResult.Success)
                     attackResult = IAttackListener.AttackResult.Success;
             }
@@ -385,7 +385,7 @@ public class Bear : MonsterBehavior, ILightCaptureListener
             {
                 Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
 
-                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.SkillAttack));
+                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.Monster_SkillAttack));
                 if (result == IAttackListener.AttackResult.Success)
                     attackResult = IAttackListener.AttackResult.Success;
             }

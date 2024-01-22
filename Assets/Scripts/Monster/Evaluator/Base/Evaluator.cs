@@ -11,6 +11,9 @@ public abstract class Evaluator : MonoBehaviour
 
     [SerializeField] protected LayerMask _targetLayer;
     [SerializeField] protected BoxCollider2D _checkCollider;
+
+    [Space]
+
     [SerializeField] private float _targetCheckCoolTime;
     [SerializeField] private bool _isDuringCoolTime;
     public bool IsDuringCoolTime
@@ -30,13 +33,9 @@ public abstract class Evaluator : MonoBehaviour
     public abstract bool IsTargetWithinRange();
     public virtual IEnumerator CoolTimeCoroutine()
     {
-        // Debug.Log("CoolTime Ω√¿€");
-
         IsDuringCoolTime = true;
         yield return new WaitForSeconds(_targetCheckCoolTime);
         IsDuringCoolTime = false;
-
-        // Debug.Log("CoolTime ≥°");
     }
     public virtual void StartCoolTimeCoroutine()
     {

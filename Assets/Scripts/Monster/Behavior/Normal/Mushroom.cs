@@ -7,10 +7,6 @@ public class Mushroom : MonsterBehavior
 
     [SerializeField] private GameObject _devourGameObject;
 
-
-    // Etc
-    // private int _countOfUpdate = 0;
-
     protected override void Awake()
     {
         base.Awake();
@@ -24,14 +20,6 @@ public class Mushroom : MonsterBehavior
     protected override void Update()
     {
         base.Update();
-
-        /*
-        // TODO : temp code
-        _countOfUpdate++;
-
-        if (_countOfUpdate == 1)
-            return;
-        */
 
         if (CautionEvaluator)
         {
@@ -73,18 +61,6 @@ public class Mushroom : MonsterBehavior
     public override void Die()
     {
         base.Die();
-    }
-
-    public void IdleAnimationStart_AnimEvent()
-    {
-        // TODO : temp code
-        //Debug.Log("Fire animation events - Idle Animation Start");
-    }
-
-    public void HideAnimationStart_AnimEvent()
-    {
-        // TODO : temp code
-        //Debug.Log("Fire animation events - Hide Animation Start");
     }
 
     public void DevourStart_AnimEvent()

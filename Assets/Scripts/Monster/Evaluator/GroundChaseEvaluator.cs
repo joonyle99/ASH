@@ -39,7 +39,6 @@ public class GroundChaseEvaluator : Evaluator
             {
                 SetTargetTrans(player.transform);
                 SetChaseDir(player.transform);
-                StartCoolTimeCoroutine();
 
                 IsChasing = true;
                 return IsChasing;

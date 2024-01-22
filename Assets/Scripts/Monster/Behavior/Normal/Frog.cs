@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 
 public class Frog : MonsterBehavior
@@ -7,7 +6,7 @@ public class Frog : MonsterBehavior
     [Header("Frog")]
     [Space]
 
-    [SerializeField] private FrogTongueAttack _tonguePrefab;
+    [SerializeField] private Frog_TongueAttack _tonguePrefab;
     [SerializeField] private Transform _mouthTrans;
 
     [Space]
@@ -15,8 +14,7 @@ public class Frog : MonsterBehavior
     [SerializeField] private float _tongueLength = 15f;
     [SerializeField] private float _targetTongueAttackTime = 0.1f;
 
-    private FrogTongueAttack _tongueInstance;
-    private SpriteRenderer _tongueSpriteRenderer;
+    private Frog_TongueAttack _tongueInstance;
     private Coroutine _tongueAttackCoroutine;
 
     protected override void Awake()
@@ -57,6 +55,7 @@ public class Frog : MonsterBehavior
             if (!GroundChaseEvaluator.IsUsable)
                 GroundChaseEvaluator.IsUsable = true;
         }
+
         return IAttackListener.AttackResult.Success;
     }
     public override void Die()
@@ -73,14 +72,14 @@ public class Frog : MonsterBehavior
     public void TongueAttack_AnimEvent()
     {
         _tongueInstance = Instantiate(_tonguePrefab, _mouthTrans.position, Quaternion.identity, _mouthTrans);
-        _tongueSpriteRenderer = _tongueInstance.GetComponent<SpriteRenderer>();
-        _tongueAttackCoroutine = StartCoroutine(ExtendTongue());
+        SpriteRenderer tongueSpriteRenderer = _tongueInstance.GetComponent<SpriteRenderer>();
+        _tongueAttackCoroutine = StartCoroutine(ExtendTongue(tongueSpriteRenderer));
     }
 
-    private IEnumerator ExtendTongue()
+    private IEnumerator ExtendTongue(SpriteRenderer tongueSpriteRenderer)
     {
-        Vector2 startSize = _tongueSpriteRenderer.size;
-        Vector2 targetSize = new Vector2(_tongueLength, _tongueSpriteRenderer.size.y);
+        Vector2 startSize = tongueSpriteRenderer.size;
+        Vector2 targetSize = new Vector2(_tongueLength, tongueSpriteRenderer.size.y);
 
         float elapsedTime = 0f;
 
@@ -89,8 +88,8 @@ public class Frog : MonsterBehavior
             elapsedTime += Time.deltaTime;
 
             float t = Mathf.Clamp01(elapsedTime / _targetTongueAttackTime);
-            if (_tongueSpriteRenderer)
-                _tongueSpriteRenderer.size = Vector2.Lerp(startSize, targetSize, t);
+            if (tongueSpriteRenderer)
+                tongueSpriteRenderer.size = Vector2.Lerp(startSize, targetSize, t);
 
             yield return null;
         }
@@ -99,7 +98,7 @@ public class Frog : MonsterBehavior
     public void DestoryTongue_AnimEvent()
     {
         if (_tongueAttackCoroutine != null)
-            StopCoroutine(ExtendTongue());
+            StopCoroutine(_tongueAttackCoroutine);
 
         Destroy(_tongueInstance.gameObject);
     }

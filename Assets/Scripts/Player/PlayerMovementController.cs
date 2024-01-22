@@ -12,6 +12,18 @@ public class PlayerMovementController : MonoBehaviour
 
     Vector2 _moveForce;
 
+
+    HashSet<object> _disableMovementList = new HashSet<object>();
+
+    public void DisableMovementExternaly(object owner)
+    {
+        _disableMovementList.Add(owner);
+    }
+    public void EnableMovementExternaly(object owner)
+    {
+        _disableMovementList.Remove(owner);
+    }
+
     void Awake()
     {
         _player = GetComponent<PlayerBehaviour>();
@@ -19,7 +31,7 @@ public class PlayerMovementController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!_player.IsGrounded || _player.RawInputs.Movement.x == 0)
+        if (!_player.IsGrounded || _player.RawInputs.Movement.x == 0  || _disableMovementList.Count > 0)
             return;
 
         Vector2 groundNormal = _player.GroundHit.normal;
