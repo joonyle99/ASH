@@ -8,6 +8,8 @@ using UnityEngine.AI;
 /// </summary>
 public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
+    #region Attribute
+
     public class MonsterAttackInfo
     {
         public float Damage = 1f;
@@ -19,8 +21,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             Force = force;
         }
     }
-
-    #region Attribute
 
     // Basic Component
     public Rigidbody2D Rigidbody { get; private set; }

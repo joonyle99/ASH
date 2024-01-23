@@ -107,7 +107,7 @@ public class Frog : MonsterBehavior
         Destroy(_tongueInstance.gameObject);
     }
 
-    public bool PatrolToIdleCondition(Monster_StateBase state)
+    private bool PatrolToIdleCondition(Monster_StateBase state)
     {
         // Patrol -> Idle인 경우에만 판단
         if (state is GroundPatrolState)
