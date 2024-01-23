@@ -19,6 +19,7 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
                 info.MainText = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].Name;
                 info.DetailText = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].DetailText;
                 GameUIManager.OpenSkillObtainPanel(info);
+                PersistentDataManager.Set<bool>(info.MainText, true);
             }
             else
             {
