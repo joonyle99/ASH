@@ -29,10 +29,8 @@ public class Turtle : MonsterBehavior
         if (IsDead)
             return IAttackListener.AttackResult.Fail;
 
-        // Hit Process
-        StartHitTimer();
-        KnockBack(attackInfo.Force);
-        GetComponent<SoundList>().PlaySFX("SE_Hurt");
+        // Turtle Hit Process
+        HitProcess(attackInfo, false, true);
 
         // Change to Hurt State
         if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundPatrolState>())

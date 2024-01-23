@@ -61,7 +61,7 @@ public abstract class Monster_StateBase : StateMachineBehaviour
             if (_elapsedStayTime > _targetStayTime)
             {
                 _elapsedStayTime = 0f;
-                animator.SetTrigger(_targetTransitionParam);
+                Monster.StartChangeStateCoroutine(_targetTransitionParam, Monster.CurrentState);
 
                 return;
             }

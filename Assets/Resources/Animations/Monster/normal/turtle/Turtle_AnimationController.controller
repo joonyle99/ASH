@@ -152,9 +152,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isAutoStateTransition: 1
   _targetTransitionParam: Patrol
-  _minStayTime: 0.5
-  _maxStayTime: 1.5
-  _targetStayTime: 5
+  _minStayTime: 1
+  _maxStayTime: 2
+  _targetStayTime: 0
   _elapsedStayTime: 0
 --- !u!1107 &-1629894275335678276
 AnimatorStateMachine:
@@ -308,43 +308,43 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Patrol
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: InAir
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Hurt
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Hide
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Show
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Die
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -482,7 +482,7 @@ MonoBehaviour:
   _isAutoStateTransition: 1
   _targetTransitionParam: Idle
   _minStayTime: 5
-  _maxStayTime: 12
+  _maxStayTime: 10
   _targetStayTime: 0
   _elapsedStayTime: 0
 --- !u!1102 &6980918681415527243

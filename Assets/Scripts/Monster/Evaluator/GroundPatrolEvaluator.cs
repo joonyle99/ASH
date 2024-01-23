@@ -7,19 +7,15 @@ public class GroundPatrolEvaluator : Evaluator
     [Space]
 
     [SerializeField] private Transform _patrolPoints;
-    [SerializeField] private List<Collider2D> _patrolPointList;
-    [SerializeField] private Collider2D _currentTargetPoint;
-    [SerializeField] private int _curPointIndex = 0;
+    [SerializeField] private bool _isOutOfPatrolRange;
+
+    private Collider2D _leftPoint;
+    private Collider2D _rightPoint;
 
     private void Awake()
     {
-        foreach (Transform child in _patrolPoints)
-        {
-            if (child.gameObject.activeSelf)
-                _patrolPointList.Add(child.GetComponent<Collider2D>());
-        }
-
-        _currentTargetPoint = _patrolPointList[_curPointIndex];
+        _leftPoint = _patrolPoints.GetChild(0).GetComponent<Collider2D>();
+        _rightPoint = _patrolPoints.GetChild(1).GetComponent<Collider2D>();
     }
 
     public override Collider2D IsTargetWithinRange()
@@ -27,17 +23,25 @@ public class GroundPatrolEvaluator : Evaluator
         return base.IsTargetWithinRange();
     }
 
-    public bool IsCorrectTargetPoint(Collider2D collider)
+    public bool IsOutOfPatrolRange()
     {
-        if (collider == _currentTargetPoint)
-            return true;
-
-        return false;
+        _isOutOfPatrolRange = IsLeftOfLeftPoint() || IsRightOfRightPoint();
+        return _isOutOfPatrolRange;
     }
-
-    public void SetNextTargetPoint()
+    public bool IsLeftOfLeftPoint()
     {
-        _curPointIndex = (_curPointIndex + 1) % _patrolPointList.Count;
-        _currentTargetPoint = _patrolPointList[_curPointIndex];
+        return _leftPoint.transform.position.x > this.transform.position.x;
+    }
+    public bool IsRightOfLeftPoint()
+    {
+        return _leftPoint.transform.position.x < this.transform.position.x;
+    }
+    public bool IsLeftOfRightPoint()
+    {
+        return _rightPoint.transform.position.x > this.transform.position.x;
+    }
+    public bool IsRightOfRightPoint()
+    {
+        return _rightPoint.transform.position.x < this.transform.position.x;
     }
 }
