@@ -20,10 +20,10 @@ public class AttackEvaluator : Evaluator
         return base.IsTargetWithinRange();
     }
 
-    private void ChangeDir(Transform trans)
+    private void ChangeDir(Vector3 targetPoint)
     {
         // 공격 전 최종적으로 방향을 바꾼다.
-        int chaseDir = Math.Sign(trans.position.x - transform.position.x);
+        int chaseDir = Math.Sign(targetPoint.x - transform.position.x);
         _monster.SetRecentDir(chaseDir);
     }
 }

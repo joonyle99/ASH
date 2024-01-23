@@ -19,7 +19,7 @@ public class GroundChaseEvaluator : Evaluator
         private set => _isChasing = value;
     }
 
-    public Transform TargetTrans { get; private set; }
+    public Vector3 TargetPoint { get; private set; }
 
     private void Awake()
     {
@@ -39,14 +39,14 @@ public class GroundChaseEvaluator : Evaluator
         return hasChaseTarget;
     }
 
-    public void SetTargetTrans(Transform trans)
+    public void SetTargetTrans(Vector3 targetPoint)
     {
         // 추격 타겟을 설정한다.
-        TargetTrans = trans;
+        TargetPoint = targetPoint;
     }
-    public void SetChaseDir(Transform trans)
+    public void SetChaseDir(Vector3 targetPoint)
     {
         // 추격 방향을 설정한다.
-        _chaseDir = Math.Sign(trans.position.x - transform.position.x);
+        _chaseDir = Math.Sign(targetPoint.x - transform.position.x);
     }
 }

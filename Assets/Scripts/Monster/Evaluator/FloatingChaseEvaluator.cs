@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FloatingChaseEvaluator : Evaluator
 {
-    public Transform TargetTrans { get; private set; }
+    public Vector3 TargetPoint { get; private set; }
 
     private void Awake()
     {
@@ -15,9 +15,9 @@ public class FloatingChaseEvaluator : Evaluator
         return base.IsTargetWithinRange();
     }
 
-    private void SetTarget(Transform trans)
+    private void SetTarget(Vector3 targetPoint)
     {
         // 추격 타겟을 설정한다
-        TargetTrans = trans;
+        TargetPoint = targetPoint;
     }
 }

@@ -31,7 +31,7 @@ public abstract class Evaluator : MonoBehaviour
     private Coroutine _coolTimeCoroutine;
 
     // 커스텀 판독 델리게이트 정의
-    protected delegate void CustomEvaluation(Transform transfrom);
+    protected delegate void CustomEvaluation(Vector3 targetPoint);
     protected CustomEvaluation customEvaluation;
 
     public virtual Collider2D IsTargetWithinRange()
@@ -55,9 +55,16 @@ public abstract class Evaluator : MonoBehaviour
                 {
                     // custom evaluation
                     if (customEvaluation != null)
-                        customEvaluation(player.transform);
+                    {
+                        // 플레이어의 타겟 포인트 설정
+                        Vector3 playerTargetPoint = player.transform.position + new Vector3(0f, player.BodyCollider.bounds.extents.y * 1.5f, 0f);
+                        // Debug.DrawRay(playerTargetPoint, Vector3.right, Color.yellow);
 
-                    return targetCollider;
+                        // 커스텀 판독 실행
+                        customEvaluation(playerTargetPoint);
+
+                        return targetCollider;
+                    }
                 }
             }
 
@@ -66,7 +73,7 @@ public abstract class Evaluator : MonoBehaviour
 
             // custom evaluation
             if (customEvaluation != null)
-                customEvaluation(this.transform);
+                customEvaluation(Vector3.zero);
 
             return targetCollider;
         }
