@@ -43,12 +43,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Header("Module")]
     [Space]
 
-    [SerializeField] private GroundPatrolModule _groundPatrolModule;
-    public GroundPatrolModule GroundPatrolModule
-    {
-        get => _groundPatrolModule;
-        private set => _groundPatrolModule = value;
-    }
     [SerializeField] private FloatingPatrolModule _floatingPatrolModule;
     public FloatingPatrolModule FloatingPatrolModule
     {
@@ -65,6 +59,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Header("Evaluator")]
     [Space]
 
+    [SerializeField] private GroundPatrolEvaluator _groundPatrolEvaluator;
+    public GroundPatrolEvaluator GroundPatrolEvaluator
+    {
+        get => _groundPatrolEvaluator;
+        private set => _groundPatrolEvaluator = value;
+    }
     [SerializeField] private GroundChaseEvaluator _groundChaseEvaluator;
     public GroundChaseEvaluator GroundChaseEvaluator
     {
@@ -241,7 +241,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         Animator = GetComponent<Animator>();
 
         // Module
-        GroundPatrolModule = GetComponent<GroundPatrolModule>();
+        GroundPatrolEvaluator = GetComponent<GroundPatrolEvaluator>();
         FloatingPatrolModule = GetComponent<FloatingPatrolModule>();
         NavMeshMoveModule = GetComponent<NavMeshMoveModule>();
 
@@ -435,6 +435,18 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
+    private IEnumerator SetRecentDirAfterGrounded(int targetDir)
+    {
+        // 코루틴을 사용해 방향 전환을 땅을 밟은 후로 설정한다
+        yield return new WaitUntil(() => IsGround);
+
+        SetRecentDir(targetDir);
+    }
+    public void StartSetRecentDirAfterGrounded(int targetDir)
+    {
+        StartCoroutine(SetRecentDirAfterGrounded(targetDir));
+    }
+
     public void BoxCastAttack(Vector2 targetPosition, Vector2 attackBoxSize, MonsterAttackInfo attackinfo, LayerMask targetLayer)
     {
         RaycastHit2D[] rayCastHits = Physics2D.BoxCastAll(targetPosition, attackBoxSize, 0f, Vector2.zero, 0.0f, targetLayer);

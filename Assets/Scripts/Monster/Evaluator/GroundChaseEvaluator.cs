@@ -21,39 +21,32 @@ public class GroundChaseEvaluator : Evaluator
 
     public Transform TargetTrans { get; private set; }
 
-    public override bool IsTargetWithinRange()
+    private void Awake()
     {
-        if (IsDuringCoolTime || !IsUsable)
-        {
-            IsChasing = false;
-            return IsChasing;
-        }
-
-        // Detect Collider
-        Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
-        if (targetCollider)
-        {
-            // Check Player
-            PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
-            if (player && !player.IsDead)
-            {
-                SetTargetTrans(player.transform);
-                SetChaseDir(player.transform);
-
-                IsChasing = true;
-                return IsChasing;
-            }
-        }
-
-        IsChasing = false;
-        return IsChasing;
+        customEvaluation -= SetTargetTrans;
+        customEvaluation += SetTargetTrans;
+        customEvaluation -= SetChaseDir;
+        customEvaluation += SetChaseDir;
     }
+
+    public override Collider2D IsTargetWithinRange()
+    {
+        var hasChaseTarget = base.IsTargetWithinRange();
+
+        if (hasChaseTarget) IsChasing = true;
+        else IsChasing = false;
+
+        return hasChaseTarget;
+    }
+
     public void SetTargetTrans(Transform trans)
     {
+        // 추격 타겟을 설정한다.
         TargetTrans = trans;
     }
     public void SetChaseDir(Transform trans)
     {
+        // 추격 방향을 설정한다.
         _chaseDir = Math.Sign(trans.position.x - transform.position.x);
     }
 }
