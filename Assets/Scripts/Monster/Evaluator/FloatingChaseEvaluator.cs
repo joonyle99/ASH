@@ -4,28 +4,20 @@ public class FloatingChaseEvaluator : Evaluator
 {
     public Transform TargetTrans { get; private set; }
 
-    public override bool IsTargetWithinRange()
+    private void Awake()
     {
-        if (IsDuringCoolTime || !IsUsable)
-            return false;
-
-        // Detect Collider
-        Collider2D targetCollider = Physics2D.OverlapBox(_checkCollider.transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
-        if (targetCollider)
-        {
-            // Check Player
-            PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
-            if (player && !player.IsDead)
-            {
-                SetTargetTrans(player.transform);
-                return true;
-            }
-        }
-
-        return false;
+        customEvaluation -= SetTarget;
+        customEvaluation += SetTarget;
     }
-    public void SetTargetTrans(Transform trans)
+
+    public override Collider2D IsTargetWithinRange()
     {
+        return base.IsTargetWithinRange();
+    }
+
+    private void SetTarget(Transform trans)
+    {
+        // 추격 타겟을 설정한다
         TargetTrans = trans;
     }
 }

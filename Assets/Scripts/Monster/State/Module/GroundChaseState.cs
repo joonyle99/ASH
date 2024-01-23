@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Monster_MoveState : Monster_StateBase
+public class GroundChaseState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

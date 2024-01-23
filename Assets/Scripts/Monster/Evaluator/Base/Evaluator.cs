@@ -9,19 +9,19 @@ public abstract class Evaluator : MonoBehaviour
     [Header("Evaluator")]
     [Space]
 
-    [SerializeField] protected LayerMask _targetLayer;
-    [SerializeField] protected BoxCollider2D _checkCollider;
+    [SerializeField] protected LayerMask _targetLayer;          // 판독 대상 레이어
+    [SerializeField] protected BoxCollider2D _checkCollider;    // 판독 콜라이더
 
     [Space]
 
-    [SerializeField] private float _targetCheckCoolTime;
-    [SerializeField] private bool _isDuringCoolTime;
+    [SerializeField] private float _targetCheckCoolTime;        // 판독 쿨타임
+    [SerializeField] private bool _isDuringCoolTime;            // 판독기 쿨타임 중 여부
     public bool IsDuringCoolTime
     {
         get => _isDuringCoolTime;
         set => _isDuringCoolTime = value;
     }
-    [SerializeField] private bool _isUsable;
+    [SerializeField] private bool _isUsable = true;             // 판독기 사용 가능 여부
     public bool IsUsable
     {
         get => _isUsable;
@@ -30,8 +30,50 @@ public abstract class Evaluator : MonoBehaviour
 
     private Coroutine _coolTimeCoroutine;
 
-    public abstract bool IsTargetWithinRange();
-    public virtual IEnumerator CoolTimeCoroutine()
+    // 커스텀 판독 델리게이트 정의
+    protected delegate void CustomEvaluation(Transform transfrom);
+    protected CustomEvaluation customEvaluation;
+
+    public virtual Collider2D IsTargetWithinRange()
+    {
+        // check coolTime and usable
+        if (IsDuringCoolTime || !IsUsable)
+            return null;
+
+        // check target within range
+        // only one collider check !
+        Collider2D targetCollider = Physics2D.OverlapBox(_checkCollider.transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
+        if (targetCollider)
+        {
+            // check player
+            // ...
+
+            PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
+            if (player)
+            {
+                if (!player.IsDead)
+                {
+                    // custom evaluation
+                    if (customEvaluation != null)
+                        customEvaluation(player.transform);
+
+                    return targetCollider;
+                }
+            }
+
+            // check other
+            // ...
+
+            // custom evaluation
+            if (customEvaluation != null)
+                customEvaluation(this.transform);
+
+            return targetCollider;
+        }
+
+        return null;
+    }
+    private IEnumerator CoolTimeCoroutine()
     {
         IsDuringCoolTime = true;
         yield return new WaitForSeconds(_targetCheckCoolTime);

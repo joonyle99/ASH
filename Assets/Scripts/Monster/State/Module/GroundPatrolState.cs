@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GroundPatrolState : Monster_MoveState
+public class GroundPatrolState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -11,14 +11,30 @@ public class GroundPatrolState : Monster_MoveState
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
+        /*
         if (Monster.IsInAir)
             return;
+        */
 
-        // flip recentDir after wall check
-        if (Monster.GroundPatrolModule)
+        // flip RecentDir after wall check
+        if (Monster.GroundPatrolEvaluator)
         {
-            if (Monster.GroundPatrolModule.IsWallCheck())
-                Monster.SetRecentDir(-Monster.RecentDir);
+            var collider = Monster.GroundPatrolEvaluator.IsTargetWithinRange();
+            if (collider)
+            {
+                if (collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
+                }
+                else if (collider.gameObject.layer == LayerMask.NameToLayer("PatrolPoint"))
+                {
+                    if (Monster.GroundPatrolEvaluator.IsCorrectTargetPoint(collider))
+                    {
+                        Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
+                        Monster.GroundPatrolEvaluator.SetNextTargetPoint();
+                    }
+                }
+            }
         }
 
         // set recentDir for chase
@@ -29,7 +45,7 @@ public class GroundPatrolState : Monster_MoveState
         }
 
         if (Monster.MoveType == MonsterDefine.MoveType.GroundWalking)
-            GroundPatrol();
+            GroundWalkingPatrol();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -37,8 +53,11 @@ public class GroundPatrolState : Monster_MoveState
         base.OnStateExit(animator, stateInfo, layerIndex);
     }
 
-    private void GroundPatrol()
+    private void GroundWalkingPatrol()
     {
+        if (Monster.IsInAir)
+            return;
+
         Vector2 groundNormal = Monster.GroundRayHit.normal;
         Vector2 moveDirection = Monster.RecentDir > 0
             ? (-1) * Vector2.Perpendicular(groundNormal)
