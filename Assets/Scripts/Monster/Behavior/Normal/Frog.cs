@@ -6,7 +6,7 @@ public class Frog : MonsterBehavior
     [Header("Frog")]
     [Space]
 
-    [SerializeField] private Frog_TongueAttack _tonguePrefab;
+    [SerializeField] private Frog_Tongue _tonguePrefab;
     [SerializeField] private Transform _mouthTrans;
 
     [Space]
@@ -14,7 +14,7 @@ public class Frog : MonsterBehavior
     [SerializeField] private float _tongueLength = 15f;
     [SerializeField] private float _targetTongueAttackTime = 0.1f;
 
-    private Frog_TongueAttack _tongueInstance;
+    private Frog_Tongue _tongueInstance;
     private Coroutine _tongueAttackCoroutine;
 
     protected override void Awake()

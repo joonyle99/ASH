@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public abstract class Monster_SkillAttack : MonoBehaviour
+public abstract class Monster_SkillObject : MonoBehaviour
 {
-    [Header("Monster_SkillAttack")]
+    [Header("Monster_SkillObject")]
     [Space]
 
     [SerializeField] protected LayerMask _skillTargetLayer;

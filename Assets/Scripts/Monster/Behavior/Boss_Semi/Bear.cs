@@ -17,23 +17,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         EarthQuake = 10
     }
 
-    public class BearAttackInfo
-    {
-        public float Damage = 1f;
-        public Vector2 Force = Vector2.zero;
-
-        public BearAttackInfo(float damage, Vector2 force)
-        {
-            Damage = damage;
-            Force = force;
-        }
-    }
-
     [Header("Bear")]
     [Space]
-
-    [SerializeField] private LayerMask _skillTargetLayer;
-    [SerializeField] private GameObject _skillHitEffect;
 
     [Header("Condition")]
     [Space]
@@ -53,7 +38,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private int _targetHurtCount;
     [SerializeField] private int _currentHurtCount;
 
-    [Header("Skill - Slash")]
+    [Header("Skill")]
     [Space]
 
     [SerializeField] private BoxCollider2D _slashCollider;
@@ -61,30 +46,27 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private float _slashForceX = 7f;
     [SerializeField] private float _slashForceY = 10f;
 
-    [Header("Skill - Body Slam")]
     [Space]
 
     [SerializeField] private BoxCollider2D _bodySlamCollider;
-    [SerializeField] private bool _isBodySlamming;
     [SerializeField] private int _bodySlamDamage = 20;
     [SerializeField] private float _bodySlamForceX = 7f;
     [SerializeField] private float _bodySlamForceY = 10f;
+    [SerializeField] private bool _isBodySlamming;
 
-    [Header("Skill - Stomp")]
     [Space]
 
     [SerializeField] private BoxCollider2D _stompCollider;
-    [SerializeField] private Bear_StalactiteAttack _stalactitePrefab;
+    [SerializeField] private Bear_Stalactite _stalactitePrefab;
     [SerializeField] private int _stalactiteCount = 5;
     [SerializeField] private int _stompDamage = 20;
     [SerializeField] private float _stompForceX = 7f;
     [SerializeField] private float _stompForceY = 10f;
 
-    [Header("Skill - Earthquake")]
     [Space]
 
     [SerializeField] private BoxCollider2D _earthQuakeCollider;
-    [SerializeField] private Bear_GroundWaveAttack _waveSkillPrefab;
+    [SerializeField] private Bear_GroundWave _waveSkillPrefab;
     [SerializeField] private int _earthQuakeDamage = 20;
     [SerializeField] private float _earthQuakeForceX = 7f;
     [SerializeField] private float _earthQuakeForceY = 10f;
@@ -166,8 +148,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         if (_isBodySlamming)
         {
-            BearAttackInfo bodySlamInfo = new BearAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
-            BearAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _skillTargetLayer);
+            MonsterAttackInfo bodySlamInfo = new MonsterAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
+            BoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _attackTargetLayer);
         }
     }
 
@@ -250,24 +232,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         _currentHurtCount = 0;
         Animator.SetInteger("HurtCount", _currentHurtCount);
     }
-    public void BearAttack(Vector2 targetPosition, Vector2 attackBoxSize, BearAttackInfo attackinfo, LayerMask targetLayer)
-    {
-        RaycastHit2D[] rayCastHits = Physics2D.BoxCastAll(targetPosition, attackBoxSize, 0f, Vector2.zero, 0.0f, targetLayer);
-        foreach (var rayCastHit in rayCastHits)
-        {
-            var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
-            foreach (var listener in listeners)
-            {
-                var forceVector = new Vector2(attackinfo.Force.x * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), attackinfo.Force.y);
-                var attackResult = listener.OnHit(new AttackInfo(attackinfo.Damage, forceVector, AttackType.Monster_SkillAttack));
 
-                if (attackResult == IAttackListener.AttackResult.Success)
-                    Instantiate(_skillHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
-            }
-        }
-    }
-
-    // skill
+    // slash
     public void Slash01_AnimEvent()
     {
         var playerPos = SceneContext.Current.Player.transform.position;
@@ -281,15 +247,19 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
     public void Slash02_AnimEvent()
     {
-        Debug.DrawRay(_playerPos, new Vector2(0f, _slashCollider.bounds.extents.y), Color.red, 0.15f);
-        Debug.DrawRay(_playerPos, new Vector2(0f, -_slashCollider.bounds.extents.y), Color.red, 0.15f);
-        Debug.DrawRay(_playerPos, new Vector2(_slashCollider.bounds.extents.x, 0f), Color.red, 0.15f);
-        Debug.DrawRay(_playerPos, new Vector2(-_slashCollider.bounds.extents.x, 0f), Color.red, 0.15f);
+        Debug.DrawRay(_playerPos, new Vector2(0f, _slashCollider.bounds.extents.y), Color.red, 0.25f);
+        Debug.DrawRay(_playerPos, new Vector2(0f, -_slashCollider.bounds.extents.y), Color.red, 0.25f);
+        Debug.DrawRay(_playerPos, new Vector2(_slashCollider.bounds.extents.x, 0f), Color.red, 0.25f);
+        Debug.DrawRay(_playerPos, new Vector2(-_slashCollider.bounds.extents.x, 0f), Color.red, 0.25f);
 
-        BearAttackInfo slashInfo = new BearAttackInfo(_slashDamage, new Vector2(_slashForceX, _slashForceY));
-        BearAttack(_playerPos, _slashCollider.bounds.size, slashInfo, _skillTargetLayer);
+        MonsterAttackInfo slashInfo = new MonsterAttackInfo(_slashDamage, new Vector2(_slashForceX, _slashForceY));
+        BoxCastAttack(_playerPos, _slashCollider.bounds.size, slashInfo, _attackTargetLayer);
+
+        // 플레이어 위치 초기화
+        _playerPos = Vector2.zero;
     }
 
+    // bodySlam
     public void BodySlam01_AnimEvent()
     {
         var playerPos = SceneContext.Current.Player.transform.position;
@@ -308,10 +278,11 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         _isBodySlamming = false;
     }
 
+    // stomp
     public void Stomp01_AnimEvent()
     {
-        BearAttackInfo stompInfo = new BearAttackInfo(_stompDamage, new Vector2(_stompForceX, _stompForceY));
-        BearAttack(_stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _skillTargetLayer);
+        MonsterAttackInfo stompInfo = new MonsterAttackInfo(_stompDamage, new Vector2(_stompForceX, _stompForceY));
+        BoxCastAttack(_stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _attackTargetLayer);
 
         // 종유석 생성
         for (int i = 0; i < _stalactiteCount; ++i)
@@ -324,14 +295,28 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         yield return new WaitForSeconds(fallingStartTime);
 
         // 종유석을 천장에서 랜덤 위치에 생성한다
-        Vector2 randomPos = (Random.value > 0.5f) ? new Vector2(Random.Range(-150f, _bodyCollider.bounds.min.x - 2.0f), 18.3f) : new Vector2(Random.Range(_bodyCollider.bounds.max.x + 2.0f, -125f), 18.3f);
+        var ceilingHeight = 18.3f;
+        var bodyColliderMinX = _bodyCollider.bounds.min.x;
+        var bodyColliderMaxX = _bodyCollider.bounds.max.x;
+        var fromDistance = 2f;
+        var toDistance = 10f;
+        var leftRange = Random.Range(bodyColliderMinX - toDistance, bodyColliderMinX - fromDistance);
+        var rightRange = Random.Range(bodyColliderMaxX + fromDistance, bodyColliderMaxX + toDistance);
+
+        Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
+        Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
+        Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
+        Debug.DrawRay(new Vector3(bodyColliderMaxX + toDistance, ceilingHeight), Vector2.down, Color.yellow, 2f);
+
+        Vector2 randomPos = (Random.value > 0.5f) ? new Vector2(leftRange, ceilingHeight) : new Vector2(rightRange, ceilingHeight);
         Instantiate(_stalactitePrefab, randomPos, Quaternion.identity);
     }
 
+    // earthQuake
     public void Earthquake01_AnimEvent()
     {
-        BearAttackInfo earthQuakeInfo = new BearAttackInfo(_earthQuakeDamage, new Vector2(_earthQuakeForceX, _earthQuakeForceY));
-        BearAttack(_earthQuakeCollider.transform.position, _earthQuakeCollider.bounds.size, earthQuakeInfo, _skillTargetLayer);
+        MonsterAttackInfo earthQuakeInfo = new MonsterAttackInfo(_earthQuakeDamage, new Vector2(_earthQuakeForceX, _earthQuakeForceY));
+        BoxCastAttack(_earthQuakeCollider.transform.position, _earthQuakeCollider.bounds.size, earthQuakeInfo, _attackTargetLayer);
 
         // 지면파 생성
         GenerateGroundWave();
