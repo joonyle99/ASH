@@ -33,7 +33,12 @@ public class InteractionController : MonoBehaviour
     void ChangeTarget(InteractableObject newTarget)
     {
         if (newTarget == _interactionTarget)
+        {
+
+            if (_interactionTarget == null)
+                _interactionMarker.Disable();
             return;
+        }
 
         _interactionTarget = newTarget;
 
