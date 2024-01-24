@@ -2,7 +2,6 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections;
 using UnityEngine;
 
-//광선이 연결되는 판정은 해야하는데 랜턴은 아닌 것들
 public class LightDoor : LanternLike
 {
     public override Transform LightPoint { get { return _lightStone; } }
@@ -17,12 +16,31 @@ public class LightDoor : LanternLike
         Closed, Opening, Opened, Closing
     }
     public State CurrentState { get; private set; } = State.Closed;
+
+
+    PreserveState _statePreserver;
+
+
+    SceneEffectEvent _recentEvent;
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+            _statePreserver.Save("opened", CurrentState == State.Opened);
+    }
+
     private void Awake()
     {
         _collider = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
         _cameraController = Camera.main.GetComponent<CameraController>();
-        
+        _statePreserver = GetComponent<PreserveState>();
+        if (_statePreserver && _statePreserver.Load("opened", false))
+        {
+            _collider.isTrigger = true;
+            CurrentState = State.Opened;
+            _animator.SetTrigger("InstantOpen");
+        }
+
     }
     public void Update()
     {
