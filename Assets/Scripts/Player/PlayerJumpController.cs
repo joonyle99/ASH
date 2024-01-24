@@ -26,6 +26,11 @@ public class PlayerJumpController : MonoBehaviour
     [SerializeField] bool _canJump;
     [SerializeField] bool _coyoteAvailable;
 
+    [Header("Effects")]
+
+    [SerializeField] ParticleHelper _doubleJumpEffect;
+    [SerializeField] ParticleHelper _jumpTrailEffect;
+
     // Properties
     public bool CanJump => _canJump;
     public bool CoyoteAvailable => _coyoteAvailable;
@@ -139,8 +144,12 @@ public class PlayerJumpController : MonoBehaviour
         _isStartJump = (_remainingJumpCount == _maxJumpCount);
         _remainingJumpCount--;
 
+        _jumpTrailEffect.Emit(2);
         if (_player.CurrentStateIs<InAirState>())
+        {
+            _doubleJumpEffect.Emit(1);
             _player.Animator.SetTrigger("DoubleJump");
+        }
 
         _player.ChangeState<JumpState>();
     }
