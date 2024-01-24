@@ -71,7 +71,7 @@ public class LightDoor : LanternLike
     }
     public void AnimEvent_OnOpenDone()
     {
-        _collider.isTrigger = true;
+        _collider.enabled = false;
         CurrentState = State.Opened;
     }
 }
