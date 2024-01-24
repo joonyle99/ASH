@@ -67,7 +67,10 @@ public class SceneContext : MonoBehaviour
         {
             Debug.LogWarning("Passage " + entranceName + " is not found in this scene !!");
             if (_passages.Count > 0)
-                EntrancePassage = _passages.Find(x => x.PassageName == "Enterance");
+            {
+
+                EntrancePassage = _passages.Find(x => x.PassageName == "Entrance");
+            }
 
         }
 

@@ -33,7 +33,7 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: a86034c9def8e014cb4ef867b5af3dba
-  graphPosition: {x: 687, y: 0}
+  graphPosition: {x: 538.6501, y: 62.500004}
   Scene:
     sceneAsset: {fileID: 102900000, guid: e97ad917cccf7304faffaef789b55c7c, type: 3}
     scenePath: Assets/Scenes/ActualBuild/Boss_4.unity
@@ -57,7 +57,8 @@ MonoBehaviour:
     sceneAsset: {fileID: 102900000, guid: fa04e3865a4c91840bd47855814f89f1, type: 3}
     scenePath: Assets/Scenes/ActualBuild/1-2.unity
   PassageNames:
-  - Exit_2
+  - Entrance
+  - to1-3
 --- !u!114 &-2014745427570758710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,46 +99,42 @@ MonoBehaviour:
   - {fileID: 1782720182068067114}
   - {fileID: -7774507360984267180}
   _edges:
-  - EntranceScene: {fileID: -2014745427570758710}
-    ExitScene: {fileID: -2869098507112400628}
-    EntrancePassage: Exit_1
-    ExitPassgage: Exit_2
   - EntranceScene: {fileID: -2869098507112400628}
     ExitScene: {fileID: 4282995401228220758}
-    EntrancePassage: Exit_2
+    EntrancePassage: to1-3
     ExitPassgage: Enterance3
   - EntranceScene: {fileID: 4282995401228220758}
     ExitScene: {fileID: -7888092096887817785}
-    EntrancePassage: Enterance3
-    ExitPassgage: doorto2
+    EntrancePassage: BossEnterance
+    ExitPassgage: boss1to1-3
   - EntranceScene: {fileID: 6500535830191988829}
     ExitScene: {fileID: 1782720182068067114}
     EntrancePassage: 2to3
     ExitPassgage: 3to2
+  - EntranceScene: {fileID: 1782720182068067114}
+    ExitScene: {fileID: 6500535830191988829}
+    EntrancePassage: 3to2
+    ExitPassgage: 2to3
+  - EntranceScene: {fileID: 6500535830191988829}
+    ExitScene: {fileID: -7774507360984267180}
+    EntrancePassage: 2to4
+    ExitPassgage: 4to2
+  - EntranceScene: {fileID: -7774507360984267180}
+    ExitScene: {fileID: 6500535830191988829}
+    EntrancePassage: 4to2
+    ExitPassgage: 2to4
+  - EntranceScene: {fileID: -2014745427570758710}
+    ExitScene: {fileID: -2869098507112400628}
+    EntrancePassage: Exit_1
+    ExitPassgage: Entrance
   - EntranceScene: {fileID: -7888092096887817785}
     ExitScene: {fileID: 6500535830191988829}
     EntrancePassage: doorto2
     ExitPassgage: 2to1
   - EntranceScene: {fileID: 6500535830191988829}
-    ExitScene: {fileID: 1782720182068067114}
-    EntrancePassage: doorto1
-    ExitPassgage: 3to2
-  - EntranceScene: {fileID: 1782720182068067114}
-    ExitScene: {fileID: 6500535830191988829}
-    EntrancePassage: 
-    ExitPassgage: 2to3
-  - EntranceScene: {fileID: 4282995401228220758}
     ExitScene: {fileID: -7888092096887817785}
-    EntrancePassage: Enterance31
-    ExitPassgage: boss1to1-3
-  - EntranceScene: {fileID: -7888092096887817785}
-    ExitScene: {fileID: 4282995401228220758}
-    EntrancePassage: doorto21
-    ExitPassgage: BossEnterance
-  - EntranceScene: {fileID: 6500535830191988829}
-    ExitScene: {fileID: -7774507360984267180}
-    EntrancePassage: 2to11
-    ExitPassgage: 4to2
+    EntrancePassage: 2to1
+    ExitPassgage: doorto2
 --- !u!114 &1782720182068067114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,7 +148,7 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: bf49829ce3af9434a9aa0e9ad8f51807
-  graphPosition: {x: 552, y: 0}
+  graphPosition: {x: 516.35004, y: -49.311985}
   Scene:
     sceneAsset: {fileID: 102900000, guid: 72f1195d20496374d998c0b65d4973fc, type: 3}
     scenePath: Assets/Scenes/ActualBuild/Boss_3.unity
