@@ -11,6 +11,18 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     DataGroup _globalDataGroup = new DataGroup();
 
     [SerializeField] SkillOrderData _skillOrderData;
+
+
+    int _cheatSkillid = 0;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F8))
+        {
+            PersistentDataManager.Set<bool>(PersistentDataManager.SkillOrderData[_cheatSkillid].Key, true);
+            PersistentDataManager.UpdateValue<int>("skillPiece", x => x + 3);
+            _cheatSkillid++;
+        }
+    }
     public static SkillOrderData SkillOrderData => Instance._skillOrderData;
     public static bool TryAddDataGroup(string groupName)
     {
