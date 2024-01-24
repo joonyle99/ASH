@@ -5,9 +5,6 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     [Header("Monster_StateBase")]
     [Space]
 
-    [Header("Auto Change State")]
-    [Space]
-
     [SerializeField] protected bool _isAutoStateTransition = false;
 
     [Space]
@@ -57,6 +54,7 @@ public abstract class Monster_StateBase : StateMachineBehaviour
             if (_elapsedStayTime > _targetStayTime)
             {
                 _elapsedStayTime = 0f;
+                Debug.Log($"Current State : {Monster.CurrentState} / Transition : {_targetTransitionParam}");
                 Monster.StartChangeStateCoroutine(_targetTransitionParam, Monster.CurrentState);
 
                 return;

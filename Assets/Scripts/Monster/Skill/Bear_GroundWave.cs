@@ -34,4 +34,25 @@ public class Bear_GroundWave : Monster_SkillObject
         // 이동 방향 설정
         _moveDir = dir;
     }
+
+    /*
+    // TODO : 기울어진 땅을 따라가도록 수정
+    public void GroundWalking()
+    {
+        Vector2 groundNormal = GroundRayHit.normal;
+        Vector2 moveDirection = RecentDir > 0
+            ? (-1) * Vector2.Perpendicular(groundNormal)
+            : Vector2.Perpendicular(groundNormal);
+
+        Debug.DrawRay(GroundRayHit.point, groundNormal);
+
+        Vector2 targetVelocity = moveDirection * MoveSpeed;
+        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(Rigidbody.velocity, moveDirection) * moveDirection;
+        Vector2 moveForce = velocityNeeded * Acceleration;
+
+        Debug.DrawRay(transform.position, moveForce);
+
+        Rigidbody.AddForce(moveForce);
+    }
+    */
 }

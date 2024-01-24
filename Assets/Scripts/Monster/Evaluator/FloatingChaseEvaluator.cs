@@ -6,8 +6,8 @@ public class FloatingChaseEvaluator : Evaluator
 
     private void Awake()
     {
-        customEvaluation -= SetTarget;
-        customEvaluation += SetTarget;
+        customEvaluationEvent -= SetTarget;
+        customEvaluationEvent += SetTarget;
     }
 
     public override Collider2D IsTargetWithinRange()

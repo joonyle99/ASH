@@ -19,14 +19,10 @@ public class GroundChaseEvaluator : Evaluator
         private set => _isChasing = value;
     }
 
-    public Vector3 TargetPoint { get; private set; }
-
     private void Awake()
     {
-        customEvaluation -= SetTargetTrans;
-        customEvaluation += SetTargetTrans;
-        customEvaluation -= SetChaseDir;
-        customEvaluation += SetChaseDir;
+        customEvaluationEvent -= SetChaseDir;
+        customEvaluationEvent += SetChaseDir;
     }
 
     public override Collider2D IsTargetWithinRange()
@@ -39,11 +35,6 @@ public class GroundChaseEvaluator : Evaluator
         return hasChaseTarget;
     }
 
-    public void SetTargetTrans(Vector3 targetPoint)
-    {
-        // 추격 타겟을 설정한다.
-        TargetPoint = targetPoint;
-    }
     public void SetChaseDir(Vector3 targetPoint)
     {
         // 추격 방향을 설정한다.

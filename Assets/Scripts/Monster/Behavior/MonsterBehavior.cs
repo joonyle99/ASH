@@ -160,13 +160,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public string MonsterName
     {
         get => _monsterName;
-        protected set => _monsterName = value;
+        set => _monsterName = value;
     }
     [SerializeField] private int _maxHp;
     public int MaxHp
     {
         get => _maxHp;
-        protected set => _maxHp = value;
+        set => _maxHp = value;
     }
     [SerializeField] private int _curHp;
     public int CurHp
@@ -178,19 +178,19 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public float MoveSpeed
     {
         get => _moveSpeed;
-        protected set => _moveSpeed = value;
+        set => _moveSpeed = value;
     }
     [SerializeField] private float _acceleration;
     public float Acceleration
     {
         get => _acceleration;
-        protected set => _acceleration = value;
+        set => _acceleration = value;
     }
     [SerializeField] private Vector2 _jumpForce;
     public Vector2 JumpForce
     {
         get => _jumpForce;
-        protected set => _jumpForce = value;
+        set => _jumpForce = value;
     }
     [SerializeField] private MonsterDefine.RankType _rankType;
     public MonsterDefine.RankType RankType
@@ -217,6 +217,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [SerializeField] private LayerMask _groundCheckLayer;
     [SerializeField] private BoxCollider2D _groundCheckCollider;
     public RaycastHit2D GroundRayHit;
+
+    [Space]
+
+    [SerializeField] private Transform _centerOfMass;
 
     // Blink
     private Material _whiteFlashMaterial;
@@ -270,6 +274,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // 바라보는 방향 설정
         RecentDir = DefaultDir;
+
+        // 무게중심 설정
+        if (!_centerOfMass)_centerOfMass = this.transform;
+        Rigidbody.centerOfMass = _centerOfMass.localPosition;
     }
     protected virtual void Update()
     {
@@ -328,6 +336,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // range based attack by attack evaluator
         if (AttackEvaluator)
         {
+            if (CurrentState is IPassiveState)
+                return;
+
             if (AttackEvaluator.IsTargetWithinRange())
             {
                 AttackEvaluator.StartCoolTimeCoroutine();

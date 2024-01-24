@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SemiBoss_GroggyState : SemiBoss_StateBase
+public class SemiBoss_GroggyState : SemiBoss_StateBase, IPassiveState
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

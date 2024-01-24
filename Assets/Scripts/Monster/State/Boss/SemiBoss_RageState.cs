@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SemiBoss_RageState : SemiBoss_StateBase
+public class SemiBoss_RageState : SemiBoss_StateBase, IPassiveState
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -17,5 +17,10 @@ public class SemiBoss_RageState : SemiBoss_StateBase
         base.OnStateExit(animator, stateInfo, layerIndex);
 
         // TODO : 보스가 격노하면 이동속도 / 공격속도 증가
+        SemiBoss.MoveSpeed *= 2f;
+
+        // 스킬 시전 속도 증가
+        if(SemiBoss.AttackEvaluator)
+            SemiBoss.AttackEvaluator.TargetCheckCoolTime /= 2f;
     }
 }

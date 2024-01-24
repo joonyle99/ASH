@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Monster_DieState : Monster_StateBase
+public class Monster_DieState : Monster_StateBase, IPassiveState
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

@@ -11,8 +11,8 @@ public class AttackEvaluator : Evaluator
     private void Awake()
     {
         _monster = GetComponent<MonsterBehavior>();
-        customEvaluation -= ChangeDir;
-        customEvaluation += ChangeDir;
+        customEvaluationEvent -= ChangeDir;
+        customEvaluationEvent += ChangeDir;
     }
 
     public override Collider2D IsTargetWithinRange()
@@ -24,6 +24,10 @@ public class AttackEvaluator : Evaluator
     {
         // 공격 전 최종적으로 방향을 바꾼다.
         int chaseDir = Math.Sign(targetPoint.x - transform.position.x);
-        _monster.SetRecentDir(chaseDir);
+
+        if (_monster.MoveType == MonsterDefine.MoveType.GroundWalking || _monster.MoveType == MonsterDefine.MoveType.GroundJumpping)
+            _monster.StartSetRecentDirAfterGrounded(chaseDir);
+        else
+            _monster.SetRecentDir(chaseDir);
     }
 }

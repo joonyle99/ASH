@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1716051016
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1716051017}
+  m_Layer: 0
+  m_Name: CenterOfMass
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1716051017
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716051016}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.42, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6506395628763043963}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &12790336525068870
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,7 +328,7 @@ MonoBehaviour:
   - {fileID: 9156823953722417553}
   - {fileID: 1182018882053832110}
   m_Bounds:
-    m_Center: {x: -0.042785645, y: -0.36253774, z: 0}
+    m_Center: {x: -0.04272461, y: -0.36253774, z: 0}
     m_Extent: {x: 2.7250001, y: 1.2055951, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -497,7 +528,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7372638284866705276}
   m_Bounds:
-    m_Center: {x: 2.4642792, y: 0.3396168, z: 0}
+    m_Center: {x: 2.4642181, y: 0.3396168, z: 0}
     m_Extent: {x: 0.7579402, y: 0.36860013, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1103,7 +1134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4386577299594174855
 Transform:
   m_ObjectHideFlags: 0
@@ -1811,6 +1842,7 @@ Transform:
   - {fileID: 4386577299912778921}
   - {fileID: 4386577300984145117}
   - {fileID: 4386577299526087941}
+  - {fileID: 1716051017}
   m_Father: {fileID: 4386577299594174855}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1928,6 +1960,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _groundCheckCollider: {fileID: 8825375826108273547}
+  _centerOfMass: {fileID: 1716051017}
 --- !u!114 &5369211660300451871
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2398,7 +2431,7 @@ MonoBehaviour:
   - {fileID: 3448077128107993971}
   - {fileID: 9156823953722417553}
   m_Bounds:
-    m_Center: {x: -1.5711429, y: 1.2653179, z: 0}
+    m_Center: {x: -1.571204, y: 1.2653179, z: 0}
     m_Extent: {x: 1.22345, y: 0.93499994, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -2613,7 +2646,7 @@ MonoBehaviour:
   - {fileID: 2479602728527215616}
   - {fileID: 3481369409206871821}
   m_Bounds:
-    m_Center: {x: 2.6872606, y: -1.407, z: 0}
+    m_Center: {x: 2.6871996, y: -1.407, z: 0}
     m_Extent: {x: 0.8550001, y: 0.97731507, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

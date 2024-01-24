@@ -15,6 +15,11 @@ public abstract class Evaluator : MonoBehaviour
     [Space]
 
     [SerializeField] private float _targetCheckCoolTime;        // 판독 쿨타임
+    public float TargetCheckCoolTime
+    {
+        get => _targetCheckCoolTime;
+        set => _targetCheckCoolTime = value;
+    }
     [SerializeField] private bool _isDuringCoolTime;            // 판독기 쿨타임 중 여부
     public bool IsDuringCoolTime
     {
@@ -30,9 +35,9 @@ public abstract class Evaluator : MonoBehaviour
 
     private Coroutine _coolTimeCoroutine;
 
-    // 커스텀 판독 델리게이트 정의
-    protected delegate void CustomEvaluation(Vector3 targetPoint);
-    protected CustomEvaluation customEvaluation;
+    // 커스텀 판독 이벤트 정의
+    protected delegate void CustomEvaluationEvent(Vector3 targetPoint);
+    protected CustomEvaluationEvent customEvaluationEvent;
 
     public virtual Collider2D IsTargetWithinRange()
     {
@@ -54,14 +59,14 @@ public abstract class Evaluator : MonoBehaviour
                 if (!player.IsDead)
                 {
                     // custom evaluation
-                    if (customEvaluation != null)
+                    if (customEvaluationEvent != null)
                     {
                         // 플레이어의 타겟 포인트 설정
                         Vector3 playerTargetPoint = player.transform.position + new Vector3(0f, player.BodyCollider.bounds.extents.y * 1.5f, 0f);
                         // Debug.DrawRay(playerTargetPoint, Vector3.right, Color.yellow);
 
                         // 커스텀 판독 실행
-                        customEvaluation(playerTargetPoint);
+                        customEvaluationEvent(playerTargetPoint);
 
                         return targetCollider;
                     }
@@ -72,8 +77,8 @@ public abstract class Evaluator : MonoBehaviour
             // ...
 
             // custom evaluation
-            if (customEvaluation != null)
-                customEvaluation(Vector3.zero);
+            if (customEvaluationEvent != null)
+                customEvaluationEvent(Vector3.zero);
 
             return targetCollider;
         }
