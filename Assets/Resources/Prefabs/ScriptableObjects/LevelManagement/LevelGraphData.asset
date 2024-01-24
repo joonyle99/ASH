@@ -16,7 +16,7 @@ MonoBehaviour:
   graphPosition: {x: 369.06247, y: -0.0000019073486}
   Scene:
     sceneAsset: {fileID: 102900000, guid: 8022db8fd7901954bb97eb0dbd31e359, type: 3}
-    scenePath: Assets/Scenes/Test/JH/Boss_1.unity
+    scenePath: Assets/Scenes/ActualBuild/Boss_1.unity
   PassageNames:
   - doorto2
 --- !u!114 &-2869098507112400628
@@ -74,6 +74,7 @@ MonoBehaviour:
   - {fileID: -2869098507112400628}
   - {fileID: -7888092096887817785}
   - {fileID: 6500535830191988829}
+  - {fileID: 4282995401228220758}
   _edges:
   - EntranceScene: {fileID: -2014745427570758710}
     ExitScene: {fileID: -2869098507112400628}
@@ -83,6 +84,24 @@ MonoBehaviour:
     ExitScene: {fileID: 6500535830191988829}
     EntrancePassage: doorto2
     ExitPassgage: doorto1
+--- !u!114 &4282995401228220758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: a766c1c5176fc3a4d99fbef607c0e843
+  graphPosition: {x: 0, y: 0}
+  Scene:
+    sceneAsset: {fileID: 0}
+    scenePath: 
+  PassageNames: []
 --- !u!114 &6500535830191988829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +118,6 @@ MonoBehaviour:
   graphPosition: {x: 587.45746, y: 0}
   Scene:
     sceneAsset: {fileID: 102900000, guid: aeae6a385217a5a40b752f7b06abf2ad, type: 3}
-    scenePath: Assets/Scenes/Test/JH/Boss_2.unity
+    scenePath: Assets/Scenes/ActualBuild/Boss_2.unity
   PassageNames:
   - doorto1
