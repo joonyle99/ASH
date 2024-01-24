@@ -7,7 +7,7 @@ public class InstantRespawnState : PlayerState
     [SerializeField] InputSetterScriptableObject _stayStillSetter;
     [SerializeField] float _spawnDuration;
     SpriteRenderer[] _spriteRenderers;
-    
+
     DisintegrateEffect _disintegrateEffect;
     public float DieDuration => _disintegrateEffect.Duration;
     public float SpawnDuration => _spawnDuration;
@@ -26,7 +26,7 @@ public class InstantRespawnState : PlayerState
     }
     IEnumerator SpawnCoroutine()
     {
-        for(int i=0; i<_spriteRenderers.Length; i++)
+        for (int i = 0; i < _spriteRenderers.Length; i++)
         {
             _spriteRenderers[i].material = Player.OriginalMaterials[i];
         }

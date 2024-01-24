@@ -12,6 +12,7 @@ public class PlayerMovementController : MonoBehaviour
 
     Vector2 _moveForce;
 
+    public Vector3 RecentMoveDirection { get; private set; }
 
     HashSet<object> _disableMovementList = new HashSet<object>();
 
@@ -38,7 +39,7 @@ public class PlayerMovementController : MonoBehaviour
         Vector2 moveDirection = _player.RawInputs.Movement.x > 0f
             ? (-1) * Vector2.Perpendicular(groundNormal)
             : Vector2.Perpendicular(groundNormal);
-
+        RecentMoveDirection = moveDirection;
         Vector2 targetVelocity = moveDirection * _maxSpeed;
         Vector2 velocityNeeded = targetVelocity - Vector2.Dot(_player.Rigidbody.velocity, moveDirection) * moveDirection;
         float accelRate = (velocityNeeded.magnitude > 0.01f) ? _acceleration : _decceleration;

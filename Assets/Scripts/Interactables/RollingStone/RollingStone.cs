@@ -9,6 +9,10 @@ public class RollingStone : InteractableObject
     [SerializeField] float _pushPower;
 
     [SerializeField] bool _stopOnRelease = false;
+    [SerializeField] bool _canPull = false;
+    [SerializeField] Collider2D _interactionZone;
+    [SerializeField] LayerMask _playerMask;
+
     [SerializeField] SoundList _soundList;
     [SerializeField] float _pushSoundInterval;
 
@@ -26,7 +30,7 @@ public class RollingStone : InteractableObject
     }
     protected override void OnInteract()
     {
-        Player.MovementController.enabled = true;
+        //Player.MovementController.enabled = true;
         _moveDirection = Player.PlayerLookDir2D.x;
     }
 
@@ -46,23 +50,34 @@ public class RollingStone : InteractableObject
     }
     public override void UpdateInteracting()
     {
-        //TODO : 플레이어가 돌에서 떨어졌을 때
-        if (IsInteractionKeyUp || IsPlayerStateChanged || Player.RawInputs.Movement.x * _moveDirection < 0)
+        List<Collider2D> contacts = new List<Collider2D>();
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.layerMask = _playerMask;
+        filter.useLayerMask= true;
+        var contactCount = _interactionZone.OverlapCollider(filter, contacts);
+        if (IsInteractionKeyUp || IsPlayerStateChanged || (!_canPull && Player.RawInputs.Movement.x * _moveDirection < 0) ||
+            contactCount == 0)
         {
             ExitInteraction();
         }
     }
     public override void FixedUpdateInteracting()
     {
-        _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower);
-        if(_clampSpeed)
+        if (_canPull && Player.RawInputs.Movement.x * _moveDirection < 0)
+            _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower * 0.7f);
+        else
+            _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower);
+
+        if (Player.RawInputs.Movement.x * _moveDirection > 0)
+            Player.Rigidbody.AddForce(Player.RawInputs.Movement * 70);
+        if (_clampSpeed)
             _rigidbody.velocity = Vector2.ClampMagnitude(_rigidbody.velocity, _maxRollSpeed);
 
     }
     protected override void OnInteractionExit()
     {
         if (_stopOnRelease)
-            _rigidbody.velocity *= 0.2f;
-        Player.MovementController.enabled = false;
+            _rigidbody.velocity *= 0.1f;
+        //Player.MovementController.enabled = false;
     }
 }

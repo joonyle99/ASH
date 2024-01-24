@@ -1342,13 +1342,11 @@ MonoBehaviour:
   _bodyHitTargetLayer:
     serializedVersion: 2
     m_Bits: 256
+  _toHitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
   _bodyHitDamage: 5
   _bodyHitForceX: 7
   _bodyHitForceY: 10
-  _fromHitEffectPrefab: {fileID: 0}
-  _toHitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
   _isAttackable: 1
-  _isHurtable: 1
 --- !u!1 &4386577300984145116
 GameObject:
   m_ObjectHideFlags: 0
@@ -1802,6 +1800,7 @@ GameObject:
   - component: {fileID: 4508301471497315008}
   - component: {fileID: 4386577300565921617}
   - component: {fileID: 5369211660300451871}
+  - component: {fileID: 671760447267284499}
   - component: {fileID: 4386577300565921619}
   - component: {fileID: 723671115631068515}
   m_Layer: 11
@@ -1982,6 +1981,19 @@ MonoBehaviour:
   _isUsable: 1
   _patrolPoints: {fileID: 4386577299285460136}
   _isOutOfPatrolRange: 0
+--- !u!114 &671760447267284499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5369211660300451864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb203bd9b09452548822786d2d04b007, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _type: 1
 --- !u!114 &4386577300565921619
 MonoBehaviour:
   m_ObjectHideFlags: 0

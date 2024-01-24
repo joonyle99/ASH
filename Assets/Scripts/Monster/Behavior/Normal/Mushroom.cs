@@ -14,6 +14,9 @@ public class Mushroom : MonsterBehavior
     protected override void Awake()
     {
         base.Awake();
+
+        boxCastAttackEvent -= KillPlayer;
+        boxCastAttackEvent += KillPlayer;
     }
     protected override void Start()
     {
@@ -78,5 +81,10 @@ public class Mushroom : MonsterBehavior
     public void DevourEnd_AnimEvent()
     {
         _isDevouring = false;
+    }
+
+    public void KillPlayer()
+    {
+        SceneContext.Current.Player.TriggerInstantRespawn(1);
     }
 }

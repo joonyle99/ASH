@@ -11,6 +11,7 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
     [SerializeField] float _fallSpeedBonus = 0f;
     [SerializeField] LayerMask _collisionLayers;
     [SerializeField] SoundList _soundList;
+    [SerializeField] ParticleHelper _impactParticle;
 
     bool _isFallInvoked = false;
     void Awake()
@@ -29,7 +30,12 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        _soundList.PlaySFX("SE_FallingSpike_Land");
+        //var ob = collision.gameObject.GetComponent<ASHObject>();
+        //if (ob != null && ob.Type == ObjectType.Ground)
+        {
+            _soundList.PlaySFX("SE_FallingSpike_Land");
+            _impactParticle.gameObject.SetActive(true);
+        }
     }
 
     void FixedUpdate()
