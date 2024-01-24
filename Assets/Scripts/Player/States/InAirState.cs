@@ -41,10 +41,16 @@ public class InAirState : PlayerState
         }
 
         // Change to Wall Grab State
-        if (Player.IsTouchedWall && Player.IsDirSync)
+        if (Player.IsTouchedWall)
         {
-            ChangeState<WallGrabState>();
-            return;
+            if (Player.IsWallable)
+            {
+                if (Player.IsDirSync && Player.IsMoveUpKey)
+                {
+                    ChangeState<WallGrabState>();
+                    return;
+                }
+            }
         }
 
         /*
