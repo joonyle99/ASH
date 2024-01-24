@@ -21,8 +21,8 @@ public class PlayerAttackController : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private float _targetNextBasicAttackTime = 1.5f;
-    [SerializeField] private float _elapsedNextBasicAttackTime;
+    [SerializeField] private float _targetNextAttackableTime = 1f;
+    [SerializeField] private float _elapsedNextAttackableTime;
     [SerializeField] private int _basicAttackCount;
     [SerializeField] private bool _isBasicAttacking;
 
@@ -47,11 +47,11 @@ public class PlayerAttackController : MonoBehaviour
         // reset attackCount
         if (_basicAttackCount > 0)
         {
-            _elapsedNextBasicAttackTime += Time.deltaTime;
+            _elapsedNextAttackableTime += Time.deltaTime;
 
-            if (_elapsedNextBasicAttackTime > _targetNextBasicAttackTime)
+            if (_elapsedNextAttackableTime > _targetNextAttackableTime)
             {
-                _elapsedNextBasicAttackTime = 0f;
+                _elapsedNextAttackableTime = 0f;
                 _basicAttackCount = 0;
                 _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
             }
@@ -64,7 +64,7 @@ public class PlayerAttackController : MonoBehaviour
         if (!IsBasicAttacking)
         {
             IsBasicAttacking = true;
-            _elapsedNextBasicAttackTime = 0f;
+            _elapsedNextAttackableTime = 0f;
             _basicAttackCount++;
 
 
@@ -72,7 +72,8 @@ public class PlayerAttackController : MonoBehaviour
             _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
 
             _player.PlaySound_SE_Attack();
-            _attackEffects[_basicAttackCount-1].Play();
+            // _attackEffects[_basicAttackCount-1].Play();
+            _attackEffects[1].Play();
 
             if (_basicAttackCount >= 3)
                 _basicAttackCount = 0;
