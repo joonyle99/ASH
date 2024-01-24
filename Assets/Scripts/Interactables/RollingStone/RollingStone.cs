@@ -8,6 +8,7 @@ public class RollingStone : InteractableObject
     [SerializeField] float _maxRollSpeed;
     [SerializeField] float _pushPower;
 
+    [SerializeField] bool _stopOnRelease = false;
     [SerializeField] SoundList _soundList;
     [SerializeField] float _pushSoundInterval;
 
@@ -60,6 +61,8 @@ public class RollingStone : InteractableObject
     }
     protected override void OnInteractionExit()
     {
+        if (_stopOnRelease)
+            _rigidbody.velocity *= 0.2f;
         Player.MovementController.enabled = false;
     }
 }
