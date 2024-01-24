@@ -26,8 +26,7 @@ public class Turtle : MonsterBehavior
     }
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        if (IsDead)
-            return IAttackListener.AttackResult.Fail;
+        // 거북이는 Dead 상태에서도 Hit가 가능하다
 
         // Turtle Hit Process
         HitProcess(attackInfo, false, true);
