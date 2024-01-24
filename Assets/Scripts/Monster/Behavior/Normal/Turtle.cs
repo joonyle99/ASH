@@ -33,7 +33,7 @@ public class Turtle : MonsterBehavior
         HitProcess(attackInfo, false, true);
 
         // Change to Hurt State
-        if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundPatrolState>())
+        if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundMoveState>())
             Animator.SetTrigger("Hurt");
 
         return IAttackListener.AttackResult.Success;

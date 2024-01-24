@@ -29,17 +29,13 @@ public abstract class Monster_StateBase : StateMachineBehaviour
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Monster = animator.GetComponent<MonsterBehavior>();
-        Monster.UpdateState(this);
-
-        _targetStayTime = 0f;
-        _elapsedStayTime = 0f;
+        Monster = animator.GetComponent<MonsterBehavior>(); // Get Monster Behavior
+        Monster.UpdateState(this);                          // Update Monster State
 
         if (_isAutoStateTransition)
         {
-            // set random time for auto change state
-            _targetStayTime = Random.Range(_minStayTime, _maxStayTime);
             _elapsedStayTime = 0f;
+            _targetStayTime = Random.Range(_minStayTime, _maxStayTime);
         }
 
         if (Monster.NavMeshMoveModule)
