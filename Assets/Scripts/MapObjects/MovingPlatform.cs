@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class MovingPlatform : ToggleableObject
 {
+    enum Type { Vertical , Horizontal }
+    [SerializeField] Type _type = Type.Vertical;
     [SerializeField] float _speed = 1;
     [SerializeField] WaypointPath _path;
+    [SerializeField] Sprite [] _stoneSprites;
+    [SerializeField] Vector2 [] _colliderSizes;
     Rigidbody2D _rigidbody;
     float _travelDistance = 0f;
     bool _isMoving = false;
@@ -19,6 +23,11 @@ public class MovingPlatform : ToggleableObject
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
             _travelDistance = _statePreserver.Load("travelDistance", 0f);
+    }
+    private void OnValidate()
+    {
+        GetComponent<SpriteRenderer>().sprite = _stoneSprites[(int) _type];
+        GetComponent<BoxCollider2D>().size = _colliderSizes[(int)_type];
     }
     private void OnDestroy()
     {
