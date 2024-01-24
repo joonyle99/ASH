@@ -235,9 +235,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private readonly float _targetFadeOutTime = 2f;
     private float _elapsedFadeOutTime;
 
-    // animation transition condition
-    public delegate bool AnimationTransitionCondition(string targetTransitionParam, Monster_StateBase state);
-    public AnimationTransitionCondition AnimTransitionCondition;
+    // animation transition event
+    public delegate bool AnimationTransitionEvent(string targetTransitionParam, Monster_StateBase state);
+    public AnimationTransitionEvent AnimTransitionEvent;
+
+    // box cast attack event
+    public delegate void BoxCastAttackEvent();
+    public BoxCastAttackEvent boxCastAttackEvent;
 
     #endregion
 
@@ -276,7 +280,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         RecentDir = DefaultDir;
 
         // 무게중심 설정
-        if (!_centerOfMass)_centerOfMass = this.transform;
+        if (!_centerOfMass) _centerOfMass = this.transform;
         Rigidbody.centerOfMass = _centerOfMass.localPosition;
     }
     protected virtual void Update()
@@ -479,7 +483,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 var attackResult = listener.OnHit(new AttackInfo(attackinfo.Damage, forceVector, AttackType.Monster_SkillAttack));
 
                 if (attackResult == IAttackListener.AttackResult.Success)
+                {
                     Instantiate(_attackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                    boxCastAttackEvent?.Invoke();
+                }
             }
         }
     }
@@ -510,13 +517,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (monsterBodyHitModule)
             monsterBodyHitModule.IsAttackable = isBool;
     }
-    public void SetIsHurtableHitBox(bool isBool)
-    {
-        var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHitModule>();
-
-        if (monsterBodyHitModule)
-            monsterBodyHitModule.IsHurtable = isBool;
-    }
     public IEnumerator AttackableHitBox(bool isBool)
     {
         yield return new WaitForSeconds(0.1f);
@@ -526,16 +526,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public void StartAttackableHitBox()
     {
         StartCoroutine(AttackableHitBox(true));
-    }
-    public IEnumerator HurtableHitBox(bool isBool)
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        SetIsHurtableHitBox(isBool);
-    }
-    public void StartHurtableHitBox()
-    {
-        StartCoroutine(HurtableHitBox(true));
     }
 
     // flash
@@ -684,8 +674,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState)
     {
         // 애니메이션 전이 조건이 있는 경우 조건을 만족할 때까지 대기
-        if(AnimTransitionCondition != null)
-            yield return new WaitUntil(() => AnimTransitionCondition(targetTransitionParam, currentState));
+        if (AnimTransitionEvent != null)
+            yield return new WaitUntil(() => AnimTransitionEvent(targetTransitionParam, currentState));
 
         Animator.SetTrigger(targetTransitionParam);
     }

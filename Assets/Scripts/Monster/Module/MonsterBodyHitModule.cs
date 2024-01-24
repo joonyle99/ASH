@@ -1,11 +1,15 @@
 using UnityEngine;
 
+/// <summary>
+/// 몬스터의 바디 타격을 담당하는 모듈
+/// </summary>
 public class MonsterBodyHitModule : MonoBehaviour
 {
     [Header("Monster BodyHit Module")]
     [Space]
 
     [SerializeField] private LayerMask _bodyHitTargetLayer;
+    [SerializeField] private GameObject _toHitEffectPrefab;
 
     [Space]
 
@@ -15,35 +19,11 @@ public class MonsterBodyHitModule : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private GameObject _fromHitEffectPrefab;
-    [SerializeField] private GameObject _toHitEffectPrefab;
-
-    [Space]
-
     [SerializeField] private bool _isAttackable = true;
     public bool IsAttackable
     {
         get { return _isAttackable; }
         set { _isAttackable = value; }
-    }
-    [SerializeField] private bool _isHurtable = true;
-    public bool IsHurtable
-    {
-        get { return _isHurtable; }
-        set { _isHurtable = value; }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (IsHurtable)
-        {
-            var spike = collision.GetComponent<Spikes>();
-            if (spike)
-            {
-                var monster = GetComponentInParent<MonsterBehavior>();
-                monster.Animator.SetTrigger("Die");
-            }
-        }
     }
 
     // 대상이 콜라이더에 계속 들어와있을 경우를 고려해 TriggerStay 사용

@@ -56,7 +56,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     [SerializeField] Material _whiteMaterial;
     [SerializeField] float _godModeTime = 1.5f;
-    [SerializeField] float _blinkDuration = 0.1f;
+    [SerializeField] float _blinkDuration = 0.06f;
 
     SpriteRenderer[] _spriteRenderers;
     Material[] _originalMaterials;
@@ -145,6 +145,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // Collider
         _bodyCollider = GetComponent<CapsuleCollider2D>();
 
+        // Sprite Renderer / Original Material
+        SaveSpriteRenderers();
         SaveOriginalMaterial();
 
         // SoundList
@@ -199,7 +201,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         // Check Wall
         WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
-        if(WallHit)
+        if (WallHit)
         {
             // TODO : 벽의 방향을 localScale로 하면 위험하다
             int wallLookDir = Math.Sign(WallHit.transform.localScale.x);
@@ -247,7 +249,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     {
         if (!IsGrounded)
         {
-            if(CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
+            if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();
         }
     }
@@ -334,8 +336,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     private void SaveOriginalMaterial()
     {
-        SaveSpriteRenderers();
-
         _originalMaterials = new Material[_spriteRenderers.Length];
 
         for (int i = 0; i < _originalMaterials.Length; i++)
@@ -343,31 +343,43 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     private void InitMaterial()
     {
+        Debug.Log("InitMaterial");
+
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
     }
+    private void ChangeMaterial()
+    {
+        for (int i = 0; i < _originalMaterials.Length; i++)
+            _spriteRenderers[i].material = _whiteMaterial;
+    }
     private IEnumerator Blink()
     {
+        // turn to white material
+        ChangeMaterial();
+
         while (IsGodMode)
         {
-            // turn to white material
-            for (int i = 0; i < _originalMaterials.Length; i++)
-                _spriteRenderers[i].material = _whiteMaterial;
+            foreach (var spriteRenderer in _spriteRenderers)
+                spriteRenderer.material.SetFloat("_FlashAmount", 0.4f);
 
             yield return new WaitForSeconds(_blinkDuration);
 
-            // turn to original material
-            for (int i = 0; i < _originalMaterials.Length; i++)
-                _spriteRenderers[i].material = _originalMaterials[i];
+            foreach (var spriteRenderer in _spriteRenderers)
+                spriteRenderer.material.SetFloat("_FlashAmount", 0f);
 
             yield return new WaitForSeconds(_blinkDuration);
         }
+
+        // turn to original material
+        if (!CurrentStateIs<InstantRespawnState>())
+            InitMaterial();
     }
     public void StartBlink()
     {
         if (this._blinkRoutine != null)
         {
-            InitMaterial();
+            // InitMaterial();
             StopCoroutine(this._blinkRoutine);
         }
         this._blinkRoutine = StartCoroutine(Blink());
