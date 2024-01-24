@@ -11,7 +11,7 @@ public class HurtState : PlayerState
         Player.IsHurt = true;
 
         Player.StartGodMode();
-        Player.StartBlink();
+        Player.StartWhiteFlash();
         // Player.StartWhiteFlash();
     }
 
