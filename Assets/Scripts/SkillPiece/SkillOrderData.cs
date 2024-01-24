@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class SkillData
 {
+    public string Key;
     public Sprite PieceIcon;
     public Sprite UnlockImage;
     public string Name;

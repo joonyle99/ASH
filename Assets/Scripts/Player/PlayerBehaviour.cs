@@ -85,7 +85,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     // Can Property
     public bool CanBasicAttack { get { return CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>(); } }
     public bool CanShootingAttack { get { return CurrentStateIs<IdleState>(); } }
-    public bool CanDash { get { return _isCanDash; } set { _isCanDash = value; } }
+    public bool CanDash { get { return _isCanDash && PersistentDataManager.Get<bool>("Dash"); } set { _isCanDash = value; } }
 
     // Condition Property
     public bool IsGrounded { get { return GroundHit; } }
