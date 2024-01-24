@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,6 +8,8 @@ using UnityEngine.AI;
 /// </summary>
 public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
+    #region Attribute
+
     public class MonsterAttackInfo
     {
         public float Damage = 1f;
@@ -18,8 +21,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             Force = force;
         }
     }
-
-    #region Attribute
 
     // Basic Component
     public Rigidbody2D Rigidbody { get; private set; }
@@ -43,12 +44,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Header("Module")]
     [Space]
 
-    [SerializeField] private GroundPatrolModule _groundPatrolModule;
-    public GroundPatrolModule GroundPatrolModule
-    {
-        get => _groundPatrolModule;
-        private set => _groundPatrolModule = value;
-    }
     [SerializeField] private FloatingPatrolModule _floatingPatrolModule;
     public FloatingPatrolModule FloatingPatrolModule
     {
@@ -65,6 +60,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Header("Evaluator")]
     [Space]
 
+    [SerializeField] private GroundPatrolEvaluator _groundPatrolEvaluator;
+    public GroundPatrolEvaluator GroundPatrolEvaluator
+    {
+        get => _groundPatrolEvaluator;
+        private set => _groundPatrolEvaluator = value;
+    }
     [SerializeField] private GroundChaseEvaluator _groundChaseEvaluator;
     public GroundChaseEvaluator GroundChaseEvaluator
     {
@@ -230,6 +231,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private readonly float _targetFadeOutTime = 2f;
     private float _elapsedFadeOutTime;
 
+    // animation transition condition
+    public delegate bool AnimationTransitionCondition(Monster_StateBase state);
+    public AnimationTransitionCondition AnimTransitionCondition;
+
     #endregion
 
     #region Function
@@ -241,11 +246,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         Animator = GetComponent<Animator>();
 
         // Module
-        GroundPatrolModule = GetComponent<GroundPatrolModule>();
         FloatingPatrolModule = GetComponent<FloatingPatrolModule>();
         NavMeshMoveModule = GetComponent<NavMeshMoveModule>();
 
         // Evaluator
+        GroundPatrolEvaluator = GetComponent<GroundPatrolEvaluator>();
         GroundChaseEvaluator = GetComponent<GroundChaseEvaluator>();
         FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
@@ -310,6 +315,36 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 IsGround = hasGroundContact;
                 IsInAir = !hasGroundContact;
 
+                // reDirectable state
+                if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundPatrolState>())
+                {
+                    // set recentDir for patrol
+                    if (GroundPatrolEvaluator)
+                    {
+                        // out patrol range
+                        if (GroundPatrolEvaluator.IsOutOfPatrolRange())
+                        {
+                            if (GroundPatrolEvaluator.IsLeftOfLeftPoint())
+                                StartSetRecentDirAfterGrounded(1);
+                            else if (GroundPatrolEvaluator.IsRightOfRightPoint())
+                                StartSetRecentDirAfterGrounded(-1);
+                        }
+                        // in patrol range
+                        else
+                        {
+                            if (GroundPatrolEvaluator.IsTargetWithinRange())
+                                StartSetRecentDirAfterGrounded(-RecentDir);
+                        }
+                    }
+
+                    // set recentDir for chase
+                    if (GroundChaseEvaluator)
+                    {
+                        if (GroundChaseEvaluator.IsTargetWithinRange())
+                            SetRecentDir(GroundChaseEvaluator.ChaseDir);
+                    }
+                }
+
                 break;
 
             case MonsterDefine.MoveType.Fly:
@@ -326,7 +361,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             if (AttackEvaluator.IsTargetWithinRange())
             {
                 AttackEvaluator.StartCoolTimeCoroutine();
-                Animator.SetTrigger("Attack");
+                StartChangeStateCoroutine("Attack", CurrentState);
             }
         }
     }
@@ -379,7 +414,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         HitProcess(attackInfo);
 
         // Check Hurt or Die Process
-        CheckHurtOrDieProcess();
+        CheckDieProcess();
 
         return IAttackListener.AttackResult.Success;
     }
@@ -388,9 +423,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // Disable Hit Box
         TurnOffHitBox();
 
+        // death effect
         StartCoroutine(DeathCoroutine());
     }
-    IEnumerator DeathCoroutine()
+
+    // Effect
+    private IEnumerator DeathCoroutine()
     {
         yield return StartCoroutine(DeathEffectCoroutine());
 
@@ -421,6 +459,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
             yield return null;
         }
+
+        yield return null;
     }
 
     // basic
@@ -434,6 +474,17 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
+    }
+    private IEnumerator SetRecentDirAfterGrounded(int targetDir)
+    {
+        // 코루틴을 사용해 방향 전환을 땅을 밟은 후로 설정한다
+        yield return new WaitUntil(() => IsGround);
+
+        SetRecentDir(targetDir);
+    }
+    public void StartSetRecentDirAfterGrounded(int targetDir)
+    {
+        StartCoroutine(SetRecentDirAfterGrounded(targetDir));
     }
     public void BoxCastAttack(Vector2 targetPosition, Vector2 attackBoxSize, MonsterAttackInfo attackinfo, LayerMask targetLayer)
     {
@@ -581,14 +632,18 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
 
     // hit & die
-    public void HitProcess(AttackInfo attackInfo)
+    public void HitProcess(AttackInfo attackInfo, bool onDamage = true, bool onKnockBack = true)
     {
         StartHitTimer();
-        CurHp -= (int)attackInfo.Damage;
-        KnockBack(attackInfo.Force);
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
+
+        if (onDamage)
+            CurHp -= (int)attackInfo.Damage;
+
+        if (onKnockBack)
+            KnockBack(attackInfo.Force);
     }
-    public void CheckHurtOrDieProcess()
+    public void CheckDieProcess()
     {
         if (CurHp <= 0)
         {
@@ -615,6 +670,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         StartCoroutine(HitTimer());
     }
+
     // state
     private void InitState()
     {
@@ -643,6 +699,40 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public bool PreviousStateIs<TState>() where TState : Monster_StateBase
     {
         return _previousState is TState;
+    }
+    private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase state)
+    {
+        // 애니메이션 전이 조건이 있는 경우 조건을 만족할 때까지 대기
+        if(AnimTransitionCondition != null)
+            yield return new WaitUntil(() => AnimTransitionCondition(state));
+
+        Animator.SetTrigger(targetTransitionParam);
+    }
+    public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase state)
+    {
+        StartCoroutine(ChangeStateCoroutine(targetTransitionParam, state));
+    }
+
+    // behavior
+    public void GroundWalking()
+    {
+        if (IsInAir)
+            return;
+
+        Vector2 groundNormal = GroundRayHit.normal;
+        Vector2 moveDirection = RecentDir > 0
+            ? (-1) * Vector2.Perpendicular(groundNormal)
+            : Vector2.Perpendicular(groundNormal);
+
+        Debug.DrawRay(GroundRayHit.point, groundNormal);
+
+        Vector2 targetVelocity = moveDirection * MoveSpeed;
+        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(Rigidbody.velocity, moveDirection) * moveDirection;
+        Vector2 moveForce = velocityNeeded * Acceleration;
+
+        Debug.DrawRay(transform.position, moveForce);
+
+        Rigidbody.AddForce(moveForce);
     }
 
     #endregion

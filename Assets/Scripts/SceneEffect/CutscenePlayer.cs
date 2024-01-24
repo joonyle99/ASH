@@ -6,16 +6,17 @@ using UnityEngine;
 
 public class CutscenePlayer : MonoBehaviour, ITriggerListener
 {
-    List<CutsceneDataComponent> _cutsceneDatas;
-    
-    void Awake()
-    {
-        _cutsceneDatas = new List<CutsceneDataComponent>(GetComponents<CutsceneDataComponent>());
-    }
-    public void PlayCutscene(string cutsceneName)
-    {
-        var cutscene = _cutsceneDatas.Find(x=>x.CutsceneName == cutsceneName);
-        SceneEffectManager.Current.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(cutscene.Sequence)));
+    [SerializeField] bool _playOnce = true;
+    [SerializeField] List<SceneEffect> _sequence;
+
+    bool _played = false;
+    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
+    { 
+        if (!_played && _playOnce)
+        {
+            SceneEffectManager.Current.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
+            _played = true;
+        }
     }
     IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
     {

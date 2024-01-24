@@ -4,6 +4,8 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine.UIElements;
 using System.Text.RegularExpressions;
 using UnityEngine.Events;
+using UnityEditorInternal;
+using System.Reflection.Emit;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -40,6 +42,7 @@ public class SceneEffect
 public class SceneEffectDrawer : PropertyDrawer
 {
     int HEIGHT = 18;
+    UnityEventDrawer _eventDrawer;
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
@@ -112,6 +115,12 @@ public class SceneEffectDrawer : PropertyDrawer
             "$1 $2"
         );
     }
+    float GetEventHeight(SerializedProperty property)
+    {
+        if (_eventDrawer == null)
+            _eventDrawer = new UnityEventDrawer();
+        return _eventDrawer.GetPropertyHeight(property, new GUIContent("Function"));
+    }
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         if (property.isExpanded)
@@ -120,7 +129,7 @@ public class SceneEffectDrawer : PropertyDrawer
             if (effectType == SceneEffect.EffectType.ChangeToDefaultInputSetter)
                 return (HEIGHT + 2) * 2;
             else if (effectType == SceneEffect.EffectType.FunctionCall)
-                return (HEIGHT + 2) * 7;
+                return (HEIGHT + 2) * 2 + GetEventHeight(property.FindPropertyRelative("Function"));
             else
                 return (HEIGHT + 2) * 3;
         }

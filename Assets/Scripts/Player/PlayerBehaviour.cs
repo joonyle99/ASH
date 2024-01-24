@@ -49,6 +49,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     [SerializeField] SkinnedMeshRenderer _capeRenderer;
     [SerializeField] Rigidbody2D _handRigidbody;
+    [SerializeField] CapsuleCollider2D _bodyCollider;
 
     [Header("Blink / God Mode")]
     [Space]
@@ -123,6 +124,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public InteractionController InteractionController { get { return _interactionController; } }
     public PlayerMovementController MovementController { get { return _movementController; } }
     public Rigidbody2D HandRigidBody { get { return _handRigidbody; } }
+    public CapsuleCollider2D BodyCollider { get { return _bodyCollider; } }
     public SoundList SoundList { get { return _soundList; } }
 
     #endregion
@@ -135,6 +137,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _attackController = GetComponent<PlayerAttackController>();
         _interactionController = GetComponent<InteractionController>();
         _movementController = GetComponent<PlayerMovementController>();
+
+        // Collider
+        _bodyCollider = GetComponent<CapsuleCollider2D>();
 
         SaveOriginalMaterial();
 

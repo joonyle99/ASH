@@ -55,7 +55,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         View.ClosePanel();
 
         //Retain control
-        InputManager.Instance.ChangeToDefaultSetter();
+        if (data.InputSetter != null)
+            InputManager.Instance.ChangeToDefaultSetter();
     }
 
 }

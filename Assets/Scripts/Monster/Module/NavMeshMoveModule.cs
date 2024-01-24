@@ -14,10 +14,6 @@ public class NavMeshMoveModule : MonoBehaviour
         _agent.updateUpAxis = false;
     }
 
-    public void SetDestination(Transform trans)
-    {
-        _destPosition = trans.position;
-    }
     public void SetDestination(Vector3 pos)
     {
         _destPosition = pos;

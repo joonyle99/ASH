@@ -9,6 +9,8 @@ public class StayStillInputSetter : InputSetterScriptableObject
     {
         InputState state = new InputState();
         state.Movement = Vector2.zero;
+        if (DialogueController.Instance.IsDialogueActive)
+            state.InteractionKey.Update(KeyCode.E);
         return state;
     }
 

@@ -19,41 +19,34 @@ public class GroundChaseEvaluator : Evaluator
         private set => _isChasing = value;
     }
 
-    public Transform TargetTrans { get; private set; }
+    public Vector3 TargetPoint { get; private set; }
 
-    public override bool IsTargetWithinRange()
+    private void Awake()
     {
-        if (IsDuringCoolTime || !IsUsable)
-        {
-            IsChasing = false;
-            return IsChasing;
-        }
-
-        // Detect Collider
-        Collider2D targetCollider = Physics2D.OverlapBox(transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
-        if (targetCollider)
-        {
-            // Check Player
-            PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
-            if (player && !player.IsDead)
-            {
-                SetTargetTrans(player.transform);
-                SetChaseDir(player.transform);
-
-                IsChasing = true;
-                return IsChasing;
-            }
-        }
-
-        IsChasing = false;
-        return IsChasing;
+        customEvaluation -= SetTargetTrans;
+        customEvaluation += SetTargetTrans;
+        customEvaluation -= SetChaseDir;
+        customEvaluation += SetChaseDir;
     }
-    public void SetTargetTrans(Transform trans)
+
+    public override Collider2D IsTargetWithinRange()
     {
-        TargetTrans = trans;
+        var hasChaseTarget = base.IsTargetWithinRange();
+
+        if (hasChaseTarget) IsChasing = true;
+        else IsChasing = false;
+
+        return hasChaseTarget;
     }
-    public void SetChaseDir(Transform trans)
+
+    public void SetTargetTrans(Vector3 targetPoint)
     {
-        _chaseDir = Math.Sign(trans.position.x - transform.position.x);
+        // 추격 타겟을 설정한다.
+        TargetPoint = targetPoint;
+    }
+    public void SetChaseDir(Vector3 targetPoint)
+    {
+        // 추격 방향을 설정한다.
+        _chaseDir = Math.Sign(targetPoint.x - transform.position.x);
     }
 }

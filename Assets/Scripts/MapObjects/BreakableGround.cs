@@ -36,6 +36,6 @@ public class BreakableGround : MonoBehaviour
     }
     void Break()
     {
-        Destroy(gameObject);
+        Destruction.Destruct(gameObject);
     }
 }
