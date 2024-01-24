@@ -67,6 +67,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] ParticleHelper _walkDirtEmitter;
     [SerializeField] ParticleHelper _landDustEmitter;
     [SerializeField] ParticleHelper _landDirtEmitter;
+    [SerializeField] ParticleHelper _dashEffect;
+    [SerializeField] ParticleHelper _dashTrailEffect;
 
     // Controller
     PlayerAttackController _attackController;
@@ -126,6 +128,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public Rigidbody2D HandRigidBody { get { return _handRigidbody; } }
     public CapsuleCollider2D BodyCollider { get { return _bodyCollider; } }
     public SoundList SoundList { get { return _soundList; } }
+    public Material[] OriginalMaterials => _originalMaterials;
 
     #endregion
 
@@ -435,6 +438,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public void PlaySound_SE_Dash()
     {
         _soundList.PlaySFX("SE_Dash");
+        _dashEffect.Emit(1);
+        _dashTrailEffect.Emit(1);
     }
 
     public void PlaySound_SE_DesolateDive_01()

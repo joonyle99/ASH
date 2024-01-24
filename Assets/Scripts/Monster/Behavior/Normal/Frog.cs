@@ -22,8 +22,8 @@ public class Frog : MonsterBehavior
     {
         base.Awake();
 
-        AnimTransitionCondition -= PatrolToIdleCondition;
-        AnimTransitionCondition += PatrolToIdleCondition;
+        AnimTransitionCondition -= PatrolToOtherCondition;
+        AnimTransitionCondition += PatrolToOtherCondition;
     }
     protected override void Start()
     {
@@ -107,16 +107,15 @@ public class Frog : MonsterBehavior
         Destroy(_tongueInstance.gameObject);
     }
 
-    private bool PatrolToIdleCondition(Monster_StateBase state)
+    private bool PatrolToOtherCondition(string targetTransitionParam, Monster_StateBase currentState)
     {
-        // Patrol -> Idle인 경우에만 판단
-        if (state is GroundPatrolState)
+        if (currentState is GroundMoveState)
         {
-            // 땅에 닿았는지 판단
-            if (IsGround)
-                return true;
-            else
-                return false;
+            if (targetTransitionParam == "Idle" || targetTransitionParam == "Attack")
+            {
+                if (IsGround) return true;
+                else return false;
+            }
         }
 
         return true;

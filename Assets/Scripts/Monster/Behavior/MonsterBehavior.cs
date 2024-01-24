@@ -232,7 +232,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private float _elapsedFadeOutTime;
 
     // animation transition condition
-    public delegate bool AnimationTransitionCondition(Monster_StateBase state);
+    public delegate bool AnimationTransitionCondition(string targetTransitionParam, Monster_StateBase state);
     public AnimationTransitionCondition AnimTransitionCondition;
 
     #endregion
@@ -314,36 +314,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 // set condition
                 IsGround = hasGroundContact;
                 IsInAir = !hasGroundContact;
-
-                // reDirectable state
-                if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundPatrolState>())
-                {
-                    // set recentDir for patrol
-                    if (GroundPatrolEvaluator)
-                    {
-                        // out patrol range
-                        if (GroundPatrolEvaluator.IsOutOfPatrolRange())
-                        {
-                            if (GroundPatrolEvaluator.IsLeftOfLeftPoint())
-                                StartSetRecentDirAfterGrounded(1);
-                            else if (GroundPatrolEvaluator.IsRightOfRightPoint())
-                                StartSetRecentDirAfterGrounded(-1);
-                        }
-                        // in patrol range
-                        else
-                        {
-                            if (GroundPatrolEvaluator.IsTargetWithinRange())
-                                StartSetRecentDirAfterGrounded(-RecentDir);
-                        }
-                    }
-
-                    // set recentDir for chase
-                    if (GroundChaseEvaluator)
-                    {
-                        if (GroundChaseEvaluator.IsTargetWithinRange())
-                            SetRecentDir(GroundChaseEvaluator.ChaseDir);
-                    }
-                }
 
                 break;
 
@@ -700,17 +670,17 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         return _previousState is TState;
     }
-    private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase state)
+    private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState)
     {
         // 애니메이션 전이 조건이 있는 경우 조건을 만족할 때까지 대기
         if(AnimTransitionCondition != null)
-            yield return new WaitUntil(() => AnimTransitionCondition(state));
+            yield return new WaitUntil(() => AnimTransitionCondition(targetTransitionParam, currentState));
 
         Animator.SetTrigger(targetTransitionParam);
     }
-    public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase state)
+    public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState)
     {
-        StartCoroutine(ChangeStateCoroutine(targetTransitionParam, state));
+        StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState));
     }
 
     // behavior

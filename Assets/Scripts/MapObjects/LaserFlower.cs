@@ -8,10 +8,25 @@ public class LaserFlower : MonoBehaviour, IAttackListener
     [SerializeField] int _maxHp = 3;
     [SerializeField] float _reviveDelay = 3;
     [SerializeField] DarkBeam _darkBeam;
+    [SerializeField] float _darkBeamHeadOffset = 0.1f;
+    [SerializeField] float _rotation = 90;
+    [SerializeField] Transform _headBone;
+
+    Animator _animator;
     int _hp;
     void Awake()
     {
         _hp = _maxHp;
+        _animator = GetComponent<Animator>();
+    }
+    void OnValidate()
+    {
+        _headBone.localRotation = Quaternion.Euler(0, 0, _rotation + 180 + 16);
+        _darkBeam.transform.localRotation = Quaternion.Euler(0, 0, _rotation);
+    }
+    void Update()
+    {
+        _darkBeam.transform.position = _headBone.position + new Vector3(Mathf.Cos(_rotation * Mathf.Deg2Rad), Mathf.Sin(_rotation * Mathf.Deg2Rad), 0) * _darkBeamHeadOffset;
     }
     public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
@@ -23,21 +38,29 @@ public class LaserFlower : MonoBehaviour, IAttackListener
         }
         return IAttackListener.AttackResult.Fail;
     }
-    void Open()
+    public void AnimEvent_ActivateDarkBeam()
     {
         _darkBeam.gameObject.SetActive(true);
+
+    }
+    void Open()
+    {
+        //_darkBeam.gameObject.SetActive(true);
         _hp = _maxHp;
+        _animator.SetTrigger("Recover");
     }
     void Close()
     {
         if (!_darkBeam.gameObject.activeSelf)
             return;
         _darkBeam.gameObject.SetActive(false);
+        _animator.SetTrigger("Die");
         StartCoroutine(OpenCoroutine());
     }
     IEnumerator OpenCoroutine()
     {
         yield return new WaitForSeconds(_reviveDelay);
         Open();
+        
     }
 }
