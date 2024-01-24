@@ -90,6 +90,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     // Condition Property
     public bool IsGrounded { get { return GroundHit; } }
     public bool IsTouchedWall { get { return WallHit; } }
+    public bool IsWallable { get; set; }
     public bool IsWallJump { get; set; }
     public bool IsInteractable { get { return CurrentStateIs<IdleState>() || CurrentStateIs<RunState>(); } }
     public bool IsHurt { get { return _isHurt; } set { _isHurt = value; } }
@@ -175,23 +176,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         #endregion
 
-        #region Check Ground & Wall
-
-        // Check Ground
-        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
-
-        // Check Upward
-        UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
-
-        // Check Wall
-        WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
-
-        // Check Dive Hit
-        DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckLength, _groundLayer);
-        GroundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
-
-        #endregion
-
         #region Basic Behavior
 
         // Player Flip
@@ -202,6 +186,31 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         // Check Dead State
         CheckDie();
+
+        #endregion
+
+        #region Check Ground & Wall
+
+        // Check Ground
+        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
+
+        // Check Upward
+        UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
+
+        // Check Wall
+        WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
+        if(WallHit)
+        {
+            // TODO : 벽의 방향을 localScale로 하면 위험하다
+            int wallLookDir = Math.Sign(WallHit.transform.localScale.x);
+            // int wallToPlayerDir = Math.Sign(this.transform.position.x - WallHit.transform.position.x);
+            bool isDirSync = (wallLookDir * RecentDir) > 0;
+            IsWallable = !isDirSync;
+        }
+
+        // Check Dive Hit
+        DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckLength, _groundLayer);
+        GroundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
 
         #endregion
 
