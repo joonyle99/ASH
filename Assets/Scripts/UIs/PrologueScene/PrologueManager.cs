@@ -25,7 +25,7 @@ public class PrologueManager : MonoBehaviour
     }
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.F8))
+        if(Input.GetKeyDown(KeyCode.F12))
         {
             StopAllCoroutines();
             StartCoroutine(StartGame());
