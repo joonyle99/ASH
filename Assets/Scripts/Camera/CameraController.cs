@@ -41,7 +41,8 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void OnSceneContextBuilt()
     {
         _proCamera.enabled = true;
-        _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
+        if (SceneContext.Current.Player != null)
+            _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
     }
     public void AddFollowTarget(Transform target)
     {
@@ -104,6 +105,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void ResetCameraSettings()
     {
+        if (SceneContext.Current.Player != null)
         StartFollow(SceneContext.Current.Player.transform);
 
         OffsetX = _initialSettings.Offset.x;

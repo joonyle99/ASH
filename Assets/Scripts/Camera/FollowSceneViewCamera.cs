@@ -9,6 +9,8 @@ public class FollowSceneViewCamera : MonoBehaviour
 {
     void Update()
     {
+        if (Application.isPlaying)
+            return;
         try
         {
             Vector3 sceneViewPos = SceneView.lastActiveSceneView.camera.transform.position;

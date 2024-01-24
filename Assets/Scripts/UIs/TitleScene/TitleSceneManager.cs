@@ -9,15 +9,19 @@ public class TitleSceneManager : MonoBehaviour
         SoundManager.Instance.PlayCommonBGM("MainTheme");
     }
     //[SerializeField] PassageData _initialPassageData;
-    public void OnStartButtonClicked()
-    {
-        SceneChangeManager.Instance.ChangeToScene("Stage1-1");
-        //SceneManager.Instance.StartSceneChangeByPassage(_initialPassageData);
-        //SoundManager.Instance.StopBGMFade(0.5f);
-    }
-    public void OnExitButtonClicked()
-    {
 
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
+    public void OpenPrologueScene()
+    {
+        StartCoroutine(OpenPrologueSceneCoroutine());
+    }
+    IEnumerator OpenPrologueSceneCoroutine()
+    {
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
+        SceneChangeManager.Instance.ChangeToScene("PrologueScene");
+    }
 }
