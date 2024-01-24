@@ -30,8 +30,8 @@ public class FallingSpike : MonoBehaviour, ITriggerListener, IAttackListener
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //var ob = collision.gameObject.GetComponent<ASHObject>();
-        //if (ob != null && ob.Type == ObjectType.Ground)
+        var ob = collision.gameObject.GetComponent<ASHObject>();
+        if (ob != null && ob.Type == ObjectType.Ground)
         {
             _soundList.PlaySFX("SE_FallingSpike_Land");
             _impactParticle.gameObject.SetActive(true);
