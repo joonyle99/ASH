@@ -7,7 +7,7 @@ public class DarkBeamEffect : MonoBehaviour
     [SerializeField] float _segmentLength;
     [SerializeField] float _thickness;
 
-    [SerializeField] SortingLayer _sortingLayer;
+    [SerializeField] string _sortingLayer;
     [SerializeField] int _orderInLayer;
 
     MeshFilter _meshFilter;
@@ -16,7 +16,7 @@ public class DarkBeamEffect : MonoBehaviour
     {
         _meshRenderer = GetComponent<MeshRenderer>();   
         _meshFilter = GetComponent<MeshFilter>();
-        _meshRenderer.sortingLayerID = _sortingLayer.id;
+        _meshRenderer.sortingLayerID = SortingLayer.NameToID(_sortingLayer);
         _meshRenderer.sortingOrder = _orderInLayer;
     }
     public void RecreateMesh(float length)
