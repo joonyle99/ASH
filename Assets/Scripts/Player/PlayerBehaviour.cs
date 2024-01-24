@@ -128,6 +128,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public Rigidbody2D HandRigidBody { get { return _handRigidbody; } }
     public CapsuleCollider2D BodyCollider { get { return _bodyCollider; } }
     public SoundList SoundList { get { return _soundList; } }
+    public Material[] OriginalMaterials => _originalMaterials;
 
     #endregion
 

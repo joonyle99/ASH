@@ -15,7 +15,13 @@ public class DisintegrateEffect : MonoBehaviour
     [SerializeField] SpriteRenderer [] _spriteRenderers;
 
     public bool IsEffectDone { get; private set; } = false;
+    public float Duration => _duration;
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+            Play();
+    }
     void GetAllSpriteRenderers()
     {
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
