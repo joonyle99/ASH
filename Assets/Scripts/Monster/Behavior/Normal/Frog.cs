@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 
 public class Frog : MonsterBehavior
@@ -20,6 +21,9 @@ public class Frog : MonsterBehavior
     protected override void Awake()
     {
         base.Awake();
+
+        AnimTransitionCondition -= PatrolToOtherCondition;
+        AnimTransitionCondition += PatrolToOtherCondition;
     }
     protected override void Start()
     {
@@ -101,5 +105,19 @@ public class Frog : MonsterBehavior
             StopCoroutine(_tongueAttackCoroutine);
 
         Destroy(_tongueInstance.gameObject);
+    }
+
+    private bool PatrolToOtherCondition(string targetTransitionParam, Monster_StateBase currentState)
+    {
+        if (currentState is GroundMoveState)
+        {
+            if (targetTransitionParam == "Idle" || targetTransitionParam == "Attack")
+            {
+                if (IsGround) return true;
+                else return false;
+            }
+        }
+
+        return true;
     }
 }
