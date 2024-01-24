@@ -44,10 +44,19 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
     }
     public void ChangeToScene(string sceneName)
     {
-        // TODO
-        Debug.LogError("Not Implemented");
+        StartCoroutine(ChangeToSceneCoroutine(sceneName));
     }
 
+    IEnumerator ChangeToSceneCoroutine(string sceneName)
+    {
+        IsChanging = true;
+        AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
+        yield return new WaitUntil(() => load.isDone);
+
+        SceneContext sceneContext = FindOrCreateSceneContext();
+        Result buildResult = sceneContext.BuildPlayable("");
+        IsChanging = false;
+    }
     IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string passageName)
     {
         IsChanging = true;
