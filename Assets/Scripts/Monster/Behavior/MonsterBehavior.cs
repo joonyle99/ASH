@@ -264,8 +264,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         AttackEvaluator = GetComponent<AttackEvaluator>();
         CautionEvaluator = GetComponent<CautionEvaluator>();
 
-        // Material
+        // Sprite Renderer / Original Material
         LoadFlashMaterial();
+        SaveSpriteRenderers();
         SaveOriginalMaterial();
 
         // Init State
@@ -536,69 +537,83 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         _superArmorMaterial =
             Resources.Load<Material>("Materials/SuperArmorFlashMaterial");
     }
-    private void SaveOriginalMaterial()
+    private void SaveSpriteRenderers()
     {
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
-
+    }
+    private void SaveOriginalMaterial()
+    {
         _originalMaterials = new Material[_spriteRenderers.Length];
+
         for (int i = 0; i < _originalMaterials.Length; i++)
             _originalMaterials[i] = _spriteRenderers[i].material;
     }
-    private void ResetOriginalMaterial()
+    private void InitMaterial()
     {
+        Debug.Log("InitMaterial");
+
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
     }
+    private void ChangeMaterial(Material material)
+    {
+        for (int i = 0; i < _originalMaterials.Length; i++)
+            _spriteRenderers[i].material = material;
+    }
     private IEnumerator WhiteFlash()
     {
+        // turn to white material
+        ChangeMaterial(_whiteFlashMaterial);
+
         while (IsHurt)
         {
-            // turn to white material
-            for (int i = 0; i < _originalMaterials.Length; i++)
-                _spriteRenderers[i].material = _whiteFlashMaterial;
+            foreach (var spriteRenderer in _spriteRenderers)
+                spriteRenderer.material.SetFloat("_FlashAmount", 0.4f);
 
             yield return new WaitForSeconds(_blinkDuration);
 
-            // turn to original material
-            for (int i = 0; i < _originalMaterials.Length; i++)
-                _spriteRenderers[i].material = _originalMaterials[i];
+            foreach (var spriteRenderer in _spriteRenderers)
+                spriteRenderer.material.SetFloat("_FlashAmount", 0f);
 
             yield return new WaitForSeconds(_blinkDuration);
         }
+
+        // TODO : 사망할때 고려하기,,
+        InitMaterial();
     }
     public void StartWhiteFlash()
     {
         if (this._whiteFlashRoutine != null)
-        {
-            ResetOriginalMaterial();
             StopCoroutine(this._whiteFlashRoutine);
-        }
+
         this._whiteFlashRoutine = StartCoroutine(WhiteFlash());
     }
     private IEnumerator SuperArmorFlash()
     {
+        // turn to white material
+        ChangeMaterial(_superArmorMaterial);
+
         while (IsSuperArmor)
         {
-            // turn to white material
-            for (int i = 0; i < _originalMaterials.Length; i++)
-                _spriteRenderers[i].material = _superArmorMaterial;
+            foreach (var spriteRenderer in _spriteRenderers)
+                spriteRenderer.material.SetFloat("_FlashAmount", 0.3f);
 
             yield return new WaitForSeconds(_blinkDuration);
 
-            // turn to original material
-            for (int i = 0; i < _originalMaterials.Length; i++)
-                _spriteRenderers[i].material = _originalMaterials[i];
+            foreach (var spriteRenderer in _spriteRenderers)
+                spriteRenderer.material.SetFloat("_FlashAmount", 0f);
 
             yield return new WaitForSeconds(_blinkDuration);
         }
+
+        // TODO : 사망할때 고려하기,,
+        InitMaterial();
     }
     public void StartSuperArmorFlash()
     {
         if (this._superArmorRoutine != null)
-        {
-            ResetOriginalMaterial();
             StopCoroutine(this._superArmorRoutine);
-        }
+
         this._superArmorRoutine = StartCoroutine(SuperArmorFlash());
     }
 

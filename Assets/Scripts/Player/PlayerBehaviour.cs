@@ -54,7 +54,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [Header("Blink / God Mode")]
     [Space]
 
-    [SerializeField] Material _whiteMaterial;
+    [SerializeField] Material _whiteFlashMaterial;
     [SerializeField] float _godModeTime = 1.5f;
     [SerializeField] float _blinkDuration = 0.06f;
 
@@ -146,6 +146,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _bodyCollider = GetComponent<CapsuleCollider2D>();
 
         // Sprite Renderer / Original Material
+        LoadFlashMaterial();
         SaveSpriteRenderers();
         SaveOriginalMaterial();
 
@@ -329,7 +330,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Debug.Log(damage + " 데미지 입음");
     }
 
-    // blink
+    // flash
+    private void LoadFlashMaterial()
+    {
+        _whiteFlashMaterial =
+            Resources.Load<Material>("Materials/WhiteFlashMaterial");
+    }
     private void SaveSpriteRenderers()
     {
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
@@ -343,17 +349,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     private void InitMaterial()
     {
-        Debug.Log("InitMaterial");
-
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
     }
     private void ChangeMaterial()
     {
         for (int i = 0; i < _originalMaterials.Length; i++)
-            _spriteRenderers[i].material = _whiteMaterial;
+            _spriteRenderers[i].material = _whiteFlashMaterial;
     }
-    private IEnumerator Blink()
+    private IEnumerator WhiteFlash()
     {
         // turn to white material
         ChangeMaterial();
@@ -375,14 +379,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         if (!CurrentStateIs<InstantRespawnState>())
             InitMaterial();
     }
-    public void StartBlink()
+    public void StartWhiteFlash()
     {
         if (this._blinkRoutine != null)
-        {
-            // InitMaterial();
             StopCoroutine(this._blinkRoutine);
-        }
-        this._blinkRoutine = StartCoroutine(Blink());
+
+        this._blinkRoutine = StartCoroutine(WhiteFlash());
     }
 
     // god mode
