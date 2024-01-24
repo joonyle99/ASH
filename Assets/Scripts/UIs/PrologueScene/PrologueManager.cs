@@ -11,7 +11,6 @@ public class PrologueManager : MonoBehaviour
     {
         public List<string> Lines;
     }
-    [SerializeField] KeyCode _proceedKey = KeyCode.E;
     [SerializeField] float _fadeInDuration = 0.3f;
     [SerializeField] float _fadeOutDuration = 0.3f;
     [SerializeField] float _lineWaitDuration = 2f;
@@ -26,7 +25,7 @@ public class PrologueManager : MonoBehaviour
     }
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q))
+        if(Input.GetKeyDown(KeyCode.F8))
         {
             StopAllCoroutines();
             StartCoroutine(StartGame());
@@ -43,7 +42,7 @@ public class PrologueManager : MonoBehaviour
         {
             yield return PlayScript(script);
             yield return FadeInProceedText();
-            yield return new WaitUntil(() => Input.GetKeyDown(_proceedKey));
+            yield return new WaitUntil(() => Input.anyKeyDown);
 
             Color color = _proceedText.color;
             color.a = 0;
