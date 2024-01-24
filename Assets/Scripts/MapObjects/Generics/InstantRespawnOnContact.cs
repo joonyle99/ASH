@@ -11,4 +11,15 @@ public class InstantRespawnOnContact : TriggerZone
         player.TriggerInstantRespawn(_damage);
     }
 
+    public override void OnActivatorEnter(TriggerActivator activator)
+    {
+        // 활성화된 오브젝트가 몬스터라면
+        if (activator.Type == ActivatorType.Monster)
+        {
+            // 거북이를 사망시킨다
+            var turtle = activator.GetComponent<Turtle>();
+            if (turtle)
+                turtle.Animator.SetTrigger("Die");
+        }
+    }
 }

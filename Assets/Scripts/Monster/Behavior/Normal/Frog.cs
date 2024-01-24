@@ -22,8 +22,8 @@ public class Frog : MonsterBehavior
     {
         base.Awake();
 
-        AnimTransitionCondition -= PatrolToOtherCondition;
-        AnimTransitionCondition += PatrolToOtherCondition;
+        AnimTransitionEvent -= PatrolToOtherCondition;
+        AnimTransitionEvent += PatrolToOtherCondition;
     }
     protected override void Start()
     {

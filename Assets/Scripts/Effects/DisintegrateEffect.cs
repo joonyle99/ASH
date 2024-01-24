@@ -33,6 +33,9 @@ public class DisintegrateEffect : MonoBehaviour
     IEnumerator ProgressCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
+
+        Debug.Log("DisintegrateEffect");
+
         foreach (var renderer in _spriteRenderers)
         {
             renderer.material = _disintegrateMaterial;
