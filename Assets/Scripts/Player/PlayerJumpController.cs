@@ -67,6 +67,12 @@ public class PlayerJumpController : MonoBehaviour
 
     void Update()
     {
+        // TEMP
+        if (!PersistentDataManager.Get<bool>("DoubleJump"))
+            _maxJumpCount = 1;
+        else
+            _maxJumpCount = 2;
+
         if (InputManager.Instance.State.JumpKey.KeyDown)
         {
             OnJumpPressed();

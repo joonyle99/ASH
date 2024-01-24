@@ -18,8 +18,8 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
                 info.Icon = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].UnlockImage;
                 info.MainText = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].Name;
                 info.DetailText = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].DetailText;
+                PersistentDataManager.Set<bool>(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key, true);
                 GameUIManager.OpenSkillObtainPanel(info);
-                PersistentDataManager.Set<bool>(info.MainText, true);
             }
             else
             {
