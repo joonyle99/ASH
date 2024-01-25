@@ -73,20 +73,31 @@ namespace LevelGraph
                     CreateNodeView(data as ExploreSceneData);
             }
 
+            List<PassagePairData> _badPairs = new List<PassagePairData>();
             //TODO : Exception Danger Zone !!
             foreach(PassagePairData passagePair in _graphData.Edges)
             {
                 NodeView entranceNode = GetNodeByGuid(passagePair.EntranceScene.Guid) as NodeView;
                 NodeView exitNode = GetNodeByGuid(passagePair.ExitScene.Guid) as NodeView;
 
-                Port entrance = entranceNode.PortDatas.Find(x => x.PassageName == passagePair.EntrancePassage).Output;
-                Port exit = exitNode.PortDatas.Find(x => x.PassageName == passagePair.ExitPassgage).Input;
+                try
+                {
+                    Port entrance = entranceNode.PortDatas.Find(x => x.PassageName == passagePair.EntrancePassage).Output;
+                    Port exit = exitNode.PortDatas.Find(x => x.PassageName == passagePair.ExitPassgage).Input;
 
-                Edge edge = entrance.ConnectTo(exit);
-                AddTextToEdge(edge, ">>>>>>");
-                AddElement(edge);
+                    Edge edge = entrance.ConnectTo(exit);
+                    AddTextToEdge(edge, ">>>>>>");
+                    AddElement(edge);
+                }
+                catch(Exception ex)
+                {
+                    Debug.Log(ex);
+                    _badPairs.Add(passagePair);
+                    continue;
+                }
 
             }
+            _graphData.Edges.RemoveAll(x=> _badPairs.Contains(x));
         }
         private void AddTextToEdge(Edge edge, string text)
         {
