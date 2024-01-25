@@ -29,10 +29,13 @@ public class Turtle : MonsterBehavior
         // 거북이는 Dead 상태에서도 Hit가 가능하다
 
         // Turtle Hit Process
-        HitProcess(attackInfo, false, true);
+        if (IsHide || IsDead)
+            HitProcess(attackInfo, false, true, false);
+        else
+            HitProcess(attackInfo, false, true);
 
         // Change to Hurt State
-        if (CurrentStateIs<Monster_IdleState>() || CurrentStateIs<GroundMoveState>())
+        if (CurrentState is IHurtableState)
             Animator.SetTrigger("Hurt");
 
         return IAttackListener.AttackResult.Success;

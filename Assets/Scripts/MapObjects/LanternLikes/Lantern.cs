@@ -87,7 +87,7 @@ public class Lantern : LanternLike, ILightCaptureListener
     }
     void Update()
     {
-        if (!IsLightOn || (IsLightOn && !_isExplodeDone))
+        if (!IsLightOn || (IsLightOn && !_isExplodeDone && !_turnedOnAtStart))
             return;
         _idleTime += Time.deltaTime;
         if (_idleTime > _idleInterval)

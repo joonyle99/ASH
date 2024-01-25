@@ -15,8 +15,8 @@ public class Mushroom : MonsterBehavior
     {
         base.Awake();
 
-        boxCastAttackEvent -= KillPlayer;
-        boxCastAttackEvent += KillPlayer;
+        customBoxCastAttackEvent -= KillPlayer;
+        customBoxCastAttackEvent += KillPlayer;
     }
     protected override void Start()
     {

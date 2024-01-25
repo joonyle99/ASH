@@ -4,7 +4,6 @@ using UnityEngine.AI;
 public class NavMeshMoveModule : MonoBehaviour
 {
     private NavMeshAgent _agent;
-    private Vector3 _destPosition;
 
     void Awake()
     {
@@ -14,20 +13,13 @@ public class NavMeshMoveModule : MonoBehaviour
         _agent.updateUpAxis = false;
     }
 
-    public void SetDestination(Vector3 pos)
+    public void MoveToDestination(Vector3 destPosition)
     {
-        _destPosition = pos;
+        _agent.SetDestination(destPosition);
     }
-    public void MoveToDestination()
+    public void SetStopAgent(bool isStop, bool isZeroVelocity)
     {
-        _agent.SetDestination(_destPosition);
-    }
-    public void SetVelocityZero()
-    {
-        _agent.velocity = Vector3.zero;
-    }
-    public void SetStopAgent(bool isStop)
-    {
+        if (isZeroVelocity) _agent.velocity = Vector3.zero;
         _agent.isStopped = isStop;
     }
 }

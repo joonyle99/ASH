@@ -1,10 +1,12 @@
 using UnityEngine;
 
-public class SemiBoss_GroggyEndState : SemiBoss_StateBase, IPassiveState
+public class SemiBoss_GroggyEndState : SemiBoss_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+
+        SemiBoss.IsGodMode = true;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -17,7 +19,6 @@ public class SemiBoss_GroggyEndState : SemiBoss_StateBase, IPassiveState
         base.OnStateExit(animator, stateInfo, layerIndex);
 
         SemiBoss.IsGroggy = false;
-        SemiBoss.IsGodMode = true;
 
         // 몬스터의 MonsterBodyHit Attack 기능을 켠다
         SemiBoss.SetIsAttackableHitBox(true);

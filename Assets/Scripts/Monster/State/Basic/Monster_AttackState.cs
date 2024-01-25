@@ -6,12 +6,7 @@ public class Monster_AttackState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // Debug.Log("Enter Attack State");
-
-        // 공격이 끊기지 않기 위한 슈퍼아머
         Monster.IsSuperArmor = true;
-
-        Monster.StartSuperArmorFlash();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

@@ -1,17 +1,12 @@
 using UnityEngine;
 
-public class Monster_HurtState : Monster_StateBase, IPassiveState
+public class Monster_HurtState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // Debug.Log("Enter Hurt State");
-
         Monster.IsHurt = true;
-
-        Monster.StartFlashTimer();
-        Monster.StartWhiteFlash();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
