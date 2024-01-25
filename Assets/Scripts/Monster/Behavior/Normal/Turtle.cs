@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 
 public class Turtle : MonsterBehavior
@@ -13,7 +14,19 @@ public class Turtle : MonsterBehavior
     protected override void Update()
     {
         base.Update();
+    }
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
 
+        if (IsDead)
+            return;
+
+        if(CurrentStateIs<GroundMoveState>())
+        {
+            // ground walking
+            GroundWalking();
+        }
     }
     protected override void SetUp()
     {

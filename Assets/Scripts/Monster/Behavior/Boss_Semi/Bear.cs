@@ -106,6 +106,25 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         base.Update();
     }
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+
+        if (IsDead)
+            return;
+
+        if (CurrentStateIs<GroundMoveState>())
+        {
+            // ground walking
+            GroundWalking();
+        }
+
+        if (_isBodySlamming)
+        {
+            MonsterAttackInfo bodySlamInfo = new MonsterAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
+            BoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _attackTargetLayer);
+        }
+    }
     protected override void SetUp()
     {
         base.SetUp();
@@ -158,15 +177,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public override void Die()
     {
         base.Die();
-    }
-
-    private void FixedUpdate()
-    {
-        if (_isBodySlamming)
-        {
-            MonsterAttackInfo bodySlamInfo = new MonsterAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
-            BoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _attackTargetLayer);
-        }
     }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)

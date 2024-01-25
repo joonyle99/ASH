@@ -37,10 +37,6 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
                     Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
             }
         }
-
-        // ground walking
-        if (Monster.MoveType == MonsterDefine.MoveType.GroundWalking)
-            Monster.GroundWalking();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

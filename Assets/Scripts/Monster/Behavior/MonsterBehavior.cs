@@ -369,6 +369,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             }
         }
     }
+    protected virtual void FixedUpdate()
+    {
+
+    }
     protected virtual void SetUp()
     {
         // 몬스터의 이름
