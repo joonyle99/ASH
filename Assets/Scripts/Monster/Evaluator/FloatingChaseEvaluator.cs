@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FloatingChaseEvaluator : Evaluator
 {
-    public Vector3 TargetPoint { get; private set; }
+    public Vector3 TargetPosition { get; private set; }
 
     private void Awake()
     {
@@ -18,6 +18,6 @@ public class FloatingChaseEvaluator : Evaluator
     private void SetTarget(Vector3 targetPoint)
     {
         // 추격 타겟을 설정한다
-        TargetPoint = targetPoint;
+        TargetPosition = targetPoint;
     }
 }

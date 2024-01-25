@@ -38,9 +38,8 @@ public abstract class Monster_StateBase : StateMachineBehaviour
         if (Monster.NavMeshMoveModule)
         {
             // NavMesh Agent Stop
-            if (Monster.CurrentStateIs<Monster_AttackState>() ||
-                Monster.CurrentStateIs<Monster_HurtState>())
-                Monster.NavMeshMoveModule.SetStopAgent(true);
+            if (Monster.CurrentState is not IMovableState)
+                Monster.NavMeshMoveModule.SetStopAgent(true, false);
         }
     }
 
@@ -53,7 +52,6 @@ public abstract class Monster_StateBase : StateMachineBehaviour
             if (_elapsedStayTime > _targetStayTime)
             {
                 _elapsedStayTime = 0f;
-                // Debug.Log($"Current State : {Monster.CurrentState} / Transition : {_targetTransitionParam}");
                 Monster.StartChangeStateCoroutine(_targetTransitionParam, Monster.CurrentState);
 
                 return;
@@ -66,9 +64,14 @@ public abstract class Monster_StateBase : StateMachineBehaviour
         if (Monster.NavMeshMoveModule)
         {
             // NavMesh Agent Resume
-            if (Monster.CurrentStateIs<Monster_AttackState>() ||
-                Monster.CurrentStateIs<Monster_HurtState>())
-                Monster.NavMeshMoveModule.SetStopAgent(false);
+            if (Monster.CurrentState is not IMovableState)
+                Monster.NavMeshMoveModule.SetStopAgent(false, false);
+        }
+
+        if (_isAutoStateTransition)
+        {
+            _elapsedStayTime = 0f;
+            _targetStayTime = 0f;
         }
     }
 }
