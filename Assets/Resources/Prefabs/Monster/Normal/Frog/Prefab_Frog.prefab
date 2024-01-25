@@ -357,7 +357,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 723737450280769874}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.09, y: -1.62, z: 0}
+  m_LocalPosition: {x: -0.09, y: -1.577, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -388,7 +388,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 3.6, y: 0.40914947}
+  m_Size: {x: 3.45, y: 0.2}
   m_EdgeRadius: 0
 --- !u!1 &1218855635058166263
 GameObject:
@@ -1146,7 +1146,7 @@ GameObject:
   - component: {fileID: 4094633951419829471}
   - component: {fileID: 4094633951419829464}
   m_Layer: 21
-  m_Name: Patrol Point
+  m_Name: Left Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1160,7 +1160,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4094633951419829470}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -9.72, y: 0, z: 0}
+  m_LocalPosition: {x: -26.98, y: 6.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1495,7 +1495,7 @@ GameObject:
   - component: {fileID: 5517317729978824788}
   - component: {fileID: 5517317729978824789}
   m_Layer: 21
-  m_Name: Patrol Point (1)
+  m_Name: Right Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1509,7 +1509,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5517317729978824787}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.82, y: 0, z: 0}
+  m_LocalPosition: {x: 11.96, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1705,6 +1705,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _groundCheckCollider: {fileID: 5517317730244132831}
+  _groundRayHitCollider: {fileID: 0}
   _centerOfMass: {fileID: 1691325673}
   _tonguePrefab: {fileID: 7171976845201288329}
   _tongueLength: 15
@@ -7437,7 +7438,7 @@ MonoBehaviour:
   - {fileID: 2669548558044180055}
   - {fileID: 4929989923956374669}
   m_Bounds:
-    m_Center: {x: 0.004539013, y: -0.14244413, z: 0}
+    m_Center: {x: 0.004600048, y: -0.14244413, z: 0}
     m_Extent: {x: 2.0184503, y: 1.8270943, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -7649,7 +7650,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 2082004997917844342}
   m_Bounds:
-    m_Center: {x: -0.0044260025, y: -0.2307049, z: 0}
+    m_Center: {x: -0.0043649673, y: -0.2307049, z: 0}
     m_Extent: {x: 0.56551504, y: 0.7865051, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

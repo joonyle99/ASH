@@ -216,7 +216,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [SerializeField] private LayerMask _groundCheckLayer;
     [SerializeField] private BoxCollider2D _groundCheckCollider;
+    [SerializeField] private Collider2D _groundRayHitCollider;
     public RaycastHit2D GroundRayHit;
+
 
     [Space]
 
@@ -303,13 +305,18 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                     _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
                     _groundCheckLayer);
 
+                // Debug.Log($"{groundRayHits.Length}개의 RayCastHit");
+
+                // ground rayCast hit
+                bool hasGroundContact = groundRayHits.Length > 0;
+
                 // groundRayHits는 몬스터와 지면이 충돌한 지점에 대한 정보이다.
                 // 이 중, 가장 가까운 지점을 GroundRayHit에 저장한다.
                 foreach (var hit in groundRayHits)
                 {
-                    // hit의 normal이 아래쪽을 향하면 안된다.
-                    if (hit.normal.y < 0)
-                        continue;
+                    // 여기서 왜 hit.normal이 아래쪽을 향하는지 확인해야 한다.
+                    // Debug.DrawRay(hit.point, hit.normal, Color.cyan);
+                    // Debug.Log($"{hit.collider.gameObject.name}");
 
                     // 충돌 지점과 이 오브젝트와의 거리가 가장 가까운 놈을 저장
                     if (GroundRayHit)
@@ -323,8 +330,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                     else
                         GroundRayHit = hit;
                 }
-
-                bool hasGroundContact = groundRayHits.Length > 0;
 
                 // set condition
                 IsGround = hasGroundContact;
@@ -757,13 +762,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             ? (-1) * Vector2.Perpendicular(groundNormal)
             : Vector2.Perpendicular(groundNormal);
 
-        Debug.DrawRay(GroundRayHit.point, groundNormal);
+        Debug.DrawRay(GroundRayHit.point, groundNormal, Color.cyan);
 
         Vector2 targetVelocity = moveDirection * MoveSpeed;
-        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(Rigidbody.velocity, moveDirection) * moveDirection;
+        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(Rigidbody.velocity, moveDirection) * moveDirection;   // 경사면을 따라 움직이기 위한 벡터
         Vector2 moveForce = velocityNeeded * Acceleration;
 
-        Debug.DrawRay(transform.position, moveForce);
+        Debug.DrawRay(transform.position, moveDirection, Color.cyan);
 
         Rigidbody.AddForce(moveForce);
     }
