@@ -286,10 +286,16 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     // slash
     public void Slash01_AnimEvent()
     {
+        // 플레이어의 위치
         var playerPos = SceneContext.Current.Player.transform.position;
 
+        // 몬스터가 플레이어를 바라보는 방향
+        var dirBearToPlayer = System.Math.Sign(playerPos.x - transform.position.x);
+        // 몬스터가 바라보는 방향에 플레이어가 있는지
+        bool isPlayerinLookDirection = (dirBearToPlayer == RecentDir);
+
         // 바라보는 방향에 플레이어가 있다면
-        if ((RecentDir > 0 && (playerPos.x > transform.position.x)) || (RecentDir < 0 && (playerPos.x < transform.position.x)))
+        if (isPlayerinLookDirection)
         {
             // 플레이어의 위치를 기억
             _playerPos = playerPos;
@@ -316,6 +322,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         var dir = System.Math.Sign(playerPos.x - transform.position.x);
 
         SetRecentDir(dir);
+        // StartSetRecentDirAfterGrounded(dir);
     }
     public void BodySlam02_AnimEvent()
     {
@@ -353,6 +360,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         var leftRange = Random.Range(bodyColliderMinX - toDistance, bodyColliderMinX - fromDistance);
         var rightRange = Random.Range(bodyColliderMaxX + fromDistance, bodyColliderMaxX + toDistance);
 
+        // 종유석 생성 범위
         Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
         Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
         Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
