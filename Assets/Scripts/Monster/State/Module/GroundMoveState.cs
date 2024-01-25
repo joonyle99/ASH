@@ -11,10 +11,6 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        // ground walking
-        if (Monster.MoveType == MonsterDefine.MoveType.GroundWalking)
-            Monster.GroundWalking();
-
         if (Monster.GroundChaseEvaluator)
         {
             // first chase
@@ -41,6 +37,10 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
                     Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
             }
         }
+
+        // ground walking
+        if (Monster.MoveType == MonsterDefine.MoveType.GroundWalking)
+            Monster.GroundWalking();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
