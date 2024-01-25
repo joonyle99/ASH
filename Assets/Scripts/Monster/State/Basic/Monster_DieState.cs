@@ -6,10 +6,10 @@ public class Monster_DieState : Monster_StateBase, IPassiveState
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        Monster.IsDead = true;
+        // Monster.IsDead = true;
 
         // Polymorphism
-        Monster.Die();
+        // Monster.Die();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -21,6 +21,6 @@ public class Monster_DieState : Monster_StateBase, IPassiveState
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        Monster.IsDead = false;
+        // Monster.IsDead = false;
     }
 }

@@ -225,7 +225,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     // Blink
     private Material _whiteFlashMaterial;
     private Material _superArmorMaterial;
-    private readonly float _blinkDuration = 0.08f;
+    private readonly float _flashInterval = 0.08f;
+    private readonly float _flashDuration = 0.9f;
+    private bool _isFlashing;
     private SpriteRenderer[] _spriteRenderers;
     private Material[] _originalMaterials;
     private Coroutine _whiteFlashRoutine;
@@ -406,6 +408,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public virtual void Die()
     {
+        IsDead = true;
+
         // Disable Hit Box
         TurnOffHitBox();
 
@@ -423,6 +427,24 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     protected virtual IEnumerator DeathEffectCoroutine()
     {
+        var effect = GetComponent<DisintegrateEffect>();
+        yield return new WaitForSeconds(0.3f);
+
+        Rigidbody.simulated = false;
+        Animator.speed = 0;
+
+        // Stop movement - Zero Velocity
+        var navMeshMoveModule = GetComponent<NavMeshMoveModule>();
+        if (navMeshMoveModule)
+        {
+            navMeshMoveModule.SetStopAgent(true);
+            navMeshMoveModule.SetVelocityZero();
+        }
+
+        effect.Play();
+        yield return new WaitUntil(() => effect.IsEffectDone);
+
+        /*
         // Fade Out Effect
 
         SpriteRenderer[] currentSpriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
@@ -447,6 +469,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         }
 
         yield return null;
+        */
     }
 
     // basic
@@ -495,20 +518,20 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     // hitBox
     public void TurnOffHitBox()
     {
-        GameObject hitBox = GetComponentInChildren<MonsterBodyHitModule>().gameObject;
+        var hitBox = GetComponentInChildren<MonsterBodyHitModule>();
 
         if (hitBox)
-            hitBox.SetActive(false);
+            hitBox.gameObject.SetActive(false);
     }
     public void TurnToCollisionHitBox()
     {
-        GameObject hitBox = GetComponentInChildren<MonsterBodyHitModule>().gameObject;
+        var hitBox = GetComponentInChildren<MonsterBodyHitModule>();
 
         if (hitBox)
         {
             Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
             hitBoxCollider.isTrigger = false;
-            hitBox.layer = LayerMask.NameToLayer("Default");
+            hitBox.gameObject.layer = LayerMask.NameToLayer("Default");
         }
     }
     public void SetIsAttackableHitBox(bool isBool)
@@ -565,17 +588,17 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // turn to white material
         ChangeMaterial(_whiteFlashMaterial);
 
-        while (IsHurt)
+        while (_isFlashing)
         {
             foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0.4f);
+                spriteRenderer.material.SetFloat("_FlashAmount", 0.3f);
 
-            yield return new WaitForSeconds(_blinkDuration);
+            yield return new WaitForSeconds(_flashInterval);
 
             foreach (var spriteRenderer in _spriteRenderers)
                 spriteRenderer.material.SetFloat("_FlashAmount", 0f);
 
-            yield return new WaitForSeconds(_blinkDuration);
+            yield return new WaitForSeconds(_flashInterval);
         }
 
         // TODO : Dead 상태에서 WhiteFlash가 호출되는 일은 없겠지만, 혹시 모르니까
@@ -584,6 +607,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public void StartWhiteFlash()
     {
+        if (this._superArmorRoutine != null)
+            StopCoroutine(this._superArmorRoutine);
+
         if (this._whiteFlashRoutine != null)
             StopCoroutine(this._whiteFlashRoutine);
 
@@ -596,6 +622,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         while (IsSuperArmor)
         {
+            /*
             foreach (var spriteRenderer in _spriteRenderers)
                 spriteRenderer.material.SetFloat("_FlashAmount", 0.2f);
 
@@ -605,6 +632,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 spriteRenderer.material.SetFloat("_FlashAmount", 0f);
 
             yield return new WaitForSeconds(_blinkDuration);
+            */
+
+            yield return null;
         }
 
         if (!IsDead)
@@ -612,10 +642,15 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public void StartSuperArmorFlash()
     {
+        /*
+        if (this._whiteFlashRoutine != null)
+            StopCoroutine(this._whiteFlashRoutine);
+
         if (this._superArmorRoutine != null)
             StopCoroutine(this._superArmorRoutine);
 
         this._superArmorRoutine = StartCoroutine(SuperArmorFlash());
+        */
     }
 
     // hit & die
@@ -635,7 +670,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (CurHp <= 0)
         {
             CurHp = 0;
-            Animator.SetTrigger("Die");
+            // Animator.SetTrigger("Die");
+            Die();
 
             return;
         }
@@ -656,6 +692,16 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public void StartHitTimer()
     {
         StartCoroutine(HitTimer());
+    }
+    private IEnumerator FlashTimer()
+    {
+        _isFlashing = true;
+        yield return new WaitForSeconds(_flashDuration);
+        _isFlashing = false;
+    }
+    public void StartFlashTimer()
+    {
+        StartCoroutine(FlashTimer());
     }
 
     // state

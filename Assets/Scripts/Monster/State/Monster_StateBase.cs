@@ -39,8 +39,7 @@ public abstract class Monster_StateBase : StateMachineBehaviour
         {
             // NavMesh Agent Stop
             if (Monster.CurrentStateIs<Monster_AttackState>() ||
-                Monster.CurrentStateIs<Monster_HurtState>() ||
-                Monster.CurrentStateIs<Monster_DieState>())
+                Monster.CurrentStateIs<Monster_HurtState>())
                 Monster.NavMeshMoveModule.SetStopAgent(true);
         }
     }
@@ -68,8 +67,7 @@ public abstract class Monster_StateBase : StateMachineBehaviour
         {
             // NavMesh Agent Resume
             if (Monster.CurrentStateIs<Monster_AttackState>() ||
-                Monster.CurrentStateIs<Monster_HurtState>() ||
-                Monster.CurrentStateIs<Monster_DieState>())
+                Monster.CurrentStateIs<Monster_HurtState>())
                 Monster.NavMeshMoveModule.SetStopAgent(false);
         }
     }

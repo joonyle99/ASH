@@ -6,8 +6,11 @@ public class Monster_HurtState : Monster_StateBase, IPassiveState
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
+        // Debug.Log("Enter Hurt State");
+
         Monster.IsHurt = true;
 
+        Monster.StartFlashTimer();
         Monster.StartWhiteFlash();
     }
 

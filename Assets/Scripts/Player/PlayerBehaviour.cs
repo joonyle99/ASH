@@ -56,7 +56,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     [SerializeField] Material _whiteFlashMaterial;
     [SerializeField] float _godModeTime = 1.5f;
-    [SerializeField] float _blinkDuration = 0.06f;
+    [SerializeField] float _flashInterval = 0.06f;
 
     SpriteRenderer[] _spriteRenderers;
     Material[] _originalMaterials;
@@ -367,12 +367,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
             foreach (var spriteRenderer in _spriteRenderers)
                 spriteRenderer.material.SetFloat("_FlashAmount", 0.4f);
 
-            yield return new WaitForSeconds(_blinkDuration);
+            yield return new WaitForSeconds(_flashInterval);
 
             foreach (var spriteRenderer in _spriteRenderers)
                 spriteRenderer.material.SetFloat("_FlashAmount", 0f);
 
-            yield return new WaitForSeconds(_blinkDuration);
+            yield return new WaitForSeconds(_flashInterval);
         }
 
         // turn to original material
@@ -394,7 +394,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         yield return new WaitForSeconds(_godModeTime);
         IsGodMode = false;
     }
-    public void StartGodMode()
+    public void StartGodModeTimer()
     {
         StartCoroutine(GodModeTimer());
     }

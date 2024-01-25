@@ -39,6 +39,10 @@ public class Turtle : MonsterBehavior
     }
     public override void Die()
     {
+        IsDead = true;
+
+        Animator.SetTrigger("Die");
+
         // Trigger -> Collision
         TurnToCollisionHitBox();
 

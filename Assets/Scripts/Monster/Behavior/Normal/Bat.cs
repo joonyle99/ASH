@@ -61,18 +61,6 @@ public class Bat : MonsterBehavior
     {
         return base.OnHit(attackInfo);
     }
-    protected override IEnumerator DeathEffectCoroutine()
-    {
-        var effect = GetComponent<DisintegrateEffect>();
-        yield return new WaitForSeconds(0.3f);
-
-        // Stop movement - Zero Velocity
-        var navMeshMoveModule = GetComponent<NavMeshMoveModule>();
-        navMeshMoveModule.SetVelocityZero();
-
-        effect.Play();
-        yield return new WaitUntil(() => effect.IsEffectDone);
-    }
 
     public void SprinkleParticle_AnimEvent()
     {

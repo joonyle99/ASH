@@ -8,14 +8,12 @@ public class Frog : MonsterBehavior
     [Space]
 
     [SerializeField] private Frog_Tongue _tonguePrefab;
-    [SerializeField] private Transform _mouthTrans;
 
     [Space]
 
     [SerializeField] private float _tongueLength = 15f;
     [SerializeField] private float _targetTongueAttackTime = 0.1f;
 
-    private Frog_Tongue _tongueInstance;
     private Coroutine _tongueAttackCoroutine;
 
     protected override void Awake()
@@ -72,14 +70,12 @@ public class Frog : MonsterBehavior
         Vector2 forceVector = new Vector2(JumpForce.x * RecentDir, JumpForce.y);
         Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
     }
-
     public void TongueAttack_AnimEvent()
     {
-        _tongueInstance = Instantiate(_tonguePrefab, _mouthTrans.position, Quaternion.identity, _mouthTrans);
-        SpriteRenderer tongueSpriteRenderer = _tongueInstance.GetComponent<SpriteRenderer>();
+        _tonguePrefab.gameObject.SetActive(true);
+        SpriteRenderer tongueSpriteRenderer = _tonguePrefab.GetComponent<SpriteRenderer>();
         _tongueAttackCoroutine = StartCoroutine(ExtendTongue(tongueSpriteRenderer));
     }
-
     private IEnumerator ExtendTongue(SpriteRenderer tongueSpriteRenderer)
     {
         Vector2 startSize = tongueSpriteRenderer.size;
@@ -98,13 +94,12 @@ public class Frog : MonsterBehavior
             yield return null;
         }
     }
-
     public void DestoryTongue_AnimEvent()
     {
         if (_tongueAttackCoroutine != null)
             StopCoroutine(_tongueAttackCoroutine);
 
-        Destroy(_tongueInstance.gameObject);
+        _tonguePrefab.gameObject.SetActive(false);
     }
 
     private bool PatrolToOtherCondition(string targetTransitionParam, Monster_StateBase currentState)
