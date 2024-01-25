@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class WaypointPath : MonoBehaviour
 {
     Transform[] _wayPoints;
     [SerializeField] bool _loop = false;
-
+    [SerializeField] LineRenderer _lineRenderer;
     float[] _distances;
 
     float _totalDistance = 0;
@@ -28,6 +31,20 @@ public class WaypointPath : MonoBehaviour
         {
             _distances[i] = Vector3.Distance(_wayPoints[i].position, _wayPoints[i + 1].position);
             _totalDistance += _distances[i];
+        }
+        UpdateLineRenderer();
+    }
+    public void UpdateLineRenderer()
+    {
+        if (_lineRenderer)
+        {
+            var transforms = GetComponentsInChildren<Transform>();
+            Vector3[] positions = new Vector3[transforms.Length - 1];
+            for (int i = 0; i < positions.Length; i++)
+                positions[i] = transforms[i + 1].position;
+            _lineRenderer.SetPositions(positions);
+            _lineRenderer.positionCount = positions.Length;
+            EditorUtility.SetDirty(_lineRenderer);
         }
     }
     public Vector3 GetPosition(float travelDistance)
@@ -65,4 +82,20 @@ public class WaypointPath : MonoBehaviour
             Gizmos.DrawLine(transforms[i].position, transforms[i+1].position);
         }
     }
+    
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(WaypointPath))]
+public class WaypointPathEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        WaypointPath t = (WaypointPath)target;
+        if (GUILayout.Button("Update LineRenderer"))
+            t.UpdateLineRenderer();
+    }
+}
+#endif

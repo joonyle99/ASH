@@ -29,7 +29,7 @@ public class MonsterBodyHitModule : MonoBehaviour
     // 대상이 콜라이더에 계속 들어와있을 경우를 고려해 TriggerStay 사용
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(IsAttackable)
+        if (IsAttackable)
         {
             // 타겟 레이어와 충돌
             if ((1 << collision.gameObject.layer & _bodyHitTargetLayer.value) > 0)

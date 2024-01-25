@@ -28,13 +28,13 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     [Space]
 
-    [SerializeField] private int _minTargetCount;
-    [SerializeField] private int _maxTargetCount;
+    [SerializeField] private int _minTargetAttackCount;
+    [SerializeField] private int _maxTargetAttackCount;
 
     [Space]
 
-    [SerializeField] private int _targetCount;
-    [SerializeField] private int _currentCount;
+    [SerializeField] private int _targetAttackCount;
+    [SerializeField] private int _currentAttackCount;
     [SerializeField] private int _targetHurtCount;
     [SerializeField] private int _currentHurtCount;
 
@@ -86,6 +86,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     private Vector2 _playerPos;
     private BoxCollider2D _bodyCollider;   // not bodyHitBox
 
+    private int healtUnit = 10000;
+
     protected override void Awake()
     {
         base.Awake();
@@ -97,22 +99,19 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         base.Start();
 
         // init
-        RandomTargetCount();
+        RandomTargetAttackCount();
         SetToRandomAttack();
     }
     protected override void Update()
     {
         base.Update();
-
-        if (!IsRage)
-        {
-            if (CurHp <= MaxHp * 0.5f)
-                Animator.SetTrigger("Shout");
-        }
     }
     protected override void SetUp()
     {
         base.SetUp();
+
+        MaxHp = _targetHurtCount * healtUnit;
+        CurHp = MaxHp;
     }
     public override void KnockBack(Vector2 forceVector)
     {
@@ -123,27 +122,36 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         if (IsGodMode || IsDead)
             return IAttackListener.AttackResult.Fail;
 
-        IncreaseHurtCount();
-
         // Hit Process
         HitProcess(attackInfo, false, false);
 
-        // Hurt
-        if (_currentHurtCount >= _targetHurtCount)
-        {
-            CurHp -= 10000;
+        // 흑곰 전용 피격 처리
+        CurHp -= healtUnit;
+        IncreaseHurtCount();
 
-            // Die
-            if (CurHp <= 0)
+        // Die
+        if (CurHp <= 0)
+        {
+            CurHp = 0;
+            Die();
+
+            return IAttackListener.AttackResult.Success;
+        }
+
+        // Rage
+        if (!IsRage)
+        {
+            if (CurHp <= MaxHp * 0.5f)
             {
-                CurHp = 0;
-                Die();
+                Animator.SetTrigger("Shout");
 
                 return IAttackListener.AttackResult.Success;
             }
-
-            Animator.SetTrigger("Hurt");
         }
+
+        // Hurt
+        if (_currentHurtCount >= _targetHurtCount)
+            Animator.SetTrigger("Hurt");
 
         return IAttackListener.AttackResult.Success;
     }
@@ -191,16 +199,16 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         }
 
         if (_currentAttack is BearAttackType.EarthQuake)
-            _currentCount = 0;
+            InitializeAttackCount();
         else
-            _currentCount++;
+            IncreaseAttackCount();
     }
     public override void AttackPostProcess()
     {
-        if (_currentCount >= _targetCount)
+        if (_currentAttackCount >= _targetAttackCount)
         {
             SetToEarthQuake();
-            RandomTargetCount();
+            RandomTargetAttackCount();
         }
         else
             SetToRandomAttack();
@@ -210,7 +218,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // 그로기 상태 진입 (더이상 손전등의 영향을 받지 않음)
         IsGroggy = true;
 
-        // 몬스터의 MonsterBodyHit를 끈다 (피격되지 않는다)
+        // 몬스터의 MonsterBodyHit를 끈다 (플레이어를 타격할 수 없다)
         SetIsAttackableHitBox(false);
     }
     public override void GroggyPostProcess()
@@ -218,24 +226,24 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // 그로기 상태 종료 (이제 손전등의 영향을 받음)
         IsGroggy = false;
 
-        // 몬스터의 MonsterBodyHit를 켠다 (피격 가능하다)
+        // 몬스터의 MonsterBodyHit를 켠다 (플레이어를 타격할 수 있다)
         SetIsAttackableHitBox(true);
 
         InitializeHurtCount();
     }
 
     // basic
-    private void RandomTargetCount()
+    private void RandomTargetAttackCount()
     {
-        if (_minTargetCount > _maxTargetCount)
+        if (_minTargetAttackCount > _maxTargetAttackCount)
             Debug.LogError("minTargetCount > maxTargetCount");
-        else if (_minTargetCount < 0)
+        else if (_minTargetAttackCount < 0)
             Debug.LogError("minTargetCount < 0");
-        else if (_maxTargetCount <= 0)
+        else if (_maxTargetAttackCount <= 0)
             Debug.LogError("maxTargetCount <= 0");
 
         // 4번 ~ 7번 공격 후 지진 공격
-        _targetCount = Random.Range(_minTargetCount, _maxTargetCount);
+        _targetAttackCount = Random.Range(_minTargetAttackCount, _maxTargetAttackCount);
     }
     private void SetToRandomAttack()
     {
@@ -248,15 +256,21 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         _nextAttack = BearAttackType.EarthQuake;
         Animator.SetInteger("NextAttackNumber", (int)_nextAttack);
     }
+    public void IncreaseAttackCount()
+    {
+        _currentAttackCount++;
+    }
+    public void InitializeAttackCount()
+    {
+        _currentAttackCount = 0;
+    }
     public void IncreaseHurtCount()
     {
         _currentHurtCount++;
-        Animator.SetInteger("HurtCount", _currentHurtCount);
     }
     public void InitializeHurtCount()
     {
         _currentHurtCount = 0;
-        Animator.SetInteger("HurtCount", _currentHurtCount);
     }
 
     // slash

@@ -44,6 +44,8 @@ public abstract class Monster_SkillObject : MonoBehaviour
             }
         }
 
+        Debug.Log(this.gameObject.name + " : " + collision.gameObject.name);
+
         // 스킬 파괴 레이어와 충돌
         if ((1 << collision.gameObject.layer & _skillDestroyLayer.value) > 0)
             Destroy(this.gameObject);

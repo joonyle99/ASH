@@ -1,10 +1,13 @@
 using UnityEngine;
 
-public class SemiBoss_RageState : SemiBoss_StateBase
+public class SemiBoss_GroggyRageState : SemiBoss_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
+
+        // 무적 시작. 피격될 수 없다.
+        SemiBoss.IsGodMode = true;
 
         // 격노 상태 시작
         SemiBoss.IsRage = true;
@@ -23,6 +26,8 @@ public class SemiBoss_RageState : SemiBoss_StateBase
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
+
+        SemiBoss.GroggyPostProcess();
 
         // 보스가 격노하면 이동속도 / 공격속도 증가
         SemiBoss.MoveSpeed *= 1.5f;
