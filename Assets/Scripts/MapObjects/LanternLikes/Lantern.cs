@@ -45,6 +45,8 @@ public class Lantern : LanternLike, ILightCaptureListener
     float _idleInterval;
     bool _isExplodeDone = false;
 
+    PreserveState _statePreserver;
+
     void Awake()
     {
         var collisions = Physics2D.OverlapPointAll(LightPoint.position);
@@ -78,11 +80,33 @@ public class Lantern : LanternLike, ILightCaptureListener
         }
         else
         {
-            _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
-            _currentSpotLight.intensity = _currentSettings.Intensity;
-
+            TurnCurrentSpotLightOn();
             IsLightOn = true;
-            _currentSpotLight.gameObject.SetActive(true);
+        }
+
+        _statePreserver = GetComponent<PreserveState>();
+        if (_statePreserver != null )
+        {
+            bool isOn = _statePreserver.Load("isOn", IsLightOn);
+            if (isOn)
+            {
+                _isExplodeDone = true;
+                TurnCurrentSpotLightOn();
+                IsLightOn = true;
+            }
+        }
+    }
+    void TurnCurrentSpotLightOn()
+    {
+        _currentSpotLight.gameObject.SetActive(true);
+        _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
+        _currentSpotLight.intensity = _currentSettings.Intensity;
+    }
+    void OnDestroy()
+    {
+        if (_statePreserver != null)
+        {
+            _statePreserver.Save("isOn", IsLightOn);
         }
     }
     void Update()
@@ -132,7 +156,8 @@ public class Lantern : LanternLike, ILightCaptureListener
         if (IsLightOn)
             return;
         IsLightOn = true;
-        StartCoroutine(ExplodeCoroutine());
+        if (!_isExplodeDone)
+            StartCoroutine(ExplodeCoroutine());
     }
     void TurnLightOff()
     {
