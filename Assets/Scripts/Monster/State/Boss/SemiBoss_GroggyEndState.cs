@@ -6,6 +6,7 @@ public class SemiBoss_GroggyEndState : SemiBoss_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
+        // 무적 시작. 피격될 수 없다.
         SemiBoss.IsGodMode = true;
     }
 
@@ -18,9 +19,6 @@ public class SemiBoss_GroggyEndState : SemiBoss_StateBase
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        SemiBoss.IsGroggy = false;
-
-        // 몬스터의 MonsterBodyHit Attack 기능을 켠다
-        SemiBoss.SetIsAttackableHitBox(true);
+        SemiBoss.GroggyPostProcess();
     }
 }
