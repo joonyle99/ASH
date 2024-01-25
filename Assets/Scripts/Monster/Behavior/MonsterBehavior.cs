@@ -556,6 +556,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public void SetIsAttackableHitBox(bool isBool)
     {
+        var str = isBool ? "Attackable" : "UnAttackable";
+        Debug.Log(str);
+
         var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHitModule>();
 
         if (monsterBodyHitModule)

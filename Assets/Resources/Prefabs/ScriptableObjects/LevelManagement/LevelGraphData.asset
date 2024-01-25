@@ -18,8 +18,8 @@ MonoBehaviour:
     sceneAsset: {fileID: 102900000, guid: 8022db8fd7901954bb97eb0dbd31e359, type: 3}
     scenePath: Assets/Scenes/ActualBuild/Boss_1.unity
   PassageNames:
-  - doorto2
-  - boss1to1-3
+  - 1to2
+  - Enterance
 --- !u!114 &-7774507360984267180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,12 +129,16 @@ MonoBehaviour:
     ExitPassgage: Entrance
   - EntranceScene: {fileID: -7888092096887817785}
     ExitScene: {fileID: 6500535830191988829}
-    EntrancePassage: doorto2
+    EntrancePassage: 1to2
     ExitPassgage: 2to1
   - EntranceScene: {fileID: 6500535830191988829}
     ExitScene: {fileID: -7888092096887817785}
     EntrancePassage: 2to1
-    ExitPassgage: doorto2
+    ExitPassgage: 1to2
+  - EntranceScene: {fileID: 4282995401228220758}
+    ExitScene: {fileID: -7888092096887817785}
+    EntrancePassage: BossEnterance
+    ExitPassgage: Enterance
 --- !u!114 &1782720182068067114
 MonoBehaviour:
   m_ObjectHideFlags: 0
