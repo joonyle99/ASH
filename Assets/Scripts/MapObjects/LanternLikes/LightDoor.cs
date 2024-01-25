@@ -11,6 +11,7 @@ public class LightDoor : LanternLike
     Animator _animator;
     Collider2D _collider;
     CameraController _cameraController;
+    public bool IsOpened => CurrentState == State.Opened;
     public enum State
     {
         Closed, Opening, Opened, Closing

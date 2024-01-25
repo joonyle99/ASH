@@ -26,6 +26,7 @@ public sealed class LanternSceneContext : SceneContext
     [SerializeField] LayerMask _beamObstacleLayers;
     [SerializeField] LightConnectionSparkEffect _sparkEffectPrefab;
     [SerializeField] LightDoor _lightDoor;
+    [SerializeField] float _silenceTimeOnStart = 2f;
     [SerializeField] List<LanternRelation> _lanternRelations;
     [Header("Last Connection Camera Effect")]
     [SerializeField] Transform _lastConnectionCameraPoint;
@@ -47,23 +48,37 @@ public sealed class LanternSceneContext : SceneContext
     const uint MaxRayCastHitCount = 5;
 
     bool _StopCheckingConnections = false;
+    bool _isSilenced = true;
+
+    
 
     public void RecordActivationTime(LanternLike lantern)
     {
         _lanternActivationOrder.Remove(lantern);
         _lanternActivationOrder.Add(lantern);
     }
+    IEnumerator UnsilenceCoroutine()
+    {
+        yield return new WaitForSeconds(_silenceTimeOnStart);
+        _isSilenced = false;
+    }
     private new void Awake()
     {
         base.Awake();
         Current = this;
-        foreach(var relation in _lanternRelations)
+        _lightDoor = FindObjectOfType<LightDoor>();
+        _isSilenced = true;
+
+        foreach (var relation in _lanternRelations)
         {
             relation.ConnectionSparkEffect = Instantiate(_sparkEffectPrefab);
             relation.ConnectionSparkEffect.SetConnection(relation.A, relation.B);
             relation.ConnectionSparkEffect.StartTravel();
         }
+        StartCoroutine(UnsilenceCoroutine());
+
     }
+    
     public bool IsAllRelationsFullyConnected(params LanternLike [] exceptions)
     {
         foreach(var relation in _lanternRelations)
@@ -142,10 +157,13 @@ public sealed class LanternSceneContext : SceneContext
             relation.Beam = Instantiate<LightBeam>(_beamPrefab);
         }
         SetBeamConnections(relation);
+
         relation.ConnectionSparkEffect.gameObject.SetActive(false);
+
         if (relation.A.transform == _lightDoor.transform || relation.B.transform == _lightDoor.transform)
         {
-            SceneEffectManager.Current.PushCutscene(new Cutscene(this, LastConnectionCameraCoroutine(relation)));   
+            if (!_lightDoor.IsOpened)
+                SceneEffectManager.Current.PushCutscene(new Cutscene(this, LastConnectionCameraCoroutine(relation)));   
         }
         else
         {
@@ -211,9 +229,11 @@ public sealed class LanternSceneContext : SceneContext
     }
     IEnumerator ConnectionCoroutine(LanternRelation relation)
     {
+        if(!_isSilenced)
         _soundList.PlaySFX("SE_Lantern_Line");
         relation.Beam.gameObject.SetActive(true);
-        yield return new WaitUntil(()=>relation.Beam.IsShootingDone);
+        if (!_isSilenced)
+            yield return new WaitUntil(()=>relation.Beam.IsShootingDone);
         relation.A.OnBeamConnected(relation.Beam);
         relation.B.OnBeamConnected(relation.Beam);
     }
@@ -248,6 +268,13 @@ public sealed class LanternSceneContext : SceneContext
             }
         }
 
+        foreach(var relation in _lanternRelations)
+        {
+
+            if ((relation.A.transform == _lightDoor.transform || relation.B.transform == _lightDoor.transform) &&
+                    _lightDoor.IsOpened)
+                relation.ConnectionSparkEffect.gameObject.SetActive(false);
+        }
 
         return buildResult;
     }
