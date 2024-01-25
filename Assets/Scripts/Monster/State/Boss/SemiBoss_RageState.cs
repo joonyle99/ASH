@@ -6,9 +6,12 @@ public class SemiBoss_RageState : SemiBoss_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
+        // 격노 상태 시작
+        SemiBoss.IsRage = true;
+
         // TODO : 외관이 좀 바뀌어도 좋을 것 같다.
         // like 머터리얼 변경
-        Monster.StartFlashTimer(3f);
+        SemiBoss.StartFlashTimer(3f);
         SemiBoss.StartSuperArmorFlash();
     }
 

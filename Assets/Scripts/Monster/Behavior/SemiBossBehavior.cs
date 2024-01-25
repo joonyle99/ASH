@@ -53,4 +53,7 @@ public abstract class SemiBossBehavior : MonsterBehavior
 
     public abstract void AttackPreProcess();
     public abstract void AttackPostProcess();
+
+    public abstract void GroggyPreProcess();
+    public abstract void GroggyPostProcess();
 }
