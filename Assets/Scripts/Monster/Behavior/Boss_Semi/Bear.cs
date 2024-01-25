@@ -347,7 +347,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public void BodySlam02_AnimEvent()
     {
         _isBodySlamming = true;
-        Rigidbody.AddForce(300f * Vector2.right * RecentDir, ForceMode2D.Impulse);
+        Rigidbody.AddForce(60f * Vector2.right * RecentDir, ForceMode2D.Impulse);
     }
     public void BodySlam03_AnimEvent()
     {
