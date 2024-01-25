@@ -23,6 +23,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [Header("Condition")]
     [Space]
 
+    [SerializeField] private int _finalTargetHurtCount;
+
+    [Space]
+
     [SerializeField] private BearAttackType _currentAttack;
     [SerializeField] private BearAttackType _nextAttack;
 
@@ -88,6 +92,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     private int healtUnit = 10000;
 
+    public GameObject LightingStone;
+
     protected override void Awake()
     {
         base.Awake();
@@ -119,17 +125,20 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
             GroundWalking();
         }
 
-        if (_isBodySlamming)
+        if (CurrentStateIs<Monster_AttackState>())
         {
-            MonsterAttackInfo bodySlamInfo = new MonsterAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
-            BoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _attackTargetLayer);
+            if (_isBodySlamming)
+            {
+                MonsterAttackInfo bodySlamInfo = new MonsterAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
+                BoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _attackTargetLayer);
+            }
         }
     }
     protected override void SetUp()
     {
         base.SetUp();
 
-        MaxHp = _targetHurtCount * healtUnit;
+        MaxHp = _finalTargetHurtCount * healtUnit;
         CurHp = MaxHp;
     }
     public override void KnockBack(Vector2 forceVector)
@@ -176,7 +185,12 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
     public override void Die()
     {
-        base.Die();
+        IsDead = true;
+
+        Animator.SetTrigger("Die");
+
+        // Disable Hit Box
+        TurnOffHitBox();
     }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
@@ -230,6 +244,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 몬스터의 MonsterBodyHit를 끈다 (플레이어를 타격할 수 없다)
         SetIsAttackableHitBox(false);
+
+        // 빛나는 돌 활성화
+        SetLightingStone(true);
     }
     public override void GroggyPostProcess()
     {
@@ -240,6 +257,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         SetIsAttackableHitBox(true);
 
         InitializeHurtCount();
+
+        // 빛나는 돌 비활성화
+        SetLightingStone(false);
     }
 
     // basic
@@ -386,5 +406,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         wave1.SetDir(Vector2.left);
         var wave2 = Instantiate(_waveSkillPrefab, _earthQuakeCollider.transform.position, Quaternion.identity);
         wave2.SetDir(Vector2.right);
+    }
+
+    public void SetLightingStone(bool isBool)
+    {
+        LightingStone.SetActive(isBool);
     }
 }
