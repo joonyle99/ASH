@@ -12,6 +12,7 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     [SerializeField] float _requiredLightTime = 0.7f;
     [SerializeField] float _openDelay = 0.7f;
     [SerializeField] SoundList _soundList;
+    [SerializeField] GameObject _lightEffect;
 
     float _eTime = 0f;
     void Awake()
@@ -25,6 +26,7 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
         _soundList.PlaySFX("SE_HiddenPath_Contact");
         yield return new WaitForSeconds(_openDelay);
         _soundList.PlaySFX("SE_HiddenPath_Open");
+        _lightEffect.SetActive(false);
         _mask.OnLightCaptured(_swipeDuration);
         InputManager.Instance.ChangeToDefaultSetter();
     }
