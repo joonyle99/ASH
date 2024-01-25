@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public class SemiBoss_GroggyStartState : SemiBoss_StateBase, IPassiveState
+public class SemiBoss_GroggyStartState : SemiBoss_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // 그로기 상태 진입. 더이상 손전등의 영향을 받지 않음
+        // 그로기 상태 진입 (더이상 손전등의 영향을 받지 않음)
         SemiBoss.IsGroggy = true;
 
-        // 몬스터의 MonsterBodyHit Attack 기능을 끈다.
+        // 몬스터의 MonsterBodyHit를 끈다 (피격되지 않는다)
         SemiBoss.SetIsAttackableHitBox(false);
     }
 

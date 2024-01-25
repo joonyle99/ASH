@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GroundMoveState : Monster_StateBase
+public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableState, IHurtableState
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -11,11 +11,23 @@ public class GroundMoveState : Monster_StateBase
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
+        // ground walking
+        if (Monster.MoveType == MonsterDefine.MoveType.GroundWalking)
+            Monster.GroundWalking();
+
+        if (Monster.GroundChaseEvaluator)
+        {
+            // first chase
+            if (Monster.GroundChaseEvaluator.IsTargetWithinRange())
+            {
+                Monster.StartSetRecentDirAfterGrounded(Monster.GroundChaseEvaluator.ChaseDir);
+                return;
+            }
+        }
+
         if (Monster.GroundPatrolEvaluator)
         {
-            // reDirection for patrol
-
-            // out patrol range
+            // then patrol
             if (Monster.GroundPatrolEvaluator.IsOutOfPatrolRange())
             {
                 if (Monster.GroundPatrolEvaluator.IsLeftOfLeftPoint())
@@ -23,24 +35,12 @@ public class GroundMoveState : Monster_StateBase
                 else if (Monster.GroundPatrolEvaluator.IsRightOfRightPoint())
                     Monster.StartSetRecentDirAfterGrounded(-1);
             }
-            // in patrol range
             else
             {
                 if (Monster.GroundPatrolEvaluator.IsTargetWithinRange())
                     Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
             }
         }
-
-        if (Monster.GroundChaseEvaluator)
-        {
-            // change state to chase
-            if (Monster.GroundChaseEvaluator.IsTargetWithinRange())
-                Monster.StartSetRecentDirAfterGrounded(Monster.GroundChaseEvaluator.ChaseDir);
-        }
-
-        // ground walking
-        if (Monster.MoveType == MonsterDefine.MoveType.GroundWalking)
-            Monster.GroundWalking();
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

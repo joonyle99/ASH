@@ -8,7 +8,7 @@ public class FloatingPatrolModule : MonoBehaviour
     [SerializeField] private BoxCollider2D _patrolArea;
     public Vector3 TargetPosition { get; private set; }
 
-    void Start()
+    void Awake()
     {
         SetTargetPos();
     }
