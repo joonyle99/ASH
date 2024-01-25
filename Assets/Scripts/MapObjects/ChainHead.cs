@@ -19,7 +19,13 @@ public class ChainHead : InteractableObject
     [SerializeField] Joint2D _lastChainPiece;
     [SerializeField] DistanceJoint2D _playerLimittingJoint;
 
-
+    int _currentRailSection = 0;
+    private void Update()
+    {
+        Vector3 angleVector = (_rail[_currentRailSection + 1].position - _rail[_currentRailSection].position);
+        float angle = Mathf.Atan2(angleVector.y, angleVector.x);
+        transform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
+    }
     protected override void OnInteract()
     {
         _handle.ConnectTo(Player.HandRigidBody);
@@ -52,14 +58,17 @@ public class ChainHead : InteractableObject
                 if (result.Intersects)
                 {
                     if (!intersection.Intersects)
+                    {
                         intersection = result;
+                        _currentRailSection = i;
+                    }
                     else if (Vector3.SqrMagnitude(transform.position - intersection.Point) > Vector3.SqrMagnitude(transform.position - result.Point))
                     {
                         intersection.Point = result.Point;
+                        _currentRailSection = i;
                     }
                 }
             }
-            print(intersection.Point);
             if (intersection.Intersects)
             {
                 transform.position = intersection.Point;
@@ -73,7 +82,6 @@ public class ChainHead : InteractableObject
                 else
                     Player.MovementController.EnableMovementExternaly(this);
                 _playerLimittingJoint.enabled = true;
-                print(Vector3.Distance(Player.HandRigidBody.position, transform.position));
             }
         }
         else
