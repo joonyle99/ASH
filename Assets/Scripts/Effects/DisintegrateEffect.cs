@@ -34,7 +34,7 @@ public class DisintegrateEffect : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        Debug.Log("DisintegrateEffect");
+        // Debug.Log($"{this.gameObject.name}ÀÇ DisintegrateEffect");
 
         foreach (var renderer in _spriteRenderers)
         {

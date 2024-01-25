@@ -205,7 +205,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         protected set => _moveType = value;
     }
 
-    [Header("Basic Attack")]
+    [Header("BoxCast Attack")]
     [Space]
 
     [SerializeField] protected LayerMask _attackTargetLayer;
@@ -550,7 +550,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     private void InitMaterial()
     {
-        Debug.Log("InitMaterial");
+        // Debug.Log($"{this.gameObject.name}의 InitMaterial");
 
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
@@ -578,8 +578,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             yield return new WaitForSeconds(_blinkDuration);
         }
 
-        // TODO : 사망할때 고려하기,,
-        InitMaterial();
+        // TODO : Dead 상태에서 WhiteFlash가 호출되는 일은 없겠지만, 혹시 모르니까
+        if (!IsDead)
+            InitMaterial();
     }
     public void StartWhiteFlash()
     {
@@ -596,7 +597,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         while (IsSuperArmor)
         {
             foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0.3f);
+                spriteRenderer.material.SetFloat("_FlashAmount", 0.2f);
 
             yield return new WaitForSeconds(_blinkDuration);
 
@@ -606,8 +607,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             yield return new WaitForSeconds(_blinkDuration);
         }
 
-        // TODO : 사망할때 고려하기,,
-        InitMaterial();
+        if (!IsDead)
+            InitMaterial();
     }
     public void StartSuperArmorFlash()
     {

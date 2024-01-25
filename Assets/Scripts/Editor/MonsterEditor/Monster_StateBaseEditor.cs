@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Monster_StateBase), true)]  // 상속받는 모든 클래스에 대해 커스텀 에디터가 사용된다.
+[CustomEditor(typeof(Monster_StateBase), true)]     // 상속받는 모든 클래스에 대해 커스텀 에디터가 사용된다.
 // [CustomEditor(typeof(Monster_StateBase))]        // 해당 클래스에 대한 커스텀 에디터를 사용한다.
 public class Monster_StateBaseEditor : Editor
 {
@@ -17,6 +17,7 @@ public class Monster_StateBaseEditor : Editor
 
     void ForceRepaint()
     {
+        // 에디터를 강제로 리페인트한다.
         Repaint();
     }
 
