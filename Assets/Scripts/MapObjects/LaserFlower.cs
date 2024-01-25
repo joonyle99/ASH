@@ -11,6 +11,7 @@ public class LaserFlower : MonoBehaviour, IAttackListener
     [SerializeField] float _darkBeamHeadOffset = 0.1f;
     [SerializeField] float _rotation = 90;
     [SerializeField] Transform _headBone;
+    [SerializeField] GameObject _attackHitbox;
 
     Animator _animator;
     int _hp;
@@ -48,6 +49,7 @@ public class LaserFlower : MonoBehaviour, IAttackListener
         //_darkBeam.gameObject.SetActive(true);
         _hp = _maxHp;
         _animator.SetTrigger("Recover");
+        _attackHitbox.SetActive(true);
     }
     void Close()
     {
@@ -55,6 +57,7 @@ public class LaserFlower : MonoBehaviour, IAttackListener
             return;
         _darkBeam.gameObject.SetActive(false);
         _animator.SetTrigger("Die");
+        _attackHitbox.SetActive(false);
         StartCoroutine(OpenCoroutine());
     }
     IEnumerator OpenCoroutine()

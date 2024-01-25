@@ -43,6 +43,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.enabled = true;
         if (SceneContext.Current.Player != null)
             _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
+        SnapFollow();
     }
     public void AddFollowTarget(Transform target)
     {

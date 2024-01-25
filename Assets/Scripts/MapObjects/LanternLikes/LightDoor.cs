@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class LightDoor : LanternLike
 {
-    public override Transform LightPoint { get { return _lightStone; } }
-    [SerializeField] Transform _lightStone;
+    public override Transform LightPoint { get { return _lightStone.transform; } }
+    [SerializeField] SpriteRenderer _lightStone;
     [SerializeField] ConstantShakePreset _doorOpenPreset;
     [SerializeField] float _doorOpenDelay;
     Animator _animator;
@@ -17,6 +17,7 @@ public class LightDoor : LanternLike
     }
     public State CurrentState { get; private set; } = State.Closed;
 
+    
 
     PreserveState _statePreserver;
 
@@ -51,6 +52,20 @@ public class LightDoor : LanternLike
     }
     public override void OnBeamConnected(LightBeam beam)
     {
+        StartCoroutine(LightenStoneCoroutine());
+    }
+
+    IEnumerator LightenStoneCoroutine()
+    {
+        float eTime = 0f;
+        float duration = 0.3f;
+        while(eTime < duration)
+        {
+            _lightStone.color = new Color(1, 1, 1, eTime / duration);
+            yield return null;
+            eTime += Time.deltaTime;
+        }
+        _lightStone.color = new Color(1, 1, 1, 1);
     }
     public override void OnBeamDisconnected(LightBeam beam)
     {
