@@ -42,6 +42,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [Space]
 
     [SerializeField] private BoxCollider2D _slashCollider;
+
+    [Space]
+
     [SerializeField] private int _slashDamage = 20;
     [SerializeField] private float _slashForceX = 7f;
     [SerializeField] private float _slashForceY = 10f;
@@ -49,16 +52,22 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [Space]
 
     [SerializeField] private BoxCollider2D _bodySlamCollider;
+    [SerializeField] private bool _isBodySlamming;
+
+    [Space]
+
     [SerializeField] private int _bodySlamDamage = 20;
     [SerializeField] private float _bodySlamForceX = 7f;
     [SerializeField] private float _bodySlamForceY = 10f;
-    [SerializeField] private bool _isBodySlamming;
 
     [Space]
 
     [SerializeField] private BoxCollider2D _stompCollider;
     [SerializeField] private Bear_Stalactite _stalactitePrefab;
     [SerializeField] private int _stalactiteCount = 5;
+
+    [Space]
+
     [SerializeField] private int _stompDamage = 20;
     [SerializeField] private float _stompForceX = 7f;
     [SerializeField] private float _stompForceY = 10f;
@@ -67,6 +76,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     [SerializeField] private BoxCollider2D _earthQuakeCollider;
     [SerializeField] private Bear_GroundWave _waveSkillPrefab;
+
+    [Space]
+
     [SerializeField] private int _earthQuakeDamage = 20;
     [SerializeField] private float _earthQuakeForceX = 7f;
     [SerializeField] private float _earthQuakeForceY = 10f;
@@ -95,10 +107,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         if (!IsRage)
         {
             if (CurHp <= MaxHp * 0.5f)
-            {
-                IsRage = true;
                 Animator.SetTrigger("Shout");
-            }
         }
     }
     protected override void SetUp()
@@ -114,10 +123,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         if (IsGodMode || IsDead)
             return IAttackListener.AttackResult.Fail;
 
-        // Hit Process
-        StartHitTimer();
         IncreaseHurtCount();
-        GetComponent<SoundList>().PlaySFX("SE_Hurt");
+
+        // Hit Process
+        HitProcess(attackInfo, false, false);
 
         // Hurt
         if (_currentHurtCount >= _targetHurtCount)
@@ -128,13 +137,12 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
             if (CurHp <= 0)
             {
                 CurHp = 0;
-                Animator.SetTrigger("Die");
+                Die();
 
                 return IAttackListener.AttackResult.Success;
             }
 
             Animator.SetTrigger("Hurt");
-            InitializeHurtCount();
         }
 
         return IAttackListener.AttackResult.Success;
@@ -196,6 +204,24 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         }
         else
             SetToRandomAttack();
+    }
+    public override void GroggyPreProcess()
+    {
+        // 그로기 상태 진입 (더이상 손전등의 영향을 받지 않음)
+        IsGroggy = true;
+
+        // 몬스터의 MonsterBodyHit를 끈다 (피격되지 않는다)
+        SetIsAttackableHitBox(false);
+    }
+    public override void GroggyPostProcess()
+    {
+        // 그로기 상태 종료 (이제 손전등의 영향을 받음)
+        IsGroggy = false;
+
+        // 몬스터의 MonsterBodyHit를 켠다 (피격 가능하다)
+        SetIsAttackableHitBox(true);
+
+        InitializeHurtCount();
     }
 
     // basic
