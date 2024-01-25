@@ -12,7 +12,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     bool _played = false;
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     { 
-        if (!_played && _playOnce)
+        if (activator.Type == ActivatorType.Player && !_played && _playOnce)
         {
             SceneEffectManager.Current.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
             _played = true;
