@@ -26,7 +26,13 @@ public class SkillOrderData : ScriptableObject
     [SerializeField] List<SkillElement> _skillDictionary = new List<SkillElement>();
     public SkillData this[int i]
     {
-        get => _skillDatas[i];
+        get
+        {
+            if (i<_skillDatas.Count)
+                return _skillDatas[i];
+            else
+                return _skillDatas[_skillDatas.Count-1];
+        }
     }
     public SkillData GetFromDict(string key)
     {
