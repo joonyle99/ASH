@@ -47,13 +47,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [Header("Skill")]
     [Space]
 
-    [SerializeField] private BoxCollider2D _slashCollider;
-
-    [Space]
-
-    [SerializeField] private int _slashDamage = 20;
-    [SerializeField] private float _slashForceX = 7f;
-    [SerializeField] private float _slashForceY = 10f;
+    [SerializeField] private Bear_Slash _slashPrefab;
 
     [Space]
 
@@ -291,7 +285,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
     private void SetToRandomAttack()
     {
-        int nextAttackNumber = Random.Range(4, 5); // 1 ~ 4
+        int nextAttackNumber = Random.Range(1, 5); // 1 ~ 4
         _nextAttack = (BearAttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
@@ -345,13 +339,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
     public void Slash02_AnimEvent()
     {
-        Debug.DrawRay(_playerPos, new Vector2(0f, _slashCollider.bounds.extents.y), Color.red, 0.25f);
-        Debug.DrawRay(_playerPos, new Vector2(0f, -_slashCollider.bounds.extents.y), Color.red, 0.25f);
-        Debug.DrawRay(_playerPos, new Vector2(_slashCollider.bounds.extents.x, 0f), Color.red, 0.25f);
-        Debug.DrawRay(_playerPos, new Vector2(-_slashCollider.bounds.extents.x, 0f), Color.red, 0.25f);
-
-        MonsterAttackInfo slashInfo = new MonsterAttackInfo(_slashDamage, new Vector2(_slashForceX, _slashForceY));
-        BoxCastAttack(_playerPos, _slashCollider.bounds.size, slashInfo, _attackTargetLayer);
+        // TODO : 여기서 할퀴기 생성
+        var slashEffect = Instantiate(_slashPrefab, _playerPos, Quaternion.identity);
+        Destroy(slashEffect.gameObject, 0.25f);
 
         // 플레이어 위치 초기화
         _playerPos = Vector2.zero;
