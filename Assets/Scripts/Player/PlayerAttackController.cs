@@ -9,9 +9,9 @@ public class PlayerAttackController : MonoBehaviour
     [Space]
 
     [SerializeField] private LayerMask _attackableEntityLayer;
-    [SerializeField] private Transform _attackHitBoxTrans;
-    [SerializeField] private float _hitBoxRadius = 3f;
-    private float _currentHitBoxRadius;
+    [SerializeField] private Collider2D _attackHitbox;
+    //[SerializeField] private float _hitBoxRadius = 3f;
+    //private float _currentHitBoxRadius;
 
     [Space]
 
@@ -85,9 +85,10 @@ public class PlayerAttackController : MonoBehaviour
     }
     public void AttackableEntityProcess_AnimEvent()
     {
-        _currentHitBoxRadius = _hitBoxRadius;
-        RaycastHit2D[] rayCastHits = Physics2D.CircleCastAll(_attackHitBoxTrans.position, _currentHitBoxRadius, Vector2.zero,
-            0f, _attackableEntityLayer);
+        List<RaycastHit2D> rayCastHits = new List<RaycastHit2D>();
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(_attackableEntityLayer);
+        _attackHitbox.Cast(_player.PlayerLookDir2D, filter, rayCastHits,0);
         List<Rigidbody2D> handledBodies = new List<Rigidbody2D>();
 
         foreach (var rayCastHit in rayCastHits)
@@ -109,7 +110,7 @@ public class PlayerAttackController : MonoBehaviour
 
             if (attackResult == IAttackListener.AttackResult.Success)
             {
-                Instantiate(_basicAttackImpactPrefab, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                Instantiate(_basicAttackImpactPrefab, rayCastHit.point + Random.insideUnitCircle * 0.2f, Quaternion.identity);
                 // TODO : Play impact sound
             }
         }
@@ -119,12 +120,6 @@ public class PlayerAttackController : MonoBehaviour
         // now you can cast attack
         IsBasicAttacking = false;
 
-        _currentHitBoxRadius = 0f;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(_attackHitBoxTrans.position, _currentHitBoxRadius);
-    }
 }
