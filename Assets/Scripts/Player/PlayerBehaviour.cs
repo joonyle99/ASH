@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener
@@ -58,7 +59,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] float _godModeTime = 1.5f;
     [SerializeField] float _flashInterval = 0.06f;
 
-    SpriteRenderer[] _spriteRenderers;
+    [ContextMenuItem("Get all", "GetAllSpriteRenderers")]
+    [SerializeField] SpriteRenderer[] _spriteRenderers;
+
     Material[] _originalMaterials;
     Coroutine _blinkRoutine;
 
@@ -84,7 +87,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     #region Properties
 
     // Can Property
-    public bool CanBasicAttack { get { return (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && !_lightController.IsLightWorking; } }
+    public bool CanBasicAttack { get { return (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (_lightController.IsLightButtonPressable && !_lightController.IsLightWorking); } }
     public bool CanShootingAttack { get { return CurrentStateIs<IdleState>(); } }
     public bool CanDash { get { return _isCanDash && PersistentDataManager.Get<bool>("Dash"); } set { _isCanDash = value; } }
 
@@ -130,6 +133,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public Rigidbody2D HandRigidBody { get { return _handRigidbody; } }
     public CapsuleCollider2D BodyCollider { get { return _bodyCollider; } }
     public SoundList SoundList { get { return _soundList; } }
+    public SpriteRenderer[] SpriteRenderers { get { return _spriteRenderers; } }
     public Material[] OriginalMaterials => _originalMaterials;
 
     #endregion
@@ -149,7 +153,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         // Sprite Renderer / Original Material
         LoadFlashMaterial();
-        SaveSpriteRenderers();
         SaveOriginalMaterial();
 
         // SoundList
@@ -193,6 +196,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         if (_curHp <= 0)
         {
             ChangeState<DieState>();
+            return;
         }
 
         #endregion
@@ -295,12 +299,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
             return IAttackListener.AttackResult.Fail;
 
         PlaySound_SE_Hurt_02();
+        StartCoroutine(SlowMotionCoroutine(0.3f));
 
         TakeDamage((int)attackInfo.Damage);
         // Change Die State
         if (_curHp <= 0)
             return IAttackListener.AttackResult.Success;
-        
+
         KnockBack(attackInfo.Force);
 
         // Change Hurt State
@@ -308,14 +313,20 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         return IAttackListener.AttackResult.Success;
     }
-
+    IEnumerator SlowMotionCoroutine(float duration)
+    {
+        print("!");
+        Time.timeScale = 0.3f;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1f;
+    }
     // flash
     private void LoadFlashMaterial()
     {
         _whiteFlashMaterial =
             Resources.Load<Material>("Materials/WhiteFlashMaterial");
     }
-    private void SaveSpriteRenderers()
+    private void GetAllSpriteRenderers()
     {
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
     }
@@ -326,10 +337,19 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         for (int i = 0; i < _originalMaterials.Length; i++)
             _originalMaterials[i] = _spriteRenderers[i].material;
     }
-    private void InitMaterial()
+    public void InitMaterial()
     {
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
+    }
+    public void InitSpriteRendererAlpha()
+    {
+        foreach (var renderer in SpriteRenderers)
+        {
+            Color color = renderer.color;
+            color.a = 1;
+            renderer.color = color;
+        }
     }
     private void ChangeMaterial()
     {

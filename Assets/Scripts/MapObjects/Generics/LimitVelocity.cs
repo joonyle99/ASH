@@ -15,7 +15,7 @@ public class LimitVelocity : MonoBehaviour
     {
         if (_rigidbody.velocity.sqrMagnitude > _maxVelocity * _maxVelocity)
         {
-            _rigidbody.velocity = _rigidbody.velocity.normalized * _maxVelocity;
+            _rigidbody.velocity = new Vector2( _rigidbody.velocity.normalized.x * _maxVelocity, _rigidbody.velocity.y);
         }
     }
 }

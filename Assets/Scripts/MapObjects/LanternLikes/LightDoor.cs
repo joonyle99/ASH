@@ -44,6 +44,11 @@ public class LightDoor : LanternLike
     }
     public void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            StartCoroutine(OpenCoroutine());
+        }
+
         if (LanternSceneContext.Current.IsAllRelationsFullyConnected(this))
         {
             IsLightOn = true;

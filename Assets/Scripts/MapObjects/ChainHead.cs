@@ -19,15 +19,26 @@ public class ChainHead : InteractableObject
     [SerializeField] Joint2D _lastChainPiece;
     [SerializeField] DistanceJoint2D _playerLimittingJoint;
 
+    [SerializeField] SoundList _soundList;
+    [SerializeField] AudioSource _moveAudio;
+
     int _currentRailSection = 0;
+    float _moveSoundTimer = 0f;
     private void Update()
     {
         Vector3 angleVector = (_rail[_currentRailSection + 1].position - _rail[_currentRailSection].position);
         float angle = Mathf.Atan2(angleVector.y, angleVector.x);
         transform.rotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
+        _moveSoundTimer -= Time.deltaTime;
+        if (_moveSoundTimer <= 0f)
+        {
+            _moveSoundTimer = 0f;
+            _moveAudio.Stop();
+        }
     }
     protected override void OnInteract()
     {
+        _soundList.PlaySFX("Grab");
         _handle.ConnectTo(Player.HandRigidBody);
         //_jointWithPlayer.enabled = true;
         Player.MovementController.enabled = true;
@@ -40,6 +51,7 @@ public class ChainHead : InteractableObject
         _handle.Disconnect();
         _playerLimittingJoint.enabled = false;
         Player.MovementController.EnableMovementExternaly(this);
+        _moveAudio.Stop();
     }
     public override void UpdateInteracting()
     {
@@ -73,6 +85,9 @@ public class ChainHead : InteractableObject
             {
                 transform.position = intersection.Point;
                 _playerLimittingJoint.enabled = false;
+                if (!_moveAudio.isPlaying)
+                    _moveAudio.Play();
+                _moveSoundTimer = 1.7f;
             }
             else
             {
@@ -91,6 +106,7 @@ public class ChainHead : InteractableObject
             Player.MovementController.EnableMovementExternaly(this);
         }
     }
+    
     Vector3 AngleToVector(float degree)
     {
         return new Vector3(Mathf.Cos(degree * Mathf.Deg2Rad), Mathf.Sin(degree * Mathf.Deg2Rad), 0);

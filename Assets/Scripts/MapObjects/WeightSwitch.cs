@@ -8,6 +8,7 @@ public class WeightSwitch : MonoBehaviour
     [SerializeField] GameObject [] switchTargets;
 
     [SerializeField] Collider2D _buttonCollider;
+    [SerializeField] SoundList _soundList;
 
     List<ToggleableObject> _toggleListeners = new List<ToggleableObject>();
     bool _isOn = false;
@@ -54,6 +55,8 @@ public class WeightSwitch : MonoBehaviour
         _isOn = true;
         foreach (var listener in _toggleListeners)
             listener.TurnOn();
+
+        _soundList.PlaySFX("Press");
     }
     void TurnOff()
     {

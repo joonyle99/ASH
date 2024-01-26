@@ -8,8 +8,11 @@ public class MovingPlatform : ToggleableObject
     [SerializeField] Type _type = Type.Vertical;
     [SerializeField] float _speed = 1;
     [SerializeField] WaypointPath _path;
+    [SerializeField] LightIcon _icon;
     [SerializeField] Sprite [] _stoneSprites;
     [SerializeField] Vector2 [] _colliderSizes;
+    [SerializeField] AudioSource _moveAudio;
+    [SerializeField] SoundClipData _workSound;
     Rigidbody2D _rigidbody;
     float _travelDistance = 0f;
     bool _isMoving = false;
@@ -48,6 +51,7 @@ public class MovingPlatform : ToggleableObject
             _recentEvent = SceneEffectManager.Current.PushSceneEvent(new SceneEvents.FollowObjects(SceneEffectEvent.EventPriority.MovingObjects,
                                                         SceneEffectEvent.MergePolicy.PlayTogether, transform));
         _isMoving = true;
+        //SoundManager.Instance.PlaySFX(_workSound);
     }
 
     void FixedUpdate()
@@ -75,10 +79,19 @@ public class MovingPlatform : ToggleableObject
         }
         _rigidbody.MovePosition(_path.GetPosition(_travelDistance));
     }
+    private void Update()
+    {
+        if (_isMoving)
+        {
+            if (!_moveAudio.isPlaying)
+                _moveAudio.Play();
+        }
+    }
     void OnStop()
     {
         _isMoving = false;
         SceneEffectManager.Current.RemoveSceneEvent(_recentEvent);
+        _moveAudio.Stop();
     }
 
 }
