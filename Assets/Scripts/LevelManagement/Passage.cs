@@ -41,7 +41,7 @@ public class Passage : TriggerZone
     }
     IEnumerator ExitSceneCoroutine()
     {
-        Cutscene _exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine());
+        Cutscene _exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine(), false);
         SceneEffectManager.Current.PushCutscene(_exitSceneCutscene);
 
         var nextPassageData = SceneChangeManager.Instance.GetNextPassageData(name);

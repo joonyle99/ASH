@@ -21,7 +21,7 @@ public class SceneTransitionPlayer : MonoBehaviour, ISceneContextBuildListener
     }
     public void OnSceneContextBuilt()
     {
-        SceneEffectManager.Current.PushCutscene(new Cutscene(this, EnterEffectCoroutine()));
+        SceneEffectManager.Current.PushCutscene(new Cutscene(this, EnterEffectCoroutine(), false));
     }
 
 
