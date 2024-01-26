@@ -16,7 +16,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         }
     }
     public bool IsDialogueActive => View.IsPanelActive;
-    public void StartDialogue(DialogueData data)
+    public void StartDialogue(DialogueData data, bool isFromCutscene = false)
     {
         if (IsDialogueActive)
             return;

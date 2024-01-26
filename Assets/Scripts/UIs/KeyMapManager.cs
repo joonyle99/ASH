@@ -65,7 +65,7 @@ public class KeyMapManager : MonoBehaviour
         _targetFadeTime = duration;
         _elapsedFadeTime = 0f;
 
-        Image[] currentImages = GetComponentsInChildren<Image>(true);
+        Image[] currentImages = _keyMap.GetComponentsInChildren<Image>(true);
 
         float[] startAlphaArray = new float[currentImages.Length];
         for (int i = 0; i < currentImages.Length; i++)

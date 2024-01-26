@@ -33,7 +33,7 @@ public class BreakableGround : MonoBehaviour
         Invoke("Break", _breakDelay);
         _isBreaking = true;
     }
-    void Break()
+    public void Break()
     {
         Destruction.Destruct(gameObject);
     }
