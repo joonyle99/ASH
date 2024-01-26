@@ -68,7 +68,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
             if (_currentLine.Text[textIndex] == '<')
             {
                 int to = _currentLine.Text.IndexOf('>', textIndex);
-                stringBuilder.Append(_currentLine.Text.Substring(textIndex, to + 1));
+                stringBuilder.Append(_currentLine.Text.Substring(textIndex, to + 1 - textIndex));
                 textIndex = to;
             }
             else
