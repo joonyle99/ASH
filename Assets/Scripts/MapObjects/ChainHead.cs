@@ -51,7 +51,6 @@ public class ChainHead : InteractableObject
         _handle.Disconnect();
         _playerLimittingJoint.enabled = false;
         Player.MovementController.EnableMovementExternaly(this);
-        _moveAudio.Stop();
     }
     public override void UpdateInteracting()
     {
