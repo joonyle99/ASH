@@ -36,13 +36,20 @@ public class KeyMapManager : MonoBehaviour
 
     public void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (_keyMap.activeSelf)
+            {
+                _keyMap.SetActive(false);
+                _isClickable = true;
+            }
+        }
+
         if (_isClickable)
         {
             if (Input.GetKeyDown(_showKey))
             {
-                if (_keyMap.activeSelf)
-                    _keyMap.SetActive(false);
-                else
+                if (!_keyMap.activeSelf)
                     _keyMap.SetActive(true);
             }
         }
