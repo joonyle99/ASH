@@ -50,6 +50,9 @@ public class DieState : PlayerState
 
         // æ¿ ¿ÁΩ√¿€
         yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
+        string passageName = SceneContext.Current.EntrancePassage.PassageName;
+        if (SceneContext.Current.EntrancePassage == null)
+            passageName = "";
         SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
     }
 
