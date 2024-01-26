@@ -295,12 +295,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
             return IAttackListener.AttackResult.Fail;
 
         PlaySound_SE_Hurt_02();
+        StartCoroutine(SlowMotionCoroutine(0.3f));
 
         TakeDamage((int)attackInfo.Damage);
         // Change Die State
         if (_curHp <= 0)
             return IAttackListener.AttackResult.Success;
-        
+
         KnockBack(attackInfo.Force);
 
         // Change Hurt State
@@ -308,7 +309,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         return IAttackListener.AttackResult.Success;
     }
-
+    IEnumerator SlowMotionCoroutine(float duration)
+    {
+        print("!");
+        Time.timeScale = 0.3f;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1f;
+    }
     // flash
     private void LoadFlashMaterial()
     {

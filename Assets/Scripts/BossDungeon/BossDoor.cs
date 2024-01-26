@@ -33,6 +33,7 @@ public class BossDoor : InteractableObject
     {
         if (BossDungeonManager.Instance.AllKeysCollected)
         {
+            _soundList.PlaySFX("Open");
             SceneEffectManager.Current.PushCutscene(new Cutscene(this, OpenCoroutine()));
         }
         else
