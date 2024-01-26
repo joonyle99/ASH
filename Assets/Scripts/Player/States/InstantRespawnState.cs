@@ -22,6 +22,7 @@ public class InstantRespawnState : PlayerState
         Animator.speed = 0;
         InputManager.Instance.ChangeInputSetter(_stayStillSetter);
         _disintegrateEffect.Play();
+        Player.SoundList.PlaySFX("Disintegrate");
     }
     protected override void OnUpdate()
     {

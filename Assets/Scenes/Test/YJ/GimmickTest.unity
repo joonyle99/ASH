@@ -147,7 +147,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6355395281014684323, guid: a3cb3c9e888ac9f4d89c5bcc08aaaaff, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6355395281014684382, guid: a3cb3c9e888ac9f4d89c5bcc08aaaaff, type: 3}
       propertyPath: m_RootOrder
@@ -320,7 +320,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6438969770222428627, guid: 7d67922457ba78f4384ead44fb0c5c47, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6438969770222428629, guid: 7d67922457ba78f4384ead44fb0c5c47, type: 3}
       propertyPath: m_RootOrder
@@ -328,11 +328,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6438969770222428629, guid: 7d67922457ba78f4384ead44fb0c5c47, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -11.58
+      value: -12.77
       objectReference: {fileID: 0}
     - target: {fileID: 6438969770222428629, guid: 7d67922457ba78f4384ead44fb0c5c47, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.95
+      value: 2.83
       objectReference: {fileID: 0}
     - target: {fileID: 6438969770222428629, guid: 7d67922457ba78f4384ead44fb0c5c47, type: 3}
       propertyPath: m_LocalPosition.z
@@ -672,7 +672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582743002, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4411306129150711097, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar
@@ -1352,6 +1352,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: "\uB098\uBB34\uC0C1\uC790(StillStone) Variant"
       objectReference: {fileID: 0}
+    - target: {fileID: 6972985535401889473, guid: aef6a1a70d7b7d74db4893ad8a91b11b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aef6a1a70d7b7d74db4893ad8a91b11b, type: 3}
 --- !u!1001 &1467131951
@@ -1616,31 +1620,39 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 623491974, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _soundDatas.Array.size
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 623491974, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _soundDatas.Array.data[9]._key
-      value: SE_Die_01(long)
+      value: Disintegrate
       objectReference: {fileID: 0}
     - target: {fileID: 623491974, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _soundDatas.Array.data[9]._clip
       value: 
-      objectReference: {fileID: 8300000, guid: 75ed8fd3b743e6e4ea5f49beaa2d75d6, type: 3}
+      objectReference: {fileID: 8300000, guid: 0cada7c1d7076ad4682a5b1986bcd5bc, type: 3}
     - target: {fileID: 623491974, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _soundDatas.Array.data[9]._pitchA
-      value: 1
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 623491974, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _soundDatas.Array.data[9]._volumeA
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 217139139750414663, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _moveUpDelay
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 217139139750414663, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _moveUpSpeed
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 217139139750414663, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _stayDuration
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 1322454706829155597, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: _maxHp
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_RootOrder
