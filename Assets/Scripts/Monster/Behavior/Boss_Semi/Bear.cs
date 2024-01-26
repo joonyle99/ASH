@@ -131,6 +131,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
             {
                 MonsterAttackInfo bodySlamInfo = new MonsterAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
                 BoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _attackTargetLayer);
+                Debug.Log("BodySlam Attack");
             }
         }
     }
@@ -277,7 +278,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
     private void SetToRandomAttack()
     {
-        int nextAttackNumber = Random.Range(1, 5); // 1 ~ 4
+        int nextAttackNumber = Random.Range(4, 5); // 1 ~ 4
         _nextAttack = (BearAttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
