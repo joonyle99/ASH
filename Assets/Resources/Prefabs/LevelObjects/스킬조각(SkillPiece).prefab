@@ -5053,6 +5053,8 @@ GameObject:
   - component: {fileID: 4511402357952128421}
   - component: {fileID: 7022115512755724678}
   - component: {fileID: 1639490964}
+  - component: {fileID: 2081668342023313553}
+  - component: {fileID: 9149404979420702974}
   m_Layer: 10
   m_Name: "\uC2A4\uD0AC\uC870\uAC01(SkillPiece)"
   m_TagString: Untagged
@@ -5130,6 +5132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8f9631cf348dc14486594259bdf587b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _soundList: {fileID: 2081668342023313553}
 --- !u!114 &7022115512755724678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5159,3 +5162,53 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _effectPrefab: {fileID: 3589396447124462397, guid: d40b0a0fb27825b458302477b58a651a, type: 3}
+--- !u!114 &2081668342023313553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4511402357952128425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: Piece
+    _clip: {fileID: 8300000, guid: 81cfb0c881279964aa3592e1b2433a69, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: Skill
+    _clip: {fileID: 8300000, guid: a20b803cb8de33847ab5ef7c3276544b, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+--- !u!114 &9149404979420702974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4511402357952128425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b59634fdc7df14dbc3855a980a0bd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundData:
+    _key: 
+    _clip: {fileID: 8300000, guid: 91fbb9f19bef9954194d8993458483d3, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 1
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 1

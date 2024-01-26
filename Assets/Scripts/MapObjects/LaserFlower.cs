@@ -13,6 +13,7 @@ public class LaserFlower : MonoBehaviour, IAttackListener
     [SerializeField] Transform _imageParent;
     [SerializeField] Transform _headBone;
     [SerializeField] GameObject _attackHitbox;
+    [SerializeField] SoundList _soundList;
 
     Animator _animator;
     int _hp;
@@ -76,6 +77,7 @@ public class LaserFlower : MonoBehaviour, IAttackListener
         _hp = _maxHp;
         _animator.SetTrigger("Recover");
         _attackHitbox.SetActive(true);
+        _soundList.PlaySFX("Revive");
     }
     void Close()
     {
