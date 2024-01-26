@@ -383,6 +383,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         MonsterAttackInfo stompInfo = new MonsterAttackInfo(_stompDamage, new Vector2(_stompForceX, _stompForceY));
         CastAttack(_stompCollider, _stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _attackTargetLayer);
         Instantiate(_stompEffectPrefab, _stompCollider.transform.position, Quaternion.identity);
+        _soundList.PlaySFX("Stomp");
         // 종유석 생성
         for (int i = 0; i < _stalactiteCount; ++i)
         {
