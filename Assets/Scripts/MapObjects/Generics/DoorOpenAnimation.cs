@@ -15,6 +15,8 @@ public class DoorOpenAnimation : MonoBehaviour
     [SerializeField] float _preheatSoundInterval;
     [SerializeField] int _preheadSoundRepeat;
 
+    [SerializeField] ParticleHelper _dustParticle;
+
     Animator _animator;
     private void Awake()
     {
@@ -23,11 +25,13 @@ public class DoorOpenAnimation : MonoBehaviour
     public IEnumerator OpenCoroutine()
     {
         SceneEffectManager.Current.Camera.StartConstantShake(_doorOpenPreset);
+        _dustParticle.Play();
         StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open_Low", _preheatSoundInterval, _preheadSoundRepeat));
         yield return new WaitForSeconds(_doorOpenDelay);
         _animator.SetTrigger("Open");
         StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open", _openSoundInterval, _openSoundRepeat));
         yield return new WaitForSeconds(_stopShakeTiming);
+        _dustParticle.Stop();
         SceneEffectManager.Current.Camera.StopConstantShake();
     }
     IEnumerator PlaySoundCoroutine(string key, float interval, int count)

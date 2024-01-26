@@ -50,4 +50,8 @@ public class ParticleHelper : MonoBehaviour
     {
         _particleSystem.Play();
     }
+    public void Stop()
+    {
+        _particleSystem.Stop();
+    }
 }
