@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener
@@ -58,7 +59,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] float _godModeTime = 1.5f;
     [SerializeField] float _flashInterval = 0.06f;
 
-    SpriteRenderer[] _spriteRenderers;
+    [ContextMenuItem("Get all", "GetAllSpriteRenderers")]
+    [SerializeField] SpriteRenderer[] _spriteRenderers;
+
     Material[] _originalMaterials;
     Coroutine _blinkRoutine;
 
@@ -149,7 +152,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         // Sprite Renderer / Original Material
         LoadFlashMaterial();
-        SaveSpriteRenderers();
         SaveOriginalMaterial();
 
         // SoundList
@@ -316,7 +318,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _whiteFlashMaterial =
             Resources.Load<Material>("Materials/WhiteFlashMaterial");
     }
-    private void SaveSpriteRenderers()
+    private void GetAllSpriteRenderers()
     {
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
     }
