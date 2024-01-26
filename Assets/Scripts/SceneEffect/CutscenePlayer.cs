@@ -1,18 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
-public class CutscenePlayer : MonoBehaviour, ITriggerListener
+public class CutscenePlayer : TriggerZone
 {
     [SerializeField] bool _playOnce = true;
     [SerializeField] List<SceneEffect> _sequence;
 
     bool _played = false;
-    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
+    public override void OnPlayerEnter(PlayerBehaviour player)
     {
-        if (activator.Type == ActivatorType.Player && !_played && _playOnce)
+        if (!_played && _playOnce)
         {
             SceneEffectManager.Current.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
             _played = true;

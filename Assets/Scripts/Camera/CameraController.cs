@@ -53,6 +53,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         _proCamera.AddCameraTargets(targets);
     }
+    public void FollowOnly(Transform target)
+    {
+        _proCamera.RemoveAllCameraTargets();
+        _proCamera.AddCameraTarget(target);
+    }
     public void RemoveFollowTargets(Transform[] targets)
     {
         foreach (var target in targets)
