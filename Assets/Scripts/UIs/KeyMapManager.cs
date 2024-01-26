@@ -1,48 +1,117 @@
-using Com.LuisPedroFonseca.ProCamera2D.TopDownShooter;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KeyMapManager : MonoBehaviour
 {
-    [SerializeField] GameObject _keyMapUI;
     [SerializeField] KeyCode _showKey;
-    [SerializeField] float _firstDuration = 10f;
 
-    [SerializeField] bool _isFirst = false;
+    [Space]
+
+    [SerializeField] private GameObject _keyMap;
+    [SerializeField] private float _firstDelay;
+
+    [Space]
+
+    [SerializeField] private float _targetFadeTime;
+    [SerializeField] private float _elapsedFadeTime;
+
+    [Space]
+
+    [SerializeField] bool _isClickable;
 
     private void Start()
     {
-        if (_isFirst && _keyMapUI != null)
-        {
-            StartCoroutine(RemoveKeymap());
-        }
+        StartCoroutine(RemoveKeyMapFirst());
     }
-    IEnumerator RemoveKeymap()
+
+    private IEnumerator RemoveKeyMapFirst()
     {
-        float eTime = 0f;
-        while(eTime < _firstDuration)
-        {
-            eTime += Time.deltaTime;
-            if (!_keyMapUI.activeInHierarchy)
-                yield break;
-            yield return null;
-        }
-        if(_keyMapUI.activeInHierarchy)
-        {
-            _keyMapUI.GetComponent<Animator>().SetTrigger("Close");
-            yield return new WaitForSeconds(0.5f);
-            _keyMapUI.SetActive(false);
-        }
+        yield return new WaitForSeconds(_firstDelay);
+
+        StartCoroutine(FadeOutTarget(_keyMap, _targetFadeTime));
     }
+
     public void Update()
     {
-        /*
-        if (Input.GetKeyDown(_showKey))
+        if (_isClickable)
         {
-            _keyMapUI.SetActive(!_keyMapUI.activeInHierarchy);
-            _isFirst = false;
+            if (Input.GetKeyDown(_showKey))
+            {
+                if (_keyMap.activeSelf)
+                    StartCoroutine(FadeOutTarget(_keyMap, _targetFadeTime));
+                else
+                    StartCoroutine(FadeInTarget(_keyMap, _targetFadeTime));
+            }
         }
-        */
+    }
+
+    public IEnumerator FadeOutTarget(GameObject targetObject, float duration)
+    {
+        // Fade Out Effect
+
+        _targetFadeTime = duration;
+        _elapsedFadeTime = 0f;
+
+        Image[] currentImages = targetObject.GetComponentsInChildren<Image>(true);
+
+        float[] startAlphaArray = new float[currentImages.Length];
+        for (int i = 0; i < currentImages.Length; i++)
+            startAlphaArray[i] = currentImages[i].color.a;
+
+        while (_elapsedFadeTime < _targetFadeTime)
+        {
+            _elapsedFadeTime += Time.deltaTime;
+            float normalizedTime = _elapsedFadeTime / _targetFadeTime; // Normalize to 0 ~ 1
+
+            for (int i = 0; i < currentImages.Length; i++)
+            {
+                Color targetColor = currentImages[i].color;
+                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
+                currentImages[i].color = targetColor;
+            }
+
+            yield return null;
+        }
+
+        if (!_isClickable)
+            _isClickable = true;
+
+        targetObject.SetActive(false);
+
+        yield return null;
+    }
+
+    public IEnumerator FadeInTarget(GameObject targetObject, float duration)
+    {
+        // Fade In Effect
+
+        targetObject.SetActive(true);
+
+        _targetFadeTime = duration;
+        _elapsedFadeTime = 0f;
+
+        Image[] currentImages = targetObject.GetComponentsInChildren<Image>(true);
+
+        float[] startAlphaArray = new float[currentImages.Length];
+        for (int i = 0; i < currentImages.Length; i++)
+            startAlphaArray[i] = currentImages[i].color.a;
+
+        while (_elapsedFadeTime < _targetFadeTime)
+        {
+            _elapsedFadeTime += Time.deltaTime;
+            float normalizedTime = _elapsedFadeTime / _targetFadeTime; // Normalize to 0 ~ 1
+
+            for (int i = 0; i < currentImages.Length; i++)
+            {
+                Color targetColor = currentImages[i].color;
+                targetColor.a = Mathf.Lerp(startAlphaArray[i], 1f, normalizedTime);
+                currentImages[i].color = targetColor;
+            }
+
+            yield return null;
+        }
+
+        yield return null;
     }
 }
