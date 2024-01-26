@@ -22,7 +22,7 @@ public class SceneTransitionPlayer : MonoBehaviour, ISceneContextBuildListener
     public void OnSceneContextBuilt()
     {
         SceneEffectManager.Current.PushCutscene(new Cutscene(this, EnterEffectCoroutine(), false));
-    }
+    } 
 
 
     protected enum FadeType { Lighten, Darken}
