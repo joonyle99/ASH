@@ -30,7 +30,7 @@ public class SemiBoss_GroggyRageState : SemiBoss_StateBase
         SemiBoss.GroggyPostProcess();
 
         // 보스가 격노하면 이동속도 / 공격속도 증가
-        SemiBoss.MoveSpeed *= 2f;
-        SemiBoss.AttackEvaluator.TargetCheckCoolTime /= 2f;
+        SemiBoss.MoveSpeed *= 1.5f;
+        SemiBoss.AttackEvaluator.TargetCheckCoolTime /= 1.5f;
     }
 }

@@ -208,6 +208,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 그로기 상태로 진입
         Animator.SetTrigger("Groggy");
+
+        // 꺼줘야겠다
+        TurnOffLightStone();
     }
     public void OnLightStay(LightCapturer capturer, LightSource lightSource)
     {
@@ -252,9 +255,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 몬스터의 MonsterBodyHit를 끈다 (플레이어를 타격할 수 없다)
         SetIsAttackableHitBox(false);
-
-        // 빛나는 돌 활성화
-        SetLightingStone(true);
     }
     public override void GroggyPostProcess()
     {
@@ -265,9 +265,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         SetIsAttackableHitBox(true);
 
         InitializeHurtCount();
-
-        // 빛나는 돌 비활성화
-        SetLightingStone(false);
 
         if (IsRage)
             SetStalactiteToRageCount();
@@ -489,8 +486,13 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         wave2.SetDir(Vector2.right);
     }
 
-    public void SetLightingStone(bool isBool)
+    public void TurnOnLightStone()
     {
-        LightingStone.SetActive(isBool);
+        LightingStone.SetActive(true);
+    }
+
+    public void TurnOffLightStone()
+    {
+        LightingStone.SetActive(false);
     }
 }

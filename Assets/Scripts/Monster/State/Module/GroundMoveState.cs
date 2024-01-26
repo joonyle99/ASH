@@ -13,11 +13,20 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
 
         if (Monster.GroundChaseEvaluator)
         {
-            // first chase
-            if (Monster.GroundChaseEvaluator.IsTargetWithinRange())
+            var collider = Monster.GroundChaseEvaluator.IsTargetWithinRange();
+            if (collider)
             {
-                Monster.StartSetRecentDirAfterGrounded(Monster.GroundChaseEvaluator.ChaseDir);
-                return;
+                // 추가로 상대와의 거리가 x보다 가까워지면 추격을 중단
+                var dist = Vector2.Distance(Monster.transform.position, collider.transform.position);
+                if (dist < 4f)
+                {
+                    Monster.GroundChaseEvaluator.IsTooClose = true;
+                }
+                else
+                {
+                    Monster.GroundChaseEvaluator.IsTooClose = false;
+                    Monster.StartSetRecentDirAfterGrounded(Monster.GroundChaseEvaluator.ChaseDir);
+                }
             }
         }
 

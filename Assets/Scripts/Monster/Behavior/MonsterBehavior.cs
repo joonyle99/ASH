@@ -781,6 +781,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (IsInAir)
             return;
 
+        // 추가로 상대와의 거리가 너무 가까워지면 추격을 중단
+        if (GroundChaseEvaluator)
+        {
+            if (GroundChaseEvaluator.IsTooClose)
+                return;
+        }
+
         Vector2 groundNormal = GroundRayHit.normal;
         Vector2 moveDirection = RecentDir > 0
             ? (-1) * Vector2.Perpendicular(groundNormal)
