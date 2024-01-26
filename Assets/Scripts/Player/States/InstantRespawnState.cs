@@ -53,7 +53,7 @@ public class InstantRespawnState : PlayerState
             renderer.color = color;
         }
         Player.Rigidbody.simulated = true;
-        Player.Alive();
+        //Player.Alive();
         ChangeState<IdleState>();
     }
     public void Respawn()

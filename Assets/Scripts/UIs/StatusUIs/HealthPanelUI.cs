@@ -2,29 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class HealthPanelUI : MonoBehaviour
 {
     const int MaxLife = 10;
 
-    [SerializeField] Slider _healGauge;
     [SerializeField] Transform[] _lifeIcons;
-
-    public float HealGauge { get { return _healGauge.value; } set { _healGauge.value = value; } }
 
     public int Life
     {
         set
         {
-            if (value > MaxLife)
-                value = MaxLife;
-            else if (value < 0)
-                value = 0;
-            UpdateLifeIcons(value);
         }
     }
-    void Awake()
+    void Update()
     {
+        var hp = SceneContext.Current.Player.CurHp;
+        if (hp > MaxLife)
+            hp = MaxLife;
+        else if (hp < 0)
+            hp = 0;
+        UpdateLifeIcons(hp);
     }
     void UpdateLifeIcons(int target)
     {

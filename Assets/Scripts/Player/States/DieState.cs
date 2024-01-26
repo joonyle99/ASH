@@ -13,8 +13,6 @@ public class DieState : PlayerState
 
     protected override void OnUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.R))
-            Player.InstantRespawn();
     }
 
     protected override void OnFixedUpdate()
