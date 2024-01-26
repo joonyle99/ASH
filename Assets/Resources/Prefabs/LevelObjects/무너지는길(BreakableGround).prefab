@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3627304428464479304}
   - component: {fileID: 3627304428464479307}
   - component: {fileID: 7281114898406234693}
+  - component: {fileID: 653679767}
   m_Layer: 0
   m_Name: "\uBB34\uB108\uC9C0\uB294\uAE38(BreakableGround)"
   m_TagString: Untagged
@@ -29,7 +30,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3750174903733972274}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.18, y: -2.46, z: 0}
   m_LocalScale: {x: 1, y: 1.38, z: 1}
   m_ConstrainProportionsScale: 0
@@ -129,15 +130,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _breakDelay: 0.5
-  _collisionSound:
-    _key: 
-    _clip: {fileID: 8300000, guid: d8e462e18fb77924c80c2068734aee26, type: 3}
-    _volumeType: 0
-    _volumeA: 1
-    _volumeB: 1
-    _pitchType: 0
-    _pitchA: 1
-    _pitchB: 1
 --- !u!114 &3627304428464479304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,6 +184,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6aa6696d59166a42b55aef4caa40f0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &653679767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3750174903733972274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65c58af972924f04da6897bdd964b06a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _objectType: 1
 --- !u!1 &8059696520790063089
 GameObject:
   m_ObjectHideFlags: 0
