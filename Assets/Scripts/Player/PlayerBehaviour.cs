@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener
@@ -58,7 +59,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] float _godModeTime = 1.5f;
     [SerializeField] float _flashInterval = 0.06f;
 
-    SpriteRenderer[] _spriteRenderers;
+    [ContextMenuItem("Get all", "GetAllSpriteRenderers")]
+    [SerializeField] SpriteRenderer[] _spriteRenderers;
+
     Material[] _originalMaterials;
     Coroutine _blinkRoutine;
 
@@ -84,7 +87,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     #region Properties
 
     // Can Property
-    public bool CanBasicAttack { get { return (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && !_lightController.IsLightWorking; } }
+    public bool CanBasicAttack { get { return (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (_lightController.IsLightButtonPressable && !_lightController.IsLightWorking); } }
     public bool CanShootingAttack { get { return CurrentStateIs<IdleState>(); } }
     public bool CanDash { get { return _isCanDash && PersistentDataManager.Get<bool>("Dash"); } set { _isCanDash = value; } }
 
@@ -149,7 +152,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         // Sprite Renderer / Original Material
         LoadFlashMaterial();
-        SaveSpriteRenderers();
         SaveOriginalMaterial();
 
         // SoundList
@@ -193,6 +195,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         if (_curHp <= 0)
         {
             ChangeState<DieState>();
+            return;
         }
 
         #endregion
@@ -300,7 +303,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // Change Die State
         if (_curHp <= 0)
             return IAttackListener.AttackResult.Success;
-        
+
         KnockBack(attackInfo.Force);
 
         // Change Hurt State
@@ -315,7 +318,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _whiteFlashMaterial =
             Resources.Load<Material>("Materials/WhiteFlashMaterial");
     }
-    private void SaveSpriteRenderers()
+    private void GetAllSpriteRenderers()
     {
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
     }
