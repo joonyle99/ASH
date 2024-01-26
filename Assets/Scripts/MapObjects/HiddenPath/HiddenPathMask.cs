@@ -33,12 +33,17 @@ public class HiddenPathMask : MonoBehaviour
                 material.DisableKeyword(keyPrefix + "_" + dir.ToString().ToUpper());
         }
     }
+    public void InstantReveal()
+    {
+        _allowSwipe = false;
+        _spriteRenderer.material.SetFloat("_MaskBound", _maskBoundTarget);
+    }
     public void InitMask(Direction swipeDirection)
     {
         _swipeDirection = swipeDirection;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         SetEnumValue(_spriteRenderer.material, "_SWIPEDIRECTION", _swipeDirection);
 
-        _spriteRenderer = GetComponent<SpriteRenderer>();
         float gradientSize = _spriteRenderer.material.GetFloat("_GradientSize");
         _bounds = new Rect(transform.position - transform.lossyScale / 2, transform.lossyScale);
         if (_swipeDirection == Direction.Left)
