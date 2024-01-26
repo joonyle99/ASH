@@ -114,8 +114,8 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         if (SceneContext.Current.Player != null)
         StartFollow(SceneContext.Current.Player.transform);
 
-        OffsetX = _initialSettings.Offset.x;
-        OffsetY = _initialSettings.Offset.y;
+       // OffsetX = _initialSettings.Offset.x;
+       // OffsetY = _initialSettings.Offset.y;
         _proCamera.HorizontalFollowSmoothness = _initialSettings.FollowSmoothness.x;
         _proCamera.VerticalFollowSmoothness = _initialSettings.FollowSmoothness.y;
     }
