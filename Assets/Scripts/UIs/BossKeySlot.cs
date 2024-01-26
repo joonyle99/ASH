@@ -14,7 +14,7 @@ public class BossKeySlot : MonoBehaviour
     }
     public void Obtain()
     {
-        SetValue(false);
+        SetValue(true);
         StartCoroutine(ObtainCoroutine());
     }
     IEnumerator ObtainCoroutine()
