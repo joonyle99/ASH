@@ -14,11 +14,6 @@ public class Bat_Sprinkle : Monster_SkillObject
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    protected override void OnTriggerEnter2D(Collider2D collision)
-    {
-        base.OnTriggerEnter2D(collision);
-    }
-
     public void SetSprite(Sprite sprite)
     {
         _spriteRenderer.sprite = sprite;
