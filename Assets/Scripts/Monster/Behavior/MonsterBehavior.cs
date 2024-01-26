@@ -242,8 +242,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private Coroutine _superArmorRoutine;
 
     // Fade Out
-    private readonly float _targetFadeOutTime = 2f;
-    private float _elapsedFadeOutTime;
+    // private readonly float _targetFadeOutTime = 2f;
+    // private float _elapsedFadeOutTime;
 
     // animation transition event
     public delegate bool CustomAnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
