@@ -22,6 +22,12 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             PersistentDataManager.UpdateValue<int>("skillPiece", x => x + 3);
             _cheatSkillid++;
         }
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            PersistentDataManager.Set<bool>(PersistentDataManager.SkillOrderData.GetFromDict("Light").Key, true);
+            PersistentDataManager.UpdateValue<int>("skillPiece", x => x + 3);
+            _cheatSkillid++;
+        }
     }
     public static SkillOrderData SkillOrderData => Instance._skillOrderData;
     public static bool TryAddDataGroup(string groupName)

@@ -341,7 +341,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         // TODO : 여기서 할퀴기 생성
         var slashEffect = Instantiate(_slashPrefab, _playerPos, Quaternion.identity);
-        Destroy(slashEffect.gameObject, 0.25f);
+        //Destroy(slashEffect.gameObject, 0.25f);
 
         // 플레이어 위치 초기화
         _playerPos = Vector2.zero;
