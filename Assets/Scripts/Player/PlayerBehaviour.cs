@@ -96,7 +96,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public bool IsHurt { get { return _isHurt; } set { _isHurt = value; } }
     public bool IsDead { get { return _isDead; } set { _isDead = value; } }
     public bool IsGodMode { get { return _isGodMode; } set { _isGodMode = value; } }
-    public int CurHp { get { return _curHp; } set { _curHp = value; } }
+    public int CurHp { get { return _curHp; }  }
 
     // Check Property
     public float GroundDistance { get; set; }
@@ -188,7 +188,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         ChangeInAirState();
 
         // Check Dead State
-        CheckDie();
+        if (_curHp <= 0)
+        {
+            ChangeState<DieState>();
+        }
 
         #endregion
 
@@ -232,7 +235,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     // basic
     private void InitPlayer()
     {
-        CurHp = _maxHp;
+        _curHp = _maxHp;
         RecentDir = Math.Sign(transform.localScale.x);
     }
     private void UpdateImageFlip()
@@ -254,14 +257,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
                 ChangeState<InAirState>();
         }
     }
-    private void CheckDie()
-    {
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-            ChangeState<DieState>();
-        }
-    }
 
 
     // key pressed event
@@ -277,6 +272,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
 
     // about hit
+    void TakeDamage(float damage)
+    {
+        _curHp -= (int)damage;
+        if (_curHp <= 0)
+        {
+            _curHp = 0;
+            ChangeState<DieState>();
+        }
+    }
     public void KnockBack(Vector2 forceVector)
     {
         Rigidbody.velocity = Vector2.zero;
@@ -288,46 +292,19 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         if (IsHurt || IsGodMode || IsDead)
             return IAttackListener.AttackResult.Fail;
 
-        CurHp -= (int)attackInfo.Damage;
         PlaySound_SE_Hurt_02();
 
+        TakeDamage((int)attackInfo.Damage);
         // Change Die State
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-            ChangeState<DieState>();
-
+        if (_curHp <= 0)
             return IAttackListener.AttackResult.Success;
-        }
-
+        
         KnockBack(attackInfo.Force);
 
         // Change Hurt State
         ChangeState<HurtState>();
 
         return IAttackListener.AttackResult.Success;
-    }
-    public void OnHitbyPuddle(float damage)
-    {
-        //애니메이션, 체력 닳기 등 하면 됨.
-        //애니메이션 종료 후 spawnpoint에서 생성
-
-        if (CurHp == 1)
-        {
-            CurHp = _maxHp;
-        }
-        else
-        {
-            CurHp -= 1;
-        }
-
-        InstantRespawn();
-    }
-    public void OnHitByPhysicalObject(float damage, Rigidbody2D other)
-    {
-        // TODO
-
-        Debug.Log(damage + " 데미지 입음");
     }
 
     // flash
@@ -400,23 +377,20 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
 
     // respawn
+    public void OnRevive()
+    {
+        _curHp = _maxHp;
+    }
     public void TriggerInstantRespawn(float damage)
     {
-        if (CurHp == 1)
-            CurHp = _maxHp;
-        else
-            CurHp -= 1;
-
-        InstantRespawn();
+        TakeDamage(damage);
+        if (CurHp > 0)
+            InstantRespawn();
     }
     public void InstantRespawn()
     {
         ChangeState<InstantRespawnState>(true);
         SceneContext.Current.InstantRespawn();
-    }
-    public void Alive()
-    {
-        _curHp = _maxHp;
     }
 
     // anim event
