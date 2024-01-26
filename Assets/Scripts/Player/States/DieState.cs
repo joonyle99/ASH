@@ -43,6 +43,7 @@ public class DieState : PlayerState
 
         yield return new WaitForSeconds(_stayDuration);
 
+        Player.SoundList.PlaySFX("Disintegrate");
         _disintegrateEffect.Play();
 
         yield return new WaitForSeconds(_disintegrateEffect.Duration);
