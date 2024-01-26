@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Bear : SemiBossBehavior, ILightCaptureListener
@@ -68,7 +69,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     [SerializeField] private BoxCollider2D _stompCollider;
     [SerializeField] private Bear_Stalactite _stalactitePrefab;
-    [SerializeField] private int _stalactiteCount = 5;
+    [SerializeField] private int _stalactiteCount;
+    [SerializeField] private Range _normalStalactiteRange;
+    [SerializeField] private Range _rageStalactiteRange;
+    [SerializeField] private List<float> _stalactitePosXs;
 
     [Space]
 
@@ -107,6 +111,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // init
         RandomTargetAttackCount();
         SetToRandomAttack();
+
+        // 종유석 카운트 초기화
+        SetStalactiteToNormalCount();
     }
     protected override void Update()
     {
@@ -125,13 +132,13 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
             GroundWalking();
         }
 
-        if (CurrentStateIs<Monster_AttackState>())
+        if (CurrentStateIs<SemiBoss_AttackState>())
         {
             if (_isBodySlamming)
             {
                 MonsterAttackInfo bodySlamInfo = new MonsterAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
                 BoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _attackTargetLayer);
-                Debug.Log("BodySlam Attack");
+                // Debug.Log("BodySlam Attack");
             }
         }
     }
@@ -261,6 +268,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 빛나는 돌 비활성화
         SetLightingStone(false);
+
+        if (IsRage)
+            SetStalactiteToRageCount();
     }
 
     // basic
@@ -302,6 +312,14 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public void InitializeHurtCount()
     {
         _currentHurtCount = 0;
+    }
+    public void SetStalactiteToNormalCount()
+    {
+        _stalactiteCount = Random.Range((int)_normalStalactiteRange.Start, (int)_normalStalactiteRange.End + 1);
+    }
+    public void SetStalactiteToRageCount()
+    {
+        _stalactiteCount = Random.Range((int)_rageStalactiteRange.Start, (int)_rageStalactiteRange.End + 1);
     }
 
     // slash
@@ -364,31 +382,93 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 종유석 생성
         for (int i = 0; i < _stalactiteCount; ++i)
+        {
+            _stalactitePosXs.Clear();
+            _stalactitePosXs = new List<float>(_stalactiteCount);
             StartCoroutine(CreateStalactite());
+        }
     }
     public IEnumerator CreateStalactite()
     {
-        var fallingStartTime = Random.Range(0.2f, 1.5f);
-
-        yield return new WaitForSeconds(fallingStartTime);
+        var fallingStartTime = Random.Range(0.5f, 1.5f);
 
         // 종유석을 천장에서 랜덤 위치에 생성한다
         var ceilingHeight = 18.3f;
         var bodyColliderMinX = _bodyCollider.bounds.min.x;
         var bodyColliderMaxX = _bodyCollider.bounds.max.x;
-        var fromDistance = 2f;
-        var toDistance = 10f;
-        var leftRange = Random.Range(bodyColliderMinX - toDistance, bodyColliderMinX - fromDistance);
-        var rightRange = Random.Range(bodyColliderMaxX + fromDistance, bodyColliderMaxX + toDistance);
+        var fromDistance = 1f;
+        var toDistance = 20f;
+        var posXInLeftRange = Random.Range(bodyColliderMinX - toDistance, bodyColliderMinX - fromDistance);
+        var posXInRightRange = Random.Range(bodyColliderMaxX + fromDistance, bodyColliderMaxX + toDistance);
 
-        // 종유석 생성 범위
-        Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
-        Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
-        Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
-        Debug.DrawRay(new Vector3(bodyColliderMaxX + toDistance, ceilingHeight), Vector2.down, Color.yellow, 2f);
+        /*
+        bool isSavable = false;
+        float finalPosX = 0f;
 
-        Vector2 randomPos = (Random.value > 0.5f) ? new Vector2(leftRange, ceilingHeight) : new Vector2(rightRange, ceilingHeight);
-        Instantiate(_stalactitePrefab, randomPos, Quaternion.identity);
+        var limitCount = 0;
+
+        // finalPosX를 정하는 과정
+        do
+        {
+            limitCount++;
+
+            if (RecentDir > 0)
+            {
+                finalPosX = posXInRightRange;
+                // Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
+                // Debug.DrawRay(new Vector3(bodyColliderMaxX + toDistance, ceilingHeight), Vector2.down, Color.yellow, 2f);
+            }
+            else
+            {
+                finalPosX = posXInLeftRange;
+                // Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
+                // Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
+            }
+
+            foreach (var posX in _stalactitePosXs)
+            {
+                var minX = posX - 0.3f;
+                var maxX = posX + 0.3f;
+
+                // 저장 가능 조건
+                if (finalPosX < minX || finalPosX > maxX)
+                {
+                    isSavable = true;
+                    break;
+                }
+            }
+
+        } while (!isSavable || limitCount > 50);
+        */
+
+        float finalPosX = 0f;
+        if (RecentDir > 0)
+        {
+            finalPosX = posXInRightRange;
+            Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
+            Debug.DrawRay(new Vector3(bodyColliderMaxX + toDistance, ceilingHeight), Vector2.down, Color.yellow, 2f);
+        }
+        else
+        {
+            finalPosX = posXInLeftRange;
+            Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
+            Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
+        }
+
+        // 모든 종유석의 생성위치 저장
+        _stalactitePosXs.Add(finalPosX);
+        Debug.Log(finalPosX);
+
+        yield return new WaitForSeconds(fallingStartTime);
+
+        // Vector2 randomPos = (Random.value > 0.5f) ? new Vector2(posXInLeftRange, ceilingHeight) : new Vector2(posXInRightRange, ceilingHeight);
+        Vector2 randomPos = new Vector2(finalPosX, ceilingHeight);
+        var stalactite = Instantiate(_stalactitePrefab, randomPos, Quaternion.identity);
+
+        // 종유석의 크기도 랜덤으로
+        var scale = Random.Range(0.4f, 1f);
+        stalactite.transform.localScale *= scale;
+        // Debug.Log(stalactite.transform.localScale);
     }
 
     // earthQuake
