@@ -6457,7 +6457,7 @@ Rigidbody2D:
   m_Material: {fileID: 6200000, guid: ea4460efb9324b34889b52a932903051, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &5175373095565138213
 MonoBehaviour:
@@ -6484,6 +6484,7 @@ MonoBehaviour:
   _isGround: 0
   _isInAir: 0
   _isSuperArmor: 0
+  _isHide: 0
   _isGodMode: 0
   _isHit: 0
   _isHurt: 0
@@ -6505,7 +6506,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _groundCheckCollider: {fileID: 5175373093861947036}
-  _groundRayHitCollider: {fileID: 0}
   _centerOfMass: {fileID: 0}
   _devourCollider: {fileID: 8155140187311723910}
   _devourDamage: 5

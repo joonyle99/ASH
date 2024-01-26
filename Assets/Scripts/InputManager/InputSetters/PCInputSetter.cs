@@ -6,11 +6,11 @@ using UnityEngine;
 public class PCInputSetter : InputSetterScriptableObject, IInputSetter
 {
     [SerializeField] KeyCode _jumpKeyCode = KeyCode.Space;
-    [SerializeField] KeyCode _dashKeyCode = KeyCode.F;
-    [SerializeField] KeyCode _basicAttackKeyCode = KeyCode.A;
+    [SerializeField] KeyCode _dashKeyCode = KeyCode.LeftShift;
+    [SerializeField] KeyCode _basicAttackKeyCode = KeyCode.Z;
     [SerializeField] KeyCode _shootingAttackKeyCode = KeyCode.S;
     [SerializeField] KeyCode _interactionKeyCode = KeyCode.E;
-    [SerializeField] KeyCode _lightingKeyCode = KeyCode.L;
+    [SerializeField] KeyCode _lightingKeyCode = KeyCode.LeftControl;
 
     public override InputState GetState()
     {
