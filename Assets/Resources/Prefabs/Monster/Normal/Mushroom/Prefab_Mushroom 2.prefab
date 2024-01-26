@@ -32,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5175373095565138197}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &61254621
 ParticleSystem:
@@ -4953,85 +4953,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.64, y: 2.24}
   m_EdgeRadius: 0
---- !u!1 &3529905670188250681
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3529905670188250680}
-  - component: {fileID: 3529905670188250682}
-  - component: {fileID: 3529905670188250683}
-  m_Layer: 16
-  m_Name: MonsterHitBox
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &3529905670188250680
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3529905670188250681}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.088, y: -0.285, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5175373095565138197}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &3529905670188250682
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3529905670188250681}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.24, y: 1.52}
-  m_EdgeRadius: 0
---- !u!114 &3529905670188250683
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3529905670188250681}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9416f7e7a68fbf42b28ccbdd52cbbe6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _bodyHitTargetLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _toHitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
-  _bodyHitDamage: 5
-  _bodyHitForceX: 7
-  _bodyHitForceY: 10
-  _isAttackable: 1
 --- !u!1 &5175373093537396573
 GameObject:
   m_ObjectHideFlags: 0
@@ -5062,7 +4983,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5175373095565138197}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &5175373093537396572
 BoxCollider2D:
@@ -5301,8 +5222,8 @@ MonoBehaviour:
   - {fileID: 5175373095293410110}
   - {fileID: 5175373095279546469}
   m_Bounds:
-    m_Center: {x: 0.0750047, y: 0.08880791, z: 0}
-    m_Extent: {x: 1.1149921, y: 0.4497945, z: 0}
+    m_Center: {x: 0.07499707, y: 0.08880839, z: 0}
+    m_Extent: {x: 1.1149845, y: 0.44979402, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -5399,7 +5320,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5175373095565138197}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &5175373093861947036
 BoxCollider2D:
@@ -5529,8 +5450,8 @@ MonoBehaviour:
   - {fileID: 5175373095184708135}
   - {fileID: 5175373093581929221}
   m_Bounds:
-    m_Center: {x: 0.024993896, y: -0.4209969, z: 0}
-    m_Extent: {x: 0.7750001, y: 0.64715004, z: 0}
+    m_Center: {x: 0.024993896, y: -0.42099738, z: 0}
+    m_Extent: {x: 0.7750001, y: 0.64714956, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -6384,7 +6305,6 @@ Transform:
   - {fileID: 5175373094617870060}
   - {fileID: 5175373094165356174}
   - {fileID: 5175373095527842914}
-  - {fileID: 3529905670188250680}
   - {fileID: 5175373093861947037}
   - {fileID: 5175373093537396575}
   - {fileID: 61254622}
