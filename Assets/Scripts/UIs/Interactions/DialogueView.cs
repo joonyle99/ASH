@@ -17,6 +17,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     public bool IsPanelActive { get { return _dialoguePanel.gameObject.activeInHierarchy; } }
     public void OpenPanel()
     {
+        _dialogueText.text = "";
         _skipUI.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _textShaker = _dialogueText.GetComponent<TextShaker>();
