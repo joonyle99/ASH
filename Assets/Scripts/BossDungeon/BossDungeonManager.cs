@@ -8,6 +8,9 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
 {
     [SerializeField] int _maxKeyCount = 3;
     [SerializeField] string _dataGroupName = "BossDungeon1";
+    [SerializeField] DialogueData _firstKeyDialogue;
+
+    public int CurrentKeyCount => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount");
 
     public bool AllKeysCollected => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount") == _maxKeyCount;
     BossKey[] _bossKeys; 
@@ -19,5 +22,9 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     public void OnKeyObtained(BossKey key)
     {
         PersistentDataManager.UpdateValue<int>(_dataGroupName, "bossKeyCount", x=>x+1);
+        if (PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount") == 1)
+        {
+            DialogueController.Instance.StartDialogue(_firstKeyDialogue);
+        }
     }
 }

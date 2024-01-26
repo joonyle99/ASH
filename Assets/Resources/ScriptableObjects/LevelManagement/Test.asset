@@ -1,0 +1,114 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5331790820577414742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 1595c86b44b32ab4080769b50c2ecd90
+  graphPosition: {x: -208.68605, y: 8.999994}
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 4d4c2599f0e99d347a87f15bae464dab, type: 3}
+    scenePath: Assets/Scenes/Test/YJ/LevelTest/LevelTest_1.unity
+  PassageNames:
+  - Passage2
+--- !u!114 &-4114560781853691686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: ef274d5081315f6418ec4f4918b50d6f
+  graphPosition: {x: -183.14313, y: -208.66313}
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: f41c250ca79ed284bb2c8ca64b460d4c, type: 3}
+    scenePath: Assets/Scenes/Test/YJ/LevelTest/LevelTest_4.unity
+  PassageNames:
+  - Passage2
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a2f9c1985d44841918c927d51311d3, type: 3}
+  m_Name: Test
+  m_EditorClassIdentifier: 
+  _nodes:
+  - {fileID: -5331790820577414742}
+  - {fileID: 7783753324342266041}
+  - {fileID: -4114560781853691686}
+  - {fileID: 730251218714092004}
+  _edges:
+  - EntranceScene: {fileID: -5331790820577414742}
+    ExitScene: {fileID: 7783753324342266041}
+    EntrancePassage: Passage2
+    ExitPassgage: Passage1
+  - EntranceScene: {fileID: 7783753324342266041}
+    ExitScene: {fileID: -5331790820577414742}
+    EntrancePassage: Passage1
+    ExitPassgage: Passage2
+  - EntranceScene: {fileID: -4114560781853691686}
+    ExitScene: {fileID: 7783753324342266041}
+    EntrancePassage: Passage2
+    ExitPassgage: Passage4
+  - EntranceScene: {fileID: 7783753324342266041}
+    ExitScene: {fileID: -4114560781853691686}
+    EntrancePassage: Passage4
+    ExitPassgage: Passage2
+--- !u!114 &730251218714092004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 3ffbde59ca673cd4d9ef9b1674426f22
+  graphPosition: {x: 265.4, y: -165}
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 4a6af20f5d9f86b49bd8bb8828b72128, type: 3}
+    scenePath: Assets/Scenes/Test/YJ/LevelTest/LevelTest_3.unity
+  PassageNames:
+  - Passage2
+--- !u!114 &7783753324342266041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 4657eef626cd89449b75e50e74390d54
+  graphPosition: {x: 73.32246, y: -132}
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: b90fd8c4f24c82d4ca149f5749b08384, type: 3}
+    scenePath: Assets/Scenes/Test/YJ/LevelTest/LevelTest_2.unity
+  PassageNames:
+  - Passage1
+  - Passage3
+  - Passage4
