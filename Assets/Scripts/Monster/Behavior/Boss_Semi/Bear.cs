@@ -1,3 +1,4 @@
+using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -80,16 +81,20 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private float _stompForceX = 7f;
     [SerializeField] private float _stompForceY = 10f;
 
-    [Space]
+    [Header("Earthquake skill")]
 
     [SerializeField] private BoxCollider2D _earthQuakeCollider;
+    [SerializeField] private Transform _waveSpawnPoint;
     [SerializeField] private Bear_GroundWave _waveSkillPrefab;
+    [SerializeField] ShakePreset _earthquakeCameraShake;
 
     [Space]
 
     [SerializeField] private int _earthQuakeDamage = 20;
     [SerializeField] private float _earthQuakeForceX = 7f;
     [SerializeField] private float _earthQuakeForceY = 10f;
+
+    [SerializeField] SoundList _soundList;
 
     private Vector2 _playerPos;
     private BoxCollider2D _bodyCollider;   // not bodyHitBox
@@ -476,13 +481,15 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 지면파 생성
         GenerateGroundWave();
+        _soundList.PlaySFX("Earthquake");
+        SceneEffectManager.Current.Camera.StartShake(_earthquakeCameraShake);
     }
     public void GenerateGroundWave()
     {
         // 2개의 지면파를 발생시킨다 (좌 / 우)
-        var wave1 = Instantiate(_waveSkillPrefab, _earthQuakeCollider.transform.position, Quaternion.identity);
+        var wave1 = Instantiate(_waveSkillPrefab, _waveSpawnPoint.position, Quaternion.identity);
         wave1.SetDir(Vector2.left);
-        var wave2 = Instantiate(_waveSkillPrefab, _earthQuakeCollider.transform.position, Quaternion.identity);
+        var wave2 = Instantiate(_waveSkillPrefab, _waveSpawnPoint.position, Quaternion.identity);
         wave2.SetDir(Vector2.right);
     }
 
