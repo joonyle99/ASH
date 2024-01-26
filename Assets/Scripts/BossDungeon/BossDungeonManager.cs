@@ -21,6 +21,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     }
     public void OnKeyObtained(BossKey key)
     {
+        GameUIManager.AddBossKey();
         PersistentDataManager.UpdateValue<int>(_dataGroupName, "bossKeyCount", x=>x+1);
         if (PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount") == 1)
         {

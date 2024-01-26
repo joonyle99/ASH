@@ -18,6 +18,8 @@ public class HealthPanelUI : MonoBehaviour
     }
     void Update()
     {
+        if (SceneContext.Current.Player == null)
+            return;
         var hp = SceneContext.Current.Player.CurHp;
         if (hp > MaxLife)
             hp = MaxLife;
