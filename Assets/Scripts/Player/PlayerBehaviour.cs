@@ -84,7 +84,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     #region Properties
 
     // Can Property
-    public bool CanBasicAttack { get { return (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && _lightController.IsLightButtonPressable; } }
+    public bool CanBasicAttack { get { return (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (_lightController.IsLightButtonPressable && !_lightController.IsLightWorking); } }
     public bool CanShootingAttack { get { return CurrentStateIs<IdleState>(); } }
     public bool CanDash { get { return _isCanDash && PersistentDataManager.Get<bool>("Dash"); } set { _isCanDash = value; } }
 
