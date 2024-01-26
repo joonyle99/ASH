@@ -37,7 +37,7 @@ public class LightController : MonoBehaviour
         }
 
         // Light Source ON / OFF
-        if (_isLightableState)
+        if (_isLightableState && PersistentDataManager.Get<bool>("Light"))
         {
             if (inputState.LightKey.KeyDown && _isLightButtonPressable)
             {
