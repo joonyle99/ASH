@@ -22,6 +22,8 @@ public class KeyMapManager : MonoBehaviour
 
     private void Start()
     {
+        _keyMap.SetActive(true);
+
         StartCoroutine(RemoveKeyMapFirst());
     }
 
@@ -29,7 +31,7 @@ public class KeyMapManager : MonoBehaviour
     {
         yield return new WaitForSeconds(_firstDelay);
 
-        StartCoroutine(FadeOutTarget(_keyMap, _targetFadeTime));
+        StartCoroutine(FadeOut(_targetFadeTime));
     }
 
     public void Update()
@@ -39,21 +41,21 @@ public class KeyMapManager : MonoBehaviour
             if (Input.GetKeyDown(_showKey))
             {
                 if (_keyMap.activeSelf)
-                    StartCoroutine(FadeOutTarget(_keyMap, _targetFadeTime));
+                    _keyMap.SetActive(false);
                 else
-                    StartCoroutine(FadeInTarget(_keyMap, _targetFadeTime));
+                    _keyMap.SetActive(true);
             }
         }
     }
 
-    public IEnumerator FadeOutTarget(GameObject targetObject, float duration)
+    public IEnumerator FadeOut(float duration)
     {
         // Fade Out Effect
 
         _targetFadeTime = duration;
         _elapsedFadeTime = 0f;
 
-        Image[] currentImages = targetObject.GetComponentsInChildren<Image>(true);
+        Image[] currentImages = GetComponentsInChildren<Image>(true);
 
         float[] startAlphaArray = new float[currentImages.Length];
         for (int i = 0; i < currentImages.Length; i++)
@@ -77,39 +79,14 @@ public class KeyMapManager : MonoBehaviour
         if (!_isClickable)
             _isClickable = true;
 
-        targetObject.SetActive(false);
+        _keyMap.SetActive(false);
 
-        yield return null;
-    }
-
-    public IEnumerator FadeInTarget(GameObject targetObject, float duration)
-    {
-        // Fade In Effect
-
-        targetObject.SetActive(true);
-
-        _targetFadeTime = duration;
-        _elapsedFadeTime = 0f;
-
-        Image[] currentImages = targetObject.GetComponentsInChildren<Image>(true);
-
-        float[] startAlphaArray = new float[currentImages.Length];
+        // 원래대로 되돌리기
         for (int i = 0; i < currentImages.Length; i++)
-            startAlphaArray[i] = currentImages[i].color.a;
-
-        while (_elapsedFadeTime < _targetFadeTime)
         {
-            _elapsedFadeTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeTime / _targetFadeTime; // Normalize to 0 ~ 1
-
-            for (int i = 0; i < currentImages.Length; i++)
-            {
-                Color targetColor = currentImages[i].color;
-                targetColor.a = Mathf.Lerp(startAlphaArray[i], 1f, normalizedTime);
-                currentImages[i].color = targetColor;
-            }
-
-            yield return null;
+            var targetColor = currentImages[i].color;
+            targetColor.a = startAlphaArray[i];
+            currentImages[i].color = targetColor;
         }
 
         yield return null;
