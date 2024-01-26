@@ -33,14 +33,11 @@ public sealed class LanternSceneContext : SceneContext
     [SerializeField] InputSetterScriptableObject _lastConnectionInputSetter;
     [SerializeField] float _cameraLastLanternStayDuration;
     [SerializeField] float _lastBeamDuration = 1;
-    [SerializeField] float _doorOpenDelay = 1;
     [SerializeField] float _cameraDoorStayDuration;
     [SerializeField] ShakePreset _beamHitDoorPreset;
     [SerializeField] ConstantShakePreset _beamShootingPreset;
 
     [SerializeField] SoundList _soundList;
-    [SerializeField] float _openSoundInterval = 0.1f;
-    [SerializeField] int _openSoundRepeat= 5;
 
     List<LanternLike> _lanternActivationOrder = new List<LanternLike>();
 
@@ -190,6 +187,7 @@ public sealed class LanternSceneContext : SceneContext
         SceneEffectManager.Current.Camera.StartFollow(relation.A.transform == _lightDoor ? relation.B.LightPoint : relation.A.LightPoint);
         InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
         yield return new WaitForSeconds(_cameraLastLanternStayDuration);
+
         //레이저 발사
         SceneEffectManager.Current.Camera.StartConstantShake(_beamShootingPreset);
         StartCoroutine(ConnectionCoroutine(relation));
@@ -201,31 +199,16 @@ public sealed class LanternSceneContext : SceneContext
             yield return null;
         }
         _soundList.PlaySFX("SE_LightDoor_Contact");
-        //cameraController.StartShake(_beamHitDoorPreset);
+        SceneEffectManager.Current.Camera.StartShake(_beamHitDoorPreset);
         yield return new WaitForSeconds(_lastBeamDuration);
+        SceneEffectManager.Current.Camera.StopConstantShake();
+
         relation.Beam.gameObject.SetActive(false);
         //빔 사라진 후 문열기 시작
-        SceneEffectManager.Current.Camera.StopConstantShake(0.1f);
-        yield return new WaitForSeconds(_doorOpenDelay);
-        _lightDoor.Open();
-        StartCoroutine(PlayOpenSoundCoroutine());
-        while (_lightDoor.CurrentState == LightDoor.State.Opening)
-        {
-            yield return null;
-        }
-        //문 열림 끝남
-        SceneEffectManager.Current.Camera?.StopConstantShake(_cameraDoorStayDuration);
+        yield return _lightDoor.OpenCoroutine();
         yield return new WaitForSeconds(_cameraDoorStayDuration);
 
         InputManager.Instance.ChangeToDefaultSetter();
-    }
-    IEnumerator PlayOpenSoundCoroutine()
-    {
-        for(int i=0; i<_openSoundRepeat; i++)
-        {
-            _soundList.PlaySFX("SE_LightDoor_Open");
-            yield return new WaitForSeconds(_openSoundInterval);
-        }
     }
     IEnumerator ConnectionCoroutine(LanternRelation relation)
     {

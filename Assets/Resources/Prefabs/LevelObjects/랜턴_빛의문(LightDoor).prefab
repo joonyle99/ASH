@@ -210,6 +210,8 @@ GameObject:
   - component: {fileID: 218767334479442676}
   - component: {fileID: 218767334479442679}
   - component: {fileID: 380178343}
+  - component: {fileID: 816325165}
+  - component: {fileID: 816325166}
   m_Layer: 0
   m_Name: "\uB79C\uD134_\uBE5B\uC758\uBB38(LightDoor)"
   m_TagString: Untagged
@@ -246,8 +248,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _lightStone: {fileID: 139042359}
-  _doorOpenPreset: {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
-  _doorOpenDelay: 0.7
 --- !u!61 &218767334479442679
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -295,6 +295,55 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &816325165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7080933666729735361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2176e78879feeff4f9eddd53cf7f0d5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _doorOpenDelay: 2
+  _stopShakeTiming: 2.5
+  _doorOpenPreset: {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
+  _soundList: {fileID: 816325166}
+  _openSoundInterval: 0.15
+  _openSoundRepeat: 7
+  _preheatSoundInterval: 0.15
+  _preheadSoundRepeat: 7
+--- !u!114 &816325166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7080933666729735361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: SE_LightDoor_Open
+    _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 1
+    _pitchA: 0.8
+    _pitchB: 1
+  - _key: SE_LightDoor_Open_Low
+    _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 1
+    _pitchA: 0.3
+    _pitchB: 0.4
 --- !u!1001 &80589180798284979
 PrefabInstance:
   m_ObjectHideFlags: 0

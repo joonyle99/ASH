@@ -6,8 +6,6 @@ public class LightDoor : LanternLike
 {
     public override Transform LightPoint { get { return _lightStone.transform; } }
     [SerializeField] SpriteRenderer _lightStone;
-    [SerializeField] ConstantShakePreset _doorOpenPreset;
-    [SerializeField] float _doorOpenDelay;
     Animator _animator;
     Collider2D _collider;
     CameraController _cameraController;
@@ -59,7 +57,7 @@ public class LightDoor : LanternLike
     IEnumerator LightenStoneCoroutine()
     {
         float eTime = 0f;
-        float duration = 0.3f;
+        float duration = 0.15f;
         while(eTime < duration)
         {
             _lightStone.color = new Color(1, 1, 1, eTime / duration);
@@ -73,17 +71,9 @@ public class LightDoor : LanternLike
         _collider.isTrigger = false;
         _animator.SetTrigger("Close");
     }
-    public void Open()
+    public IEnumerator OpenCoroutine()
     {
-        Debug.Log("¹®¿­¸²");
-        StartCoroutine(OpenCoroutine());
-    }
-    IEnumerator OpenCoroutine()
-    {
-        CurrentState = State.Opening;
-        _cameraController.StartConstantShake(_doorOpenPreset);
-        yield return new WaitForSeconds(_doorOpenDelay);
-        _animator.SetTrigger("Open");
+        yield return GetComponent<DoorOpenAnimation>().OpenCoroutine();
     }
     public void AnimEvent_OnOpenDone()
     {

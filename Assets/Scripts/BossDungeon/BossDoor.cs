@@ -7,12 +7,15 @@ using UnityEngine.Rendering;
 public class BossDoor : InteractableObject
 {
     [SerializeField] GameObject _passage;
-    [SerializeField] float _doorOpenDelay;
-    [SerializeField] ConstantShakePreset _doorOpenPreset;
+    [SerializeField] float _goInDelay = 1f;
     [SerializeField] InputSetterScriptableObject _stayStillInputSetter;
     [SerializeField] InputSetterScriptableObject _enterInputSetter;
 
+    [SerializeField] SoundList _soundList;
+
     [SerializeField] DialogueData _failDialogue;
+
+    DoorOpenAnimation _doorOpenAnimation;
 
     Animator _animator;
     Collider2D _collider;
@@ -21,6 +24,7 @@ public class BossDoor : InteractableObject
     {
         _animator = GetComponent<Animator>();
         _collider = GetComponent<Collider2D>();
+        _doorOpenAnimation = GetComponent<DoorOpenAnimation>();
         _passage.SetActive(false);
     }
     // Start is called before the first frame update
@@ -53,10 +57,9 @@ public class BossDoor : InteractableObject
         InputManager.Instance.ChangeInputSetter(_stayStillInputSetter);
         SceneEffectManager.Current.Camera.RemoveFollowTarget(SceneContext.Current.Player.transform);
         SceneEffectManager.Current.Camera.AddFollowTarget(transform);
-        SceneEffectManager.Current.Camera.StartConstantShake(_doorOpenPreset);
-        yield return new WaitForSeconds(_doorOpenDelay);
-        _animator.SetTrigger("Open");
+        yield return _doorOpenAnimation.OpenCoroutine();
         yield return new WaitUntil(() => _passage.activeSelf);
+        yield return new WaitForSeconds(_goInDelay);
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
     }
     void OpenDoor()
