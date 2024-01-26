@@ -22,9 +22,12 @@ public class KeyMapManager : MonoBehaviour
 
     private void Start()
     {
-        _keyMap.SetActive(true);
-
-        StartCoroutine(RemoveKeyMapFirst());
+        if (!PersistentDataManager.Get<bool>("keymap"))
+        {
+            PersistentDataManager.Set("keymap", true);
+            _keyMap.SetActive(true);
+            StartCoroutine(RemoveKeyMapFirst());
+        }
     }
 
     private IEnumerator RemoveKeyMapFirst()
