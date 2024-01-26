@@ -66,14 +66,15 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private float _bodySlamForceX = 7f;
     [SerializeField] private float _bodySlamForceY = 10f;
 
-    [Space]
+    [Header("Stomp skill")]
 
-    [SerializeField] private BoxCollider2D _stompCollider;
+    [SerializeField] private Collider2D _stompCollider;
     [SerializeField] private Bear_Stalactite _stalactitePrefab;
     [SerializeField] private int _stalactiteCount;
     [SerializeField] private Range _normalStalactiteRange;
     [SerializeField] private Range _rageStalactiteRange;
     [SerializeField] private List<float> _stalactitePosXs;
+    [SerializeField] private GameObject _stompEffectPrefab;
 
     [Space]
 
@@ -380,8 +381,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public void Stomp01_AnimEvent()
     {
         MonsterAttackInfo stompInfo = new MonsterAttackInfo(_stompDamage, new Vector2(_stompForceX, _stompForceY));
-        BoxCastAttack(_stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _attackTargetLayer);
-
+        CastAttack(_stompCollider, _stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _attackTargetLayer);
+        Instantiate(_stompEffectPrefab, _stompCollider.transform.position, Quaternion.identity);
         // 종유석 생성
         for (int i = 0; i < _stalactiteCount; ++i)
         {
