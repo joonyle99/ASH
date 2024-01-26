@@ -10,6 +10,7 @@ public class LaserFlower : MonoBehaviour, IAttackListener
     [SerializeField] DarkBeam _darkBeam;
     [SerializeField] float _darkBeamHeadOffset = 0.1f;
     [SerializeField] float _rotation = 90;
+    [SerializeField] Transform _imageParent;
     [SerializeField] Transform _headBone;
     [SerializeField] GameObject _attackHitbox;
 
@@ -19,15 +20,40 @@ public class LaserFlower : MonoBehaviour, IAttackListener
     {
         _hp = _maxHp;
         _animator = GetComponent<Animator>();
+
+
+        //AdjustAngles();
     }
     void OnValidate()
     {
-        _headBone.localRotation = Quaternion.Euler(0, 0, _rotation + 180 + 16);
-        _darkBeam.transform.localRotation = Quaternion.Euler(0, 0, _rotation);
+        AdjustAngles();
     }
     void Update()
     {
         _darkBeam.transform.position = _headBone.position + new Vector3(Mathf.Cos(_rotation * Mathf.Deg2Rad), Mathf.Sin(_rotation * Mathf.Deg2Rad), 0) * _darkBeamHeadOffset;
+
+    }
+    void AdjustAngles()
+    {
+        if (Mathf.Abs(Mathf.DeltaAngle(_rotation, 0)) < 90)
+        {
+            _imageParent.localScale = new Vector3(-Mathf.Abs(_imageParent.localScale.x), _imageParent.localScale.y, _imageParent.localScale.z);
+            float flippedRotation = Mathf.DeltaAngle(_rotation, 180);
+            _headBone.localRotation = Quaternion.Euler(0, 0, flippedRotation + 180 + 16);
+
+            _darkBeam.transform.rotation = Quaternion.Euler(0, 0, _rotation);
+            _darkBeam.transform.position = _headBone.position + new Vector3(Mathf.Cos(_rotation * Mathf.Deg2Rad), Mathf.Sin(_rotation * Mathf.Deg2Rad), 0) * _darkBeamHeadOffset;
+
+        }
+        else
+        {
+            _imageParent.localScale = new Vector3(Mathf.Abs(_imageParent.localScale.x), _imageParent.localScale.y, _imageParent.localScale.z);
+
+            _headBone.localRotation = Quaternion.Euler(0, 0, _rotation + 180 + 16);
+
+            _darkBeam.transform.rotation = Quaternion.Euler(0, 0, _rotation);
+           
+        }
     }
     public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
