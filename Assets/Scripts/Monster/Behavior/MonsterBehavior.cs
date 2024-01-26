@@ -222,7 +222,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [SerializeField] private LayerMask _groundCheckLayer;
     [SerializeField] private BoxCollider2D _groundCheckCollider;
-    [SerializeField] private Collider2D _groundRayHitCollider;
     public RaycastHit2D GroundRayHit;
 
 
@@ -337,10 +336,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                     else
                         GroundRayHit = hit;
                 }
-
-                // set groundRayHitCollider
-                if (GroundRayHit)
-                    _groundRayHitCollider = GroundRayHit.collider;
 
                 // set condition
                 IsGround = hasGroundContact;
