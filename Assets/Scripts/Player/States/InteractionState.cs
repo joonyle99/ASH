@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D.TopDownShooter;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 /// <summary>
 /// 플레이어가 상호작용 하는 경우에 진입하는 상태

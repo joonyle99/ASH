@@ -1,8 +1,8 @@
 //https://www.patrykgalach.com/2020/01/27/assigning-interface-in-unity-inspector/
 
-using UnityEditor;
-#if UNITY_EDITOR
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
 #endif
 
 /// <summary>
