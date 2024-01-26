@@ -74,6 +74,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     PlayerAttackController _attackController;
     InteractionController _interactionController;
     PlayerMovementController _movementController;
+    LightController _lightController;
 
     // Sound List
     SoundList _soundList;
@@ -83,7 +84,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     #region Properties
 
     // Can Property
-    public bool CanBasicAttack { get { return CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>(); } }
+    public bool CanBasicAttack { get { return (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && !_lightController.IsLightWorking; } }
     public bool CanShootingAttack { get { return CurrentStateIs<IdleState>(); } }
     public bool CanDash { get { return _isCanDash && PersistentDataManager.Get<bool>("Dash"); } set { _isCanDash = value; } }
 
@@ -141,6 +142,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _attackController = GetComponent<PlayerAttackController>();
         _interactionController = GetComponent<InteractionController>();
         _movementController = GetComponent<PlayerMovementController>();
+        _lightController = GetComponent<LightController>();
 
         // Collider
         _bodyCollider = GetComponent<CapsuleCollider2D>();

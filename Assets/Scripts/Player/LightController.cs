@@ -9,6 +9,7 @@ public class LightController : MonoBehaviour
 
     [SerializeField] private bool _isLightableState;
     [SerializeField] private bool _isLightWorking;
+    public bool IsLightWorking { get => _isLightWorking; }
     [SerializeField] private bool _isLightButtonPressable = true;
     [SerializeField] private float _rotateSpeed;
     [SerializeField] private float _maxAngle;
