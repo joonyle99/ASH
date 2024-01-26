@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class HiddenPath : MonoBehaviour, ILightCaptureListener
@@ -13,13 +14,34 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     [SerializeField] float _openDelay = 0.7f;
     [SerializeField] SoundList _soundList;
     [SerializeField] GameObject _lightEffect;
+    [SerializeField] GameObject _lightCapturer;
+
+    PreserveState _statePreserver;
 
     float _eTime = 0f;
     void Awake()
     {
         _mask.InitMask(_swipeDirection);
+        _statePreserver = GetComponent<PreserveState>();
+        if (_statePreserver)
+        {
+            if (_statePreserver.Load<bool>("opened", false))
+            {
+                Destroy(_lightCapturer);
+                Destroy(_destroyingCollidersParent);
+                _lightEffect.SetActive(false);
+                _mask.InstantReveal();
+            }
+        }
     }
     
+    void OnDestroy()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.Save("opened", _lightCapturer == null);
+        }
+    }
     IEnumerator OpenPathCoroutine()
     {
         InputManager.Instance.ChangeInputSetter(_openInputSetter);
