@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using Utils;
 
 public class DieState : PlayerState
 {
@@ -12,8 +14,8 @@ public class DieState : PlayerState
     public float DieDuration => _disintegrateEffect.Duration;
     public float SpawnDuration => _spawnDuration;
 
-    private float _moveUpSpeed = 1f;
-    private float _moveUpDuration = 3f;
+    [SerializeField] float _moveUpDistance = 4f;
+    [SerializeField] float _moveUpDuration = 1.5f;
 
     private float _previousGravityScale;
 
@@ -24,9 +26,17 @@ public class DieState : PlayerState
         // 위로 이동
         _previousGravityScale = Player.Rigidbody.gravityScale;
         Player.Rigidbody.gravityScale = 0f;
-        Player.Rigidbody.velocity = Vector2.up * _moveUpSpeed;
+        Player.Rigidbody.velocity = Vector2.zero;
 
-        yield return new WaitForSeconds(_moveUpDuration);
+        Vector2 originalPos = Player.Rigidbody.position;
+        Vector2 targetPos = Player.Rigidbody.position + Vector2.up * _moveUpDistance;
+        float eTime = 0f;
+        while(eTime < _moveUpDuration)
+        {
+            Player.Rigidbody.MovePosition(Vector2.Lerp(originalPos, targetPos, Curves.EaseOut(eTime / _moveUpDuration)));
+            yield return null;
+            eTime += Time.deltaTime;
+        }
 
         Player.Rigidbody.simulated = false;
         Player.enabled = false;
@@ -38,7 +48,8 @@ public class DieState : PlayerState
         yield return new WaitForSeconds(_disintegrateEffect.Duration);
 
         // 씬 재시작
-        Debug.Log("씬 재시작 타이밍");
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
+        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
     }
 
     void Awake()
