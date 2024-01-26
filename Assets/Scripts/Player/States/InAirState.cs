@@ -30,7 +30,7 @@ public class InAirState : PlayerState
         }
 
         // Change to Dash State
-        if (Input.GetKeyDown(KeyCode.F))
+        if (InputManager.Instance.State.DashKey.KeyDown)
         {
             if (Player.CanDash && Player.IsMoveXKey)
             {
