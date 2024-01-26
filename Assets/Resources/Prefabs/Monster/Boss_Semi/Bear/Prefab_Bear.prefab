@@ -254,30 +254,30 @@ MonoBehaviour:
   _finalTargetHurtCount: 10
   _currentAttack: 0
   _nextAttack: 0
-  _minTargetAttackCount: 3
-  _maxTargetAttackCount: 5
+  _minTargetAttackCount: 1
+  _maxTargetAttackCount: 1
   _targetAttackCount: 0
   _currentAttackCount: 0
   _targetHurtCount: 3
   _currentHurtCount: 0
   _slashCollider: {fileID: 113752819527728353}
-  _slashDamage: 20
+  _slashDamage: 1
   _slashForceX: 7
   _slashForceY: 10
   _bodySlamCollider: {fileID: 2586591776054811315}
   _isBodySlamming: 0
-  _bodySlamDamage: 20
+  _bodySlamDamage: 1
   _bodySlamForceX: 7
   _bodySlamForceY: 10
   _stompCollider: {fileID: 5109231471644252796}
   _stalactitePrefab: {fileID: 6190995042310891283, guid: e11f98982e6347c47be5d6f4d5fbc091, type: 3}
-  _stalactiteCount: 5
-  _stompDamage: 20
-  _stompForceX: 7
+  _stalactiteCount: 4
+  _stompDamage: 1
+  _stompForceX: 12
   _stompForceY: 10
   _earthQuakeCollider: {fileID: 5109231473129831231}
   _waveSkillPrefab: {fileID: 1687034788766365448, guid: 839e0876f9e523a42bb75e4004df8274, type: 3}
-  _earthQuakeDamage: 20
+  _earthQuakeDamage: 1
   _earthQuakeForceX: 7
   _earthQuakeForceY: 10
   LightingStone: {fileID: 1689909348}
@@ -796,9 +796,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _toHitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
-  _bodyHitDamage: 5
+  _bodyHitDamage: 1
   _bodyHitForceX: 7
-  _bodyHitForceY: 9
+  _bodyHitForceY: 10
   _isAttackable: 1
 --- !u!1 &113752819527728355
 GameObject:

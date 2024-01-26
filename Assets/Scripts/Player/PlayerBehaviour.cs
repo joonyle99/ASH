@@ -133,6 +133,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public Rigidbody2D HandRigidBody { get { return _handRigidbody; } }
     public CapsuleCollider2D BodyCollider { get { return _bodyCollider; } }
     public SoundList SoundList { get { return _soundList; } }
+    public SpriteRenderer[] SpriteRenderers { get { return _spriteRenderers; } }
     public Material[] OriginalMaterials => _originalMaterials;
 
     #endregion
@@ -336,10 +337,19 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         for (int i = 0; i < _originalMaterials.Length; i++)
             _originalMaterials[i] = _spriteRenderers[i].material;
     }
-    private void InitMaterial()
+    public void InitMaterial()
     {
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
+    }
+    public void InitSpriteRendererAlpha()
+    {
+        foreach (var renderer in SpriteRenderers)
+        {
+            Color color = renderer.color;
+            color.a = 1;
+            renderer.color = color;
+        }
     }
     private void ChangeMaterial()
     {
