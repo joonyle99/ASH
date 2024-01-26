@@ -11,10 +11,10 @@ public class Bat : MonsterBehavior
     [SerializeField] private Transform _shootPosition;
     [SerializeField] private Sprite[] _skillSprites;
 
-    private int _particleCount = 8;
-    private float _shootingPower = 6f;
-    private float _shootingAngle = 60f;
-    private float _shootingVariant = 30f;
+    [SerializeField] private int _particleCount = 8;
+    [SerializeField] private float _shootingPower = 6f;
+    [SerializeField] private float _shootingAngle = 90f;
+    [SerializeField] private float _shootingVariant = 40f;
 
     protected override void Awake()
     {
