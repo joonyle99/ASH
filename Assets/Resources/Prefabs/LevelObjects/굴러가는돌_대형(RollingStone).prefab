@@ -19869,6 +19869,8 @@ GameObject:
   - component: {fileID: 7590811073639362257}
   - component: {fileID: 1884605436532243709}
   - component: {fileID: 7969468135733862207}
+  - component: {fileID: 987519927}
+  - component: {fileID: 987519928}
   m_Layer: 12
   m_Name: "\uAD74\uB7EC\uAC00\uB294\uB3CC_\uB300\uD615(RollingStone)"
   m_TagString: Untagged
@@ -20054,6 +20056,14 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 0.8
     _pitchB: 0
+  - _key: SE_FallingTree_Landing
+    _clip: {fileID: 8300000, guid: 90c11a540eb862f4d9c9e21a059cd558, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!114 &7333671589761644017
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20188,6 +20198,44 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &987519927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284470426582743002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5394a3473b60e8b4db9335414bd390b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundList: {fileID: 7537142565806814644}
+  _logVelocity: 0
+  _conditions:
+  - PlayOnce: 1
+    Velocity: 2.5
+    ObjectType: 1
+    Key: SE_FallingTree_Landing
+--- !u!114 &987519928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284470426582743002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f42456f672a4da949834c0c4841f842d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _logVelocity: 0
+  _conditions:
+  - PlayOnce: 1
+    RotateToNormal: 1
+    Velocity: 2.5
+    ObjectType: 1
+    EffectPrefab: {fileID: -7316940235884863632, guid: c94afd77663cf324cb010e60f409ca81, type: 3}
 --- !u!1 &3652522480378706043
 GameObject:
   m_ObjectHideFlags: 0
