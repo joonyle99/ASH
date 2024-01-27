@@ -165,8 +165,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // init player
         InitPlayer();
 
-        // play bgm
-        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
     }
     protected override void Update()
     {

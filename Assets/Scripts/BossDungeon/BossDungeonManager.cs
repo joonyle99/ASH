@@ -9,6 +9,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     [SerializeField] int _maxKeyCount = 3;
     [SerializeField] string _dataGroupName = "BossDungeon1";
     [SerializeField] DialogueData _firstKeyDialogue;
+    [SerializeField] SoundClipData _bossDungeonBGM;
 
     public int CurrentKeyCount => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount");
 
@@ -17,7 +18,10 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     new void Awake()
     {
         base.Awake();
-        PersistentDataManager.TryAddDataGroup(_dataGroupName);
+        if(PersistentDataManager.TryAddDataGroup(_dataGroupName))
+        {
+            SoundManager.Instance.PlayBGM(_bossDungeonBGM.Clip, _bossDungeonBGM.Volume);
+        }
     }
     public void OnKeyObtained(BossKey key)
     {
