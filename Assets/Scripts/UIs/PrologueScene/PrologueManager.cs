@@ -36,7 +36,7 @@ public class PrologueManager : MonoBehaviour
         yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
         SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "");
         // play bgm
-        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
+        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.7f);
     }
     IEnumerator PlayScripts()
     {
@@ -45,6 +45,8 @@ public class PrologueManager : MonoBehaviour
             yield return PlayScript(script);
             yield return FadeInProceedText();
             yield return new WaitUntil(() => Input.anyKeyDown);
+            SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Button");
+
 
             Color color = _proceedText.color;
             color.a = 0;
