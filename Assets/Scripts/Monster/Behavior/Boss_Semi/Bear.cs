@@ -71,6 +71,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private List<float> _stalactitePosXs;
     [SerializeField] private GameObject _stompEffectPrefab;
 
+    [SerializeField] float ceilingHeight = 18.3f;
+    [SerializeField] float fromDistance = 1f;
+    [SerializeField] float toDistance = 20f;
+
     [Space]
 
     [SerializeField] private int _stompDamage = 20;
@@ -346,6 +350,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         if (RecentDir < 1)
             slashEffect.transform.localScale = new Vector3(-Mathf.Abs(slashEffect.transform.localScale.x), slashEffect.transform.localScale.y, slashEffect.transform.localScale.z);
 
+        _soundList.PlaySFX("Slash");
         // 플레이어 위치 초기화
         _playerPos = Vector2.zero;
     }
@@ -357,6 +362,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         slashEffect.transform.localScale = new Vector3(-Mathf.Abs(slashEffect.transform.localScale.x), slashEffect.transform.localScale.y, slashEffect.transform.localScale.z);
         //Destroy(slashEffect.gameObject, 0.25f);
 
+        _soundList.PlaySFX("Slash");
         // 플레이어 위치 초기화
         _playerPos = Vector2.zero;
     }
@@ -366,12 +372,16 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         var playerPos = SceneContext.Current.Player.transform.position;
         var dir = System.Math.Sign(playerPos.x - transform.position.x);
-
         SetRecentDir(dir);
         // StartSetRecentDirAfterGrounded(dir);
     }
+    public void PlaySound_AnimEvent(string key)
+    {
+        _soundList.PlaySFX(key);
+    }
     public void BodySlam02_AnimEvent()
     {
+        _soundList.PlaySFX("BodySlam");
         _isBodySlamming = true;
         Rigidbody.AddForce(60f * Vector2.right * RecentDir, ForceMode2D.Impulse);
     }
@@ -401,11 +411,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         var fallingStartTime = Random.Range(0.5f, 1.5f);
 
         // 종유석을 천장에서 랜덤 위치에 생성한다
-        var ceilingHeight = 18.3f;
         var bodyColliderMinX = _bodyCollider.bounds.min.x;
         var bodyColliderMaxX = _bodyCollider.bounds.max.x;
-        var fromDistance = 1f;
-        var toDistance = 20f;
         var posXInLeftRange = Random.Range(bodyColliderMinX - toDistance, bodyColliderMinX - fromDistance);
         var posXInRightRange = Random.Range(bodyColliderMaxX + fromDistance, bodyColliderMaxX + toDistance);
 
@@ -465,7 +472,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 모든 종유석의 생성위치 저장
         _stalactitePosXs.Add(finalPosX);
-        Debug.Log(finalPosX);
 
         yield return new WaitForSeconds(fallingStartTime);
 
