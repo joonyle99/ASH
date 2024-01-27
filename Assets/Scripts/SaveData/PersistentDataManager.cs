@@ -25,8 +25,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Input.GetKeyDown(KeyCode.F4))
         {
             PersistentDataManager.Set<bool>("Light", true);
-            PersistentDataManager.UpdateValue<int>("skillPiece", x => x + 3);
-            _cheatSkillid++;
         }
     }
     public static SkillOrderData SkillOrderData => Instance._skillOrderData;

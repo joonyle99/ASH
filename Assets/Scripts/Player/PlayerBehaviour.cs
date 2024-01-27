@@ -315,7 +315,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     IEnumerator SlowMotionCoroutine(float duration)
     {
-        print("!");
         Time.timeScale = 0.3f;
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1f;

@@ -13,10 +13,10 @@ public class BossCameraSetter : MonoBehaviour
     BossCameraEvent _event;
     private void Start()
     {
-        if (_activateOnStart)
-            Activate();
         foreach (var t in _invisibleWalls)
             t.gameObject.SetActive(false);
+        if (_activateOnStart)
+            Activate();
     }
     public void Activate()
     {
