@@ -47,7 +47,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [Header("Skill")]
     [Space]
 
-    [SerializeField] private Bear_Slash _slashPrefab;
+    [SerializeField] private Bear_Slash _slash1Prefab;
+    [SerializeField] private Bear_Slash _slash2Prefab;
 
     [Space]
 
@@ -340,7 +341,20 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public void Slash02_AnimEvent()
     {
         // TODO : 여기서 할퀴기 생성
-        var slashEffect = Instantiate(_slashPrefab, _playerPos, Quaternion.identity);
+        var slashEffect = Instantiate(_slash1Prefab, _playerPos, Quaternion.identity);
+        //Destroy(slashEffect.gameObject, 0.25f);
+        if (RecentDir < 1)
+            slashEffect.transform.localScale = new Vector3(-Mathf.Abs(slashEffect.transform.localScale.x), slashEffect.transform.localScale.y, slashEffect.transform.localScale.z);
+
+        // 플레이어 위치 초기화
+        _playerPos = Vector2.zero;
+    }
+    public void Slash02_02_AnimEvent()
+    {
+        // TODO : 여기서 할퀴기 생성
+        var slashEffect = Instantiate(_slash2Prefab, _playerPos, Quaternion.identity);
+        if (RecentDir < 1)
+        slashEffect.transform.localScale = new Vector3(-Mathf.Abs(slashEffect.transform.localScale.x), slashEffect.transform.localScale.y, slashEffect.transform.localScale.z);
         //Destroy(slashEffect.gameObject, 0.25f);
 
         // 플레이어 위치 초기화
