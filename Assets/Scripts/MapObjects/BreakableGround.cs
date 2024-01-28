@@ -6,14 +6,14 @@ public class BreakableGround : MonoBehaviour
 {
 
     [SerializeField] float _breakDelay = 0.5f;
-    [SerializeField] SoundClipData _collisionSound;
 
     bool _isBreaking = false;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (_isBreaking)
             return;
-            PlayerBehaviour player = collision.transform.GetComponent<PlayerBehaviour>();
+
+        PlayerBehaviour player = collision.transform.GetComponent<PlayerBehaviour>();
         if (player != null && player.CurrentStateIs<DiveState>())
         {
             StartBreaking();
@@ -30,11 +30,10 @@ public class BreakableGround : MonoBehaviour
     }
     void StartBreaking()
     {
-        SoundManager.Instance.PlaySFX(_collisionSound);
         Invoke("Break", _breakDelay);
         _isBreaking = true;
     }
-    void Break()
+    public void Break()
     {
         Destruction.Destruct(gameObject);
     }

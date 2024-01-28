@@ -41,7 +41,7 @@ public class Mushroom2 : MonsterBehavior
         base.Die();
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
         if(_isDevouring)
         {

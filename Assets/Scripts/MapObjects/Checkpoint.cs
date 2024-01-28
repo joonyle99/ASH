@@ -14,6 +14,7 @@ public class Checkpoint : TriggerZone
     {
         SceneContext.Current.CheckPointManager.OnPlayPassedCheckpoint(this);
     }
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = new Color(1, 1, 1, 1);
@@ -35,5 +36,5 @@ public class Checkpoint : TriggerZone
         Gizmos.DrawLine(transform.position - new Vector3(-lineLength, lineLength, 0), transform.position + new Vector3(-lineLength, lineLength, 0));
 
     }
-
+#endif
 }

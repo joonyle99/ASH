@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class Monster_SkillObject : MonoBehaviour
@@ -46,6 +47,23 @@ public abstract class Monster_SkillObject : MonoBehaviour
 
         // 스킬 파괴 레이어와 충돌
         if ((1 << collision.gameObject.layer & _skillDestroyLayer.value) > 0)
-            Destroy(this.gameObject);
+        {
+            var effect = GetComponent<DisintegrateEffect>();
+            if (effect)
+                StartCoroutine(DeathEffectCoroutine(effect));
+            else
+                Destroy(this.gameObject);
+        }
+    }
+
+    public IEnumerator DeathEffectCoroutine(DisintegrateEffect effect)
+    {
+        this.GetComponent<Rigidbody2D>().simulated = false;
+
+        effect.Play();
+
+        yield return new WaitUntil(() => effect.IsEffectDone);
+
+        Destroy(this.gameObject);
     }
 }

@@ -97,6 +97,8 @@ GameObject:
   - component: {fileID: 6355395281014684377}
   - component: {fileID: 7892648401539103136}
   - component: {fileID: 2924479491306100990}
+  - component: {fileID: 1129854489}
+  - component: {fileID: 1129854490}
   m_Layer: 0
   m_Name: "\uAC00\uC2DC\uBC2D(Spikes)"
   m_TagString: Untagged
@@ -184,3 +186,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _objectType: 6
+--- !u!114 &1129854489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6355395281014684323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: SE_CrashRock_hit
+    _clip: {fileID: 8300000, guid: c74d168b8fcc2ab469cde81cd2bd7976, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+--- !u!114 &1129854490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6355395281014684323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5394a3473b60e8b4db9335414bd390b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundList: {fileID: 1129854489}
+  _logVelocity: 0
+  _conditions:
+  - PlayOnce: 0
+    Velocity: 0
+    ObjectType: 8
+    Key: SE_CrashRock_hit

@@ -5,6 +5,7 @@ using UnityEngine;
 public class SkillObtainer : MonoBehaviour
 {
     [SerializeField] string _skillKey;
+    [SerializeField] SoundClipData _skillUISound;
 
     public void ObtainSkill()
     {
@@ -14,6 +15,13 @@ public class SkillObtainer : MonoBehaviour
         info.MainText = skillToGet.Name;
         info.DetailText = skillToGet.DetailText;
         GameUIManager.OpenSkillObtainPanel(info);
-        PersistentDataManager.Set(info.MainText, true);
+        PersistentDataManager.Set(_skillKey, true);
+        StartCoroutine(PlaySoundCoroutine(0.25f));
+    }
+    IEnumerator PlaySoundCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SoundManager.Instance.PlaySFX(_skillUISound);
+
     }
 }

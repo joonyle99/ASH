@@ -35,6 +35,8 @@ public class PrologueManager : MonoBehaviour
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
         SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "");
+        // play bgm
+        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.3f);
     }
     IEnumerator PlayScripts()
     {

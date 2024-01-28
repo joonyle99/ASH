@@ -18,6 +18,12 @@ public class GroundChaseEvaluator : Evaluator
         get => _isChasing;
         private set => _isChasing = value;
     }
+    [SerializeField] private bool _isTooClose;
+    public bool IsTooClose
+    {
+        get => _isTooClose;
+        set => _isTooClose = value;
+    }
 
     private void Awake()
     {

@@ -1,14 +1,12 @@
 using UnityEngine;
 
 using Com.LuisPedroFonseca.ProCamera2D;
-using UnityEngine.UIElements;
-using System.Text.RegularExpressions;
 using UnityEngine.Events;
-using UnityEditorInternal;
-using System.Reflection.Emit;
+using System.Text.RegularExpressions;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditorInternal;
 #endif
 
 [System.Serializable]

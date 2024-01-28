@@ -36,7 +36,7 @@ public class LightDoor : LanternLike
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver && _statePreserver.Load("opened", false))
         {
-            _collider.isTrigger = true;
+            _collider.enabled = false;
             CurrentState = State.Opened;
             _animator.SetTrigger("InstantOpen");
         }
@@ -44,6 +44,11 @@ public class LightDoor : LanternLike
     }
     public void Update()
     {
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            StartCoroutine(OpenCoroutine());
+        }
+
         if (LanternSceneContext.Current.IsAllRelationsFullyConnected(this))
         {
             IsLightOn = true;

@@ -108,12 +108,18 @@ public sealed class LanternSceneContext : SceneContext
             if (!relation.IsConnected)
             {
                 if (relation.A.IsLightOn && relation.B.IsLightOn && CanRayBeReached(relation.A, relation.B))
+                {
                     Connect(relation);
+                    print("Connect " + relation.A.name + ", " + relation.B.name);
+                }
             }
             else
             {
                 if (!relation.A.IsLightOn || !relation.B.IsLightOn || !CanRayBeReached(relation.A, relation.B))
+                {
                     Disconnect(relation);
+                    print("Disconnect " + relation.A.name + ", " + relation.B.name);
+                }
             }
         }
     }

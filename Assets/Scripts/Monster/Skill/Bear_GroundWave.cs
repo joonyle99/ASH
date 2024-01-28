@@ -9,11 +9,12 @@ public class Bear_GroundWave : Monster_SkillObject
 
     [SerializeField] private float _targetDistance;
     [SerializeField] private float _elapsedMoveDistance;
+    [SerializeField] private float _speed = 8f;
 
     private void Update()
     {
         // 프레임당 이동 벡터 및 거리 계산
-        Vector2 frameMoveVector = _moveDir * Time.deltaTime * 14f;
+        Vector2 frameMoveVector = _moveDir * Time.deltaTime * _speed;
         float frameMoveDistance = frameMoveVector.magnitude;
         transform.Translate(frameMoveVector);
 
@@ -29,5 +30,7 @@ public class Bear_GroundWave : Monster_SkillObject
     {
         // 이동 방향 설정
         _moveDir = dir;
+        if (dir.x < 0)
+        transform.localScale = new Vector3(-Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
     }
 }

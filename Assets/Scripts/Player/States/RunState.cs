@@ -17,7 +17,7 @@ public class RunState : PlayerState
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (InputManager.Instance.State.DashKey.KeyDown)
         {
             if (Player.CanDash && Player.IsMoveXKey)
             {

@@ -120,6 +120,7 @@ GameObject:
   - component: {fileID: 8664240521131181900}
   - component: {fileID: 8664240521131181901}
   - component: {fileID: 5840467780459493392}
+  - component: {fileID: 4852645954634241695}
   m_Layer: 0
   m_Name: "\uC2A4\uC704\uCE58(WeightSwitch)"
   m_TagString: Untagged
@@ -161,6 +162,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   _buttonCollider: {fileID: 8664240521514348760}
+  _soundList: {fileID: 4852645954634241695}
 --- !u!210 &5840467780459493392
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -172,6 +174,27 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -2
+--- !u!114 &4852645954634241695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8664240521131181899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: Press
+    _clip: {fileID: 8300000, guid: 6df3121eb1d5db54a83fec6cd6bfa22e, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!1 &8664240521514348578
 GameObject:
   m_ObjectHideFlags: 0

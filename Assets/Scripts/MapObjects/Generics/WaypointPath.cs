@@ -44,7 +44,9 @@ public class WaypointPath : MonoBehaviour
                 positions[i] = transforms[i + 1].position;
             _lineRenderer.SetPositions(positions);
             _lineRenderer.positionCount = positions.Length;
+#if UNITY_EDITOR
             EditorUtility.SetDirty(_lineRenderer);
+#endif
         }
     }
     public Vector3 GetPosition(float travelDistance)

@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 6675122785390983191}
   - component: {fileID: 6675122785390983176}
   - component: {fileID: 411557236}
+  - component: {fileID: 392493074}
   m_Layer: 11
   m_Name: "\uC2DD\uC778\uAF43(LaserFlower)"
   m_TagString: Untagged
@@ -202,6 +203,7 @@ MonoBehaviour:
   _imageParent: {fileID: 1670789331345834656}
   _headBone: {fileID: 7636778035711398523}
   _attackHitbox: {fileID: 89865051}
+  _soundList: {fileID: 392493074}
 --- !u!95 &411557236
 Animator:
   serializedVersion: 5
@@ -223,6 +225,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &392493074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6675122785390983189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: Revive
+    _clip: {fileID: 8300000, guid: df0a745df8b3e194ea2afd8e999c55c4, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!1001 &1937013630
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -741,6 +764,14 @@ PrefabInstance:
     - target: {fileID: 4206174766304073952, guid: 796438bd5e69a2c4288c9ac0265592ef, type: 3}
       propertyPath: _obstacleLayer.m_Bits
       value: 8819163
+      objectReference: {fileID: 0}
+    - target: {fileID: 4606679390300816785, guid: 796438bd5e69a2c4288c9ac0265592ef, type: 3}
+      propertyPath: m_Pitch
+      value: -0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4606679390300816785, guid: 796438bd5e69a2c4288c9ac0265592ef, type: 3}
+      propertyPath: m_Volume
+      value: 0.12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 796438bd5e69a2c4288c9ac0265592ef, type: 3}

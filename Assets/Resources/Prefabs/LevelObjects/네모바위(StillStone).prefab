@@ -7,10 +7,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 987519927, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
-      propertyPath: _conditions.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 987519928, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: _conditions.Array.size
       value: 0
@@ -721,7 +717,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742948, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.size
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742948, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[0].x
@@ -733,27 +729,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742948, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[1].x
-      value: 1.7230898
+      value: 1.727288
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742948, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[1].y
-      value: 1.2098035
+      value: 1.875518
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742948, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[2].x
-      value: 1.0147312
+      value: -1.6759403
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742948, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[2].y
-      value: 1.8672147
+      value: 1.875518
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742948, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[3].x
-      value: -0.9137814
+      value: -1.67594
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742948, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[3].y
-      value: 1.8255304
+      value: -1.545131
       objectReference: {fileID: 0}
     - target: {fileID: 1284470426582742948, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Points.m_Paths.Array.data[0].Array.data[4].x
@@ -1967,12 +1963,68 @@ PrefabInstance:
       propertyPath: _objectList.Array.data[0]
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4411306128511004080, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306128511004080, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.16
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306128511004085, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306128511004085, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306128511004085, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306128511004085, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306129150711092, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306129150711092, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306129150711097, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306129150711097, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4411306129150711097, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 4434692469590788450, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 6200000, guid: ad834480f5a2b8b48abb59c7089be7ae, type: 2}
     - target: {fileID: 7537142565806814644, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
       propertyPath: _soundDatas.Array.data[0]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 647b0117daf478b4d91f7677c79b59dc, type: 3}
+    - target: {fileID: 7969468135733862207, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: m_Pitch
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7969468135733862207, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: m_Volume
+      value: 0.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 7969468135733862207, guid: 4809f4113656ee34fad1338ec9baa5bd, type: 3}
+      propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: 647b0117daf478b4d91f7677c79b59dc, type: 3}
     m_RemovedComponents:
@@ -2028,8 +2080,6 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 1.727288, y: -1.545131}
-      - {x: 1.727288, y: 1.2098035}
-      - {x: 1.0147312, y: 1.8672147}
-      - {x: -0.9137814, y: 1.8255304}
-      - {x: -1.7341328, y: 1.4804655}
-      - {x: -1.734133, y: -1.5960852}
+      - {x: 1.727288, y: 1.875518}
+      - {x: -1.6759403, y: 1.875518}
+      - {x: -1.67594, y: -1.545131}

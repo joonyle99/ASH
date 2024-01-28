@@ -39,7 +39,7 @@ public class CutscenePlayer : TriggerZone
             }
             else if (effect.Type == SceneEffect.EffectType.Dialogue)
             {
-                DialogueController.Instance.StartDialogue(effect.DialogueData);
+                DialogueController.Instance.StartDialogue(effect.DialogueData, true);
                 yield return new WaitWhile(() => DialogueController.Instance.IsDialogueActive);
             }
             else if (effect.Type == SceneEffect.EffectType.WaitForSeconds)

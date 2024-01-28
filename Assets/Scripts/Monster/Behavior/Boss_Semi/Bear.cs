@@ -1,4 +1,6 @@
+using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Bear : SemiBossBehavior, ILightCaptureListener
@@ -45,13 +47,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [Header("Skill")]
     [Space]
 
-    [SerializeField] private BoxCollider2D _slashCollider;
-
-    [Space]
-
-    [SerializeField] private int _slashDamage = 20;
-    [SerializeField] private float _slashForceX = 7f;
-    [SerializeField] private float _slashForceY = 10f;
+    [SerializeField] private Bear_Slash _slash1Prefab;
+    [SerializeField] private Bear_Slash _slash2Prefab;
 
     [Space]
 
@@ -64,11 +61,19 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private float _bodySlamForceX = 7f;
     [SerializeField] private float _bodySlamForceY = 10f;
 
-    [Space]
+    [Header("Stomp skill")]
 
-    [SerializeField] private BoxCollider2D _stompCollider;
+    [SerializeField] private Collider2D _stompCollider;
     [SerializeField] private Bear_Stalactite _stalactitePrefab;
-    [SerializeField] private int _stalactiteCount = 5;
+    [SerializeField] private int _stalactiteCount;
+    [SerializeField] private Range _normalStalactiteRange;
+    [SerializeField] private Range _rageStalactiteRange;
+    [SerializeField] private List<float> _stalactitePosXs;
+    [SerializeField] private GameObject _stompEffectPrefab;
+
+    [SerializeField] float ceilingHeight = 18.3f;
+    [SerializeField] float fromDistance = 1f;
+    [SerializeField] float toDistance = 20f;
 
     [Space]
 
@@ -76,16 +81,20 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private float _stompForceX = 7f;
     [SerializeField] private float _stompForceY = 10f;
 
-    [Space]
+    [Header("Earthquake skill")]
 
     [SerializeField] private BoxCollider2D _earthQuakeCollider;
+    [SerializeField] private Transform _waveSpawnPoint;
     [SerializeField] private Bear_GroundWave _waveSkillPrefab;
+    [SerializeField] ShakePreset _earthquakeCameraShake;
 
     [Space]
 
     [SerializeField] private int _earthQuakeDamage = 20;
     [SerializeField] private float _earthQuakeForceX = 7f;
     [SerializeField] private float _earthQuakeForceY = 10f;
+
+    [SerializeField] SoundList _soundList;
 
     private Vector2 _playerPos;
     private BoxCollider2D _bodyCollider;   // not bodyHitBox
@@ -107,6 +116,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // init
         RandomTargetAttackCount();
         SetToRandomAttack();
+
+        // 종유석 카운트 초기화
+        SetStalactiteToNormalCount();
     }
     protected override void Update()
     {
@@ -125,12 +137,13 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
             GroundWalking();
         }
 
-        if (CurrentStateIs<Monster_AttackState>())
+        if (CurrentStateIs<SemiBoss_AttackState>())
         {
             if (_isBodySlamming)
             {
                 MonsterAttackInfo bodySlamInfo = new MonsterAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
                 BoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _attackTargetLayer);
+                // Debug.Log("BodySlam Attack");
             }
         }
     }
@@ -200,6 +213,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 그로기 상태로 진입
         Animator.SetTrigger("Groggy");
+
+        // 꺼줘야겠다
+        TurnOffLightStone();
     }
     public void OnLightStay(LightCapturer capturer, LightSource lightSource)
     {
@@ -244,9 +260,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 몬스터의 MonsterBodyHit를 끈다 (플레이어를 타격할 수 없다)
         SetIsAttackableHitBox(false);
-
-        // 빛나는 돌 활성화
-        SetLightingStone(true);
     }
     public override void GroggyPostProcess()
     {
@@ -258,8 +271,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         InitializeHurtCount();
 
-        // 빛나는 돌 비활성화
-        SetLightingStone(false);
+        if (IsRage)
+            SetStalactiteToRageCount();
     }
 
     // basic
@@ -302,6 +315,14 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         _currentHurtCount = 0;
     }
+    public void SetStalactiteToNormalCount()
+    {
+        _stalactiteCount = Random.Range((int)_normalStalactiteRange.Start, (int)_normalStalactiteRange.End + 1);
+    }
+    public void SetStalactiteToRageCount()
+    {
+        _stalactiteCount = Random.Range((int)_rageStalactiteRange.Start, (int)_rageStalactiteRange.End + 1);
+    }
 
     // slash
     public void Slash01_AnimEvent()
@@ -323,14 +344,25 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
     public void Slash02_AnimEvent()
     {
-        Debug.DrawRay(_playerPos, new Vector2(0f, _slashCollider.bounds.extents.y), Color.red, 0.25f);
-        Debug.DrawRay(_playerPos, new Vector2(0f, -_slashCollider.bounds.extents.y), Color.red, 0.25f);
-        Debug.DrawRay(_playerPos, new Vector2(_slashCollider.bounds.extents.x, 0f), Color.red, 0.25f);
-        Debug.DrawRay(_playerPos, new Vector2(-_slashCollider.bounds.extents.x, 0f), Color.red, 0.25f);
+        // TODO : 여기서 할퀴기 생성
+        var slashEffect = Instantiate(_slash1Prefab, _playerPos, Quaternion.identity);
+        //Destroy(slashEffect.gameObject, 0.25f);
+        if (RecentDir < 1)
+            slashEffect.transform.localScale = new Vector3(-Mathf.Abs(slashEffect.transform.localScale.x), slashEffect.transform.localScale.y, slashEffect.transform.localScale.z);
 
-        MonsterAttackInfo slashInfo = new MonsterAttackInfo(_slashDamage, new Vector2(_slashForceX, _slashForceY));
-        BoxCastAttack(_playerPos, _slashCollider.bounds.size, slashInfo, _attackTargetLayer);
+        _soundList.PlaySFX("Slash");
+        // 플레이어 위치 초기화
+        _playerPos = Vector2.zero;
+    }
+    public void Slash02_02_AnimEvent()
+    {
+        // TODO : 여기서 할퀴기 생성
+        var slashEffect = Instantiate(_slash2Prefab, _playerPos, Quaternion.identity);
+        if (RecentDir < 1)
+        slashEffect.transform.localScale = new Vector3(-Mathf.Abs(slashEffect.transform.localScale.x), slashEffect.transform.localScale.y, slashEffect.transform.localScale.z);
+        //Destroy(slashEffect.gameObject, 0.25f);
 
+        _soundList.PlaySFX("Slash");
         // 플레이어 위치 초기화
         _playerPos = Vector2.zero;
     }
@@ -340,12 +372,16 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         var playerPos = SceneContext.Current.Player.transform.position;
         var dir = System.Math.Sign(playerPos.x - transform.position.x);
-
         SetRecentDir(dir);
         // StartSetRecentDirAfterGrounded(dir);
     }
+    public void PlaySound_AnimEvent(string key)
+    {
+        _soundList.PlaySFX(key);
+    }
     public void BodySlam02_AnimEvent()
     {
+        _soundList.PlaySFX("BodySlam");
         _isBodySlamming = true;
         Rigidbody.AddForce(60f * Vector2.right * RecentDir, ForceMode2D.Impulse);
     }
@@ -359,35 +395,94 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public void Stomp01_AnimEvent()
     {
         MonsterAttackInfo stompInfo = new MonsterAttackInfo(_stompDamage, new Vector2(_stompForceX, _stompForceY));
-        BoxCastAttack(_stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _attackTargetLayer);
-
+        CastAttack(_stompCollider, _stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _attackTargetLayer);
+        Instantiate(_stompEffectPrefab, _stompCollider.transform.position, Quaternion.identity);
+        _soundList.PlaySFX("Stomp");
         // 종유석 생성
         for (int i = 0; i < _stalactiteCount; ++i)
+        {
+            _stalactitePosXs.Clear();
+            _stalactitePosXs = new List<float>(_stalactiteCount);
             StartCoroutine(CreateStalactite());
+        }
     }
     public IEnumerator CreateStalactite()
     {
-        var fallingStartTime = Random.Range(0.2f, 1.5f);
+        var fallingStartTime = Random.Range(0.5f, 1.5f);
+
+        // 종유석을 천장에서 랜덤 위치에 생성한다
+        var bodyColliderMinX = _bodyCollider.bounds.min.x;
+        var bodyColliderMaxX = _bodyCollider.bounds.max.x;
+        var posXInLeftRange = Random.Range(bodyColliderMinX - toDistance, bodyColliderMinX - fromDistance);
+        var posXInRightRange = Random.Range(bodyColliderMaxX + fromDistance, bodyColliderMaxX + toDistance);
+
+        /*
+        bool isSavable = false;
+        float finalPosX = 0f;
+
+        var limitCount = 0;
+
+        // finalPosX를 정하는 과정
+        do
+        {
+            limitCount++;
+
+            if (RecentDir > 0)
+            {
+                finalPosX = posXInRightRange;
+                // Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
+                // Debug.DrawRay(new Vector3(bodyColliderMaxX + toDistance, ceilingHeight), Vector2.down, Color.yellow, 2f);
+            }
+            else
+            {
+                finalPosX = posXInLeftRange;
+                // Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
+                // Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
+            }
+
+            foreach (var posX in _stalactitePosXs)
+            {
+                var minX = posX - 0.3f;
+                var maxX = posX + 0.3f;
+
+                // 저장 가능 조건
+                if (finalPosX < minX || finalPosX > maxX)
+                {
+                    isSavable = true;
+                    break;
+                }
+            }
+
+        } while (!isSavable || limitCount > 50);
+        */
+
+        float finalPosX = 0f;
+        if (RecentDir > 0)
+        {
+            finalPosX = posXInRightRange;
+            Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
+            Debug.DrawRay(new Vector3(bodyColliderMaxX + toDistance, ceilingHeight), Vector2.down, Color.yellow, 2f);
+        }
+        else
+        {
+            finalPosX = posXInLeftRange;
+            Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
+            Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
+        }
+
+        // 모든 종유석의 생성위치 저장
+        _stalactitePosXs.Add(finalPosX);
 
         yield return new WaitForSeconds(fallingStartTime);
 
-        // 종유석을 천장에서 랜덤 위치에 생성한다
-        var ceilingHeight = 18.3f;
-        var bodyColliderMinX = _bodyCollider.bounds.min.x;
-        var bodyColliderMaxX = _bodyCollider.bounds.max.x;
-        var fromDistance = 2f;
-        var toDistance = 10f;
-        var leftRange = Random.Range(bodyColliderMinX - toDistance, bodyColliderMinX - fromDistance);
-        var rightRange = Random.Range(bodyColliderMaxX + fromDistance, bodyColliderMaxX + toDistance);
+        // Vector2 randomPos = (Random.value > 0.5f) ? new Vector2(posXInLeftRange, ceilingHeight) : new Vector2(posXInRightRange, ceilingHeight);
+        Vector2 randomPos = new Vector2(finalPosX, ceilingHeight);
+        var stalactite = Instantiate(_stalactitePrefab, randomPos, Quaternion.identity);
 
-        // 종유석 생성 범위
-        Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
-        Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
-        Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
-        Debug.DrawRay(new Vector3(bodyColliderMaxX + toDistance, ceilingHeight), Vector2.down, Color.yellow, 2f);
-
-        Vector2 randomPos = (Random.value > 0.5f) ? new Vector2(leftRange, ceilingHeight) : new Vector2(rightRange, ceilingHeight);
-        Instantiate(_stalactitePrefab, randomPos, Quaternion.identity);
+        // 종유석의 크기도 랜덤으로
+        var scale = Random.Range(0.4f, 1f);
+        stalactite.transform.localScale *= scale;
+        // Debug.Log(stalactite.transform.localScale);
     }
 
     // earthQuake
@@ -398,18 +493,25 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 지면파 생성
         GenerateGroundWave();
+        _soundList.PlaySFX("Earthquake");
+        SceneEffectManager.Current.Camera.StartShake(_earthquakeCameraShake);
     }
     public void GenerateGroundWave()
     {
         // 2개의 지면파를 발생시킨다 (좌 / 우)
-        var wave1 = Instantiate(_waveSkillPrefab, _earthQuakeCollider.transform.position, Quaternion.identity);
+        var wave1 = Instantiate(_waveSkillPrefab, _waveSpawnPoint.position, Quaternion.identity);
         wave1.SetDir(Vector2.left);
-        var wave2 = Instantiate(_waveSkillPrefab, _earthQuakeCollider.transform.position, Quaternion.identity);
+        var wave2 = Instantiate(_waveSkillPrefab, _waveSpawnPoint.position, Quaternion.identity);
         wave2.SetDir(Vector2.right);
     }
 
-    public void SetLightingStone(bool isBool)
+    public void TurnOnLightStone()
     {
-        LightingStone.SetActive(isBool);
+        LightingStone.SetActive(true);
+    }
+
+    public void TurnOffLightStone()
+    {
+        LightingStone.SetActive(false);
     }
 }

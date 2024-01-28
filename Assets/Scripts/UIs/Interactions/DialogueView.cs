@@ -17,6 +17,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     public bool IsPanelActive { get { return _dialoguePanel.gameObject.activeInHierarchy; } }
     public void OpenPanel()
     {
+        _dialogueText.text = "";
         _skipUI.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _textShaker = _dialogueText.GetComponent<TextShaker>();
@@ -68,7 +69,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
             if (_currentLine.Text[textIndex] == '<')
             {
                 int to = _currentLine.Text.IndexOf('>', textIndex);
-                stringBuilder.Append(_currentLine.Text.Substring(textIndex, to + 1));
+                stringBuilder.Append(_currentLine.Text.Substring(textIndex, to + 1 - textIndex));
                 textIndex = to;
             }
             else

@@ -22,9 +22,12 @@ public class KeyMapManager : MonoBehaviour
 
     private void Start()
     {
-        _keyMap.SetActive(true);
-
-        StartCoroutine(RemoveKeyMapFirst());
+        if (!PersistentDataManager.Get<bool>("keymap"))
+        {
+            PersistentDataManager.Set("keymap", true);
+            _keyMap.SetActive(true);
+            StartCoroutine(RemoveKeyMapFirst());
+        }
     }
 
     private IEnumerator RemoveKeyMapFirst()
@@ -62,7 +65,7 @@ public class KeyMapManager : MonoBehaviour
         _targetFadeTime = duration;
         _elapsedFadeTime = 0f;
 
-        Image[] currentImages = GetComponentsInChildren<Image>(true);
+        Image[] currentImages = _keyMap.GetComponentsInChildren<Image>(true);
 
         float[] startAlphaArray = new float[currentImages.Length];
         for (int i = 0; i < currentImages.Length; i++)

@@ -13,12 +13,17 @@ public class RollingStone : InteractableObject
     [SerializeField] Collider2D _interactionZone;
     [SerializeField] LayerMask _playerMask;
 
+    [SerializeField] ParticleHelper _dustParticle;
+
     [SerializeField] SoundList _soundList;
     [SerializeField] float _pushSoundInterval;
 
     [SerializeField] AudioSource _rollAudio;
     Rigidbody2D _rigidbody;
     IAttackListener _attackableComponent;
+
+    float _rollAudioTiming = 0f;
+    float _rollAudioOriginalVolume;
 
     float _moveDirection = 0;
 
@@ -27,6 +32,7 @@ public class RollingStone : InteractableObject
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _attackableComponent = GetComponent<IAttackListener>();
+        _rollAudioOriginalVolume = _rollAudio.volume;
     }
     protected override void OnInteract()
     {
@@ -36,16 +42,28 @@ public class RollingStone : InteractableObject
 
     private void Update()
     {
-        if (_rigidbody.velocity.sqrMagnitude > 0.3f && _rigidbody.GetContacts(new Collider2D[1]) > 0)
+        if (_rigidbody.velocity.sqrMagnitude > 0.4f && _rigidbody.GetContacts(new Collider2D[1]) > 0)
         {
             if (!_rollAudio.isPlaying)
+            {
+                _rollAudio.volume = _rollAudioOriginalVolume;
                 _rollAudio.Play();
+
+                _dustParticle.Play();
+            }
+            _rollAudioTiming = 1f;
         }
         else
         {
-
-            if (_rollAudio.isPlaying)
+            _rollAudioTiming -= Time.deltaTime;
+            _rollAudio.volume = _rollAudioOriginalVolume * _rollAudioTiming;
+            if (_rollAudio.isPlaying && _rollAudioTiming <= 0f)
+            {
+                _rollAudioTiming = 0f;
                 _rollAudio.Stop();
+
+                _dustParticle.Stop();
+            }
         }
     }
     public override void UpdateInteracting()

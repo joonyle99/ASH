@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
@@ -242,8 +243,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private Coroutine _superArmorRoutine;
 
     // Fade Out
-    private readonly float _targetFadeOutTime = 2f;
-    private float _elapsedFadeOutTime;
+    // private readonly float _targetFadeOutTime = 2f;
+    // private float _elapsedFadeOutTime;
 
     // animation transition event
     public delegate bool CustomAnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
@@ -533,6 +534,28 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             }
         }
     }
+    public void CastAttack(Collider2D collider, Vector2 targetPosition, Vector2 attackBoxSize, MonsterAttackInfo attackinfo, LayerMask targetLayer)
+    {
+        ContactFilter2D contactFilter = new ContactFilter2D();
+        contactFilter.SetLayerMask(targetLayer);
+        List<RaycastHit2D> rayCastHits = new List<RaycastHit2D>();
+        collider.Cast(Vector2.right, contactFilter, rayCastHits, 0);
+        foreach (var rayCastHit in rayCastHits)
+        {
+            var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
+            foreach (var listener in listeners)
+            {
+                var forceVector = new Vector2(attackinfo.Force.x * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), attackinfo.Force.y);
+                var attackResult = listener.OnHit(new AttackInfo(attackinfo.Damage, forceVector, AttackType.Monster_SkillAttack));
+
+                if (attackResult == IAttackListener.AttackResult.Success)
+                {
+                    Instantiate(_attackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                    
+                }
+            }
+        }
+    }
 
     // hitBox
     public void TurnOffHitBox()
@@ -780,6 +803,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         if (IsInAir)
             return;
+
+        // 추가로 상대와의 거리가 너무 가까워지면 추격을 중단
+        if (GroundChaseEvaluator)
+        {
+            if (GroundChaseEvaluator.IsTooClose)
+                return;
+        }
 
         Vector2 groundNormal = GroundRayHit.normal;
         Vector2 moveDirection = RecentDir > 0

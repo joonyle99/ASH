@@ -26,7 +26,7 @@ public class LightBeamLineEffect : MonoBehaviour
 
     float _idleTime = 0f;
 
-    const float MinDistanceFromLantern = 0.01f;
+    const float MinDistanceFromLantern = 0.1f;
     public void MarkAsLastConnection()
     {
         _isLastBeam = true;

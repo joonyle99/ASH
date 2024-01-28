@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class LightController : MonoBehaviour
 {
@@ -11,6 +10,7 @@ public class LightController : MonoBehaviour
     [SerializeField] private bool _isLightWorking;
     public bool IsLightWorking { get => _isLightWorking; }
     [SerializeField] private bool _isLightButtonPressable = true;
+    public bool IsLightButtonPressable { get => _isLightButtonPressable; }
     [SerializeField] private float _rotateSpeed;
     [SerializeField] private float _maxAngle;
     [SerializeField] private float _curAngle;
@@ -37,20 +37,14 @@ public class LightController : MonoBehaviour
         }
 
         // Light Source ON / OFF
-        if (_isLightableState)
+        if (_isLightableState && PersistentDataManager.Get<bool>("Light"))
         {
             if (inputState.LightKey.KeyDown && _isLightButtonPressable)
             {
                 if (!_isLightWorking)
-                {
                     _player.Animator.SetTrigger("TurnOnLight");
-                    _isLightButtonPressable = false;
-                }
                 else
-                {
                     _player.Animator.SetTrigger("TurnOffLight");
-                    _isLightButtonPressable = false;
-                }
             }
         }
 
@@ -98,5 +92,9 @@ public class LightController : MonoBehaviour
     public void LightButtonPressable()
     {
         _isLightButtonPressable = true;
+    }
+    public void LightButtonDisPressable()
+    {
+        _isLightButtonPressable = false;
     }
 }
