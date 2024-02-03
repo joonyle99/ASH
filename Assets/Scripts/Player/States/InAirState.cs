@@ -43,7 +43,7 @@ public class InAirState : PlayerState
         // Change to Wall Grab State
         if (Player.IsTouchedWall)
         {
-            if (Player.IsWallable)
+            if (Player.IsClimbable)
             {
                 if (Player.IsDirSync && Player.IsMoveUpKey)
                 {
@@ -67,11 +67,11 @@ public class InAirState : PlayerState
         */
 
         // Wall Jump에서 In Air State로 넘어온 경우
-        if (Player.IsWallJump)
+        if (Player.IsClimbJump)
         {
             // 플레이어의 velocity를 그대로 가지고 간다
             Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, Player.Rigidbody.velocity.y);
-            Player.IsWallJump = false;
+            Player.IsClimbJump = false;
         }
         // Basic Jump에서 In Air State로 넘어온 경우
         else
@@ -92,7 +92,7 @@ public class InAirState : PlayerState
     protected override void OnFixedUpdate()
     {
         // Basic Jump에서 In Air State로 넘어온 경우
-        if (!Player.IsWallJump)
+        if (!Player.IsClimbJump)
         {
             // 공중에서 좌우로 움직일 수 있다.
             Player.Rigidbody.AddForce(Vector2.right * Player.RawInputs.Movement.x * _inAirMoveAcceleration);
