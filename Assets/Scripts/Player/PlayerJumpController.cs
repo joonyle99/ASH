@@ -179,7 +179,7 @@ public class PlayerJumpController : MonoBehaviour
     /// </summary>
     public void ExecuteWallJump()
     {
-        _player.IsWallJump = true;
+        _player.IsClimbJump = true;
 
         // player input
         int xInput = (int)_player.RawInputs.Movement.x; // -1 0 1

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener
@@ -12,22 +11,16 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] Transform _groundCheckTrans;
+    [SerializeField] Transform _groundAboveCheckTrans;
     [SerializeField] float _groundCheckRadius;
-    [SerializeField] float _groundCheckLength;
+    [SerializeField] float _groundAboveCheckLength;
 
-    [Header("Wall Check")]
+    [Header("Climb Check")]
     [Space]
 
-    [SerializeField] LayerMask _wallLayer;
-    [SerializeField] Transform _wallCheckRayTrans;
-    [SerializeField] float _wallCheckRayLength;
-    [SerializeField] float _upwardRayLength;
-
-    [Header("Dive Check")]
-    [Space]
-
-    [SerializeField] float _diveCheckLength;
-    [SerializeField] float _diveThreshholdHeight;
+    [SerializeField] LayerMask _climbLayer;
+    [SerializeField] Transform _climbCheckTrans;
+    [SerializeField] float _climbCheckLength;
 
     [Header("Player")]
     [Space]
@@ -40,32 +33,33 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] bool _isHurt;
     [SerializeField] bool _isDead;
     [SerializeField] bool _isGodMode;
-    [SerializeField] bool _isCanDash = true;
 
-    [Tooltip("이 각도를 초과한 경사에선 서있지 못함")]
-    [SerializeField] float _slopeThreshold = 70f;
+    [Space]
+
+    [SerializeField] bool _isCanBasicAttack = true;
+    [SerializeField] bool _isCanJump = true;
+    [SerializeField] bool _isCanDash = true;
 
     [Header("Viewr")]
     [Space]
 
-    [SerializeField] SkinnedMeshRenderer _capeRenderer;
-    [SerializeField] Rigidbody2D _handRigidbody;
     [SerializeField] CapsuleCollider2D _bodyCollider;
+    [SerializeField] Rigidbody2D _handRigidbody;
 
-    [Header("Blink / God Mode")]
+    [Header("White Flash")]
     [Space]
 
     [SerializeField] Material _whiteFlashMaterial;
     [SerializeField] float _godModeTime = 1.5f;
     [SerializeField] float _flashInterval = 0.06f;
 
-    [ContextMenuItem("Get all", "GetAllSpriteRenderers")]
     [SerializeField] SpriteRenderer[] _spriteRenderers;
-
     Material[] _originalMaterials;
-    Coroutine _blinkRoutine;
+    Coroutine _whiteFlashRoutine;
 
     [Header("Effects")]
+    [Space]
+
     [SerializeField] ParticleHelper _walkDustEmitter;
     [SerializeField] ParticleHelper _walkDirtEmitter;
     [SerializeField] ParticleHelper _landDustEmitter;
@@ -74,9 +68,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] ParticleHelper _dashTrailEffect;
 
     // Controller
-    PlayerAttackController _attackController;
+    PlayerAttackController _playerAttackController;
     InteractionController _interactionController;
-    PlayerMovementController _movementController;
+    PlayerMovementController _playerMovementController;
     LightController _lightController;
 
     // Sound List
@@ -87,25 +81,19 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     #region Properties
 
     // Can Property
-    public bool CanBasicAttack { get { return (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (_lightController.IsLightButtonPressable && !_lightController.IsLightWorking); } }
-    public bool CanShootingAttack { get { return CurrentStateIs<IdleState>(); } }
+    public bool CanBasicAttack { get { return _isCanBasicAttack && (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (_lightController.IsLightButtonPressable && !_lightController.IsLightWorking); } set { _isCanBasicAttack = value; } }
     public bool CanDash { get { return _isCanDash && PersistentDataManager.Get<bool>("Dash"); } set { _isCanDash = value; } }
+    public bool CanInteract { get { return CurrentStateIs<IdleState>() || CurrentStateIs<RunState>(); } }
 
     // Condition Property
     public bool IsGrounded { get { return GroundHit; } }
-    public bool IsTouchedWall { get { return WallHit; } }
-    public bool IsWallable { get; set; }
-    public bool IsWallJump { get; set; }
-    public bool IsInteractable { get { return CurrentStateIs<IdleState>() || CurrentStateIs<RunState>(); } }
+    public bool IsTouchedWall { get { return ClimbHit; } }
+    public bool IsClimbable { get; set; }
+    public bool IsClimbJump { get; set; }
     public bool IsHurt { get { return _isHurt; } set { _isHurt = value; } }
     public bool IsDead { get { return _isDead; } set { _isDead = value; } }
     public bool IsGodMode { get { return _isGodMode; } set { _isGodMode = value; } }
-    public int CurHp { get { return _curHp; }  }
-
-    // Check Property
-    public float GroundDistance { get; set; }
-    public float DiveThreshholdHeight { get { return _diveThreshholdHeight; } private set { _diveThreshholdHeight = value; } }
-    public float SlopeThreshold { get { return _slopeThreshold; } }
+    public int CurHp { get { return _curHp; } }
 
     // Input Property
     public InputState RawInputs { get { return InputManager.Instance.State; } }
@@ -118,21 +106,25 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     // Direction Property
     public int RecentDir { get; set; }
-    public bool IsDirSync { get { return Mathf.Abs(PlayerLookDir2D.x - RawInputs.Movement.x) < 0.01f; } }
-    public bool IsOppositeDirSync { get { return Mathf.Abs(PlayerLookDir2D.x + RawInputs.Movement.x) < 0.01f; } }
+    public bool IsDirSync { get { return Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) > 0.01f; } }
+    public bool IsOppositeDirSync { get { return Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) < -0.01f; } }
     public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
 
-    // Etc
+    // RaycastHit
     public RaycastHit2D GroundHit { get; private set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
-    public RaycastHit2D WallHit { get; set; }
-    public RaycastHit2D DiveHit { get; set; }
+    public RaycastHit2D ClimbHit { get; set; }
+
+    // Component
+    public PlayerAttackController PlayerAttackController { get { return _playerAttackController; } }
     public InteractionController InteractionController { get { return _interactionController; } }
-    public PlayerMovementController MovementController { get { return _movementController; } }
+    public PlayerMovementController PlayerMovementController { get { return _playerMovementController; } }
     public Rigidbody2D HandRigidBody { get { return _handRigidbody; } }
     public CapsuleCollider2D BodyCollider { get { return _bodyCollider; } }
     public SoundList SoundList { get { return _soundList; } }
+
+    // SpriteRenderer / Material
     public SpriteRenderer[] SpriteRenderers { get { return _spriteRenderers; } }
     public Material[] OriginalMaterials => _originalMaterials;
 
@@ -143,20 +135,20 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     protected override void Awake()
     {
         // Controller
-        _attackController = GetComponent<PlayerAttackController>();
+        _playerAttackController = GetComponent<PlayerAttackController>();
         _interactionController = GetComponent<InteractionController>();
-        _movementController = GetComponent<PlayerMovementController>();
+        _playerMovementController = GetComponent<PlayerMovementController>();
         _lightController = GetComponent<LightController>();
 
-        // Collider
+        // collider
         _bodyCollider = GetComponent<CapsuleCollider2D>();
-
-        // Sprite Renderer / Original Material
-        LoadFlashMaterial();
-        SaveOriginalMaterial();
 
         // SoundList
         _soundList = GetComponent<SoundList>();
+
+        // Material for White Flash
+        LoadFlashMaterial();
+        SaveOriginalMaterial();
     }
     protected override void Start()
     {
@@ -164,7 +156,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         // init player
         InitPlayer();
-
     }
     protected override void Update()
     {
@@ -177,8 +168,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         if (InputManager.Instance.State.BasicAttackKey.KeyDown)
             OnBasicAttackPressed();
-        if (InputManager.Instance.State.ShootingAttackKey.KeyDown)
-            OnShootingAttackPressed();
 
         #endregion
 
@@ -199,36 +188,32 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         #endregion
 
-        #region Check Ground & Wall
+        #region Check Ground & Climb
 
         // Check Ground
         GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
 
         // Check Upward
-        UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _upwardRayLength, _groundLayer);
+        UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _groundAboveCheckLength, _groundLayer);
 
-        // Check Wall
-        WallHit = Physics2D.Raycast(_wallCheckRayTrans.position, PlayerLookDir2D, _wallCheckRayLength, _wallLayer);
-        if (WallHit)
+        // Check Climb
+        ClimbHit = Physics2D.Raycast(_climbCheckTrans.position, PlayerLookDir2D, _climbCheckLength, _climbLayer);
+        if (ClimbHit)
         {
             // TODO : 벽의 방향을 localScale로 하면 위험하다
-            int wallLookDir = Math.Sign(WallHit.transform.localScale.x);
-            // int wallToPlayerDir = Math.Sign(this.transform.position.x - WallHit.transform.position.x);
+            int wallLookDir = Math.Sign(ClimbHit.transform.localScale.x);
             bool isDirSync = (wallLookDir * RecentDir) > 0;
-            IsWallable = !isDirSync;
+            IsClimbable = !isDirSync;
         }
-
-        // Check Dive Hit
-        DiveHit = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _diveCheckLength, _groundLayer);
-        GroundDistance = _groundCheckTrans.position.y - DiveHit.point.y;
 
         #endregion
 
         #region Animaotr Parameter
 
+        // TODO : 필요없는거 삭제하기
+        // + 애니메이터 수정하기
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
-        Animator.SetFloat("GroundDistance", GroundDistance);
         Animator.SetFloat("InputHorizontal", RawInputs.Movement.x);
         Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
         Animator.SetBool("IsDirSync", IsDirSync);
@@ -244,7 +229,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     private void UpdateImageFlip()
     {
-        if (CurrentStateIs<RunState>() || CurrentStateIs<InAirState>() || MovementController.isActiveAndEnabled)
+        if (CurrentStateIs<RunState>() || CurrentStateIs<InAirState>() || PlayerMovementController.isActiveAndEnabled)
         {
             if (!IsDirSync && Mathf.Abs(RawInputs.Movement.x) > 0.01f)
             {
@@ -267,12 +252,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     void OnBasicAttackPressed()
     {
         if (CanBasicAttack)
-            _attackController.CastBasicAttack();
-    }
-    void OnShootingAttackPressed()
-    {
-        if (CanShootingAttack)
-            _attackController.CastShootingAttack();
+            _playerAttackController.CastBasicAttack();
     }
 
     // about hit
@@ -322,10 +302,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     {
         _whiteFlashMaterial =
             Resources.Load<Material>("Materials/WhiteFlashMaterial");
-    }
-    private void GetAllSpriteRenderers()
-    {
-        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
     }
     private void SaveOriginalMaterial()
     {
@@ -377,10 +353,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     public void StartWhiteFlash()
     {
-        if (this._blinkRoutine != null)
-            StopCoroutine(this._blinkRoutine);
+        if (this._whiteFlashRoutine != null)
+            StopCoroutine(this._whiteFlashRoutine);
 
-        this._blinkRoutine = StartCoroutine(WhiteFlash());
+        this._whiteFlashRoutine = StartCoroutine(WhiteFlash());
     }
 
     // god mode
@@ -512,22 +488,17 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     private void OnDrawGizmosSelected()
     {
-        // Draw Ground Check
+        // set color
         Gizmos.color = Color.red;
+
+        // Draw Ground Check
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
 
+        // Draw Ground Above Check
+        Gizmos.DrawLine(_groundAboveCheckTrans.position,
+            _groundAboveCheckTrans.position + Vector3.up * _groundAboveCheckLength);
+
         // Draw Wall Check
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(_wallCheckRayTrans.position, _wallCheckRayTrans.position + PlayerLookDir3D * _wallCheckRayLength);
-
-        // Draw Upward Ray
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position - UtilDefine.PaddingVector,
-            transform.position - UtilDefine.PaddingVector + Vector3.up * _upwardRayLength);
-
-        // Draw Dive Check
-        Gizmos.color = Color.white;
-        Gizmos.DrawLine(_groundCheckTrans.position + UtilDefine.PaddingVector,
-            _groundCheckTrans.position + UtilDefine.PaddingVector + Vector3.down * _diveCheckLength);
+        Gizmos.DrawLine(_climbCheckTrans.position, _climbCheckTrans.position + PlayerLookDir3D * _climbCheckLength);
     }
 }
