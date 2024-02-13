@@ -21,9 +21,14 @@ namespace LevelGraph
             if (match == -1)
             {
                 Debug.LogWarning(string.Format("Exit for {0}/{1} not set", entrancePassageData.SceneName, entrancePassageData.PassageName));
+                foreach(var edge in _edges)
+                {
+                    Debug.LogWarningFormat("{0}/{1} -> {2}/{3}", edge.EntranceScene.SceneName, edge.EntrancePassage, edge.ExitScene.SceneName, edge.ExitPassgage);
+                }
                 return entrancePassageData;
             }
             exitPassageData.SceneName = _edges[match].ExitScene.SceneName;
+
             exitPassageData.PassageName = _edges[match].ExitPassgage;
 
             return exitPassageData;

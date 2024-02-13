@@ -12,7 +12,7 @@ namespace LevelGraph
 
         [HideInInspector] public Vector2 graphPosition;
 
-        public string SceneName { get; private set; }
+        [SerializeField][HideInInspector] public string SceneName;// { get; private set; }
         public Tymski.SceneReference Scene;
         public List<string> PassageNames= new List<string>();
 
