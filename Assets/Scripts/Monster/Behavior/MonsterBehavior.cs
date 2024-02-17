@@ -398,7 +398,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         var navMesh = GetComponent<NavMeshAgent>();
 
         if (navMesh)
-            navMesh.velocity = forceVector / 1.5f;
+            navMesh.velocity = forceVector / 2.0f;
         else
         {
             // 속도 초기화
