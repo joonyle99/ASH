@@ -210,12 +210,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         #region Animaotr Parameter
 
-        // TODO : 필요없는거 삭제하기
-        // + 애니메이터 수정하기
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
-        Animator.SetFloat("InputHorizontal", RawInputs.Movement.x);
-        Animator.SetFloat("PlayerLookDirX", PlayerLookDir2D.x);
         Animator.SetBool("IsDirSync", IsDirSync);
 
         #endregion
