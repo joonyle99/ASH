@@ -225,9 +225,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     private void UpdateImageFlip()
     {
-        if (CurrentStateIs<RunState>() || CurrentStateIs<InAirState>() || PlayerMovementController.isActiveAndEnabled)
+        if (CurrentStateIs<RunState>() || CurrentStateIs<InAirState>())
         {
-            if (!IsDirSync && Mathf.Abs(RawInputs.Movement.x) > 0.01f)
+            if (IsOppositeDirSync && IsMoveXKey)
             {
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
