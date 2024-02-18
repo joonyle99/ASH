@@ -225,7 +225,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [SerializeField] private BoxCollider2D _groundCheckCollider;
     public RaycastHit2D GroundRayHit;
 
-
     [Space]
 
     [SerializeField] private Transform _centerOfMass;
