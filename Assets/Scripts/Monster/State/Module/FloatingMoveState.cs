@@ -14,7 +14,7 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IMovableSt
         if(Monster.FloatingChaseEvaluator)
         {
             // Target Within Range
-            if (Monster.FloatingChaseEvaluator.IsTargetWithinRange())
+            if (Monster.FloatingChaseEvaluator.IsTargetWithinRangePlus())
             {
                 // Move to Target for Chase
                 Monster.NavMeshMoveModule.MoveToDestination(Monster.FloatingChaseEvaluator.TargetPosition);

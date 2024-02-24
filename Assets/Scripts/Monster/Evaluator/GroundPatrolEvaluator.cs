@@ -18,9 +18,9 @@ public class GroundPatrolEvaluator : Evaluator
         _rightPoint = _patrolPoints.GetChild(1).GetComponent<Collider2D>();
     }
 
-    public override Collider2D IsTargetWithinRange()
+    public override Collider2D IsTargetWithinRangePlus()
     {
-        return base.IsTargetWithinRange();
+        return base.IsTargetWithinRangePlus();
     }
 
     public bool IsOutOfPatrolRange()

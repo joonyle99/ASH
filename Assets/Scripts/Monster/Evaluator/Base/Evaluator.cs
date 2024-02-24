@@ -39,7 +39,7 @@ public abstract class Evaluator : MonoBehaviour
     protected delegate void CustomEvaluationEvent(Vector3 targetPoint);
     protected CustomEvaluationEvent customEvaluationEvent;
 
-    public virtual Collider2D IsTargetWithinRange()
+    public virtual Collider2D IsTargetWithinRangePlus()
     {
         // check coolTime and usable
         if (IsDuringCoolTime || !IsUsable)
@@ -47,7 +47,7 @@ public abstract class Evaluator : MonoBehaviour
 
         // check target within range
         // only one collider check !
-        Collider2D targetCollider = Physics2D.OverlapBox(_checkCollider.transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
+        var targetCollider = Physics2D.OverlapBox(_checkCollider.transform.position, _checkCollider.bounds.size, 0f, _targetLayer);
         if (targetCollider)
         {
             // check player
@@ -58,14 +58,14 @@ public abstract class Evaluator : MonoBehaviour
             {
                 if (!player.IsDead)
                 {
-                    // custom evaluation
+                    // 추가 작업
                     if (customEvaluationEvent != null)
                     {
                         // 플레이어의 타겟 포인트 설정
                         Vector3 playerTargetPoint = player.transform.position + new Vector3(0f, player.BodyCollider.bounds.extents.y * 1.5f, 0f);
                         // Debug.DrawRay(playerTargetPoint, Vector3.right, Color.yellow);
 
-                        // 커스텀 판독 실행
+                        // 플레이어 위치를 전달
                         customEvaluationEvent(playerTargetPoint);
 
                         return targetCollider;
@@ -76,7 +76,8 @@ public abstract class Evaluator : MonoBehaviour
             // check other
             // ...
 
-            // custom evaluation
+            // 추가 작업
+            // (0, 0, 0)을 전달
             if (customEvaluationEvent != null)
                 customEvaluationEvent(Vector3.zero);
 

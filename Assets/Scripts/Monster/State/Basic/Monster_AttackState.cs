@@ -6,7 +6,7 @@ public class Monster_AttackState : Monster_StateBase
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        Monster.IsSuperArmor = true;
+        Monster.IsAttacking = true;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -18,6 +18,6 @@ public class Monster_AttackState : Monster_StateBase
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        Monster.IsSuperArmor = false;
+        Monster.IsAttacking = false;
     }
 }

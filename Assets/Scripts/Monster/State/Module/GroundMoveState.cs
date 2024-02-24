@@ -13,7 +13,7 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
 
         if (Monster.GroundChaseEvaluator)
         {
-            var collider = Monster.GroundChaseEvaluator.IsTargetWithinRange();
+            var collider = Monster.GroundChaseEvaluator.IsTargetWithinRangePlus();
             if (collider)
             {
                 // 추가로 상대와의 거리가 x보다 가까워지면 추격을 중단
@@ -42,7 +42,7 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
             }
             else
             {
-                if (Monster.GroundPatrolEvaluator.IsTargetWithinRange())
+                if (Monster.GroundPatrolEvaluator.IsTargetWithinRangePlus())
                     Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
             }
         }
