@@ -1,17 +1,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
-public class CutscenePlayer : TriggerZone
+public class CutscenePlayer : MonoBehaviour, ITriggerListener
 {
     [SerializeField] bool _playOnce = true;
     [SerializeField] List<SceneEffect> _sequence;
 
     bool _played = false;
-    public override void OnPlayerEnter(PlayerBehaviour player)
+
+    public bool IsPlaying { get; private set; } = false;
+
+    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
+    {
+        if (activator.Type == ActivatorType.Player)
+            Play();
+    }
+    public void Play()
     {
         if (!_played && _playOnce)
         {
@@ -21,7 +27,8 @@ public class CutscenePlayer : TriggerZone
     }
     IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
     {
-        for(int i=0; i<sequence.Count; i++)
+        IsPlaying = true;
+        for (int i=0; i<sequence.Count; i++)
         {
             var effect = sequence[i];
 
@@ -42,6 +49,11 @@ public class CutscenePlayer : TriggerZone
                 DialogueController.Instance.StartDialogue(effect.DialogueData, true);
                 yield return new WaitWhile(() => DialogueController.Instance.IsDialogueActive);
             }
+            else if (effect.Type == SceneEffect.EffectType.LifePurchase)
+            {
+                GameUIManager.OpenLifePurchasePanel();
+                yield return new WaitWhile(() => GameUIManager.IsLifePurchasePanelOpen);
+            }
             else if (effect.Type == SceneEffect.EffectType.WaitForSeconds)
             {
                 yield return new WaitForSeconds(effect.Time);
@@ -59,6 +71,7 @@ public class CutscenePlayer : TriggerZone
                 effect.Function?.Invoke();
             }
         }
+        IsPlaying = false;
     }
 
 }
