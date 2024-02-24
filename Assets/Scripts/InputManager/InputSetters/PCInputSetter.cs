@@ -7,10 +7,10 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
 {
     [SerializeField] KeyCode _jumpKeyCode = KeyCode.Space;
     [SerializeField] KeyCode _dashKeyCode = KeyCode.LeftShift;
-    [SerializeField] KeyCode _basicAttackKeyCode = KeyCode.Z;
+    [SerializeField] KeyCode _basicAttackKeyCode = KeyCode.A;
     [SerializeField] KeyCode _shootingAttackKeyCode = KeyCode.S;
-    [SerializeField] KeyCode _interactionKeyCode = KeyCode.E;
-    [SerializeField] KeyCode _lightingKeyCode = KeyCode.LeftControl;
+    [SerializeField] KeyCode _interactionKeyCode = KeyCode.F;
+    [SerializeField] KeyCode _lightingKeyCode = KeyCode.Q;
 
     public override InputState GetState()
     {
