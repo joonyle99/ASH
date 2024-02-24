@@ -32,14 +32,6 @@ public class GroundPatrolEvaluator : Evaluator
     {
         return _leftPoint.transform.position.x > this.transform.position.x;
     }
-    public bool IsRightOfLeftPoint()
-    {
-        return _leftPoint.transform.position.x < this.transform.position.x;
-    }
-    public bool IsLeftOfRightPoint()
-    {
-        return _rightPoint.transform.position.x > this.transform.position.x;
-    }
     public bool IsRightOfRightPoint()
     {
         return _rightPoint.transform.position.x < this.transform.position.x;
