@@ -32,19 +32,24 @@ public class PlayerMovementController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!_player.IsGrounded || _player.RawInputs.Movement.x == 0  || _disableMovementList.Count > 0)
+        if (!_player.IsGrounded || _player.RawInputs.Movement.x == 0 || _disableMovementList.Count > 0)
             return;
 
+        // 지면의 기울기에 따른 이동 방향 설정
         Vector2 groundNormal = _player.GroundHit.normal;
         Vector2 moveDirection = _player.RawInputs.Movement.x > 0f
             ? (-1) * Vector2.Perpendicular(groundNormal)
             : Vector2.Perpendicular(groundNormal);
         RecentMoveDirection = moveDirection;
+
+        // 목표까지의 필요한 속도 계산
         Vector2 targetVelocity = moveDirection * _maxSpeed;
         Vector2 velocityNeeded = targetVelocity - Vector2.Dot(_player.Rigidbody.velocity, moveDirection) * moveDirection;
-        float accelRate = (velocityNeeded.magnitude > 0.01f) ? _acceleration : _decceleration;
 
+        // 최종적으로 가해줄 힘을 계산
+        float accelRate = (velocityNeeded.magnitude > 0.01f) ? _acceleration : _decceleration;
         _moveForce = velocityNeeded * accelRate;
+
         _player.Rigidbody.AddForce(_moveForce);
     }
     private void OnDrawGizmosSelected()

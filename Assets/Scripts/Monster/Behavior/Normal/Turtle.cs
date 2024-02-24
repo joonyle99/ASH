@@ -23,6 +23,7 @@ public class Turtle : MonsterBehavior
 
         if(CurrentStateIs<GroundMoveState>())
         {
+            // TODO : MonsterBehavior에 두면 안된다
             // ground walking
             GroundWalking();
         }
@@ -44,7 +45,7 @@ public class Turtle : MonsterBehavior
         if (IsHide || IsDead)
             HitProcess(attackInfo, false, true, false);
         else
-            HitProcess(attackInfo, false, true);
+            HitProcess(attackInfo, false, false, true);
 
         // Change to Hurt State
         if (CurrentState is IHurtableState)
