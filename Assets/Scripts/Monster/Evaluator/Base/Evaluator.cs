@@ -26,6 +26,12 @@ public abstract class Evaluator : MonoBehaviour
         get => _isDuringCoolTime;
         set => _isDuringCoolTime = value;
     }
+    [SerializeField] private bool _canWorking = true;           // 판독기 작동 스위치
+    public bool CanWorking
+    {
+        get => _canWorking;
+        set => _canWorking = value;
+    }
     [SerializeField] private bool _isUsable = true;             // 판독기 사용 가능 여부
     public bool IsUsable
     {
@@ -42,7 +48,7 @@ public abstract class Evaluator : MonoBehaviour
     public virtual Collider2D IsTargetWithinRangePlus()
     {
         // check coolTime and usable
-        if (IsDuringCoolTime || !IsUsable)
+        if (IsDuringCoolTime || !_canWorking || !IsUsable)
             return null;
 
         // check target within range
