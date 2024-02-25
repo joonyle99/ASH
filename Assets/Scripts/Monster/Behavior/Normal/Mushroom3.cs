@@ -48,8 +48,11 @@ public class Mushroom3 : MonsterBehavior, ILightCaptureListener
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {
-        // ºû¿¡ ´êÀ¸¸é ¼û´Â´Ù
-        Animator.SetTrigger("Hide");
+        if (CurrentStateIs<Monster_IdleState>())
+        {
+            // ºû¿¡ ´êÀ¸¸é ¼û´Â´Ù
+            Animator.SetTrigger("Hide");
+        }
     }
 
     public void OnLightStay(LightCapturer capturer, LightSource lightSource)
