@@ -11,6 +11,11 @@ public class Mushroom3 : MonsterBehavior, ILightCaptureListener
     [SerializeField] private float _devourForceY = 10f;
     [SerializeField] private bool _isDevouring;
 
+    [Space]
+
+    [SerializeField] private float _targetDieTime = 4f;
+    [SerializeField] private float _elapsedDieTime;
+
     protected override void Awake()
     {
         base.Awake();
@@ -45,6 +50,23 @@ public class Mushroom3 : MonsterBehavior, ILightCaptureListener
     {
         // ºû¿¡ ´êÀ¸¸é ¼û´Â´Ù
         Animator.SetTrigger("Hide");
+    }
+
+    public void OnLightStay(LightCapturer capturer, LightSource lightSource)
+    {
+        _elapsedDieTime += Time.deltaTime;
+        if (_elapsedDieTime > _targetDieTime)
+        {
+            // Die
+            Die();
+        }
+
+        CurrentState.ElaspedStayTime = 0f;
+    }
+
+    public void OnLightExit(LightCapturer capturer, LightSource lightSource)
+    {
+        _elapsedDieTime = 0f;
     }
 
     protected override void FixedUpdate()

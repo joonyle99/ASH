@@ -7,19 +7,29 @@ public class Monster_HideState : Monster_StateBase, IAttackableState
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
         Monster.IsHide = true;
+
+        // ²®Áú ¹ö¼¸
+        if (Monster.MonsterName.Contains(MonsterDefine.MonsterName.²®Áú¹ö¼¸.ToString()))
+        {
+            if (Monster.AttackEvaluator)
+            {
+                Monster.AttackEvaluator.CanWorking = false;
+            }
+        }
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        // °ÅºÏÀÌÀÎ °æ¿ì¿¡¸¸
+        // °ÅºÏÀÌ
         if (Monster.MonsterName.Contains(MonsterDefine.MonsterName.°¡½Ã°ÅºÏ.ToString()))
         {
             // reset stay time
             if (Monster.IsHit)
                 _elapsedStayTime = 0f;
         }
+
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -27,5 +37,14 @@ public class Monster_HideState : Monster_StateBase, IAttackableState
         base.OnStateExit(animator, stateInfo, layerIndex);
 
         Monster.IsHide = false;
+
+        // ²®Áú ¹ö¼¸
+        if (Monster.MonsterName.Contains(MonsterDefine.MonsterName.²®Áú¹ö¼¸.ToString()))
+        {
+            if (Monster.AttackEvaluator)
+            {
+                Monster.AttackEvaluator.CanWorking = true;
+            }
+        }
     }
 }
