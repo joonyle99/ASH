@@ -17,25 +17,28 @@ public class Letterbox : MonoBehaviour
         SetHeight(0);
     }
 
-    public void Open()
+    public void Open(bool instant = false)
     {
-        StartCoroutine(OpenCoroutine());
+        StartCoroutine(OpenCoroutine(instant));
     }
-    IEnumerator OpenCoroutine()
+    IEnumerator OpenCoroutine(bool instant)
     {
         float eTime = 0f;
         Color color = _topImage.color;
-        while (eTime < _letterboxOpenDuration)
+        if (!instant)
         {
-            float t = (eTime / _letterboxOpenDuration);
-            color.a = t;
-            _topImage.color = color;
-            _bottomImage.color = color;
+            while (eTime < _letterboxOpenDuration)
+            {
+                float t = (eTime / _letterboxOpenDuration);
+                color.a = t;
+                _topImage.color = color;
+                _bottomImage.color = color;
 
-            float height = Mathf.Lerp(0, _letterboxHeight, t);
-            SetHeight(height);
-            yield return null;
-            eTime += Time.deltaTime;
+                float height = Mathf.Lerp(0, _letterboxHeight, t);
+                SetHeight(height);
+                yield return null;
+                eTime += Time.deltaTime;
+            }
         }
         color.a = 1;
         _topImage.color = color;
@@ -53,8 +56,6 @@ public class Letterbox : MonoBehaviour
     }
     IEnumerator CloseCoroutine()
     {
-
-        print("close");
         float eTime = 0f;
         Color color = _topImage.color;
         while (eTime < _letterboxCloseDuration)

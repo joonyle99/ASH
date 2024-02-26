@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManager>
+public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManager>, ISceneContextBuildListener
 {
     public bool IsChanging { get; private set; } = false;
 
@@ -68,4 +68,8 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
         IsChanging = false;
     }
 
+    public void OnSceneContextBuilt()
+    {
+        SceneEffectManager.Current.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterEffectCoroutine(), false));
+    }
 }

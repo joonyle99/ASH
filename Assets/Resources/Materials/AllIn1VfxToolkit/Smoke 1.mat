@@ -1,52 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!28 &-5340885618609652896
-Texture2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: _ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.0,"g":0.0,"b":0.0,"a":1.0},"time":0.5411764979362488},{"color":{"r":0.5,"g":0.5,"b":0.5,"a":1.0},"time":0.9705958366394043},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 2
-  m_Width: 64
-  m_Height: 1
-  m_CompleteImageSize: 256
-  m_MipsStripped: 0
-  m_TextureFormat: 4
-  m_MipCount: 1
-  m_IsReadable: 1
-  m_IsPreProcessed: 0
-  m_IgnoreMasterTextureLimit: 0
-  m_StreamingMipmaps: 0
-  m_StreamingMipmapsPriority: 0
-  m_VTOnly: 0
-  m_AlphaIsTransparency: 0
-  m_ImageCount: 1
-  m_TextureDimension: 2
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_LightmapFormat: 0
-  m_ColorSpace: 0
-  m_PlatformBlob: 
-  image data: 256
-  _typelessdata: 000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff000000ff040404ff090909ff0e0e0eff121212ff171717ff1c1c1cff212121ff252525ff2a2a2aff2f2f2fff333333ff383838ff3d3d3dff424242ff464646ff4b4b4bff505050ff545454ff595959ff5e5e5eff636363ff676767ff6c6c6cff717171ff757575ff7a7a7aff7f7f7fffbababaffffffffff
-  m_StreamData:
-    serializedVersion: 2
-    offset: 0
-    size: 0
-    path: 
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -54,15 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: BackFire
+  m_Name: Smoke 1
   m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
   m_ValidKeywords:
-  - ADDITIVECONFIG_ON
-  - COLORRAMPGRAD_ON
-  - COLORRAMP_ON
-  - GLOW_ON
-  - PREMULTIPLYCOLOR_ON
-  - SHAPE2_ON
+  - SHAPE1SHAPECOLOR_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -78,7 +26,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ColorRampTexGradient:
-        m_Texture: {fileID: -5340885618609652896}
+        m_Texture: {fileID: -8638488460860000577, guid: cb7a93b488543fe4589b6f482d6fe57e, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DistNormalMap:
@@ -94,7 +42,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FadeTex:
-        m_Texture: {fileID: 2800000, guid: 854b25bc08516364da5a786b1cad247e, type: 3}
+        m_Texture: {fileID: 2800000, guid: fcb027caad6963b4a80539bbce0d10e9, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _GlowTex:
@@ -102,8 +50,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 89aee6e5903b6a343b5d3533c4a48949, type: 3}
-        m_Scale: {x: 1, y: 0.8}
+        m_Texture: {fileID: 2800000, guid: 992852ad7302cab4fad62256affe0d4d, type: 3}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
         m_Texture: {fileID: 2800000, guid: 2f6642b43dc405d498acba7e288c068c, type: 3}
@@ -118,7 +66,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape2Tex:
-        m_Texture: {fileID: 2800000, guid: e5e97b5066461de4abce09eb85d52896, type: 3}
+        m_Texture: {fileID: 2800000, guid: c30280930b1bb164c943428f6e670fef, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape3DistortTex:
@@ -147,19 +95,19 @@ Material:
     - _AlphaBrightness: 0
     - _AlphaContrast: 1
     - _AlphaCutoffValue: 0.25
-    - _AlphaFadeAmount: 0
+    - _AlphaFadeAmount: -0.1
     - _AlphaFadePow: 1
     - _AlphaFadeSmooth: 0
     - _AlphaStepMax: 0.075
     - _AlphaStepMin: 0
-    - _BlurIntensity: 4.5
+    - _BlurIntensity: 0
     - _CamDistFadeStepMax: 100
     - _CamDistFadeStepMin: 0
     - _CamDistProximityFade: 0
-    - _ColorGradingMidPoint: 0.5
+    - _ColorGradingMidPoint: 0.463
     - _ColorMask: 15
     - _ColorRampBlend: 1
-    - _ColorRampLuminosity: 0
+    - _ColorRampLuminosity: 1
     - _CullingOption: 0
     - _DebugShape: 1
     - _DepthGlow: 0
@@ -181,18 +129,18 @@ Material:
     - _FadePower: 1
     - _FadeScrollXSpeed: 0
     - _FadeScrollYSpeed: 0
-    - _FadeTransition: 0.075
+    - _FadeTransition: 0.5
     - _FishEyeUvAmount: 0.35
     - _Glow: 0
-    - _GlowGlobal: 0.85
+    - _GlowGlobal: 1
     - _HandDrawnAmount: 10
     - _HandDrawnSpeed: 5
-    - _HsvBright: 1.06
+    - _HsvBright: 1
     - _HsvSaturation: 1
-    - _HsvShift: 0
+    - _HsvShift: 180
     - _LightAmount: 0
     - _MaskPow: 1
-    - _OffsetSh1: 1
+    - _OffsetSh1: -0.34
     - _OffsetSh2: 1
     - _OffsetSh3: 1
     - _PinchUvAmount: 0.35
@@ -202,7 +150,7 @@ Material:
     - _RandomSh1Mult: 1
     - _RandomSh2Mult: 1
     - _RandomSh3Mult: 1
-    - _RenderingMode: 5
+    - _RenderingMode: 0
     - _RimAddAmount: 1
     - _RimBias: 0
     - _RimErodesAlpha: 0
@@ -250,16 +198,16 @@ Material:
     - _ShapeAlphaWeight: 1
     - _ShapeBrightness: 0
     - _ShapeColorWeight: 1
-    - _ShapeContrast: 1
+    - _ShapeContrast: 2.99
     - _ShapeDistortAmount: 0.5
     - _ShapeDistortXSpeed: 0.1
     - _ShapeDistortYSpeed: 0.1
     - _ShapeRotationOffset: 0
     - _ShapeRotationSpeed: 0
-    - _ShapeXSpeed: 0.1
-    - _ShapeYSpeed: -2
+    - _ShapeXSpeed: 0
+    - _ShapeYSpeed: 0
     - _SoftFactor: 0.5
-    - _SrcMode: 1
+    - _SrcMode: 5
     - _TextureScrollXSpeed: 1
     - _TextureScrollYSpeed: 0
     - _TimingSeed: 0
@@ -283,16 +231,16 @@ Material:
     m_Colors:
     - _BackFaceTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorGradingDark: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorGradingLight: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorGradingMiddle: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorGradingDark: {r: 0, g: 0.025249315, b: 0.7830189, a: 1}
+    - _ColorGradingLight: {r: 0, g: 0.87058824, b: 2, a: 1}
+    - _ColorGradingMiddle: {r: 0, g: 0.3764706, b: 1.9215686, a: 1}
     - _DepthGlowColor: {r: 1, g: 1, b: 1, a: 1}
     - _FadeBurnColor: {r: 1, g: 1, b: 0, a: 1}
     - _FrontFaceTint: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
     - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Shape2Color: {r: 0.57434916, g: 0.57434916, b: 0.57434916, a: 1}
+    - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ShapeColor: {r: 1.1486983, g: 1.1486983, b: 1.1486983, a: 1}
+    - _ShapeColor: {r: 1.4980392, g: 1.4980392, b: 1.4980392, a: 1}
   m_BuildTextureStacks: []

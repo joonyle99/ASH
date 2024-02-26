@@ -56,9 +56,9 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     {
         _instance._bossKeyPanel.AddKey();
     }
-    public static void OpenLetterbox()
+    public static void OpenLetterbox(bool instant = false)
     {
-        _instance._letterbox.Open();
+        _instance._letterbox.Open(instant);
         _instance._statusUIs.alpha = 0;
     }
     public static void CloseLetterbox()
