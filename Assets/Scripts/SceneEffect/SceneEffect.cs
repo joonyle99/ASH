@@ -22,6 +22,7 @@ public class SceneEffect
         ChangeInputSetter,
         ChangeToDefaultInputSetter,
         FunctionCall,
+        LifePurchase,
     }
     public EffectType Type { get { return _type; } }
     public bool IsCameraEffect { get { return _type == EffectType.CameraShake || _type == EffectType.ConstantCameraShake || _type == EffectType.StopConstantCameraShake; } }
@@ -124,7 +125,8 @@ public class SceneEffectDrawer : PropertyDrawer
         if (property.isExpanded)
         {
             var effectType = (SceneEffect.EffectType)property.FindPropertyRelative("_type").enumValueIndex;
-            if (effectType == SceneEffect.EffectType.ChangeToDefaultInputSetter)
+            if (effectType == SceneEffect.EffectType.ChangeToDefaultInputSetter ||
+                effectType == SceneEffect.EffectType.LifePurchase)
                 return (HEIGHT + 2) * 2;
             else if (effectType == SceneEffect.EffectType.FunctionCall)
                 return (HEIGHT + 2) * 2 + GetEventHeight(property.FindPropertyRelative("Function"));

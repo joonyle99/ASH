@@ -31,7 +31,7 @@ public class LightController : MonoBehaviour
         _isLightableState = _player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<RunState>();
 
         // Auto Light Source Off
-        if (!_isLightableState && _isLightWorking)
+        if (_isLightWorking && !_isLightableState)
         {
             TurnOffLight();
         }
@@ -65,7 +65,6 @@ public class LightController : MonoBehaviour
             return;
 
         _isLightWorking = true;
-        _player.Animator.SetBool("IsLightWorking", _isLightWorking);
 
         // ºûÀ» ÄÒ´Ù
         _light.SetActive(true);
@@ -78,7 +77,6 @@ public class LightController : MonoBehaviour
             return;
 
         _isLightWorking = false;
-        _player.Animator.SetBool("IsLightWorking", _isLightWorking);
 
         // ÃÊ±âÈ­
         _curAngle = 0f;

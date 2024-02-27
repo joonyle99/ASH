@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -119,11 +118,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _isInAir;
         set => _isInAir = value;
     }
-    [SerializeField] private bool _isSuperArmor;
-    public bool IsSuperArmor
+    [SerializeField] private bool _isAttacking;
+    public bool IsAttacking
     {
-        get => _isSuperArmor;
-        set => _isSuperArmor = value;
+        get => _isAttacking;
+        set => _isAttacking = value;
     }
     [SerializeField] private bool _isHide;
     public bool IsHide
@@ -224,7 +223,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [SerializeField] private LayerMask _groundCheckLayer;
     [SerializeField] private BoxCollider2D _groundCheckCollider;
     public RaycastHit2D GroundRayHit;
-
 
     [Space]
 
@@ -357,7 +355,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         {
             if (CurrentState is IAttackableState)
             {
-                if (AttackEvaluator.IsTargetWithinRange())
+                if (AttackEvaluator.IsTargetWithinRangePlus())
                 {
                     AttackEvaluator.StartCoolTimeCoroutine();
                     StartChangeStateCoroutine("Attack", CurrentState);
@@ -398,7 +396,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         var navMesh = GetComponent<NavMeshAgent>();
 
         if (navMesh)
-            navMesh.velocity = forceVector / 1.5f;
+            navMesh.velocity = forceVector / 2.0f;
         else
         {
             // 속도 초기화
@@ -551,7 +549,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 if (attackResult == IAttackListener.AttackResult.Success)
                 {
                     Instantiate(_attackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
-                    
+
                 }
             }
         }
@@ -724,7 +722,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // superArmor is started when monster attack
         // superArmor : hurt animation x
-        if (IsSuperArmor)
+        if (IsAttacking)
             return;
 
         Animator.SetTrigger("Hurt");

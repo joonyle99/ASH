@@ -5,7 +5,7 @@ public class RunState : PlayerState
 {
     protected override void OnEnter()
     {
-        Player.MovementController.enabled = true;
+        Player.PlayerMovementController.enabled = true;
         Player.Animator.SetBool("IsRun", true);
     }
 
@@ -29,7 +29,7 @@ public class RunState : PlayerState
 
         if (Player.IsTouchedWall)
         {
-            if (Player.IsWallable)
+            if (Player.IsClimbable)
             {
                 if (Player.IsDirSync && Player.IsMoveUpKey)
                 {
@@ -41,7 +41,7 @@ public class RunState : PlayerState
     }
     protected override void OnExit()
     {
-        Player.MovementController.enabled = false;
+        Player.PlayerMovementController.enabled = false;
         Player.Animator.SetBool("IsRun", false);
     }
 

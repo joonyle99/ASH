@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Threading;
 using UnityEngine;
 
 public class Frog : MonsterBehavior
 {
+    /*
     [Header("Frog")]
     [Space]
 
@@ -14,14 +13,21 @@ public class Frog : MonsterBehavior
     [SerializeField] private float _tongueLength = 15f;
     [SerializeField] private float _targetTongueAttackTime = 0.1f;
 
+    private SpriteRenderer _tongueSpriteRenderer;
+    private Vector2 _originSize;
+
     private Coroutine _tongueAttackCoroutine;
+    */
 
     protected override void Awake()
     {
         base.Awake();
 
-        customAnimTransitionEvent -= PatrolToOtherCondition;
-        customAnimTransitionEvent += PatrolToOtherCondition;
+        // _tongueSpriteRenderer = _tonguePrefab.GetComponent<SpriteRenderer>();
+        // _originSize = _tongueSpriteRenderer.size;
+
+        customAnimTransitionEvent -= GroundMoveToOtherCondition;
+        customAnimTransitionEvent += GroundMoveToOtherCondition;
     }
     protected override void Start()
     {
@@ -70,11 +76,12 @@ public class Frog : MonsterBehavior
         Vector2 forceVector = new Vector2(JumpForce.x * RecentDir, JumpForce.y);
         Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
     }
+
+    /*
     public void TongueAttack_AnimEvent()
     {
         _tonguePrefab.gameObject.SetActive(true);
-        SpriteRenderer tongueSpriteRenderer = _tonguePrefab.GetComponent<SpriteRenderer>();
-        _tongueAttackCoroutine = StartCoroutine(ExtendTongue(tongueSpriteRenderer));
+        _tongueAttackCoroutine = StartCoroutine(ExtendTongue(_tongueSpriteRenderer));
     }
     private IEnumerator ExtendTongue(SpriteRenderer tongueSpriteRenderer)
     {
@@ -99,17 +106,20 @@ public class Frog : MonsterBehavior
         if (_tongueAttackCoroutine != null)
             StopCoroutine(_tongueAttackCoroutine);
 
+        _tongueSpriteRenderer.size = _originSize;
+
         _tonguePrefab.gameObject.SetActive(false);
     }
+    */
 
-    private bool PatrolToOtherCondition(string targetTransitionParam, Monster_StateBase currentState)
+    private bool GroundMoveToOtherCondition(string targetTransitionParam, Monster_StateBase currentState)
     {
         if (currentState is GroundMoveState)
         {
             if (targetTransitionParam == "Idle" || targetTransitionParam == "Attack")
             {
-                if (IsGround) return true;
-                else return false;
+                // ¶¥¿¡ ÂøÁöÇÑ ÈÄ ÀüÀÌ
+                return IsGround;
             }
         }
 

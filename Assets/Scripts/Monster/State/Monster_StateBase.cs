@@ -21,6 +21,16 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     [SerializeField] protected float _targetStayTime = 0f;
     [SerializeField] protected float _elapsedStayTime = 0f;
 
+    public float TargetStayTime
+    {
+        get { return _targetStayTime; }
+    }
+    public float ElaspedStayTime
+    {
+        get { return _elapsedStayTime; }
+        set { _elapsedStayTime = value; }
+    }
+
     // Monster Behavior
     public MonsterBehavior Monster { get; private set; }
 

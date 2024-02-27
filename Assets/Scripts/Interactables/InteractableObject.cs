@@ -14,7 +14,6 @@ public enum InteractionStateChangeType
 {
     DontChange = 0, 
     InteractionState = 1,
-    
 }
 public abstract class InteractableObject : MonoBehaviour
 {

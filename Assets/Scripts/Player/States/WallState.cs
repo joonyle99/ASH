@@ -21,13 +21,13 @@ public class WallState : PlayerState
         Player.Animator.SetBool("IsWall", true);
 
         // 벽의 위치
-        wallHitPos = Player.WallHit.transform.position;
+        wallHitPos = Player.ClimbHit.transform.position;
 
         // 벽의 Hit 위치
-        wallHitPointPos = Player.WallHit.point;
+        wallHitPointPos = Player.ClimbHit.point;
 
         // 벽의 법선벡터
-        wallNormalVec = Player.WallHit.normal;
+        wallNormalVec = Player.ClimbHit.normal;
 
         // 벽의 노말 벡터의 수직한 벡터 계산
         if (wallHitPointPos.x > Player.transform.position.x)

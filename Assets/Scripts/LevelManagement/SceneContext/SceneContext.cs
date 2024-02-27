@@ -50,7 +50,18 @@ public class SceneContext : MonoBehaviour
             }
         }
 
-        SceneTransitionPlayer = FindFirstObjectByType<PlayableSceneTransitionPlayer>();
+        var transitionPlayers = FindObjectsOfType<PlayableSceneTransitionPlayer>();
+        if (transitionPlayers.Length == 1)
+            SceneTransitionPlayer = transitionPlayers[0];
+        else
+        {
+            if (transitionPlayers[0].GetComponent<SceneChangeManager>() != null)
+            {
+                SceneTransitionPlayer = transitionPlayers[1];
+            }
+            else
+                SceneTransitionPlayer = transitionPlayers[0];
+        }
         UpdateBuildResult(SceneTransitionPlayer);
 
 

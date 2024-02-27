@@ -51,12 +51,16 @@ public abstract class StateMachineBase : MonoBehaviour
     public TState ChangeState<TState>(bool ignoreSameState = false) where TState : StateBase
     {
         var nextState = GetComponent<TState>();
-        if (ignoreSameState && nextState == CurrentState)
+        if (ignoreSameState && (nextState == CurrentState))
             return nextState;
+
         CurrentState.TriggerExit();
+
         PreviousState = CurrentState;
         CurrentState = nextState;
+
         CurrentState.TriggerEnter(this);
+
         return nextState;
     }
     public bool CurrentStateIs<TState>() where TState : StateBase

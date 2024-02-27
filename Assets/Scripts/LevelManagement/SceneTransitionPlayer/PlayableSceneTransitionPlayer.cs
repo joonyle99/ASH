@@ -11,7 +11,7 @@ using Utils;
  */
 public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
 {
-    [SerializeField] float _transitionDuration = 0.5f;
+    [SerializeField] protected float TransitionDuration = 0.5f;
 
     [Header("Respawn")]
     [SerializeField] float _respawnFadeDuration = 0.5f;
@@ -21,12 +21,12 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     {
         SceneEffectManager.Current.Camera.DisableCameraFollow();
 
-        yield return FadeCoroutine(_transitionDuration, FadeType.Darken);
+        yield return FadeCoroutine(TransitionDuration, FadeType.Darken);
     }
 
     public override IEnumerator EnterEffectCoroutine()
     {
-        StartCoroutine(FadeCoroutine(_transitionDuration, FadeType.Darken));
+        StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
         Passage entrance = SceneContext.Current.EntrancePassage;
         if (entrance == null)
         {

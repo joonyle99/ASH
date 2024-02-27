@@ -19,11 +19,8 @@ public class Bat_Sprinkle : Monster_SkillObject
         _spriteRenderer.sprite = sprite;
     }
 
-    public void Shoot(float angle, float power)
+    public void Shoot(Vector3 throwForce)
     {
-        float afterAngle = Mathf.Deg2Rad * (angle + 90);
-        Vector3 throwForce = new Vector3(Mathf.Cos(afterAngle), Mathf.Sin(afterAngle), 0) * power;
-
         _rigidbody.AddForce(throwForce, ForceMode2D.Impulse);
     }
 }

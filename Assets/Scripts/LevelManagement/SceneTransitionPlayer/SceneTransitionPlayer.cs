@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SceneTransitionPlayer : MonoBehaviour, ISceneContextBuildListener
+public class SceneTransitionPlayer : MonoBehaviour
 {
     [SerializeField] Image _fadeImage;
     [SerializeField] float _fadeDuration;
@@ -19,10 +19,6 @@ public class SceneTransitionPlayer : MonoBehaviour, ISceneContextBuildListener
     {
         yield return FadeCoroutine(_fadeDuration, FadeType.Lighten);
     }
-    public void OnSceneContextBuilt()
-    {
-        SceneEffectManager.Current.PushCutscene(new Cutscene(this, EnterEffectCoroutine(), false));
-    } 
 
 
     protected enum FadeType { Lighten, Darken}

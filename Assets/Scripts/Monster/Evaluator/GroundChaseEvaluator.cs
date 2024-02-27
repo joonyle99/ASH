@@ -31,9 +31,9 @@ public class GroundChaseEvaluator : Evaluator
         customEvaluationEvent += SetChaseDir;
     }
 
-    public override Collider2D IsTargetWithinRange()
+    public override Collider2D IsTargetWithinRangePlus()
     {
-        var hasChaseTarget = base.IsTargetWithinRange();
+        var hasChaseTarget = base.IsTargetWithinRangePlus();
 
         if (hasChaseTarget) IsChasing = true;
         else IsChasing = false;

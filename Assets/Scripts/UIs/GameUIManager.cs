@@ -12,13 +12,20 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     [SerializeField] float _skillObtainPanelDuration;
     [SerializeField] BossKeyPanel _bossKeyPanel;
 
+    [SerializeField] LifePurchasePanel _lifePurchasePanel;
 
     [SerializeField] CanvasGroup _statusUIs;
     [SerializeField] Letterbox _letterbox;
 
+    public static bool IsLifePurchasePanelOpen => _instance._lifePurchasePanel.gameObject.activeInHierarchy;
     private void Awake()
     {
         _instance = this;
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            PersistentDataManager.UpdateValue<int>("gold", x => x + 100);
     }
     public void OnSceneContextBuilt()
     {
@@ -31,6 +38,11 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
             CloseBossKeyPanel();
         }
     }
+    public static void OpenLifePurchasePanel()
+    {
+        _instance._lifePurchasePanel.Open();
+    }
+
     public static void OpenBossKeyPanel(int keyCount)
     {
         _instance._bossKeyPanel.gameObject.SetActive(true);
@@ -44,9 +56,9 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     {
         _instance._bossKeyPanel.AddKey();
     }
-    public static void OpenLetterbox()
+    public static void OpenLetterbox(bool instant = false)
     {
-        _instance._letterbox.Open();
+        _instance._letterbox.Open(instant);
         _instance._statusUIs.alpha = 0;
     }
     public static void CloseLetterbox()

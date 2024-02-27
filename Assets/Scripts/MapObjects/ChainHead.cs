@@ -41,7 +41,7 @@ public class ChainHead : InteractableObject
         _soundList.PlaySFX("Grab");
         _handle.ConnectTo(Player.HandRigidBody);
         //_jointWithPlayer.enabled = true;
-        Player.MovementController.enabled = true;
+        Player.PlayerMovementController.enabled = true;
         _playerLimittingJoint.connectedBody = Player.Rigidbody;
         _playerLimittingJoint.connectedAnchor = Player.HandRigidBody.position - Player.Rigidbody.position;
         _playerLimittingJoint.distance = _chainLength;
@@ -50,7 +50,7 @@ public class ChainHead : InteractableObject
     {
         _handle.Disconnect();
         _playerLimittingJoint.enabled = false;
-        Player.MovementController.EnableMovementExternaly(this);
+        Player.PlayerMovementController.EnableMovementExternaly(this);
     }
     public override void UpdateInteracting()
     {
@@ -92,9 +92,9 @@ public class ChainHead : InteractableObject
             {
                 if (Player.RawInputs.Movement.x >= 0 && transform.position.x < Player.transform.position.x
                     || Player.RawInputs.Movement.x <= 0 && transform.position.x > Player.transform.position.x)
-                    Player.MovementController.DisableMovementExternaly(this);
+                    Player.PlayerMovementController.DisableMovementExternaly(this);
                 else
-                    Player.MovementController.EnableMovementExternaly(this);
+                    Player.PlayerMovementController.EnableMovementExternaly(this);
                 _playerLimittingJoint.enabled = true;
             }
         }
@@ -102,7 +102,7 @@ public class ChainHead : InteractableObject
         {
             _playerLimittingJoint.enabled = false;
 
-            Player.MovementController.EnableMovementExternaly(this);
+            Player.PlayerMovementController.EnableMovementExternaly(this);
         }
     }
     

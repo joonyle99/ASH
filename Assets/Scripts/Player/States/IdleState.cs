@@ -5,7 +5,13 @@ using UnityEngine.UIElements;
 public class IdleState : PlayerState
 {
     [Header("Idle Settings")]
-    [SerializeField] float _belowForce = 150;         // 아래로 가해주는 힘
+    [Space]
+
+    [Tooltip("아래로 가해주는 힘")]
+    [SerializeField] float _belowForce = 150f;
+
+    [Tooltip("이 각도를 초과한 경사에선 서있지 못함")]
+    [SerializeField] float _slopeThreshold = 70f;
 
     protected override void OnEnter()
     {
@@ -28,7 +34,7 @@ public class IdleState : PlayerState
         float groundAngle = Mathf.Abs(Mathf.Atan2(_groundNormal.y, _groundNormal.x) * Mathf.Rad2Deg - 90);
 
         // 기울어진 땅에서 미끄럼 방지
-        if (groundAngle < Player.SlopeThreshold)
+        if (groundAngle < _slopeThreshold)
         {
             Player.Rigidbody.AddForce(-_groundNormal * _belowForce);
         }
