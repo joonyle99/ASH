@@ -85,18 +85,25 @@ public class PlayerAttackController : MonoBehaviour
     }
     public void AttackableEntityProcess_AnimEvent()
     {
-        List<RaycastHit2D> rayCastHits = new List<RaycastHit2D>();
+        // cast parameter
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(_attackableEntityLayer);
+        List<RaycastHit2D> rayCastHits = new List<RaycastHit2D>();
+
+        // do cast
         _attackHitbox.Cast(_player.PlayerLookDir2D, filter, rayCastHits,0);
+
         List<Rigidbody2D> handledBodies = new List<Rigidbody2D>();
 
         foreach (var rayCastHit in rayCastHits)
         {
+            // rayCastHit에 Rigidbody가 없거나 이미 리스트업 했다면 continue
             if (!rayCastHit.rigidbody || handledBodies.Contains(rayCastHit.rigidbody))
                 continue;
 
+            // rayCastHit의 모든 IAttackListener를 가져옴
             var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
+
             handledBodies.Add(rayCastHit.rigidbody);
 
             IAttackListener.AttackResult attackResult = IAttackListener.AttackResult.Fail;
