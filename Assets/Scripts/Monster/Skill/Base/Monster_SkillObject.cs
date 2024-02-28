@@ -18,6 +18,7 @@ public abstract class Monster_SkillObject : MonoBehaviour
     [Space]
 
     [SerializeField] protected GameObject _hitEffectPrefab;
+    [SerializeField] protected SoundClipData _colideSound;
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
@@ -48,6 +49,9 @@ public abstract class Monster_SkillObject : MonoBehaviour
         // 스킬 파괴 레이어와 충돌
         if ((1 << collision.gameObject.layer & _skillDestroyLayer.value) > 0)
         {
+            if (_colideSound != null)
+                SoundManager.Instance.PlaySFX(_colideSound);
+
             var effect = GetComponent<DisintegrateEffect>();
             if (effect)
                 StartCoroutine(DeathEffectCoroutine(effect));

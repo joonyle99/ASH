@@ -31,6 +31,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     [SerializeField] private BearAttackType _currentAttack;
     [SerializeField] private BearAttackType _nextAttack;
+    [Tooltip("1 : Slash Right\r\n2 : Slash Left\r\n3 : BodySlam\r\n4 : Stomp")]
+    [SerializeField] private Range _randomAttackRange;
 
     [Space]
 
@@ -65,15 +67,23 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     [SerializeField] private Collider2D _stompCollider;
     [SerializeField] private Bear_Stalactite _stalactitePrefab;
-    [SerializeField] private int _stalactiteCount;
-    [SerializeField] private Range _normalStalactiteRange;
-    [SerializeField] private Range _rageStalactiteRange;
-    [SerializeField] private List<float> _stalactitePosXs;
     [SerializeField] private GameObject _stompEffectPrefab;
 
-    [SerializeField] float ceilingHeight = 18.3f;
-    [SerializeField] float fromDistance = 1f;
-    [SerializeField] float toDistance = 20f;
+    [Space]
+
+    [SerializeField] private int _stalactiteCount;
+    [SerializeField] private Range _createTimeRange;
+    [SerializeField] private Range _createSizeRange;
+
+    [Space]
+
+    [SerializeField] private float _ceilingHeight = 18.3f;
+    [SerializeField] private Range _distanceRange;
+
+    [Space]
+
+    [SerializeField] private Range _normalStalactiteRange;
+    [SerializeField] private Range _rageStalactiteRange;
 
     [Space]
 
@@ -86,7 +96,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private BoxCollider2D _earthQuakeCollider;
     [SerializeField] private Transform _waveSpawnPoint;
     [SerializeField] private Bear_GroundWave _waveSkillPrefab;
-    [SerializeField] ShakePreset _earthquakeCameraShake;
+    [SerializeField] private ShakePreset _earthquakeCameraShake;
 
     [Space]
 
@@ -94,14 +104,13 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private float _earthQuakeForceX = 7f;
     [SerializeField] private float _earthQuakeForceY = 10f;
 
-    [SerializeField] SoundList _soundList;
+    [SerializeField] private SoundList _soundList;
+
+    [SerializeField] private BoxCollider2D _bodyCollider;   // not bodyHitBox
+    [SerializeField] private GameObject LightingStone;      // 이마에 박힌 보석
 
     private Vector2 _playerPos;
-    private BoxCollider2D _bodyCollider;   // not bodyHitBox
-
     private int healtUnit = 10000;
-
-    public GameObject LightingStone;
 
     protected override void Awake()
     {
@@ -116,8 +125,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // init
         RandomTargetAttackCount();
         SetToRandomAttack();
-
-        // 종유석 카운트 초기화
         SetStalactiteToNormalCount();
     }
     protected override void Update()
@@ -213,9 +220,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // 그로기 상태로 진입
         Animator.SetTrigger("Groggy");
-
-        // 꺼줘야겠다
-        TurnOffLightStone();
     }
     public void OnLightStay(LightCapturer capturer, LightSource lightSource)
     {
@@ -290,7 +294,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
     private void SetToRandomAttack()
     {
-        int nextAttackNumber = Random.Range(1, 5); // 1 ~ 4
+        int nextAttackNumber = (int)_randomAttackRange.Random();
         _nextAttack = (BearAttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
@@ -359,7 +363,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // TODO : 여기서 할퀴기 생성
         var slashEffect = Instantiate(_slash2Prefab, _playerPos, Quaternion.identity);
         if (RecentDir < 1)
-        slashEffect.transform.localScale = new Vector3(-Mathf.Abs(slashEffect.transform.localScale.x), slashEffect.transform.localScale.y, slashEffect.transform.localScale.z);
+            slashEffect.transform.localScale = new Vector3(-Mathf.Abs(slashEffect.transform.localScale.x), slashEffect.transform.localScale.y, slashEffect.transform.localScale.z);
         //Destroy(slashEffect.gameObject, 0.25f);
 
         _soundList.PlaySFX("Slash");
@@ -375,13 +379,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         SetRecentDir(dir);
         // StartSetRecentDirAfterGrounded(dir);
     }
-    public void PlaySound_AnimEvent(string key)
-    {
-        _soundList.PlaySFX(key);
-    }
     public void BodySlam02_AnimEvent()
     {
-        _soundList.PlaySFX("BodySlam");
         _isBodySlamming = true;
         Rigidbody.AddForce(60f * Vector2.right * RecentDir, ForceMode2D.Impulse);
     }
@@ -392,97 +391,39 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
 
     // stomp
-    public void Stomp01_AnimEvent()
+    public void StompEffect()
     {
-        MonsterAttackInfo stompInfo = new MonsterAttackInfo(_stompDamage, new Vector2(_stompForceX, _stompForceY));
-        CastAttack(_stompCollider, _stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _attackTargetLayer);
         Instantiate(_stompEffectPrefab, _stompCollider.transform.position, Quaternion.identity);
         _soundList.PlaySFX("Stomp");
-        // 종유석 생성
+    }
+    public void Stomp01_AnimEvent()
+    {
+        // stomp attack
+        MonsterAttackInfo stompInfo = new MonsterAttackInfo(_stompDamage, new Vector2(_stompForceX, _stompForceY));
+        CastAttack(_stompCollider, _stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _attackTargetLayer);
+        StompEffect();
+
+        // create stalactite
         for (int i = 0; i < _stalactiteCount; ++i)
-        {
-            _stalactitePosXs.Clear();
-            _stalactitePosXs = new List<float>(_stalactiteCount);
             StartCoroutine(CreateStalactite());
-        }
     }
     public IEnumerator CreateStalactite()
     {
-        var fallingStartTime = Random.Range(0.5f, 1.5f);
+        yield return new WaitForSeconds(_createTimeRange.Random());
 
-        // 종유석을 천장에서 랜덤 위치에 생성한다
-        var bodyColliderMinX = _bodyCollider.bounds.min.x;
-        var bodyColliderMaxX = _bodyCollider.bounds.max.x;
-        var posXInLeftRange = Random.Range(bodyColliderMinX - toDistance, bodyColliderMinX - fromDistance);
-        var posXInRightRange = Random.Range(bodyColliderMaxX + fromDistance, bodyColliderMaxX + toDistance);
+        // random pos range
+        float posXInRange = (RecentDir > 0)
+            ? Random.Range(_bodyCollider.bounds.max.x + _distanceRange.Start,
+                _bodyCollider.bounds.max.x + _distanceRange.End)
+            : Random.Range(_bodyCollider.bounds.min.x - _distanceRange.End,
+                _bodyCollider.bounds.min.x - _distanceRange.Start);
+        Vector2 position = new Vector2(posXInRange, _ceilingHeight);
 
-        /*
-        bool isSavable = false;
-        float finalPosX = 0f;
+        // create stalactite
+        var stalactite = Instantiate(_stalactitePrefab, position, Quaternion.identity);
 
-        var limitCount = 0;
-
-        // finalPosX를 정하는 과정
-        do
-        {
-            limitCount++;
-
-            if (RecentDir > 0)
-            {
-                finalPosX = posXInRightRange;
-                // Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
-                // Debug.DrawRay(new Vector3(bodyColliderMaxX + toDistance, ceilingHeight), Vector2.down, Color.yellow, 2f);
-            }
-            else
-            {
-                finalPosX = posXInLeftRange;
-                // Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
-                // Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
-            }
-
-            foreach (var posX in _stalactitePosXs)
-            {
-                var minX = posX - 0.3f;
-                var maxX = posX + 0.3f;
-
-                // 저장 가능 조건
-                if (finalPosX < minX || finalPosX > maxX)
-                {
-                    isSavable = true;
-                    break;
-                }
-            }
-
-        } while (!isSavable || limitCount > 50);
-        */
-
-        float finalPosX = 0f;
-        if (RecentDir > 0)
-        {
-            finalPosX = posXInRightRange;
-            Debug.DrawRay(new Vector3(bodyColliderMaxX + fromDistance, ceilingHeight), Vector2.down, Color.blue, 2f);
-            Debug.DrawRay(new Vector3(bodyColliderMaxX + toDistance, ceilingHeight), Vector2.down, Color.yellow, 2f);
-        }
-        else
-        {
-            finalPosX = posXInLeftRange;
-            Debug.DrawRay(new Vector3(bodyColliderMinX - toDistance, ceilingHeight), Vector2.down, Color.red, 2f);
-            Debug.DrawRay(new Vector3(bodyColliderMinX - fromDistance, ceilingHeight), Vector2.down, Color.green, 2f);
-        }
-
-        // 모든 종유석의 생성위치 저장
-        _stalactitePosXs.Add(finalPosX);
-
-        yield return new WaitForSeconds(fallingStartTime);
-
-        // Vector2 randomPos = (Random.value > 0.5f) ? new Vector2(posXInLeftRange, ceilingHeight) : new Vector2(posXInRightRange, ceilingHeight);
-        Vector2 randomPos = new Vector2(finalPosX, ceilingHeight);
-        var stalactite = Instantiate(_stalactitePrefab, randomPos, Quaternion.identity);
-
-        // 종유석의 크기도 랜덤으로
-        var scale = Random.Range(0.4f, 1f);
-        stalactite.transform.localScale *= scale;
-        // Debug.Log(stalactite.transform.localScale);
+        // random size
+        stalactite.transform.localScale *= _createSizeRange.Random();
     }
 
     // earthQuake
@@ -505,13 +446,25 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         wave2.SetDir(Vector2.right);
     }
 
-    public void TurnOnLightStone()
+    public void PlaySound_AnimEvent(string key)
     {
-        LightingStone.SetActive(true);
+        _soundList.PlaySFX(key);
     }
 
-    public void TurnOffLightStone()
+    private void OnDrawGizmosSelected()
     {
-        LightingStone.SetActive(false);
+        // 천장
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(new Vector3(transform.position.x - 25f, _ceilingHeight, transform.position.z), new Vector3(transform.position.x + 25f, _ceilingHeight, transform.position.z));
+
+        // 오른쪽 종유석 범위
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(new Vector3(_bodyCollider.bounds.max.x + _distanceRange.Start, _ceilingHeight, transform.position.z), new Vector3(_bodyCollider.bounds.max.x + _distanceRange.Start, _ceilingHeight - 3f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(_bodyCollider.bounds.max.x + _distanceRange.End, _ceilingHeight, transform.position.z), new Vector3(_bodyCollider.bounds.max.x + _distanceRange.End, _ceilingHeight - 3f, transform.position.z));
+
+        // 왼쪽 종유석 범위
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(new Vector3(_bodyCollider.bounds.min.x - _distanceRange.Start, _ceilingHeight, transform.position.z), new Vector3(_bodyCollider.bounds.min.x - _distanceRange.Start, _ceilingHeight - 3f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(_bodyCollider.bounds.min.x - _distanceRange.End, _ceilingHeight, transform.position.z), new Vector3(_bodyCollider.bounds.min.x - _distanceRange.End, _ceilingHeight - 3f, transform.position.z));
     }
 }

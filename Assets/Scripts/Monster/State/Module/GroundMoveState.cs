@@ -18,7 +18,7 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
             {
                 // 추가로 상대와의 거리가 x보다 가까워지면 추격을 중단
                 var dist = Vector2.Distance(Monster.transform.position, collider.transform.position);
-                if (dist < 4f)
+                if (dist < 3f)
                 {
                     Monster.GroundChaseEvaluator.IsTooClose = true;
                 }
