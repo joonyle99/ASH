@@ -17,9 +17,10 @@ public class BossClearColorChangePlayer : MonoBehaviour
             target.Initialize(_material);
         }
     }
-    private void Start()
+    private void Update()
     {
-        PlayEffect();
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+            PlayEffect();
     }
     public void PlayEffect()
     {
