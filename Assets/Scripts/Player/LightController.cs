@@ -33,7 +33,7 @@ public class LightController : MonoBehaviour
         // Auto Light Source Off
         if (_isLightWorking && !_isLightableState)
         {
-            TurnOffLight();
+            _player.Animator.SetBool("IsLightWorking", false);
         }
 
         // Light Source ON / OFF
@@ -65,6 +65,7 @@ public class LightController : MonoBehaviour
             return;
 
         _isLightWorking = true;
+        _player.Animator.SetBool("IsLightWorking", _isLightWorking);
 
         // 빛을 켠다
         _light.SetActive(true);
@@ -77,6 +78,7 @@ public class LightController : MonoBehaviour
             return;
 
         _isLightWorking = false;
+        _player.Animator.SetBool("IsLightWorking", _isLightWorking);
 
         // 초기화
         _curAngle = 0f;
@@ -89,10 +91,12 @@ public class LightController : MonoBehaviour
 
     public void LightButtonPressable()
     {
+        // 빛 스킬 시전 시간 동안은 Press 불가능
         _isLightButtonPressable = true;
     }
     public void LightButtonDisPressable()
     {
+        // 빛 스킬 시전이 시작되면 Press 불가능
         _isLightButtonPressable = false;
     }
 }

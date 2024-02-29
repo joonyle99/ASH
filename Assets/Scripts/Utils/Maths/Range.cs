@@ -20,7 +20,7 @@ struct RangeInt
 /// Range [Start, End)
 /// </summary>
 [System.Serializable]
-struct Range
+public struct Range
 {
     public float Start;
     public float End;
