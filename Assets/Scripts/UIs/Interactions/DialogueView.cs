@@ -8,6 +8,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     [SerializeField] Image _dialoguePanel;
     [SerializeField] Image _skipUI;
     [SerializeField] TextMeshProUGUI _dialogueText;
+    [SerializeField] TextMeshProUGUI _nameText;
 
     TextShaker _textShaker;
 
@@ -38,6 +39,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
         _skipUI.gameObject.SetActive(false);
         _dialogueText.alpha = 1;
 
+        _nameText.text = line.Speaker;
         //Set shake
         if (line.ShakeParams == TextShakeParams.None)
             _textShaker.StopShake();

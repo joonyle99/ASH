@@ -8,18 +8,18 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Dialogue Data", fileName = "New Dialogue Data")]
 public class DialogueData : ScriptableObject
 {
-    [SerializeField] string _NPCName;
+    [SerializeField] string _defaultSpeaker;
     [SerializeField] InputSetterScriptableObject _inputSetter;
     [SerializeField] TextAsset _script;
     [SerializeField] float _defaultCharactersPerSecond = 12;
     [SerializeField] DialogueAction[] _actions;
 
-    public string NPCName => _NPCName;
     public InputSetterScriptableObject InputSetter => _inputSetter;
     public List<DialogueLine> GetDialogueSequence()
     {
         List<DialogueLine> dialogueSequence = new List<DialogueLine>();
         string [] scriptLines = HappyTools.TSVRead.SplitLines(_script.text);
+        string speakerName = _defaultSpeaker;
         for (int i=0; i<scriptLines.Length; i++)
         {
             float charactersPerSecond = _defaultCharactersPerSecond;
@@ -32,12 +32,13 @@ public class DialogueData : ScriptableObject
                 for (int c = 0; c < commands.Length; c++) 
                 {
                     var words = commands[c].Split(":");
-                    if (words[0].Trim().ToLower() == "speed")
+                    var firstWord = words[0].Trim().ToLower();
+                    if (firstWord == "speed")
                     {
                         if (!float.TryParse(words[1].Trim(), out charactersPerSecond))
                             Debug.LogError("Can't parse speed in line " + i.ToString());
                     }
-                    else if (words[0].Trim().ToLower() == "shake")
+                    else if (firstWord == "shake")
                     {
                         var shakeParamValues = words[1].Trim().Split('/');
                         Debug.Assert(shakeParamValues.Length == 3, "Can't parse shake in line " + i.ToString());
@@ -45,6 +46,10 @@ public class DialogueData : ScriptableObject
                             || !float.TryParse(shakeParamValues[1].Trim(), out shakeParams.MovePower)
                             || !float.TryParse(shakeParamValues[2].Trim(), out shakeParams.Speed))
                             Debug.LogError("Can't parse shake in line " + i.ToString());
+                    }
+                    else if (firstWord == "name")
+                    {
+                        speakerName = words[1].Trim();
                     }
                 }
                 continue;
@@ -55,6 +60,7 @@ public class DialogueData : ScriptableObject
             line.Text = scriptLines[i];
             line.CharactersPerSecond = charactersPerSecond;
             line.ShakeParams = shakeParams;
+            line.Speaker = speakerName;
 
             dialogueSequence.Add(line);
         }
