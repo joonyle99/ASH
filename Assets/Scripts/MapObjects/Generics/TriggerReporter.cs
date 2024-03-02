@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TriggerReporter : TriggerZone
 {
+    // 트리거 작용을 보고하는 대상
     [SerializeField] GameObject _reportTargetObject;
     ITriggerListener [] _reportTargets;
 

@@ -6,9 +6,9 @@ using UnityEngine;
 public class CutscenePlayer : MonoBehaviour, ITriggerListener
 {
     [SerializeField] bool _playOnce = true;
-    [SerializeField] List<SceneEffect> _sequence;
+    [SerializeField] bool _played = false;
 
-    bool _played = false;
+    [SerializeField] List<SceneEffect> _sequence;
 
     public bool IsPlaying { get; private set; } = false;
 
