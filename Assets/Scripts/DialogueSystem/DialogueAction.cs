@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Dialogue Data", fileName = "New Dialogue Data")]
-public abstract class DialogueAction : ScriptableObject
-{
-    public abstract void Invoke();
+public class DialogueAction : ScriptableObject
+{ 
 }

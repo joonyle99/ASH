@@ -19,7 +19,7 @@ public class TriggerZone : MonoBehaviour
         {
             OnActivatorEnter(activator);
             if (activator.Type == ActivatorType.Player)
-                OnPlayerEnter(SceneContext.Current.Player);
+                OnPlayerEnter(activator.GetComponent<PlayerBehaviour>());
         }
     }
     void OnTriggerExit2D(Collider2D other)
