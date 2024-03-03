@@ -726,11 +726,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 33.31025
+      value: 29.840048
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.116628
+      value: 35.095325
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -51163,11 +51163,20 @@ PrefabInstance:
       value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 4950070036778526826, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_text
+      value: "This \uC548\uB155\uD558\uC138\uC694ple of <color=#FF000033>different</color>
+        colors.\nsddsds"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950070036778526826, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 7825681848100788585, guid: 6949a0c0c4cf8ca4099ee39100594830, type: 2}
     - target: {fileID: 4950070036778526826, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
       propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950070036801773366, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4950070036961960967, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
@@ -66400,6 +66409,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
+  _played: 0
   _sequence: []
 --- !u!114 &6060988662800880878
 MonoBehaviour:
@@ -66421,7 +66431,9 @@ MonoBehaviour:
   _dialogueOnConsecutiveInteract: {fileID: 11400000, guid: c09ab8b2cb8b8e2429b3aa797ba6136f, type: 2}
   _dialogueOnFirstAttack: {fileID: 11400000, guid: 366703d4845c3784f9ef0c7ba2c3ffa6, type: 2}
   _dialogueAfterSecondAttack: {fileID: 11400000, guid: c8ce8e3db4dc90e429de5d37e9c24fff, type: 2}
+  _cutscenePlayer: {fileID: 0}
   _hp: 3
+  _lightNPC: {fileID: 0}
 --- !u!199 &7632465929378413057
 ParticleSystemRenderer:
   serializedVersion: 6
