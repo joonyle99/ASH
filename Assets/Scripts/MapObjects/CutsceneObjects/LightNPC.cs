@@ -53,7 +53,7 @@ public class LightNPC : MonoBehaviour
         float eTime = 0f;
         while (eTime < _flashStartDuration)
         {
-            float t = eTime / _curveMovementDuration;
+            float t = eTime / _flashStartDuration;
             _flashLight.pointLightOuterRadius = _flashMaxRadius * t;
             yield return null;
             eTime += Time.deltaTime;
@@ -62,7 +62,7 @@ public class LightNPC : MonoBehaviour
         eTime = 0f;
         while (eTime < _flashEndDuration)
         {
-            float t = 1 - eTime / _curveMovementDuration;
+            float t = 1 - eTime / _flashEndDuration;
             _flashLight.pointLightOuterRadius = _flashMaxRadius * t;
             yield return null;
             eTime += Time.deltaTime;

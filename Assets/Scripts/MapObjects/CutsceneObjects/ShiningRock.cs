@@ -11,6 +11,7 @@ public class ShiningRock : InteractableObject, IAttackListener
     [SerializeField] CutscenePlayer _cutscenePlayer;
     [SerializeField] int _hp = 3;
     [SerializeField] GameObject _lightNPC;
+    [SerializeField] SoundList _soundList;
     bool _hasPlayedDialogue = false;
 
     bool _hittable = false;
@@ -20,14 +21,17 @@ public class ShiningRock : InteractableObject, IAttackListener
     }
     protected override void OnInteract()
     {
-        if (_hasPlayedDialogue)
+        if (!_hasPlayedDialogue)
+        {
             DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract);
+            _hasPlayedDialogue = true;
+        }
         else
         {
             if (_hp == 3)
-                DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract);
+                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);
             else if (_hp == 2)
-                DialogueController.Instance.StartDialogue(_dialogueOnFirstAttack);
+                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);
             else if (_hp == 1)
                 DialogueController.Instance.StartDialogue(_dialogueAfterSecondAttack);
         }
@@ -44,6 +48,7 @@ public class ShiningRock : InteractableObject, IAttackListener
     public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         _hp--;
+        _soundList.PlaySFX("Hit");
         if (_hp == 2)
         {
             DialogueController.Instance.StartDialogue(_dialogueOnFirstAttack);
@@ -53,7 +58,8 @@ public class ShiningRock : InteractableObject, IAttackListener
             _lightNPC.transform.parent = transform.parent;
             _lightNPC.SetActive(true);
             _cutscenePlayer.Play();
-            Destroy(gameObject);
+            _soundList.PlaySFX("Die");
+            Destruction.Destruct(gameObject);
         }
         return IAttackListener.AttackResult.Success;
     }
