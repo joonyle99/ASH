@@ -140,6 +140,9 @@ namespace LevelGraph
                     LinkNodes(edge);
                 }
             }
+
+            EditorUtility.SetDirty(_graphData);
+            AssetDatabase.SaveAssets();
             return graphViewChange;
         }
         public void OnNodeClicked(NodeView clickedNodeView)
