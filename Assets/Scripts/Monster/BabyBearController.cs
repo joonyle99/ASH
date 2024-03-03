@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class BabyBearController : MonoBehaviour
 {
@@ -17,16 +18,27 @@ public class BabyBearController : MonoBehaviour
     {
         _animator.SetTrigger(paramName);
     }
+    
+    public void Flip()
+    {
+        // flip
+        var localScale = transform.localScale;
+        localScale.x *= -1;
+        transform.localScale = localScale;
+    }
 
-    // 새끼곰이 반대 방향으로 사라지는 연출
     public void RunAway()
     {
-        SetTriggerAnim("Walk");
+        Flip();
+
+        // runAway
         StartCoroutine(RunAwayCoroutine());
     }
 
     public IEnumerator RunAwayCoroutine()
     {
+        SetTriggerAnim("RunAway");
+
         float eTime = 0f;
         while (eTime < _time)
         {
@@ -35,7 +47,8 @@ public class BabyBearController : MonoBehaviour
             transform.position = nextPosition;
             yield return null;
         }
-        Destroy(this.gameObject);
         yield return null;
+
+        SetTriggerAnim("Idle");
     }
 }
