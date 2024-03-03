@@ -42,12 +42,16 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
             return;
         StartCoroutine(ChangeToPlayableSceneCoroutine(sceneName, passageName));
     }
+    public void ChangeToScene(string sceneName, System.Action changeDoneCallback)
+    {
+        StartCoroutine(ChangeToSceneCoroutine(sceneName, changeDoneCallback));
+    }
     public void ChangeToScene(string sceneName)
     {
-        StartCoroutine(ChangeToSceneCoroutine(sceneName));
+        StartCoroutine(ChangeToSceneCoroutine(sceneName, null));
     }
 
-    IEnumerator ChangeToSceneCoroutine(string sceneName)
+    IEnumerator ChangeToSceneCoroutine(string sceneName, System.Action changeDoneCallback)
     {
         IsChanging = true;
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
@@ -56,6 +60,9 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
         SceneContext sceneContext = FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable("");
         IsChanging = false;
+
+        if (changeDoneCallback != null)
+            changeDoneCallback.Invoke();
     }
     IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string passageName)
     {

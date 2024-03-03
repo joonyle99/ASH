@@ -15,6 +15,10 @@ public class TitleSceneManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void ChangeScene(string sceneName)
+    {
+        StartCoroutine(SceneChangeCoroutine(sceneName));
+    }
     public void OpenPrologueScene()
     {
         StartCoroutine(OpenPrologueSceneCoroutine());
@@ -23,5 +27,10 @@ public class TitleSceneManager : MonoBehaviour
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
         SceneChangeManager.Instance.ChangeToScene("PrologueScene");
+    }
+    IEnumerator SceneChangeCoroutine(string sceneName)
+    {
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
+        SceneChangeManager.Instance.ChangeToScene(sceneName, ()=>  SoundManager.Instance.PlayCommonBGM("Exploration1"));
     }
 }
