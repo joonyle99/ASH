@@ -20,6 +20,10 @@ public class BossClearColorChange : MonoBehaviour
             _renderer.material = material;
             _renderer.material.SetTexture("_ChangeTex", _changedSprite.texture);
         }
+        else
+        {
+            _renderer.color = new Color(_renderer.color.r, _renderer.color.g, _renderer.color.b, 0);
+        }
     }
 
     public void SetProgress(float progress)
