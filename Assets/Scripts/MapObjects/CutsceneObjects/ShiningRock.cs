@@ -8,11 +8,16 @@ public class ShiningRock : InteractableObject, IAttackListener
     [SerializeField] DialogueData _dialogueOnConsecutiveInteract;
     [SerializeField] DialogueData _dialogueOnFirstAttack;
     [SerializeField] DialogueData _dialogueAfterSecondAttack;
-
+    [SerializeField] CutscenePlayer _cutscenePlayer;
     [SerializeField] int _hp = 3;
+    [SerializeField] GameObject _lightNPC;
     bool _hasPlayedDialogue = false;
 
     bool _hittable = false;
+    void Awake()
+    {
+        _lightNPC.SetActive(false);
+    }
     protected override void OnInteract()
     {
         if (_hasPlayedDialogue)
@@ -45,6 +50,9 @@ public class ShiningRock : InteractableObject, IAttackListener
         }
         else if (_hp == 0)
         {
+            _lightNPC.transform.parent = transform.parent;
+            _lightNPC.SetActive(true);
+            _cutscenePlayer.Play();
             Destroy(gameObject);
         }
         return IAttackListener.AttackResult.Success;
