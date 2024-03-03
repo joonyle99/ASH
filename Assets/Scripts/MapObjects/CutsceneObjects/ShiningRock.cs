@@ -21,12 +21,15 @@ public class ShiningRock : InteractableObject, IAttackListener
     }
     protected override void OnInteract()
     {
-        if (_hasPlayedDialogue)
+        if (!_hasPlayedDialogue)
+        {
             DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract);
+            _hasPlayedDialogue = true;
+        }
         else
         {
             if (_hp == 3)
-                DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract);
+                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);
             else if (_hp == 2)
                 DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);
             else if (_hp == 1)
