@@ -29,4 +29,9 @@ public class BearBlocking : MonoBehaviour
         bear.enabled = true;
         bear.Animator.SetTrigger("EndBlocking");
     }
+
+    public void EndBlocking_OnlyEnable()
+    {
+        bear.enabled = true;
+    }
 }

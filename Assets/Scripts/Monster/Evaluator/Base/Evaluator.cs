@@ -111,4 +111,9 @@ public abstract class Evaluator : MonoBehaviour
 
         this._coolTimeCoroutine = StartCoroutine(CoolTimeCoroutine());
     }
+
+    public void SetCanWorking(bool canWorking)
+    {
+        CanWorking = canWorking;
+    }
 }
