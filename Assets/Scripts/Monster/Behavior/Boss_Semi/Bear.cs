@@ -114,10 +114,14 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     private Vector2 _playerPos;
     private int healtUnit = 10000;
 
-    private static bool isCutScene_1;
-    private static bool isCutScene_2;
-    private static bool isCutScene_3;
-    private static bool isCutScene_4;
+    public static bool isCutScene_LightingGuide;
+    public CutscenePlayer lightingGuide;
+    public static bool isCutScene_AttackSuccess;
+    public CutscenePlayer attackSuccess;
+    public static bool isCutScene_Rage;
+    public CutscenePlayer rageCutscene;
+    public static bool isCutScene_End;
+    public CutscenePlayer endCutscene;
 
     protected override void Awake()
     {
@@ -402,6 +406,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         Instantiate(_stompEffectPrefab, _stompCollider.transform.position, Quaternion.identity);
         _soundList.PlaySFX("Stomp");
+
+        // create stalactite
+        for (int i = 0; i < _stalactiteCount; ++i)
+            StartCoroutine(CreateStalactite());
     }
     public void Stomp01_AnimEvent()
     {
@@ -409,10 +417,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         MonsterAttackInfo stompInfo = new MonsterAttackInfo(_stompDamage, new Vector2(_stompForceX, _stompForceY));
         CastAttack(_stompCollider, _stompCollider.transform.position, _stompCollider.bounds.size, stompInfo, _attackTargetLayer);
         StompEffect();
-
-        // create stalactite
-        for (int i = 0; i < _stalactiteCount; ++i)
-            StartCoroutine(CreateStalactite());
     }
     public IEnumerator CreateStalactite()
     {
