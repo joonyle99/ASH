@@ -34,7 +34,7 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: a86034c9def8e014cb4ef867b5af3dba
-  graphPosition: {x: 601, y: 83}
+  graphPosition: {x: 589, y: 143}
   SceneName: Boss_4
   Scene:
     sceneAsset: {fileID: 102900000, guid: e97ad917cccf7304faffaef789b55c7c, type: 3}
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: caa1ad0b955ba424b89163fb112642a4
-  graphPosition: {x: 375.2, y: 42}
+  graphPosition: {x: 375, y: 18}
   SceneName: Boss_2
   Scene:
     sceneAsset: {fileID: 102900000, guid: 826783374fa299a4088f5a288b4ae10c, type: 3}
@@ -143,10 +143,30 @@ MonoBehaviour:
     ExitScene: {fileID: 7502026196269074928}
     EntrancePassage: doortoBoss
     ExitPassgage: DungeontoBoss
+  - EntranceScene: {fileID: -7888092096887817785}
+    ExitScene: {fileID: -1493074355644229260}
+    EntrancePassage: 1to2
+    ExitPassgage: 2to1
   - EntranceScene: {fileID: -1493074355644229260}
     ExitScene: {fileID: -7888092096887817785}
-    EntrancePassage: 
+    EntrancePassage: 2to1
     ExitPassgage: 1to2
+  - EntranceScene: {fileID: -1493074355644229260}
+    ExitScene: {fileID: 1782720182068067114}
+    EntrancePassage: 2to3
+    ExitPassgage: 3to2
+  - EntranceScene: {fileID: 1782720182068067114}
+    ExitScene: {fileID: -1493074355644229260}
+    EntrancePassage: 3to2
+    ExitPassgage: 2to3
+  - EntranceScene: {fileID: -1493074355644229260}
+    ExitScene: {fileID: -7774507360984267180}
+    EntrancePassage: 2to4
+    ExitPassgage: 4to2
+  - EntranceScene: {fileID: -7774507360984267180}
+    ExitScene: {fileID: -1493074355644229260}
+    EntrancePassage: 4to2
+    ExitPassgage: 2to4
 --- !u!114 &1782720182068067114
 MonoBehaviour:
   m_ObjectHideFlags: 0

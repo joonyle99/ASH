@@ -16,9 +16,17 @@ public class Mushroom3 : MonsterBehavior, ILightCaptureListener
     [SerializeField] private float _targetDieTime = 4f;
     [SerializeField] private float _elapsedDieTime;
 
+    [Space]
+
+    public static bool isCutSceneMushroom;
+    public CutscenePlayer cutSceneMushroom;
+
     protected override void Awake()
     {
         base.Awake();
+
+        customBoxCastAttackEvent -= CutScene_Mushroom;
+        customBoxCastAttackEvent += CutScene_Mushroom;
     }
     protected override void Start()
     {
@@ -88,5 +96,14 @@ public class Mushroom3 : MonsterBehavior, ILightCaptureListener
     public void DevourEnd_AnimEvent()
     {
         _isDevouring = false;
+    }
+
+    public void CutScene_Mushroom()
+    {
+        if (!isCutSceneMushroom && cutSceneMushroom)
+        {
+            isCutSceneMushroom = true;
+            cutSceneMushroom.Play();
+        }
     }
 }

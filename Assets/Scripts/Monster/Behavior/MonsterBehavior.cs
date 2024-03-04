@@ -298,6 +298,15 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (IsDead)
             return;
 
+        // Die
+        if (CurHp <= 0)
+        {
+            CurHp = 0;
+            Die();
+
+            return;
+        }
+
         // condition
         switch (MoveType)
         {

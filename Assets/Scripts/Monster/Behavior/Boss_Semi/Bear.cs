@@ -106,8 +106,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     [SerializeField] private SoundList _soundList;
 
-    [SerializeField] private BoxCollider2D _bodyCollider;   // not bodyHitBox
-    [SerializeField] private GameObject LightingStone;      // 이마에 박힌 보석
+    [SerializeField] private BoxCollider2D _bodyCollider;               // not bodyHitBox
+    [SerializeField] private GameObject LightingStone;                  // 이마에 박힌 보석
+    [SerializeField] private ParticleSystem[] DisintegrateEffects;      // 잿가루 효과 파티클
+    [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;
 
     private Vector2 _playerPos;
     private int healtUnit = 10000;
@@ -449,6 +451,29 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public void PlaySound_AnimEvent(string key)
     {
         _soundList.PlaySFX(key);
+    }
+
+    public void StartDisintegrateEffect()
+    {
+        StartCoroutine(DisintegrateEffectCoroutine());
+    }
+
+    public IEnumerator DisintegrateEffectCoroutine()
+    {
+        foreach (var effect in DisintegrateEffects)
+        {
+            effect.gameObject.SetActive(true);
+            effect.Play();
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        Animator.SetTrigger("DieEnd");
+
+        var endParticleTime = DisintegrateEffects[0].main.duration;
+        yield return new WaitForSeconds(endParticleTime);
+
+        bossClearColorChangeEffect.PlayEffect();
     }
 
     private void OnDrawGizmosSelected()
