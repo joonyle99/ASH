@@ -5,7 +5,8 @@ using UnityEngine;
 public class BGMPlayer : MonoBehaviour
 {
     [SerializeField] string key;
-    private void Start()
+
+    public void PlayerBattleBGM()
     {
         SoundManager.Instance.PlayCommonBGM(key);
     }

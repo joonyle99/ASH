@@ -125,6 +125,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     public int earthQuakeCount = 0;
     public bool isNeverGroogy = true;
+    public bool isNeverRage = true;
 
     protected override void Awake()
     {
@@ -147,9 +148,17 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         if (!isCutScene_LightingGuide && lightingGuide)
         {
-            if (earthQuakeCount >= 1 && isNeverGroogy)
+            if (earthQuakeCount >= 3 && isNeverGroogy)
             {
                 StartCoroutine(LightingGuideCoroutine());
+            }
+        }
+
+        if (!isCutScene_AttackSuccess && attackSuccess)
+        {
+            if (!isNeverRage)
+            {
+                StartCoroutine(AttackSuccessCoroutine());
             }
         }
     }
@@ -209,14 +218,11 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         }
 
         // Rage
-        if (!IsRage)
+        if (!IsRage && (CurHp <= MaxHp * 0.5f))
         {
-            if (CurHp <= MaxHp * 0.5f)
-            {
-                Animator.SetTrigger("Shout");
-
-                return IAttackListener.AttackResult.Success;
-            }
+            Animator.SetTrigger("Hurt");
+            isNeverRage = false;
+            return IAttackListener.AttackResult.Success;
         }
 
         // Hurt
@@ -509,6 +515,22 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         yield return new WaitUntil(() => CurrentStateIs<Monster_IdleState>());
 
         lightingGuide.Play();
+    }
+
+    public IEnumerator AttackSuccessCoroutine()
+    {
+        isCutScene_AttackSuccess = true;
+
+        AttackEvaluator.SetCanWorking(false);
+
+        yield return new WaitUntil(() => CurrentStateIs<Monster_IdleState>());
+
+        attackSuccess.Play();
+    }
+
+    public void AnimatorSetTrigger(string paramName)
+    {
+        Animator.SetTrigger(paramName);
     }
 
     private void OnDrawGizmosSelected()
