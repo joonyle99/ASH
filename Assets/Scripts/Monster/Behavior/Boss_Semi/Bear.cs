@@ -123,6 +123,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public static bool isCutScene_End;
     public CutscenePlayer endCutscene;
 
+    public int earthQuakeCount = 0;
+    public bool isNeverGroogy = true;
+
     protected override void Awake()
     {
         base.Awake();
@@ -141,6 +144,14 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     protected override void Update()
     {
         base.Update();
+
+        if (!isCutScene_LightingGuide && lightingGuide)
+        {
+            if (earthQuakeCount >= 1 && isNeverGroogy)
+            {
+                StartCoroutine(LightingGuideCoroutine());
+            }
+        }
     }
     protected override void FixedUpdate()
     {
@@ -254,7 +265,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         }
 
         if (_currentAttack is BearAttackType.EarthQuake)
+        {
             InitializeAttackCount();
+            earthQuakeCount++;
+        }
         else
             IncreaseAttackCount();
     }
@@ -272,6 +286,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         // 그로기 상태 진입 (더이상 손전등의 영향을 받지 않음)
         IsGroggy = true;
+
+        if (isNeverGroogy)
+            isNeverGroogy = false;
 
         // 몬스터의 MonsterBodyHit를 끈다 (플레이어를 타격할 수 없다)
         SetIsAttackableHitBox(false);
@@ -483,6 +500,15 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         yield return new WaitForSeconds(endParticleTime);
 
         bossClearColorChangeEffect.PlayEffect();
+    }
+
+    public IEnumerator LightingGuideCoroutine()
+    {
+        isCutScene_LightingGuide = true;
+
+        yield return new WaitUntil(() => CurrentStateIs<Monster_IdleState>());
+
+        lightingGuide.Play();
     }
 
     private void OnDrawGizmosSelected()

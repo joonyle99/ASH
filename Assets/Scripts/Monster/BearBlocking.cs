@@ -7,8 +7,7 @@ public class BearBlocking : MonoBehaviour
 
     private void Start()
     {
-        bear.enabled = false;
-        bear.Animator.SetTrigger("StartBlocking");
+        StartBlocking();
     }
 
     private void Update()
@@ -17,6 +16,12 @@ public class BearBlocking : MonoBehaviour
         {
             EndBlocking();
         }
+    }
+
+    public void StartBlocking()
+    {
+        bear.enabled = false;
+        bear.Animator.SetTrigger("StartBlocking");
     }
 
     public void EndBlocking()
