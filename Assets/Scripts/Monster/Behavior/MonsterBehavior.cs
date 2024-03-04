@@ -448,6 +448,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
 
     // Effect
+    public void DeathEffect()
+    {
+        // death effect
+        StartCoroutine(DeathCoroutine());
+    }
     private IEnumerator DeathCoroutine()
     {
         yield return StartCoroutine(DeathEffectCoroutine());

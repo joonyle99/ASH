@@ -7,7 +7,9 @@ public class BossClearColorChangePlayer : MonoBehaviour
     [SerializeField] Material _material;
     [SerializeField] float _duration = 2f;
 
-    BossClearColorChange[] _changeTargets; 
+    BossClearColorChange[] _changeTargets;
+
+    public bool isEndEffect = false;
 
     void Awake()
     {
@@ -34,5 +36,7 @@ public class BossClearColorChangePlayer : MonoBehaviour
                 target.SetProgress(eTime / _duration);
             }
         }
+
+        isEndEffect = true;
     }
 }

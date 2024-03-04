@@ -118,8 +118,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public CutscenePlayer lightingGuide;
     public static bool isCutScene_AttackSuccess;
     public CutscenePlayer attackSuccess;
-    public static bool isCutScene_Rage;
-    public CutscenePlayer rageCutscene;
     public static bool isCutScene_End;
     public CutscenePlayer endCutscene;
 
@@ -212,7 +210,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         if (CurHp <= 0)
         {
             CurHp = 0;
+
             Die();
+
+            StartCoroutine(SlowMotionCoroutine(5f));
 
             return IAttackListener.AttackResult.Success;
         }
@@ -492,20 +493,34 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     public IEnumerator DisintegrateEffectCoroutine()
     {
+        // 사라지는 효과 시작
         foreach (var effect in DisintegrateEffects)
         {
             effect.gameObject.SetActive(true);
             effect.Play();
         }
 
-        yield return new WaitForSeconds(2f);
+        var endParticleTime = DisintegrateEffects[0].main.duration;
+        yield return new WaitForSeconds(endParticleTime / 1.5f);
 
+        // 넉다운 이미지로 변경
         Animator.SetTrigger("DieEnd");
 
-        var endParticleTime = DisintegrateEffects[0].main.duration;
-        yield return new WaitForSeconds(endParticleTime);
+        yield return new WaitForSeconds(5f);
 
+        // 서서히 돌아오는 효과 시작
         bossClearColorChangeEffect.PlayEffect();
+
+        // 노래 끄자
+        SoundManager.Instance.StopBGM();
+
+        yield return new WaitUntil(() => bossClearColorChangeEffect.isEndEffect);
+
+        if (!isCutScene_End && endCutscene)
+        {
+            isCutScene_End = true;
+            endCutscene.Play();
+        }
     }
 
     public IEnumerator LightingGuideCoroutine()
@@ -531,6 +546,13 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public void AnimatorSetTrigger(string paramName)
     {
         Animator.SetTrigger(paramName);
+    }
+
+    IEnumerator SlowMotionCoroutine(float duration)
+    {
+        Time.timeScale = 0.3f;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1f;
     }
 
     private void OnDrawGizmosSelected()
