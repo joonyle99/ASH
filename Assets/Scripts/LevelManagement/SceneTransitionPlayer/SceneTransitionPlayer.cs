@@ -19,7 +19,12 @@ public class SceneTransitionPlayer : MonoBehaviour
     {
         yield return FadeCoroutine(_fadeDuration, FadeType.Lighten);
     }
-
+    public void SetFadeImageAlpha(float alpha)
+    {
+        Color color = _fadeImage.color;
+        color.a = alpha;
+        _fadeImage.color = color;
+    }
 
     protected enum FadeType { Lighten, Darken}
     protected IEnumerator FadeCoroutine(float duration, FadeType fadeType)
