@@ -114,6 +114,11 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     private Vector2 _playerPos;
     private int healtUnit = 10000;
 
+    private static bool isCutScene_1;
+    private static bool isCutScene_2;
+    private static bool isCutScene_3;
+    private static bool isCutScene_4;
+
     protected override void Awake()
     {
         base.Awake();
