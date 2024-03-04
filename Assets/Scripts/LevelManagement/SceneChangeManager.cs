@@ -10,6 +10,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
 
     //TEMP : 게임 글로벌 데이터를 저장하는 곳으로 이동
     [SerializeField] LevelGraphData _levelGraphData;
+    [SerializeField] SceneTransitionPlayer _defaultSceneTransitionPlayer;
 
     public PassageData GetNextPassageData(string passageName)
     {
@@ -77,6 +78,9 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
 
     public void OnSceneContextBuilt()
     {
-        SceneEffectManager.Current.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterEffectCoroutine(), false));
+            SceneEffectManager.Current.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterEffectCoroutine(), false));
+
+        if (SceneContext.Current.SceneTransitionPlayer != _defaultSceneTransitionPlayer)
+            _defaultSceneTransitionPlayer.SetFadeImageAlpha(0);
     }
 }

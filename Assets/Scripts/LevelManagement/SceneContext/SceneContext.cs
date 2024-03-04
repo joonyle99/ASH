@@ -51,16 +51,15 @@ public class SceneContext : MonoBehaviour
         }
 
         var transitionPlayers = FindObjectsOfType<PlayableSceneTransitionPlayer>();
-        if (transitionPlayers.Length == 1)
-            SceneTransitionPlayer = transitionPlayers[0];
-        else
+        int i = 0;
+        while(i < transitionPlayers.Length)
         {
-            if (transitionPlayers[0].GetComponent<SceneChangeManager>() != null)
+            if (transitionPlayers[i].GetComponent<SceneChangeManager>() == null)
             {
-                SceneTransitionPlayer = transitionPlayers[1];
+                SceneTransitionPlayer = transitionPlayers[i];
+                break;
             }
-            else
-                SceneTransitionPlayer = transitionPlayers[0];
+            i++;
         }
         UpdateBuildResult(SceneTransitionPlayer);
 
