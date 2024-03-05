@@ -77,10 +77,11 @@ public class LightBeamLineEffect : MonoBehaviour
         {
             Vector3 targetPosition = _connectedTransforms[targetPointIndex].position;
             Vector3 direction = (targetPosition - currentPosition).normalized;
-            if(!_isLastBeam)
-                currentPosition += direction * _lineDrawSpeed * Time.deltaTime;
+            if (!_isLastBeam)
+                currentPosition = Vector3.MoveTowards(currentPosition, targetPosition, _lineDrawSpeed * Time.deltaTime);
             else
-                currentPosition += direction * _lastLineDrawSpeed * Time.deltaTime;
+                currentPosition = Vector3.MoveTowards(currentPosition, targetPosition, _lastLineDrawSpeed * Time.deltaTime);
+            print((currentPosition - targetPosition).sqrMagnitude + " " + MinDistanceFromLantern);
             if ((currentPosition - targetPosition).sqrMagnitude < MinDistanceFromLantern * MinDistanceFromLantern)
             {
                 _lineRenderer.SetPosition(targetPointIndex, targetPosition);
