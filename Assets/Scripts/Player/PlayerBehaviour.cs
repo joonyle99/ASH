@@ -40,6 +40,17 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] bool _isCanJump = true;
     [SerializeField] bool _isCanDash = true;
 
+    [Header("HeadAim")]
+    [Space]
+
+    [SerializeField] Transform _target;
+    [SerializeField] float _speed = 5f;
+    [SerializeField] float _rightMin = 0.9f;
+    [SerializeField] float _rightMax = 1.9f;
+    [SerializeField] float _leftMin = 0.4f;
+    [SerializeField] float _leftMax = 1.4f;
+
+
     [Header("Viewr")]
     [Space]
 
@@ -176,6 +187,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // Player Flip
         UpdateImageFlip();
 
+        // Player Head Aim
+        HeadAimControl();
+
         // Change In Air State
         ChangeInAirState();
 
@@ -231,6 +245,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
             {
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
+
+                // UpdateFlip 할때마다 Target Object의 높이를 맞춰줘야 한다.
+                // 0.9 ~ 1.9를 1.4 ~ 0.4에 대응시킨다.
+                Vector3 targetVector = _target.localPosition;
+                targetVector.y = (_leftMin + _rightMax) - targetVector.y;
+                targetVector.y = (RecentDir == 1)
+                    ? Mathf.Clamp(targetVector.y, _rightMin, _rightMax)
+                    : Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
+                _target.localPosition = targetVector;
             }
         }
     }
@@ -240,6 +263,71 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         {
             if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();
+        }
+    }
+
+    private void HeadAimControl()
+    {
+        // target의 높이 변화에 의한 Aim 설정
+        // multi aim constraint 사용
+
+        /*
+        if (IsMoveUpKey || IsMoveDownKey)
+        {
+            Vector3 targetVector = _target.localPosition;
+            float targetMoveDirection = IsMoveUpKey ? 1f : -1f;
+            targetVector.y += targetMoveDirection * _speed * Time.deltaTime;
+
+            targetVector.y = (RecentDir == 1)
+                ? Mathf.Clamp(targetVector.y, _rightMin, _rightMax)
+                : Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
+
+            _target.localPosition = targetVector;
+        }
+        */
+
+        // TODO : 코드 최적화 필요
+        if (IsMoveUpKey)
+        {
+            if (RecentDir == 1)
+            {
+                Vector3 targetVector = _target.localPosition;
+                targetVector.y += _speed * Time.deltaTime;
+
+                targetVector.y = Mathf.Clamp(targetVector.y, _rightMin, _rightMax);
+
+                _target.localPosition = targetVector;
+            }
+            else
+            {
+                Vector3 targetVector = _target.localPosition;
+                targetVector.y -= _speed * Time.deltaTime;
+
+                targetVector.y = Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
+
+                _target.localPosition = targetVector;
+            }
+        }
+        else if (IsMoveDownKey)
+        {
+            if (RecentDir == 1)
+            {
+                Vector3 targetVector = _target.localPosition;
+                targetVector.y -= _speed * Time.deltaTime;
+
+                targetVector.y = Mathf.Clamp(targetVector.y, _rightMin, _rightMax);
+
+                _target.localPosition = targetVector;
+            }
+            else
+            {
+                Vector3 targetVector = _target.localPosition;
+                targetVector.y += _speed * Time.deltaTime;
+
+                targetVector.y = Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
+
+                _target.localPosition = targetVector;
+            }
         }
     }
 

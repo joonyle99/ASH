@@ -20,7 +20,7 @@ public class LightSource : MonoBehaviour
 
     void OnEnable()
     {
-        // this.transform.rotation = Quaternion.identity;
+        // this.transform.worldRotation = Quaternion.identity;
     }
 
     void Update()
