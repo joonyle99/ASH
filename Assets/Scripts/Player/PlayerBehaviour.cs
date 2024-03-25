@@ -192,7 +192,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         UpdateImageFlip();
 
         // Player Head Aim
-        HeadAimControl();
+        if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>())
+            HeadAimControl();
 
         // Change In Air State
         ChangeInAirState();
@@ -272,46 +273,42 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     private void HeadAimControl()
     {
-        // TODO : 코드 간결화 작업 필요
         // 상태에 따라 자연스러운 카메라 및 targetObject 움직임 구현하기
 
-        // target의 높이 변화에 의한 Aim 설정
+        // target의 높이 변화에 의한 Head Aim 설정
         // multi aim constraint 사용
 
-        // 플레이어의 바라보는 방향과 키 입력에 따른 target 오브젝트가 움직이는 방향 설정 (기본값 0)
-        float targetMoveDir = 0f;
+        // 왼쪽을 바라볼 때 (recentDir == -1)
+        // -> down key -> target object move to up (targetMoveDir == 1)
+        // -> up key -> target object move to down (targetMoveDir == -1)
+        // 오른쪽을 바라볼 때 (recentDir == 1)
+        // -> down key -> target object move to down  (targetMoveDir == -1)
+        // -> up key -> target object move to up  (targetMoveDir == 1)
 
-        if (IsMoveUpKey) targetMoveDir = (RecentDir == 1) ? 1f : -1f;
-        else if (IsMoveDownKey) targetMoveDir = (RecentDir == 1) ? -1f : 1f;
+        // 플레이어의 바라보는 방향과 키 입력에 따른 target 오브젝트가 움직이는 방향 설정 (기본값 0)
+        float targetObjectMoveDir = 0f;
+
+        if (IsMoveUpKey) targetObjectMoveDir = (RecentDir == 1) ? 1f : -1f;
+        else if (IsMoveDownKey) targetObjectMoveDir = (RecentDir == 1) ? -1f : 1f;
+
+        float min = (RecentDir == 1) ? _rightMin : _leftMin;
+        float max = (RecentDir == 1) ? _rightMax : _leftMax;
 
         // target 오브젝트가 위 / 아래로 움직이는 경우
-        if (Mathf.Abs(targetMoveDir) > 0.01f)
+        if (Mathf.Abs(targetObjectMoveDir) > 0.001f)
         {
-            // 왼쪽을 바라볼 때 (recentDir == -1)
-            // -> down key -> target object move to up (targetMoveDir == 1)
-            // -> up key -> target object move to down (targetMoveDir == -1)
-            // 오른쪽을 바라볼 때 (recentDir == 1)
-            // -> down key -> target object move to down  (targetMoveDir == -1)
-            // -> up key -> target object move to up  (targetMoveDir == 1)
-
             // 카메라 이동
             float cameraPosY = SceneContext.Current.Camera.OffsetY;
-            var cameraMoveDir = Mathf.Sign(RecentDir * targetMoveDir);
+            float cameraMoveDir = Mathf.Sign(RecentDir * targetObjectMoveDir); // (RecentDir * targetObjectMoveDir) == -1 => down key
             cameraPosY += cameraMoveDir * _cameraSpeed * Time.deltaTime;
             cameraPosY = Mathf.Clamp(cameraPosY, _cameraMin, _cameraMax);
             SceneContext.Current.Camera.OffsetY = cameraPosY;
 
             // target 오브젝트 이동
-            Vector3 targetVector = _target.localPosition;
-            targetVector.y += targetMoveDir * _speed * Time.deltaTime;
-
-            float min = (RecentDir == 1) ? _rightMin : _leftMin;
-            float max = (RecentDir == 1) ? _rightMax : _leftMax;
-
-            // target 오브젝트의 최소 최대 높이 설정
-            targetVector.y = Mathf.Clamp(targetVector.y, min, max);
-
-            _target.localPosition = targetVector;
+            Vector3 targetPos = _target.localPosition;
+            targetPos.y += targetObjectMoveDir * _speed * Time.deltaTime;
+            targetPos.y = Mathf.Clamp(targetPos.y, min, max);
+            _target.localPosition = targetPos;
         }
         // target 오브젝트가 제자리로 돌아가는 경우
         else
@@ -319,39 +316,28 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
             // 카메라 이동
             float cameraPosY = SceneContext.Current.Camera.OffsetY;
             float cameraOriginY = (_cameraMin + _cameraMax) / 2f;
-
-            float moveDir = cameraOriginY - cameraPosY;
-
-            if (Mathf.Abs(moveDir) < 0.01f) return;
-
-            cameraPosY += Mathf.Sign(moveDir) * _cameraSpeed * Time.deltaTime;
-
-            if (moveDir < 0f) cameraPosY = Mathf.Max(cameraPosY, cameraOriginY);
-            else cameraPosY = Mathf.Min(cameraPosY, cameraOriginY);
-
-            SceneContext.Current.Camera.OffsetY = cameraPosY;
+            float cameraMoveDir = cameraOriginY - cameraPosY;
+            if (Mathf.Abs(cameraMoveDir) > 0.001f)
+            {
+                cameraPosY += Mathf.Sign(cameraMoveDir) * _cameraSpeed * Time.deltaTime;
+                if (cameraMoveDir < 0f) cameraPosY = Mathf.Max(cameraPosY, cameraOriginY);
+                else cameraPosY = Mathf.Min(cameraPosY, cameraOriginY);
+                SceneContext.Current.Camera.OffsetY = cameraPosY;
+            }
 
             // targetObject 이동
-            Vector3 targetVector = _target.localPosition;
-
-            float min = (RecentDir == 1) ? _rightMin : _leftMin;
-            float max = (RecentDir == 1) ? _rightMax : _leftMax;
-            float targetY = (min + max) / 2f;
-
-            if (Mathf.Abs(targetVector.y - targetY) < 0.01f) return;
-
-            float needY = targetY - targetVector.y;
-            targetVector.y += MathF.Sign(needY) * _speed / 2f * Time.deltaTime;
-
-            // target 오브젝트 이동 방향 : 위 -> 아래
-            if (targetVector.y > targetY) targetVector.y = Mathf.Clamp(targetVector.y, targetY, max);
-            // target 오브젝트 이동 방향 : 아래 -> 위
-            else targetVector.y = Mathf.Clamp(targetVector.y, min, targetY);
-
-            _target.localPosition = targetVector;
+            Vector3 targetPos = _target.localPosition;
+            float targetOriginY = (min + max) / 2f;
+            if (Mathf.Abs(targetPos.y - targetOriginY) > 0.001f)
+            {
+                float taretMoveDir = targetOriginY - targetPos.y;
+                targetPos.y += MathF.Sign(taretMoveDir) * _speed / 2f * Time.deltaTime;
+                if (targetPos.y > targetOriginY) targetPos.y = Mathf.Clamp(targetPos.y, targetOriginY, max);    // target 오브젝트 이동 방향 : 위 -> 아래
+                else targetPos.y = Mathf.Clamp(targetPos.y, min, targetOriginY);                                // target 오브젝트 이동 방향 : 아래 -> 위
+                _target.localPosition = targetPos;
+            }
         }
     }
-
 
     // key pressed event
     void OnBasicAttackPressed()
