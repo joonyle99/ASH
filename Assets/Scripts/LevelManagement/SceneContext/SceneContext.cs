@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 
 /// <summary>
@@ -18,6 +19,8 @@ public class SceneContext : MonoBehaviour
 
     List<Passage> _passages = new List<Passage>();
 
+    public ProCamera2D Camera { get; private set; }
+
     [SerializeField] CheckpointManager _checkpointManager;
 
     public CheckpointManager CheckPointManager { get { return _checkpointManager; } }
@@ -31,6 +34,7 @@ public class SceneContext : MonoBehaviour
             if (_checkpointManager == null)
                 _checkpointManager = gameObject.AddComponent<CheckpointManager>();
         }
+        Camera = FindObjectOfType<ProCamera2D>();
     }
     public void InstantRespawn()
     {

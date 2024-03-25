@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener
 {
@@ -49,7 +51,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] float _rightMax = 1.9f;
     [SerializeField] float _leftMin = 0.4f;
     [SerializeField] float _leftMax = 1.4f;
-
+    [SerializeField] float _cameraSpeed = 1f;
+    [SerializeField] float _cameraMin = 0.08f;
+    [SerializeField] float _cameraMax = 0.68f;
 
     [Header("Viewr")]
     [Space]
@@ -268,66 +272,83 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     private void HeadAimControl()
     {
+        // TODO : 코드 간결화 작업 필요
+        // 상태에 따라 자연스러운 카메라 및 targetObject 움직임 구현하기
+
         // target의 높이 변화에 의한 Aim 설정
         // multi aim constraint 사용
 
-        /*
-        if (IsMoveUpKey || IsMoveDownKey)
-        {
-            Vector3 targetVector = _target.localPosition;
-            float targetMoveDirection = IsMoveUpKey ? 1f : -1f;
-            targetVector.y += targetMoveDirection * _speed * Time.deltaTime;
+        // 플레이어의 바라보는 방향과 키 입력에 따른 target 오브젝트가 움직이는 방향 설정 (기본값 0)
+        float targetMoveDir = 0f;
 
-            targetVector.y = (RecentDir == 1)
-                ? Mathf.Clamp(targetVector.y, _rightMin, _rightMax)
-                : Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
+        if (IsMoveUpKey) targetMoveDir = (RecentDir == 1) ? 1f : -1f;
+        else if (IsMoveDownKey) targetMoveDir = (RecentDir == 1) ? -1f : 1f;
+
+        // target 오브젝트가 위 / 아래로 움직이는 경우
+        if (Mathf.Abs(targetMoveDir) > 0.01f)
+        {
+            // 왼쪽을 바라볼 때 (recentDir == -1)
+            // -> down key -> target object move to up (targetMoveDir == 1)
+            // -> up key -> target object move to down (targetMoveDir == -1)
+            // 오른쪽을 바라볼 때 (recentDir == 1)
+            // -> down key -> target object move to down  (targetMoveDir == -1)
+            // -> up key -> target object move to up  (targetMoveDir == 1)
+
+            // 카메라 이동
+            float cameraPosY = SceneContext.Current.Camera.OffsetY;
+            var cameraMoveDir = Mathf.Sign(RecentDir * targetMoveDir);
+            cameraPosY += cameraMoveDir * _cameraSpeed * Time.deltaTime;
+            cameraPosY = Mathf.Clamp(cameraPosY, _cameraMin, _cameraMax);
+            SceneContext.Current.Camera.OffsetY = cameraPosY;
+
+            // target 오브젝트 이동
+            Vector3 targetVector = _target.localPosition;
+            targetVector.y += targetMoveDir * _speed * Time.deltaTime;
+
+            float min = (RecentDir == 1) ? _rightMin : _leftMin;
+            float max = (RecentDir == 1) ? _rightMax : _leftMax;
+
+            // target 오브젝트의 최소 최대 높이 설정
+            targetVector.y = Mathf.Clamp(targetVector.y, min, max);
 
             _target.localPosition = targetVector;
         }
-        */
-
-        // TODO : 코드 최적화 필요
-        if (IsMoveUpKey)
+        // target 오브젝트가 제자리로 돌아가는 경우
+        else
         {
-            if (RecentDir == 1)
-            {
-                Vector3 targetVector = _target.localPosition;
-                targetVector.y += _speed * Time.deltaTime;
+            // 카메라 이동
+            float cameraPosY = SceneContext.Current.Camera.OffsetY;
+            float cameraOriginY = (_cameraMin + _cameraMax) / 2f;
 
-                targetVector.y = Mathf.Clamp(targetVector.y, _rightMin, _rightMax);
+            float moveDir = cameraOriginY - cameraPosY;
 
-                _target.localPosition = targetVector;
-            }
-            else
-            {
-                Vector3 targetVector = _target.localPosition;
-                targetVector.y -= _speed * Time.deltaTime;
+            if (Mathf.Abs(moveDir) < 0.01f) return;
 
-                targetVector.y = Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
+            cameraPosY += Mathf.Sign(moveDir) * _cameraSpeed * Time.deltaTime;
 
-                _target.localPosition = targetVector;
-            }
-        }
-        else if (IsMoveDownKey)
-        {
-            if (RecentDir == 1)
-            {
-                Vector3 targetVector = _target.localPosition;
-                targetVector.y -= _speed * Time.deltaTime;
+            if (moveDir < 0f) cameraPosY = Mathf.Max(cameraPosY, cameraOriginY);
+            else cameraPosY = Mathf.Min(cameraPosY, cameraOriginY);
 
-                targetVector.y = Mathf.Clamp(targetVector.y, _rightMin, _rightMax);
+            SceneContext.Current.Camera.OffsetY = cameraPosY;
 
-                _target.localPosition = targetVector;
-            }
-            else
-            {
-                Vector3 targetVector = _target.localPosition;
-                targetVector.y += _speed * Time.deltaTime;
+            // targetObject 이동
+            Vector3 targetVector = _target.localPosition;
 
-                targetVector.y = Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
+            float min = (RecentDir == 1) ? _rightMin : _leftMin;
+            float max = (RecentDir == 1) ? _rightMax : _leftMax;
+            float targetY = (min + max) / 2f;
 
-                _target.localPosition = targetVector;
-            }
+            if (Mathf.Abs(targetVector.y - targetY) < 0.01f) return;
+
+            float needY = targetY - targetVector.y;
+            targetVector.y += MathF.Sign(needY) * _speed / 2f * Time.deltaTime;
+
+            // target 오브젝트 이동 방향 : 위 -> 아래
+            if (targetVector.y > targetY) targetVector.y = Mathf.Clamp(targetVector.y, targetY, max);
+            // target 오브젝트 이동 방향 : 아래 -> 위
+            else targetVector.y = Mathf.Clamp(targetVector.y, min, targetY);
+
+            _target.localPosition = targetVector;
         }
     }
 
