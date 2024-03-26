@@ -1,28 +1,10 @@
 using System;
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener
 {
     #region Attribute
-
-    [Header("Ground Check")]
-    [Space]
-
-    [SerializeField] LayerMask _groundLayer;
-    [SerializeField] Transform _groundCheckTrans;
-    [SerializeField] Transform _groundAboveCheckTrans;
-    [SerializeField] float _groundCheckRadius;
-    [SerializeField] float _groundAboveCheckLength;
-
-    [Header("Climb Check")]
-    [Space]
-
-    [SerializeField] LayerMask _climbLayer;
-    [SerializeField] Transform _climbCheckTrans;
-    [SerializeField] float _climbCheckLength;
 
     [Header("Player")]
     [Space]
@@ -127,7 +109,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
 
     // RaycastHit
-    public RaycastHit2D GroundHit { get; private set; }
+    public RaycastHit2D GroundHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
     public RaycastHit2D ClimbHit { get; set; }
 
@@ -191,10 +173,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // Player Flip
         UpdateImageFlip();
 
-        // Player Head Aim
-        if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>())
-            HeadAimControl();
-
         // Change In Air State
         ChangeInAirState();
 
@@ -203,26 +181,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         {
             ChangeState<DieState>();
             return;
-        }
-
-        #endregion
-
-        #region Check Ground & Climb
-
-        // Check Ground
-        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
-
-        // Check Upward
-        UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _groundAboveCheckLength, _groundLayer);
-
-        // Check Climb
-        ClimbHit = Physics2D.Raycast(_climbCheckTrans.position, PlayerLookDir2D, _climbCheckLength, _climbLayer);
-        if (ClimbHit)
-        {
-            // TODO : 벽의 방향을 localScale로 하면 위험하다
-            int wallLookDir = Math.Sign(ClimbHit.transform.localScale.x);
-            bool isDirSync = (wallLookDir * RecentDir) > 0;
-            IsClimbable = !isDirSync;
         }
 
         #endregion
@@ -268,74 +226,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         {
             if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();
-        }
-    }
-
-    private void HeadAimControl()
-    {
-        // 상태에 따라 자연스러운 카메라 및 targetObject 움직임 구현하기
-
-        // target의 높이 변화에 의한 Head Aim 설정
-        // multi aim constraint 사용
-
-        // 왼쪽을 바라볼 때 (recentDir == -1)
-        // -> down key -> target object move to up (targetMoveDir == 1)
-        // -> up key -> target object move to down (targetMoveDir == -1)
-        // 오른쪽을 바라볼 때 (recentDir == 1)
-        // -> down key -> target object move to down  (targetMoveDir == -1)
-        // -> up key -> target object move to up  (targetMoveDir == 1)
-
-        // 플레이어의 바라보는 방향과 키 입력에 따른 target 오브젝트가 움직이는 방향 설정 (기본값 0)
-        float targetObjectMoveDir = 0f;
-
-        if (IsMoveUpKey) targetObjectMoveDir = (RecentDir == 1) ? 1f : -1f;
-        else if (IsMoveDownKey) targetObjectMoveDir = (RecentDir == 1) ? -1f : 1f;
-
-        float min = (RecentDir == 1) ? _rightMin : _leftMin;
-        float max = (RecentDir == 1) ? _rightMax : _leftMax;
-
-        // target 오브젝트가 위 / 아래로 움직이는 경우
-        if (Mathf.Abs(targetObjectMoveDir) > 0.001f)
-        {
-            // 카메라 이동
-            float cameraPosY = SceneContext.Current.Camera.OffsetY;
-            float cameraMoveDir = Mathf.Sign(RecentDir * targetObjectMoveDir); // (RecentDir * targetObjectMoveDir) == -1 => down key
-            cameraPosY += cameraMoveDir * _cameraSpeed * Time.deltaTime;
-            cameraPosY = Mathf.Clamp(cameraPosY, _cameraMin, _cameraMax);
-            SceneContext.Current.Camera.OffsetY = cameraPosY;
-
-            // target 오브젝트 이동
-            Vector3 targetPos = _target.localPosition;
-            targetPos.y += targetObjectMoveDir * _speed * Time.deltaTime;
-            targetPos.y = Mathf.Clamp(targetPos.y, min, max);
-            _target.localPosition = targetPos;
-        }
-        // target 오브젝트가 제자리로 돌아가는 경우
-        else
-        {
-            // 카메라 이동
-            float cameraPosY = SceneContext.Current.Camera.OffsetY;
-            float cameraOriginY = (_cameraMin + _cameraMax) / 2f;
-            float cameraMoveDir = cameraOriginY - cameraPosY;
-            if (Mathf.Abs(cameraMoveDir) > 0.001f)
-            {
-                cameraPosY += Mathf.Sign(cameraMoveDir) * _cameraSpeed * Time.deltaTime;
-                if (cameraMoveDir < 0f) cameraPosY = Mathf.Max(cameraPosY, cameraOriginY);
-                else cameraPosY = Mathf.Min(cameraPosY, cameraOriginY);
-                SceneContext.Current.Camera.OffsetY = cameraPosY;
-            }
-
-            // targetObject 이동
-            Vector3 targetPos = _target.localPosition;
-            float targetOriginY = (min + max) / 2f;
-            if (Mathf.Abs(targetPos.y - targetOriginY) > 0.001f)
-            {
-                float taretMoveDir = targetOriginY - targetPos.y;
-                targetPos.y += MathF.Sign(taretMoveDir) * _speed / 2f * Time.deltaTime;
-                if (targetPos.y > targetOriginY) targetPos.y = Mathf.Clamp(targetPos.y, targetOriginY, max);    // target 오브젝트 이동 방향 : 위 -> 아래
-                else targetPos.y = Mathf.Clamp(targetPos.y, min, targetOriginY);                                // target 오브젝트 이동 방향 : 아래 -> 위
-                _target.localPosition = targetPos;
-            }
         }
     }
 
@@ -576,20 +466,4 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
 
     #endregion
-
-    private void OnDrawGizmosSelected()
-    {
-        // set color
-        Gizmos.color = Color.red;
-
-        // Draw Ground Check
-        Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
-
-        // Draw Ground Above Check
-        Gizmos.DrawLine(_groundAboveCheckTrans.position,
-            _groundAboveCheckTrans.position + Vector3.up * _groundAboveCheckLength);
-
-        // Draw Wall Check
-        Gizmos.DrawLine(_climbCheckTrans.position, _climbCheckTrans.position + PlayerLookDir3D * _climbCheckLength);
-    }
 }
