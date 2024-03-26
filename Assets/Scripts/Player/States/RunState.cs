@@ -3,18 +3,20 @@ using UnityEngine.EventSystems;
 
 public class RunState : PlayerState
 {
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         Player.PlayerMovementController.enabled = true;
         Player.Animator.SetBool("IsRun", true);
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
         if (!Player.IsMoveXKey)
         {
             ChangeState<IdleState>();
-            return;
+            return true;
         }
 
         if (InputManager.Instance.State.DashKey.KeyDown)
@@ -23,7 +25,7 @@ public class RunState : PlayerState
             {
                 GetComponent<DashState>().SetDashDir(Player.RawInputs.Movement.x);
                 ChangeState<DashState>();
-                return;
+                return true;
             }
         }
 
@@ -34,15 +36,19 @@ public class RunState : PlayerState
                 if (Player.IsDirSync && Player.IsMoveUpKey)
                 {
                     ChangeState<WallGrabState>();
-                    return;
+                    return true;
                 }
             }
         }
+
+        return true;
     }
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         Player.PlayerMovementController.enabled = false;
         Player.Animator.SetBool("IsRun", false);
+
+        return true;
     }
 
 }

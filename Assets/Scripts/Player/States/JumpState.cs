@@ -4,7 +4,7 @@ public class JumpState : PlayerState
 {
     PlayerJumpController _jumpController;
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         _jumpController = Player.GetComponent<PlayerJumpController>();
 
@@ -16,19 +16,21 @@ public class JumpState : PlayerState
         else if (Player.PreviousState is WallState && !InputManager.Instance.State.JumpKey.Pressing) _jumpController.ExcuteEndWallJump();
         // Jump
         else _jumpController.ExcuteBasicJump();
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
-
+        return true;
     }
-    protected override void OnFixedUpdate()
+    protected override bool OnFixedUpdate()
     {
-
+        return true;
     }
 
-    protected override void OnExit()
+    protected override bool OnExit()
     {
-
+        return true;
     }
 }

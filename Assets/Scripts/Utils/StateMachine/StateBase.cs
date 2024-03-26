@@ -31,10 +31,10 @@ public abstract class StateBase : MonoBehaviour
     }
 
     protected virtual void SetAnimsOnEnter() {}
-    protected abstract void OnEnter();
-    protected abstract void OnUpdate();
-    protected virtual void OnFixedUpdate() { }
-    protected abstract void OnExit();
+    protected abstract bool OnEnter();
+    protected abstract bool OnUpdate();
+    protected virtual bool OnFixedUpdate() { return true;}
+    protected abstract bool OnExit();
 
     public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
     {

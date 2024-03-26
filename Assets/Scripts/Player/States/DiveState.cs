@@ -31,15 +31,17 @@ public class DiveState : PlayerState
     bool _isCharging = false;          // 차징 상태
     bool _isDiving = false;            // 다이빙 상태
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         StartCoroutine(ExcuteDive());
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
         if (!_isDiving)
-            return;
+            return false;
 
         // 가속도 적용
         Player.Rigidbody.velocity += Vector2.up * _fastDiveSpeed * Physics2D.gravity.y * Time.deltaTime;
@@ -76,17 +78,24 @@ public class DiveState : PlayerState
 
             // 내려찍기가 끝나면 Idle State
             ChangeState<IdleState>();
+
+            return true;
         }
+
+        return true;
     }
-    protected override void OnFixedUpdate()
+    protected override bool OnFixedUpdate()
     {
 
+        return true;
     }
 
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         Player.Animator.SetBool("IsCharging", false);
         Player.Animator.SetBool("IsDiving", false);
+
+        return true;
     }
 
     // 코루틴을 사용해서 플레이어를 공중에서 멈추게 한다

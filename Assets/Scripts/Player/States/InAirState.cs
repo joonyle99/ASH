@@ -12,12 +12,14 @@ public class InAirState : PlayerState
     [SerializeField] float _fastDropPower = 1.2f;        // 빨리 떨어지는 힘
     [SerializeField] float _maxDropSpeed = 60f;        // 떨어지는 속도 최대값
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         Player.Animator.SetBool("IsInAir", true);
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
         // Change to Idle State
         if (Player.IsGrounded)
@@ -26,7 +28,7 @@ public class InAirState : PlayerState
             Player.PlaySound_SE_Jump_02();
 
             ChangeState<IdleState>();
-            return;
+            return true;
         }
 
         // Change to Dash State
@@ -36,7 +38,7 @@ public class InAirState : PlayerState
             {
                 GetComponent<DashState>().SetDashDir(Player.RawInputs.Movement.x);
                 ChangeState<DashState>();
-                return;
+                return true;
             }
         }
 
@@ -48,7 +50,7 @@ public class InAirState : PlayerState
                 if (Player.IsDirSync && Player.IsMoveUpKey)
                 {
                     ChangeState<WallGrabState>();
-                    return;
+                    return true;
                 }
             }
         }
@@ -88,8 +90,10 @@ public class InAirState : PlayerState
             if (Player.Rigidbody.velocity.y < (-1) * _maxDropSpeed)
                 Player.Rigidbody.velocity = new Vector2(Player.Rigidbody.velocity.x, (-1) * _maxDropSpeed);
         }
+
+        return true;
     }
-    protected override void OnFixedUpdate()
+    protected override bool OnFixedUpdate()
     {
         // Basic Jump에서 In Air State로 넘어온 경우
         if (!Player.IsClimbJump)
@@ -104,11 +108,15 @@ public class InAirState : PlayerState
             // 가속 낙하
             Player.Rigidbody.AddForce(_fastDropPower * Physics2D.gravity);
         }
+
+        return true;
     }
 
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         Player.Animator.SetBool("IsInAir", false);
         Player.Animator.SetBool("IsJump", false);
+
+        return true;
     }
 }

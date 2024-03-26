@@ -61,7 +61,7 @@ public class DieState : PlayerState
         _disintegrateEffect = GetComponent<DisintegrateEffect>();
     }
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         Animator.SetTrigger("Die");
 
@@ -71,16 +71,20 @@ public class DieState : PlayerState
         InputManager.Instance.ChangeInputSetter(_stayStillSetter);
 
         StartCoroutine(MoveUp());
+
+        return true;
     }
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
 
+        return true;
     }
-    protected override void OnFixedUpdate()
+    protected override bool OnFixedUpdate()
     {
 
+        return true;
     }
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         /*
         Player.IsDead = false;
@@ -88,5 +92,7 @@ public class DieState : PlayerState
 
         InputManager.Instance.ChangeToDefaultSetter();
         */
+
+        return true;
     }
 }
