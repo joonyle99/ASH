@@ -10,8 +10,6 @@ public class HealingState : PlayerState
     {
         Debug.Log("Enter Healing");
 
-        Player.PlaySound_SE_Healing_01();
-
         StartCoroutine(Healing());
 
         return true;

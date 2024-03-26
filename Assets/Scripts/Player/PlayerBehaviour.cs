@@ -24,33 +24,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] bool _isCanJump = true;
     [SerializeField] bool _isCanDash = true;
 
-    [Header("HeadAim")]
-    [Space]
-
-    [SerializeField] Transform _target;
-    [SerializeField] float _speed = 5f;
-    [SerializeField] float _rightMin = 0.9f;
-    [SerializeField] float _rightMax = 1.9f;
-    [SerializeField] float _leftMin = 0.4f;
-    [SerializeField] float _leftMax = 1.4f;
-    [SerializeField] float _cameraSpeed = 1f;
-    [SerializeField] float _cameraMin = 0.08f;
-    [SerializeField] float _cameraMax = 0.68f;
-
-    [Header("Viewr")]
-    [Space]
-
-    [SerializeField] CapsuleCollider2D _bodyCollider;
-    [SerializeField] Rigidbody2D _handRigidbody;
-
-    [Header("White Flash")]
+    [Header("White Flash for Hit")]
     [Space]
 
     [SerializeField] Material _whiteFlashMaterial;
+    [SerializeField] SpriteRenderer[] _spriteRenderers;
+
     [SerializeField] float _godModeTime = 1.5f;
     [SerializeField] float _flashInterval = 0.06f;
 
-    [SerializeField] SpriteRenderer[] _spriteRenderers;
     Material[] _originalMaterials;
     Coroutine _whiteFlashRoutine;
 
@@ -69,6 +51,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     InteractionController _interactionController;
     PlayerMovementController _playerMovementController;
     LightController _lightController;
+    HeadAimController _headAimContoller;
+
+    // rigidbody and collider
+    CapsuleCollider2D _bodyCollider;
+    Rigidbody2D _handRigidbody;
 
     // Sound List
     SoundList _soundList;
@@ -121,9 +108,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public CapsuleCollider2D BodyCollider { get { return _bodyCollider; } }
     public SoundList SoundList { get { return _soundList; } }
 
-    // SpriteRenderer / Material
+    // SpriteRenderer for White Flash
     public SpriteRenderer[] SpriteRenderers { get { return _spriteRenderers; } }
-    public Material[] OriginalMaterials => _originalMaterials;
 
     #endregion
 
@@ -136,6 +122,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _interactionController = GetComponent<InteractionController>();
         _playerMovementController = GetComponent<PlayerMovementController>();
         _lightController = GetComponent<LightController>();
+        _headAimContoller = GetComponent<HeadAimController>();
 
         // collider
         _bodyCollider = GetComponent<CapsuleCollider2D>();
@@ -144,7 +131,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _soundList = GetComponent<SoundList>();
 
         // Material for White Flash
-        LoadFlashMaterial();
         SaveOriginalMaterial();
     }
     protected override void Start()
@@ -209,14 +195,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
 
-                // UpdateFlip 할때마다 Target Object의 높이를 맞춰줘야 한다.
-                // 0.9 ~ 1.9를 1.4 ~ 0.4에 대응시킨다.
-                Vector3 targetVector = _target.localPosition;
-                targetVector.y = (_leftMin + _rightMax) - targetVector.y;
-                targetVector.y = (RecentDir == 1)
-                    ? Mathf.Clamp(targetVector.y, _rightMin, _rightMax)
-                    : Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
-                _target.localPosition = targetVector;
+                _headAimContoller.HeadAimControlOnFlip();
             }
         }
     }
@@ -279,11 +258,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Time.timeScale = 1f;
     }
     // flash
-    private void LoadFlashMaterial()
-    {
-        _whiteFlashMaterial =
-            Resources.Load<Material>("Materials/WhiteFlashMaterial");
-    }
     private void SaveOriginalMaterial()
     {
         _originalMaterials = new Material[_spriteRenderers.Length];
@@ -415,31 +389,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _dashTrailEffect.Emit(1);
     }
 
-    public void PlaySound_SE_DesolateDive_01()
-    {
-        _soundList.PlaySFX("SE_DesolateDive_01");
-    }
-
-    public void PlaySound_SE_DesolateDive_02()
-    {
-        _soundList.PlaySFX("SE_DesolateDive_02");
-    }
-
-    public void PlaySound_SE_Shooting_01()
-    {
-        _soundList.PlaySFX("SE_Shooting_01");
-    }
-
-    public void PlaySound_SE_Shooting_02()
-    {
-        _soundList.PlaySFX("SE_Shooting_02");
-    }
-
-    public void PlaySound_SE_Hurt_01()
-    {
-        // _soundList.PlaySFX("SE_Hurt_01");
-    }
-
     public void PlaySound_SE_Hurt_02()
     {
         _soundList.PlaySFX("SE_Hurt_02");
@@ -453,16 +402,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public void PlaySound_SE_Die_02()
     {
         _soundList.PlaySFX("SE_Die_02");
-    }
-
-    public void PlaySound_SE_Healing_01()
-    {
-        _soundList.PlaySFX("SE_Healing_01");
-    }
-
-    public void PlaySound_SE_Healing_02()
-    {
-        _soundList.PlaySFX("SE_Healing_02");
     }
 
     #endregion

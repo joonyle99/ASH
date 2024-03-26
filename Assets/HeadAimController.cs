@@ -16,6 +16,7 @@ public class HeadAimController : MonoBehaviour
     [SerializeField] float _cameraMin = 0.08f;
     [SerializeField] float _cameraMax = 0.68f;
 
+    public Transform Target => _target;
     private PlayerBehaviour _player;
 
     void Awake()
@@ -53,7 +54,7 @@ public class HeadAimController : MonoBehaviour
         float max = (_player.RecentDir == 1) ? _rightMax : _leftMax;
 
         // target 오브젝트가 위 / 아래로 움직이는 경우
-        if (Mathf.Abs(targetObjectMoveDir) > 0.001f)
+        if (Mathf.Abs(targetObjectMoveDir) > 0.01f)
         {
             // 카메라 이동
             float cameraPosY = SceneContext.Current.Camera.OffsetY;
@@ -75,7 +76,7 @@ public class HeadAimController : MonoBehaviour
             float cameraPosY = SceneContext.Current.Camera.OffsetY;
             float cameraOriginY = (_cameraMin + _cameraMax) / 2f;
             float cameraMoveDir = cameraOriginY - cameraPosY;
-            if (Mathf.Abs(cameraMoveDir) > 0.001f)
+            if (Mathf.Abs(cameraMoveDir) > 0.01f)
             {
                 cameraPosY += Mathf.Sign(cameraMoveDir) * _cameraSpeed * Time.deltaTime;
                 if (cameraMoveDir < 0f) cameraPosY = Mathf.Max(cameraPosY, cameraOriginY);
@@ -86,7 +87,7 @@ public class HeadAimController : MonoBehaviour
             // targetObject 이동
             Vector3 targetPos = _target.localPosition;
             float targetOriginY = (min + max) / 2f;
-            if (Mathf.Abs(targetPos.y - targetOriginY) > 0.001f)
+            if (Mathf.Abs(targetPos.y - targetOriginY) > 0.01f)
             {
                 float taretMoveDir = targetOriginY - targetPos.y;
                 targetPos.y += MathF.Sign(taretMoveDir) * _speed / 2f * Time.deltaTime;
@@ -95,5 +96,17 @@ public class HeadAimController : MonoBehaviour
                 _target.localPosition = targetPos;
             }
         }
+    }
+
+    public void HeadAimControlOnFlip()
+    {
+        // UpdateFlip 할때마다 Target Object의 높이를 맞춰줘야 한다.
+        // 0.9 ~ 1.9를 1.4 ~ 0.4에 대응시킨다.
+        Vector3 targetVector = _target.localPosition;
+        targetVector.y = (_leftMin + _rightMax) - targetVector.y;
+        targetVector.y = (_player.RecentDir == 1)
+            ? Mathf.Clamp(targetVector.y, _rightMin, _rightMax)
+            : Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
+        _target.localPosition = targetVector;
     }
 }

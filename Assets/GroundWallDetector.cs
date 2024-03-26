@@ -47,6 +47,9 @@ public class GroundWallDetector : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        if(_player == null)
+            return;
+
         // set color
         Gizmos.color = Color.red;
 
