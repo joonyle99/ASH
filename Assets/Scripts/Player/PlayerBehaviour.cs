@@ -1,28 +1,10 @@
 using System;
 using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener
 {
     #region Attribute
-
-    [Header("Ground Check")]
-    [Space]
-
-    [SerializeField] LayerMask _groundLayer;
-    [SerializeField] Transform _groundCheckTrans;
-    [SerializeField] Transform _groundAboveCheckTrans;
-    [SerializeField] float _groundCheckRadius;
-    [SerializeField] float _groundAboveCheckLength;
-
-    [Header("Climb Check")]
-    [Space]
-
-    [SerializeField] LayerMask _climbLayer;
-    [SerializeField] Transform _climbCheckTrans;
-    [SerializeField] float _climbCheckLength;
 
     [Header("Player")]
     [Space]
@@ -42,33 +24,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] bool _isCanJump = true;
     [SerializeField] bool _isCanDash = true;
 
-    [Header("HeadAim")]
-    [Space]
-
-    [SerializeField] Transform _target;
-    [SerializeField] float _speed = 5f;
-    [SerializeField] float _rightMin = 0.9f;
-    [SerializeField] float _rightMax = 1.9f;
-    [SerializeField] float _leftMin = 0.4f;
-    [SerializeField] float _leftMax = 1.4f;
-    [SerializeField] float _cameraSpeed = 1f;
-    [SerializeField] float _cameraMin = 0.08f;
-    [SerializeField] float _cameraMax = 0.68f;
-
-    [Header("Viewr")]
-    [Space]
-
-    [SerializeField] CapsuleCollider2D _bodyCollider;
-    [SerializeField] Rigidbody2D _handRigidbody;
-
-    [Header("White Flash")]
+    [Header("White Flash for Hit")]
     [Space]
 
     [SerializeField] Material _whiteFlashMaterial;
+    [SerializeField] SpriteRenderer[] _spriteRenderers;
+
     [SerializeField] float _godModeTime = 1.5f;
     [SerializeField] float _flashInterval = 0.06f;
 
-    [SerializeField] SpriteRenderer[] _spriteRenderers;
     Material[] _originalMaterials;
     Coroutine _whiteFlashRoutine;
 
@@ -87,6 +51,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     InteractionController _interactionController;
     PlayerMovementController _playerMovementController;
     LightController _lightController;
+    HeadAimController _headAimContoller;
+
+    // rigidbody and collider
+    CapsuleCollider2D _bodyCollider;
+    Rigidbody2D _handRigidbody;
 
     // Sound List
     SoundList _soundList;
@@ -127,7 +96,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
 
     // RaycastHit
-    public RaycastHit2D GroundHit { get; private set; }
+    public RaycastHit2D GroundHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
     public RaycastHit2D ClimbHit { get; set; }
 
@@ -139,9 +108,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public CapsuleCollider2D BodyCollider { get { return _bodyCollider; } }
     public SoundList SoundList { get { return _soundList; } }
 
-    // SpriteRenderer / Material
+    // SpriteRenderer for White Flash
     public SpriteRenderer[] SpriteRenderers { get { return _spriteRenderers; } }
-    public Material[] OriginalMaterials => _originalMaterials;
 
     #endregion
 
@@ -154,6 +122,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _interactionController = GetComponent<InteractionController>();
         _playerMovementController = GetComponent<PlayerMovementController>();
         _lightController = GetComponent<LightController>();
+        _headAimContoller = GetComponent<HeadAimController>();
 
         // collider
         _bodyCollider = GetComponent<CapsuleCollider2D>();
@@ -162,7 +131,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _soundList = GetComponent<SoundList>();
 
         // Material for White Flash
-        LoadFlashMaterial();
         SaveOriginalMaterial();
     }
     protected override void Start()
@@ -191,10 +159,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // Player Flip
         UpdateImageFlip();
 
-        // Player Head Aim
-        if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>())
-            HeadAimControl();
-
         // Change In Air State
         ChangeInAirState();
 
@@ -203,26 +167,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         {
             ChangeState<DieState>();
             return;
-        }
-
-        #endregion
-
-        #region Check Ground & Climb
-
-        // Check Ground
-        GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
-
-        // Check Upward
-        UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _groundAboveCheckLength, _groundLayer);
-
-        // Check Climb
-        ClimbHit = Physics2D.Raycast(_climbCheckTrans.position, PlayerLookDir2D, _climbCheckLength, _climbLayer);
-        if (ClimbHit)
-        {
-            // TODO : 벽의 방향을 localScale로 하면 위험하다
-            int wallLookDir = Math.Sign(ClimbHit.transform.localScale.x);
-            bool isDirSync = (wallLookDir * RecentDir) > 0;
-            IsClimbable = !isDirSync;
         }
 
         #endregion
@@ -251,14 +195,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
 
-                // UpdateFlip 할때마다 Target Object의 높이를 맞춰줘야 한다.
-                // 0.9 ~ 1.9를 1.4 ~ 0.4에 대응시킨다.
-                Vector3 targetVector = _target.localPosition;
-                targetVector.y = (_leftMin + _rightMax) - targetVector.y;
-                targetVector.y = (RecentDir == 1)
-                    ? Mathf.Clamp(targetVector.y, _rightMin, _rightMax)
-                    : Mathf.Clamp(targetVector.y, _leftMin, _leftMax);
-                _target.localPosition = targetVector;
+                _headAimContoller.HeadAimControlOnFlip();
             }
         }
     }
@@ -268,74 +205,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         {
             if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();
-        }
-    }
-
-    private void HeadAimControl()
-    {
-        // 상태에 따라 자연스러운 카메라 및 targetObject 움직임 구현하기
-
-        // target의 높이 변화에 의한 Head Aim 설정
-        // multi aim constraint 사용
-
-        // 왼쪽을 바라볼 때 (recentDir == -1)
-        // -> down key -> target object move to up (targetMoveDir == 1)
-        // -> up key -> target object move to down (targetMoveDir == -1)
-        // 오른쪽을 바라볼 때 (recentDir == 1)
-        // -> down key -> target object move to down  (targetMoveDir == -1)
-        // -> up key -> target object move to up  (targetMoveDir == 1)
-
-        // 플레이어의 바라보는 방향과 키 입력에 따른 target 오브젝트가 움직이는 방향 설정 (기본값 0)
-        float targetObjectMoveDir = 0f;
-
-        if (IsMoveUpKey) targetObjectMoveDir = (RecentDir == 1) ? 1f : -1f;
-        else if (IsMoveDownKey) targetObjectMoveDir = (RecentDir == 1) ? -1f : 1f;
-
-        float min = (RecentDir == 1) ? _rightMin : _leftMin;
-        float max = (RecentDir == 1) ? _rightMax : _leftMax;
-
-        // target 오브젝트가 위 / 아래로 움직이는 경우
-        if (Mathf.Abs(targetObjectMoveDir) > 0.001f)
-        {
-            // 카메라 이동
-            float cameraPosY = SceneContext.Current.Camera.OffsetY;
-            float cameraMoveDir = Mathf.Sign(RecentDir * targetObjectMoveDir); // (RecentDir * targetObjectMoveDir) == -1 => down key
-            cameraPosY += cameraMoveDir * _cameraSpeed * Time.deltaTime;
-            cameraPosY = Mathf.Clamp(cameraPosY, _cameraMin, _cameraMax);
-            SceneContext.Current.Camera.OffsetY = cameraPosY;
-
-            // target 오브젝트 이동
-            Vector3 targetPos = _target.localPosition;
-            targetPos.y += targetObjectMoveDir * _speed * Time.deltaTime;
-            targetPos.y = Mathf.Clamp(targetPos.y, min, max);
-            _target.localPosition = targetPos;
-        }
-        // target 오브젝트가 제자리로 돌아가는 경우
-        else
-        {
-            // 카메라 이동
-            float cameraPosY = SceneContext.Current.Camera.OffsetY;
-            float cameraOriginY = (_cameraMin + _cameraMax) / 2f;
-            float cameraMoveDir = cameraOriginY - cameraPosY;
-            if (Mathf.Abs(cameraMoveDir) > 0.001f)
-            {
-                cameraPosY += Mathf.Sign(cameraMoveDir) * _cameraSpeed * Time.deltaTime;
-                if (cameraMoveDir < 0f) cameraPosY = Mathf.Max(cameraPosY, cameraOriginY);
-                else cameraPosY = Mathf.Min(cameraPosY, cameraOriginY);
-                SceneContext.Current.Camera.OffsetY = cameraPosY;
-            }
-
-            // targetObject 이동
-            Vector3 targetPos = _target.localPosition;
-            float targetOriginY = (min + max) / 2f;
-            if (Mathf.Abs(targetPos.y - targetOriginY) > 0.001f)
-            {
-                float taretMoveDir = targetOriginY - targetPos.y;
-                targetPos.y += MathF.Sign(taretMoveDir) * _speed / 2f * Time.deltaTime;
-                if (targetPos.y > targetOriginY) targetPos.y = Mathf.Clamp(targetPos.y, targetOriginY, max);    // target 오브젝트 이동 방향 : 위 -> 아래
-                else targetPos.y = Mathf.Clamp(targetPos.y, min, targetOriginY);                                // target 오브젝트 이동 방향 : 아래 -> 위
-                _target.localPosition = targetPos;
-            }
         }
     }
 
@@ -389,11 +258,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Time.timeScale = 1f;
     }
     // flash
-    private void LoadFlashMaterial()
-    {
-        _whiteFlashMaterial =
-            Resources.Load<Material>("Materials/WhiteFlashMaterial");
-    }
     private void SaveOriginalMaterial()
     {
         _originalMaterials = new Material[_spriteRenderers.Length];
@@ -525,31 +389,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _dashTrailEffect.Emit(1);
     }
 
-    public void PlaySound_SE_DesolateDive_01()
-    {
-        _soundList.PlaySFX("SE_DesolateDive_01");
-    }
-
-    public void PlaySound_SE_DesolateDive_02()
-    {
-        _soundList.PlaySFX("SE_DesolateDive_02");
-    }
-
-    public void PlaySound_SE_Shooting_01()
-    {
-        _soundList.PlaySFX("SE_Shooting_01");
-    }
-
-    public void PlaySound_SE_Shooting_02()
-    {
-        _soundList.PlaySFX("SE_Shooting_02");
-    }
-
-    public void PlaySound_SE_Hurt_01()
-    {
-        // _soundList.PlaySFX("SE_Hurt_01");
-    }
-
     public void PlaySound_SE_Hurt_02()
     {
         _soundList.PlaySFX("SE_Hurt_02");
@@ -565,31 +404,5 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         _soundList.PlaySFX("SE_Die_02");
     }
 
-    public void PlaySound_SE_Healing_01()
-    {
-        _soundList.PlaySFX("SE_Healing_01");
-    }
-
-    public void PlaySound_SE_Healing_02()
-    {
-        _soundList.PlaySFX("SE_Healing_02");
-    }
-
     #endregion
-
-    private void OnDrawGizmosSelected()
-    {
-        // set color
-        Gizmos.color = Color.red;
-
-        // Draw Ground Check
-        Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
-
-        // Draw Ground Above Check
-        Gizmos.DrawLine(_groundAboveCheckTrans.position,
-            _groundAboveCheckTrans.position + Vector3.up * _groundAboveCheckLength);
-
-        // Draw Wall Check
-        Gizmos.DrawLine(_climbCheckTrans.position, _climbCheckTrans.position + PlayerLookDir3D * _climbCheckLength);
-    }
 }
