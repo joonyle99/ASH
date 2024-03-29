@@ -13,35 +13,38 @@ public class IdleState : PlayerState
     [Tooltip("이 각도를 초과한 경사에선 서있지 못함")]
     [SerializeField] float _slopeThreshold = 70f;
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
 
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
         if (Mathf.RoundToInt(Player.RawInputs.Movement.x) != 0)
         {
             ChangeState<RunState>();
-            return;
+            return true;
         }
 
+        return true;
     }
 
-    protected override void OnFixedUpdate()
+    protected override bool OnFixedUpdate()
     {
-        Vector2 _groundNormal = Player.GroundHit.normal;
-        float groundAngle = Mathf.Abs(Mathf.Atan2(_groundNormal.y, _groundNormal.x) * Mathf.Rad2Deg - 90);
+        Vector2 groundNormal = Player.GroundHit.normal;
+        float groundAngle = Mathf.Abs(Mathf.Atan2(groundNormal.y, groundNormal.x) * Mathf.Rad2Deg - 90f);
 
         // 기울어진 땅에서 미끄럼 방지
         if (groundAngle < _slopeThreshold)
-        {
-            Player.Rigidbody.AddForce(-_groundNormal * _belowForce);
-        }
+            Player.Rigidbody.AddForce(-groundNormal * _belowForce);
+
+        return true;
     }
 
-    protected override void OnExit()
+    protected override bool OnExit()
     {
-
+        return true;
     }
 }

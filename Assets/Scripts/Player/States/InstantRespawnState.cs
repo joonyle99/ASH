@@ -15,7 +15,7 @@ public class InstantRespawnState : PlayerState
         _disintegrateEffect = GetComponent<DisintegrateEffect>();
     }
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         Player.Rigidbody.simulated = false;
         Player.enabled = false;
@@ -23,14 +23,19 @@ public class InstantRespawnState : PlayerState
         InputManager.Instance.ChangeInputSetter(_stayStillSetter);
         _disintegrateEffect.Play();
         Player.SoundList.PlaySFX("Disintegrate");
+
+        return true;
     }
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
 
+        return true;
     }
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         InputManager.Instance.ChangeToDefaultSetter();
+
+        return true;
     }
 
     IEnumerator SpawnCoroutine()

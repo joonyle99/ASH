@@ -11,7 +11,7 @@ public class WallClimbState : WallState
 
     bool IsAboveWall { get { return Player.transform.position.y > wallHitPos.y; } }
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         base.OnEnter();
 
@@ -20,9 +20,11 @@ public class WallClimbState : WallState
         Player.Rigidbody.velocity = Vector2.zero;
 
         Animator.SetBool("IsClimb", true);
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
         if (Player.IsMoveUpKey)
         {
@@ -30,11 +32,11 @@ public class WallClimbState : WallState
             if (!Player.IsTouchedWall && IsAboveWall)
             {
                 ChangeState<JumpState>();
-                return;
+                return true;
             }
 
             if (Player.UpwardGroundHit)
-                return;
+                return false;
 
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
         }
@@ -43,7 +45,7 @@ public class WallClimbState : WallState
             if (!Player.IsTouchedWall)
             {
                 ChangeState<InAirState>();
-                return;
+                return true;
             }
 
             transform.position -= Vector3.up * _wallClimbSpeed * Time.deltaTime;
@@ -51,23 +53,27 @@ public class WallClimbState : WallState
         else
         {
             ChangeState<WallGrabState>();
-            return;
+            return true;
         }
 
         // Idle State
         if (Player.IsGrounded && Player.IsMoveDownKey)
         {
             ChangeState<IdleState>();
-            return;
+            return true;
         }
+
+        return true;
     }
 
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         Player.Rigidbody.gravityScale = _prevGravity;
 
         Animator.SetBool("IsClimb", false);
 
         base.OnExit();
+
+        return true;
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class InteractionState : PlayerState
 {
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         switch (Player.InteractionController.InteractionTarget.AnimationType)
         {
@@ -17,13 +17,17 @@ public class InteractionState : PlayerState
         }
         if (Player.InteractionController.InteractionTarget.AnimationType != InteractionAnimationType.None)
             Player.Animator.SetTrigger("Interact");
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
+
+        return true;
     }
 
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         switch (Player.InteractionController.InteractionTarget.AnimationType)
         {
@@ -32,5 +36,7 @@ public class InteractionState : PlayerState
                 Player.Animator.SetBool("IsPush", false);
                 break;
         }
+
+        return true;
     }
 }

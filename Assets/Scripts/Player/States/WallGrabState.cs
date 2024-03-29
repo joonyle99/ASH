@@ -7,13 +7,13 @@ using UnityEngine;
 /// </summary>
 public class WallGrabState : WallState
 {
-    private float _paddingValue = 0.5f;
     private float _prevGravity;
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         // Wall Normal, Perpendicular 정보를 받음
-        base.OnEnter();
+        bool isPass = base.OnEnter();
+        if (!isPass) return false;
 
         _prevGravity = Player.Rigidbody.gravityScale;
         Player.Rigidbody.gravityScale = 0f;
@@ -21,24 +21,30 @@ public class WallGrabState : WallState
 
         Animator.SetBool("IsGrab", true);
 
-        transform.position = new Vector3(wallHitPos.x - _paddingValue * Player.PlayerLookDir2D.x, transform.position.y, transform.position.z);
+        transform.position = new Vector3(wallHitPos.x - 0.5f * Player.PlayerLookDir2D.x, transform.position.y, transform.position.z);
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
         // Wall Climb State
         if (Player.IsMoveYKey)
         {
             ChangeState<WallClimbState>();
-            return;
+            return true;
         }
+
+        return true;
     }
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         Player.Rigidbody.gravityScale = _prevGravity;
 
         Animator.SetBool("IsGrab", false);
 
         base.OnExit();
+
+        return true;
     }
 }

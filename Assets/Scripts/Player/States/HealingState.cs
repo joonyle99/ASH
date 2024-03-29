@@ -6,27 +6,30 @@ public class HealingState : PlayerState
     [Range(0f, 10f)] [SerializeField] float _healingTime;
     public ParticleSystem particleEffect;
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         Debug.Log("Enter Healing");
 
-        Player.PlaySound_SE_Healing_01();
-
         StartCoroutine(Healing());
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
 
+        return true;
     }
-    protected override void OnFixedUpdate()
+    protected override bool OnFixedUpdate()
     {
 
+        return true;
     }
 
-    protected override void OnExit()
+    protected override bool OnExit()
     {
 
+        return true;
     }
 
     /// <summary>

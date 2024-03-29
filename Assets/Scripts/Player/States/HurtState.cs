@@ -4,7 +4,7 @@ using UnityEngine;
 public class HurtState : PlayerState
 {
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         Animator.SetTrigger("Hurt");
 
@@ -13,20 +13,26 @@ public class HurtState : PlayerState
         Player.StartGodModeTimer();
         Player.StartWhiteFlash();
         // Player.StartWhiteFlash();
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
 
+        return true;
     }
 
-    protected override void OnFixedUpdate()
+    protected override bool OnFixedUpdate()
     {
 
+        return true;
     }
 
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         Player.IsHurt = false;
+
+        return true;
     }
 }

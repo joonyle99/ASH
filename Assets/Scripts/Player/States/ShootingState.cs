@@ -19,23 +19,29 @@ public class ShootingState : PlayerState
     [Range(0f, 5f)] [SerializeField] private float _bulletPosX;
     [Range(0f, 5f)] [SerializeField] private float _bulletPosY;
 
-    protected override void OnEnter()
+    protected override bool OnEnter()
     {
         StartCoroutine(Shooting());
+
+        return true;
     }
 
-    protected override void OnUpdate()
+    protected override bool OnUpdate()
     {
 
+        return true;
     }
-    protected override void OnFixedUpdate()
+    protected override bool OnFixedUpdate()
     {
 
+        return true;
     }
 
-    protected override void OnExit()
+    protected override bool OnExit()
     {
         Player.Animator.SetBool("IsShooting", false);
+
+        return true;
     }
 
     /// <summary>
