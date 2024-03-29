@@ -2,21 +2,33 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SandOrb
-  m_Shader: {fileID: 4800000, guid: d0d1fd1e0a8a302438a8dfaa0601857a, type: 3}
-  m_ShaderKeywords: ADDITIVECONFIG_ON ALPHAFADE_ON CAMDISTFADE_ON CUSTOMBLENDING_ON
-    GLOW_ON RIM_ON SHAPE1CONTRAST_ON SHAPE2_ON SOFTPART_ON
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - ADDITIVECONFIG_ON
+  - ALPHAFADE_ON
+  - CAMDISTFADE_ON
+  - GLOW_ON
+  - RIM_ON
+  - SHAPE1CONTRAST_ON
+  - SHAPE2_ON
+  - SOFTPART_ON
+  m_InvalidKeywords:
+  - CUSTOMBLENDING_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -108,6 +120,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: cc83d98075bce6546925fcebeef421ee, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 1
     - _AlphaBrightness: 0
@@ -205,6 +218,7 @@ Material:
     - _InnerOutlineAlpha: 1
     - _InnerOutlineGlow: 1
     - _InnerOutlineThickness: 1
+    - _LightAmount: 0
     - _MaskPow: 1
     - _MaxXUV: 1
     - _MaxYUV: 1
@@ -242,6 +256,9 @@ Material:
     - _PosterizeNumColors: 8
     - _PosterizeOutline: 0
     - _RandomSeed: 0
+    - _RandomSh1Mult: 1
+    - _RandomSh2Mult: 1
+    - _RandomSh3Mult: 1
     - _RectSize: 1
     - _RenderingMode: 5
     - _RimAddAmount: 1
@@ -257,7 +274,13 @@ Material:
     - _ScreenUvSh2DistScale: 1
     - _ScreenUvSh3DistScale: 1
     - _ScreenUvShDistScale: 1
+    - _Sh1BlendOffset: 0
+    - _Sh2BlendOffset: 0
+    - _Sh3BlendOffset: 0
     - _ShadowAlpha: 0.5
+    - _ShadowAmount: 0.4
+    - _ShadowStepMax: 1
+    - _ShadowStepMin: 0
     - _ShadowX: 0.1
     - _ShadowY: -0.05
     - _ShakeUvSpeed: 2.5
@@ -271,6 +294,8 @@ Material:
     - _Shape2DistortAmount: 0.25
     - _Shape2DistortXSpeed: 0.4
     - _Shape2DistortYSpeed: 0.5
+    - _Shape2RotationOffset: 0
+    - _Shape2RotationSpeed: 0
     - _Shape2XSpeed: 0.37
     - _Shape2YSpeed: 0.26
     - _Shape3AlphaWeight: 2
@@ -280,6 +305,8 @@ Material:
     - _Shape3DistortAmount: 0.5
     - _Shape3DistortXSpeed: 0.1
     - _Shape3DistortYSpeed: 0.1
+    - _Shape3RotationOffset: 0
+    - _Shape3RotationSpeed: 0
     - _Shape3XSpeed: 0
     - _Shape3YSpeed: 0
     - _ShapeAlphaWeight: 1
@@ -289,6 +316,8 @@ Material:
     - _ShapeDistortAmount: 0.23
     - _ShapeDistortXSpeed: 0.1
     - _ShapeDistortYSpeed: 0.1
+    - _ShapeRotationOffset: 0
+    - _ShapeRotationSpeed: 0
     - _ShapeXSpeed: 0.43
     - _ShapeYSpeed: 0.33
     - _ShineGlow: 1
@@ -345,6 +374,7 @@ Material:
     - _HitEffectColor: {r: 1, g: 1, b: 1, a: 1}
     - _HologramStripeColor: {r: 0, g: 1, b: 1, a: 1}
     - _InnerOutlineColor: {r: 1, g: 0, b: 0, a: 1}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 0.74509805, b: 0.32156864, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
@@ -352,3 +382,4 @@ Material:
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 2.1185474, g: 1.6415969, b: 1.1868302, a: 1}
     - _ShineColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

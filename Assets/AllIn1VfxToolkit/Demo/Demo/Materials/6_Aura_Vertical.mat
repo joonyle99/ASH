@@ -6,21 +6,27 @@ Texture2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: _ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.23529411852359773,"g":0.04313725605607033,"b":0.06115764379501343,"a":1.0},"time":0.0},{"color":{"r":0.5176470875740051,"g":0.10196078568696976,"b":0.17918840050697328,"a":1.0},"time":0.45433738827705386},{"color":{"r":0.8313725590705872,"g":0.3176470398902893,"b":0.4023311138153076,"a":1.0},"time":0.9612573385238648},{"color":{"r":0.8313725590705872,"g":0.40986666083335879,"b":0.4870629608631134,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_Name: z_ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.23529411852359773,"g":0.04313725605607033,"b":0.06115764379501343,"a":1.0},"time":0.0},{"color":{"r":0.5176470875740051,"g":0.10196078568696976,"b":0.17918840050697328,"a":1.0},"time":0.45433738827705386},{"color":{"r":0.8313725590705872,"g":0.3176470398902893,"b":0.4023311138153076,"a":1.0},"time":0.9612573385238648},{"color":{"r":0.8313725590705872,"g":0.40986666083335879,"b":0.4870629608631134,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
   serializedVersion: 2
   m_Width: 64
   m_Height: 1
   m_CompleteImageSize: 256
+  m_MipsStripped: 0
   m_TextureFormat: 4
   m_MipCount: 1
   m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
   m_AlphaIsTransparency: 0
   m_ImageCount: 1
   m_TextureDimension: 2
@@ -34,30 +40,46 @@ Texture2D:
     m_WrapW: 1
   m_LightmapFormat: 0
   m_ColorSpace: 0
+  m_PlatformBlob: 
   image data: 256
   _typelessdata: 3c0b10ff3f0c11ff410c12ff440d13ff460d14ff490e15ff4b0e16ff4e0f17ff500f18ff531019ff55101aff58111bff5a111cff5d121dff5f121eff62131fff641320ff671421ff691423ff6c1524ff6e1525ff711626ff731727ff761728ff781829ff7b182aff7d192bff80192cff821a2dff851b2eff871c30ff8a1e32ff8c2034ff8f2235ff912337ff942539ff96273bff99283dff9b2a3eff9e2c40ffa02e42ffa32f44ffa63146ffa83347ffab3449ffad364bffb0384dffb23a4effb53b50ffb73d52ffba3f54ffbc4156ffbf4257ffc14459ffc4465bffc6475dffc9495effcb4b60ffce4d62ffd04e64ffd35066ffd4556affd45f73ffd4697cff
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 6_Aura_Vertical
-  m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
-  m_ShaderKeywords: ADDITIVECONFIG_ON BLUR_ON COLORRAMPGRAD_ON COLORRAMP_ON DISTORT_ON
-    HSV_ON PREMULTIPLYCOLOR_ON SHAPE1CONTRAST_ON SHAPE2_ON SHAPE3CONTRAST_ON SHAPE3DISTORT_ON
-    SHAPE3_ON
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - ADDITIVECONFIG_ON
+  - COLORRAMPGRAD_ON
+  - COLORRAMP_ON
+  - DISTORT_ON
+  - HSV_ON
+  - PREMULTIPLYCOLOR_ON
+  - SHAPE1CONTRAST_ON
+  - SHAPE2_ON
+  - SHAPE3CONTRAST_ON
+  - SHAPE3DISTORT_ON
+  - SHAPE3_ON
+  m_InvalidKeywords:
+  - BLUR_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -129,6 +151,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 1
     - _AlphaBrightness: 0
@@ -202,6 +225,9 @@ Material:
     - _ScreenUvSh2DistScale: 1
     - _ScreenUvSh3DistScale: 1
     - _ScreenUvShDistScale: 1
+    - _Sh1BlendOffset: 0
+    - _Sh2BlendOffset: 0
+    - _Sh3BlendOffset: 0
     - _ShadowAmount: 0.4
     - _ShadowStepMax: 1
     - _ShadowStepMin: 0
@@ -216,6 +242,8 @@ Material:
     - _Shape2DistortAmount: 0.5
     - _Shape2DistortXSpeed: 0.1
     - _Shape2DistortYSpeed: 0.1
+    - _Shape2RotationOffset: 0
+    - _Shape2RotationSpeed: 0
     - _Shape2XSpeed: 0
     - _Shape2YSpeed: 0
     - _Shape3AlphaWeight: 2
@@ -225,6 +253,8 @@ Material:
     - _Shape3DistortAmount: 0.25
     - _Shape3DistortXSpeed: 0.34
     - _Shape3DistortYSpeed: 0.1
+    - _Shape3RotationOffset: 0
+    - _Shape3RotationSpeed: 0
     - _Shape3XSpeed: -0.1
     - _Shape3YSpeed: -0.8
     - _ShapeAlphaWeight: 1
@@ -234,6 +264,8 @@ Material:
     - _ShapeDistortAmount: 0.62
     - _ShapeDistortXSpeed: 0
     - _ShapeDistortYSpeed: -0.35
+    - _ShapeRotationOffset: 0
+    - _ShapeRotationSpeed: 0
     - _ShapeXSpeed: 0.05
     - _ShapeYSpeed: -0.4
     - _SoftFactor: 0.5
@@ -273,3 +305,4 @@ Material:
     - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

@@ -2,20 +2,29 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ImpactMark
-  m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
-  m_ShaderKeywords: ADDITIVECONFIG_ON COLORRAMPGRAD_ON COLORRAMP_ON GLOW_ON PREMULTIPLYCOLOR_ON
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - ADDITIVECONFIG_ON
+  - COLORRAMPGRAD_ON
+  - COLORRAMP_ON
+  - GLOW_ON
+  - PREMULTIPLYCOLOR_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -87,6 +96,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 1
     - _AlphaCutoffValue: 0.25
@@ -232,27 +242,34 @@ Material:
     - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!28 &28128282944734690
 Texture2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: _ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":1.0,"g":0.13315561413764954,"b":0.0,"a":1.0},"time":0.026474403217434884},{"color":{"r":1.0,"g":0.7534735202789307,"b":0.3349056839942932,"a":1.0},"time":0.7676509022712708},{"color":{"r":1.0,"g":0.9916656017303467,"b":0.4811320900917053,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_Name: z_ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":1.0,"g":0.13315561413764954,"b":0.0,"a":1.0},"time":0.026474403217434884},{"color":{"r":1.0,"g":0.7534735202789307,"b":0.3349056839942932,"a":1.0},"time":0.7676509022712708},{"color":{"r":1.0,"g":0.9916656017303467,"b":0.4811320900917053,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
   serializedVersion: 2
   m_Width: 64
   m_Height: 1
   m_CompleteImageSize: 256
+  m_MipsStripped: 0
   m_TextureFormat: 4
   m_MipCount: 1
   m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
   m_AlphaIsTransparency: 0
   m_ImageCount: 1
   m_TextureDimension: 2
@@ -266,9 +283,11 @@ Texture2D:
     m_WrapW: 1
   m_LightmapFormat: 0
   m_ColorSpace: 1
+  m_PlatformBlob: 
   image data: 256
   _typelessdata: ff2200ffff2200ffff2301ffff2602ffff2a04ffff2d06ffff3108ffff340affff370cffff3b0dffff3e0fffff4211ffff4513ffff4815ffff4c17ffff4f18ffff531affff561cffff591effff5d20ffff6022ffff6323ffff6725ffff6a27ffff6e29ffff712bffff742dffff782effff7b30ffff7f32ffff8234ffff8536ffff8937ffff8c39ffff8f3bffff933dffff963fffff9a41ffff9d42ffffa044ffffa446ffffa748ffffab4affffae4cffffb14dffffb54fffffb851ffffbc53ffffbf55ffffc357ffffc75affffcb5cffffcf5fffffd361ffffd864ffffdc66ffffe069ffffe46bffffe86effffec70fffff073fffff576fffff978fffffd7bff
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 

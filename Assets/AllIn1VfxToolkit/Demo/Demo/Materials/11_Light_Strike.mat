@@ -8,7 +8,9 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 11_Light_Strike
-  m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - ADDITIVECONFIG_ON
   - DOODLE_ON
@@ -23,9 +25,10 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -62,7 +65,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
-        m_Texture: {fileID: 2800000, guid: ca96557312bc1dd4caacf0a880881d29, type: 3}
+        m_Texture: {fileID: 2800000, guid: fadb12822bee63748bffde4352642d6c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape1MaskTex:
@@ -75,7 +78,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _Shape2Tex:
         m_Texture: {fileID: 2800000, guid: 854b25bc08516364da5a786b1cad247e, type: 3}
-        m_Scale: {x: 0, y: 1}
+        m_Scale: {x: 0.91, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Shape3DistortTex:
         m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
@@ -147,7 +150,7 @@ Material:
     - _HsvSaturation: 2
     - _HsvShift: 360
     - _LightAmount: 0
-    - _MaskPow: 1
+    - _MaskPow: 1.53
     - _OffsetSh1: 1
     - _OffsetSh2: 1
     - _OffsetSh3: 1
@@ -181,17 +184,17 @@ Material:
     - _ShakeUvX: 1.5
     - _ShakeUvY: 1
     - _Shape1MaskPow: 1
-    - _Shape2AlphaWeight: 2
+    - _Shape2AlphaWeight: 1.24
     - _Shape2Brightness: 0
-    - _Shape2ColorWeight: 2
+    - _Shape2ColorWeight: 1.24
     - _Shape2Contrast: 1
     - _Shape2DistortAmount: 0.5
     - _Shape2DistortXSpeed: 0.1
     - _Shape2DistortYSpeed: 0.1
     - _Shape2RotationOffset: 0
     - _Shape2RotationSpeed: 0
-    - _Shape2XSpeed: 5
-    - _Shape2YSpeed: 1
+    - _Shape2XSpeed: 2.88
+    - _Shape2YSpeed: -0.84
     - _Shape3AlphaWeight: 2
     - _Shape3Brightness: 0
     - _Shape3ColorWeight: 2
@@ -203,13 +206,13 @@ Material:
     - _Shape3RotationSpeed: 0
     - _Shape3XSpeed: 0
     - _Shape3YSpeed: 0
-    - _ShapeAlphaWeight: 1
+    - _ShapeAlphaWeight: 0.98
     - _ShapeBrightness: 0
-    - _ShapeColorWeight: 1
+    - _ShapeColorWeight: 0.98
     - _ShapeContrast: 1
     - _ShapeDistortAmount: 2.68
-    - _ShapeDistortXSpeed: 0.5
-    - _ShapeDistortYSpeed: 2
+    - _ShapeDistortXSpeed: 4
+    - _ShapeDistortYSpeed: -0.86
     - _ShapeRotationOffset: 0
     - _ShapeRotationSpeed: 0
     - _ShapeXSpeed: 0
@@ -228,7 +231,7 @@ Material:
     - _VertOffsetPower: 1
     - _VertOffsetTexXSpeed: 0.1
     - _VertOffsetTexYSpeed: 0.1
-    - _WaveAmount: 0
+    - _WaveAmount: 7
     - _WaveSpeed: 15.7
     - _WaveStrength: 7.5
     - _WaveX: 0

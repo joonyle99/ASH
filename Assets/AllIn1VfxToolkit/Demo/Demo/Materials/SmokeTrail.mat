@@ -2,20 +2,28 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SmokeTrail
-  m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
-  m_ShaderKeywords: ADDITIVECONFIG_ON GLOW_ON SHAPE2_ON TRAILWIDTH_ON
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - ADDITIVECONFIG_ON
+  - GLOW_ON
+  - SHAPE2_ON
+  - TRAILWIDTH_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -91,6 +99,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 1
     - _AlphaBrightness: 0
@@ -163,6 +172,9 @@ Material:
     - _ScreenUvSh2DistScale: 1
     - _ScreenUvSh3DistScale: 1
     - _ScreenUvShDistScale: 1
+    - _Sh1BlendOffset: 0
+    - _Sh2BlendOffset: 0
+    - _Sh3BlendOffset: 0
     - _ShadowAmount: 0.4
     - _ShadowStepMax: 1
     - _ShadowStepMin: 0
@@ -239,27 +251,34 @@ Material:
     - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
 --- !u!28 &28473530624310552
 Texture2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: _TrailWidthGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.0,"g":0.0,"b":0.0,"a":1.0},"time":0.0},{"color":{"r":0.4905660152435303,"g":0.4905660152435303,"b":0.4905660152435303,"a":1.0},"time":0.2874952256679535},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_Name: z_TrailWidthGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.0,"g":0.0,"b":0.0,"a":1.0},"time":0.0},{"color":{"r":0.4905660152435303,"g":0.4905660152435303,"b":0.4905660152435303,"a":1.0},"time":0.2874952256679535},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
   serializedVersion: 2
   m_Width: 64
   m_Height: 1
   m_CompleteImageSize: 256
+  m_MipsStripped: 0
   m_TextureFormat: 4
   m_MipCount: 1
   m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
   m_AlphaIsTransparency: 0
   m_ImageCount: 1
   m_TextureDimension: 2
@@ -273,9 +292,11 @@ Texture2D:
     m_WrapW: 1
   m_LightmapFormat: 0
   m_ColorSpace: 1
+  m_PlatformBlob: 
   image data: 256
   _typelessdata: 000000ff070707ff0e0e0eff151515ff1c1c1cff232323ff292929ff303030ff373737ff3e3e3eff454545ff4c4c4cff535353ff5a5a5aff616161ff686868ff6f6f6fff757575ff7c7c7cff808080ff838383ff858585ff888888ff8b8b8bff8e8e8eff919191ff949494ff979797ff9a9a9aff9d9d9dff9f9f9fffa2a2a2ffa5a5a5ffa8a8a8ffabababffaeaeaeffb1b1b1ffb4b4b4ffb7b7b7ffbababaffbcbcbcffbfbfbfffc2c2c2ffc5c5c5ffc8c8c8ffcbcbcbffcececeffd1d1d1ffd4d4d4ffd6d6d6ffd9d9d9ffdcdcdcffdfdfdfffe2e2e2ffe5e5e5ffe8e8e8ffebebebffeeeeeefff1f1f1fff3f3f3fff6f6f6fff9f9f9fffcfcfcffffffffff
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 

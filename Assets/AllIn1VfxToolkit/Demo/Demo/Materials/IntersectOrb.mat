@@ -2,23 +2,36 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: IntersectOrb
-  m_Shader: {fileID: 4800000, guid: d0d1fd1e0a8a302438a8dfaa0601857a, type: 3}
-  m_ShaderKeywords: CAMDISTFADE_ON COLORRAMPGRAD_ON COLORRAMP_ON DEPTHGLOW_ON GLOW_ON
-    HSV_ON RIM_ON SHAPE1CONTRAST_ON SHAPE1DISTORT_ON SHAPE2CONTRAST_ON SHAPE2DISTORT_ON
-    SHAPE2_ON
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - CAMDISTFADE_ON
+  - COLORRAMPGRAD_ON
+  - COLORRAMP_ON
+  - DEPTHGLOW_ON
+  - GLOW_ON
+  - HSV_ON
+  - RIM_ON
+  - SHAPE1CONTRAST_ON
+  - SHAPE1DISTORT_ON
+  - SHAPE2CONTRAST_ON
+  - SHAPE2DISTORT_ON
+  - SHAPE2_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap:
-    RenderType: Transparent
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -90,6 +103,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: ead4bb59fa3716842879d18a0d632106, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 1
     - _AlphaBrightness: 0
@@ -138,6 +152,7 @@ Material:
     - _HsvBright: 1
     - _HsvSaturation: 1.194
     - _HsvShift: 0
+    - _LightAmount: 0
     - _MaskPow: 1
     - _OffsetSh1: 1
     - _OffsetSh2: 1
@@ -146,6 +161,9 @@ Material:
     - _PixelateSize: 234
     - _PosterizeGamma: 0.75
     - _PosterizeNumColors: 8
+    - _RandomSh1Mult: 1
+    - _RandomSh2Mult: 1
+    - _RandomSh3Mult: 1
     - _RenderingMode: 0
     - _RimAddAmount: 1
     - _RimBias: 0
@@ -159,6 +177,12 @@ Material:
     - _ScreenUvSh2DistScale: 1
     - _ScreenUvSh3DistScale: 1
     - _ScreenUvShDistScale: 1
+    - _Sh1BlendOffset: 0
+    - _Sh2BlendOffset: 0
+    - _Sh3BlendOffset: 0
+    - _ShadowAmount: 0.4
+    - _ShadowStepMax: 1
+    - _ShadowStepMin: 0
     - _ShakeUvSpeed: 2.5
     - _ShakeUvX: 1.5
     - _ShakeUvY: 1
@@ -170,6 +194,8 @@ Material:
     - _Shape2DistortAmount: 0.85
     - _Shape2DistortXSpeed: 0.01
     - _Shape2DistortYSpeed: 0
+    - _Shape2RotationOffset: 0
+    - _Shape2RotationSpeed: 0
     - _Shape2XSpeed: 0
     - _Shape2YSpeed: 0.5
     - _Shape3AlphaWeight: 1
@@ -179,6 +205,8 @@ Material:
     - _Shape3DistortAmount: 0.5
     - _Shape3DistortXSpeed: 0.1
     - _Shape3DistortYSpeed: 0.1
+    - _Shape3RotationOffset: 0
+    - _Shape3RotationSpeed: 0
     - _Shape3XSpeed: 0
     - _Shape3YSpeed: 0
     - _ShapeAlphaWeight: 1
@@ -188,6 +216,8 @@ Material:
     - _ShapeDistortAmount: 0.25
     - _ShapeDistortXSpeed: 0.1
     - _ShapeDistortYSpeed: 0.1
+    - _ShapeRotationOffset: 0
+    - _ShapeRotationSpeed: 0
     - _ShapeXSpeed: 0
     - _ShapeYSpeed: 0
     - _SoftFactor: 0.5
@@ -222,31 +252,39 @@ Material:
     - _FadeBurnColor: {r: 1, g: 1, b: 0, a: 1}
     - _FrontFaceTint: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 0.38679248, g: 1, b: 0.98829085, a: 1}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 0.5188679, g: 0.98502403, b: 1, a: 1}
     - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 0, g: 1.0001854, b: 1.216786, a: 0.36862746}
+  m_BuildTextureStacks: []
 --- !u!28 &28048054286760324
 Texture2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: _ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.0,"g":0.1258895844221115,"b":0.17924529314041139,"a":1.0},"time":0.024170290678739549},{"color":{"r":0.0,"g":1.0,"b":0.8194985389709473,"a":1.0},"time":0.2574959993362427},{"color":{"r":0.5176470875740051,"g":1.0,"b":0.8972690105438232,"a":1.0},"time":0.49745938181877139},{"color":{"r":0.5188679099082947,"g":0.9850240349769592,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_Name: z_ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.0,"g":0.1258895844221115,"b":0.17924529314041139,"a":1.0},"time":0.024170290678739549},{"color":{"r":0.0,"g":1.0,"b":0.8194985389709473,"a":1.0},"time":0.2574959993362427},{"color":{"r":0.5176470875740051,"g":1.0,"b":0.8972690105438232,"a":1.0},"time":0.49745938181877139},{"color":{"r":0.5188679099082947,"g":0.9850240349769592,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
   serializedVersion: 2
   m_Width: 64
   m_Height: 1
   m_CompleteImageSize: 256
+  m_MipsStripped: 0
   m_TextureFormat: 4
   m_MipCount: 1
   m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
   m_AlphaIsTransparency: 0
   m_ImageCount: 1
   m_TextureDimension: 2
@@ -260,9 +298,11 @@ Texture2D:
     m_WrapW: 1
   m_LightmapFormat: 0
   m_ColorSpace: 1
+  m_PlatformBlob: 
   image data: 256
   _typelessdata: 00202eff00202eff002733ff00373eff004649ff005554ff00645fff00736bff008276ff009181ff00a18cff00b097ff00bfa2ff00ceadff00ddb8ff00ecc3ff00fccfff07ffd2ff10ffd3ff18ffd5ff21ffd6ff2affd7ff32ffd9ff3bffdaff44ffdbff4dffdcff55ffdeff5effdfff67ffe0ff70ffe2ff78ffe3ff81ffe4ff84ffe5ff84ffe6ff84ffe7ff84ffe8ff84fee9ff84fee9ff84feeaff84feebff84feecff84feedff84feeeff84feeeff84fdefff84fdf0ff84fdf1ff84fdf2ff84fdf3ff84fdf3ff84fdf4ff84fdf5ff84fdf6ff84fcf7ff84fcf8ff84fcf8ff84fcf9ff84fcfaff84fcfbff84fcfcff84fcfdff84fbfdff84fbfeff84fbffff
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 

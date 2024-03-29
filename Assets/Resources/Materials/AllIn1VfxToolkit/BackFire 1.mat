@@ -8,13 +8,16 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BackFire 1
-  m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
-  m_ValidKeywords: []
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_ValidKeywords:
+  - SHAPE1SHAPECOLOR_ON
+  - SHAPE2SHAPECOLOR_ON
+  - SHAPE2_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
@@ -121,7 +124,7 @@ Material:
     - _DistortionScrollXSpeed: 0
     - _DistortionScrollYSpeed: 0
     - _DstMode: 10
-    - _EditorDrawers: 61
+    - _EditorDrawers: 63
     - _FadeAmount: -0.1
     - _FadeBurnGlow: 2
     - _FadeBurnWidth: 0.025
@@ -149,7 +152,7 @@ Material:
     - _RandomSh1Mult: 1
     - _RandomSh2Mult: 1
     - _RandomSh3Mult: 1
-    - _RenderingMode: 5
+    - _RenderingMode: 0
     - _RimAddAmount: 1
     - _RimBias: 0
     - _RimErodesAlpha: 0
@@ -206,7 +209,7 @@ Material:
     - _ShapeXSpeed: 0.1
     - _ShapeYSpeed: -1.5
     - _SoftFactor: 0.5
-    - _SrcMode: 1
+    - _SrcMode: 5
     - _TextureScrollXSpeed: 1
     - _TextureScrollYSpeed: 0
     - _TimingSeed: 0

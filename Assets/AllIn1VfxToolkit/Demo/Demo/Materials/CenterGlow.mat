@@ -6,21 +6,27 @@ Texture2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: _ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.0,"g":0.39903855323791506,"b":1.0,"a":1.0},"time":0.13823148608207704},{"color":{"r":0.18396228551864625,"g":0.7018987536430359,"b":1.0,"a":1.0},"time":0.7941252589225769},{"color":{"r":0.6745283007621765,"g":0.9819181561470032,"b":1.0,"a":1.0},"time":0.9735255837440491},{"color":{"r":0.7971698045730591,"g":0.987781286239624,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_Name: z_ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.0,"g":0.39903855323791506,"b":1.0,"a":1.0},"time":0.13823148608207704},{"color":{"r":0.18396228551864625,"g":0.7018987536430359,"b":1.0,"a":1.0},"time":0.7941252589225769},{"color":{"r":0.6745283007621765,"g":0.9819181561470032,"b":1.0,"a":1.0},"time":0.9735255837440491},{"color":{"r":0.7971698045730591,"g":0.987781286239624,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
   serializedVersion: 2
   m_Width: 64
   m_Height: 1
   m_CompleteImageSize: 256
+  m_MipsStripped: 0
   m_TextureFormat: 4
   m_MipCount: 1
   m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
   m_AlphaIsTransparency: 0
   m_ImageCount: 1
   m_TextureDimension: 2
@@ -34,29 +40,41 @@ Texture2D:
     m_WrapW: 1
   m_LightmapFormat: 0
   m_ColorSpace: 0
+  m_PlatformBlob: 
   image data: 256
   _typelessdata: 0066ffff0066ffff0066ffff0066ffff0066ffff0066ffff0066ffff0066ffff0066ffff0066ffff0168ffff036affff046cffff056effff0670ffff0772ffff0873ffff0975ffff0b77ffff0c79ffff0d7bffff0e7dffff0f7fffff1080ffff1182ffff1284ffff1486ffff1588ffff168affff178cffff188effff198fffff1a91ffff1c93ffff1d95ffff1e97ffff1f99ffff209bffff219dffff229effff24a0ffff25a2ffff26a4ffff27a6ffff28a8ffff29aaffff2aabffff2badffff2dafffff2eb1ffff2fb3ffff3ab9ffff45bfffff50c6ffff5bccffff66d2ffff71d9ffff7cdfffff87e5ffff92ecffff9df2ffffa8f8ffffb9fbffffcbfcffff
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CenterGlow
-  m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
-  m_ShaderKeywords: ADDITIVECONFIG_ON ALPHACUTOFF_ON COLORRAMPGRAD_ON COLORRAMP_ON
-    GLOW_ON PREMULTIPLYCOLOR_ON SHAKEUV_ON
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - ADDITIVECONFIG_ON
+  - ALPHACUTOFF_ON
+  - COLORRAMPGRAD_ON
+  - COLORRAMP_ON
+  - GLOW_ON
+  - PREMULTIPLYCOLOR_ON
+  - SHAKEUV_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -128,6 +146,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 1
     - _AlphaBrightness: 0
@@ -281,3 +300,4 @@ Material:
     - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

@@ -12,15 +12,21 @@ Texture2D:
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
   serializedVersion: 2
   m_Width: 64
   m_Height: 1
   m_CompleteImageSize: 256
+  m_MipsStripped: 0
   m_TextureFormat: 4
   m_MipCount: 1
   m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
   m_AlphaIsTransparency: 0
   m_ImageCount: 1
   m_TextureDimension: 2
@@ -34,29 +40,38 @@ Texture2D:
     m_WrapW: 1
   m_LightmapFormat: 0
   m_ColorSpace: 0
+  m_PlatformBlob: 
   image data: 256
   _typelessdata: 000000ff050100ff0b0100ff100200ff160300ff1b0300ff210400ff260500ff2b0600ff310600ff360700ff3c0800ff410800ff460900ff4c0a00ff510a00ff570b00ff5c0c00ff620c00ff670d00ff6c0e00ff720e00ff770f00ff7d1000ff821100ff881100ff8d1200ff921300ff981300ff9d1400ffa31500ffa81500ffad1600ffb31700ffb81900ffbb2100ffbf2800ffc23000ffc63700ffc93f00ffcd4600ffd04e00ffd45500ffd75d00ffdb6400ffde6c00ffe27300ffe57b00ffe98200ffec8a00fff09100fff39800fff7a000fffaa700fffeaf00ffffb70fffffbe24ffffc639ffffce4effffd664ffffde79ffffe68effffeda3fffff5b8ff
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ExplosionSparks
-  m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
-  m_ShaderKeywords: ADDITIVECONFIG_ON COLORRAMPGRAD_ON COLORRAMP_ON GLOW_ON
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - ADDITIVECONFIG_ON
+  - COLORRAMPGRAD_ON
+  - COLORRAMP_ON
+  - GLOW_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap:
-    RenderType: Transparent
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -128,6 +143,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 0.75
     - _AlphaBrightness: 0
@@ -201,6 +217,9 @@ Material:
     - _ScreenUvSh2DistScale: 1
     - _ScreenUvSh3DistScale: 1
     - _ScreenUvShDistScale: 1
+    - _Sh1BlendOffset: 0
+    - _Sh2BlendOffset: 0
+    - _Sh3BlendOffset: 0
     - _ShadowAmount: 0.4
     - _ShadowStepMax: 1
     - _ShadowStepMin: 0
@@ -278,3 +297,4 @@ Material:
     - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []

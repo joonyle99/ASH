@@ -2,21 +2,34 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SandWaves
-  m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
-  m_ShaderKeywords: CAMDISTFADE_ON COLORGRADING_ON COLORRAMPGRAD_ON DISTORT_ON FADE_ON
-    MASK_ON POLARUVDISTORT_ON POLARUV_ON SHAPE1DISTORT_ON TEXTURESCROLL_ON
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - CAMDISTFADE_ON
+  - COLORGRADING_ON
+  - COLORRAMPGRAD_ON
+  - DISTORT_ON
+  - FADE_ON
+  - MASK_ON
+  - POLARUVDISTORT_ON
+  - POLARUV_ON
+  - SHAPE1DISTORT_ON
+  - TEXTURESCROLL_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -88,6 +101,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 1
     - _AlphaBrightness: 0
@@ -136,6 +150,7 @@ Material:
     - _HsvBright: 1.495
     - _HsvSaturation: 1.165
     - _HsvShift: 0
+    - _LightAmount: 0
     - _MaskPow: 1
     - _OffsetSh1: 1
     - _OffsetSh2: 1
@@ -144,6 +159,9 @@ Material:
     - _PixelateSize: 32
     - _PosterizeGamma: 0.75
     - _PosterizeNumColors: 8
+    - _RandomSh1Mult: 1
+    - _RandomSh2Mult: 1
+    - _RandomSh3Mult: 1
     - _RenderingMode: 0
     - _RimAddAmount: 1
     - _RimBias: 0
@@ -157,6 +175,12 @@ Material:
     - _ScreenUvSh2DistScale: 1
     - _ScreenUvSh3DistScale: 1
     - _ScreenUvShDistScale: 1
+    - _Sh1BlendOffset: 0
+    - _Sh2BlendOffset: 0
+    - _Sh3BlendOffset: 0
+    - _ShadowAmount: 0.4
+    - _ShadowStepMax: 1
+    - _ShadowStepMin: 0
     - _ShakeUvSpeed: 2.5
     - _ShakeUvX: 1.5
     - _ShakeUvY: 1
@@ -168,6 +192,8 @@ Material:
     - _Shape2DistortAmount: 0.5
     - _Shape2DistortXSpeed: 0.1
     - _Shape2DistortYSpeed: 0.1
+    - _Shape2RotationOffset: 0
+    - _Shape2RotationSpeed: 0
     - _Shape2XSpeed: 0
     - _Shape2YSpeed: 0
     - _Shape3AlphaWeight: 2
@@ -177,6 +203,8 @@ Material:
     - _Shape3DistortAmount: 0.5
     - _Shape3DistortXSpeed: 0.1
     - _Shape3DistortYSpeed: 0.1
+    - _Shape3RotationOffset: 0
+    - _Shape3RotationSpeed: 0
     - _Shape3XSpeed: 0
     - _Shape3YSpeed: 0
     - _ShapeAlphaWeight: 1
@@ -186,6 +214,8 @@ Material:
     - _ShapeDistortAmount: 1.21
     - _ShapeDistortXSpeed: 0.1
     - _ShapeDistortYSpeed: -0.2
+    - _ShapeRotationOffset: 0
+    - _ShapeRotationSpeed: 0
     - _ShapeXSpeed: -0.09
     - _ShapeYSpeed: -0.18
     - _SoftFactor: 0.55
@@ -220,10 +250,12 @@ Material:
     - _FadeBurnColor: {r: 1, g: 1, b: 0, a: 1}
     - _FrontFaceTint: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 1.1345841, g: 0.8786992, b: 0.63729835, a: 1}
+  m_BuildTextureStacks: []
 --- !u!28 &28138555666083622
 Texture2D:
   m_ObjectHideFlags: 0
@@ -236,15 +268,21 @@ Texture2D:
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
   serializedVersion: 2
   m_Width: 64
   m_Height: 1
   m_CompleteImageSize: 256
+  m_MipsStripped: 0
   m_TextureFormat: 4
   m_MipCount: 1
   m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
   m_AlphaIsTransparency: 0
   m_ImageCount: 1
   m_TextureDimension: 2
@@ -258,9 +296,11 @@ Texture2D:
     m_WrapW: 1
   m_LightmapFormat: 0
   m_ColorSpace: 1
+  m_PlatformBlob: 
   image data: 256
   _typelessdata: 000000ff000000ff080001ff180004ff280107ff390109ff49010cff59020fff690211ff7a0214ff820215ff880216ff8d0217ff930218ff990218ff9f0219ffa5021affab021bffb1011bffb7011cffbc011dffc2011effc8011fffce011fffd40120ffda0121ffe00122ffe60023ffeb0023fff10024fff70025fffd0026ffff0724ffff1021ffff1a1effff241bffff2e18ffff3815ffff4212ffff4c10ffff560dffff600affff6a07ffff7404ffff7e01ffff8502ffff8a04ffff9006ffff9609ffff9b0bffffa10effffa710ffffac12ffffb215ffffb817ffffbd19ffffc31cffffc91effffce21ffffd423ffffda25ffffdf28ffffe52afff3ed9eff
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 

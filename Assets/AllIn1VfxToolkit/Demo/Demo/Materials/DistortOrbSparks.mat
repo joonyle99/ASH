@@ -8,25 +8,24 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: DistortOrbSparks
-  m_Shader: {fileID: 10753, guid: 0000000000000000f000000000000000, type: 0}
-  m_ValidKeywords: []
-  m_InvalidKeywords:
+  m_Shader: {fileID: 4800000, guid: b430983578466934c944e7171b4c372c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
   - ADDITIVECONFIG_ON
   - GLOW_ON
   - PREMULTIPLYCOLOR_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _AlphaTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _ColorRampTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -97,7 +96,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - PixelSnap: 0
     - _Alpha: 1
     - _AlphaBrightness: 0
     - _AlphaContrast: 1
@@ -130,7 +128,6 @@ Material:
     - _DistortionScrollYSpeed: 0
     - _DstMode: 10
     - _EditorDrawers: 61
-    - _EnableExternalAlpha: 0
     - _FadeAmount: -0.1
     - _FadeBurnGlow: 5
     - _FadeBurnWidth: 0.01
@@ -244,11 +241,9 @@ Material:
     - _ColorGradingMiddle: {r: 1, g: 1, b: 1, a: 1}
     - _DepthGlowColor: {r: 1, g: 1, b: 1, a: 1}
     - _FadeBurnColor: {r: 1, g: 1, b: 0, a: 1}
-    - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _FrontFaceTint: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
     - _LightColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
