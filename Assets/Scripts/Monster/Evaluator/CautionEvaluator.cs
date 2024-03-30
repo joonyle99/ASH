@@ -5,8 +5,8 @@ using UnityEngine;
 /// </summary>
 public class CautionEvaluator : Evaluator
 {
-    public override Collider2D IsTargetWithinRangePlus()
+    public override Collider2D IsTargetWithinRange()
     {
-        return base.IsTargetWithinRangePlus();
+        return base.IsTargetWithinRange();
     }
 }

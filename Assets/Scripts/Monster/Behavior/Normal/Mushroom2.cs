@@ -23,7 +23,7 @@ public class Mushroom2 : MonsterBehavior
     {
         base.Update();
     }
-    protected override void SetUp()
+    public override void SetUp()
     {
         base.SetUp();
     }
@@ -46,7 +46,7 @@ public class Mushroom2 : MonsterBehavior
         if(_isDevouring)
         {
             MonsterAttackInfo devourInfo = new MonsterAttackInfo(_devourDamage, new Vector2(_devourForceX, _devourForceY));
-            BoxCastAttack(_devourCollider.transform.position, _devourCollider.bounds.size, devourInfo, _attackTargetLayer);
+            BasicBoxCastAttack(_devourCollider.transform.position, _devourCollider.bounds.size, devourInfo, _attackTargetLayer);
         }
     }
 

@@ -16,19 +16,13 @@ public class Turtle : MonsterBehavior
     }
     protected override void FixedUpdate()
     {
-        base.FixedUpdate();
-
         if (IsDead)
             return;
 
         if(CurrentStateIs<GroundMoveState>())
-        {
-            // TODO : MonsterBehavior에 두면 안된다
-            // ground walking
-            GroundWalking();
-        }
+            monsterMovement.GroundWalking();
     }
-    protected override void SetUp()
+    public override void SetUp()
     {
         base.SetUp();
     }
@@ -42,10 +36,10 @@ public class Turtle : MonsterBehavior
         // 거북이는 Dead 상태에서도 Hit가 가능하다
 
         // Turtle Hit Process
-        if (IsHide || IsDead)
+        if (IsHiding || IsDead)
             HitProcess(attackInfo, false, true, false);
         else
-            HitProcess(attackInfo, false, false, true);
+            HitProcess(attackInfo, false, true, true);
 
         // Change to Hurt State
         if (CurrentState is IHurtableState)
@@ -60,7 +54,7 @@ public class Turtle : MonsterBehavior
         Animator.SetTrigger("Die");
 
         // Trigger -> Collision
-        TurnToCollisionHitBox();
+        GroundizeHitBox();
 
         // disable monster main collider
         GetComponent<Collider2D>().enabled = false;

@@ -3,31 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+public class MonsterAttackInfo
+{
+    public float Damage = 1f;
+    public Vector2 Force = Vector2.zero;
+
+    public MonsterAttackInfo(float damage, Vector2 force)
+    {
+        Damage = damage;
+        Force = force;
+    }
+}
+
 /// <summary>
-/// 몬스터의 기본 행동을 정의
+/// 몬스터의 기본 행동을 정의하는 추상클래스
 /// </summary>
 public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
     #region Attribute
 
-    public class MonsterAttackInfo
-    {
-        public float Damage = 1f;
-        public Vector2 Force = Vector2.zero;
-
-        public MonsterAttackInfo(float damage, Vector2 force)
-        {
-            Damage = damage;
-            Force = force;
-        }
-    }
-
-    // Basic Component
     public Rigidbody2D Rigidbody { get; private set; }
     public Animator Animator { get; private set; }
-
-    [Header("MonsterBehavior")]
-    [Space]
 
     [Header("State")]
     [Space]
@@ -124,11 +120,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _isAttacking;
         set => _isAttacking = value;
     }
-    [SerializeField] private bool _isHide;
-    public bool IsHide
+    [SerializeField] private bool _isHiding;
+    public bool IsHiding
     {
-        get => _isHide;
-        set => _isHide = value;
+        get => _isHiding;
+        set => _isHiding = value;
     }
     [SerializeField] private bool _isGodMode;
     public bool IsGodMode
@@ -136,11 +132,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _isGodMode;
         set => _isGodMode = value;
     }
-    [SerializeField] private bool _isHit;
-    public bool IsHit
+    [SerializeField] private bool _isHitting;
+    public bool IsHitting
     {
-        get => _isHit;
-        set => _isHit = value;
+        get => _isHitting;
+        set => _isHitting = value;
     }
     [SerializeField] private bool _isHurt;
     public bool IsHurt
@@ -158,6 +154,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Header("Monster Data")]
     [Space]
 
+    [SerializeField] private Transform _centerOfMass;
     [SerializeField] private MonsterData _monsterData;
 
     [Space]
@@ -167,6 +164,18 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         get => _monsterName;
         set => _monsterName = value;
+    }
+    [SerializeField] private MonsterDefine.RankType _rankType;
+    public MonsterDefine.RankType RankType
+    {
+        get => _rankType;
+        protected set => _rankType = value;
+    }
+    [SerializeField] private MonsterDefine.MoveType _moveType;
+    public MonsterDefine.MoveType MoveType
+    {
+        get => _moveType;
+        protected set => _moveType = value;
     }
     [SerializeField] private int _maxHp;
     public int MaxHp
@@ -178,7 +187,16 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public int CurHp
     {
         get => _curHp;
-        set => _curHp = value;
+        set
+        {
+            _curHp = value;
+
+            if (_curHp <= 0)
+            {
+                _curHp = 0;
+                Die();
+            }
+        }
     }
     [SerializeField] private float _moveSpeed;
     public float MoveSpeed
@@ -198,24 +216,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _jumpForce;
         set => _jumpForce = value;
     }
-    [SerializeField] private MonsterDefine.RankType _rankType;
-    public MonsterDefine.RankType RankType
-    {
-        get => _rankType;
-        protected set => _rankType = value;
-    }
-    [SerializeField] private MonsterDefine.MoveType _moveType;
-    public MonsterDefine.MoveType MoveType
-    {
-        get => _moveType;
-        protected set => _moveType = value;
-    }
-
-    [Header("BoxCast Attack")]
-    [Space]
-
-    [SerializeField] protected LayerMask _attackTargetLayer;
-    [SerializeField] protected GameObject _attackHitEffect;
 
     [Header("Ground Check")]
     [Space]
@@ -224,33 +224,25 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [SerializeField] private BoxCollider2D _groundCheckCollider;
     public RaycastHit2D GroundRayHit;
 
+    [Header("Basic BoxCast Attack")]
     [Space]
 
-    [SerializeField] private Transform _centerOfMass;
+    [SerializeField] protected LayerMask _attackTargetLayer;
+    [SerializeField] protected GameObject _attackHitEffect;
 
-    // Blink
-    private Material _whiteFlashMaterial;
-    private Material _superArmorMaterial;
-    private readonly float _flashInterval = 0.08f;
-    private readonly float _flashDuration = 0.9f;
-    private bool _isFlashing;
-    private SpriteRenderer[] _spriteRenderers;
-    private Material[] _originalMaterials;
-    private Coroutine _flashTimerRoutine;
-    private Coroutine _whiteFlashRoutine;
-    private Coroutine _superArmorRoutine;
+    // movement
+    protected MonsterMovement monsterMovement;
 
-    // Fade Out
-    // private readonly float _targetFadeOutTime = 2f;
-    // private float _elapsedFadeOutTime;
+    // blink Effect
+    private BlinkEffect _blinkEffect;
 
     // animation transition event
     public delegate bool CustomAnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
     public CustomAnimTransitionEvent customAnimTransitionEvent;
 
     // box cast attack event
-    public delegate void CustomBoxCastAttackEvent();
-    public CustomBoxCastAttackEvent customBoxCastAttackEvent;
+    public delegate void CustomBasicBoxCastAttackEvent();
+    public CustomBasicBoxCastAttackEvent customBasicBoxCastAttackEvent;
 
     #endregion
 
@@ -273,10 +265,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         AttackEvaluator = GetComponent<AttackEvaluator>();
         CautionEvaluator = GetComponent<CautionEvaluator>();
 
-        // Sprite Renderer / Original Material
-        LoadFlashMaterial();
-        SaveSpriteRenderers();
-        SaveOriginalMaterial();
+        monsterMovement = GetComponent<MonsterMovement>();
+        _blinkEffect = GetComponent<BlinkEffect>();
 
         // Init State
         InitState();
@@ -298,16 +288,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (IsDead)
             return;
 
-        // Die
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-            Die();
-
-            return;
-        }
-
-        // condition
+        // ground check
         switch (MoveType)
         {
             case MonsterDefine.MoveType.GroundTurret:
@@ -345,7 +326,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                         GroundRayHit = hit;
                 }
 
-                // set condition
                 IsGround = hasGroundContact;
                 IsInAir = !hasGroundContact;
 
@@ -359,14 +339,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 break;
         }
 
-        // range based attack by attack evaluator
+        // range based attack by evaluator
         if (AttackEvaluator)
         {
             if (CurrentState is IAttackableState)
             {
-                if (AttackEvaluator.IsTargetWithinRangePlus())
+                if (AttackEvaluator.IsTargetWithinRange())
                 {
-                    AttackEvaluator.StartCoolTimeCoroutine();
+                    AttackEvaluator.StartEvaluatorCoolTime();
                     StartChangeStateCoroutine("Attack", CurrentState);
                 }
             }
@@ -376,10 +356,16 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
 
     }
-    protected virtual void SetUp()
+    public virtual void SetUp()
     {
         // 몬스터의 이름
         MonsterName = _monsterData.MonsterName.ToString();
+
+        // 몬스터의 랭크
+        RankType = _monsterData.RankType;
+
+        // 몬스터의 행동 타입
+        MoveType = _monsterData.MoveType;
 
         // 몬스터의 최대 체력
         MaxHp = _monsterData.MaxHp;
@@ -393,19 +379,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // 몬스터의 점프파워
         JumpForce = _monsterData.JumpForce;
-
-        // 몬스터의 랭크
-        RankType = _monsterData.RankType;
-
-        // 몬스터의 행동 타입
-        MoveType = _monsterData.MoveType;
     }
     public virtual void KnockBack(Vector2 forceVector)
     {
         var navMesh = GetComponent<NavMeshAgent>();
-
-        if (navMesh)
-            navMesh.velocity = forceVector / 2.0f;
+        if (navMesh) navMesh.velocity = forceVector / 2.0f;
         else
         {
             // 속도 초기화
@@ -421,11 +399,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (IsGodMode || IsDead)
             return IAttackListener.AttackResult.Fail;
 
-        // Hit Process
         HitProcess(attackInfo);
-
-        // Check Hurt or Die Process
-        CheckDieProcess();
+        HurtProcess();
 
         return IAttackListener.AttackResult.Success;
     }
@@ -440,11 +415,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 Animator.SetTrigger("Die");
         }
 
-        // Disable Hit Box
-        TurnOffHitBox();
+        DisableHitBox();
 
-        // death effect
-        StartCoroutine(DeathCoroutine());
+        DeathEffect();
     }
 
     // Effect
@@ -455,6 +428,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     private IEnumerator DeathCoroutine()
     {
+        // DeathEffectCoroutine가 끝날 때까지 대기
         yield return StartCoroutine(DeathEffectCoroutine());
 
         if (transform.root) Destroy(transform.root.gameObject);
@@ -465,43 +439,15 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         var effect = GetComponent<DisintegrateEffect>();
         yield return new WaitForSeconds(0.3f);
 
+        // Stop movement
+        var navMeshMoveModule = GetComponent<NavMeshMoveModule>();
+        if (navMeshMoveModule) navMeshMoveModule.SetStopAgent(true, true);
         Rigidbody.simulated = false;
         Animator.speed = 0;
 
-        // Stop movement
-        var navMeshMoveModule = GetComponent<NavMeshMoveModule>();
-        if (navMeshMoveModule)
-            navMeshMoveModule.SetStopAgent(true, true);
-
+        // wait until effect done
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
-
-        /*
-        // Fade Out Effect
-
-        SpriteRenderer[] currentSpriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
-
-        float[] startAlphaArray = new float[currentSpriteRenderers.Length];
-        for (int i = 0; i < currentSpriteRenderers.Length; i++)
-            startAlphaArray[i] = currentSpriteRenderers[i].color.a;
-
-        while (_elapsedFadeOutTime < _targetFadeOutTime)
-        {
-            _elapsedFadeOutTime += Time.deltaTime;
-            float normalizedTime = _elapsedFadeOutTime / _targetFadeOutTime; // Normalize to 0 ~ 1
-
-            for (int i = 0; i < currentSpriteRenderers.Length; i++)
-            {
-                Color targetColor = currentSpriteRenderers[i].color;
-                targetColor.a = Mathf.Lerp(startAlphaArray[i], 0f, normalizedTime);
-                currentSpriteRenderers[i].color = targetColor;
-            }
-
-            yield return null;
-        }
-
-        yield return null;
-        */
     }
 
     // basic
@@ -527,7 +473,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         StartCoroutine(SetRecentDirAfterGrounded(targetDir));
     }
-    public void BoxCastAttack(Vector2 targetPosition, Vector2 attackBoxSize, MonsterAttackInfo attackinfo, LayerMask targetLayer)
+    public void BasicBoxCastAttack(Vector2 targetPosition, Vector2 attackBoxSize, MonsterAttackInfo attackinfo, LayerMask targetLayer)
     {
         RaycastHit2D[] rayCastHits = Physics2D.BoxCastAll(targetPosition, attackBoxSize, 0f, Vector2.zero, 0.0f, targetLayer);
         foreach (var rayCastHit in rayCastHits)
@@ -541,17 +487,21 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 if (attackResult == IAttackListener.AttackResult.Success)
                 {
                     Instantiate(_attackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
-                    customBoxCastAttackEvent?.Invoke();
+                    customBasicBoxCastAttackEvent?.Invoke();
                 }
             }
         }
     }
-    public void CastAttack(Collider2D collider, Vector2 targetPosition, Vector2 attackBoxSize, MonsterAttackInfo attackinfo, LayerMask targetLayer)
+    public void ColliderCastAttack(Collider2D collider, MonsterAttackInfo attackinfo, LayerMask targetLayer)
     {
+        // layer wrapping to contactFilter
         ContactFilter2D contactFilter = new ContactFilter2D();
         contactFilter.SetLayerMask(targetLayer);
+
+        // collider cast
         List<RaycastHit2D> rayCastHits = new List<RaycastHit2D>();
         collider.Cast(Vector2.right, contactFilter, rayCastHits, 0);
+
         foreach (var rayCastHit in rayCastHits)
         {
             var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
@@ -563,23 +513,23 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 if (attackResult == IAttackListener.AttackResult.Success)
                 {
                     Instantiate(_attackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
-
+                    customBasicBoxCastAttackEvent?.Invoke();
                 }
             }
         }
     }
 
     // hitBox
-    public void TurnOffHitBox()
+    public void DisableHitBox()
     {
-        var hitBox = GetComponentInChildren<MonsterBodyHitModule>();
+        var hitBox = GetComponentInChildren<MonsterBodyHit>();
 
         if (hitBox)
             hitBox.gameObject.SetActive(false);
     }
-    public void TurnToCollisionHitBox()
+    public void GroundizeHitBox()
     {
-        var hitBox = GetComponentInChildren<MonsterBodyHitModule>();
+        var hitBox = GetComponentInChildren<MonsterBodyHit>();
 
         if (hitBox)
         {
@@ -588,184 +538,47 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             hitBox.gameObject.layer = LayerMask.NameToLayer("Default");
         }
     }
-    public void SetIsAttackableHitBox(bool isBool)
+    public void SetAttackableHitBox(bool isBool)
     {
-        var str = isBool ? "Attackable" : "UnAttackable";
-        Debug.Log(str);
+        // var str = isBool ? "Attackable" : "UnAttackable";
+        // Debug.Log(str);
 
-        var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHitModule>();
+        var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHit>();
 
         if (monsterBodyHitModule)
             monsterBodyHitModule.IsAttackable = isBool;
     }
-    public IEnumerator AttackableHitBox(bool isBool)
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        SetIsAttackableHitBox(isBool);
-    }
-    public void StartAttackableHitBox()
-    {
-        StartCoroutine(AttackableHitBox(true));
-    }
-
-    // flash
-    private void LoadFlashMaterial()
-    {
-        _whiteFlashMaterial =
-            Resources.Load<Material>("Materials/WhiteFlashMaterial");
-        _superArmorMaterial =
-            Resources.Load<Material>("Materials/SuperArmorFlashMaterial");
-    }
-    private void SaveSpriteRenderers()
-    {
-        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
-    }
-    private void SaveOriginalMaterial()
-    {
-        _originalMaterials = new Material[_spriteRenderers.Length];
-
-        for (int i = 0; i < _originalMaterials.Length; i++)
-            _originalMaterials[i] = _spriteRenderers[i].material;
-    }
-    private void InitMaterial()
-    {
-        // Debug.Log($"{this.gameObject.name}의 InitMaterial");
-
-        for (int i = 0; i < _spriteRenderers.Length; i++)
-            _spriteRenderers[i].material = _originalMaterials[i];
-    }
-    private void ChangeMaterial(Material material)
-    {
-        for (int i = 0; i < _originalMaterials.Length; i++)
-            _spriteRenderers[i].material = material;
-    }
-    private IEnumerator WhiteFlash()
-    {
-        // turn to white material
-        ChangeMaterial(_whiteFlashMaterial);
-
-        while (_isFlashing)
-        {
-            foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0.3f);
-
-            yield return new WaitForSeconds(_flashInterval);
-
-            foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0f);
-
-            yield return new WaitForSeconds(_flashInterval);
-        }
-
-        // TODO : Dead 상태에서 WhiteFlash가 호출되는 일은 없겠지만, 혹시 모르니까
-        if (!IsDead)
-            InitMaterial();
-    }
-    public void StartWhiteFlash()
-    {
-        if (this._superArmorRoutine != null)
-            StopCoroutine(this._superArmorRoutine);
-
-        if (this._whiteFlashRoutine != null)
-            StopCoroutine(this._whiteFlashRoutine);
-
-        this._whiteFlashRoutine = StartCoroutine(WhiteFlash());
-    }
-    private IEnumerator SuperArmorFlash()
-    {
-        // turn to white material
-        ChangeMaterial(_superArmorMaterial);
-
-        while (_isFlashing)
-        {
-            foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0.2f);
-
-            yield return new WaitForSeconds(_flashInterval);
-
-            foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0f);
-
-            yield return new WaitForSeconds(_flashInterval);
-
-            yield return null;
-        }
-
-        if (!IsDead)
-            InitMaterial();
-    }
-    public void StartSuperArmorFlash()
-    {
-        if (this._whiteFlashRoutine != null)
-            StopCoroutine(this._whiteFlashRoutine);
-
-        if (this._superArmorRoutine != null)
-            StopCoroutine(this._superArmorRoutine);
-
-        this._superArmorRoutine = StartCoroutine(SuperArmorFlash());
-    }
 
     // hit & die
-    public void HitProcess(AttackInfo attackInfo, bool onDamage = true, bool onKnockBack = true, bool onWhiteFlash = true)
+    public void HitProcess(AttackInfo attackInfo, bool onDamage = true, bool onKnockBack = true, bool useBlinkEffect = true)
     {
-        StartHitTimer();
+        StartCoroutine(HitTimer());
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
-        if (onWhiteFlash)
-        {
-            StartFlashTimer();
-            StartWhiteFlash();
-        }
-
-        if (onDamage)
-            CurHp -= (int)attackInfo.Damage;
+        if (useBlinkEffect)
+            _blinkEffect.StartBlink();
 
         if (onKnockBack)
             KnockBack(attackInfo.Force);
-    }
-    public void CheckDieProcess()
-    {
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-            Die();
 
-            return;
-        }
+        if (onDamage)
+            CurHp -= (int)attackInfo.Damage;
+    }
+    public void HurtProcess()
+    {
+        if (IsDead) return;
 
         // superArmor is started when monster attack
         // superArmor : hurt animation x
-        if (IsAttacking)
-            return;
+        if (IsAttacking) return;
 
         Animator.SetTrigger("Hurt");
     }
     private IEnumerator HitTimer()
     {
-        IsHit = true;
+        IsHitting = true;
         yield return new WaitForSeconds(0.05f);
-        IsHit = false;
-    }
-    public void StartHitTimer()
-    {
-        StartCoroutine(HitTimer());
-    }
-    private IEnumerator FlashTimer(float duration)
-    {
-        _isFlashing = true;
-        yield return new WaitForSeconds(duration);
-        _isFlashing = false;
-    }
-    public void StartFlashTimer(float duration = 0f)
-    {
-        if (_flashTimerRoutine != null)
-            StopCoroutine(_flashTimerRoutine);
-
-        if (duration < 0.01f)
-            duration = _flashDuration;
-
-        _flashTimerRoutine = StartCoroutine(FlashTimer(duration));
+        IsHitting = false;
     }
 
     // state
@@ -808,35 +621,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState)
     {
         StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState));
-    }
-
-    // behavior
-    public void GroundWalking()
-    {
-        if (IsInAir)
-            return;
-
-        // 추가로 상대와의 거리가 너무 가까워지면 추격을 중단
-        if (GroundChaseEvaluator)
-        {
-            if (GroundChaseEvaluator.IsTooClose)
-                return;
-        }
-
-        Vector2 groundNormal = GroundRayHit.normal;
-        Vector2 moveDirection = RecentDir > 0
-            ? (-1) * Vector2.Perpendicular(groundNormal)
-            : Vector2.Perpendicular(groundNormal);
-
-        Debug.DrawRay(GroundRayHit.point, groundNormal, Color.cyan);
-
-        Vector2 targetVelocity = moveDirection * MoveSpeed;
-        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(Rigidbody.velocity, moveDirection) * moveDirection;   // 경사면을 따라 움직이기 위한 벡터
-        Vector2 moveForce = velocityNeeded * Acceleration;
-
-        Debug.DrawRay(transform.position, moveDirection, Color.cyan);
-
-        Rigidbody.AddForce(moveForce);
     }
 
     #endregion

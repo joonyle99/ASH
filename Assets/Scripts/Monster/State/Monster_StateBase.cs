@@ -5,30 +5,24 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     [Header("Monster_StateBase")]
     [Space]
 
-    [SerializeField] protected bool _isAutoStateTransition = false;
+    [SerializeField] protected bool isAutoStateTransition = false;
 
     [Space]
 
-    [SerializeField] protected string _targetTransitionParam;
+    [SerializeField] protected string targetTransitionParam;
 
     [Space]
 
-    [SerializeField] protected float _minStayTime = 0f;
-    [SerializeField] protected float _maxStayTime = 0f;
+    [SerializeField] protected Range stayTime;
 
     [Space]
 
-    [SerializeField] protected float _targetStayTime = 0f;
-    [SerializeField] protected float _elapsedStayTime = 0f;
-
-    public float TargetStayTime
-    {
-        get { return _targetStayTime; }
-    }
+    [SerializeField] protected float targetStayTime;
+    [SerializeField] protected float elapsedStayTime;
     public float ElaspedStayTime
     {
-        get { return _elapsedStayTime; }
-        set { _elapsedStayTime = value; }
+        get { return elapsedStayTime; }
+        set { elapsedStayTime = value; }
     }
 
     // Monster Behavior
@@ -36,13 +30,13 @@ public abstract class Monster_StateBase : StateMachineBehaviour
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Monster = animator.GetComponent<MonsterBehavior>(); // Get Monster Behavior
-        Monster.UpdateState(this);                          // Update Monster State
+        Monster = animator.GetComponent<MonsterBehavior>();     // Get Monster Behavior
+        Monster.UpdateState(this);                              // Update Monster State
 
-        if (_isAutoStateTransition)
+        if (isAutoStateTransition)
         {
-            _elapsedStayTime = 0f;
-            _targetStayTime = Random.Range(_minStayTime, _maxStayTime);
+            elapsedStayTime = 0f;
+            targetStayTime = stayTime.Random();
         }
 
         if (Monster.NavMeshMoveModule)
@@ -56,15 +50,13 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         // auto change to next state
-        if (_isAutoStateTransition)
+        if (isAutoStateTransition)
         {
-            _elapsedStayTime += Time.deltaTime;
-            if (_elapsedStayTime > _targetStayTime)
+            elapsedStayTime += Time.deltaTime;
+            if (elapsedStayTime > targetStayTime)
             {
-                _elapsedStayTime = 0f;
-                Monster.StartChangeStateCoroutine(_targetTransitionParam, Monster.CurrentState);
-
-                return;
+                elapsedStayTime = 0f;
+                Monster.StartChangeStateCoroutine(targetTransitionParam, Monster.CurrentState);
             }
         }
     }
@@ -78,10 +70,10 @@ public abstract class Monster_StateBase : StateMachineBehaviour
                 Monster.NavMeshMoveModule.SetStopAgent(false, false);
         }
 
-        if (_isAutoStateTransition)
+        if (isAutoStateTransition)
         {
-            _elapsedStayTime = 0f;
-            _targetStayTime = 0f;
+            elapsedStayTime = 0f;
+            targetStayTime = 0f;
         }
     }
 }

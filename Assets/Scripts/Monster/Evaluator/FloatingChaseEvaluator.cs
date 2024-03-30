@@ -10,9 +10,9 @@ public class FloatingChaseEvaluator : Evaluator
         customEvaluationEvent += SetTarget;
     }
 
-    public override Collider2D IsTargetWithinRangePlus()
+    public override Collider2D IsTargetWithinRange()
     {
-        return base.IsTargetWithinRangePlus();
+        return base.IsTargetWithinRange();
     }
 
     private void SetTarget(Vector3 targetPoint)

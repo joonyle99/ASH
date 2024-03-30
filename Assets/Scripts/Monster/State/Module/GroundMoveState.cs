@@ -11,14 +11,14 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        if (Monster.GroundChaseEvaluator)
+        if (Monster.GroundChaseEvaluator && Monster.GroundChaseEvaluator.IsUsable && Monster.GroundChaseEvaluator.CanWorking)
         {
-            var collider = Monster.GroundChaseEvaluator.IsTargetWithinRangePlus();
+            var collider = Monster.GroundChaseEvaluator.IsTargetWithinRange();
             if (collider)
             {
                 // 추가로 상대와의 거리가 x보다 가까워지면 추격을 중단
                 var dist = Vector2.Distance(Monster.transform.position, collider.transform.position);
-                if (dist < 3f)
+                if (dist < Monster.GroundChaseEvaluator.MaxChaseDistance)
                 {
                     Monster.GroundChaseEvaluator.IsTooClose = true;
                 }
@@ -30,19 +30,22 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
             }
         }
 
-        if (Monster.GroundPatrolEvaluator)
+        if (Monster.GroundPatrolEvaluator && Monster.GroundPatrolEvaluator.IsUsable && Monster.GroundPatrolEvaluator.CanWorking)
         {
-            // then patrol
+            // 범위 바깥에 있는 경우
             if (Monster.GroundPatrolEvaluator.IsOutOfPatrolRange())
             {
+                // 오른쪽으로 간다
                 if (Monster.GroundPatrolEvaluator.IsLeftOfLeftPoint())
                     Monster.StartSetRecentDirAfterGrounded(1);
+                // 왼쪽으로 간다
                 else if (Monster.GroundPatrolEvaluator.IsRightOfRightPoint())
                     Monster.StartSetRecentDirAfterGrounded(-1);
             }
             else
             {
-                if (Monster.GroundPatrolEvaluator.IsTargetWithinRangePlus())
+                // 범위 안에서 가상의 벽에 닿으면 반대 방향으로 간다
+                if (Monster.GroundPatrolEvaluator.IsTargetWithinRange())
                     Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
             }
         }

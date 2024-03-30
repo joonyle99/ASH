@@ -14,11 +14,11 @@ public abstract class Evaluator : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private float _targetCheckCoolTime;        // 판독 쿨타임
+    [SerializeField] private float _targetEvaluatorCoolTime;    // 판독 쿨타임
     public float TargetCheckCoolTime
     {
-        get => _targetCheckCoolTime;
-        set => _targetCheckCoolTime = value;
+        get => _targetEvaluatorCoolTime;
+        set => _targetEvaluatorCoolTime = value;
     }
     [SerializeField] private bool _isDuringCoolTime;            // 판독기 쿨타임 중 여부
     public bool IsDuringCoolTime
@@ -45,7 +45,7 @@ public abstract class Evaluator : MonoBehaviour
     protected delegate void CustomEvaluationEvent(Vector3 targetPoint);
     protected CustomEvaluationEvent customEvaluationEvent;
 
-    public virtual Collider2D IsTargetWithinRangePlus()
+    public virtual Collider2D IsTargetWithinRange()
     {
         // check coolTime and usable
         if (IsDuringCoolTime || !_canWorking || !IsUsable)
@@ -95,14 +95,14 @@ public abstract class Evaluator : MonoBehaviour
     private IEnumerator CoolTimeCoroutine()
     {
         IsDuringCoolTime = true;
-        yield return new WaitForSeconds(_targetCheckCoolTime);
+        yield return new WaitForSeconds(_targetEvaluatorCoolTime);
         IsDuringCoolTime = false;
     }
-    public virtual void StartCoolTimeCoroutine()
+    public virtual void StartEvaluatorCoolTime()
     {
-        if (_targetCheckCoolTime < 0.01f)
+        if (_targetEvaluatorCoolTime < 0.01f)
         {
-            Debug.LogWarning("CheckCoolTime을 사용할거면 값을 설정해주세요 ");
+            Debug.LogWarning("Evaluator CoolTime을 사용하기 위해 _targetCheckCoolTime을 설정해주세요");
             return;
         }
 

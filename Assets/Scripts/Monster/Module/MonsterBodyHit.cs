@@ -1,21 +1,21 @@
 using UnityEngine;
 
 /// <summary>
-/// 몬스터의 바디 타격을 담당하는 모듈
+/// 몬스터의 바디 타격을 담당
 /// </summary>
-public class MonsterBodyHitModule : MonoBehaviour
+public class MonsterBodyHit : MonoBehaviour
 {
-    [Header("Monster BodyHit Module")]
+    [Header("Monster Body Hit")]
     [Space]
 
-    [SerializeField] private LayerMask _bodyHitTargetLayer;
-    [SerializeField] private GameObject _toHitEffectPrefab;
+    [SerializeField] private LayerMask _targetLayer;
+    [SerializeField] private GameObject _hitEffect;
 
     [Space]
 
-    [SerializeField] private int _bodyHitDamage = 5;
-    [SerializeField] private float _bodyHitForceX = 7f;
-    [SerializeField] private float _bodyHitForceY = 9f;
+    [SerializeField] private int _damage = 1;
+    [SerializeField] private float _forceX = 7f;
+    [SerializeField] private float _forceY = 10f;
 
     [Space]
 
@@ -32,7 +32,7 @@ public class MonsterBodyHitModule : MonoBehaviour
         if (IsAttackable)
         {
             // 타겟 레이어와 충돌
-            if ((1 << collision.gameObject.layer & _bodyHitTargetLayer.value) > 0)
+            if ((1 << collision.gameObject.layer & _targetLayer.value) > 0)
             {
                 // 타겟이 플레이어인 경우
                 PlayerBehaviour player = collision.GetComponent<PlayerBehaviour>();
@@ -42,14 +42,14 @@ public class MonsterBodyHitModule : MonoBehaviour
                     if (!player.IsHurt && !player.IsGodMode && !player.IsDead)
                     {
                         // 플레이어를 타격
-                        Vector2 forceVector = new Vector2(_bodyHitForceX * Mathf.Sign(player.transform.position.x - this.transform.position.x), _bodyHitForceY);
-                        IAttackListener.AttackResult attackResult = player.OnHit(new AttackInfo(_bodyHitDamage, forceVector, AttackType.Monster_BodyAttack));
+                        Vector2 forceVector = new Vector2(_forceX * Mathf.Sign(player.transform.position.x - this.transform.position.x), _forceY);
+                        IAttackListener.AttackResult attackResult = player.OnHit(new AttackInfo(_damage, forceVector, AttackType.Monster_BodyAttack));
 
                         // 타격 성공 시 히트 이펙트 생성
                         if (attackResult == IAttackListener.AttackResult.Success)
                         {
                             Vector2 playerPos = player.transform.position;
-                            Instantiate(_toHitEffectPrefab, playerPos + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                            Instantiate(_hitEffect, playerPos + Random.insideUnitCircle * 0.3f, Quaternion.identity);
                         }
                     }
                 }

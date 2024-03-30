@@ -12,6 +12,13 @@ public class GroundChaseEvaluator : Evaluator
         get => _chaseDir;
         private set => _chaseDir = value;
     }
+    [SerializeField] private float _maxChaseDistance = 3f;
+    public float MaxChaseDistance
+    {
+        get => _maxChaseDistance;
+        private set => _maxChaseDistance = value;
+    }
+
     [SerializeField] private bool _isChasing;
     public bool IsChasing
     {
@@ -31,9 +38,9 @@ public class GroundChaseEvaluator : Evaluator
         customEvaluationEvent += SetChaseDir;
     }
 
-    public override Collider2D IsTargetWithinRangePlus()
+    public override Collider2D IsTargetWithinRange()
     {
-        var hasChaseTarget = base.IsTargetWithinRangePlus();
+        var hasChaseTarget = base.IsTargetWithinRange();
 
         if (hasChaseTarget) IsChasing = true;
         else IsChasing = false;

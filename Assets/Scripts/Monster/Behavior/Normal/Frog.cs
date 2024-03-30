@@ -37,7 +37,7 @@ public class Frog : MonsterBehavior
     {
         base.Update();
     }
-    protected override void SetUp()
+    public override void SetUp()
     {
         base.SetUp();
     }

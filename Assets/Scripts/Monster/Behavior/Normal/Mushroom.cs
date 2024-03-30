@@ -15,8 +15,8 @@ public class Mushroom : MonsterBehavior
     {
         base.Awake();
 
-        customBoxCastAttackEvent -= KillPlayer;
-        customBoxCastAttackEvent += KillPlayer;
+        customBasicBoxCastAttackEvent -= KillPlayer;
+        customBasicBoxCastAttackEvent += KillPlayer;
     }
     protected override void Start()
     {
@@ -28,7 +28,7 @@ public class Mushroom : MonsterBehavior
 
         if (CautionEvaluator)
         {
-            if (!CautionEvaluator.IsTargetWithinRangePlus())
+            if (!CautionEvaluator.IsTargetWithinRange())
             {
                 if (CurrentStateIs<Monster_HideState>())
                 {
@@ -47,7 +47,7 @@ public class Mushroom : MonsterBehavior
             }
         }
     }
-    protected override void SetUp()
+    public override void SetUp()
     {
         base.SetUp();
     }
@@ -70,7 +70,7 @@ public class Mushroom : MonsterBehavior
         if(_isDevouring)
         {
             MonsterAttackInfo devourInfo = new MonsterAttackInfo(_devourDamage, new Vector2(_devourForceX, _devourForceY));
-            BoxCastAttack(_devourCollider.transform.position, _devourCollider.bounds.size, devourInfo, _attackTargetLayer);
+            BasicBoxCastAttack(_devourCollider.transform.position, _devourCollider.bounds.size, devourInfo, _attackTargetLayer);
         }
     }
 

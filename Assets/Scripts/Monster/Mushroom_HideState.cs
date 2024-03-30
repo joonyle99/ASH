@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class Monster_HideState : Monster_StateBase, IAttackableState
+public class Mushroom_HideState : Monster_HideState
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        Monster.IsHiding = true;
+        if (Monster.AttackEvaluator)
+        {
+            Monster.AttackEvaluator.CanWorking = false;
+        }
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -18,6 +21,9 @@ public class Monster_HideState : Monster_StateBase, IAttackableState
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        Monster.IsHiding = false;
+        if (Monster.AttackEvaluator)
+        {
+            Monster.AttackEvaluator.CanWorking = true;
+        }
     }
 }

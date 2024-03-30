@@ -33,7 +33,7 @@ public abstract class SemiBossBehavior : MonsterBehavior
     {
         base.Update();
     }
-    protected override void SetUp()
+    public override void SetUp()
     {
         base.SetUp();
     }

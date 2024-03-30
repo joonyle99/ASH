@@ -15,9 +15,9 @@ public class AttackEvaluator : Evaluator
         customEvaluationEvent += ChangeDir;
     }
 
-    public override Collider2D IsTargetWithinRangePlus()
+    public override Collider2D IsTargetWithinRange()
     {
-        return base.IsTargetWithinRangePlus();
+        return base.IsTargetWithinRange();
     }
 
     private void ChangeDir(Vector3 targetPoint)

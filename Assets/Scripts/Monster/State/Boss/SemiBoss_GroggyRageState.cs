@@ -14,8 +14,8 @@ public class SemiBoss_GroggyRageState : SemiBoss_StateBase
 
         // TODO : 외관이 좀 바뀌어도 좋을 것 같다.
         // like 머터리얼 변경
-        SemiBoss.StartFlashTimer(3f);
-        SemiBoss.StartSuperArmorFlash();
+        // SemiBoss.StartFlashTimer(3f);
+        // SemiBoss.StartSuperArmorFlash();
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

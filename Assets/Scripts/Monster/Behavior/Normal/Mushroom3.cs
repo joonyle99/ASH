@@ -25,8 +25,8 @@ public class Mushroom3 : MonsterBehavior, ILightCaptureListener
     {
         base.Awake();
 
-        customBoxCastAttackEvent -= CutScene_Mushroom;
-        customBoxCastAttackEvent += CutScene_Mushroom;
+        customBasicBoxCastAttackEvent -= CutScene_Mushroom;
+        customBasicBoxCastAttackEvent += CutScene_Mushroom;
     }
     protected override void Start()
     {
@@ -36,7 +36,7 @@ public class Mushroom3 : MonsterBehavior, ILightCaptureListener
     {
         base.Update();
     }
-    protected override void SetUp()
+    public override void SetUp()
     {
         base.SetUp();
     }
@@ -85,7 +85,7 @@ public class Mushroom3 : MonsterBehavior, ILightCaptureListener
         if(_isDevouring)
         {
             MonsterAttackInfo devourInfo = new MonsterAttackInfo(_devourDamage, new Vector2(_devourForceX, _devourForceY));
-            BoxCastAttack(_devourCollider.transform.position, _devourCollider.bounds.size, devourInfo, _attackTargetLayer);
+            BasicBoxCastAttack(_devourCollider.transform.position, _devourCollider.bounds.size, devourInfo, _attackTargetLayer);
         }
     }
 

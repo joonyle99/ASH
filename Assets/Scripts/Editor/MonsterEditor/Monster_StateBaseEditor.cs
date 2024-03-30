@@ -26,7 +26,7 @@ public class Monster_StateBaseEditor : Editor
         // SerializedObject를 업데이트
         serializedObject.Update();
 
-        SerializedProperty isAutoStateTransition = serializedObject.FindProperty("_isAutoStateTransition");
+        SerializedProperty isAutoStateTransition = serializedObject.FindProperty("isAutoStateTransition");
         if (!isAutoStateTransition.boolValue)
         {
             SerializedProperty iterator = serializedObject.GetIterator();
@@ -35,11 +35,11 @@ public class Monster_StateBaseEditor : Editor
                 // 특정 프로퍼티를 숨긴다.
                 switch (iterator.name)
                 {
-                    case "_targetTransitionParam":
+                    case "targetTransitionParam":
                     case "_minStayTime":
                     case "_maxStayTime":
-                    case "_targetStayTime":
-                    case "_elapsedStayTime":
+                    case "targetStayTime":
+                    case "elapsedStayTime":
                         continue;
                     default:
                         EditorGUILayout.PropertyField(iterator, true);
