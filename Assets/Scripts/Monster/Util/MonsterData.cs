@@ -4,30 +4,30 @@ using UnityEngine;
 public class MonsterData : ScriptableObject
 {
     // 몬스터 이름
-    [SerializeField] private MonsterDefine.MonsterName _monsterName;
-    public MonsterDefine.MonsterName MonsterName => _monsterName;
+    [field: SerializeField]
+    public MonsterDefine.MonsterName MonsterName { get; private set; }
 
     // 몬스터 랭크
-    [SerializeField] private MonsterDefine.RankType _rankType;
-    public MonsterDefine.RankType RankType => _rankType;
+    [field: SerializeField]
+    public MonsterDefine.RankType RankType { get; private set; }
 
     // 몬스터 행동 타입
-    [SerializeField] private MonsterDefine.MoveType _moveType;
-    public MonsterDefine.MoveType MoveType => _moveType;
+    [field: SerializeField]
+    public MonsterDefine.MoveType MoveType { get; private set; }
 
     // 최대 체력
-    [SerializeField] private int _maxHp;
-    public int MaxHp => _maxHp;
+    [field: SerializeField]
+    public int MaxHp { get; private set; }
 
     // 이동 속도
-    [SerializeField] private float _moveSpeed;
-    public float MoveSpeed => _moveSpeed;
+    [field: SerializeField]
+    public float MoveSpeed { get; private set; }
 
     // 가속도
-    [SerializeField] private float _acceleration;
-    public float Acceleration => _acceleration;
+    [field: SerializeField]
+    public float Acceleration { get; private set; }
 
     // 점프 파워
-    [SerializeField] private Vector2 _jumpForce;
-    public Vector2 JumpForce => _jumpForce;
+    [field: SerializeField]
+    public Vector2 JumpForce { get; private set; }
 }
