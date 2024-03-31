@@ -51,30 +51,18 @@ public class Frog : MonsterBehavior
         base.OnHit(attackInfo);
 
         // 선공 당하면 공격 모드 진입
-        if (AttackEvaluator)
-        {
-            if (!AttackEvaluator.IsUsable)
-                AttackEvaluator.IsUsable = true;
-        }
+        if (!AttackEvaluator.IsUsable)
+            AttackEvaluator.IsUsable = true;
 
         // 선공 당하면 추격 모드 진입
-        if (GroundChaseEvaluator)
-        {
-            if (!GroundChaseEvaluator.IsUsable)
-                GroundChaseEvaluator.IsUsable = true;
-        }
+        if (!GroundChaseEvaluator.IsUsable)
+            GroundChaseEvaluator.IsUsable = true;
 
         return IAttackListener.AttackResult.Success;
     }
     public override void Die()
     {
         base.Die();
-    }
-
-    public void Jump_AnimEvent()
-    {
-        Vector2 forceVector = new Vector2(JumpForce.x * RecentDir, JumpForce.y);
-        Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
     }
 
     /*

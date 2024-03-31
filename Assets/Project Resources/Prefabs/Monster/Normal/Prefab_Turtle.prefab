@@ -1930,11 +1930,11 @@ MonoBehaviour:
   _currentState: {fileID: 0}
   _floatingPatrolModule: {fileID: 0}
   _navMeshMoveModule: {fileID: 0}
-  _groundPatrolEvaluator: {fileID: 0}
-  _groundChaseEvaluator: {fileID: 0}
-  _floatingChaseEvaluator: {fileID: 0}
-  _attackEvaluator: {fileID: 0}
-  _cautionEvaluator: {fileID: 0}
+  groundPatrolEvaluator: {fileID: 0}
+  groundChaseEvaluator: {fileID: 0}
+  floatingChaseEvaluator: {fileID: 0}
+  attackEvaluator: {fileID: 0}
+  cautionEvaluator: {fileID: 0}
   _defaultDir: -1
   _recentDir: 0
   _isGround: 0
@@ -1987,13 +1987,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cbb59a130bc4684eaee920d3139c56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetLayer:
+  targetLayer:
     serializedVersion: 2
-    m_Bits: 2097160
-  _checkCollider: {fileID: 8377344811798160662}
+    m_Bits: 9
+  checkCollider: {fileID: 8377344811798160662}
   _targetEvaluatorCoolTime: 0
   _isDuringCoolTime: 0
-  _canWorking: 1
   _isUsable: 1
   _patrolPoints: {fileID: 4386577299285460136}
   _isOutOfPatrolRange: 0

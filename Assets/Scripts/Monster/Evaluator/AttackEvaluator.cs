@@ -2,15 +2,15 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// 공격 판정기
+/// 대상이 공격 범위 안에 들어왔는지 판단하고 방향을 전환하는 클래스
 /// </summary>
 public class AttackEvaluator : Evaluator
 {
-    private MonsterBehavior _monster;
-
-    private void Awake()
+    public override void Awake()
     {
-        _monster = GetComponent<MonsterBehavior>();
+        base.Awake();
+
+        // 타겟 감지 시 자동으로 발생하는 기능 추가
         customEvaluationEvent -= ChangeDir;
         customEvaluationEvent += ChangeDir;
     }
@@ -25,9 +25,14 @@ public class AttackEvaluator : Evaluator
         // 공격 전 최종적으로 방향을 바꾼다.
         int chaseDir = Math.Sign(targetPoint.x - transform.position.x);
 
-        if (_monster.MoveType == MonsterDefine.MoveType.GroundWalking || _monster.MoveType == MonsterDefine.MoveType.GroundJumpping)
-            _monster.StartSetRecentDirAfterGrounded(chaseDir);
+        if (monsterBehavior.MoveType == MonsterDefine.MoveType.GroundWalking ||
+            monsterBehavior.MoveType == MonsterDefine.MoveType.GroundJumpping)
+        {
+            monsterBehavior.StartSetRecentDirAfterGrounded(chaseDir);
+        }
         else
-            _monster.SetRecentDir(chaseDir);
+        {
+            monsterBehavior.SetRecentDir(chaseDir);
+        }
     }
 }

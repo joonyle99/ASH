@@ -56,35 +56,35 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Header("Evaluator")]
     [Space]
 
-    [SerializeField] private GroundPatrolEvaluator _groundPatrolEvaluator;
+    [SerializeField] private GroundPatrolEvaluator groundPatrolEvaluator;
     public GroundPatrolEvaluator GroundPatrolEvaluator
     {
-        get => _groundPatrolEvaluator;
-        private set => _groundPatrolEvaluator = value;
+        get => groundPatrolEvaluator;
+        private set => groundPatrolEvaluator = value;
     }
-    [SerializeField] private GroundChaseEvaluator _groundChaseEvaluator;
+    [SerializeField] private GroundChaseEvaluator groundChaseEvaluator;
     public GroundChaseEvaluator GroundChaseEvaluator
     {
-        get => _groundChaseEvaluator;
-        private set => _groundChaseEvaluator = value;
+        get => groundChaseEvaluator;
+        private set => groundChaseEvaluator = value;
     }
-    [SerializeField] private FloatingChaseEvaluator _floatingChaseEvaluator;
+    [SerializeField] private FloatingChaseEvaluator floatingChaseEvaluator;
     public FloatingChaseEvaluator FloatingChaseEvaluator
     {
-        get => _floatingChaseEvaluator;
-        private set => _floatingChaseEvaluator = value;
+        get => floatingChaseEvaluator;
+        private set => floatingChaseEvaluator = value;
     }
-    [SerializeField] private AttackEvaluator _attackEvaluator;
+    [SerializeField] private AttackEvaluator attackEvaluator;
     public AttackEvaluator AttackEvaluator
     {
-        get => _attackEvaluator;
-        private set => _attackEvaluator = value;
+        get => attackEvaluator;
+        private set => attackEvaluator = value;
     }
-    [SerializeField] private CautionEvaluator _cautionEvaluator;
+    [SerializeField] private CautionEvaluator cautionEvaluator;
     public CautionEvaluator CautionEvaluator
     {
-        get => _cautionEvaluator;
-        private set => _cautionEvaluator = value;
+        get => cautionEvaluator;
+        private set => cautionEvaluator = value;
     }
 
     [Header("Condition")]
@@ -342,6 +342,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // range based attack by evaluator
         if (AttackEvaluator)
         {
+            if (!AttackEvaluator.IsUsable) return;
+
             if (CurrentState is IAttackableState)
             {
                 if (AttackEvaluator.IsTargetWithinRange())
@@ -437,11 +439,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     protected virtual IEnumerator DeathEffectCoroutine()
     {
         var effect = GetComponent<DisintegrateEffect>();
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.3f);  // 자연스러운 효과를 위한 대기
 
-        // Stop movement
+        // NavMesh Agent Stop movement
         var navMeshMoveModule = GetComponent<NavMeshMoveModule>();
         if (navMeshMoveModule) navMeshMoveModule.SetStopAgent(true, true);
+
+        // Generic Stop movement
         Rigidbody.simulated = false;
         Animator.speed = 0;
 

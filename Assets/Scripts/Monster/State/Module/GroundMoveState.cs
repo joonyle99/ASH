@@ -11,8 +11,10 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        if (Monster.GroundChaseEvaluator && Monster.GroundChaseEvaluator.IsUsable && Monster.GroundChaseEvaluator.CanWorking)
+        if (Monster.GroundChaseEvaluator)
         {
+            if (!Monster.GroundPatrolEvaluator.IsUsable) return;
+
             var collider = Monster.GroundChaseEvaluator.IsTargetWithinRange();
             if (collider)
             {
@@ -30,8 +32,10 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableStat
             }
         }
 
-        if (Monster.GroundPatrolEvaluator && Monster.GroundPatrolEvaluator.IsUsable && Monster.GroundPatrolEvaluator.CanWorking)
+        if (Monster.GroundPatrolEvaluator)
         {
+            if (!Monster.GroundPatrolEvaluator.IsUsable) return;
+
             // 범위 바깥에 있는 경우
             if (Monster.GroundPatrolEvaluator.IsOutOfPatrolRange())
             {

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// 경계 판독기
+/// 대상이 경계 범위 안에 들어왔는지 판단하는 클래스
 /// </summary>
 public class CautionEvaluator : Evaluator
 {

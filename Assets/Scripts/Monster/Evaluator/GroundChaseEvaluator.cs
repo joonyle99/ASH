@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// 지상 몬스터가 대상이 추격 범위 안에 들어왔는지 하는 판단하고 방향을 전환하는 클래스
+/// </summary>
 public class GroundChaseEvaluator : Evaluator
 {
     [Header("Ground Chase Evaluator")]
@@ -32,8 +35,11 @@ public class GroundChaseEvaluator : Evaluator
         set => _isTooClose = value;
     }
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
+
+        // 타겟 감지 시 자동으로 발생하는 기능 추가
         customEvaluationEvent -= SetChaseDir;
         customEvaluationEvent += SetChaseDir;
     }
@@ -50,7 +56,6 @@ public class GroundChaseEvaluator : Evaluator
 
     public void SetChaseDir(Vector3 targetPoint)
     {
-        // 추격 방향을 설정한다.
         _chaseDir = Math.Sign(targetPoint.x - transform.position.x);
     }
 }

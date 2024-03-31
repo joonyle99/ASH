@@ -536,7 +536,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         isCutScene_AttackSuccess = true;
 
-        AttackEvaluator.SetCanWorking(false);
+        if (AttackEvaluator.IsUsable)
+            AttackEvaluator.IsUsable = false;
 
         yield return new WaitUntil(() => CurrentStateIs<Monster_IdleState>());
 

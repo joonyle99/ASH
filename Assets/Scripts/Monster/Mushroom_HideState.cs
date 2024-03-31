@@ -6,10 +6,8 @@ public class Mushroom_HideState : Monster_HideState
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        if (Monster.AttackEvaluator)
-        {
-            Monster.AttackEvaluator.CanWorking = false;
-        }
+        if (Monster.AttackEvaluator.IsUsable)
+            Monster.AttackEvaluator.IsUsable = false;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -21,9 +19,7 @@ public class Mushroom_HideState : Monster_HideState
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        if (Monster.AttackEvaluator)
-        {
-            Monster.AttackEvaluator.CanWorking = true;
-        }
+        if (!Monster.AttackEvaluator.IsUsable)
+            Monster.AttackEvaluator.IsUsable = true;
     }
 }

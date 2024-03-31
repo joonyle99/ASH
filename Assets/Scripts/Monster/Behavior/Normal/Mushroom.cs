@@ -28,6 +28,8 @@ public class Mushroom : MonsterBehavior
 
         if (CautionEvaluator)
         {
+            if (!CautionEvaluator.IsUsable) return;
+
             if (!CautionEvaluator.IsTargetWithinRange())
             {
                 if (CurrentStateIs<Monster_HideState>())

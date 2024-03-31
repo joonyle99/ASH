@@ -66,7 +66,6 @@ public class DieState : PlayerState
         Animator.SetTrigger("Die");
 
         Player.IsDead = true;
-        Animator.SetBool("IsDead", Player.IsDead);
 
         InputManager.Instance.ChangeInputSetter(_stayStillSetter);
 

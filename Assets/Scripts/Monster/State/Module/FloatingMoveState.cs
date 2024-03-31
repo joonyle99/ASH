@@ -13,6 +13,8 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IMovableSt
 
         if(Monster.FloatingChaseEvaluator)
         {
+            if (!Monster.FloatingChaseEvaluator.IsUsable) return;
+
             // Target Within Range
             if (Monster.FloatingChaseEvaluator.IsTargetWithinRange())
             {

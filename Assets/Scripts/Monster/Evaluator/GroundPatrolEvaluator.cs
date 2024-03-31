@@ -1,6 +1,8 @@
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Patrol 상태에서 방향 전환이 필요한 상황을 판단하는 클래스
+/// </summary>
 public class GroundPatrolEvaluator : Evaluator
 {
     [Header("Ground Patrol Evaluator")]
@@ -12,8 +14,10 @@ public class GroundPatrolEvaluator : Evaluator
     private Collider2D _leftPoint;
     private Collider2D _rightPoint;
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
+
         _leftPoint = _patrolPoints.GetChild(0).GetComponent<Collider2D>();
         _rightPoint = _patrolPoints.GetChild(1).GetComponent<Collider2D>();
     }
