@@ -5,26 +5,53 @@ using UnityEngine;
 
 public class WindArea : MonoBehaviour
 {
-    public bool isWorking = false;
+    [SerializeField] private bool _isWorking = false;
     public float value = 15f;
-    public GameObject player = null;
+    private GameObject _player = null;
+    [SerializeField] vector windVector;
+    private Vector2 _vector;
 
-    private void Update()
+    enum vector
     {
-        if (isWorking)
+        up,
+        down,
+        right,
+        left
+    }
+
+    private void Start()
+    {
+        switch (windVector)
         {
-            Debug.Log("isWorking");
+            case vector.up:
+                _vector = Vector2.up;
+                break;
+            case vector.down:
+                _vector = Vector2.down;
+                break;
+            case vector.left:
+                _vector = Vector2.left;
+                break;
+            case vector.right:
+                _vector = Vector2.right;
+                break;
+            default:
+                _vector = Vector2.up;
+                break;
         }
     }
 
+
     private void FixedUpdate()
     {
-        if (isWorking)
-        {
-            if (player.transform.position.x < this.transform.position.x)
-                player.GetComponent<Rigidbody2D>().AddForce(Vector2.left * value, ForceMode2D.Force);
-            else
-                player.GetComponent<Rigidbody2D>().AddForce(Vector2.right * value, ForceMode2D.Force);
+        if (_isWorking)
+        {       
+            _player.GetComponent<Rigidbody2D>().AddForce(_vector * value, ForceMode2D.Force);
+
+            if(!_player.GetComponent<PlayerBehaviour>().CurrentStateIs<JumpState>())
+            {
+                _player.GetComponent<PlayerBehaviour>().ChangeState<JumpState>();
+            }
         }
     }
 
@@ -32,8 +59,8 @@ public class WindArea : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            player = other.gameObject;
-            isWorking = true;
+            _player = other.gameObject;
+            _isWorking = true;
         }
     }
 
@@ -41,7 +68,7 @@ public class WindArea : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            isWorking = false;
+            _isWorking = false;
         }
     }
 }
