@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MonsterMovement : MonoBehaviour
+public class MonsterMovementModule : MonoBehaviour
 {
     private MonsterBehavior _monster;
 

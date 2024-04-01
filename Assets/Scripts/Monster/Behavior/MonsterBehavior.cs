@@ -46,11 +46,17 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get => _floatingPatrolModule;
         private set => _floatingPatrolModule = value;
     }
-    [SerializeField] private NavMeshMoveModule _navMeshMoveModule;
-    public NavMeshMoveModule NavMeshMoveModule
+    [SerializeField] private MonsterMovementModule _monsterMovementModule;
+    public MonsterMovementModule MonsterMovementModule
     {
-        get => _navMeshMoveModule;
-        private set => _navMeshMoveModule = value;
+        get => _monsterMovementModule;
+        private set => _monsterMovementModule = value;
+    }
+    [SerializeField] private NavMeshMovementModule navMeshMovementModule;
+    public NavMeshMovementModule NavMeshMovementModule
+    {
+        get => navMeshMovementModule;
+        private set => navMeshMovementModule = value;
     }
 
     [Header("Evaluator")]
@@ -230,9 +236,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [SerializeField] protected LayerMask _attackTargetLayer;
     [SerializeField] protected GameObject _attackHitEffect;
 
-    // movement
-    protected MonsterMovement monsterMovement;
-
     // blink Effect
     private BlinkEffect _blinkEffect;
 
@@ -256,7 +259,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // Module
         FloatingPatrolModule = GetComponent<FloatingPatrolModule>();
-        NavMeshMoveModule = GetComponent<NavMeshMoveModule>();
+        MonsterMovementModule = GetComponent<MonsterMovementModule>();
+        NavMeshMovementModule = GetComponent<NavMeshMovementModule>();
 
         // Evaluator
         GroundPatrolEvaluator = GetComponent<GroundPatrolEvaluator>();
@@ -265,7 +269,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         AttackEvaluator = GetComponent<AttackEvaluator>();
         CautionEvaluator = GetComponent<CautionEvaluator>();
 
-        monsterMovement = GetComponent<MonsterMovement>();
         _blinkEffect = GetComponent<BlinkEffect>();
 
         // Init State
@@ -442,7 +445,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         yield return new WaitForSeconds(0.3f);  // 자연스러운 효과를 위한 대기
 
         // NavMesh Agent Stop movement
-        var navMeshMoveModule = GetComponent<NavMeshMoveModule>();
+        var navMeshMoveModule = GetComponent<NavMeshMovementModule>();
         if (navMeshMoveModule) navMeshMoveModule.SetStopAgent(true, true);
 
         // Generic Stop movement
@@ -560,7 +563,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         GetComponent<SoundList>().PlaySFX("SE_Hurt");
 
         if (useBlinkEffect)
-            _blinkEffect.StartBlink();
+        {
+            if (_blinkEffect)
+                _blinkEffect.StartBlink();
+            else
+                Debug.LogWarning("Blink Effect isn't attached");
+        }
 
         if (onKnockBack)
             KnockBack(attackInfo.Force);

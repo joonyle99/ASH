@@ -169,8 +169,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         if (CurrentStateIs<GroundMoveState>())
         {
-            // ground walking
-            monsterMovement.GroundWalking();
+            if (MonsterMovementModule)
+                MonsterMovementModule.GroundWalking();
+
         }
 
         if (CurrentStateIs<SemiBoss_AttackState>())

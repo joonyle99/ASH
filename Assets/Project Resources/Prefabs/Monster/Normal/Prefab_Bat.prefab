@@ -199,7 +199,7 @@ MonoBehaviour:
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 9c35a70c33febf649bd89527e94eb641, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 72fb1d6f1c20b5342ad15619464e0e10, type: 2}
 --- !u!114 &536029390823338697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,7 +257,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 536029391485816285}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -384,7 +384,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 536029391928586686}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -6641,13 +6641,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9416f7e7a68fbf42b28ccbdd52cbbe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bodyHitTargetLayer:
+  _targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _toHitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
-  _bodyHitDamage: 1
-  _bodyHitForceX: 7
-  _bodyHitForceY: 10
+  _hitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+  _damage: 1
+  _forceX: 7
+  _forceY: 10
   _isAttackable: 1
 --- !u!1 &5220563648474221831
 GameObject:
@@ -7730,7 +7730,8 @@ GameObject:
   - component: {fileID: 8241212124387651252}
   - component: {fileID: 8241212124387651249}
   - component: {fileID: 8241212124387651250}
-  - component: {fileID: 24041348087843040}
+  - component: {fileID: 4497915375666473784}
+  - component: {fileID: 7349952303861848815}
   - component: {fileID: 7446310042365394395}
   - component: {fileID: 8241212124184343094}
   - component: {fileID: 8241212124387651255}
@@ -7869,40 +7870,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentState: {fileID: 0}
   _floatingPatrolModule: {fileID: 0}
-  _navMeshMoveModule: {fileID: 0}
-  _groundPatrolEvaluator: {fileID: 0}
-  _groundChaseEvaluator: {fileID: 0}
-  _floatingChaseEvaluator: {fileID: 0}
-  _attackEvaluator: {fileID: 0}
-  _cautionEvaluator: {fileID: 0}
+  _monsterMovementModule: {fileID: 0}
+  navMeshMovementModule: {fileID: 0}
+  groundPatrolEvaluator: {fileID: 0}
+  groundChaseEvaluator: {fileID: 0}
+  floatingChaseEvaluator: {fileID: 0}
+  attackEvaluator: {fileID: 0}
+  cautionEvaluator: {fileID: 0}
   _defaultDir: 1
   _recentDir: 0
   _isGround: 0
   _isInAir: 0
   _isAttacking: 0
-  _isHide: 0
+  _isHiding: 0
   _isGodMode: 0
-  _isHit: 0
+  _isHitting: 0
   _isHurt: 0
   _isDead: 0
+  _centerOfMass: {fileID: 0}
   _monsterData: {fileID: 11400000, guid: 8e99bafb1cb583d42ad075bff16cd758, type: 2}
   _monsterName: 
+  _rankType: 0
+  _moveType: 0
   _maxHp: 0
   _curHp: 0
   _moveSpeed: 0
   _acceleration: 0
   _jumpForce: {x: 0, y: 0}
-  _rankType: 0
-  _moveType: 0
-  _attackTargetLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _attackHitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
   _groundCheckLayer:
     serializedVersion: 2
     m_Bits: 0
   _groundCheckCollider: {fileID: 0}
-  _centerOfMass: {fileID: 0}
+  _attackTargetLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  _attackHitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
   _batSkillPrefab: {fileID: 2007017996437501280, guid: e98a801d4e584ec4ca7b2591c541fa95, type: 3}
   _shootPosition: {fileID: 6665625261890682485}
   _skillSprites:
@@ -7952,14 +7954,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdf362ade591fd64bb8d8fbf58adc41b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetLayer:
+  targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _checkCollider: {fileID: 536029391485816282}
-  _targetCheckCoolTime: 0
+  checkCollider: {fileID: 536029391485816282}
+  _targetEvaluatorCoolTime: 0
   _isDuringCoolTime: 0
   _isUsable: 1
---- !u!114 &24041348087843040
+--- !u!114 &4497915375666473784
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7968,16 +7970,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 8287174373163788403}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 384d33ca666e5df42bdc0d68664994cd, type: 3}
+  m_Script: {fileID: 11500000, guid: 5979935db533b7c40843aff2b489ab9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetLayer:
+  targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _checkCollider: {fileID: 7446310042458634360}
-  _targetCheckCoolTime: 3
+  checkCollider: {fileID: 7446310042458634360}
+  _targetEvaluatorCoolTime: 5
   _isDuringCoolTime: 0
   _isUsable: 1
+--- !u!114 &7349952303861848815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8287174373163788403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 578f433165691624d804d642588e34d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _material: {fileID: 2100000, guid: 678d300c14d52344fbeb9ed1ac30db5c, type: 2}
+  _interval: 0.08
+  _duration: 0.9
+  _isBlinking: 0
 --- !u!114 &7446310042365394395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7991,12 +8009,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: f223424763115e24a8f11ba946531d72, type: 2}
-  _duration: 2
-  _timeOffsetAfterParticle: 0
+  _duration: 3
+  _timeOffsetAfterParticle: 0.1
   _particle: {fileID: 1173428890911020551}
-  _heightRange:
-    Start: -1
-    End: 1
+  _bottomOffset: 0.82
+  _topOffset: 0.91
   _spriteRenderers:
   - {fileID: 3306538263014290928}
   - {fileID: 4180139956250542821}

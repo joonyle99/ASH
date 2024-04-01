@@ -26,6 +26,12 @@ public class Bat : MonsterBehavior
     protected override void Start()
     {
         base.Start();
+
+        if (NavMeshMovementModule)
+        {
+            NavMeshMovementModule.SetSpeed(MoveSpeed);
+            NavMeshMovementModule.SetAcceleration(Acceleration);
+        }
     }
     protected override void Update()
     {

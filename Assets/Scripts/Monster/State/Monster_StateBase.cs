@@ -39,11 +39,11 @@ public abstract class Monster_StateBase : StateMachineBehaviour
             targetStayTime = stayTime.Random();
         }
 
-        if (Monster.NavMeshMoveModule)
+        if (Monster.NavMeshMovementModule)
         {
             // NavMesh Agent Stop
             if (Monster.CurrentState is not IMovableState)
-                Monster.NavMeshMoveModule.SetStopAgent(true, false);
+                Monster.NavMeshMovementModule.SetStopAgent(true, false);
         }
     }
 
@@ -63,11 +63,11 @@ public abstract class Monster_StateBase : StateMachineBehaviour
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (Monster.NavMeshMoveModule)
+        if (Monster.NavMeshMovementModule)
         {
             // NavMesh Agent Resume
             if (Monster.CurrentState is not IMovableState)
-                Monster.NavMeshMoveModule.SetStopAgent(false, false);
+                Monster.NavMeshMovementModule.SetStopAgent(false, false);
         }
 
         if (isAutoStateTransition)

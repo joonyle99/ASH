@@ -19,8 +19,11 @@ public class Turtle : MonsterBehavior
         if (IsDead)
             return;
 
-        if(CurrentStateIs<GroundMoveState>())
-            monsterMovement.GroundWalking();
+        if (CurrentStateIs<GroundMoveState>())
+        {
+            if (MonsterMovementModule)
+                MonsterMovementModule.GroundWalking();
+        }
     }
     public override void SetUp()
     {

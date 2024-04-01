@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DisintegrateEffect : MonoBehaviour
@@ -33,7 +32,7 @@ public class DisintegrateEffect : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        // DisIntegrate Effect Initialize
+        // Disintegrate Effect Initialize
         foreach (var renderer in _spriteRenderers)
         {
             renderer.material = _disintegrateMaterial;
@@ -49,7 +48,7 @@ public class DisintegrateEffect : MonoBehaviour
 
         yield return new WaitForSeconds(_timeOffsetAfterParticle);
 
-        // DisIntegrate Effect Progress
+        // Disintegrate Effect Progress
         float eTime = 0f;
         while (eTime < _duration)
         {

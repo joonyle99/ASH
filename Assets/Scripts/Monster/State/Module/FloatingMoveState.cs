@@ -18,8 +18,11 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IMovableSt
             // Target Within Range
             if (Monster.FloatingChaseEvaluator.IsTargetWithinRange())
             {
-                // Move to Target for Chase
-                Monster.NavMeshMoveModule.MoveToDestination(Monster.FloatingChaseEvaluator.TargetPosition);
+                if (Monster.NavMeshMovementModule)
+                {
+                    // Move to Target for Chase
+                    Monster.NavMeshMovementModule.MoveToDestination(Monster.FloatingChaseEvaluator.TargetPosition);
+                }
 
                 return;
             }
@@ -30,8 +33,11 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IMovableSt
             // Patrol Point Update
             Monster.FloatingPatrolModule.UpdatePatrolPoint();
 
-            // Move to Target for Patrol
-            Monster.NavMeshMoveModule.MoveToDestination(Monster.FloatingPatrolModule.TargetPosition);
+            if (Monster.NavMeshMovementModule)
+            {
+                // Move to Target for Patrol
+                Monster.NavMeshMovementModule.MoveToDestination(Monster.FloatingPatrolModule.TargetPosition);
+            }
         }
     }
 
