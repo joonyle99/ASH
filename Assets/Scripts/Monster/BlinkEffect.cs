@@ -8,12 +8,15 @@ public class BlinkEffect : MonoBehaviour
     [SerializeField] private float _duration = 0.9f;
     [SerializeField] private bool _isBlinking = false;
 
+    private MonsterBehavior _monster;
     private SpriteRenderer[] _spriteRenderers;
     private Material[] _originalMaterials;
     private Coroutine _blinkCoroutine;
 
     void Awake()
     {
+        _monster = GetComponent<MonsterBehavior>();
+
         // spriteRenderers
         _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
@@ -55,11 +58,11 @@ public class BlinkEffect : MonoBehaviour
 
         _isBlinking = false;
 
-        // if (IsDead) yield break;
+        if (_monster.IsDead) yield break;
 
         InitMaterial();
     }
-    public void StartBlink()
+    public void Play()
     {
         if (_blinkCoroutine != null)
             StopCoroutine(_blinkCoroutine);

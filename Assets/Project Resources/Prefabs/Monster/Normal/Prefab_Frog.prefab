@@ -1965,7 +1965,7 @@ GameObject:
   - component: {fileID: 5517317730400959640}
   - component: {fileID: 8433490137912059618}
   - component: {fileID: 5247372131622839078}
-  - component: {fileID: 105934349092047480}
+  - component: {fileID: 7921451255379820264}
   - component: {fileID: 5517317730400959726}
   - component: {fileID: 5517317730400959725}
   m_Layer: 11
@@ -2080,7 +2080,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentState: {fileID: 0}
   _floatingPatrolModule: {fileID: 0}
-  _navMeshMoveModule: {fileID: 0}
+  _monsterMovementModule: {fileID: 0}
+  navMeshMovementModule: {fileID: 0}
   groundPatrolEvaluator: {fileID: 0}
   groundChaseEvaluator: {fileID: 0}
   floatingChaseEvaluator: {fileID: 0}
@@ -2205,7 +2206,7 @@ MonoBehaviour:
   _interval: 0.08
   _duration: 0.9
   _isBlinking: 0
---- !u!114 &105934349092047480
+--- !u!114 &7921451255379820264
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2214,15 +2215,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5517317730400959723}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02a8288930774944a998fe23a741c463, type: 3}
+  m_Script: {fileID: 11500000, guid: a8db120a4cad9594697e4db079395c12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _disintegrateMaterial: {fileID: 2100000, guid: f223424763115e24a8f11ba946531d72, type: 2}
-  _duration: 3
+  _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
+  _duration: 2
   _timeOffsetAfterParticle: 0.2
   _particle: {fileID: 661171705018409503}
-  _bottomOffset: 0.9
-  _topOffset: 1
   _spriteRenderers:
   - {fileID: 2698838109196167647}
   - {fileID: 6699197765517470954}

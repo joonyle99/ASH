@@ -441,7 +441,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     protected virtual IEnumerator DeathEffectCoroutine()
     {
-        var effect = GetComponent<DisintegrateEffect>();
+        var effect = GetComponent<DisintegrateEffect_New>();
         yield return new WaitForSeconds(0.3f);  // 자연스러운 효과를 위한 대기
 
         // NavMesh Agent Stop movement
@@ -565,7 +565,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (useBlinkEffect)
         {
             if (_blinkEffect)
-                _blinkEffect.StartBlink();
+                _blinkEffect.Play();
             else
                 Debug.LogWarning("Blink Effect isn't attached");
         }
