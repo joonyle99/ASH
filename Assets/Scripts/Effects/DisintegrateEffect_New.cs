@@ -40,12 +40,9 @@ public class DisintegrateEffect_New : MonoBehaviour
         float eTime = 0f;
         while (eTime < _duration)
         {
-            float progress = 0f;
-            Debug.Log(progress);
             foreach (var spriteRenderer in _spriteRenderers)
             {
-                progress = eTime / _duration;
-                spriteRenderer.material.SetFloat("_Progress", progress);
+                spriteRenderer.material.SetFloat("_Progress", eTime / _duration);
             }
 
             eTime += Time.deltaTime;
