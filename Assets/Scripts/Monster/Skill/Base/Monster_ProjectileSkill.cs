@@ -20,8 +20,10 @@ public class Monster_ProjectileSkill : Monster_Skill
         // 스킬 파괴 레이어와 충돌
         if ((1 << collision.gameObject.layer & destroyLayer.value) > 0)
         {
+            /*
             if (colliderSound != null)
                 SoundManager.Instance.PlaySFX(colliderSound);
+            */
 
             var effect = GetComponent<DisintegrateEffect>();
             if (effect)
