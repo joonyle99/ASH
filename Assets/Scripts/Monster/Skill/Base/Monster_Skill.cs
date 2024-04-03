@@ -1,13 +1,11 @@
-using System.Collections;
 using UnityEngine;
 
-public abstract class Monster_SkillObject : MonoBehaviour
+public abstract class Monster_Skill : MonoBehaviour
 {
-    [Header("Monster_SkillObject")]
+    [Header("Monster Skill")]
     [Space]
 
     [SerializeField] protected LayerMask targetLayer;
-    [SerializeField] protected LayerMask destroyLayer;
 
     [Space]
 
@@ -18,7 +16,6 @@ public abstract class Monster_SkillObject : MonoBehaviour
     [Space]
 
     [SerializeField] protected GameObject hitEffect;
-    [SerializeField] protected SoundClipData colideSound;
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
@@ -45,29 +42,5 @@ public abstract class Monster_SkillObject : MonoBehaviour
                 }
             }
         }
-
-        // 스킬 파괴 레이어와 충돌
-        if ((1 << collision.gameObject.layer & destroyLayer.value) > 0)
-        {
-            if (colideSound != null)
-                SoundManager.Instance.PlaySFX(colideSound);
-
-            var effect = GetComponent<DisintegrateEffect>();
-            if (effect)
-                StartCoroutine(DeathEffectCoroutine(effect));
-            else
-                Destroy(this.gameObject);
-        }
-    }
-
-    public IEnumerator DeathEffectCoroutine(DisintegrateEffect effect)
-    {
-        GetComponent<Rigidbody2D>().simulated = false;
-
-        effect.Play();
-
-        yield return new WaitUntil(() => effect.IsEffectDone);
-
-        Destroy(gameObject);
     }
 }

@@ -24,6 +24,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     public Rigidbody2D Rigidbody { get; private set; }
     public Animator Animator { get; private set; }
+    public Collider2D BodyCollider2D { get; private set; }
 
     [Header("State")]
     [Space]
@@ -256,6 +257,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // Basic Component
         Rigidbody = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
+        BodyCollider2D = GetComponent<Collider2D>();
 
         // Module
         FloatingPatrolModule = GetComponent<FloatingPatrolModule>();
@@ -413,15 +415,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         IsDead = true;
 
-        // Check Die Trigger
+        // Check that Animator has Die Trigger Param
         foreach (AnimatorControllerParameter param in Animator.parameters)
         {
             if (param.name == "Die" && param.type == AnimatorControllerParameterType.Trigger)
                 Animator.SetTrigger("Die");
         }
 
-        DisableHitBox();
-
+        DisableAllCollider();
         DeathEffect();
     }
 
@@ -523,6 +524,16 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                     customBasicBoxCastAttackEvent?.Invoke();
                 }
             }
+        }
+    }
+    public void DisableAllCollider()
+    {
+        var colliders = GetComponentsInChildren<Collider2D>();
+        foreach (var coll in colliders)
+        {
+            if (coll == BodyCollider2D) continue;
+
+            coll.enabled = false;
         }
     }
 

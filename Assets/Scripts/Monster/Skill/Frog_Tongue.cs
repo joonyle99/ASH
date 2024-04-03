@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Frog_Tongue : Monster_SkillObject
+public class Frog_Tongue : Monster_Skill
 {
 
 }

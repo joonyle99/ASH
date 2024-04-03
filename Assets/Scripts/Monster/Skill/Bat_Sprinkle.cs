@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Bat_Sprinkle : Monster_SkillObject
+public class Bat_Sprinkle : Monster_ProjectileSkill
 {
     [Header("Bat_Sprinkle")]
     [Space]

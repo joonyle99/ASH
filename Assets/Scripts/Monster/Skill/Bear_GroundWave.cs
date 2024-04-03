@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Bear_GroundWave : Monster_SkillObject
+public class Bear_GroundWave : Monster_Skill
 {
     [Header("Bear_GroundWave")]
     [Space]

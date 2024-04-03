@@ -137,16 +137,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9675141e3b57ff5479cacc5dad2f5355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillTargetLayer:
+  targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _skillDestroyLayer:
+  damage: 1
+  forceX: 7
+  forceY: 10
+  hitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+  destroyLayer:
     serializedVersion: 2
     m_Bits: 8
-  _skillDamage: 1
-  _skillForceX: 7
-  _skillForceY: 10
-  _hitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+  colliderSound:
+    _key: PUNCH_DESIGNED_LIGHT_39
+    _clip: {fileID: 8300000, guid: 1473c4ce4b26f474f8c9959a2a56a903, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 1
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 1
 --- !u!96 &962277711411876598
 TrailRenderer:
   serializedVersion: 2
