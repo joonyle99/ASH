@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class WindArea : MonoBehaviour
 {
-    [SerializeField] private bool _isWorking = false;
+    [SerializeField] bool _isStartActive = true;
+    PreserveState _statePreserver;
+
+/*    [SerializeField] private bool _isWorking = false;
     public float value = 15f;
     private GameObject _player = null;
     [SerializeField] vector windVector;
@@ -17,9 +20,25 @@ public class WindArea : MonoBehaviour
         down,
         right,
         left
+    }*/
+
+    private void Awake()
+    {
+        _statePreserver = GetComponent<PreserveState>();
+
+        if(_statePreserver != null)
+            _isStartActive = _statePreserver.Load("isActive", gameObject.activeSelf);
+
+        gameObject.SetActive(_isStartActive);
     }
 
-    private void Start()
+    public void SetActive()
+    {
+        gameObject.SetActive(!gameObject.activeSelf);
+        _statePreserver.Save("isActive", gameObject.activeSelf);
+    }
+
+/*    private void Start()
     {
         switch (windVector)
         {
@@ -70,5 +89,5 @@ public class WindArea : MonoBehaviour
         {
             _isWorking = false;
         }
-    }
+    }*/
 }

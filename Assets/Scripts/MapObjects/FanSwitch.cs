@@ -27,7 +27,7 @@ public class FanSwitch : InteractableObject
             SceneEffectManager.Current.Camera.StartFollow(_windZoneArr[i].transform);   // 카메라 연출 => 바람장치 있는곳으로 카메라 이동
             yield return new WaitForSeconds(_cameraMoveDuration);
             // 켜지는 연출
-            _windZoneArr[i].SetActive(!_windZoneArr[i].activeSelf); // 실제로 켜짐
+            _windZoneArr[i].GetComponent<WindArea>().SetActive();   // 실제로 켜짐
             yield return new WaitForSeconds(1.0f);
         }
         InputManager.Instance.ChangeToDefaultSetter();

@@ -5609,11 +5609,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -60.629925
+      value: -131.67249
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.62293
+      value: 11.659208
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -14271,13 +14271,14 @@ GameObject:
   - component: {fileID: 207500948}
   - component: {fileID: 207500950}
   - component: {fileID: 207500949}
+  - component: {fileID: 207500951}
   m_Layer: 0
-  m_Name: WindArea
+  m_Name: WindZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &207500948
 Transform:
   m_ObjectHideFlags: 0
@@ -14340,6 +14341,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 10}
   m_EdgeRadius: 0
+--- !u!114 &207500951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207500947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3af986983099574fadbfabf62229f4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isWorking: 0
+  value: 15
+  windVector: 0
+  _isStartActive: 0
 --- !u!4 &213084107 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
@@ -22437,8 +22454,9 @@ GameObject:
   - component: {fileID: 557540571}
   - component: {fileID: 557540574}
   - component: {fileID: 557540575}
+  - component: {fileID: 557540576}
   m_Layer: 0
-  m_Name: WindArea
+  m_Name: WindZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22506,6 +22524,22 @@ AreaEffector2D:
   m_ForceTarget: 0
   m_Drag: 0
   m_AngularDrag: 0
+--- !u!114 &557540576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557540570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3af986983099574fadbfabf62229f4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isWorking: 0
+  value: 15
+  windVector: 0
+  _isStartActive: 1
 --- !u!1 &570154637
 GameObject:
   m_ObjectHideFlags: 0
@@ -27213,7 +27247,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: 1824.8634
+      value: 1814.626
       objectReference: {fileID: 0}
     - target: {fileID: 5171320284482388750, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_IsActive
