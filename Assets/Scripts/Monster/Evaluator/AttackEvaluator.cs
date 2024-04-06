@@ -15,11 +15,6 @@ public class AttackEvaluator : Evaluator
         customEvaluationEvent += ChangeDir;
     }
 
-    public override Collider2D IsTargetWithinRange()
-    {
-        return base.IsTargetWithinRange();
-    }
-
     private void ChangeDir(Vector3 targetPoint)
     {
         // 공격 전 최종적으로 방향을 바꾼다.

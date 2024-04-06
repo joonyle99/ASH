@@ -14,18 +14,6 @@ public abstract class Evaluator : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private float _targetEvaluatorCoolTime;    // 판독 쿨타임 시간
-    public float TargetCheckCoolTime
-    {
-        get => _targetEvaluatorCoolTime;
-        set => _targetEvaluatorCoolTime = value;
-    }
-    [SerializeField] private bool _isDuringCoolTime;            // 판독기 쿨타임 여부
-    public bool IsDuringCoolTime
-    {
-        get => _isDuringCoolTime;
-        set => _isDuringCoolTime = value;
-    }
     [SerializeField] private bool _isUsable = true;
     public bool IsUsable
     {
@@ -37,6 +25,18 @@ public abstract class Evaluator : MonoBehaviour
             if (!_isUsable)
                 Debug.Log($"{this.name} 판독기는 비활성화 되었습니다");
         }
+    }
+    [SerializeField] private float _targetEvaluatorCoolTime;    // 판독 쿨타임 시간
+    public float TargetCheckCoolTime
+    {
+        get => _targetEvaluatorCoolTime;
+        set => _targetEvaluatorCoolTime = value;
+    }
+    [SerializeField] private bool _isDuringCoolTime;            // 판독기 쿨타임 여부
+    public bool IsDuringCoolTime
+    {
+        get => _isDuringCoolTime;
+        set => _isDuringCoolTime = value;
     }
 
     protected MonsterBehavior monsterBehavior;

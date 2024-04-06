@@ -32,6 +32,6 @@ public sealed class Turtle : MonsterBehavior
         base.Die(false);
 
         // Trigger -> Collision
-        MakeHitBoxStepable();
+        SetHitBoxStepable(true);
     }
 }

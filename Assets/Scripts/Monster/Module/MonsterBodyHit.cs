@@ -38,6 +38,8 @@ public class MonsterBodyHit : MonoBehaviour
                 PlayerBehaviour player = collision.GetComponent<PlayerBehaviour>();
                 if (player)
                 {
+                    // Debug.Log($"{this.transform.root.gameObject.name}안에 Player가 들어와있다 !");
+
                     // 플레이어가 타격 가능한 상태인 경우
                     if (!player.IsHurt && !player.IsGodMode && !player.IsDead)
                     {

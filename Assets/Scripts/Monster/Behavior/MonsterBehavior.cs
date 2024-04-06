@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -235,10 +236,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public delegate bool CustomAnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
     public CustomAnimTransitionEvent customAnimTransitionEvent;
 
-    // box cast attack event
-    public delegate void CustomBasicBoxCastAttackEvent();
-    public CustomBasicBoxCastAttackEvent customBasicBoxCastAttackEvent;
-
     #endregion
 
     #region Function
@@ -337,11 +334,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (AttackEvaluator)
         {
             if (!AttackEvaluator.IsUsable) return;
+            if (AttackEvaluator.IsDuringCoolTime) return;
 
             if (CurrentState is IAttackableState)
             {
                 if (AttackEvaluator.IsTargetWithinRange())
                 {
+                    // Debug.Log("공격 범위에 대상이 존재");
+
                     AttackEvaluator.StartEvaluatorCoolTime();
                     StartChangeStateCoroutine("Attack", CurrentState);
                 }
@@ -430,7 +430,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     protected virtual IEnumerator DeathEffectCoroutine()
     {
         var effect = GetComponent<DisintegrateEffect_New>();
-        yield return new WaitForSeconds(0.3f);  // 자연스러운 효과를 위한 대기
+        yield return new WaitForSeconds(0.2f);  // 자연스러운 효과를 위한 대기
 
         // NavMesh Agent Stop movement
         var navMeshMoveModule = GetComponent<NavMeshMovementModule>();
@@ -482,7 +482,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 if (attackResult == IAttackListener.AttackResult.Success)
                 {
                     Instantiate(AttackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
-                    customBasicBoxCastAttackEvent?.Invoke();
                 }
             }
         }
@@ -508,49 +507,67 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 if (attackResult == IAttackListener.AttackResult.Success)
                 {
                     Instantiate(AttackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
-                    customBasicBoxCastAttackEvent?.Invoke();
                 }
             }
         }
     }
 
     // control hitBox & collider
-    public void DisableAllCollider(bool isDisableBodyHitCollider = true)
+    public void DisableAllCollider(bool isIncludeMainBody = false, bool isIncludeHitBox = true)
     {
-        var colliders = GetComponentsInChildren<Collider2D>();
-        foreach (var coll in colliders)
+        var colliders = GetComponentsInChildren<Collider2D>(true);
+        foreach (var collider in colliders)
         {
-            // 지면에 붙어있기 위한 Body 콜라이더는 생략
-            if (coll == MainBodyCollider2D) continue;
-
-            // BodyHitCollider를 생략하는 옵션
-            if (!isDisableBodyHitCollider)
+            if (!isIncludeMainBody)
             {
-                var c = coll.GetComponent<MonsterBodyHit>();
-                if (c != null)
-                    continue;
+                // Main Body Collider2D를 생략하는 옵션
+                if (collider == MainBodyCollider2D) continue;
             }
 
-            coll.enabled = false;
+            if (!isIncludeHitBox)
+            {
+                // HitBox Collider를 생략하는 옵션
+                var hitBox = collider.GetComponent<MonsterBodyHit>();
+                if (hitBox != null) continue;
+            }
+
+            collider.enabled = false;
         }
     }
-    public void MakeHitBoxStepable()
+    public void SetHitBoxActive(bool isBool)
     {
-        var hitBox = GetComponentInChildren<MonsterBodyHit>();
+        // includeInactive : true -> 비활성화된 자식 오브젝트도 검색
+        var hitBox = GetComponentInChildren<MonsterBodyHit>(true);
+
+        if (hitBox)
+            hitBox.gameObject.SetActive(isBool);
+    }
+    public void SetHitBoxStepable(bool isBool)
+    {
+        var hitBox = GetComponentInChildren<MonsterBodyHit>(true);
 
         if (hitBox)
         {
-            Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
-            hitBoxCollider.isTrigger = false;
-            hitBox.gameObject.layer = LayerMask.NameToLayer("Default");
+            if (isBool)
+            {
+                Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
+                hitBoxCollider.isTrigger = false;
+                hitBox.gameObject.layer = LayerMask.NameToLayer("Default");
+            }
+            else
+            {
+                Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
+                hitBoxCollider.isTrigger = true;
+                hitBox.gameObject.layer = LayerMask.NameToLayer("MonsterHitBox");
+            }
         }
     }
     public void SetHitBoxAttackable(bool isBool)
     {
-        var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHit>();
+        var hitBox = GetComponentInChildren<MonsterBodyHit>(true);
 
-        if (monsterBodyHitModule)
-            monsterBodyHitModule.IsAttackable = isBool;
+        if (hitBox)
+            hitBox.IsAttackable = isBool;
     }
 
     // hit & die

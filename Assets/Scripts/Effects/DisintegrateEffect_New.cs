@@ -30,19 +30,19 @@ public class DisintegrateEffect_New : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        // Disintegrate Material Initialize
-        foreach (var spriteRenderer in SpriteRenderers)
-        {
-            spriteRenderer.material = _disintegrateMaterial;
-            spriteRenderer.material.SetFloat("_Progress", 0f);
-        }
-
         // ParticleHelper
         _particle.transform.parent = null;
         _particle.transform.position = transform.position;
         _particle.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(_timeOffsetAfterParticle);
+
+        // Disintegrate Material Initialize
+        foreach (var spriteRenderer in SpriteRenderers)
+        {
+            spriteRenderer.material = _disintegrateMaterial;
+            spriteRenderer.material.SetFloat("_Progress", 0f);
+        }
 
         // Disintegrate Effect Progress
         float eTime = 0f;

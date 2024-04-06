@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Monster_HideState : Monster_StateBase, IAttackableState
+public class Monster_HideState : Monster_StateBase
 {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
