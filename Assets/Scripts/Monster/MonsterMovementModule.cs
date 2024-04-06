@@ -34,19 +34,19 @@ public class MonsterMovementModule : MonoBehaviour
         Debug.DrawRay(_monster.GroundRayHit.point, groundNormal, Color.cyan);
 
         Vector2 targetVelocity = moveDirection * _monster.MoveSpeed;
-        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(_monster.Rigidbody.velocity, moveDirection) * moveDirection;   // 경사면을 따라 움직이기 위한 벡터
+        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(_monster.RigidBody2D.velocity, moveDirection) * moveDirection;   // 경사면을 따라 움직이기 위한 벡터
         Vector2 moveForce = velocityNeeded * _monster.Acceleration;
 
         Debug.DrawRay(transform.position, moveDirection, Color.cyan);
 
-        _monster.Rigidbody.AddForce(moveForce);
+        _monster.RigidBody2D.AddForce(moveForce);
     }
 
     // 애니메이션 이벤트로 사용
     public void GroundJumpping()
     {
         Vector2 forceVector = new Vector2(_monster.JumpForce.x * _monster.RecentDir, _monster.JumpForce.y);
-        _monster.Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
+        _monster.RigidBody2D.AddForce(forceVector, ForceMode2D.Impulse);
     }
 
 }

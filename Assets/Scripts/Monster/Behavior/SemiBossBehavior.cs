@@ -21,36 +21,6 @@ public abstract class SemiBossBehavior : MonsterBehavior
         set => _isRage = value;
     }
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-    protected override void Start()
-    {
-        base.Start();
-    }
-    protected override void Update()
-    {
-        base.Update();
-    }
-    public override void SetUp()
-    {
-        base.SetUp();
-    }
-
-    public override void KnockBack(Vector2 forceVector)
-    {
-        base.KnockBack(forceVector);
-    }
-    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
-    {
-        return base.OnHit(attackInfo);
-    }
-    public override void Die()
-    {
-        base.Die();
-    }
-
     public abstract void AttackPreProcess();
     public abstract void AttackPostProcess();
 

@@ -2,10 +2,15 @@ using UnityEngine;
 
 public abstract class Monster_StateBase : StateMachineBehaviour
 {
-    [Header("Monster_StateBase")]
+    [Header("Monster StateBase")]
     [Space]
 
     [SerializeField] protected bool isAutoStateTransition = false;
+    public bool IsAutoStateTransition
+    {
+        get { return isAutoStateTransition; }
+        private set { isAutoStateTransition = value; }
+    }
 
     [Space]
 

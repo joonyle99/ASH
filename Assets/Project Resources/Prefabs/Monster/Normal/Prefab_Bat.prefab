@@ -545,11 +545,11 @@ Transform:
   m_GameObject: {fileID: 1173428890911020547}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.3809524, y: 2.3809524, z: 2.3809524}
+  m_LocalScale: {x: 2.3809521, y: 2.3809521, z: 2.3809521}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7190538845886001168}
-  m_RootOrder: 18
+  m_Father: {fileID: 4384009080308123366}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!198 &1173428890911020545
 ParticleSystem:
@@ -6580,6 +6580,41 @@ MonoBehaviour:
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!1 &4709531775218597704
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4384009080308123366}
+  m_Layer: 11
+  m_Name: Bat Options
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4384009080308123366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4709531775218597704}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5084815061623858273}
+  - {fileID: 6665625261890682485}
+  - {fileID: 7446310042458634361}
+  - {fileID: 1173428890911020550}
+  m_Father: {fileID: 7190538845886001168}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5084815061623858278
 GameObject:
   m_ObjectHideFlags: 0
@@ -6605,13 +6640,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5084815061623858278}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7190538845886001168}
-  m_RootOrder: 16
+  m_Father: {fileID: 4384009080308123366}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &5084815061623858272
 CircleCollider2D:
@@ -7013,13 +7048,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6665625261890682484}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.6, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.60000193, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7190538845886001168}
-  m_RootOrder: 15
+  m_Father: {fileID: 4384009080308123366}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6729885783326938725
 GameObject:
@@ -7321,13 +7356,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7446310042458634246}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7190538845886001168}
-  m_RootOrder: 17
+  m_Father: {fileID: 4384009080308123366}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &7446310042458634360
 BoxCollider2D:
@@ -7769,10 +7804,7 @@ Transform:
   - {fileID: 2868207275550237050}
   - {fileID: 3388467011945227438}
   - {fileID: 5761106258104201179}
-  - {fileID: 6665625261890682485}
-  - {fileID: 5084815061623858273}
-  - {fileID: 7446310042458634361}
-  - {fileID: 1173428890911020550}
+  - {fileID: 4384009080308123366}
   m_Father: {fileID: 8241212123419817092}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7832,7 +7864,7 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!195 &8241212124387651251
 NavMeshAgent:
@@ -7868,43 +7900,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a892460cf4c14e4f908a3c84673621c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentState: {fileID: 0}
-  _floatingPatrolModule: {fileID: 0}
-  _monsterMovementModule: {fileID: 0}
-  navMeshMovementModule: {fileID: 0}
-  groundPatrolEvaluator: {fileID: 0}
-  groundChaseEvaluator: {fileID: 0}
-  floatingChaseEvaluator: {fileID: 0}
-  attackEvaluator: {fileID: 0}
-  cautionEvaluator: {fileID: 0}
-  _defaultDir: 1
-  _recentDir: 0
-  _isGround: 0
-  _isInAir: 0
-  _isAttacking: 0
-  _isHiding: 0
-  _isGodMode: 0
-  _isHitting: 0
-  _isHurt: 0
-  _isDead: 0
-  _centerOfMass: {fileID: 0}
-  _monsterData: {fileID: 11400000, guid: 8e99bafb1cb583d42ad075bff16cd758, type: 2}
-  _monsterName: 
-  _rankType: 0
-  _moveType: 0
-  _maxHp: 0
+  <DefaultDir>k__BackingField: 0
+  <RecentDir>k__BackingField: 0
+  <IsGround>k__BackingField: 0
+  <IsInAir>k__BackingField: 0
+  <IsAttacking>k__BackingField: 0
+  <IsHiding>k__BackingField: 0
+  <IsGodMode>k__BackingField: 0
+  <IsHitting>k__BackingField: 0
+  <IsHurt>k__BackingField: 0
+  <IsDead>k__BackingField: 0
+  <CenterOfMass>k__BackingField: {fileID: 0}
+  <MonsterData>k__BackingField: {fileID: 11400000, guid: 8e99bafb1cb583d42ad075bff16cd758, type: 2}
+  <MonsterName>k__BackingField: 
+  <RankType>k__BackingField: 0
+  <MoveType>k__BackingField: 0
+  <MaxHp>k__BackingField: 0
   _curHp: 0
-  _moveSpeed: 0
-  _acceleration: 0
-  _jumpForce: {x: 0, y: 0}
-  _groundCheckLayer:
+  <MoveSpeed>k__BackingField: 0
+  <Acceleration>k__BackingField: 0
+  <JumpForce>k__BackingField: {x: 0, y: 0}
+  <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 0
-  _groundCheckCollider: {fileID: 0}
-  _attackTargetLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  _attackHitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+  <GroundCheckCollider>k__BackingField: {fileID: 0}
+  <BlinkEffect>k__BackingField: {fileID: 7349952303861848815}
   _batSkillPrefab: {fileID: 2007017996437501280, guid: e98a801d4e584ec4ca7b2591c541fa95, type: 3}
   _shootPosition: {fileID: 6665625261890682485}
   _skillSprites:

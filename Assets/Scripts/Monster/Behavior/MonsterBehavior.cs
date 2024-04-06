@@ -5,8 +5,14 @@ using UnityEngine.AI;
 
 public class MonsterAttackInfo
 {
-    public float Damage = 1f;
-    public Vector2 Force = Vector2.zero;
+    public float Damage;
+    public Vector2 Force;
+
+    public MonsterAttackInfo()
+    {
+        Damage = 1f;
+        Force = Vector2.zero;
+    }
 
     public MonsterAttackInfo(float damage, Vector2 force)
     {
@@ -22,173 +28,133 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
     #region Attribute
 
-    public Rigidbody2D Rigidbody { get; private set; }
+    // Basic Component
+    public Rigidbody2D RigidBody2D { get; private set; }
     public Animator Animator { get; private set; }
-    public Collider2D BodyCollider2D { get; private set; }
+    public Collider2D MainBodyCollider2D { get; private set; }
 
-    [Header("State")]
-    [Space]
-
-    [SerializeField] private Monster_StateBase _currentState;
-    public Monster_StateBase CurrentState
-    {
-        get => _currentState;
-        private set => _currentState = value;
-    }
+    // State
+    public Monster_StateBase CurrentState { get; private set; }
     private Monster_StateBase _initialState;
     private Monster_StateBase _previousState;
 
-    [Header("Module")]
-    [Space]
+    // Module
+    public FloatingPatrolModule FloatingPatrolModule { get; private set; }
+    public MonsterMovementModule MonsterMovementModule { get; private set; }
+    public NavMeshMovementModule NavMeshMovementModule { get; private set; }
 
-    [SerializeField] private FloatingPatrolModule _floatingPatrolModule;
-    public FloatingPatrolModule FloatingPatrolModule
-    {
-        get => _floatingPatrolModule;
-        private set => _floatingPatrolModule = value;
-    }
-    [SerializeField] private MonsterMovementModule _monsterMovementModule;
-    public MonsterMovementModule MonsterMovementModule
-    {
-        get => _monsterMovementModule;
-        private set => _monsterMovementModule = value;
-    }
-    [SerializeField] private NavMeshMovementModule navMeshMovementModule;
-    public NavMeshMovementModule NavMeshMovementModule
-    {
-        get => navMeshMovementModule;
-        private set => navMeshMovementModule = value;
-    }
+    // Evaluator
+    public GroundPatrolEvaluator GroundPatrolEvaluator { get; private set; }
+    public GroundChaseEvaluator GroundChaseEvaluator { get; private set; }
+    public FloatingChaseEvaluator FloatingChaseEvaluator { get; private set; }
+    public AttackEvaluator AttackEvaluator { get; private set; }
+    public CautionEvaluator CautionEvaluator { get; private set; }
 
-    [Header("Evaluator")]
-    [Space]
+    [field: Header("Condition")]
+    [field: Space]
 
-    [SerializeField] private GroundPatrolEvaluator groundPatrolEvaluator;
-    public GroundPatrolEvaluator GroundPatrolEvaluator
-    {
-        get => groundPatrolEvaluator;
-        private set => groundPatrolEvaluator = value;
-    }
-    [SerializeField] private GroundChaseEvaluator groundChaseEvaluator;
-    public GroundChaseEvaluator GroundChaseEvaluator
-    {
-        get => groundChaseEvaluator;
-        private set => groundChaseEvaluator = value;
-    }
-    [SerializeField] private FloatingChaseEvaluator floatingChaseEvaluator;
-    public FloatingChaseEvaluator FloatingChaseEvaluator
-    {
-        get => floatingChaseEvaluator;
-        private set => floatingChaseEvaluator = value;
-    }
-    [SerializeField] private AttackEvaluator attackEvaluator;
-    public AttackEvaluator AttackEvaluator
-    {
-        get => attackEvaluator;
-        private set => attackEvaluator = value;
-    }
-    [SerializeField] private CautionEvaluator cautionEvaluator;
-    public CautionEvaluator CautionEvaluator
-    {
-        get => cautionEvaluator;
-        private set => cautionEvaluator = value;
-    }
-
-    [Header("Condition")]
-    [Space]
-
-    [SerializeField] private int _defaultDir = 1;
+    [field: SerializeField]
     public int DefaultDir
     {
-        get => _defaultDir;
-        private set => _defaultDir = value;
+        get;
+        private set;
     }
-    [SerializeField] private int _recentDir;
+    [field: SerializeField]
     public int RecentDir
     {
-        get => _recentDir;
-        set => _recentDir = value;
+        get;
+        set;
     }
-    [SerializeField] private bool _isGround;
+    [field: SerializeField]
     public bool IsGround
     {
-        get => _isGround;
-        set => _isGround = value;
+        get;
+        set;
     }
-    [SerializeField] private bool _isInAir;
+    [field: SerializeField]
     public bool IsInAir
     {
-        get => _isInAir;
-        set => _isInAir = value;
+        get;
+        set;
     }
-    [SerializeField] private bool _isAttacking;
+    [field: SerializeField]
     public bool IsAttacking
     {
-        get => _isAttacking;
-        set => _isAttacking = value;
+        get;
+        set;
     }
-    [SerializeField] private bool _isHiding;
+    [field: SerializeField]
     public bool IsHiding
     {
-        get => _isHiding;
-        set => _isHiding = value;
+        get;
+        set;
     }
-    [SerializeField] private bool _isGodMode;
+    [field: SerializeField]
     public bool IsGodMode
     {
-        get => _isGodMode;
-        set => _isGodMode = value;
+        get;
+        set;
     }
-    [SerializeField] private bool _isHitting;
+    [field: SerializeField]
     public bool IsHitting
     {
-        get => _isHitting;
-        set => _isHitting = value;
+        get;
+        set;
     }
-    [SerializeField] private bool _isHurt;
+    [field: SerializeField]
     public bool IsHurt
     {
-        get => _isHurt;
-        set => _isHurt = value;
+        get;
+        set;
     }
-    [SerializeField] private bool _isDead;
+    [field: SerializeField]
     public bool IsDead
     {
-        get => _isDead;
-        set => _isDead = value;
+        get;
+        set;
     }
 
-    [Header("Monster Data")]
-    [Space]
+    [field: Header("Monster Data")]
+    [field: Space]
 
-    [SerializeField] private Transform _centerOfMass;
-    [SerializeField] private MonsterData _monsterData;
+    [field: SerializeField]
+    public Transform CenterOfMass
+    {
+        get;
+        private set;
+    }
+    [field: SerializeField]
+    public MonsterData MonsterData
+    {
+        get;
+        private set;
+    }
 
-    [Space]
+    [field: Space]
 
-    [SerializeField] private string _monsterName;
+    [field: SerializeField]
     public string MonsterName
     {
-        get => _monsterName;
-        set => _monsterName = value;
+        get;
+        set;
     }
-    [SerializeField] private MonsterDefine.RankType _rankType;
+    [field: SerializeField]
     public MonsterDefine.RankType RankType
     {
-        get => _rankType;
-        protected set => _rankType = value;
+        get;
+        protected set;
     }
-    [SerializeField] private MonsterDefine.MoveType _moveType;
+    [field: SerializeField]
     public MonsterDefine.MoveType MoveType
     {
-        get => _moveType;
-        protected set => _moveType = value;
+        get;
+        protected set;
     }
-    [SerializeField] private int _maxHp;
+    [field: SerializeField]
     public int MaxHp
     {
-        get => _maxHp;
-        set => _maxHp = value;
+        get;
+        set;
     }
     [SerializeField] private int _curHp;
     public int CurHp
@@ -205,40 +171,65 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             }
         }
     }
-    [SerializeField] private float _moveSpeed;
+    [field: SerializeField]
     public float MoveSpeed
     {
-        get => _moveSpeed;
-        set => _moveSpeed = value;
+        get;
+        set;
     }
-    [SerializeField] private float _acceleration;
+    [field: SerializeField]
     public float Acceleration
     {
-        get => _acceleration;
-        set => _acceleration = value;
+        get;
+        set;
     }
-    [SerializeField] private Vector2 _jumpForce;
+    [field: SerializeField]
     public Vector2 JumpForce
     {
-        get => _jumpForce;
-        set => _jumpForce = value;
+        get;
+        set;
     }
 
-    [Header("Ground Check")]
-    [Space]
+    [field: Header("Ground Check")]
+    [field: Space]
 
-    [SerializeField] private LayerMask _groundCheckLayer;
-    [SerializeField] private BoxCollider2D _groundCheckCollider;
+    [field: SerializeField]
+    public LayerMask GroundCheckLayer
+    {
+        get;
+        private set;
+    }
+    [field: SerializeField]
+    public Collider2D GroundCheckCollider
+    {
+        get;
+        private set;
+    }
     public RaycastHit2D GroundRayHit;
 
-    [Header("Basic BoxCast Attack")]
-    [Space]
+    [field: Header("Basic BoxCast Attack")]
+    [field: Space]
 
-    [SerializeField] protected LayerMask _attackTargetLayer;
-    [SerializeField] protected GameObject _attackHitEffect;
+    protected LayerMask AttackTargetLayer
+    {
+        get;
+        set;
+    }
+    protected GameObject AttackHitEffect
+    {
+        get;
+        set;
+    }
 
-    // blink Effect
-    private BlinkEffect _blinkEffect;
+    [field: Header("ETC")]
+    [field: Space]
+
+    [field: SerializeField]
+    public BlinkEffect BlinkEffect
+    {
+        get;
+        private set;
+    }
 
     // animation transition event
     public delegate bool CustomAnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
@@ -255,9 +246,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     protected virtual void Awake()
     {
         // Basic Component
-        Rigidbody = GetComponent<Rigidbody2D>();
+        RigidBody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
-        BodyCollider2D = GetComponent<Collider2D>();
+        MainBodyCollider2D = GetComponent<Collider2D>();
 
         // Module
         FloatingPatrolModule = GetComponent<FloatingPatrolModule>();
@@ -271,8 +262,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         AttackEvaluator = GetComponent<AttackEvaluator>();
         CautionEvaluator = GetComponent<CautionEvaluator>();
 
-        _blinkEffect = GetComponent<BlinkEffect>();
-
         // Init State
         InitState();
     }
@@ -285,8 +274,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         RecentDir = DefaultDir;
 
         // 무게중심 설정
-        if (!_centerOfMass) _centerOfMass = this.transform;
-        Rigidbody.centerOfMass = _centerOfMass.localPosition;
+        if (!CenterOfMass) CenterOfMass = this.transform;
+        RigidBody2D.centerOfMass = CenterOfMass.localPosition;
     }
     protected virtual void Update()
     {
@@ -301,9 +290,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             case MonsterDefine.MoveType.GroundJumpping:
 
                 // ground rayCast
-                RaycastHit2D[] groundRayHits = Physics2D.BoxCastAll(_groundCheckCollider.transform.position,
-                    _groundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
-                    _groundCheckLayer);
+                RaycastHit2D[] groundRayHits = Physics2D.BoxCastAll(GroundCheckCollider.transform.position,
+                    GroundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
+                    GroundCheckLayer);
 
                 // Debug.Log($"{groundRayHits.Length}개의 RayCastHit");
 
@@ -359,33 +348,29 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             }
         }
     }
-    protected virtual void FixedUpdate()
-    {
-
-    }
     public virtual void SetUp()
     {
         // 몬스터의 이름
-        MonsterName = _monsterData.MonsterName.ToString();
+        MonsterName = MonsterData.MonsterName.ToString();
 
         // 몬스터의 랭크
-        RankType = _monsterData.RankType;
+        RankType = MonsterData.RankType;
 
         // 몬스터의 행동 타입
-        MoveType = _monsterData.MoveType;
+        MoveType = MonsterData.MoveType;
 
         // 몬스터의 최대 체력
-        MaxHp = _monsterData.MaxHp;
+        MaxHp = MonsterData.MaxHp;
         CurHp = MaxHp;
 
         // 몬스터의 이동속도
-        MoveSpeed = _monsterData.MoveSpeed;
+        MoveSpeed = MonsterData.MoveSpeed;
 
         // 몬스터의 가속도
-        Acceleration = _monsterData.Acceleration;
+        Acceleration = MonsterData.Acceleration;
 
         // 몬스터의 점프파워
-        JumpForce = _monsterData.JumpForce;
+        JumpForce = MonsterData.JumpForce;
     }
     public virtual void KnockBack(Vector2 forceVector)
     {
@@ -394,11 +379,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         else
         {
             // 속도 초기화
-            Rigidbody.velocity = Vector2.zero;
+            RigidBody2D.velocity = Vector2.zero;
 
             // Monster의 Mass에 따른 보정
-            forceVector *= Rigidbody.mass / 1.0f;
-            Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
+            forceVector *= RigidBody2D.mass / 1.0f;
+            RigidBody2D.AddForce(forceVector, ForceMode2D.Impulse);
         }
     }
     public virtual IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
@@ -411,7 +396,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         return IAttackListener.AttackResult.Success;
     }
-    public virtual void Die()
+    public virtual void Die(bool isDeathEffect = true)
     {
         IsDead = true;
 
@@ -423,7 +408,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         }
 
         DisableAllCollider();
-        DeathEffect();
+
+        if (isDeathEffect)
+            DeathEffect();
     }
 
     // Effect
@@ -450,7 +437,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (navMeshMoveModule) navMeshMoveModule.SetStopAgent(true, true);
 
         // Generic Stop movement
-        Rigidbody.simulated = false;
+        RigidBody2D.simulated = false;
         Animator.speed = 0;
 
         // wait until effect done
@@ -494,13 +481,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
                 if (attackResult == IAttackListener.AttackResult.Success)
                 {
-                    Instantiate(_attackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                    Instantiate(AttackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
                     customBasicBoxCastAttackEvent?.Invoke();
                 }
             }
         }
     }
-    public void ColliderCastAttack(Collider2D collider, MonsterAttackInfo attackinfo, LayerMask targetLayer)
+    public void BasicColliderCastAttack(Collider2D collider, MonsterAttackInfo attackinfo, LayerMask targetLayer)
     {
         // layer wrapping to contactFilter
         ContactFilter2D contactFilter = new ContactFilter2D();
@@ -520,32 +507,34 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
                 if (attackResult == IAttackListener.AttackResult.Success)
                 {
-                    Instantiate(_attackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                    Instantiate(AttackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
                     customBasicBoxCastAttackEvent?.Invoke();
                 }
             }
         }
     }
-    public void DisableAllCollider()
+
+    // control hitBox & collider
+    public void DisableAllCollider(bool isDisableBodyHitCollider = true)
     {
         var colliders = GetComponentsInChildren<Collider2D>();
         foreach (var coll in colliders)
         {
-            if (coll == BodyCollider2D) continue;
+            // 지면에 붙어있기 위한 Body 콜라이더는 생략
+            if (coll == MainBodyCollider2D) continue;
+
+            // BodyHitCollider를 생략하는 옵션
+            if (!isDisableBodyHitCollider)
+            {
+                var c = coll.GetComponent<MonsterBodyHit>();
+                if (c != null)
+                    continue;
+            }
 
             coll.enabled = false;
         }
     }
-
-    // hitBox
-    public void DisableHitBox()
-    {
-        var hitBox = GetComponentInChildren<MonsterBodyHit>();
-
-        if (hitBox)
-            hitBox.gameObject.SetActive(false);
-    }
-    public void GroundizeHitBox()
+    public void MakeHitBoxStepable()
     {
         var hitBox = GetComponentInChildren<MonsterBodyHit>();
 
@@ -556,11 +545,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             hitBox.gameObject.layer = LayerMask.NameToLayer("Default");
         }
     }
-    public void SetAttackableHitBox(bool isBool)
+    public void SetHitBoxAttackable(bool isBool)
     {
-        // var str = isBool ? "Attackable" : "UnAttackable";
-        // Debug.Log(str);
-
         var monsterBodyHitModule = GetComponentInChildren<MonsterBodyHit>();
 
         if (monsterBodyHitModule)
@@ -575,8 +561,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         if (useBlinkEffect)
         {
-            if (_blinkEffect)
-                _blinkEffect.Play();
+            if (BlinkEffect)
+                BlinkEffect.Play();
             else
                 Debug.LogWarning("Blink Effect isn't attached");
         }
@@ -617,17 +603,17 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         }
 
         // Init Animation State
-        _currentState = _initialState;
+        CurrentState = _initialState;
         _previousState = _initialState;
     }
     public void UpdateState(Monster_StateBase state)
     {
-        _previousState = _currentState;
-        _currentState = state;
+        _previousState = CurrentState;
+        CurrentState = state;
     }
     public bool CurrentStateIs<TState>() where TState : Monster_StateBase
     {
-        return _currentState is TState;
+        return CurrentState is TState;
     }
     public bool PreviousStateIs<TState>() where TState : Monster_StateBase
     {

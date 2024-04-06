@@ -1,20 +1,6 @@
-using UnityEngine;
-
-public class Turtle : MonsterBehavior
+public sealed class Turtle : MonsterBehavior
 {
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-    protected override void Start()
-    {
-        base.Start();
-    }
-    protected override void Update()
-    {
-        base.Update();
-    }
-    protected override void FixedUpdate()
+    public void FixedUpdate()
     {
         if (IsDead)
             return;
@@ -25,18 +11,9 @@ public class Turtle : MonsterBehavior
                 MonsterMovementModule.GroundWalking();
         }
     }
-    public override void SetUp()
-    {
-        base.SetUp();
-    }
-
-    public override void KnockBack(Vector2 forceVector)
-    {
-        base.KnockBack(forceVector);
-    }
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        // 거북이는 Dead 상태에서도 Hit가 가능하다
+        // ** 거북이는 Dead 상태에서도 Hit가 가능하다 **
 
         // Turtle Hit Process
         if (IsHiding || IsDead)
@@ -50,16 +27,11 @@ public class Turtle : MonsterBehavior
 
         return IAttackListener.AttackResult.Success;
     }
-    public override void Die()
+    public override void Die(bool isDeathEffect = true)
     {
-        IsDead = true;
-
-        Animator.SetTrigger("Die");
+        base.Die(false);
 
         // Trigger -> Collision
-        GroundizeHitBox();
-
-        // disable monster main collider
-        GetComponent<Collider2D>().enabled = false;
+        MakeHitBoxStepable();
     }
 }

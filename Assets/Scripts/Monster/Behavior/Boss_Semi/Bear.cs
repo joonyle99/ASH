@@ -160,10 +160,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
             }
         }
     }
-    protected override void FixedUpdate()
+    public void FixedUpdate()
     {
-        base.FixedUpdate();
-
         if (IsDead)
             return;
 
@@ -179,7 +177,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
             if (_isBodySlamming)
             {
                 MonsterAttackInfo bodySlamInfo = new MonsterAttackInfo(_bodySlamDamage, new Vector2(_bodySlamForceX, _bodySlamForceY));
-                BasicBoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, _attackTargetLayer);
+                BasicBoxCastAttack(_bodySlamCollider.transform.position, _bodySlamCollider.bounds.size, bodySlamInfo, AttackTargetLayer);
                 // Debug.Log("BodySlam Attack");
             }
         }
@@ -212,7 +210,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         {
             CurHp = 0;
 
-            Die();
+            Die(false);
 
             StartCoroutine(SlowMotionCoroutine(5f));
 
@@ -233,14 +231,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         return IAttackListener.AttackResult.Success;
     }
-    public override void Die()
+    public override void Die(bool isDeathEffect = true)
     {
-        IsDead = true;
-
-        Animator.SetTrigger("Die");
-
-        // Disable Hit Box
-        DisableHitBox();
+        base.Die(false);
     }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
@@ -299,7 +292,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
             isNeverGroogy = false;
 
         // 몬스터의 MonsterBodyHit를 끈다 (플레이어를 타격할 수 없다)
-        SetAttackableHitBox(false);
+        SetHitBoxAttackable(false);
     }
     public override void GroggyPostProcess()
     {
@@ -307,7 +300,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         IsGroggy = false;
 
         // 몬스터의 MonsterBodyHit를 켠다 (플레이어를 타격할 수 있다)
-        SetAttackableHitBox(true);
+        SetHitBoxAttackable(true);
 
         InitializeHurtCount();
 
@@ -418,11 +411,11 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public void BodySlam02_AnimEvent()
     {
         _isBodySlamming = true;
-        Rigidbody.AddForce(60f * Vector2.right * RecentDir, ForceMode2D.Impulse);
+        RigidBody2D.AddForce(60f * Vector2.right * RecentDir, ForceMode2D.Impulse);
     }
     public void BodySlam03_AnimEvent()
     {
-        Rigidbody.velocity = Vector2.zero;
+        RigidBody2D.velocity = Vector2.zero;
         _isBodySlamming = false;
     }
 
@@ -440,7 +433,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     {
         // stomp attack
         MonsterAttackInfo stompInfo = new MonsterAttackInfo(_stompDamage, new Vector2(_stompForceX, _stompForceY));
-        ColliderCastAttack(_stompCollider, stompInfo, _attackTargetLayer);
+        BasicColliderCastAttack(_stompCollider, stompInfo, AttackTargetLayer);
         StompEffect();
     }
     public IEnumerator CreateStalactite()
@@ -466,7 +459,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     public void Earthquake01_AnimEvent()
     {
         MonsterAttackInfo earthQuakeInfo = new MonsterAttackInfo(_earthQuakeDamage, new Vector2(_earthQuakeForceX, _earthQuakeForceY));
-        BasicBoxCastAttack(_earthQuakeCollider.transform.position, _earthQuakeCollider.bounds.size, earthQuakeInfo, _attackTargetLayer);
+        BasicBoxCastAttack(_earthQuakeCollider.transform.position, _earthQuakeCollider.bounds.size, earthQuakeInfo, AttackTargetLayer);
 
         // 지면파 생성
         GenerateGroundWave();
