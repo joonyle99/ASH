@@ -11,6 +11,7 @@ public class Monster_ProjectileSkill : Monster_Skill
     [Space]
 
     [SerializeField] protected LayerMask destroyLayer;
+    [SerializeField] protected float effectDelay;
     [SerializeField] protected SoundClipData colliderSound;
 
     protected override void OnTriggerEnter2D(Collider2D collision)
@@ -25,7 +26,7 @@ public class Monster_ProjectileSkill : Monster_Skill
                 SoundManager.Instance.PlaySFX(colliderSound);
             */
 
-            var effect = GetComponent<DisintegrateEffect>();
+            var effect = GetComponent<DisintegrateEffect_New>();
             if (effect)
                 StartCoroutine(DeathEffectCoroutine(effect));
             else
@@ -33,11 +34,13 @@ public class Monster_ProjectileSkill : Monster_Skill
         }
     }
 
-    private IEnumerator DeathEffectCoroutine(DisintegrateEffect effect)
+    private IEnumerator DeathEffectCoroutine(DisintegrateEffect_New effect)
     {
+        // 물리 시뮬레이션 정지
         GetComponent<Rigidbody2D>().simulated = false;
 
-        effect.Play();
+        // 사라짐 이펙트 시작
+        effect.Play(effectDelay);
 
         yield return new WaitUntil(() => effect.IsEffectDone);
 

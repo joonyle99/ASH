@@ -8,7 +8,15 @@ public class DisintegrateEffect_New : MonoBehaviour
     [SerializeField] private float _duration;
     [SerializeField] private float _timeOffsetAfterParticle = 0.2f;
     [SerializeField] private ParticleHelper _particle;
-    [SerializeField] private SpriteRenderer[] _spriteRenderers;
+
+    [field: Space]
+
+    [field: SerializeField]
+    public SpriteRenderer[] SpriteRenderers
+    {
+        get;
+        set;
+    }
 
     public bool IsEffectDone { get; private set; } = false;
     public float Duration => _duration;
@@ -23,7 +31,7 @@ public class DisintegrateEffect_New : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         // Disintegrate Material Initialize
-        foreach (var spriteRenderer in _spriteRenderers)
+        foreach (var spriteRenderer in SpriteRenderers)
         {
             spriteRenderer.material = _disintegrateMaterial;
             spriteRenderer.material.SetFloat("_Progress", 0f);
@@ -40,7 +48,7 @@ public class DisintegrateEffect_New : MonoBehaviour
         float eTime = 0f;
         while (eTime < _duration)
         {
-            foreach (var spriteRenderer in _spriteRenderers)
+            foreach (var spriteRenderer in SpriteRenderers)
             {
                 spriteRenderer.material.SetFloat("_Progress", eTime / _duration);
             }
