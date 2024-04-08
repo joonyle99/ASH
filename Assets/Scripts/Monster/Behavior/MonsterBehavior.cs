@@ -216,15 +216,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         private set;
     }
 
-    /*
-    [field: SerializeField]
-    public CutscenePlayer_Event CutscenePlayer_Event
-    {
-        get;
-        private set;
-    }
-    */
-
     // animation transition event
     public delegate bool AnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
     public AnimTransitionEvent animTransitionEvent;
@@ -602,15 +593,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState));
     }
-    
-    /*
-    // Cutscene
-    public void Play_CutscenePlayerEvent()
-    {
-        if (CutscenePlayer_Event)
-            CutscenePlayer_Event.Play();
-    }
-    */
 
     // Sound
     public void PlaySound(string key)

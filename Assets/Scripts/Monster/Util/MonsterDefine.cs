@@ -52,5 +52,5 @@ public static class MonsterDefine
         Fly,
     }
 
-    public static int BossHealthUnit = 100;
+    public static int BossHealthUnit = 10000;
 }

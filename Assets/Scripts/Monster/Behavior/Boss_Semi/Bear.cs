@@ -7,8 +7,8 @@ public enum BearAttackType
     Null = 0,
 
     // Normal Attack
-    Slash_Right,
-    Slash_Left,
+    SlashRight,
+    SlashLeft,
     BodySlam,
     Stomp,
 
@@ -31,24 +31,25 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     [Space]
 
+    [Header("Attack Type")]
+    [Tooltip("1 : Slash Right\r\n2 : Slash Left\r\n3 : BodySlam\r\n4 : Stomp")]
+    [SerializeField] private Range _attackTypeRange;
     [SerializeField] private BearAttackType _currentAttack;
     [SerializeField] private BearAttackType _nextAttack;
 
     [Space]
 
-    [Tooltip("1 : Slash Right\r\n2 : Slash Left\r\n3 : BodySlam\r\n4 : Stomp")]
-    [SerializeField] private Range _attackTypeRange;
+    [Header("Attack Count")]
     [Tooltip("Count of attacks for EarthQuake")]
     [SerializeField] private RangeInt _attackCountRange;
-
-    [Space]
-
     [SerializeField] private int _targetAttackCount;
     [SerializeField] private int _currentAttackCount;
 
     [Space]
 
+    [Header("Hit Count")]
     [Tooltip("Count of hits for Groggy state")]
+    [SerializeField] private RangeInt _hitCountRange;
     [SerializeField] private int _targetHitCount;
     [SerializeField] private int _currentHitCount;
 
@@ -61,6 +62,11 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [SerializeField] private Bear_Slash _slash01;
     [SerializeField] private Bear_Slash _slash02;
     private Vector2 _playerPos;
+
+    [Header("BodySlam")]
+    [Space]
+
+    [SerializeField] private float _bodySlamLength;
 
     [Header("Stomp")]
     [Space]
@@ -94,27 +100,8 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     [Header("VFX")]
     [Space]
 
-    [SerializeField] private GameObject LightingStone;                              // 이마에 박힌 보석
-    [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect; // 색이 서서히 돌아오는 효과
-    [SerializeField] private ParticleSystem[] DisintegrateEffects;                  // 잿가루 효과 파티클
-
-    [Header("Cutscene")]
-    [Space]
-
-    [SerializeField] private CutscenePlayer lightingGuide;
-    [SerializeField] private CutscenePlayer attackSuccess;
-    [SerializeField] private CutscenePlayer endCutscene;
-
-    public static bool isCutScene_LightingGuide;
-    public static bool isCutScene_AttackSuccess;
-    public static bool isCutScene_End;
-
-    [Header("ETC")]
-    [Space]
-
-    public int earthQuakeCount = 0;
-    public bool isNeverGroogy = true;
-    public bool isNeverRage = true;
+    [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;         // 색이 서서히 돌아오는 효과
+    [SerializeField] private ParticleSystem[] DisintegrateEffects;                          // 잿가루 효과 파티클
 
     #endregion
 
@@ -125,31 +112,11 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         base.Start();
 
         // init
+        IsGodMode = true;
         RandomTargetAttackCount();
+        RandomTargetHitCount();
         SetToRandomAttack();
-        SetStalactiteToNormalCount();
-    }
-    protected override void Update()
-    {
-        base.Update();
-
-        /*
-        if (!isCutScene_LightingGuide && lightingGuide)
-        {
-            if (earthQuakeCount >= 3 && isNeverGroogy)
-            {
-                StartCoroutine(LightingGuideCoroutine());
-            }
-        }
-
-        if (!isCutScene_AttackSuccess && attackSuccess)
-        {
-            if (!isNeverRage)
-            {
-                StartCoroutine(AttackSuccessCoroutine());
-            }
-        }
-        */
+        _stalactiteCount = Random.Range((int)_normalStalactiteRange.Start, (int)_normalStalactiteRange.End + 1);
     }
     public void FixedUpdate()
     {
@@ -177,39 +144,19 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // Hit Process
         HitProcess(attackInfo, false, false);
 
-        // 흑곰 전용 피격 처리
+        // 체력 감소
+        _currentHitCount++;
         CurHp -= MonsterDefine.BossHealthUnit;
-        IncreaseHurtCount();
 
-        // Die
-        if (CurHp <= 0)
-        {
-            CurHp = 0;
-
-            Die(true, false);
-
-            StartCoroutine(SlowMotionCoroutine(5f));
-
-            return IAttackListener.AttackResult.Success;
-        }
-
-        // Rage
-        if (!IsRage && (CurHp <= MaxHp * 0.5f))
-        {
-            SetAnimatorTrigger("Hurt");
-            isNeverRage = false;
-            return IAttackListener.AttackResult.Success;
-        }
-
-        // Hurt
-        if (_currentHitCount >= _targetHitCount)
-            SetAnimatorTrigger("Hurt");
+        CheckStatus();
 
         return IAttackListener.AttackResult.Success;
     }
     public override void Die(bool isHitBoxDisable = true, bool isDeathEffect = true)
     {
         base.Die(true, false);
+
+        StartCoroutine(SlowMotionCoroutine(5f));
     }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
@@ -234,12 +181,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         }
 
         if (_currentAttack is BearAttackType.EarthQuake)
-        {
-            InitializeAttackCount();
-            earthQuakeCount++;
-        }
+            _currentAttackCount = 0;
         else
-            IncreaseAttackCount();
+            _currentAttackCount++;
     }
     public override void AttackPostProcess()
     {
@@ -256,9 +200,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // 그로기 상태 진입 (더이상 손전등의 영향을 받지 않음)
         IsGroggy = true;
 
-        if (isNeverGroogy)
-            isNeverGroogy = false;
-
         // 몬스터의 MonsterBodyHit를 끈다 (플레이어를 타격할 수 없다)
         SetHitBoxAttackable(false);
     }
@@ -267,13 +208,13 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // 그로기 상태 종료 (이제 손전등의 영향을 받음)
         IsGroggy = false;
 
-        // 몬스터의 MonsterBodyHit를 켠다 (플레이어를 타격할 수 있다)
+        // 몬스터의 Body HitBox를 켠다 (플레이어를 타격할 수 있다)
         SetHitBoxAttackable(true);
 
-        InitializeHurtCount();
+        _currentHitCount = 0;
 
         if (IsRage)
-            SetStalactiteToRageCount();
+            _stalactiteCount = Random.Range((int)_rageStalactiteRange.Start, (int)_rageStalactiteRange.End + 1);
     }
 
     // basic
@@ -289,6 +230,17 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // 4번 ~ 7번 공격 후 지진 공격
         _targetAttackCount = Random.Range(_attackCountRange.Start, _attackCountRange.End);
     }
+    private void RandomTargetHitCount()
+    {
+        if (_hitCountRange.Start > _hitCountRange.End)
+            Debug.LogError("minTargetCount > maxTargetCount");
+        else if (_hitCountRange.Start < 0)
+            Debug.LogError("minTargetCount < 0");
+        else if (_hitCountRange.End <= 0)
+            Debug.LogError("maxTargetCount <= 0");
+
+        _targetHitCount = Random.Range(_hitCountRange.Start, _hitCountRange.End);
+    }
     private void SetToRandomAttack()
     {
         int nextAttackNumber = (int)_attackTypeRange.Random();
@@ -300,29 +252,20 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         _nextAttack = BearAttackType.EarthQuake;
         Animator.SetInteger("NextAttackNumber", (int)_nextAttack);
     }
-    public void IncreaseAttackCount()
+    public void CheckStatus()
     {
-        _currentAttackCount++;
-    }
-    public void InitializeAttackCount()
-    {
-        _currentAttackCount = 0;
-    }
-    public void IncreaseHurtCount()
-    {
-        _currentHitCount++;
-    }
-    public void InitializeHurtCount()
-    {
-        _currentHitCount = 0;
-    }
-    public void SetStalactiteToNormalCount()
-    {
-        _stalactiteCount = Random.Range((int)_normalStalactiteRange.Start, (int)_normalStalactiteRange.End + 1);
-    }
-    public void SetStalactiteToRageCount()
-    {
-        _stalactiteCount = Random.Range((int)_rageStalactiteRange.Start, (int)_rageStalactiteRange.End + 1);
+        if (IsDead) return;
+
+        // 격노 상태로 진입
+        if (!IsRage && (CurHp <= MaxHp / 2))
+        {
+            SetAnimatorTrigger("Shout");
+        }
+        // 그로기 상태 해제되며 피격
+        else if (_currentHitCount >= _targetHitCount)
+        {
+            SetAnimatorTrigger("Hurt");
+        }
     }
 
     // slash
@@ -343,42 +286,45 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
             // 플레이어의 위치를 기억
             _playerPos = playerPos;
         }
+        else
+        {
+            _playerPos = Vector2.zero;
+        }
     }
     public void Slash01_AnimEvent()
     {
+        // slash effect
         var slash = Instantiate(_slash01, _playerPos, Quaternion.identity);
         if (RecentDir < 1) slash.transform.localScale = new Vector3(-Mathf.Abs(slash.transform.localScale.x), slash.transform.localScale.y, slash.transform.localScale.z);
         slash.SetActor(this);
 
+        // slash sound
         PlaySound("Slash");
-
-        // 플레이어 위치 초기화
-        _playerPos = Vector2.zero;
     }
     public void Slash02_AnimEvent()
     {
+        // slash effect
         var slash = Instantiate(_slash02, _playerPos, Quaternion.identity);
         if (RecentDir < 1) slash.transform.localScale = new Vector3(-Mathf.Abs(slash.transform.localScale.x), slash.transform.localScale.y, slash.transform.localScale.z);
         slash.SetActor(this);
 
+        // slash sound
         PlaySound("Slash");
-
-        // 플레이어 위치 초기화
-        _playerPos = Vector2.zero;
     }
 
     // bodySlam
     public void BodySlamPre_AnimEvent()
     {
+        // 플레이어의 위치
         var playerPos = SceneContext.Current.Player.transform.position;
-        var dir = System.Math.Sign(playerPos.x - transform.position.x);
+        var dirBearToPlayer = System.Math.Sign(playerPos.x - transform.position.x);
 
         // 방향 전환
-        SetRecentDir(dir);
+        SetRecentDir(dirBearToPlayer);
     }
     public void BodySlam01_AnimEvent()
     {
-        RigidBody2D.AddForce(60f * Vector2.right * RecentDir, ForceMode2D.Impulse);
+        RigidBody2D.AddForce(_bodySlamLength * Vector2.right * RecentDir, ForceMode2D.Impulse);
     }
     public void BodySlam02_AnimEvent()
     {
@@ -388,7 +334,9 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     // stomp
     public void Stomp01_AnimEvent()
     {
+        // stomp effect
         Instantiate(_stompEffectPrefab, _stomp.transform.position, Quaternion.identity);
+        // stomp sound
         PlaySound("Stomp");
 
         // create stalactite
@@ -409,20 +357,20 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // create stalactite
         var stalactite = Instantiate(_stalactitePrefab, position, Quaternion.identity);
-
         stalactite.SetActor(this);
-
-        // random size
         stalactite.transform.localScale *= _createSizeRange.Random();
     }
 
     // earthQuake
     public void Earthquake01_AnimEvent()
     {
-        // 지면파 생성
-        GenerateGroundWave();
-        PlaySound("Earthquake");
+        // earthQuake camera shake
         SceneEffectManager.Current.Camera.StartShake(_earthquakeCameraShake);
+        // earthQuake sound
+        PlaySound("Earthquake");
+
+        // create wave
+        GenerateGroundWave();
     }
     public void GenerateGroundWave()
     {
@@ -436,6 +384,12 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
 
     // effects
+    IEnumerator SlowMotionCoroutine(float duration)
+    {
+        Time.timeScale = 0.3f;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1f;
+    }
     public void StartDisintegrateEffect()
     {
         StartCoroutine(DisintegrateEffectCoroutine());
@@ -464,39 +418,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         SoundManager.Instance.StopBGM();
 
         yield return new WaitUntil(() => bossClearColorChangeEffect.isEndEffect);
-
-        if (!isCutScene_End && endCutscene)
-        {
-            isCutScene_End = true;
-            endCutscene.Play();
-        }
-    }
-
-    // cutscene
-    public IEnumerator LightingGuideCoroutine()
-    {
-        isCutScene_LightingGuide = true;
-
-        yield return new WaitUntil(() => CurrentStateIs<Monster_IdleState>());
-
-        lightingGuide.Play();
-    }
-    public IEnumerator AttackSuccessCoroutine()
-    {
-        isCutScene_AttackSuccess = true;
-
-        if (AttackEvaluator.IsUsable)
-            AttackEvaluator.IsUsable = false;
-
-        yield return new WaitUntil(() => CurrentStateIs<Monster_IdleState>());
-
-        attackSuccess.Play();
-    }
-    IEnumerator SlowMotionCoroutine(float duration)
-    {
-        Time.timeScale = 0.3f;
-        yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1f;
     }
 
     #endregion
