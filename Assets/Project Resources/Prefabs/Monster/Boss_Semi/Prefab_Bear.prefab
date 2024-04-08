@@ -5003,7 +5003,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1528936702}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GroundWaveSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5189,7 +5189,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.18111038, y: 0.3139267}
+  m_Offset: {x: 0.18111038, y: 0.40039444}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -5200,7 +5200,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 8.66, y: 10.317852}
+  m_Size: {x: 8.66, y: 10.144917}
   m_EdgeRadius: 0
 --- !u!50 &68886007787193407
 Rigidbody2D:
@@ -5219,7 +5219,7 @@ Rigidbody2D:
   m_AngularDrag: 0
   m_GravityScale: 5
   m_Material: {fileID: 6200000, guid: ea4460efb9324b34889b52a932903051, type: 2}
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
@@ -5257,62 +5257,59 @@ MonoBehaviour:
   <JumpForce>k__BackingField: {x: 0, y: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
-    m_Bits: 9
+    m_Bits: 8
   <GroundCheckCollider>k__BackingField: {fileID: 68886008988939920}
   <BlinkEffect>k__BackingField: {fileID: 6296443733435208325}
   <IsGroggy>k__BackingField: 0
   <IsRage>k__BackingField: 0
-  _finalTargetHurtCount: 16
-  _currentAttack: 0
-  _nextAttack: 0
+  _finalTargetHurtCount: 1
   _attackTypeRange:
     Start: 1
     End: 5
+  _currentAttack: 0
+  _nextAttack: 0
   _attackCountRange:
     Start: 3
-    End: 4
+    End: 3
   _targetAttackCount: 0
   _currentAttackCount: 0
+  _hitCountRange:
+    Start: 3
+    End: 3
   _targetHitCount: 0
   _currentHitCount: 0
   _slash01: {fileID: 7501307551420893577, guid: 0e4912bd354e0a745b23c90eeca2032d, type: 3}
   _slash02: {fileID: 7501307551420893577, guid: 8d76e949b7f36ac4198f8bb85cbfb2ae, type: 3}
+  _bodySlamLength: 60
   _stomp: {fileID: 9197840957116043268}
   _stompEffectPrefab: {fileID: 4196376847951404993, guid: 8c9746120f8843545ba62bd1c65a294a, type: 3}
   _stalactitePrefab: {fileID: 6190995042310891283, guid: e11f98982e6347c47be5d6f4d5fbc091, type: 3}
   _stalactiteCount: 4
-  _ceilingHeight: 7
+  _ceilingHeight: 35
   _createTimeRange:
     Start: 0.5
     End: 1.5
   _createSizeRange:
-    Start: 0.5
-    End: 1
+    Start: 0.7
+    End: 1.3
   _distanceRange:
     Start: 3
     End: 20
   _normalStalactiteRange:
-    Start: 4
-    End: 5
+    Start: 6
+    End: 6
   _rageStalactiteRange:
-    Start: 7
-    End: 8
+    Start: 9
+    End: 9
   _waveSpawnPoint: {fileID: 1528936702}
   _waveSkillPrefab: {fileID: 1687034788766365448, guid: 839e0876f9e523a42bb75e4004df8274, type: 3}
   _earthquakeCameraShake: {fileID: 11400000, guid: f0baf86e91dbdea4baab2071a43edb5a, type: 2}
-  LightingStone: {fileID: 1689909348}
   bossClearColorChangeEffect: {fileID: 0}
   DisintegrateEffects:
   - {fileID: 5403583929865551525}
   - {fileID: 5403583929826336060}
   - {fileID: 5403583928566379217}
   - {fileID: 5403583929368315107}
-  lightingGuide: {fileID: 0}
-  attackSuccess: {fileID: 0}
-  endCutscene: {fileID: 0}
-  earthQuakeCount: 0
-  isNeverGroogy: 1
-  isNeverRage: 1
 --- !u!114 &57872128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5396,7 +5393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
-  _duration: 2
+  _duration: 3
   _timeOffsetAfterParticle: 0.2
   _particle: {fileID: 0}
   <SpriteRenderers>k__BackingField:
@@ -5440,7 +5437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_Hurt
+  - _key: Hurt
     _clip: {fileID: 8300000, guid: 3ae94ecee806e984a8ef72c269bb8200, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -5802,7 +5799,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.10808319}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -5813,7 +5810,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 6, y: 1}
+  m_Size: {x: 6, y: 0.7838336}
   m_EdgeRadius: 0
 --- !u!1 &68886009013000998
 GameObject:
@@ -5824,7 +5821,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 68886009013000997}
-  m_Layer: 11
+  m_Layer: 10
   m_Name: Fixed Skill Colliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7018,7 +7015,7 @@ GameObject:
   - component: {fileID: 2586591776054811315}
   - component: {fileID: 2107499345393335048}
   - component: {fileID: 2714031601283482056}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BodySlam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7099,7 +7096,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18fc597e516efba4487245d5c6ddf8ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
+  actor: {fileID: 68886007787193792}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -7937,7 +7934,7 @@ GameObject:
   - component: {fileID: 403945401}
   - component: {fileID: 7559421799557341531}
   - component: {fileID: 9197840957116043268}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Stomp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8008,7 +8005,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05d4d69e53c5509458182f28f9fa409a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
+  actor: {fileID: 68886007787193792}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -8028,7 +8025,7 @@ GameObject:
   - component: {fileID: 5109231473129831231}
   - component: {fileID: 68886008199415106}
   - component: {fileID: 68886008199415105}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: EarthQuake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8109,7 +8106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89929e35e50b97b40b3cde7b40639a6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actor: {fileID: 0}
+  actor: {fileID: 68886007787193792}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
