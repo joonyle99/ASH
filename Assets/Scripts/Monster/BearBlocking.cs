@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class BearBlocking : MonoBehaviour
@@ -21,13 +20,13 @@ public class BearBlocking : MonoBehaviour
     public void StartBlocking()
     {
         bear.enabled = false;
-        bear.Animator.SetTrigger("StartBlocking");
+        bear.SetAnimatorTrigger("StartBlocking");
     }
 
     public void EndBlocking()
     {
         bear.enabled = true;
-        bear.Animator.SetTrigger("EndBlocking");
+        bear.SetAnimatorTrigger("EndBlocking");
     }
 
     public void EndBlocking_OnlyEnable()

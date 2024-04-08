@@ -14633,7 +14633,7 @@ GameObject:
   - component: {fileID: 7501307551420893577}
   - component: {fileID: 2053038797}
   m_Layer: 0
-  m_Name: Bear_Slash1Prefab
+  m_Name: Bear_Slash01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14667,17 +14667,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4156235010dd9e9418db134e4c9f313d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillTargetLayer:
+  targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _skillDestroyLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  _skillDamage: 1
-  _skillForceX: 7
-  _skillForceY: 10
-  _hitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
-  _duration: 0.5
+  damage: 1
+  forceX: 7
+  forceY: 10
+  hitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+  _lifeDuration: 0.5
 --- !u!60 &2053038797
 PolygonCollider2D:
   m_ObjectHideFlags: 0

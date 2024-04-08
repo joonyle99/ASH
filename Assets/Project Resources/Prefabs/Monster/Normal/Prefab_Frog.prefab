@@ -238,7 +238,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7951287674994505330}
   m_Bounds:
-    m_Center: {x: 0.009389579, y: -0.2202687, z: 0}
+    m_Center: {x: 0.009420097, y: -0.2202687, z: 0}
     m_Extent: {x: 0.73589027, y: 0.45805517, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -491,7 +491,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3175164499067490040}
   m_Bounds:
-    m_Center: {x: 0.009359062, y: -0.22026497, z: 0}
+    m_Center: {x: 0.009389579, y: -0.22026497, z: 0}
     m_Extent: {x: 0.7358901, y: 0.45805502, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -538,7 +538,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3283107024004520622}
   - component: {fileID: 3103850369869368378}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: bone_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -678,7 +678,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7236433487572048457}
   m_Bounds:
-    m_Center: {x: 0.009974062, y: -0.22006994, z: 0}
+    m_Center: {x: 0.01000458, y: -0.22006994, z: 0}
     m_Extent: {x: 0.6919551, y: 0.27636003, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1055,7 +1055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2694611401037248589}
   - component: {fileID: 7627861366395449893}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: bone_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1244,7 +1244,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3116180960954582346}
   - component: {fileID: 6636229683399083918}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: bone_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1389,7 +1389,7 @@ GameObject:
   - component: {fileID: 6652099337659434889}
   - component: {fileID: 3768164301280472331}
   - component: {fileID: 9055877814797468119}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: "\uD600 \uB9C8\uBB34\uB9AC"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1500,7 +1500,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1219348545884854193}
   - component: {fileID: 3591715759411775999}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: bone_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1639,7 +1639,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9173645295793485338}
   - component: {fileID: 3499127406383555971}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: bone_6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1720,7 +1720,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8189673080587721868}
   - component: {fileID: 5982693674524741852}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: bone_7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2163,9 +2163,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 9
   checkCollider: {fileID: 5517317730597714473}
+  _isUsable: 1
   _targetEvaluatorCoolTime: 0
   _isDuringCoolTime: 0
-  _isUsable: 1
   _patrolPoints: {fileID: 5517317730710916852}
   _isOutOfPatrolRange: 0
 --- !u!114 &5517317730400959640
@@ -2184,13 +2184,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   checkCollider: {fileID: 5517317729223708157}
+  _isUsable: 0
   _targetEvaluatorCoolTime: 0
   _isDuringCoolTime: 0
-  _isUsable: 0
-  _chaseDir: 1
-  _maxChaseDistance: 0
-  _isChasing: 0
-  _isTooClose: 0
+  <ChaseDir>k__BackingField: 1
+  <MaxChaseDistance>k__BackingField: 0
+  <IsChasing>k__BackingField: 0
+  <IsTooClose>k__BackingField: 0
 --- !u!114 &8433490137912059618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2207,9 +2207,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   checkCollider: {fileID: 4553435955701956536}
+  _isUsable: 0
   _targetEvaluatorCoolTime: 5
   _isDuringCoolTime: 0
-  _isUsable: 0
 --- !u!114 &5247372131622839078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2239,7 +2239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
-  _duration: 2
+  _duration: 3
   _timeOffsetAfterParticle: 0.2
   _particle: {fileID: 661171705018409503}
   <SpriteRenderers>k__BackingField:
@@ -2271,7 +2271,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_Hurt
+  - _key: Hurt
     _clip: {fileID: 8300000, guid: 3ae94ecee806e984a8ef72c269bb8200, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -2334,7 +2334,7 @@ GameObject:
   - component: {fileID: 4143828007152718468}
   - component: {fileID: 4693036147426800917}
   - component: {fileID: 5938876821569813243}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Tongue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2391,6 +2391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 895a7c2db0358ea428c8c0fba60b56fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actor: {fileID: 5517317730400959633}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -2503,7 +2504,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4023280740483236144}
   - component: {fileID: 2149282576557033029}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: bone_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2705,7 +2706,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 8404162786085990350}
   m_Bounds:
-    m_Center: {x: 0.005189538, y: -0.2265749, z: 0}
+    m_Center: {x: 0.0052200556, y: -0.2265749, z: 0}
     m_Extent: {x: 0.43064013, y: 0.5306351, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -2811,7 +2812,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 6647059704371852835}
   m_Bounds:
-    m_Center: {x: 0.00019907951, y: -0.22370803, z: 0}
+    m_Center: {x: 0.00022959709, y: -0.22370803, z: 0}
     m_Extent: {x: 0.50083005, y: 0.48677993, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -7843,7 +7844,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 8709760740336623863}
   m_Bounds:
-    m_Center: {x: 0.0049489737, y: -0.22634995, z: 0}
+    m_Center: {x: 0.0049794912, y: -0.22634995, z: 0}
     m_Extent: {x: 0.62634003, y: 0.41086006, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

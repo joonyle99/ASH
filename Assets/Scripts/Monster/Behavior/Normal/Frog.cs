@@ -4,8 +4,8 @@ public class Frog : MonsterBehavior
     {
         base.Awake();
 
-        customAnimTransitionEvent -= GroundMoveToOtherCondition;
-        customAnimTransitionEvent += GroundMoveToOtherCondition;
+        animTransitionEvent -= GroundMoveToOtherCondition;
+        animTransitionEvent += GroundMoveToOtherCondition;
     }
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {

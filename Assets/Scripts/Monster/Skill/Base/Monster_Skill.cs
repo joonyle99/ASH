@@ -5,6 +5,7 @@ public abstract class Monster_Skill : MonoBehaviour
     [Header("Monster Skill")]
     [Space]
 
+    [SerializeField] protected MonsterBehavior actor;
     [SerializeField] protected LayerMask targetLayer;
 
     [Space]
@@ -29,8 +30,14 @@ public abstract class Monster_Skill : MonoBehaviour
                 // 플레이어가 타격 가능한 상태인 경우
                 if (!player.IsHurt && !player.IsGodMode && !player.IsDead)
                 {
-                    // 플레이어를 타격
-                    Vector2 forceVector = new Vector2(forceX * Mathf.Sign(player.transform.position.x - this.transform.position.x), forceY);
+                    // Actor가 있으면 Actor를 기준으로 방향 설정
+                    Vector2 forceVector = (actor == null)
+                        ? new Vector2(forceX * Mathf.Sign(player.transform.position.x - this.transform.position.x),
+                            forceY)
+                        : new Vector2(forceX * Mathf.Sign(player.transform.position.x - actor.transform.position.x),
+                            forceY);
+
+                    // 플레이어에게 타격
                     IAttackListener.AttackResult attackResult = player.OnHit(new AttackInfo(damage, forceVector, AttackType.Monster_SkillAttack));
 
                     // 타격 성공 시 히트 이펙트 생성
@@ -42,5 +49,10 @@ public abstract class Monster_Skill : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SetActor(MonsterBehavior actor)
+    {
+        this.actor = actor;
     }
 }

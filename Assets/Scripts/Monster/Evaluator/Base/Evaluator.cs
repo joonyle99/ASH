@@ -43,8 +43,8 @@ public abstract class Evaluator : MonoBehaviour
     private Coroutine _coolTimeCoroutine;
 
     // 커스텀 판독 이벤트 정의
-    protected delegate void CustomEvaluationEvent(Vector3 targetPoint);
-    protected CustomEvaluationEvent customEvaluationEvent;
+    protected delegate void EvaluationEvent(Vector3 targetPoint);
+    protected EvaluationEvent evaluationEvent;
 
     public virtual void Awake()
     {
@@ -65,17 +65,20 @@ public abstract class Evaluator : MonoBehaviour
         Collider2D targetCollider = Physics2D.OverlapBox(checkCollider.transform.position, checkCollider.bounds.size, 0f, targetLayer);
         if (targetCollider == null) return null;
 
-        // check only player
+        // check player
         PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
-        if (player == null) return null;
-        if (player.IsDead) return null;
-
-        // do additional event
-        if (customEvaluationEvent != null)
+        if (player)
         {
-            // 플레이어의 타겟 포인트 설정
-            Vector3 playerPos = player.transform.position + new Vector3(0f, player.BodyCollider.bounds.extents.y * 1.5f, 0f);
-            customEvaluationEvent(playerPos);
+            if (!player.IsDead)
+            {
+                // do additional event
+                if (evaluationEvent != null)
+                {
+                    // 플레이어의 타겟 포인트 설정
+                    Vector3 playerPos = player.transform.position + new Vector3(0f, player.BodyCollider.bounds.extents.y * 1.5f, 0f);
+                    evaluationEvent(playerPos);
+                }
+            }
         }
 
         // return target collider

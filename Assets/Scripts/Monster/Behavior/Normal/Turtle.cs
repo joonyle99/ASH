@@ -7,8 +7,8 @@ public sealed class Turtle : MonsterBehavior
 
         if (CurrentStateIs<GroundMoveState>())
         {
-            if (MonsterMovementModule)
-                MonsterMovementModule.GroundWalking();
+            if (GroundMovementModule)
+                GroundMovementModule.GroundWalking();
         }
     }
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
@@ -23,13 +23,13 @@ public sealed class Turtle : MonsterBehavior
 
         // Change to Hurt State
         if (CurrentState is IHurtableState)
-            Animator.SetTrigger("Hurt");
+            SetAnimatorTrigger("Hurt");
 
         return IAttackListener.AttackResult.Success;
     }
-    public override void Die(bool isDeathEffect = true)
+    public override void Die(bool isHitBoxDisable = true, bool isDeathEffect = true)
     {
-        base.Die(false);
+        base.Die(false, false);
 
         // Trigger -> Collision
         SetHitBoxStepable(true);

@@ -6,56 +6,51 @@ using UnityEngine;
 /// </summary>
 public class GroundChaseEvaluator : Evaluator
 {
-    [Header("Ground Chase Evaluator")]
-    [Space]
-
-    [SerializeField] private int _chaseDir = 1;
+    [field: Header("Ground Chase Evaluator")]
+    [field: Space]
+    [field: SerializeField]
     public int ChaseDir
     {
-        get => _chaseDir;
-        private set => _chaseDir = value;
-    }
-    [SerializeField] private float _maxChaseDistance = 3f;
+        get;
+        private set;
+    } = 1;
+    [field: SerializeField]
     public float MaxChaseDistance
     {
-        get => _maxChaseDistance;
-        private set => _maxChaseDistance = value;
-    }
-
-    [SerializeField] private bool _isChasing;
+        get;
+        private set;
+    } = 3;
+    [field: SerializeField]
     public bool IsChasing
     {
-        get => _isChasing;
-        private set => _isChasing = value;
+        get;
+        private set;
     }
-    [SerializeField] private bool _isTooClose;
+    [field: SerializeField]
     public bool IsTooClose
     {
-        get => _isTooClose;
-        set => _isTooClose = value;
+        get;
+        set;
     }
 
     public override void Awake()
     {
         base.Awake();
 
-        // 타겟 감지 시 자동으로 발생하는 기능 추가
-        customEvaluationEvent -= SetChaseDir;
-        customEvaluationEvent += SetChaseDir;
+        evaluationEvent -= SetChaseDir;
+        evaluationEvent += SetChaseDir;
     }
 
     public override Collider2D IsTargetWithinRange()
     {
         var hasChaseTarget = base.IsTargetWithinRange();
 
-        if (hasChaseTarget) IsChasing = true;
-        else IsChasing = false;
-
+        IsChasing = hasChaseTarget;
         return hasChaseTarget;
     }
 
     public void SetChaseDir(Vector3 targetPoint)
     {
-        _chaseDir = Math.Sign(targetPoint.x - transform.position.x);
+        ChaseDir = Math.Sign(targetPoint.x - transform.position.x);
     }
 }

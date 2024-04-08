@@ -12,12 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f262b5ce52ab7bb4ba07fcaef2784a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!114 &-8746908445737796623
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30,12 +31,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd30a5d6b04cd5840bc5119eafcba3ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 1
-  _targetTransitionParam: Idle
-  _minStayTime: 5
-  _maxStayTime: 5
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1102 &-8374175341227003006
 AnimatorState:
   serializedVersion: 6
@@ -178,12 +180,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 903ea91fbbaea81448c21fe0c1e65fb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1102 &-6660057505160487257
 AnimatorState:
   serializedVersion: 6
@@ -372,12 +375,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd44f86cbe8281b4ea5a5b2234ce143c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1101 &-3254903843589456957
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -729,97 +733,97 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Move
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Attack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: NextAttackNumber
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Slash
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: BodySlam
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Stomp
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Earthquake
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Groggy
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Hurt
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Rage
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Shout
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Die
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: DieEnd
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: StartBlocking
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: EndBlocking
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -873,12 +877,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2022d31a623df24a8982abbaed74730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1101 &646439088908273417
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -964,12 +969,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 904687e24e2b6fe4b98e9a7019023c52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1101 &2850709450441104233
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1157,12 +1163,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f262b5ce52ab7bb4ba07fcaef2784a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1102 &4882509322582488173
 AnimatorState:
   serializedVersion: 6
@@ -1203,12 +1210,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f262b5ce52ab7bb4ba07fcaef2784a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!114 &5594371275432896360
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1221,12 +1229,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f262b5ce52ab7bb4ba07fcaef2784a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1101 &6349460936609936028
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1261,12 +1270,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f262b5ce52ab7bb4ba07fcaef2784a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!114 &6877179253810289066
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1279,12 +1289,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7cd6d4bb1dcefd43b49f9676cfac231, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 1
-  _targetTransitionParam: Move
-  _minStayTime: 0
-  _maxStayTime: 2
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 1
+  targetTransitionParam: Move
+  stayTime:
+    Start: 2
+    End: 2
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1101 &7039698477984059101
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1351,12 +1362,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd44f86cbe8281b4ea5a5b2234ce143c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1102 &7645153092133801931
 AnimatorState:
   serializedVersion: 6
@@ -1427,12 +1439,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99dc662fe8f5f9b48af0c05eca2474ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 1
-  _targetTransitionParam: Idle
-  _minStayTime: 10
-  _maxStayTime: 15
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 1
+  targetTransitionParam: Idle
+  stayTime:
+    Start: 5
+    End: 5
+  targetStayTime: 0
+  elapsedStayTime: 0
 --- !u!1102 &8366935142940052555
 AnimatorState:
   serializedVersion: 6

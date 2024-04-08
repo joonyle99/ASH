@@ -1,61 +1,66 @@
 using UnityEngine;
 
-public class GroundMoveState : Monster_StateBase, IAttackableState, IMovableState, IHurtableState
+public class GroundMoveState : Monster_StateBase, IAttackableState, IHurtableState, IMovingState
 {
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
     }
 
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        if (Monster.GroundChaseEvaluator)
-        {
-            if (!Monster.GroundPatrolEvaluator.IsUsable) return;
+        var chaseEvaluator = Monster.GroundChaseEvaluator;
+        var patrolEvaluator = Monster.GroundPatrolEvaluator;
 
-            var collider = Monster.GroundChaseEvaluator.IsTargetWithinRange();
-            if (collider)
+        if (chaseEvaluator?.IsUsable == true)
+        {
+            // 추격 대상이 범위 안에 있는지 확인
+            var targetCollider = chaseEvaluator.IsTargetWithinRange();
+            if (targetCollider)
             {
                 // 추가로 상대와의 거리가 x보다 가까워지면 추격을 중단
-                var dist = Vector2.Distance(Monster.transform.position, collider.transform.position);
-                if (dist < Monster.GroundChaseEvaluator.MaxChaseDistance)
+                var distSquared = Vector3.SqrMagnitude(targetCollider.transform.position - Monster.transform.position);
+                var maxDistSquared = chaseEvaluator.MaxChaseDistance * chaseEvaluator.MaxChaseDistance;
+                if (distSquared  < maxDistSquared)
                 {
-                    Monster.GroundChaseEvaluator.IsTooClose = true;
+                    chaseEvaluator.IsTooClose = true;
                 }
                 else
                 {
-                    Monster.GroundChaseEvaluator.IsTooClose = false;
-                    Monster.StartSetRecentDirAfterGrounded(Monster.GroundChaseEvaluator.ChaseDir);
+                    chaseEvaluator.IsTooClose = false;
+                    Monster.StartSetRecentDirAfterGrounded(chaseEvaluator.ChaseDir);
                 }
+
+                // 추격 판정기 작동 시 Patrol 판정기는 작동하지 않도록
+                return;
             }
         }
-
-        if (Monster.GroundPatrolEvaluator)
+        
+        if (patrolEvaluator?.IsUsable == true)
         {
-            if (!Monster.GroundPatrolEvaluator.IsUsable) return;
-
             // 범위 바깥에 있는 경우
-            if (Monster.GroundPatrolEvaluator.IsOutOfPatrolRange())
+            if (patrolEvaluator.IsOutOfPatrolRange())
             {
                 // 오른쪽으로 간다
-                if (Monster.GroundPatrolEvaluator.IsLeftOfLeftPoint())
+                if (patrolEvaluator.IsLeftOfLeftPoint())
                     Monster.StartSetRecentDirAfterGrounded(1);
                 // 왼쪽으로 간다
-                else if (Monster.GroundPatrolEvaluator.IsRightOfRightPoint())
+                else if (patrolEvaluator.IsRightOfRightPoint())
                     Monster.StartSetRecentDirAfterGrounded(-1);
             }
+            // 범위 안에 있는 경우
             else
             {
-                // 범위 안에서 가상의 벽에 닿으면 반대 방향으로 간다
-                if (Monster.GroundPatrolEvaluator.IsTargetWithinRange())
+                // 범위 안에서 Patrol 벽에 닿으면 반대 방향으로 간다
+                if (patrolEvaluator.IsTargetWithinRange())
                     Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
             }
         }
     }
 
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
     }

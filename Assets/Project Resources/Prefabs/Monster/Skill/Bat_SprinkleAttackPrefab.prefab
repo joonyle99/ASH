@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1679590112453342977}
   - component: {fileID: 2007017996437501280}
   - component: {fileID: 1446741384077978874}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Bat_SprinkleAttackPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,6 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9675141e3b57ff5479cacc5dad2f5355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actor: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -172,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
-  _duration: 2
+  _duration: 3
   _timeOffsetAfterParticle: 0.2
   _particle: {fileID: 314671143907008369}
   <SpriteRenderers>k__BackingField:
@@ -189,7 +190,7 @@ GameObject:
   - component: {fileID: 4883480419940562082}
   - component: {fileID: 6385406334781356123}
   - component: {fileID: 314671143907008369}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: DisintegrateEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5082,7 +5083,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3359299906351964313}
   - component: {fileID: 8480369605381698619}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}

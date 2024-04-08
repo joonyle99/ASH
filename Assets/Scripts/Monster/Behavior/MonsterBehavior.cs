@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -14,7 +12,6 @@ public class MonsterAttackInfo
         Damage = 1f;
         Force = Vector2.zero;
     }
-
     public MonsterAttackInfo(float damage, Vector2 force)
     {
         Damage = damage;
@@ -33,6 +30,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public Rigidbody2D RigidBody2D { get; private set; }
     public Animator Animator { get; private set; }
     public Collider2D MainBodyCollider2D { get; private set; }
+    public SoundList SoundList { get; private set; }
 
     // State
     public Monster_StateBase CurrentState { get; private set; }
@@ -41,8 +39,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     // Module
     public FloatingPatrolModule FloatingPatrolModule { get; private set; }
-    public MonsterMovementModule MonsterMovementModule { get; private set; }
-    public NavMeshMovementModule NavMeshMovementModule { get; private set; }
+    public GroundMovementModule GroundMovementModule { get; private set; }
+    public FloatingMovementModule FloatingMovementModule { get; private set; }
 
     // Evaluator
     public GroundPatrolEvaluator GroundPatrolEvaluator { get; private set; }
@@ -168,7 +166,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             if (_curHp <= 0)
             {
                 _curHp = 0;
-                Die();
+                Die(true, true);
             }
         }
     }
@@ -206,21 +204,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get;
         private set;
     }
-    public RaycastHit2D GroundRayHit;
-
-    [field: Header("Basic BoxCast Attack")]
-    [field: Space]
-
-    protected LayerMask AttackTargetLayer
-    {
-        get;
-        set;
-    }
-    protected GameObject AttackHitEffect
-    {
-        get;
-        set;
-    }
+    public RaycastHit2D groundRayHit;
 
     [field: Header("ETC")]
     [field: Space]
@@ -232,9 +216,18 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         private set;
     }
 
+    /*
+    [field: SerializeField]
+    public CutscenePlayer_Event CutscenePlayer_Event
+    {
+        get;
+        private set;
+    }
+    */
+
     // animation transition event
-    public delegate bool CustomAnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
-    public CustomAnimTransitionEvent customAnimTransitionEvent;
+    public delegate bool AnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
+    public AnimTransitionEvent animTransitionEvent;
 
     #endregion
 
@@ -246,11 +239,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         RigidBody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
         MainBodyCollider2D = GetComponent<Collider2D>();
+        SoundList = GetComponent<SoundList>();
 
         // Module
         FloatingPatrolModule = GetComponent<FloatingPatrolModule>();
-        MonsterMovementModule = GetComponent<MonsterMovementModule>();
-        NavMeshMovementModule = GetComponent<NavMeshMovementModule>();
+        GroundMovementModule = GetComponent<GroundMovementModule>();
+        FloatingMovementModule = GetComponent<FloatingMovementModule>();
 
         // Evaluator
         GroundPatrolEvaluator = GetComponent<GroundPatrolEvaluator>();
@@ -258,6 +252,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
         CautionEvaluator = GetComponent<CautionEvaluator>();
+
+        // ETC
+        BlinkEffect = GetComponent<BlinkEffect>();
+        // CutscenePlayer_Event = GetComponent<CutscenePlayer_Event>();
 
         // Init State
         InitState();
@@ -305,16 +303,16 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                     // Debug.Log($"{hit.collider.gameObject.name}");
 
                     // 충돌 지점과 이 오브젝트와의 거리가 가장 가까운 놈을 저장
-                    if (GroundRayHit)
+                    if (groundRayHit)
                     {
-                        float newDist = Vector2.Distance(transform.position, hit.point);
-                        float oldDist = Vector2.Distance(transform.position, GroundRayHit.point);
+                        float newDistSquared = Vector2.SqrMagnitude(hit.point - (Vector2)transform.position);
+                        float oldDistSquared = Vector2.SqrMagnitude(groundRayHit.point - (Vector2)transform.position);
 
-                        if (newDist < oldDist)
-                            GroundRayHit = hit;
+                        if (newDistSquared < oldDistSquared)
+                            groundRayHit = hit;
                     }
                     else
-                        GroundRayHit = hit;
+                        groundRayHit = hit;
                 }
 
                 IsGround = hasGroundContact;
@@ -348,6 +346,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             }
         }
     }
+
     public virtual void SetUp()
     {
         // 몬스터의 이름
@@ -396,7 +395,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         return IAttackListener.AttackResult.Success;
     }
-    public virtual void Die(bool isDeathEffect = true)
+    public virtual void Die(bool isHitBoxDisable = true, bool isDeathEffect = true)
     {
         IsDead = true;
 
@@ -404,17 +403,18 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         foreach (AnimatorControllerParameter param in Animator.parameters)
         {
             if (param.name == "Die" && param.type == AnimatorControllerParameterType.Trigger)
-                Animator.SetTrigger("Die");
+                SetAnimatorTrigger("Die");
         }
 
-        DisableAllCollider();
+        // Collider 비활성화
+        DisableCollider(isHitBoxDisable);
 
         if (isDeathEffect)
             DeathEffect();
     }
 
     // Effect
-    public void DeathEffect()
+    private void DeathEffect()
     {
         // death effect
         StartCoroutine(DeathCoroutine());
@@ -433,7 +433,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         yield return new WaitForSeconds(0.2f);  // 자연스러운 효과를 위한 대기
 
         // NavMesh Agent Stop movement
-        var navMeshMoveModule = GetComponent<NavMeshMovementModule>();
+        var navMeshMoveModule = GetComponent<FloatingMovementModule>();
         if (navMeshMoveModule) navMeshMoveModule.SetStopAgent(true, true);
 
         // Generic Stop movement
@@ -468,63 +468,17 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         StartCoroutine(SetRecentDirAfterGrounded(targetDir));
     }
-    public void BasicBoxCastAttack(Vector2 targetPosition, Vector2 attackBoxSize, MonsterAttackInfo attackinfo, LayerMask targetLayer)
-    {
-        RaycastHit2D[] rayCastHits = Physics2D.BoxCastAll(targetPosition, attackBoxSize, 0f, Vector2.zero, 0.0f, targetLayer);
-        foreach (var rayCastHit in rayCastHits)
-        {
-            var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
-            foreach (var listener in listeners)
-            {
-                var forceVector = new Vector2(attackinfo.Force.x * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), attackinfo.Force.y);
-                var attackResult = listener.OnHit(new AttackInfo(attackinfo.Damage, forceVector, AttackType.Monster_SkillAttack));
-
-                if (attackResult == IAttackListener.AttackResult.Success)
-                {
-                    Instantiate(AttackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
-                }
-            }
-        }
-    }
-    public void BasicColliderCastAttack(Collider2D collider, MonsterAttackInfo attackinfo, LayerMask targetLayer)
-    {
-        // layer wrapping to contactFilter
-        ContactFilter2D contactFilter = new ContactFilter2D();
-        contactFilter.SetLayerMask(targetLayer);
-
-        // collider cast
-        List<RaycastHit2D> rayCastHits = new List<RaycastHit2D>();
-        collider.Cast(Vector2.right, contactFilter, rayCastHits, 0);
-
-        foreach (var rayCastHit in rayCastHits)
-        {
-            var listeners = rayCastHit.rigidbody.GetComponents<IAttackListener>();
-            foreach (var listener in listeners)
-            {
-                var forceVector = new Vector2(attackinfo.Force.x * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), attackinfo.Force.y);
-                var attackResult = listener.OnHit(new AttackInfo(attackinfo.Damage, forceVector, AttackType.Monster_SkillAttack));
-
-                if (attackResult == IAttackListener.AttackResult.Success)
-                {
-                    Instantiate(AttackHitEffect, rayCastHit.point + Random.insideUnitCircle * 0.3f, Quaternion.identity);
-                }
-            }
-        }
-    }
 
     // control hitBox & collider
-    public void DisableAllCollider(bool isIncludeMainBody = false, bool isIncludeHitBox = true)
+    public void DisableCollider(bool isHitBoxDisable)
     {
         var colliders = GetComponentsInChildren<Collider2D>(true);
         foreach (var collider in colliders)
         {
-            if (!isIncludeMainBody)
-            {
-                // Main Body Collider2D를 생략하는 옵션
-                if (collider == MainBodyCollider2D) continue;
-            }
+            // Main Body Collider2D를 생략하는 옵션
+            if (collider == MainBodyCollider2D) continue;
 
-            if (!isIncludeHitBox)
+            if (!isHitBoxDisable)
             {
                 // HitBox Collider를 생략하는 옵션
                 var hitBox = collider.GetComponent<MonsterBodyHit>();
@@ -570,11 +524,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             hitBox.IsAttackable = isBool;
     }
 
-    // hit & die
+    // hit
     public void HitProcess(AttackInfo attackInfo, bool onDamage = true, bool onKnockBack = true, bool useBlinkEffect = true)
     {
         StartCoroutine(HitTimer());
-        GetComponent<SoundList>().PlaySFX("SE_Hurt");
+        PlaySound("Hurt");
 
         if (useBlinkEffect)
         {
@@ -598,7 +552,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // superArmor : hurt animation x
         if (IsAttacking) return;
 
-        Animator.SetTrigger("Hurt");
+        SetAnimatorTrigger("Hurt");
     }
     private IEnumerator HitTimer()
     {
@@ -639,14 +593,34 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState)
     {
         // 애니메이션 전이 조건이 있는 경우 조건을 만족할 때까지 대기
-        if (customAnimTransitionEvent != null)
-            yield return new WaitUntil(() => customAnimTransitionEvent(targetTransitionParam, currentState));
+        if (animTransitionEvent != null)
+            yield return new WaitUntil(() => animTransitionEvent(targetTransitionParam, currentState));
 
         Animator.SetTrigger(targetTransitionParam);
     }
     public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState)
     {
         StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState));
+    }
+    
+    /*
+    // Cutscene
+    public void Play_CutscenePlayerEvent()
+    {
+        if (CutscenePlayer_Event)
+            CutscenePlayer_Event.Play();
+    }
+    */
+
+    // Sound
+    public void PlaySound(string key)
+    {
+        SoundList.PlaySFX(key);
+    }
+    // Animator
+    public void SetAnimatorTrigger(string key)
+    {
+        Animator.SetTrigger(key);
     }
 
     #endregion

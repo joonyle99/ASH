@@ -31,10 +31,10 @@ public class Bat : MonsterBehavior
     {
         base.Start();
 
-        if (NavMeshMovementModule)
+        if (FloatingMovementModule)
         {
-            NavMeshMovementModule.SetSpeed(MoveSpeed);
-            NavMeshMovementModule.SetAcceleration(Acceleration);
+            FloatingMovementModule.SetSpeed(MoveSpeed);
+            FloatingMovementModule.SetAcceleration(Acceleration);
         }
     }
 
@@ -58,7 +58,7 @@ public class Bat : MonsterBehavior
             particle.Shoot(force);
         }
 
-        GetComponent<SoundList>().PlaySFX("SE_Bat");
+        PlaySound("Sprinkle");
     }
 
     void OnDrawGizmosSelected()

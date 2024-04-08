@@ -1,13 +1,13 @@
 using UnityEngine;
 
-public class FloatingMoveState : Monster_StateBase, IAttackableState, IMovableState, IHurtableState
+public class FloatingMoveState : Monster_StateBase, IAttackableState, IHurtableState, IMovingState
 {
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
     }
 
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
@@ -18,10 +18,10 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IMovableSt
             // Target Within Range
             if (Monster.FloatingChaseEvaluator.IsTargetWithinRange())
             {
-                if (Monster.NavMeshMovementModule)
+                if (Monster.FloatingMovementModule)
                 {
                     // Move to Target for Chase
-                    Monster.NavMeshMovementModule.MoveToDestination(Monster.FloatingChaseEvaluator.TargetPosition);
+                    Monster.FloatingMovementModule.MoveToDestination(Monster.FloatingChaseEvaluator.TargetPosition);
                 }
 
                 return;
@@ -33,15 +33,15 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IMovableSt
             // Patrol Point Update
             Monster.FloatingPatrolModule.UpdatePatrolPoint();
 
-            if (Monster.NavMeshMovementModule)
+            if (Monster.FloatingMovementModule)
             {
                 // Move to Target for Patrol
-                Monster.NavMeshMovementModule.MoveToDestination(Monster.FloatingPatrolModule.TargetPosition);
+                Monster.FloatingMovementModule.MoveToDestination(Monster.FloatingPatrolModule.TargetPosition);
             }
         }
     }
 
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
     }

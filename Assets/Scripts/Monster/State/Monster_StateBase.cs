@@ -33,10 +33,10 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     // Monster Behavior
     public MonsterBehavior Monster { get; private set; }
 
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Monster = animator.GetComponent<MonsterBehavior>();     // Get Monster Behavior
-        Monster.UpdateState(this);                              // Update Monster State
+        Monster = animator.GetComponent<MonsterBehavior>();     // Get Monster Behavior when State Enter
+        Monster.UpdateState(this);                              // Update Monster State when State Enter
 
         if (isAutoStateTransition)
         {
@@ -44,15 +44,15 @@ public abstract class Monster_StateBase : StateMachineBehaviour
             targetStayTime = stayTime.Random();
         }
 
-        if (Monster.NavMeshMovementModule)
+        if (Monster.FloatingMovementModule)
         {
             // NavMesh Agent Stop
-            if (Monster.CurrentState is not IMovableState)
-                Monster.NavMeshMovementModule.SetStopAgent(true, false);
+            if (Monster.CurrentState is not IMovingState)
+                Monster.FloatingMovementModule.SetStopAgent(true, false);
         }
     }
 
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         // auto change to next state
         if (isAutoStateTransition)
@@ -66,13 +66,13 @@ public abstract class Monster_StateBase : StateMachineBehaviour
         }
     }
 
-    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (Monster.NavMeshMovementModule)
+        if (Monster.FloatingMovementModule)
         {
             // NavMesh Agent Resume
-            if (Monster.CurrentState is not IMovableState)
-                Monster.NavMeshMovementModule.SetStopAgent(false, false);
+            if (Monster.CurrentState is not IMovingState)
+                Monster.FloatingMovementModule.SetStopAgent(false, false);
         }
 
         if (isAutoStateTransition)

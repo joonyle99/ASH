@@ -1251,6 +1251,7 @@ GameObject:
   - component: {fileID: 3124748255850639288}
   - component: {fileID: 1621067903612610556}
   - component: {fileID: 1621067903612610559}
+  - component: {fileID: 5885552443500036374}
   m_Layer: 11
   m_Name: Monster_Mushroom
   m_TagString: Untagged
@@ -1384,8 +1385,6 @@ MonoBehaviour:
   <BlinkEffect>k__BackingField: {fileID: 0}
   _targetDieTime: 4
   _elapsedDieTime: 0
-  isDoneCutscene: 0
-  cutScene: {fileID: 0}
 --- !u!114 &153955686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1418,7 +1417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
-  _duration: 2
+  _duration: 3
   _timeOffsetAfterParticle: 0.2
   _particle: {fileID: 0}
   <SpriteRenderers>k__BackingField:
@@ -1443,7 +1442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_Hurt
+  - _key: Hurt
     _clip: {fileID: 8300000, guid: 3ae94ecee806e984a8ef72c269bb8200, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -1462,6 +1461,20 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &5885552443500036374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621067903612610548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b253cb87c67921f4fb6a3e7a5cf9b691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasExecutedCutscene: 0
+  cutScene: {fileID: 0}
 --- !u!1 &1621067903666761739
 GameObject:
   m_ObjectHideFlags: 0
@@ -1668,7 +1681,7 @@ GameObject:
   - component: {fileID: 5864509507176187490}
   - component: {fileID: 2342239083866205033}
   - component: {fileID: 5885552443500036368}
-  - component: {fileID: 5885552443500036364}
+  - component: {fileID: 839993801014122013}
   m_Layer: 0
   m_Name: Devour
   m_TagString: Untagged
@@ -1738,7 +1751,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
---- !u!114 &5885552443500036364
+--- !u!114 &839993801014122013
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1750,6 +1763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51e96c52b0d54e44f8d12a9cf8a72833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actor: {fileID: 1621067903612610058}
   targetLayer:
     serializedVersion: 2
     m_Bits: 256

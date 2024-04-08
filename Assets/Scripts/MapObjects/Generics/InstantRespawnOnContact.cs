@@ -19,7 +19,7 @@ public class InstantRespawnOnContact : TriggerZone
             // ∞≈∫œ¿Ã∏¶ ªÁ∏¡Ω√≈≤¥Ÿ
             var turtle = activator.GetComponent<Turtle>();
             if (turtle)
-                turtle.Die();
+                turtle.Die(false, false);
         }
     }
 }

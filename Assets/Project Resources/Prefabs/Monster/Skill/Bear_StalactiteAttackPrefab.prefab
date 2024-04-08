@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 751112767}
   - component: {fileID: 751112766}
   - component: {fileID: 751112765}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: DisintegrateEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26,14 +26,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 751112764}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -28.664354, y: -9.434313, z: 0}
-  m_LocalScale: {x: 2.099604, y: 2.099604, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.8, z: 0}
+  m_LocalScale: {x: 0.63761, y: 0.63761, z: 0.63761}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6190995042310891286}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &751112767
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -4907,8 +4907,8 @@ GameObject:
   - component: {fileID: 6190995042310891285}
   - component: {fileID: 6190995042310891284}
   - component: {fileID: 6190995042310891283}
-  - component: {fileID: -3918131033243830647}
-  m_Layer: 0
+  - component: {fileID: -2281094838506855948}
+  m_Layer: 23
   m_Name: Bear_StalactiteAttackPrefab
   m_TagString: Stalactite
   m_Icon: {fileID: 0}
@@ -4924,7 +4924,7 @@ Transform:
   m_GameObject: {fileID: 4981769418987962229}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5493685, y: 0.5493685, z: 1.1534562}
+  m_LocalScale: {x: 0.43283096, y: 0.43283096, z: 0.90877354}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1250883760959808914}
@@ -4991,26 +4991,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562d96777a39c6d478f918bede02a672, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillTargetLayer:
+  actor: {fileID: 0}
+  targetLayer:
     serializedVersion: 2
     m_Bits: 256
-  _skillDestroyLayer:
+  damage: 1
+  forceX: 7
+  forceY: 10
+  hitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+  destroyLayer:
     serializedVersion: 2
-    m_Bits: 2056
-  _skillDamage: 1
-  _skillForceX: 7
-  _skillForceY: 10
-  _hitEffectPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
-  _colideSound:
+    m_Bits: 2057
+  effectDelay: 0.2
+  colliderSound:
     _key: 
-    _clip: {fileID: 8300000, guid: 83f24ee06310fbd4989850c7860204ec, type: 3}
+    _clip: {fileID: 0}
     _volumeType: 0
     _volumeA: 1
     _volumeB: 1
-    _pitchType: 1
-    _pitchA: 0.6
+    _pitchType: 0
+    _pitchA: 1
     _pitchB: 1
---- !u!114 &-3918131033243830647
+--- !u!114 &-2281094838506855948
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5019,17 +5021,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 4981769418987962229}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02a8288930774944a998fe23a741c463, type: 3}
+  m_Script: {fileID: 11500000, guid: a8db120a4cad9594697e4db079395c12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _disintegrateMaterial: {fileID: 2100000, guid: f223424763115e24a8f11ba946531d72, type: 2}
-  _duration: 2
+  _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
+  _duration: 3
   _timeOffsetAfterParticle: 0.2
   _particle: {fileID: 751112765}
-  _heightRange:
-    Start: -3
-    End: 0
-  _spriteRenderers:
+  <SpriteRenderers>k__BackingField:
   - {fileID: 4593838716533725837}
 --- !u!1 &5326780676511029834
 GameObject:
@@ -5041,7 +5040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1250883760959808914}
   - component: {fileID: 4593838716533725837}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: layer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

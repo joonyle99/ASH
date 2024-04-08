@@ -11,21 +11,15 @@ public class FloatingChaseEvaluator : Evaluator
     {
         base.Awake();
 
-        // 타겟 감지 시 자동으로 발생하는 기능 추가
-        customEvaluationEvent -= SetTarget;
-        customEvaluationEvent += SetTarget;
-    }
-
-    public override Collider2D IsTargetWithinRange()
-    {
-        return base.IsTargetWithinRange();
+        evaluationEvent -= ChangeTarget;
+        evaluationEvent += ChangeTarget;
     }
 
     /// <summary>
     /// NavMesh의 타겟을 설정한다
     /// </summary>
     /// <param name="targetPoint"></param>
-    private void SetTarget(Vector3 targetPoint)
+    private void ChangeTarget(Vector3 targetPoint)
     {
         // 추격 타겟을 설정한다
         TargetPosition = targetPoint;

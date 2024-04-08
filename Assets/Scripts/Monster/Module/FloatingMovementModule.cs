@@ -5,7 +5,7 @@ using UnityEngine.AI;
 /// Nav Mesh Agent를 이용한 특수한 이동 모듈
 /// Monster Movement Module와 함께 사용하지 않는다
 /// </summary>
-public class NavMeshMovementModule : MonoBehaviour
+public class FloatingMovementModule : MonoBehaviour
 {
     private NavMeshAgent _agent;
 

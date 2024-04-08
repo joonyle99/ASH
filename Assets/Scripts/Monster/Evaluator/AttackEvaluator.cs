@@ -10,9 +10,8 @@ public class AttackEvaluator : Evaluator
     {
         base.Awake();
 
-        // 타겟 감지 시 자동으로 발생하는 기능 추가
-        customEvaluationEvent -= ChangeDir;
-        customEvaluationEvent += ChangeDir;
+        evaluationEvent -= ChangeDir;
+        evaluationEvent += ChangeDir;
     }
 
     private void ChangeDir(Vector3 targetPoint)

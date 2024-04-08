@@ -8,17 +8,12 @@ public class Mushroom : MonsterBehavior, ILightCaptureListener
     [SerializeField] private float _targetDieTime = 4f;
     [SerializeField] private float _elapsedDieTime;
 
-    [Space]
-
-    public bool isDoneCutscene;
-    public CutscenePlayer cutScene;
-
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {
         if (CurrentStateIs<Monster_IdleState>())
         {
             // 빛에 닿으면 숨는다
-            Animator.SetTrigger("Hide");
+            SetAnimatorTrigger("Hide");
         }
     }
 
@@ -28,7 +23,7 @@ public class Mushroom : MonsterBehavior, ILightCaptureListener
 
         if (_elapsedDieTime > _targetDieTime)
         {
-            Die();
+            Die(true, true);
         }
 
         // 자동 전환을 막는다
@@ -41,14 +36,5 @@ public class Mushroom : MonsterBehavior, ILightCaptureListener
     public void OnLightExit(LightCapturer capturer, LightSource lightSource)
     {
         _elapsedDieTime = 0f;
-    }
-
-    public void Mushroom_CutScene()
-    {
-        if (!isDoneCutscene && cutScene)
-        {
-            isDoneCutscene = true;
-            cutScene.Play();
-        }
     }
 }

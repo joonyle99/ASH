@@ -51,4 +51,6 @@ public static class MonsterDefine
         GroundFloating,
         Fly,
     }
+
+    public static int BossHealthUnit = 100;
 }

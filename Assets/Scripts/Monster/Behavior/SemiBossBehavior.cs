@@ -2,23 +2,20 @@ using UnityEngine;
 
 public abstract class SemiBossBehavior : MonsterBehavior
 {
-    [Header("SemiBossBehavior")]
-    [Space]
+    [field: Header("SemiBoss Behavior")]
+    [field: Space]
 
-    [Header("Condition")]
-    [Space]
-
-    [SerializeField] private bool _isGroggy;
+    [field: SerializeField]
     public bool IsGroggy
     {
-        get => _isGroggy;
-        set => _isGroggy = value;
+        get;
+        set;
     }
-    [SerializeField] private bool _isRage;
+    [field: SerializeField]
     public bool IsRage
     {
-        get => _isRage;
-        set => _isRage = value;
+        get;
+        set;
     }
 
     public abstract void AttackPreProcess();
