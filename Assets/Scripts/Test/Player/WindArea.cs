@@ -35,7 +35,6 @@ public class WindArea : MonoBehaviour
     public void SetActive()
     {
         gameObject.SetActive(!gameObject.activeSelf);
-        _statePreserver.Save("isActive", gameObject.activeSelf);
     }
 
 /*    private void Start()
@@ -64,13 +63,13 @@ public class WindArea : MonoBehaviour
     private void FixedUpdate()
     {
         if (_isWorking)
-        {       
+        {
             _player.GetComponent<Rigidbody2D>().AddForce(_vector * value, ForceMode2D.Force);
 
-            if(!_player.GetComponent<PlayerBehaviour>().CurrentStateIs<JumpState>())
-            {
-                _player.GetComponent<PlayerBehaviour>().ChangeState<JumpState>();
-            }
+            *//*            if (!_player.GetComponent<PlayerBehaviour>().CurrentStateIs<JumpState>())
+                        {
+                            _player.GetComponent<PlayerBehaviour>().ChangeState<JumpState>();
+                        }*//*
         }
     }
 
