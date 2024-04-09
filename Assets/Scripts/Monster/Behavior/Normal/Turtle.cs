@@ -15,9 +15,10 @@ public sealed class Turtle : MonsterBehavior
     {
         // ** 거북이는 Dead 상태에서도 Hit가 가능하다 **
 
-        // Turtle Hit Process
+        // 숨거나 사망 상태에서 피격 처리
         if (IsHiding || IsDead)
             HitProcess(attackInfo, false, true, false);
+        // 일반적인 상태의 피격 처리
         else
             HitProcess(attackInfo, false, true, true);
 

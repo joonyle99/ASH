@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BossClearColorChangePlayer : MonoBehaviour
@@ -13,12 +12,12 @@ public class BossClearColorChangePlayer : MonoBehaviour
 
     void Awake()
     {
+        // 씬에 존재하는 모든 BossClearColorChange 컴포넌트를 찾아서 초기화한다
         _changeTargets = FindObjectsOfType<BossClearColorChange>();
         foreach (var target in _changeTargets)
-        {
             target.Initialize(_material);
-        }
     }
+
     public void PlayEffect()
     {
         StartCoroutine(PlayEffectCoroutine());
@@ -28,13 +27,11 @@ public class BossClearColorChangePlayer : MonoBehaviour
         float eTime = 0f;
         while (eTime < _duration)
         {
-            yield return null;
-            eTime += Time.deltaTime;
-
             foreach (var target in _changeTargets)
-            {
                 target.SetProgress(eTime / _duration);
-            }
+
+            eTime += Time.deltaTime;
+            yield return null;
         }
 
         isEndEffect = true;

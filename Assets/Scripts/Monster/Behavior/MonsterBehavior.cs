@@ -47,7 +47,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public GroundChaseEvaluator GroundChaseEvaluator { get; private set; }
     public FloatingChaseEvaluator FloatingChaseEvaluator { get; private set; }
     public AttackEvaluator AttackEvaluator { get; private set; }
-    public CautionEvaluator CautionEvaluator { get; private set; }
 
     [field: Header("Condition")]
     [field: Space]
@@ -166,7 +165,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             if (_curHp <= 0)
             {
                 _curHp = 0;
-                Die(true, true);
+                Die(true, true);        // 기본적으로 몬스터 사망 시, HitBox 비활성화, DeathEffect 실행
             }
         }
     }
@@ -242,11 +241,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         GroundChaseEvaluator = GetComponent<GroundChaseEvaluator>();
         FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
-        CautionEvaluator = GetComponent<CautionEvaluator>();
 
         // ETC
         BlinkEffect = GetComponent<BlinkEffect>();
-        // CutscenePlayer_Event = GetComponent<CutscenePlayer_Event>();
 
         // Init State
         InitState();

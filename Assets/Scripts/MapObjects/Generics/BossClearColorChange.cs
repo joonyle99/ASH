@@ -1,17 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BossClearColorChange : MonoBehaviour
 {
     public enum ChangeType
     {
-        Material, OverlayAlpha
+        Material,
+        OverlayAlpha
     }
+
     [SerializeField] ChangeType _changeType;
     [SerializeField] Sprite _changedSprite;
 
     SpriteRenderer _renderer;
+
     public void Initialize(Material material)
     {
         _renderer = GetComponent<SpriteRenderer>();
@@ -19,6 +20,7 @@ public class BossClearColorChange : MonoBehaviour
         {
             _renderer.material = material;
             _renderer.material.SetTexture("_ChangeTex", _changedSprite.texture);
+            _renderer.material.SetFloat("_Progress", 0f);
         }
         else
         {

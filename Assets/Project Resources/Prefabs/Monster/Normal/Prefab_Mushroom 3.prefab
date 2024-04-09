@@ -1251,7 +1251,6 @@ GameObject:
   - component: {fileID: 3124748255850639288}
   - component: {fileID: 1621067903612610556}
   - component: {fileID: 1621067903612610559}
-  - component: {fileID: 5885552443500036374}
   m_Layer: 11
   m_Name: Monster_Mushroom
   m_TagString: Untagged
@@ -1419,7 +1418,8 @@ MonoBehaviour:
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
   _duration: 3
   _timeOffsetAfterParticle: 0.2
-  _particle: {fileID: 0}
+  _particles:
+  - {fileID: 5885552443160089908}
   <SpriteRenderers>k__BackingField:
   - {fileID: 1621067903435944438}
   - {fileID: 1621067902774816758}
@@ -1461,20 +1461,6 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &5885552443500036374
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1621067903612610548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b253cb87c67921f4fb6a3e7a5cf9b691, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hasExecutedCutscene: 0
-  cutScene: {fileID: 0}
 --- !u!1 &1621067903666761739
 GameObject:
   m_ObjectHideFlags: 0

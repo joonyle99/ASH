@@ -26,9 +26,9 @@ public class Frog : MonsterBehavior
     {
         if (currentState is GroundMoveState)
         {
-            if (targetTransitionParam == "Idle" || targetTransitionParam == "Attack")
+            // Idle, Attack 상태로 전이할 때는 땅에 착지한 후 전이
+            if (targetTransitionParam is "Idle" or "Attack")
             {
-                // 땅에 착지한 후 전이
                 return IsGround;
             }
         }

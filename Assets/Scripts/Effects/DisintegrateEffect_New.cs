@@ -7,7 +7,7 @@ public class DisintegrateEffect_New : MonoBehaviour
     [SerializeField] private Material _disintegrateMaterial;
     [SerializeField] private float _duration;
     [SerializeField] private float _timeOffsetAfterParticle = 0.2f;
-    [SerializeField] private ParticleHelper _particle;
+    [SerializeField] private ParticleHelper[] _particles;
 
     [field: Space]
 
@@ -31,9 +31,12 @@ public class DisintegrateEffect_New : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         // ParticleHelper
-        _particle.transform.parent = null;
-        _particle.transform.position = transform.position;
-        _particle.gameObject.SetActive(true);
+        foreach (var particleHelper in _particles)
+        {
+            particleHelper.transform.parent = null;
+            particleHelper.transform.position = transform.position;
+            particleHelper.gameObject.SetActive(true);
+        }
 
         yield return new WaitForSeconds(_timeOffsetAfterParticle);
 

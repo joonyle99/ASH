@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bat : MonsterBehavior

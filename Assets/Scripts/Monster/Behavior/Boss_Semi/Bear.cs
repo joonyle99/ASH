@@ -97,7 +97,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     [Space]
 
-    [Header("VFX")]
+    [Header("Die End VFX")]
     [Space]
 
     [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;         // 색이 서서히 돌아오는 효과
@@ -384,40 +384,54 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
 
     // effects
-    IEnumerator SlowMotionCoroutine(float duration)
+    public IEnumerator SlowMotionCoroutine(float duration)
     {
         Time.timeScale = 0.3f;
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1f;
     }
-    public void StartDisintegrateEffect()
+    public void StartAfterDeath()
     {
-        StartCoroutine(DisintegrateEffectCoroutine());
+        StartCoroutine(AfterDeathCoroutine());
     }
-    public IEnumerator DisintegrateEffectCoroutine()
+    public IEnumerator AfterDeathCoroutine()
     {
-        // 사라지는 효과 시작
-        foreach (var effect in DisintegrateEffects)
-        {
-            effect.gameObject.SetActive(true);
-            effect.Play();
-        }
+        yield return StartCoroutine(ChangeImageCoroutine());
 
+        yield return StartCoroutine(ChangeBackgroundCoroutine());
+
+        yield return StartCoroutine(DisintegrateCoroutine());
+    }
+    public IEnumerator ChangeImageCoroutine()
+    {
+        // 사망 이미지로 변경하기 위한 가림막 효과
+        foreach (var effect in DisintegrateEffects)
+            effect.gameObject.SetActive(true);  // play on awake effect
+
+        // 파티클이 어느정도 나올때까지 대기
         var endParticleTime = DisintegrateEffects[0].main.duration;
-        yield return new WaitForSeconds(endParticleTime / 1.5f);
+        yield return new WaitForSeconds(endParticleTime / 2f);
 
         // 넉다운 이미지로 변경
         SetAnimatorTrigger("DieEnd");
 
         yield return new WaitForSeconds(5f);
-
+    }
+    public IEnumerator ChangeBackgroundCoroutine()
+    {
         // 색이 서서히 돌아오는 효과 시작
         bossClearColorChangeEffect.PlayEffect();
 
-        // 노래 끄자
+        // 배경음악 정지
         SoundManager.Instance.StopBGM();
 
         yield return new WaitUntil(() => bossClearColorChangeEffect.isEndEffect);
+    }
+    public IEnumerator DisintegrateCoroutine()
+    {
+        var effect = GetComponent<DisintegrateEffect_New>();
+        effect.Play();
+        yield return new WaitUntil(() => effect.IsEffectDone);
     }
 
     #endregion
