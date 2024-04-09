@@ -18,6 +18,9 @@ public abstract class Monster_Skill : MonoBehaviour
 
     [SerializeField] protected GameObject hitEffect;
 
+    protected delegate void MosnterSkillEvent();
+    protected MosnterSkillEvent monsterSkillEvent;
+
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         // 스킬 타겟 레이어와 충돌
@@ -45,6 +48,7 @@ public abstract class Monster_Skill : MonoBehaviour
                     {
                         Vector2 playerPos = player.transform.position;
                         Instantiate(hitEffect, playerPos + Random.insideUnitCircle * 0.3f, Quaternion.identity);
+                        monsterSkillEvent?.Invoke();
                     }
                 }
             }

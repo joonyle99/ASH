@@ -1668,6 +1668,7 @@ GameObject:
   - component: {fileID: 2342239083866205033}
   - component: {fileID: 5885552443500036368}
   - component: {fileID: 839993801014122013}
+  - component: {fileID: 5885552443500036364}
   m_Layer: 10
   m_Name: Devour
   m_TagString: Untagged
@@ -1757,6 +1758,21 @@ MonoBehaviour:
   forceX: 7
   forceY: 10
   hitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
+  _cutscenePlayerList: {fileID: 5885552443500036364}
+--- !u!114 &5885552443500036364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5331753062976157993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b2e3d95dc54be64c939388064af2c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cutscenePlayers:
+  - {fileID: 0}
 --- !u!1 &5885552443160089909
 GameObject:
   m_ObjectHideFlags: 0

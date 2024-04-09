@@ -235,6 +235,7 @@ GameObject:
   - component: {fileID: 6195014887653608503}
   - component: {fileID: 68886007787193404}
   - component: {fileID: 68886007787193405}
+  - component: {fileID: 68886008199415118}
   m_Layer: 11
   m_Name: Monster_Bear
   m_TagString: Untagged
@@ -415,6 +416,9 @@ MonoBehaviour:
   - {fileID: 5403583929826336060}
   - {fileID: 5403583928566379217}
   - {fileID: 5403583929368315107}
+  _cutscenePlayerList: {fileID: 0}
+  _earthquakeCount: 0
+  _totalHitCount: 0
 --- !u!114 &57872128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -617,6 +621,23 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &68886008199415118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68886007787193795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b2e3d95dc54be64c939388064af2c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cutscenePlayers:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &68886007898307181
 GameObject:
   m_ObjectHideFlags: 0
