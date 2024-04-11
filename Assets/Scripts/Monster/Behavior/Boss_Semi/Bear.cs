@@ -108,25 +108,18 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
     [Space]
 
+    [SerializeField]
     private bool _isLightingGuide;
     [SerializeField] private int _earthquakeCount;
     public int EarthquakeCount
     {
         get => _earthquakeCount;
-        private set
-        {
-            _earthquakeCount = value;
-
-            if (_earthquakeCount >= 3 && !_isLightingGuide)
-            {
-                _isLightingGuide = true;
-
-                // 빛 가이드 컷씬 시작
-                StartCoroutine(PlayNextCutSceneCoroutine());
-            }
-        }
+        private set => _earthquakeCount = value;
     }
 
+    [Space]
+
+    [SerializeField]
     private bool _is9thAttackSuccess;
     [SerializeField] private int _totalHitCount;
     public int TotalHitCount
@@ -141,10 +134,18 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
                 _is9thAttackSuccess = true;
 
                 // 9번째 공격 성공 컷씬 시작
-                StartCoroutine(PlayNextCutSceneCoroutine());
+                StartCoroutine(PlayCutSceneCoroutine("9th Attack Success"));
             }
         }
     }
+
+    [Space]
+    
+    [SerializeField] private GameObject _debugGameObject;
+    [SerializeField] private float _distanceFromTarget;
+    [SerializeField] InputSetterScriptableObject _moveRightInputSetter;
+    [SerializeField] InputSetterScriptableObject _moveLeftInputSetter;
+    [SerializeField] InputSetterScriptableObject _stayStillInputSetter;
 
     #endregion
 
@@ -189,6 +190,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         HitProcess(attackInfo, false, false);
 
         // 체력 감소
+        TotalHitCount++;
         _currentHitCount++;
         CurHp -= MonsterDefine.BossHealthUnit;
 
@@ -212,12 +214,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         SetAnimatorTrigger("Groggy");
 
         if (!_isLightingGuide)
-        {
             _isLightingGuide = true;
-
-            if (_cutscenePlayerList)
-                _cutscenePlayerList.PassNextCutScene();
-        }
     }
 
     // base
@@ -233,7 +230,10 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         }
 
         if (_currentAttack is BearAttackType.EarthQuake)
+        {
             _currentAttackCount = 0;
+            EarthquakeCount++;
+        }
         else
             _currentAttackCount++;
     }
@@ -246,6 +246,12 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         }
         else
             SetToRandomAttack();
+
+        if (EarthquakeCount >= 3 && !_isLightingGuide)
+        {
+            _isLightingGuide = true;
+            StartCoroutine(PlayCutSceneCoroutine("Lighting Guide"));
+        }
     }
     public override void GroggyPreProcess()
     {
@@ -263,7 +269,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         // 몬스터의 Body HitBox를 켠다 (플레이어를 타격할 수 있다)
         SetHitBoxAttackable(true);
 
-        TotalHitCount += _currentHitCount;
         _currentHitCount = 0;
 
         if (IsRage)
@@ -419,8 +424,6 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
 
         // create wave
         GenerateGroundWave();
-
-        EarthquakeCount++;
     }
     public void GenerateGroundWave()
     {
@@ -442,10 +445,39 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
     public void StartAfterDeath()
     {
+        // 병렬적으로 코루틴을 실행
+        StartCoroutine(PlayerMoveCoroutine());
         StartCoroutine(AfterDeathCoroutine());
+    }
+    public IEnumerator PlayerMoveCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
 
-        // 플레이어 이동 컷씬 시작
-        _cutscenePlayerList.PlayNextCutScene();
+        var player = SceneContext.Current.Player;
+        var playerPosX = player.transform.position.x;
+        var bearToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
+        var targetPosX = transform.position.x + (bearToPlayerDir) * _distanceFromTarget;
+
+        // debug code
+        Instantiate(_debugGameObject, new Vector3(targetPosX, transform.position.y, transform.position.z),
+            Quaternion.identity);
+
+        var playerMoveDir1 = System.Math.Sign(targetPosX - playerPosX);
+        yield return StartCoroutine(MoveCoroutine(playerMoveDir1, targetPosX));
+
+        // 만약 플레이어가 뒤돌고 있다면 방향을 돌려준다
+        if (bearToPlayerDir == player.RecentDir)
+        {
+            var playerMoveDir2 = (-1) * playerMoveDir1;
+            yield return StartCoroutine(MoveCoroutine(playerMoveDir2, targetPosX + playerMoveDir2 * 0.5f));
+        }
+
+        InputManager.Instance.ChangeInputSetter(_stayStillInputSetter);
+    }
+    public IEnumerator MoveCoroutine(int moveDir, float targetPosX)
+    {
+        InputManager.Instance.ChangeInputSetter(moveDir > 0 ? _moveRightInputSetter : _moveLeftInputSetter);
+        yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.1f);
     }
     public IEnumerator AfterDeathCoroutine()
     {
@@ -453,7 +485,7 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         yield return StartCoroutine(ChangeBackgroundCoroutine());
 
         // 사망 컷씬 시작
-        _cutscenePlayerList.PlayNextCutScene();
+        _cutscenePlayerList.PlayCutscene("Bear Die");
     }
     public IEnumerator ChangeImageCoroutine()
     {
@@ -489,11 +521,12 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
         var effect = GetComponent<DisintegrateEffect_New>();
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
+        Destroy(transform.root ? transform.root.gameObject : gameObject);
     }
-    public IEnumerator PlayNextCutSceneCoroutine()
+    public IEnumerator PlayCutSceneCoroutine(string name)
     {
         yield return new WaitUntil(() => CurrentStateIs<Monster_IdleState>());
-        _cutscenePlayerList.PlayNextCutScene();
+        _cutscenePlayerList.PlayCutscene(name);
     }
 
     #endregion

@@ -46,16 +46,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] ParticleHelper _dashEffect;
     [SerializeField] ParticleHelper _dashTrailEffect;
 
+    [Header("ETC")]
+    [Space]
+
+    [SerializeField] CapsuleCollider2D _bodyCollider;
+    [SerializeField] Rigidbody2D _handRigidbody;
+
     // Controller
     PlayerAttackController _playerAttackController;
     InteractionController _interactionController;
     PlayerMovementController _playerMovementController;
     LightController _lightController;
     HeadAimController _headAimContoller;
-
-    // rigidbody and collider
-    CapsuleCollider2D _bodyCollider;
-    Rigidbody2D _handRigidbody;
 
     // Sound List
     SoundList _soundList;

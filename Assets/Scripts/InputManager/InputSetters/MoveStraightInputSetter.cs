@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Move Straight InputSetter", menuName = "InputSetters/Move Straight")]
 public class MoveStraightInputSetter : InputSetterScriptableObject
@@ -14,5 +12,4 @@ public class MoveStraightInputSetter : InputSetterScriptableObject
         state.Movement = new Vector2(_direction == Direction.Left ? -1 : 1, 0);
         return state;
     }
-
 }

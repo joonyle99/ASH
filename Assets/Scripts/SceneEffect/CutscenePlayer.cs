@@ -72,5 +72,4 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
         }
         IsPlaying = false;
     }
-
 }

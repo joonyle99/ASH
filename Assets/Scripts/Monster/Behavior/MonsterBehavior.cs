@@ -405,15 +405,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private void DeathEffect()
     {
         // death effect
-        StartCoroutine(DeathCoroutine());
-    }
-    private IEnumerator DeathCoroutine()
-    {
-        // DeathEffectCoroutine가 끝날 때까지 대기
-        yield return StartCoroutine(DeathEffectCoroutine());
-
-        if (transform.root) Destroy(transform.root.gameObject);
-        else Destroy(gameObject);
+        StartCoroutine(DeathEffectCoroutine());
     }
     protected virtual IEnumerator DeathEffectCoroutine()
     {
@@ -431,6 +423,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // wait until effect done
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
+        Destroy(transform.root ? transform.root.gameObject : gameObject);
     }
 
     // basic

@@ -17,7 +17,7 @@ public class Mushroom_Devour : Monster_Skill
     private void LightCutscene()
     {
         // 컷씬을 재생
-        _cutscenePlayerList.PlayNextCutScene();
+        _cutscenePlayerList.PlayCutscene("Lighting Guide");
 
         // 이벤트를 한 번만 호출하도록 제거
         monsterSkillEvent -= LightCutscene;

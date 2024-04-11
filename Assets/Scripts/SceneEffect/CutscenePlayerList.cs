@@ -1,43 +1,36 @@
-using System.Collections.Generic;
 using UnityEngine;
+
+[System.Serializable]
+public class CutsceneDictionary
+{
+    public string name;
+    public CutscenePlayer cutscenePlayer;
+}
 
 public class CutscenePlayerList : MonoBehaviour
 {
     [SerializeField]
-    private CutscenePlayer[] _cutscenePlayers;
-    private Queue<CutscenePlayer> _cutscenePlayerQueue;
+    private CutsceneDictionary[] _cutsceneDictionary;
 
-    private void Awake()
+    public void PlayCutscene(string name)
     {
-        if (_cutscenePlayers.Length == 0)
-            Debug.LogError("No cutscene player to play");
+        var cutscenePlayer = FindCutscene(name);
 
-        // 배열을 바로 Queue의 생성자에 넘겨주는 것이 더 직관적
-        _cutscenePlayerQueue = new Queue<CutscenePlayer>(_cutscenePlayers);
+        if (cutscenePlayer != null)
+            cutscenePlayer.Play();
+        else
+            Debug.LogError("Cutscene not found: " + name);
     }
 
-    public void PlayNextCutScene()
+    public CutscenePlayer FindCutscene(string name)
     {
-        if (_cutscenePlayerQueue.Count == 0)
-            return;
+        // Find the cutscene player with the given name
+        foreach (CutsceneDictionary cutscene in _cutsceneDictionary)
+        {
+            if (cutscene.name == name)
+                return cutscene.cutscenePlayer;
+        }
 
-        var cutscenePlayer = _cutscenePlayerQueue.Dequeue();
-        cutscenePlayer.Play();
-    }
-
-    public void PassNextCutScene()
-    {
-        if (_cutscenePlayerQueue.Count == 0)
-            return;
-
-        _cutscenePlayerQueue.Dequeue();
-    }
-
-    public void PlayCutscene(int index)
-    {
-        if(index < 0 || index >= _cutscenePlayers.Length)
-            return;
-
-        _cutscenePlayers[index].Play();
+        return null;
     }
 }

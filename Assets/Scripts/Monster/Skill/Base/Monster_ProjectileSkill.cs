@@ -36,14 +36,9 @@ public class Monster_ProjectileSkill : Monster_Skill
 
     private IEnumerator DeathEffectCoroutine(DisintegrateEffect_New effect)
     {
-        // 물리 시뮬레이션 정지
         GetComponent<Rigidbody2D>().simulated = false;
-
-        // 사라짐 이펙트 시작
         effect.Play(effectDelay);
-
         yield return new WaitUntil(() => effect.IsEffectDone);
-
-        Destroy(gameObject);
+        Destroy(transform.root ? transform.root.gameObject : gameObject);
     }
 }
