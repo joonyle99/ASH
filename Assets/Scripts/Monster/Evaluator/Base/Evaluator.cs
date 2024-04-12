@@ -43,8 +43,9 @@ public abstract class Evaluator : MonoBehaviour
     private Coroutine _coolTimeCoroutine;
 
     // 커스텀 판독 이벤트 정의
-    protected delegate void EvaluationEvent(Vector3 targetPoint);
-    protected EvaluationEvent evaluationEvent;
+    protected delegate void EvaluationEvent(Vector3 targetPoint);       // void EvaluationEvent(Vector3 targetPoint)이라는 델리게이트(대리자) 선언
+    protected event EvaluationEvent evaluationEvent;                    // EvaluationEvent 델리게이트를 이벤트로 선언(델리게이트를 외부에서 멋대로 호출하는 문제를 방지
+                                                                        // event 키워드는 외부에서 evaluationEvent(Vector3.back); 와 같이 호출할 수 없도록 막는다
 
     public virtual void Awake()
     {
@@ -88,7 +89,10 @@ public abstract class Evaluator : MonoBehaviour
     private IEnumerator CoolTimeCoroutine()
     {
         IsDuringCoolTime = true;
+
+        // 쿨타임 시간만큼 대기
         yield return new WaitForSeconds(_targetEvaluatorCoolTime);
+
         IsDuringCoolTime = false;
     }
     public virtual void StartEvaluatorCoolTime()

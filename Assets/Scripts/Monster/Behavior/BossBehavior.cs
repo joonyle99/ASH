@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public abstract class SemiBossBehavior : MonsterBehavior
+public abstract class BossBehavior : MonsterBehavior
 {
-    [field: Header("SemiBoss Behavior")]
+    [field: Header("Boss Behavior")]
     [field: Space]
 
     [field: SerializeField]

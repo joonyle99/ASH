@@ -8,8 +8,8 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     [SerializeField] protected bool isAutoStateTransition = false;
     public bool IsAutoStateTransition
     {
-        get { return isAutoStateTransition; }
-        private set { isAutoStateTransition = value; }
+        get => isAutoStateTransition;
+        private set => isAutoStateTransition = value;
     }
 
     [Space]
@@ -23,11 +23,10 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     [Space]
 
     [SerializeField] protected float targetStayTime;
-    [SerializeField] protected float elapsedStayTime;
-    public float ElaspedStayTime
+    [field: SerializeField] public float ElapsedStayTime
     {
-        get { return elapsedStayTime; }
-        set { elapsedStayTime = value; }
+        get;
+        set;
     }
 
     // Monster Behavior
@@ -40,7 +39,7 @@ public abstract class Monster_StateBase : StateMachineBehaviour
 
         if (isAutoStateTransition)
         {
-            elapsedStayTime = 0f;
+            ElapsedStayTime = 0f;
             targetStayTime = stayTime.Random();
         }
 
@@ -57,10 +56,10 @@ public abstract class Monster_StateBase : StateMachineBehaviour
         // auto change to next state
         if (isAutoStateTransition)
         {
-            elapsedStayTime += Time.deltaTime;
-            if (elapsedStayTime > targetStayTime)
+            ElapsedStayTime += Time.deltaTime;
+            if (ElapsedStayTime > targetStayTime)
             {
-                elapsedStayTime = 0f;
+                ElapsedStayTime = 0f;
                 Monster.StartChangeStateCoroutine(targetTransitionParam, Monster.CurrentState);
             }
         }
@@ -77,7 +76,7 @@ public abstract class Monster_StateBase : StateMachineBehaviour
 
         if (isAutoStateTransition)
         {
-            elapsedStayTime = 0f;
+            ElapsedStayTime = 0f;
             targetStayTime = 0f;
         }
     }

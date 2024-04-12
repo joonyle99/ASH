@@ -32,5 +32,8 @@ public class Cutscene
         if (_useLetterbox)
             GameUIManager.CloseLetterbox();
         IsStartted = false;
+
+        // 플레이어를 무적 상태로 만든다
+        SceneContext.Current.Player.IsGodMode = false;
     }
 }

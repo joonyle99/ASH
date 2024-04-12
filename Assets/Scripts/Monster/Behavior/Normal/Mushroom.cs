@@ -29,7 +29,7 @@ public class Mushroom : MonsterBehavior, ILightCaptureListener
         // 자동 전환을 막는다
         if (CurrentState.IsAutoStateTransition)
         {
-            CurrentState.ElaspedStayTime = 0f;
+            CurrentState.ElapsedStayTime = 0f;
         }
     }
 

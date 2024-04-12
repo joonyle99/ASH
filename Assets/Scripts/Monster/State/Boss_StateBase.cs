@@ -1,15 +1,15 @@
 using UnityEngine;
 
-public abstract class SemiBoss_StateBase : Monster_StateBase
+public abstract class Boss_StateBase : Monster_StateBase
 {
-    // SemiBoss Behavior
-    public SemiBossBehavior SemiBoss { get; private set; }
+    // Boss Behavior
+    public BossBehavior Boss { get; private set; }
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        SemiBoss = Monster as SemiBossBehavior;
+        Boss = Monster as BossBehavior;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

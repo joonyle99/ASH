@@ -1,13 +1,10 @@
 using UnityEngine;
 
-public class SemiBoss_GroggyState : SemiBoss_StateBase
+public class Boss_DieState : Monster_DieState
 {
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
-
-        // 무적 해제. 피격될 수 있다.
-        SemiBoss.IsGodMode = false;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

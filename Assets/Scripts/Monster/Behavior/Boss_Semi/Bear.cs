@@ -16,7 +16,7 @@ public enum BearAttackType
     EarthQuake = 10
 }
 
-public class Bear : SemiBossBehavior, ILightCaptureListener
+public class Bear : BossBehavior, ILightCaptureListener
 {
     #region Variable
 
@@ -525,7 +525,12 @@ public class Bear : SemiBossBehavior, ILightCaptureListener
     }
     public IEnumerator PlayCutSceneCoroutine(string name)
     {
-        yield return new WaitUntil(() => CurrentStateIs<Monster_IdleState>());
+        // Debug.Log("9번째 공격 성공, 컷씬 실행을 대기합니다");
+
+        yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
+
+        // Debug.Log("Monster_IdleState이므로 컷씬을 실행합니다");
+
         _cutscenePlayerList.PlayCutscene(name);
     }
 

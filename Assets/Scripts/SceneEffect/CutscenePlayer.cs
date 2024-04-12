@@ -22,6 +22,9 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
         {
             SceneEffectManager.Current.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
             _played = true;
+
+            // 플레이어를 무적 상태로 만든다
+            SceneContext.Current.Player.IsGodMode = true;
         }
     }
     IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
