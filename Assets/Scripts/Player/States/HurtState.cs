@@ -12,7 +12,6 @@ public class HurtState : PlayerState
 
         Player.StartGodModeTimer();
         Player.StartWhiteFlash();
-        // Player.StartBlink();
 
         return true;
     }

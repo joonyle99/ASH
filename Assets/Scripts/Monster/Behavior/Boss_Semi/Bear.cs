@@ -1,5 +1,7 @@
 using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum BearAttackType
@@ -23,38 +25,10 @@ public class Bear : BossBehavior, ILightCaptureListener
     [Header("Bear")]
     [Space]
 
-    [Header("Condition")]
-    [Space]
-
-    [Tooltip("hurt count x health unit = MaxHp")]
-    [SerializeField] private int _finalTargetHurtCount;
-
-    [Space]
-
-    [Header("Attack Type")]
     [Tooltip("1 : Slash Right\r\n2 : Slash Left\r\n3 : BodySlam\r\n4 : Stomp")]
     [SerializeField] private Range _attackTypeRange;
     [SerializeField] private BearAttackType _currentAttack;
     [SerializeField] private BearAttackType _nextAttack;
-
-    [Space]
-
-    [Header("Attack Count")]
-    [Tooltip("Count of attacks for EarthQuake")]
-    [SerializeField] private RangeInt _attackCountRange;
-    [SerializeField] private int _targetAttackCount;
-    [SerializeField] private int _currentAttackCount;
-
-    [Space]
-
-    [Header("Hit Count")]
-    [Tooltip("Count of hits for Groggy state")]
-    [SerializeField] private RangeInt _hitCountRange;
-    [SerializeField] private int _targetHitCount;
-    [SerializeField] private int _currentHitCount;
-
-    [Header("Skill Settings")]
-    [Space]
 
     [Header("Slash")]
     [Space]
@@ -82,6 +56,8 @@ public class Bear : BossBehavior, ILightCaptureListener
     [SerializeField] private Range _createTimeRange;
     [SerializeField] private Range _createSizeRange;
     [SerializeField] private Range _distanceRange;
+    [SerializeField] private float _minDistanceEach;
+    [SerializeField] private List<float> _usedPosX;
 
     [Space]
 
@@ -140,8 +116,7 @@ public class Bear : BossBehavior, ILightCaptureListener
     }
 
     [Space]
-    
-    [SerializeField] private GameObject _debugGameObject;
+
     [SerializeField] private float _distanceFromTarget;
     [SerializeField] InputSetterScriptableObject _moveRightInputSetter;
     [SerializeField] InputSetterScriptableObject _moveLeftInputSetter;
@@ -160,7 +135,6 @@ public class Bear : BossBehavior, ILightCaptureListener
         RandomTargetAttackCount();
         RandomTargetHitCount();
         SetToRandomAttack();
-        _stalactiteCount = Random.Range((int)_normalStalactiteRange.Start, (int)_normalStalactiteRange.End + 1);
     }
 
     public void FixedUpdate()
@@ -178,7 +152,7 @@ public class Bear : BossBehavior, ILightCaptureListener
     {
         base.SetUp();
 
-        MaxHp = _finalTargetHurtCount * MonsterDefine.BossHealthUnit;
+        MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
         CurHp = MaxHp;
     }
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
@@ -191,7 +165,7 @@ public class Bear : BossBehavior, ILightCaptureListener
 
         // 체력 감소
         TotalHitCount++;
-        _currentHitCount++;
+        currentHitCount++;
         CurHp -= MonsterDefine.BossHealthUnit;
 
         CheckHurtState();
@@ -231,15 +205,15 @@ public class Bear : BossBehavior, ILightCaptureListener
 
         if (_currentAttack is BearAttackType.EarthQuake)
         {
-            _currentAttackCount = 0;
+            currentAttackCount = 0;
             EarthquakeCount++;
         }
         else
-            _currentAttackCount++;
+            currentAttackCount++;
     }
     public override void AttackPostProcess()
     {
-        if (_currentAttackCount >= _targetAttackCount)
+        if (currentAttackCount >= targetAttackCount)
         {
             SetToEarthQuake();
             RandomTargetAttackCount();
@@ -269,36 +243,13 @@ public class Bear : BossBehavior, ILightCaptureListener
         // 몬스터의 Body HitBox를 켠다 (플레이어를 타격할 수 있다)
         SetHitBoxAttackable(true);
 
-        _currentHitCount = 0;
+        currentHitCount = 0;
 
         if (IsRage)
             _stalactiteCount = Random.Range((int)_rageStalactiteRange.Start, (int)_rageStalactiteRange.End + 1);
     }
 
     // basic
-    private void RandomTargetAttackCount()
-    {
-        if (_attackCountRange.Start > _attackCountRange.End)
-            Debug.LogError("minTargetCount > maxTargetCount");
-        else if (_attackCountRange.Start < 0)
-            Debug.LogError("minTargetCount < 0");
-        else if (_attackCountRange.End <= 0)
-            Debug.LogError("maxTargetCount <= 0");
-
-        // 4번 ~ 7번 공격 후 지진 공격
-        _targetAttackCount = Random.Range(_attackCountRange.Start, _attackCountRange.End);
-    }
-    private void RandomTargetHitCount()
-    {
-        if (_hitCountRange.Start > _hitCountRange.End)
-            Debug.LogError("minTargetCount > maxTargetCount");
-        else if (_hitCountRange.Start < 0)
-            Debug.LogError("minTargetCount < 0");
-        else if (_hitCountRange.End <= 0)
-            Debug.LogError("maxTargetCount <= 0");
-
-        _targetHitCount = Random.Range(_hitCountRange.Start, _hitCountRange.End);
-    }
     private void SetToRandomAttack()
     {
         int nextAttackNumber = (int)_attackTypeRange.Random();
@@ -315,7 +266,7 @@ public class Bear : BossBehavior, ILightCaptureListener
         if (IsDead) return;
 
         // 그로기 상태 해제되며 피격
-        if (_currentHitCount >= _targetHitCount)
+        if (currentHitCount >= targetHitCount)
         {
             SetAnimatorTrigger("Hurt");
         }
@@ -387,6 +338,12 @@ public class Bear : BossBehavior, ILightCaptureListener
     // stomp
     public void Stomp01_AnimEvent()
     {
+        // set stalactite count
+        _stalactiteCount = Random.Range((int)_normalStalactiteRange.Start, (int)_normalStalactiteRange.End + 1);
+
+        // init stored stalactite pos
+        _usedPosX = new List<float>();
+
         // stomp effect
         Instantiate(_stompEffectPrefab, _stomp.transform.position, Quaternion.identity);
         // stomp sound
@@ -394,24 +351,45 @@ public class Bear : BossBehavior, ILightCaptureListener
 
         // create stalactite
         for (int i = 0; i < _stalactiteCount; ++i)
-            StartCoroutine(CreateStalactite());
+        {
+            StartCoroutine(CreateStalactite(RecentDir));
+        }
     }
-    public IEnumerator CreateStalactite()
+    public IEnumerator CreateStalactite(int dir)
     {
         yield return new WaitForSeconds(_createTimeRange.Random());
 
-        // random pos range
-        float posXInRange = (RecentDir > 0)
-            ? Random.Range(MainBodyCollider2D.bounds.max.x + _distanceRange.Start,
-                MainBodyCollider2D.bounds.max.x + _distanceRange.End)
-            : Random.Range(MainBodyCollider2D.bounds.min.x - _distanceRange.End,
-                MainBodyCollider2D.bounds.min.x - _distanceRange.Start);
-        Vector2 position = new Vector2(posXInRange, _ceilingHeight);
+        // reallocation count limit
+        int posReallocationCount = 0;
+
+        float newPosXInRange;
+        do
+        {
+            // random pos range
+            newPosXInRange = (dir > 0)
+                ? Random.Range(MainBodyCollider2D.bounds.max.x + _distanceRange.Start,
+                    MainBodyCollider2D.bounds.max.x + _distanceRange.End)
+                : Random.Range(MainBodyCollider2D.bounds.min.x - _distanceRange.End,
+                    MainBodyCollider2D.bounds.min.x - _distanceRange.Start);
+
+            posReallocationCount++;
+
+        } while (_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistanceEach) && posReallocationCount <= 10);
+        // List<>: C#에서 제공하는 '제네릭 컬렉션 (<Type> 덕분에, 박싱 / 언박싱을 하지 않음)' 유형 중 하나로, 동적 배열을 구현
+        // Any(): LINQ(Language Integrated Query) 확장 메서드
+        // 컬렉션 내의 요소 중 하나라도 주어진 조건을 만족하는지 확인하는 메서드
+        // 성능상의 이유로 posReallocationCount <= 10로 최대 재할당 횟수를 제한
+
+        // store posX
+        _usedPosX.Add(newPosXInRange);
+
+        // confirm position
+        Vector2 position = new Vector2(newPosXInRange, _ceilingHeight);
 
         // create stalactite
         var stalactite = Instantiate(_stalactitePrefab, position, Quaternion.identity);
-        stalactite.SetActor(this);
         stalactite.transform.localScale *= _createSizeRange.Random();
+        stalactite.SetActor(this);
     }
 
     // earthQuake
@@ -457,10 +435,6 @@ public class Bear : BossBehavior, ILightCaptureListener
         var playerPosX = player.transform.position.x;
         var bearToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
         var targetPosX = transform.position.x + (bearToPlayerDir) * _distanceFromTarget;
-
-        // debug code
-        Instantiate(_debugGameObject, new Vector3(targetPosX, transform.position.y, transform.position.z),
-            Quaternion.identity);
 
         var playerMoveDir1 = System.Math.Sign(targetPosX - playerPosX);
         yield return StartCoroutine(MoveCoroutine(playerMoveDir1, targetPosX));

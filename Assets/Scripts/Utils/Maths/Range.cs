@@ -3,7 +3,7 @@
 /// Range [Start, End)
 /// </summary>
 [System.Serializable]
-struct RangeInt
+public struct RangeInt
 {
     public int Start;
     public int End;
@@ -13,7 +13,6 @@ struct RangeInt
         End = end;
     }
     public bool Contains(int index) => Start <= index && index < End;
-
 }
 
 /// <summary>

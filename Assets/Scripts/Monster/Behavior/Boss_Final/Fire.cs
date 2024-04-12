@@ -1,24 +1,47 @@
 using UnityEngine;
 
+public enum FireAttackType
+{
+    Null = 0,
+
+    // Normal Attack
+
+    // Special Attack
+}
+
 public class Fire : BossBehavior
 {
     public override void AttackPreProcess()
     {
-        throw new System.NotImplementedException();
-    }
 
+    }
     public override void AttackPostProcess()
     {
-        throw new System.NotImplementedException();
-    }
 
+    }
     public override void GroggyPreProcess()
     {
-        throw new System.NotImplementedException();
-    }
 
+    }
     public override void GroggyPostProcess()
     {
-        throw new System.NotImplementedException();
+
+    }
+
+    public void FireFlameBeam_AnimEvent()
+    {
+
+    }
+    public void DropFireball_AnimEvent()
+    {
+
+    }
+    public void MoveAshPillar_AnimEvent()
+    {
+
+    }
+    public void ExplodeFirePillar_AnimEvent()
+    {
+
     }
 }

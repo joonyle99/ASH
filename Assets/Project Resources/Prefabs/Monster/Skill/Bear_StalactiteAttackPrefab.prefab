@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 751112764}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.8, z: 0}
-  m_LocalScale: {x: 0.63761, y: 0.63761, z: 0.63761}
+  m_LocalPosition: {x: 0.09, y: -2.28, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6190995042310891286}
@@ -4945,7 +4945,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.009045064, y: -2.9845412}
+  m_Offset: {x: 0.016471893, y: -2.553786}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -4956,7 +4956,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.2819098, y: 5.47498}
+  m_Size: {x: 1.534421, y: 4.6134696}
   m_EdgeRadius: 0
 --- !u!50 &6190995042310891284
 Rigidbody2D:
@@ -4973,11 +4973,11 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0
-  m_GravityScale: 3
+  m_GravityScale: 4
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &6190995042310891283
 MonoBehaviour:
@@ -5001,17 +5001,17 @@ MonoBehaviour:
   hitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
   destroyLayer:
     serializedVersion: 2
-    m_Bits: 2057
+    m_Bits: 2056
   effectDelay: 0.2
   colliderSound:
     _key: 
-    _clip: {fileID: 0}
+    _clip: {fileID: 8300000, guid: 57efaaac06e80474dbd940a7ca97a839, type: 3}
     _volumeType: 0
     _volumeA: 1
     _volumeB: 1
-    _pitchType: 0
-    _pitchA: 1
-    _pitchB: 1
+    _pitchType: 1
+    _pitchA: 0.8
+    _pitchB: 1.2
 --- !u!114 &-2281094838506855948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5025,9 +5025,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
-  _duration: 3
+  _duration: 2
   _timeOffsetAfterParticle: 0.2
-  _particle: {fileID: 751112765}
+  _particles:
+  - {fileID: 751112765}
   <SpriteRenderers>k__BackingField:
   - {fileID: 4593838716533725837}
 --- !u!1 &5326780676511029834

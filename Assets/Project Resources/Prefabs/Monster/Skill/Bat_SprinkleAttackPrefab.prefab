@@ -33,8 +33,8 @@ Transform:
   m_LocalScale: {x: 0.31608728, y: 0.31608728, z: 0.79021823}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5809433741711211265}
   - {fileID: 3359299906351964313}
+  - {fileID: 5809433741711211265}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -173,9 +173,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
-  _duration: 3
+  _duration: 2
   _timeOffsetAfterParticle: 0.2
-  _particle: {fileID: 314671143907008369}
+  _particles:
+  - {fileID: 314671143907008369}
   <SpriteRenderers>k__BackingField:
   - {fileID: 1679590112453342983}
 --- !u!1 &2053905738643962617
@@ -206,11 +207,11 @@ Transform:
   m_GameObject: {fileID: 2053905738643962617}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.803325, y: 0.803325, z: 0.32133}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1679590112453342976}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &4883480419940562082
 ParticleSystem:
@@ -5103,7 +5104,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1679590112453342976}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!96 &8480369605381698619
 TrailRenderer:

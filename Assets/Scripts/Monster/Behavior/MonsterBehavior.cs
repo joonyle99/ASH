@@ -217,7 +217,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     // animation transition event
     public delegate bool AnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
-    public AnimTransitionEvent animTransitionEvent;
+    public event AnimTransitionEvent animTransitionEvent;
 
     #endregion
 
@@ -328,8 +328,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 {
                     // Debug.Log("공격 범위에 대상이 존재");
 
-                    AttackEvaluator.StartEvaluatorCoolTime();
                     StartChangeStateCoroutine("Attack", CurrentState);
+
+                    // TODO: 쿨타임 부분을 어떻게 해당 State가 끝난 후 시작하도록 할지 고민을 해보자
+                    AttackEvaluator.StartEvaluatorCoolTime();
                 }
             }
         }
@@ -584,15 +586,15 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState));
     }
 
-    // Sound
-    public void PlaySound(string key)
-    {
-        SoundList.PlaySFX(key);
-    }
     // Animator
     public void SetAnimatorTrigger(string key)
     {
         Animator.SetTrigger(key);
+    }
+    // Sound
+    public void PlaySound(string key)
+    {
+        SoundList.PlaySFX(key);
     }
 
     #endregion
