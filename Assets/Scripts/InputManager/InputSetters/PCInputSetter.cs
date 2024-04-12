@@ -39,7 +39,7 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
         state.InteractionKey.Update(_interactionKeyCode);
         state.JumpKey.Update(_jumpKeyCode);
         state.DashKey.Update(_dashKeyCode);
-        state.BasicAttackKey.Update(_basicAttackKeyCode);
+        state.AttackKey.Update(_basicAttackKeyCode);
         state.ShootingAttackKey.Update(_shootingAttackKeyCode);
         state.LightKey.Update(_lightingKeyCode);
 

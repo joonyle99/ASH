@@ -6,29 +6,29 @@ using UnityEditor;
 
 public abstract class StateMachineBase : MonoBehaviour
 {
-    [Header("StateMachineBase")]
-    [Space]
-
-    [SerializeField] private Rigidbody2D _rigidbody;
+    // default components
+    private Rigidbody2D _rigidbody;
     public Rigidbody2D Rigidbody
     {
         get => _rigidbody;
         private set => _rigidbody = value;
     }
-    [SerializeField] private Animator _animator;
+    private Animator _animator;
     public Animator Animator
     {
         get => _animator;
         private set => _animator = value;
     }
 
-    [SerializeField] StateBase _initialState;
+    // states
+    [SerializeField] private StateBase _initialState;
     public StateBase CurrentState { get; private set; }
     public StateBase PreviousState { get; private set; }
 
     protected virtual void Awake()
     {
-
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
     }
     protected virtual void Start()
     {
@@ -37,7 +37,7 @@ public abstract class StateMachineBase : MonoBehaviour
             Debug.LogError($"Initial state of {this.gameObject.name} is missing!");
 #endif
         CurrentState = _initialState;
-        CurrentState.TriggerEnter(this);
+        if (CurrentState != null) CurrentState.TriggerEnter(this);
     }
     protected virtual void Update()
     {
@@ -54,11 +54,13 @@ public abstract class StateMachineBase : MonoBehaviour
         if (ignoreSameState && (nextState == CurrentState))
             return nextState;
 
+        // first exit the current state
         CurrentState.TriggerExit();
 
         PreviousState = CurrentState;
         CurrentState = nextState;
 
+        // second enter the next state
         CurrentState.TriggerEnter(this);
 
         return nextState;
@@ -73,6 +75,7 @@ public abstract class StateMachineBase : MonoBehaviour
     }
 }
 
+/*
 #if UNITY_EDITOR
 [CustomEditor(typeof(StateMachineBase), true), CanEditMultipleObjects]
 public class StateMachineBaseEditor : Editor
@@ -89,3 +92,4 @@ public class StateMachineBaseEditor : Editor
     }
 }
 #endif
+*/

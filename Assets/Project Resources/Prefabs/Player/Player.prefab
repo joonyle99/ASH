@@ -34326,7 +34326,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1081859879
 Transform:
   m_ObjectHideFlags: 0
@@ -34342,7 +34342,7 @@ Transform:
   - {fileID: 998239157}
   - {fileID: 888660483}
   m_Father: {fileID: 1087395793}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!198 &1081859882
 ParticleSystem:
@@ -39179,8 +39179,8 @@ Transform:
   - {fileID: 1876344610}
   - {fileID: 254349088}
   - {fileID: 214444510}
-  - {fileID: 1081859879}
   - {fileID: 1487785936}
+  - {fileID: 1081859879}
   - {fileID: 1960645147}
   - {fileID: 324246712}
   - {fileID: 82296964}
@@ -54147,7 +54147,7 @@ GameObject:
   - component: {fileID: 1487785938}
   - component: {fileID: 1487785937}
   m_Layer: 0
-  m_Name: Attack2Effect
+  m_Name: AttackEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54168,7 +54168,7 @@ Transform:
   - {fileID: 1293635454}
   - {fileID: 1774929830}
   m_Father: {fileID: 1087395793}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!198 &1487785939
 ParticleSystem:
@@ -68714,12 +68714,12 @@ GameObject:
   - component: {fileID: 1960645149}
   - component: {fileID: 1960645148}
   m_Layer: 0
-  m_Name: Attack3Effect
+  m_Name: Attack2Effect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1960645147
 Transform:
   m_ObjectHideFlags: 0
@@ -73697,7 +73697,6 @@ GameObject:
   - component: {fileID: 288488160}
   - component: {fileID: 1181652494}
   - component: {fileID: 1322454706829155597}
-  - component: {fileID: 1322454706829155596}
   - component: {fileID: 1047186074}
   - component: {fileID: 1592143213}
   - component: {fileID: 5733063111376558414}
@@ -73861,16 +73860,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbbedf25f49f0a041ac4515148658ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rigidbody: {fileID: 1322454706829155605}
-  _animator: {fileID: 623491952}
   _initialState: {fileID: 1322454706829155586}
   _maxHp: 10
   _curHp: 0
   _isHurt: 0
   _isGodMode: 0
   _isDead: 0
-  _isCanBasicAttack: 1
-  _isCanJump: 1
+  _isCanAttack: 1
   _isCanDash: 1
   _walkDustEmitter: {fileID: 2188167572188442875}
   _walkDirtEmitter: {fileID: 1876344607}
@@ -73882,20 +73878,6 @@ MonoBehaviour:
   _blinkEffect: {fileID: 0}
   _soundList: {fileID: 0}
   _handRigidbody: {fileID: 7533154066349335788}
---- !u!114 &1322454706829155596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1322454706829173486}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: caa35b2e38448e549ac38921d81fd7da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _inputAdaptSpeed: 6
-  _inputAdaptSpeedInAir: 6
 --- !u!114 &1047186074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73934,7 +73916,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxSpeed: 8
   _acceleration: 37.5
-  _decceleration: 37.5
+  _deceleration: 37.5
 --- !u!114 &5733063111376558414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73950,18 +73932,11 @@ MonoBehaviour:
   _attackableEntityLayer:
     serializedVersion: 2
     m_Bits: 235657
-  _attackHitbox: {fileID: 9170627944668340901}
+  _attackCollider: {fileID: 9170627944668340901}
   _attackDamage: 1
-  _attackPowerX: 8
-  _attackPowerY: 7
-  _targetNextAttackableTime: 1
-  _elapsedNextAttackableTime: 0
-  _basicAttackCount: 0
-  _isBasicAttacking: 0
-  _attackEffects:
-  - {fileID: 1081859880}
-  - {fileID: 1487785937}
-  - {fileID: 1960645148}
+  _attackPowerX: 7
+  _attackPowerY: 10
+  _attackEffects: {fileID: 1487785937}
   _basicAttackImpactPrefab: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
 --- !u!114 &1322454706829155599
 MonoBehaviour:
@@ -74067,9 +74042,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47fe57c77af3df24fa8a92231e6c08e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
   _belowForce: 250
   _slopeThreshold: 70
 --- !u!114 &1322454706829155587
@@ -74084,9 +74056,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 821621d83344c7e46a52179217bd01e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
 --- !u!114 &1322454706829155584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74099,9 +74068,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e616ace9c0778145ae0fc0a5ebd9852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
 --- !u!114 &1322454706829155585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74114,9 +74080,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61d159f0c8c9daa479117832d902c635, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
   _inAirMoveAcceleration: 30
   _maxInAirMoveSpeed: 6
   _fastDropThreshhold: 4
@@ -74134,9 +74097,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d87578dd4d46eb4498d78ef77cdd4400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
   _dashSpeed: 20
   _targetDashDuration: 0.2
   _targetDashCoolTime: 0.7
@@ -74152,9 +74112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 849422a6630c01244ad9f794f30a9230, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
 --- !u!114 &3839760623545100111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74167,9 +74124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3969673444ad65d4fb61f6aa30e9bb66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
   _wallClimbSpeed: 3.7
 --- !u!114 &2070142170
 MonoBehaviour:
@@ -74183,9 +74137,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca0ec07bb3bc6c546b50b915a40da8dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
 --- !u!114 &8597292765040709485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74198,9 +74149,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e8e9be6aed8d2145a0274e5fc750c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
 --- !u!114 &217139139750414663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74213,9 +74161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f999627e3660ea749b53474c61c585eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
   _stayStillSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
   _moveUpDelay: 0.3
   _stayDuration: 0.3
@@ -74234,9 +74179,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3aac3f60fbb1f8a44bcca92042684eb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _animatorParameters:
-    _enterParams: []
-    _exitParams: []
   _stayStillSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
   _spawnDuration: 0.3
 --- !u!114 &3064736143565219573

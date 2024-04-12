@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InAirState : PlayerState
+public class InAirState : PlayerState, IAttackableState
 {
     [Header("InAir Setting")]
 

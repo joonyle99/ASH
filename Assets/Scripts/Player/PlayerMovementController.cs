@@ -1,38 +1,26 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovementController : MonoBehaviour
 {
-    [SerializeField] float _maxSpeed = 8f;
-    [SerializeField] float _acceleration = 15f;
-    [SerializeField] float _decceleration = 15f;
+    [SerializeField] private float _maxSpeed = 8f;
+    [SerializeField] private float _acceleration = 37.5f;
+    [SerializeField] private float _deceleration = 37.5f;
 
-    PlayerBehaviour _player;
+    private HashSet<object> _disableMovementList;
 
-    Vector2 _moveForce;
+    private PlayerBehaviour _player;
+    private Vector2 _moveForce;
 
-    public Vector3 RecentMoveDirection { get; private set; }
-
-    HashSet<object> _disableMovementList = new HashSet<object>();
-
-    public void DisableMovementExternaly(object owner)
-    {
-        _disableMovementList.Add(owner);
-    }
-    public void EnableMovementExternaly(object owner)
-    {
-        _disableMovementList.Remove(owner);
-    }
-
-    void Awake()
+    private void Awake()
     {
         _player = GetComponent<PlayerBehaviour>();
-    }
 
-    void FixedUpdate()
+        _disableMovementList = new HashSet<object>();
+    }
+    private void FixedUpdate()
     {
-        if (!_player.IsGrounded || _player.RawInputs.Movement.x == 0 || _disableMovementList.Count > 0)
+        if (!_player.IsGrounded || !_player.IsMoveXKey || _disableMovementList.Count > 0)
             return;
 
         // 지면의 기울기에 따른 이동 방향 설정
@@ -40,18 +28,31 @@ public class PlayerMovementController : MonoBehaviour
         Vector2 moveDirection = _player.RawInputs.Movement.x > 0f
             ? (-1) * Vector2.Perpendicular(groundNormal)
             : Vector2.Perpendicular(groundNormal);
-        RecentMoveDirection = moveDirection;
 
         // 목표까지의 필요한 속도 계산
         Vector2 targetVelocity = moveDirection * _maxSpeed;
         Vector2 velocityNeeded = targetVelocity - Vector2.Dot(_player.Rigidbody.velocity, moveDirection) * moveDirection;
 
         // 최종적으로 가해줄 힘을 계산
-        float accelRate = (velocityNeeded.magnitude > 0.01f) ? _acceleration : _decceleration;
-        _moveForce = velocityNeeded * accelRate;
+        float accelRate = (velocityNeeded.magnitude > 0.01f) ? _acceleration : _deceleration;
+        Vector2 moveForce = velocityNeeded * accelRate;
 
-        _player.Rigidbody.AddForce(_moveForce);
+        // for gizmos
+        _moveForce = moveForce;
+
+        // 플레이어에게 힘을 가함
+        _player.Rigidbody.AddForce(moveForce);
     }
+
+    public void DisableMovementExternal(object owner)
+    {
+        _disableMovementList.Add(owner);
+    }
+    public void EnableMovementExternal(object owner)
+    {
+        _disableMovementList.Remove(owner);
+    }
+
     private void OnDrawGizmosSelected()
     {
         // 플레이어가 이동하는 방향
@@ -62,7 +63,6 @@ public class PlayerMovementController : MonoBehaviour
 
             Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position, transform.position + new Vector3(_player.Rigidbody.velocity.x, _player.Rigidbody.velocity.y, 0));
-
         }
     }
 }

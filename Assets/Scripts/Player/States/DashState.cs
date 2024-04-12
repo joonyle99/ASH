@@ -12,34 +12,30 @@ public class DashState : PlayerState
     [SerializeField] float _targetDashCoolTime = 0.7f;
 
     private Vector2 _dashDir;
-    private float _orginGravity;
+    private float _originGravity;
     private float _elapsedDashTime;
-    public bool IsDashing { get; private set; }
 
     protected override bool OnEnter()
     {
         Player.Animator.SetBool("IsDash", true);
 
-        ExcuteDash();
+        PreProcess();
 
         return true;
     }
 
     protected override bool OnUpdate()
     {
-        if (IsDashing)
+        // 가속도 때문에 Update()에서 속도를 계속해서 설정해준다
+        Player.Rigidbody.velocity = _dashDir * _dashSpeed;
+
+        _elapsedDashTime += Time.deltaTime;
+        if (_elapsedDashTime > _targetDashDuration)
         {
-            // 가속도 때문에 Update()에서 속도를 계속해서 설정해준다
-            Player.Rigidbody.velocity = _dashDir * _dashSpeed;
+            _elapsedDashTime = 0f;
+            Player.ChangeState<InAirState>();
 
-            _elapsedDashTime += Time.deltaTime;
-
-            if (_elapsedDashTime > _targetDashDuration)
-            {
-                _elapsedDashTime = 0f;
-                Player.ChangeState<InAirState>();
-                return true;
-            }
+            return true;
         }
 
         return true;
@@ -52,53 +48,37 @@ public class DashState : PlayerState
 
     protected override bool OnExit()
     {
-        FinishDash();
+        PostProcess();
 
         StartCoroutine(DashCoolDown());
 
-        Player.Animator.SetBool("IsDash", IsDashing);
+        Player.Animator.SetBool("IsDash", false);
 
         return true;
     }
 
-    private void ExcuteDash()
+    private void PreProcess()
     {
-        // 기존 중력 저장
-        _orginGravity = Player.Rigidbody.gravityScale;
-
-        // 대쉬 실행 시 속성 설정
-        IsDashing = true;
-        Player.CanDash = false;
-
-        // 대쉬 동안 무적
+        SceneContext.Current.Player.CanDash = false;
         Player.IsGodMode = true;
-        // Player.StartSuperArmorFlash();
-
-        // 중력 0으로 설정
+        _originGravity = Player.Rigidbody.gravityScale;
         Player.Rigidbody.gravityScale = 0f;
     }
 
-    private void FinishDash()
+    private void PostProcess()
     {
-        // 대쉬 종료 시 속성 설정
-        IsDashing = false;
-
-        // 무적 종료
         Player.IsGodMode = false;
-
-        // 기존 중력으로 되돌리기
-        Player.Rigidbody.gravityScale = _orginGravity;
+        Player.Rigidbody.gravityScale = _originGravity;
     }
 
     private IEnumerator DashCoolDown()
     {
         yield return new WaitForSeconds(_targetDashCoolTime);
-        Player.CanDash = true;
+        SceneContext.Current.Player.CanDash = true;
     }
 
     public void SetDashDir(float xDirection)
     {
-        // 대쉬 방향 설정
         _dashDir = new Vector2(xDirection, 0f).normalized;
     }
 }

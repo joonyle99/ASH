@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using Gizmos = UnityEngine.Gizmos;
 
 public class PlayerAttackController : MonoBehaviour
 {
@@ -9,32 +7,19 @@ public class PlayerAttackController : MonoBehaviour
     [Space]
 
     [SerializeField] private LayerMask _attackableEntityLayer;
-    [SerializeField] private Collider2D _attackHitbox;
-    //[SerializeField] private float _hitBoxRadius = 3f;
-    //private float _currentHitBoxRadius;
+    [SerializeField] private Collider2D _attackCollider;
 
     [Space]
 
-    [SerializeField] private int _attackDamage = 20;
+    [SerializeField] private int _attackDamage = 1;
     [SerializeField] private float _attackPowerX = 7f;
     [SerializeField] private float _attackPowerY = 10f;
 
+    [Header("Effects")]
     [Space]
 
-    [SerializeField] private float _targetNextAttackableTime = 1f;
-    [SerializeField] private float _elapsedNextAttackableTime;
-    [SerializeField] private int _basicAttackCount;
-    [SerializeField] private bool _isBasicAttacking;
-
-    [Header("Effects")]
-    [SerializeField] ParticleHelper[] _attackEffects;
+    [SerializeField] ParticleHelper _attackEffects;
     [SerializeField] GameObject _basicAttackImpactPrefab;
-
-    public bool IsBasicAttacking
-    {
-        get => _isBasicAttacking;
-        private set => _isBasicAttacking = value;
-    }
 
     private PlayerBehaviour _player;
 
@@ -42,48 +27,16 @@ public class PlayerAttackController : MonoBehaviour
     {
         _player = GetComponent<PlayerBehaviour>();
     }
-    private void Update()
+
+    public void CastAttack()
     {
-        // reset attackCount
-        if (_basicAttackCount > 0)
-        {
-            _elapsedNextAttackableTime += Time.deltaTime;
+        _player.CanAttack = false;
 
-            if (_elapsedNextAttackableTime > _targetNextAttackableTime)
-            {
-                _elapsedNextAttackableTime = 0f;
-                _basicAttackCount = 0;
-                _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
-            }
-        }
+        _player.Animator.SetTrigger("Attack");
+        _player.PlaySound_SE_Attack();
+        _attackEffects.Play();
     }
-
-    public void CastBasicAttack()
-    {
-        // you can attack when attack animation is done
-        if (!IsBasicAttacking)
-        {
-            IsBasicAttacking = true;
-            _elapsedNextAttackableTime = 0f;
-            _basicAttackCount++;
-
-
-            _player.Animator.SetTrigger("Attack");
-            _player.Animator.SetInteger("BasicAttackCount", _basicAttackCount);
-
-            _player.PlaySound_SE_Attack();
-            // _attackEffects[_basicAttackCount-1].Play();
-            _attackEffects[1].Play();
-
-            if (_basicAttackCount >= 3)
-                _basicAttackCount = 0;
-        }
-    }
-    public void CastShootingAttack()
-    {
-        // _player.ChangeState<ShootingState>();
-    }
-    public void AttackableEntityProcess_AnimEvent()
+    public void AttackProcess_AnimEvent()
     {
         // cast parameter
         ContactFilter2D filter = new ContactFilter2D();
@@ -91,13 +44,13 @@ public class PlayerAttackController : MonoBehaviour
         List<RaycastHit2D> rayCastHits = new List<RaycastHit2D>();
 
         // do cast
-        _attackHitbox.Cast(_player.PlayerLookDir2D, filter, rayCastHits,0);
+        _attackCollider.Cast(_player.PlayerLookDir2D, filter, rayCastHits, 0);
 
         List<Rigidbody2D> handledBodies = new List<Rigidbody2D>();
 
         foreach (var rayCastHit in rayCastHits)
         {
-            // rayCastHit에 Rigidbody가 없거나 이미 리스트업 했다면 continue
+            // rayCastHit에 RigidBody가 없거나 이미 리스트업 했다면 continue
             if (!rayCastHit.rigidbody || handledBodies.Contains(rayCastHit.rigidbody))
                 continue;
 
@@ -118,15 +71,12 @@ public class PlayerAttackController : MonoBehaviour
             if (attackResult == IAttackListener.AttackResult.Success)
             {
                 Instantiate(_basicAttackImpactPrefab, rayCastHit.point + Random.insideUnitCircle * 0.2f, Quaternion.identity);
-                // TODO : Play impact sound
             }
         }
     }
-    public void FinishBasicAttack_AnimEvent()
+    public void AttackFinish_AnimEvent()
     {
         // now you can cast attack
-        IsBasicAttacking = false;
-
+        _player.CanAttack = true;
     }
-
 }

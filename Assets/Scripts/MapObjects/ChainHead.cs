@@ -50,7 +50,7 @@ public class ChainHead : InteractableObject
     {
         _handle.Disconnect();
         _playerLimittingJoint.enabled = false;
-        Player.PlayerMovementController.EnableMovementExternaly(this);
+        Player.PlayerMovementController.EnableMovementExternal(this);
     }
     public override void UpdateInteracting()
     {
@@ -92,9 +92,9 @@ public class ChainHead : InteractableObject
             {
                 if (Player.RawInputs.Movement.x >= 0 && transform.position.x < Player.transform.position.x
                     || Player.RawInputs.Movement.x <= 0 && transform.position.x > Player.transform.position.x)
-                    Player.PlayerMovementController.DisableMovementExternaly(this);
+                    Player.PlayerMovementController.DisableMovementExternal(this);
                 else
-                    Player.PlayerMovementController.EnableMovementExternaly(this);
+                    Player.PlayerMovementController.EnableMovementExternal(this);
                 _playerLimittingJoint.enabled = true;
             }
         }
@@ -102,7 +102,7 @@ public class ChainHead : InteractableObject
         {
             _playerLimittingJoint.enabled = false;
 
-            Player.PlayerMovementController.EnableMovementExternaly(this);
+            Player.PlayerMovementController.EnableMovementExternal(this);
         }
     }
     

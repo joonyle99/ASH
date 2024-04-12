@@ -2,32 +2,21 @@ using UnityEngine;
 
 public class HealthPanelUI : MonoBehaviour
 {
-    const int MaxLife = 10;
-
-    [SerializeField] Transform[] _lifeIcons;
+    [SerializeField] private Transform[] _lifeIcon;
 
     private void Update()
     {
         if (SceneContext.Current.Player == null) return;
-
-        var hp = SceneContext.Current.Player.CurHp;
-
-        if (hp > MaxLife) hp = MaxLife;
-        else if (hp < 0) hp = 0;
-
-        UpdateLifeIcons(hp);
+        UpdateLifeIcons(SceneContext.Current.Player.CurHp);
     }
 
-    private void UpdateLifeIcons(int target)
+    private void UpdateLifeIcons(int curHp)
     {
-        if (target <= 0)
+        // CurHp와 LifeIcon을 동기화한다
+        for (int lifeIndex = 0; lifeIndex < _lifeIcon.Length; lifeIndex++)
         {
-            //사망
-        }
-        for (int i = 0; i < _lifeIcons.Length; i++)
-        {
-            bool on = i < target;
-            _lifeIcons[i].gameObject.SetActive(on);
+            bool isLifeOn = lifeIndex < curHp;
+            _lifeIcon[lifeIndex].gameObject.SetActive(isLifeOn);
         }
     }
 }

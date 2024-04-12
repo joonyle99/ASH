@@ -1,7 +1,4 @@
-using UnityEngine;
-using UnityEngine.EventSystems;
-
-public class RunState : PlayerState
+public class RunState : PlayerState, IAttackableState, IInteractableState
 {
     protected override bool OnEnter()
     {

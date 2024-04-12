@@ -3,16 +3,18 @@ using UnityEngine;
 
 public abstract class StateBase : MonoBehaviour
 {
-    [SerializeField] StateAnimatorParamData _animatorParameters;
+    // [SerializeField] StateAnimatorParamData _animatorParameters;
 
     protected StateMachineBase StateMachine { get; set; }
-    protected Animator Animator { get => StateMachine.Animator; }
+    protected Animator Animator => StateMachine.Animator;
 
     public void TriggerEnter(StateMachineBase stateMachine)
     {
         StateMachine = stateMachine;
         SetAnimsOnEnter();
-        _animatorParameters.InvokeEnter(StateMachine.Animator);
+
+        // _animatorParameters.InvokeEnter(StateMachine.Animator);
+
         OnEnter();
     }
     public void TriggerUpdate()
@@ -25,25 +27,25 @@ public abstract class StateBase : MonoBehaviour
     }
     public void TriggerExit()
     {
-        _animatorParameters.InvokeExit(StateMachine.Animator);
+        // _animatorParameters.InvokeExit(StateMachine.Animator);
+
         OnExit();
-        //StateMachine = null;
+        StateMachine = null;
     }
 
-    protected virtual void SetAnimsOnEnter() {}
+    protected virtual void SetAnimsOnEnter() { }
     protected abstract bool OnEnter();
     protected abstract bool OnUpdate();
-    protected virtual bool OnFixedUpdate() { return true;}
+    protected virtual bool OnFixedUpdate() { return true; }
     protected abstract bool OnExit();
 
-    public NextState ChangeState<NextState>(bool ignoreSameState = false) where NextState : StateBase
+    public TNextState ChangeState<TNextState>(bool ignoreSameState = false) where TNextState : StateBase
     {
-        return StateMachine.ChangeState<NextState>(ignoreSameState);
+        return StateMachine.ChangeState<TNextState>(ignoreSameState);
     }
-
-    public bool StateIs<State>() where State : StateBase
+    public bool CurrentStateIs<TState>() where TState : StateBase
     {
-        return StateMachine.CurrentState is State;
+        return StateMachine.CurrentState is TState;
     }
 
     //public new T GetComponent<T>() where T : Component
@@ -52,6 +54,7 @@ public abstract class StateBase : MonoBehaviour
     //}
 }
 
+/*
 [System.Serializable]
 public class StateAnimatorParamData
 {
@@ -68,3 +71,4 @@ public class StateAnimatorParamData
             animParamData.Invoke(animator);
     }
 }
+*/

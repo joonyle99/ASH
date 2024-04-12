@@ -1,8 +1,6 @@
-using Unity.Collections;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class IdleState : PlayerState
+public class IdleState : PlayerState, IAttackableState, IInteractableState
 {
     [Header("Idle Settings")]
     [Space]

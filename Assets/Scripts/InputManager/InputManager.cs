@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public struct InputState
@@ -11,7 +8,7 @@ public struct InputState
     public ActionKey InteractionKey;
     public ActionKey JumpKey;
     public ActionKey DashKey;
-    public ActionKey BasicAttackKey;
+    public ActionKey AttackKey;
     public ActionKey ShootingAttackKey;
     public ActionKey LightKey;
 }
@@ -25,10 +22,6 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
     InputState _cachedState;
     public InputState State => _cachedState;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
     public void ChangeToDefaultSetter()
     {
         ChangeInputSetter(_defaultInputSetter);

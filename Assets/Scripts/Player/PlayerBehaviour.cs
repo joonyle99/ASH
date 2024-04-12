@@ -20,8 +20,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     [Space]
 
-    [SerializeField] private bool _isCanBasicAttack = true;
-    [SerializeField] private bool _isCanJump = true;
+    [SerializeField] private bool _isCanAttack = true;
     [SerializeField] private bool _isCanDash = true;
 
     [Header("Effects")]
@@ -54,17 +53,17 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     #region Properties
 
     // Can Property
-    public bool CanBasicAttack
+    public bool CanAttack
     {
-        get => _isCanBasicAttack && (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (playerLightSkillController.IsLightButtonPressable && !playerLightSkillController.IsLightWorking);
-        set => _isCanBasicAttack = value;
+        get => _isCanAttack && (CurrentState is IAttackableState) && (playerLightSkillController.IsLightButtonPressable && !playerLightSkillController.IsLightWorking);
+        set => _isCanAttack = value;
     }
     public bool CanDash
     {
         get => _isCanDash && PersistentDataManager.Get<bool>("Dash");
         set => _isCanDash = value;
     }
-    public bool CanInteract => CurrentStateIs<IdleState>() || CurrentStateIs<RunState>();
+    public bool CanInteract => CurrentState is IInteractableState;
 
     // Condition Property
     public bool IsGrounded => GroundHit;
@@ -136,6 +135,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     protected override void Awake()
     {
+        base.Awake();
+
         // Controller
         _playerAttackController = GetComponent<PlayerAttackController>();
         playerInteractionController = GetComponent<PlayerInteractionController>();
@@ -164,8 +165,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         #region Input
 
-        if (InputManager.Instance.State.BasicAttackKey.KeyDown)
-            OnBasicAttackPressed();
+        if (InputManager.Instance.State.AttackKey.KeyDown && CanAttack)
+            _playerAttackController.CastAttack();
 
         #endregion
 
@@ -226,13 +227,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         }
     }
 
-    // key pressed event
-    void OnBasicAttackPressed()
-    {
-        if (CanBasicAttack)
-            _playerAttackController.CastBasicAttack();
-    }
-
     // about hit
     public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
@@ -255,7 +249,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         return IAttackListener.AttackResult.Success;
     }
-    void TakeDamage(float damage)
+    private void TakeDamage(float damage)
     {
         _curHp -= (int)damage;
         if (_curHp <= 0)
@@ -269,7 +263,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Rigidbody.velocity = Vector2.zero;
         Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
     }
-    IEnumerator SlowMotionCoroutine(float duration)
+    private IEnumerator SlowMotionCoroutine(float duration)
     {
         Time.timeScale = 0.3f;
         yield return new WaitForSecondsRealtime(duration);
@@ -289,7 +283,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         SceneContext.Current.InstantRespawn();
     }
 
-    // anim event
+    // anim
     public void FinishState_AnimEvent()
     {
         ChangeState<IdleState>();
