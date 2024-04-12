@@ -99,6 +99,89 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _changeType: 1
   _changedSprite: {fileID: 0}
+--- !u!1 &635128870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 635128873}
+  - component: {fileID: 635128872}
+  - component: {fileID: 635128871}
+  m_Layer: 0
+  m_Name: ShootAura
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &635128873
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635128870}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 3.3462558, y: 0.29744416, z: 0}
+  m_LocalScale: {x: 4.5680585, y: 6.659478, z: 4.1473975}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 935916161044178407}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 85.33501, z: 0}
+--- !u!33 &635128872
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635128870}
+  m_Mesh: {fileID: 4300000, guid: 6f68ea8366f9aea41a04f552fd738aea, type: 2}
+--- !u!23 &635128871
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 635128870}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 152f589e6badcea498fdd2b0c464337e, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1528936701
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,22 +451,22 @@ MonoBehaviour:
   <BlinkEffect>k__BackingField: {fileID: 6296443733435208325}
   <IsGroggy>k__BackingField: 0
   <IsRage>k__BackingField: 0
-  _finalTargetHurtCount: 18
+  finalTargetHurtCount: 18
+  attackCountRange:
+    Start: 2
+    End: 4
+  targetAttackCount: 0
+  currentAttackCount: 0
+  hitCountRange:
+    Start: 3
+    End: 3
+  targetHitCount: 0
+  currentHitCount: 0
   _attackTypeRange:
-    Start: 1
+    Start: 4
     End: 5
   _currentAttack: 0
   _nextAttack: 0
-  _attackCountRange:
-    Start: 1
-    End: 1
-  _targetAttackCount: 0
-  _currentAttackCount: 0
-  _hitCountRange:
-    Start: 3
-    End: 3
-  _targetHitCount: 0
-  _currentHitCount: 0
   _slash01: {fileID: 7501307551420893577, guid: 0e4912bd354e0a745b23c90eeca2032d, type: 3}
   _slash02: {fileID: 7501307551420893577, guid: 8d76e949b7f36ac4198f8bb85cbfb2ae, type: 3}
   _bodySlamLength: 60
@@ -396,17 +479,19 @@ MonoBehaviour:
     Start: 0.5
     End: 1.5
   _createSizeRange:
-    Start: 0.7
-    End: 1.3
+    Start: 0.5
+    End: 1
   _distanceRange:
-    Start: 3
+    Start: 0
     End: 20
+  _minDistanceEach: 0.5
+  _usedPosX: []
   _normalStalactiteRange:
-    Start: 6
-    End: 6
+    Start: 7
+    End: 7
   _rageStalactiteRange:
-    Start: 9
-    End: 9
+    Start: 10
+    End: 10
   _waveSpawnPoint: {fileID: 1528936702}
   _waveSkillPrefab: {fileID: 1687034788766365448, guid: 839e0876f9e523a42bb75e4004df8274, type: 3}
   _earthquakeCameraShake: {fileID: 11400000, guid: f0baf86e91dbdea4baab2071a43edb5a, type: 2}
@@ -417,8 +502,14 @@ MonoBehaviour:
   - {fileID: 5403583928566379217}
   - {fileID: 5403583929368315107}
   _cutscenePlayerList: {fileID: 68886008199415118}
+  _isLightingGuide: 0
   _earthquakeCount: 0
+  _is9thAttackSuccess: 0
   _totalHitCount: 0
+  _distanceFromTarget: 6
+  _moveRightInputSetter: {fileID: 11400000, guid: d64c3139295c5ec4697d66ad6a58d04f, type: 2}
+  _moveLeftInputSetter: {fileID: 11400000, guid: bda65bfa556fab147895b7d4385ad239, type: 2}
+  _stayStillInputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
 --- !u!114 &57872128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -634,11 +725,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b2e3d95dc54be64c939388064af2c83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cutscenePlayers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  _cutsceneDictionary:
+  - name: Lighting Guide
+    cutscenePlayer: {fileID: 0}
+  - name: 9th Attack Success
+    cutscenePlayer: {fileID: 0}
+  - name: Bear Die
+    cutscenePlayer: {fileID: 0}
 --- !u!1 &68886007898307181
 GameObject:
   m_ObjectHideFlags: 0
@@ -1481,6 +1574,7 @@ Transform:
   - {fileID: 5403583929826336059}
   - {fileID: 5403583928566379222}
   - {fileID: 5403583929368315108}
+  - {fileID: 635128873}
   m_Father: {fileID: 68886007787193793}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
