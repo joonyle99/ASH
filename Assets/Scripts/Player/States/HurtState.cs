@@ -10,8 +10,7 @@ public class HurtState : PlayerState
 
         Player.IsHurt = true;
 
-        Player.StartGodModeTimer();
-        Player.StartWhiteFlash();
+        Player.BlinkEffect.Play();
 
         return true;
     }

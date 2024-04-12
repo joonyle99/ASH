@@ -9,58 +9,45 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [Header("Player")]
     [Space]
 
-    [SerializeField] int _maxHp;
-    [SerializeField] int _curHp;
+    [SerializeField] private int _maxHp = 10;
+    [SerializeField] private int _curHp;
 
     [Space]
 
-    [SerializeField] bool _isHurt;
-    [SerializeField] bool _isDead;
-    [SerializeField] bool _isGodMode;
+    [SerializeField] private bool _isHurt;
+    [SerializeField] private bool _isGodMode;
+    [SerializeField] private bool _isDead;
 
     [Space]
 
-    [SerializeField] bool _isCanBasicAttack = true;
-    [SerializeField] bool _isCanJump = true;
-    [SerializeField] bool _isCanDash = true;
-
-    [Header("White Flash for Hit")]
-    [Space]
-
-    [SerializeField] Material _whiteFlashMaterial;
-    [SerializeField] SpriteRenderer[] _spriteRenderers;
-
-    [SerializeField] float _godModeTime = 1.5f;
-    [SerializeField] float _flashInterval = 0.06f;
-
-    Material[] _originalMaterials;
-    Coroutine _whiteFlashRoutine;
+    [SerializeField] private bool _isCanBasicAttack = true;
+    [SerializeField] private bool _isCanJump = true;
+    [SerializeField] private bool _isCanDash = true;
 
     [Header("Effects")]
     [Space]
 
-    [SerializeField] ParticleHelper _walkDustEmitter;
-    [SerializeField] ParticleHelper _walkDirtEmitter;
-    [SerializeField] ParticleHelper _landDustEmitter;
-    [SerializeField] ParticleHelper _landDirtEmitter;
-    [SerializeField] ParticleHelper _dashEffect;
-    [SerializeField] ParticleHelper _dashTrailEffect;
+    [SerializeField] private ParticleHelper _walkDustEmitter;
+    [SerializeField] private ParticleHelper _walkDirtEmitter;
+    [SerializeField] private ParticleHelper _landDustEmitter;
+    [SerializeField] private ParticleHelper _landDirtEmitter;
+    [SerializeField] private ParticleHelper _dashEffect;
+    [SerializeField] private ParticleHelper _dashTrailEffect;
 
     [Header("ETC")]
     [Space]
 
-    [SerializeField] CapsuleCollider2D _bodyCollider;
-    [SerializeField] Rigidbody2D _handRigidbody;
+    [SerializeField] private CapsuleCollider2D _bodyCollider;
+    [SerializeField] private BlinkEffect _blinkEffect;
+    [SerializeField] private SoundList _soundList;
+    [SerializeField] private Rigidbody2D _handRigidbody;
 
     // Controller
-    PlayerAttackController _playerAttackController;
-    InteractionController _interactionController;
-    PlayerMovementController _playerMovementController;
-    LightController _lightController;
-    HeadAimController _headAimContoller;
-
-    // Sound List
-    SoundList _soundList;
+    private PlayerMovementController _playerMovementController;
+    private PlayerAttackController _playerAttackController;
+    private PlayerInteractionController playerInteractionController;
+    private PlayerLightSkillController playerLightSkillController;
+    private PlayerHeadAimController playerHeadAimController;
 
     #endregion
 
@@ -69,10 +56,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     // Can Property
     public bool CanBasicAttack
     {
-        get => _isCanBasicAttack && (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (_lightController.IsLightButtonPressable && !_lightController.IsLightWorking);
+        get => _isCanBasicAttack && (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (playerLightSkillController.IsLightButtonPressable && !playerLightSkillController.IsLightWorking);
         set => _isCanBasicAttack = value;
     }
-    public bool CanDash { get => _isCanDash && PersistentDataManager.Get<bool>("Dash");
+    public bool CanDash
+    {
+        get => _isCanDash && PersistentDataManager.Get<bool>("Dash");
         set => _isCanDash = value;
     }
     public bool CanInteract => CurrentStateIs<IdleState>() || CurrentStateIs<RunState>();
@@ -87,15 +76,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         get => _isHurt;
         set => _isHurt = value;
     }
-    public bool IsDead
-    {
-        get => _isDead;
-        set => _isDead = value;
-    }
     public bool IsGodMode
     {
         get => _isGodMode;
         set => _isGodMode = value;
+    }
+    public bool IsDead
+    {
+        get => _isDead;
+        set => _isDead = value;
     }
     public int CurHp
     {
@@ -127,19 +116,19 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     // RayCastHit
     public RaycastHit2D GroundHit { get; set; }
-    public RaycastHit2D UpwardGroundHit { get; set; }
     public RaycastHit2D ClimbHit { get; set; }
+    public RaycastHit2D UpwardGroundHit { get; set; }
 
     // Component
     public PlayerAttackController PlayerAttackController => _playerAttackController;
-    public InteractionController InteractionController => _interactionController;
+    public PlayerInteractionController PlayerInteractionController => playerInteractionController;
     public PlayerMovementController PlayerMovementController => _playerMovementController;
-    public Rigidbody2D HandRigidBody => _handRigidbody;
-    public CapsuleCollider2D BodyCollider => _bodyCollider;
-    public SoundList SoundList => _soundList;
 
-    // SpriteRenderer for White Flash
-    public SpriteRenderer[] SpriteRenderers => _spriteRenderers;
+    // ETC
+    public CapsuleCollider2D BodyCollider => _bodyCollider;
+    public BlinkEffect BlinkEffect => _blinkEffect;
+    public SoundList SoundList => _soundList;
+    public Rigidbody2D HandRigidBody => _handRigidbody;
 
     #endregion
 
@@ -149,19 +138,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     {
         // Controller
         _playerAttackController = GetComponent<PlayerAttackController>();
-        _interactionController = GetComponent<InteractionController>();
+        playerInteractionController = GetComponent<PlayerInteractionController>();
         _playerMovementController = GetComponent<PlayerMovementController>();
-        _lightController = GetComponent<LightController>();
-        _headAimContoller = GetComponent<HeadAimController>();
+        playerLightSkillController = GetComponent<PlayerLightSkillController>();
+        playerHeadAimController = GetComponent<PlayerHeadAimController>();
 
-        // collider
+        // ETC
         _bodyCollider = GetComponent<CapsuleCollider2D>();
-
-        // SoundList
+        _blinkEffect = GetComponent<BlinkEffect>();
         _soundList = GetComponent<SoundList>();
-
-        // Material for White Flash
-        SaveOriginalMaterial();
     }
     protected override void Start()
     {
@@ -213,7 +198,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     // basic
     private void InitPlayer()
     {
+        // 체력 초기화
         _curHp = _maxHp;
+
+        // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);
     }
     private void UpdateImageFlip()
@@ -225,7 +213,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
 
-                _headAimContoller.HeadAimControlOnFlip();
+                playerHeadAimController.HeadAimControlOnFlip();
             }
         }
     }
@@ -246,20 +234,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
 
     // about hit
-    void TakeDamage(float damage)
-    {
-        _curHp -= (int)damage;
-        if (_curHp <= 0)
-        {
-            _curHp = 0;
-            ChangeState<DieState>();
-        }
-    }
-    public void KnockBack(Vector2 forceVector)
-    {
-        Rigidbody.velocity = Vector2.zero;
-        Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
-    }
     public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         // fail return condition
@@ -281,86 +255,28 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         return IAttackListener.AttackResult.Success;
     }
+    void TakeDamage(float damage)
+    {
+        _curHp -= (int)damage;
+        if (_curHp <= 0)
+        {
+            _curHp = 0;
+            ChangeState<DieState>();
+        }
+    }
+    public void KnockBack(Vector2 forceVector)
+    {
+        Rigidbody.velocity = Vector2.zero;
+        Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
+    }
     IEnumerator SlowMotionCoroutine(float duration)
     {
         Time.timeScale = 0.3f;
         yield return new WaitForSecondsRealtime(duration);
         Time.timeScale = 1f;
     }
-    // flash
-    private void SaveOriginalMaterial()
-    {
-        _originalMaterials = new Material[_spriteRenderers.Length];
-
-        for (int i = 0; i < _originalMaterials.Length; i++)
-            _originalMaterials[i] = _spriteRenderers[i].material;
-    }
-    public void InitMaterial()
-    {
-        for (int i = 0; i < _spriteRenderers.Length; i++)
-            _spriteRenderers[i].material = _originalMaterials[i];
-    }
-    public void InitSpriteRendererAlpha()
-    {
-        foreach (var renderer in SpriteRenderers)
-        {
-            Color color = renderer.color;
-            color.a = 1;
-            renderer.color = color;
-        }
-    }
-    private void ChangeMaterial()
-    {
-        for (int i = 0; i < _originalMaterials.Length; i++)
-            _spriteRenderers[i].material = _whiteFlashMaterial;
-    }
-    private IEnumerator WhiteFlash()
-    {
-        // turn to white material
-        ChangeMaterial();
-
-        while (IsGodMode)
-        {
-            foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0.4f);
-
-            yield return new WaitForSeconds(_flashInterval);
-
-            foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0f);
-
-            yield return new WaitForSeconds(_flashInterval);
-        }
-
-        // turn to original material
-        if (!CurrentStateIs<InstantRespawnState>())
-            InitMaterial();
-    }
-    public void StartWhiteFlash()
-    {
-        if (this._whiteFlashRoutine != null)
-            StopCoroutine(this._whiteFlashRoutine);
-
-        this._whiteFlashRoutine = StartCoroutine(WhiteFlash());
-    }
-
-    // god mode
-    private IEnumerator GodModeTimer()
-    {
-        IsGodMode = true;
-        yield return new WaitForSeconds(_godModeTime);
-        IsGodMode = false;
-    }
-    public void StartGodModeTimer()
-    {
-        StartCoroutine(GodModeTimer());
-    }
 
     // respawn
-    public void OnRevive()
-    {
-        _curHp = _maxHp;
-    }
     public void TriggerInstantRespawn(float damage)
     {
         TakeDamage(damage);
@@ -386,52 +302,52 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public void PlaySound_SE_Run()
     {
         _soundList.PlaySFX("SE_Run");
+
         _walkDustEmitter.Emit(1);
         _walkDirtEmitter.Emit(UnityEngine.Random.Range(0, 3));
     }
-
     public void PlaySound_SE_Jump_01()
     {
         _soundList.PlaySFX("SE_Jump_01");
     }
-
     public void PlaySound_SE_Jump_02()
     {
         _soundList.PlaySFX("SE_Jump_02");
+
         _landDustEmitter.Emit(2);
         _landDirtEmitter.Emit(7);
     }
-
     public void PlaySound_SE_DoubleJump()
     {
         _soundList.PlaySFX("SE_DoubleJump");
     }
-
     public void PlaySound_SE_Attack()
     {
         _soundList.PlaySFX("SE_Attack");
     }
-
     public void PlaySound_SE_Dash()
     {
         _soundList.PlaySFX("SE_Dash");
+
         _dashEffect.Emit(1);
         _dashTrailEffect.Emit(1);
     }
-
     public void PlaySound_SE_Hurt_02()
     {
         _soundList.PlaySFX("SE_Hurt_02");
     }
-
     public void PlaySound_SE_Die_01()
     {
         _soundList.PlaySFX("SE_Die_01(long)");
     }
-
     public void PlaySound_SE_Die_02()
     {
         _soundList.PlaySFX("SE_Die_02");
+    }
+
+    public void PlaySound(string key)
+    {
+        _soundList.PlaySFX(key);
     }
 
     #endregion

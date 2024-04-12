@@ -14,10 +14,10 @@ public class InteractMarkerActivationZone : TriggerZone
     }
     public override void OnPlayerEnter(PlayerBehaviour player)
     {
-        player.InteractionController.AddInteractableInRange(_interactableObject);
+        player.PlayerInteractionController.AddInteractableInRange(_interactableObject);
     }
     public override void OnPlayerExit(PlayerBehaviour player)
     {
-        player.InteractionController.RemoveInteractableInRange(_interactableObject);
+        player.PlayerInteractionController.RemoveInteractableInRange(_interactableObject);
     }
 }

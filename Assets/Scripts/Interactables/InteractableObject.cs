@@ -61,6 +61,6 @@ public abstract class InteractableObject : MonoBehaviour
     {
         IsInteracting = false;
         OnInteractionExit();
-        Player.InteractionController.OnInteractionExit();
+        Player.PlayerInteractionController.OnInteractionExit();
     }
 }

@@ -40,32 +40,46 @@ public class InstantRespawnState : PlayerState
 
     IEnumerator SpawnCoroutine()
     {
-        Player.InitMaterial();
+        // change all player's spriteRenderer to original material
+        Player.BlinkEffect.InitMaterial();
 
+        // reset player condition
         Player.enabled = true;
-        Player.Rigidbody.velocity = Vector2.zero;
         Animator.speed = 1;
+        Player.Rigidbody.velocity = Vector2.zero;
 
+        // 
         float eTime = 0f;
         while (eTime < _spawnDuration)
         {
-            foreach (var renderer in Player.SpriteRenderers)
+            foreach (var spriteRenderer in Player.BlinkEffect.SpriteRenderers)
             {
-                Color color = renderer.color;
+                Color color = spriteRenderer.color;
                 color.a = Mathf.Lerp(0, 1, eTime / _spawnDuration);
-                renderer.color = color;
+                spriteRenderer.color = color;
             }
-            yield return null;
             eTime += Time.deltaTime;
+            yield return null;
         }
 
+        // TODO: ÀÌ ºÎºÐÀÌ ¹ºÁö ±î¸Ô¾ú´Ù
+        /*
         Player.InitSpriteRendererAlpha();
+
+        public void InitSpriteRendererAlpha()
+        {
+            foreach (var renderer in SpriteRenderers)
+            {
+                Color color = renderer.color;
+                color.a = 1;
+                renderer.color = color;
+            }
+        }
+        */
 
         Player.Rigidbody.simulated = true;
 
         ChangeState<IdleState>();
-
-        yield return null;
     }
     public void Respawn()
     {

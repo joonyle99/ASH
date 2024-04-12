@@ -8,40 +8,54 @@ public class BlinkEffect : MonoBehaviour
     [SerializeField] private float _duration = 0.9f;
     [SerializeField] private bool _isBlinking = false;
 
+    private PlayerBehaviour _player;
     private MonsterBehavior _monster;
-    private SpriteRenderer[] _spriteRenderers;
-    private Material[] _originalMaterials;
+
+    [SerializeField]
+    private SpriteRenderer[] _spriteRenderers;  // blink target spriteRenderers
+    private Material[] _originalMaterials;      // originalMaterial's count == spriteRenderer's count
+
     private Coroutine _blinkCoroutine;
+
+    public SpriteRenderer[] SpriteRenderers => _spriteRenderers;
 
     void Awake()
     {
+        // subject
+        _player = GetComponent<PlayerBehaviour>();
         _monster = GetComponent<MonsterBehavior>();
 
-        // spriteRenderers
-        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        // 몬스터의 경우에만 자동으로 SpriteRenderer를 찾아서 넣어줌
+        if (_monster)
+            _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
 
-        // materials
+        // save original Materials
         _originalMaterials = new Material[_spriteRenderers.Length];
         for (int i = 0; i < _originalMaterials.Length; i++)
             _originalMaterials[i] = _spriteRenderers[i].material;
     }
 
-    private void InitMaterial()
+    public void InitMaterial()
     {
+        // put original Material to spriteRenderer
         for (int i = 0; i < _spriteRenderers.Length; i++)
             _spriteRenderers[i].material = _originalMaterials[i];
     }
-    private void ChangeMaterial(Material material)
+    public void ChangeMaterial(Material material)
     {
-        for (int i = 0; i < _spriteRenderers.Length; i++)
-            _spriteRenderers[i].material = material;
+        // change material to spriteRenderer
+        foreach (var spriteRenderer in _spriteRenderers)
+            spriteRenderer.material = material;
     }
     private IEnumerator BlinkCoroutine()
     {
+        // first, change material to blink material
         ChangeMaterial(_material);
 
         _isBlinking = true;
+        if (_player) _player.IsGodMode = _isBlinking;
 
+        // second, blink
         float startTime = Time.time;
         while (startTime + _duration > Time.time)
         {
@@ -57,9 +71,12 @@ public class BlinkEffect : MonoBehaviour
         }
 
         _isBlinking = false;
+        if (_player) _player.IsGodMode = _isBlinking;
 
-        if (_monster.IsDead) yield break;
+        if ((_player && _player.IsDead) || (_monster && _monster.IsDead))
+            yield break;
 
+        // third, change material to original material
         InitMaterial();
     }
     public void Play()

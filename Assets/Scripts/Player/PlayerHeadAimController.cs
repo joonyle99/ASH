@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class HeadAimController : MonoBehaviour
+public class PlayerHeadAimController : MonoBehaviour
 {
     [Header("HeadAim")]
     [Space]

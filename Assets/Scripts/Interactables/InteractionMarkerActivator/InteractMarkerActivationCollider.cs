@@ -15,12 +15,12 @@ public class InteractMarkerActivationCollider : MonoBehaviour
     {
         var player = collision.transform.GetComponent<PlayerBehaviour>();
         if(player != null)
-            player.InteractionController.AddInteractableInRange(_interactableObject);
+            player.PlayerInteractionController.AddInteractableInRange(_interactableObject);
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
         var player = collision.transform.GetComponent<PlayerBehaviour>();
         if (player != null)
-            player.InteractionController.RemoveInteractableInRange(_interactableObject);
+            player.PlayerInteractionController.RemoveInteractableInRange(_interactableObject);
     }
 }

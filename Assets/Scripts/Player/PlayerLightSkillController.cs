@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class LightController : MonoBehaviour
+public class PlayerLightSkillController : MonoBehaviour
 {
     [SerializeField] private GameObject _light;
 

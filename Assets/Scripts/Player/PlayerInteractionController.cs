@@ -1,8 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractionController : MonoBehaviour
+public class PlayerInteractionController : MonoBehaviour
 {
     // 범위 안의 상호작용 가능한 오브젝트 후보 리스트
     List<InteractableObject> _interactablesInRange = new List<InteractableObject>();
