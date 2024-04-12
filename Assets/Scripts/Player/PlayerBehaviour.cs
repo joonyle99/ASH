@@ -67,51 +67,79 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     #region Properties
 
     // Can Property
-    public bool CanBasicAttack { get { return _isCanBasicAttack && (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (_lightController.IsLightButtonPressable && !_lightController.IsLightWorking); } set { _isCanBasicAttack = value; } }
-    public bool CanDash { get { return _isCanDash && PersistentDataManager.Get<bool>("Dash"); } set { _isCanDash = value; } }
-    public bool CanInteract { get { return CurrentStateIs<IdleState>() || CurrentStateIs<RunState>(); } }
+    public bool CanBasicAttack
+    {
+        get => _isCanBasicAttack && (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<InAirState>()) && (_lightController.IsLightButtonPressable && !_lightController.IsLightWorking);
+        set => _isCanBasicAttack = value;
+    }
+    public bool CanDash { get => _isCanDash && PersistentDataManager.Get<bool>("Dash");
+        set => _isCanDash = value;
+    }
+    public bool CanInteract => CurrentStateIs<IdleState>() || CurrentStateIs<RunState>();
 
     // Condition Property
-    public bool IsGrounded { get { return GroundHit; } }
-    public bool IsTouchedWall { get { return ClimbHit; } }
+    public bool IsGrounded => GroundHit;
+    public bool IsTouchedWall => ClimbHit;
     public bool IsClimbable { get; set; }
     public bool IsClimbJump { get; set; }
-    public bool IsHurt { get { return _isHurt; } set { _isHurt = value; } }
-    public bool IsDead { get { return _isDead; } set { _isDead = value; } }
-    public bool IsGodMode { get { return _isGodMode; } set { _isGodMode = value; } }
-    public int CurHp { get { return _curHp; } }
+    public bool IsHurt
+    {
+        get => _isHurt;
+        set => _isHurt = value;
+    }
+    public bool IsDead
+    {
+        get => _isDead;
+        set => _isDead = value;
+    }
+    public bool IsGodMode
+    {
+        get => _isGodMode;
+        set => _isGodMode = value;
+    }
+    public int CurHp
+    {
+        get => _curHp;
+        set
+        {
+            _curHp = value;
+
+            if (_curHp > _maxHp) _curHp = _maxHp;
+            else if (_curHp < 0) _curHp = 0;
+        }
+    }
 
     // Input Property
-    public InputState RawInputs { get { return InputManager.Instance.State; } }
-    public bool IsMoveXKey { get { return Math.Abs(RawInputs.Movement.x) > 0.01f; } }
-    public bool IsMoveRightKey { get { return RawInputs.Movement.x > 0.01f; } }
-    public bool IsMoveLeftKey { get { return RawInputs.Movement.x < -0.01f; } }
-    public bool IsMoveYKey { get { return Math.Abs(RawInputs.Movement.y) > 0.01f; } }
-    public bool IsMoveUpKey { get { return RawInputs.Movement.y > 0.01f; } }
-    public bool IsMoveDownKey { get { return RawInputs.Movement.y < -0.01f; } }
+    public InputState RawInputs => InputManager.Instance.State;
+    public bool IsMoveXKey => Math.Abs(RawInputs.Movement.x) > 0.01f;
+    public bool IsMoveRightKey => RawInputs.Movement.x > 0.01f;
+    public bool IsMoveLeftKey => RawInputs.Movement.x < -0.01f;
+    public bool IsMoveYKey => Math.Abs(RawInputs.Movement.y) > 0.01f;
+    public bool IsMoveUpKey => RawInputs.Movement.y > 0.01f;
+    public bool IsMoveDownKey => RawInputs.Movement.y < -0.01f;
 
     // Direction Property
     public int RecentDir { get; set; }
-    public bool IsDirSync { get { return Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) > 0.01f; } }
-    public bool IsOppositeDirSync { get { return Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) < -0.01f; } }
-    public Vector2 PlayerLookDir2D { get { return new Vector2(RecentDir, 0f); } }
-    public Vector3 PlayerLookDir3D { get { return new Vector3(RecentDir, 0f, 0f); } }
+    public bool IsDirSync => Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) > 0.01f;
+    public bool IsOppositeDirSync => Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) < -0.01f;
+    public Vector2 PlayerLookDir2D => new(RecentDir, 0f);
+    public Vector3 PlayerLookDir3D => new(RecentDir, 0f, 0f);
 
-    // RaycastHit
+    // RayCastHit
     public RaycastHit2D GroundHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
     public RaycastHit2D ClimbHit { get; set; }
 
     // Component
-    public PlayerAttackController PlayerAttackController { get { return _playerAttackController; } }
-    public InteractionController InteractionController { get { return _interactionController; } }
-    public PlayerMovementController PlayerMovementController { get { return _playerMovementController; } }
-    public Rigidbody2D HandRigidBody { get { return _handRigidbody; } }
-    public CapsuleCollider2D BodyCollider { get { return _bodyCollider; } }
-    public SoundList SoundList { get { return _soundList; } }
+    public PlayerAttackController PlayerAttackController => _playerAttackController;
+    public InteractionController InteractionController => _interactionController;
+    public PlayerMovementController PlayerMovementController => _playerMovementController;
+    public Rigidbody2D HandRigidBody => _handRigidbody;
+    public CapsuleCollider2D BodyCollider => _bodyCollider;
+    public SoundList SoundList => _soundList;
 
     // SpriteRenderer for White Flash
-    public SpriteRenderer[] SpriteRenderers { get { return _spriteRenderers; } }
+    public SpriteRenderer[] SpriteRenderers => _spriteRenderers;
 
     #endregion
 

@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class HealthPanelUI : MonoBehaviour
 {
@@ -10,24 +6,19 @@ public class HealthPanelUI : MonoBehaviour
 
     [SerializeField] Transform[] _lifeIcons;
 
-    public int Life
+    private void Update()
     {
-        set
-        {
-        }
-    }
-    void Update()
-    {
-        if (SceneContext.Current.Player == null)
-            return;
+        if (SceneContext.Current.Player == null) return;
+
         var hp = SceneContext.Current.Player.CurHp;
-        if (hp > MaxLife)
-            hp = MaxLife;
-        else if (hp < 0)
-            hp = 0;
+
+        if (hp > MaxLife) hp = MaxLife;
+        else if (hp < 0) hp = 0;
+
         UpdateLifeIcons(hp);
     }
-    void UpdateLifeIcons(int target)
+
+    private void UpdateLifeIcons(int target)
     {
         if (target <= 0)
         {
