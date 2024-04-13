@@ -1,157 +1,128 @@
-﻿using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
+﻿using System.Collections;
+using UnityEngine;
 
 public class PlayerJumpController : MonoBehaviour
 {
-    [Header("Jump Power Settings")]
-
-    [Space]
-
-    [SerializeField] float _startJumpPower = 14f;
-    [SerializeField] float _inAirJumpPower = 12f;
-    [SerializeField] float _wallJumpPower = 6f;
-    [SerializeField] float _wallEndJumpPower = 15f;
-
-    [SerializeField] float _longJumpDuration = 0.2f;
-    [SerializeField] float _longJumpPower = 4f;
-
     [Header("Jump Settings")]
 
     [Space]
 
-    [SerializeField] float _coyoteTime = 3f;
-    [SerializeField] float _jumpQueueDuration = 0.1f;
-    [SerializeField] int _maxJumpCount = 2;
+    [SerializeField] private float _startJumpPower = 14f;
+    [SerializeField] private float _inAirJumpPower = 14f;
 
-    [SerializeField] bool _canJump;
-    [SerializeField] bool _coyoteAvailable;
+    [Space]
+
+    [SerializeField] private float _wallJumpPower = 4f;
+    [SerializeField] private float _wallEndJumpPower = 18f;
+
+    [Space]
+
+    [SerializeField] private float _longJumpPower = 4f;
+    [SerializeField] private float _longJumpDuration = 0.2f;
+
+    [Space]
+
+    [SerializeField] private float _jumpQueueDuration = 0.1f;
+    [SerializeField] private float _coyoteTime = 3f;
+    [SerializeField] private int _maxJumpCount = 2;
 
     [Header("Effects")]
 
-    [SerializeField] ParticleHelper _doubleJumpEffect;
-    [SerializeField] ParticleHelper _jumpTrailEffect;
+    [SerializeField] private ParticleHelper _doubleJumpEffect;
+    [SerializeField] private ParticleHelper _jumpTrailEffect;
 
     // Properties
-    public bool CanJump => _canJump;
-    public bool CoyoteAvailable => _coyoteAvailable;
+    public bool CanJump => _remainingJumpCount > 0 && _timeAfterPlatformLeft <= _coyoteTime;
+    public int MaxJumpCount => PersistentDataManager.Get<bool>("DoubleJump") ? _maxJumpCount : 1;
 
-    // Variables
-    bool _isLongJumping;
-    float _longJumpTime;
+    private bool _isJumpKeyQueued;
+    private bool _isStartJump;
+    private int _remainingJumpCount;
+    private bool _isLongJumping;
+    private float _longJumpTime;
+    private float _timeAfterPlatformLeft;
 
-    int _remainingJumpCount;
-    bool _isStartJump;
+    private Coroutine _jumKeyTimerCoroutine;
+    private PlayerBehaviour _player;
 
-    bool _isJumpQueued;
-    float _timeAfterJumpQueued;
-
-    float _timeAfterPlatformLeft;
-
-    PlayerBehaviour _player;
-
-    void Awake()
+    private void Awake()
     {
-        _remainingJumpCount = _maxJumpCount;
         _player = GetComponent<PlayerBehaviour>();
     }
-
-    void FixedUpdate()
+    private void Start()
+    {
+        ResetJumpCount();
+    }
+    private void FixedUpdate()
     {
         // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
-        if (_isLongJumping && _remainingJumpCount >= _maxJumpCount - 1)
-        {
-            // Debug.Log("롱 점프 되는중 ~~");
+        // (_isLongJumping && _remainingJumpCount >= MaxJumpCount - 1)
+        if (_isLongJumping)
             _player.Rigidbody.AddForce(_longJumpPower * (-1) * Physics2D.gravity);
-        }
     }
-
-    void Update()
+    private void Update()
     {
-        // TEMP
-        if (!PersistentDataManager.Get<bool>("DoubleJump"))
-            _maxJumpCount = 1;
-        else
-            _maxJumpCount = 2;
-
+        // Enqueue jump input
         if (InputManager.Instance.State.JumpKey.KeyDown)
-        {
-            OnJumpPressed();
-        }
-        _coyoteAvailable = (_timeAfterPlatformLeft <= _coyoteTime);
-        _canJump = (_remainingJumpCount > 0 && _coyoteAvailable);
+            StartJumpQueueCoroutine();
 
         // Reset jump count
         if (_player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<WallState>())
             ResetJumpCount();
 
-        // Long jump (롱점프 시간 동안은 위쪽으로 힘을 더 줌)
+        // Check left time after platform
+        if (_player.IsGrounded || _player.CurrentStateIs<WallState>()) _timeAfterPlatformLeft = 0f;
+        else _timeAfterPlatformLeft += Time.deltaTime;
+
+        // Check long jump time
         if (_isLongJumping)
         {
             _longJumpTime += Time.deltaTime;
 
             // 롱점프 시간이 지나거나 점프 버튼을 때면 롱점프는 종료된다.
-            if ((_longJumpTime >= _longJumpDuration) || !InputManager.Instance.State.JumpKey.Pressing)
+            if (_longJumpTime >= _longJumpDuration || !InputManager.Instance.State.JumpKey.Pressing)
+            {
+                _longJumpTime = 0f;
                 _isLongJumping = false;
+            }
         }
 
-        // Jump time check
-        if(_player.IsGrounded || _player.CurrentStateIs<WallState>())
-            _timeAfterPlatformLeft = 0f;
-        else
-            _timeAfterPlatformLeft += Time.deltaTime; // 발판을 떠난 후 경과 시간 증가
+        // Is there any jump input in the queue?
+        if (!_isJumpKeyQueued) return;
 
-        // Jump if queued
-        if (_isJumpQueued)
+        // Player의 Current State가 Jump State로 진입할 수 없는 상태라면 점프 불가
+        if (_player.CurrentState is not IJumpableState)
         {
-            // Player의 Current State가 Jump State로 진입할 수 없는 상태라면 점프 불가
-            if (_player.CurrentStateIs<DashState>() || _player.CurrentStateIs<DiveState>() || _player.CurrentStateIs<ShootingState>() || _player.CurrentStateIs<HurtState>() || _player.CurrentStateIs<DieState>() || _player.CurrentStateIs<HealingState>())
-            {
-                _isJumpQueued = false;
-                return;
-            }
-
-            // 벽타기 상태에서 바라보는 방향과 반대 방향으로 방향키를 누르지 않으면 점프 x
-            if (_player.CurrentStateIs<WallState>() && !_player.IsOppositeDirSync)
-            {
-                _isJumpQueued = false;
-                return;
-            }
-
-            _timeAfterJumpQueued += Time.deltaTime;
-
-            // 점프키가 눌린 후 JumpQueue에서 점프 명령이 대기하는데, 대기 시간이 종료되면 해당 점프 명령은 취소된다.
-            if (_timeAfterJumpQueued > _jumpQueueDuration)
-                _isJumpQueued = false;
-            else if (CanJump)
-            {
-                CastJump();
-                return;
-            }
+            _isJumpKeyQueued = false;
+            return;
         }
+
+        // 벽타기 상태에서 바라보는 방향과 반대 방향으로 방향키를 누르지 않으면 점프 x
+        if (_player.CurrentStateIs<WallState>() && !_player.IsOppositeDirSync)
+        {
+            _isJumpKeyQueued = false;
+            return;
+        }
+
+        // cast jump
+        if (CanJump)
+            CastJump();
     }
 
     public void ResetJumpCount()
     {
-        _remainingJumpCount = _maxJumpCount;
+        _remainingJumpCount = MaxJumpCount;
     }
-
-    public void OnJumpPressed()
+    private void CastJump()
     {
-        _isJumpQueued = true;
-        _timeAfterJumpQueued = 0f;
-    }
-
-    //JumpState 시작
-    void CastJump()
-    {
-        _isJumpQueued = false;
+        _isJumpKeyQueued = false;
         _isLongJumping = true;
-        _longJumpTime = 0f;
-        _isStartJump = (_remainingJumpCount == _maxJumpCount);
+        _isStartJump = _remainingJumpCount == MaxJumpCount;
         _remainingJumpCount--;
 
         _jumpTrailEffect.Emit(2);
-        if (_player.CurrentStateIs<InAirState>())
+
+        if (!_isStartJump)
         {
             _doubleJumpEffect.Emit(1);
             _player.Animator.SetTrigger("DoubleJump");
@@ -159,13 +130,30 @@ public class PlayerJumpController : MonoBehaviour
 
         _player.ChangeState<JumpState>();
     }
+    public void StartJumpQueueCoroutine()
+    {
+        if (_jumKeyTimerCoroutine != null)
+            StopCoroutine(_jumKeyTimerCoroutine);
+
+        _jumKeyTimerCoroutine = StartCoroutine(JumpQueueCoroutine());
+    }
+    private IEnumerator JumpQueueCoroutine()
+    {
+        // push jump input to 'jump queue'
+        _isJumpKeyQueued = true;
+
+        yield return new WaitForSeconds(_jumpQueueDuration);
+
+        // pop jump input to 'jump queue'
+        _isJumpKeyQueued = false;
+    }
 
     /// <summary>
     /// Basic Jump
     /// </summary>
-    public void ExcuteBasicJump()
+    public void BasicJump()
     {
-        float jumpPower = _isStartJump ? _startJumpPower : _inAirJumpPower;
+        var jumpPower = _isStartJump ? _startJumpPower : _inAirJumpPower;
 
         // 현재의 velocity.y를 초기화 시킨다
         _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, 0f);
@@ -173,11 +161,10 @@ public class PlayerJumpController : MonoBehaviour
         // ForceMode2D.Force : 충격파와 같은 힘을 가한다 (Jump를 위한 출력방식)
         _player.Rigidbody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
-
     /// <summary>
     /// Wall Jump
     /// </summary>
-    public void ExecuteWallJump()
+    public void WallJump()
     {
         _player.IsClimbJump = true;
 
@@ -197,11 +184,10 @@ public class PlayerJumpController : MonoBehaviour
         Vector2 wallJumpForce = new Vector2(_player.RecentDir * xPower, yPower) * _wallJumpPower;
         _player.Rigidbody.AddForce(wallJumpForce, ForceMode2D.Impulse);
     }
-
     /// <summary>
     /// End Wall Jump
     /// </summary>
-    public void ExcuteEndWallJump()
+    public void EndWallJump()
     {
         // 한번에 2개의 점프가 깎인다.
         _remainingJumpCount = 0;

@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// wall 상태 (grab, climb, 등) 의 기반 클래스
 /// </summary>
-public abstract class WallState : PlayerState
+public abstract class WallState : PlayerState, IJumpableState
 {
     [Header("Wall State")]
     [Space]

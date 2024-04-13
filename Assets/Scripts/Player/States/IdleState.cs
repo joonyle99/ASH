@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class IdleState : PlayerState, IAttackableState, IInteractableState
+public class IdleState : PlayerState, IAttackableState, IJumpableState, IInteractableState
 {
     [Header("Idle Settings")]
     [Space]

@@ -1,4 +1,4 @@
-public class RunState : PlayerState, IAttackableState, IInteractableState
+public class RunState : PlayerState, IAttackableState, IJumpableState, IInteractableState
 {
     protected override bool OnEnter()
     {
