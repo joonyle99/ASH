@@ -125,7 +125,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 635128870}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 3.3462558, y: 0.29744416, z: 0}
+  m_LocalPosition: {x: 4.57, y: 0.29744416, z: 0}
   m_LocalScale: {x: 4.5680585, y: 6.659478, z: 4.1473975}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -434,20 +434,21 @@ MonoBehaviour:
   <IsHitting>k__BackingField: 0
   <IsHurt>k__BackingField: 0
   <IsDead>k__BackingField: 0
-  <CenterOfMass>k__BackingField: {fileID: 68886007898307180}
-  <MonsterData>k__BackingField: {fileID: 11400000, guid: aed43b2a09cf1e245b2b2dc2a6d04688, type: 2}
-  <MonsterName>k__BackingField: 
-  <RankType>k__BackingField: 0
-  <MoveType>k__BackingField: 0
-  <MaxHp>k__BackingField: 0
+  _monsterDataObject: {fileID: 11400000, guid: aed43b2a09cf1e245b2b2dc2a6d04688, type: 2}
+  monsterData:
+    MonsterName: 
+    RankType: 0
+    MoveType: 0
+    MaxHp: 0
+    MoveSpeed: 0
+    Acceleration: 0
+    JumpForce: {x: 0, y: 0}
   _curHp: 0
-  <MoveSpeed>k__BackingField: 0
-  <Acceleration>k__BackingField: 0
-  <JumpForce>k__BackingField: {x: 0, y: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
   <GroundCheckCollider>k__BackingField: {fileID: 68886008988939920}
+  <CenterOfMass>k__BackingField: {fileID: 68886007898307180}
   <BlinkEffect>k__BackingField: {fileID: 6296443733435208325}
   <IsGroggy>k__BackingField: 0
   <IsRage>k__BackingField: 0
@@ -463,8 +464,8 @@ MonoBehaviour:
   targetHitCount: 0
   currentHitCount: 0
   _attackTypeRange:
-    Start: 4
-    End: 5
+    Start: 3
+    End: 4
   _currentAttack: 0
   _nextAttack: 0
   _slash01: {fileID: 7501307551420893577, guid: 0e4912bd354e0a745b23c90eeca2032d, type: 3}
@@ -580,6 +581,7 @@ MonoBehaviour:
   _interval: 0.08
   _duration: 0.9
   _isBlinking: 0
+  _spriteRenderers: []
 --- !u!114 &6195014887653608503
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -174,6 +174,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     }
     public override void Die(bool isHitBoxDisable = true, bool isDeathEffect = true)
     {
+        // 흑곰은 사망 이펙트를 재생하지 않는다
         base.Die(true, false);
 
         StartCoroutine(SlowMotionCoroutine(5f));

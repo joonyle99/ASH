@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -123,24 +124,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         set;
     }
 
-    [field: Header("Monster Data")]
-    [field: Space]
+    [Header("Monster Data")]
+    [Space]
 
-    [field: SerializeField]
-    public Transform CenterOfMass
-    {
-        get;
-        private set;
-    }
+    [SerializeField]
+    private MonsterDataObject _monsterDataObject;
 
-    [field: Space]
+    [Space]
 
-    [field: SerializeField]
-    public MonsterDataObject MonsterDataObject
-    {
-        get;
-        private set;
-    }
     public MonsterData monsterData;
     [SerializeField] private int _curHp;
     public int CurHp
@@ -150,10 +141,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         {
             _curHp = value;
 
+            // 체력이 0 이하가 되면 사망
             if (_curHp <= 0)
             {
                 _curHp = 0;
-                Die(true, true);        // 기본적으로 몬스터 사망 시, HitBox 비활성화, DeathEffect 실행
+                Die();
             }
         }
     }
@@ -179,7 +171,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [field: Header("ETC")]
     [field: Space]
-
+    [field: SerializeField]
+    public Transform CenterOfMass
+    {
+        get;
+        private set;
+    }
     [field: SerializeField]
     public BlinkEffect BlinkEffect
     {
@@ -187,9 +184,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         private set;
     }
 
+    public Coroutine recentCoroutine;
+
     // animation transition event
-    public delegate bool AnimTransitionEvent(string targetTransitionParam, Monster_StateBase state);
-    public event AnimTransitionEvent animTransitionEvent;
+    public delegate bool AnimTransitionDelegate(string targetTransitionParam, Monster_StateBase state);
+    public event AnimTransitionDelegate AnimTransitionEvent;
 
     #endregion
 
@@ -235,6 +234,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (!CenterOfMass) CenterOfMass = this.transform;
         RigidBody2D.centerOfMass = CenterOfMass.localPosition;
     }
+    protected virtual void OnEnable()
+    {
+
+    }
     protected virtual void Update()
     {
         if (IsDead)
@@ -243,9 +246,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // ground check
         switch (monsterData.MoveType)
         {
-            case MonsterDefine.MoveType.GroundTurret:
-            case MonsterDefine.MoveType.GroundWalking:
-            case MonsterDefine.MoveType.GroundJumpping:
+            case MonsterDefine.MoveType.Ground:
 
                 // ground rayCast
                 RaycastHit2D[] groundRayHits = Physics2D.BoxCastAll(GroundCheckCollider.transform.position,
@@ -315,25 +316,25 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public virtual void SetUp()
     {
         // 몬스터의 이름
-        monsterData.MonsterName = MonsterDataObject.Name.ToString();
+        monsterData.MonsterName = _monsterDataObject.Name.ToString();
 
         // 몬스터의 랭크
-        monsterData.RankType = MonsterDataObject.RankType;
+        monsterData.RankType = _monsterDataObject.RankType;
 
         // 몬스터의 행동 타입
-        monsterData.MoveType = MonsterDataObject.MoveType;
+        monsterData.MoveType = _monsterDataObject.MoveType;
 
         // 몬스터의 최대 체력
-        monsterData.MaxHp = MonsterDataObject.MaxHp;
+        monsterData.MaxHp = _monsterDataObject.MaxHp;
 
         // 몬스터의 이동속도
-        monsterData.MoveSpeed = MonsterDataObject.MoveSpeed;
+        monsterData.MoveSpeed = _monsterDataObject.MoveSpeed;
 
         // 몬스터의 가속도
-        monsterData.Acceleration = MonsterDataObject.Acceleration;
+        monsterData.Acceleration = _monsterDataObject.Acceleration;
 
         // 몬스터의 점프파워
-        monsterData.JumpForce = MonsterDataObject.JumpForce;
+        monsterData.JumpForce = _monsterDataObject.JumpForce;
     }
     public virtual void KnockBack(Vector2 forceVector)
     {
@@ -361,6 +362,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public virtual void Die(bool isHitBoxDisable = true, bool isDeathEffect = true)
     {
+        // Set Dead
         IsDead = true;
 
         // Check that Animator has Die Trigger Param
@@ -370,11 +372,33 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 SetAnimatorTrigger("Die");
         }
 
-        // Collider 비활성화
-        DisableCollider(isHitBoxDisable);
+        // HitBox Disable
+        SetHitBoxDisable(isHitBoxDisable);
 
-        if (isDeathEffect)
-            DeathEffect();
+        // Death Effect
+        if (isDeathEffect) DeathEffect();
+    }
+    public virtual void Revive()
+    {
+        // Set Revive
+        IsDead = false;
+
+        // 여기서 바뀐 것들 모두 다시 바꿔줘야 한다
+        IsHurt = false;
+        CurHp = monsterData.MaxHp;
+
+        // Check that Animator has Revive Trigger Param
+        foreach (AnimatorControllerParameter param in Animator.parameters)
+        {
+            if (param.name == "Revive" && param.type == AnimatorControllerParameterType.Trigger)
+                SetAnimatorTrigger("Revive");
+        }
+
+        // HitBox Enable
+        SetHitBoxDisable(false);
+
+        // Revive Effect
+        ReviveEffect();
     }
 
     // Effect
@@ -383,10 +407,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // death effect
         StartCoroutine(DeathEffectCoroutine());
     }
-    protected virtual IEnumerator DeathEffectCoroutine()
+    private IEnumerator DeathEffectCoroutine()
     {
         var effect = GetComponent<DisintegrateEffect_New>();
-        yield return new WaitForSeconds(0.2f);  // 자연스러운 효과를 위한 대기
+        yield return new WaitForSeconds(0.2f);  // for natural effect
 
         // NavMesh Agent Stop movement
         var navMeshMoveModule = GetComponent<FloatingMovementModule>();
@@ -396,10 +420,42 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         RigidBody2D.simulated = false;
         Animator.speed = 0;
 
-        // wait until effect done
+        // Wait until effect done
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
-        Destroy(transform.root ? transform.root.gameObject : gameObject);
+
+        // Stop all coroutines on this behavior
+        StopAllCoroutines();
+
+        // MonsterManager에게 사망 정보 전달
+        MonsterManager.Instance.NotifyDeath(this);
+
+        // Disable gameObject
+        gameObject.SetActive(false);
+    }
+    private void ReviveEffect()
+    {
+        // Enable gameObject
+        gameObject.SetActive(true);
+
+        // revive effect
+        StartCoroutine(ReviveEffectCoroutine());
+    }
+    private IEnumerator ReviveEffectCoroutine()
+    {
+        var effect = GetComponent<DisintegrateEffect_New>();
+
+        // Wait until effect done
+        effect.Revert();
+        yield return new WaitUntil(() => !effect.IsEffectDone);
+
+        // NavMesh Agent Resume movement
+        var navMeshMoveModule = GetComponent<FloatingMovementModule>();
+        if (navMeshMoveModule) navMeshMoveModule.SetStopAgent(false, false);
+
+        // Generic Resume movement
+        RigidBody2D.simulated = true;
+        Animator.speed = 1;
     }
 
     // basic
@@ -414,44 +470,35 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
+    public void StartSetRecentDirAfterGrounded(int targetDir)
+    {
+        // 해당 코루틴은 매 업데이트 마다 실행되므로, 중복 실행을 방지하기 위해 리턴해준다
+        // if (recentCoroutine != null) return;
+
+        // recentCoroutine = StartCoroutine(SetRecentDirAfterGrounded(targetDir));
+        recentCoroutine = StartCoroutine(SetRecentDirAfterGrounded(targetDir));
+    }
     private IEnumerator SetRecentDirAfterGrounded(int targetDir)
     {
+        // TODO: 매 업데이트에서 코루틴이 실행되어 불필요한 연산이 발생한다
+        // Debug.Log("SetRecentDirAfterGrounded 코루틴 실행");
+
         // 코루틴을 사용해 방향 전환을 땅을 밟은 후로 설정한다
         yield return new WaitUntil(() => IsGround);
 
         SetRecentDir(targetDir);
-    }
-    public void StartSetRecentDirAfterGrounded(int targetDir)
-    {
-        StartCoroutine(SetRecentDirAfterGrounded(targetDir));
+
+        // recentCoroutine = null;
     }
 
-    // control hitBox & collider
-    public void DisableCollider(bool isHitBoxDisable)
-    {
-        var colliders = GetComponentsInChildren<Collider2D>(true);
-        foreach (var collider in colliders)
-        {
-            // Main Body Collider2D를 생략하는 옵션
-            if (collider == MainBodyCollider2D) continue;
-
-            if (!isHitBoxDisable)
-            {
-                // HitBox Collider를 생략하는 옵션
-                var hitBox = collider.GetComponent<MonsterBodyHit>();
-                if (hitBox != null) continue;
-            }
-
-            collider.enabled = false;
-        }
-    }
-    public void SetHitBoxActive(bool isBool)
+    // hitBox
+    public void SetHitBoxDisable(bool isDisable)
     {
         // includeInactive : true -> 비활성화된 자식 오브젝트도 검색
         var hitBox = GetComponentInChildren<MonsterBodyHit>(true);
 
         if (hitBox)
-            hitBox.gameObject.SetActive(isBool);
+            hitBox.gameObject.SetActive(!isDisable);
     }
     public void SetHitBoxStepable(bool isBool)
     {
@@ -459,17 +506,19 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         if (hitBox)
         {
-            if (isBool)
+            Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
+            if (hitBoxCollider)
             {
-                Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
-                hitBoxCollider.isTrigger = false;
-                hitBox.gameObject.layer = LayerMask.NameToLayer("Default");
-            }
-            else
-            {
-                Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
-                hitBoxCollider.isTrigger = true;
-                hitBox.gameObject.layer = LayerMask.NameToLayer("MonsterHitBox");
+                if (isBool)
+                {
+                    hitBoxCollider.isTrigger = false;
+                    hitBox.gameObject.layer = LayerMask.NameToLayer("Default");
+                }
+                else
+                {
+                    hitBoxCollider.isTrigger = true;
+                    hitBox.gameObject.layer = LayerMask.NameToLayer("MonsterHitBox");
+                }
             }
         }
     }
@@ -484,7 +533,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     // hit
     public void HitProcess(AttackInfo attackInfo, bool onDamage = true, bool onKnockBack = true, bool useBlinkEffect = true)
     {
-        StartCoroutine(HitTimer());
+        StartCoroutine(HitTimerCoroutine());
         PlaySound("Hurt");
 
         if (useBlinkEffect)
@@ -504,14 +553,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public void HurtProcess()
     {
         if (IsDead) return;
-
-        // superArmor is started when monster attack
-        // superArmor : hurt animation x
         if (IsAttacking) return;
 
         SetAnimatorTrigger("Hurt");
     }
-    private IEnumerator HitTimer()
+    private IEnumerator HitTimerCoroutine()
     {
         IsHitting = true;
         yield return new WaitForSeconds(0.05f);
@@ -547,25 +593,24 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         return _previousState is TState;
     }
-    private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState)
-    {
-        // 애니메이션 전이 조건이 있는 경우 조건을 만족할 때까지 대기
-        if (animTransitionEvent != null)
-            yield return new WaitUntil(() => animTransitionEvent(targetTransitionParam, currentState));
-
-        Animator.SetTrigger(targetTransitionParam);
-    }
     public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState)
     {
         StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState));
     }
+    private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState)
+    {
+        // 애니메이션 전이 조건이 있는 경우 조건을 만족할 때까지 대기
+        if (AnimTransitionEvent != null)
+            yield return new WaitUntil(() => AnimTransitionEvent(targetTransitionParam, currentState));
 
-    // Animator
+        Animator.SetTrigger(targetTransitionParam);
+    }
+
+    // Animator & Sound
     public void SetAnimatorTrigger(string key)
     {
         Animator.SetTrigger(key);
     }
-    // Sound
     public void PlaySound(string key)
     {
         SoundList.PlaySFX(key);

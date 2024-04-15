@@ -13,11 +13,10 @@ public class BlinkEffect : MonoBehaviour
 
     [SerializeField]
     private SpriteRenderer[] _spriteRenderers;  // blink target spriteRenderers
-    private Material[] _originalMaterials;      // originalMaterial's count == spriteRenderer's count
-
-    private Coroutine _blinkCoroutine;
-
     public SpriteRenderer[] SpriteRenderers => _spriteRenderers;
+
+    private Material[] _originalMaterials;      // originalMaterial's count == spriteRenderer's count
+    private Coroutine _blinkCoroutine;
 
     void Awake()
     {

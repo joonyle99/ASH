@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class InstantRespawnOnContact : TriggerZone
@@ -18,8 +16,7 @@ public class InstantRespawnOnContact : TriggerZone
         {
             // ∞≈∫œ¿Ã∏¶ ªÁ∏¡Ω√≈≤¥Ÿ
             var turtle = activator.GetComponent<Turtle>();
-            if (turtle)
-                turtle.Die(false, false);
+            if (turtle) turtle.CurHp -= turtle.monsterData.MaxHp;
         }
     }
 }

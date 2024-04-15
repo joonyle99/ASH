@@ -1144,7 +1144,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1621067903465288225}
   m_Layer: 0
-  m_Name: Prefab_Mushroom 3
+  m_Name: Prefab_Mushroom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1367,20 +1367,21 @@ MonoBehaviour:
   <IsHitting>k__BackingField: 0
   <IsHurt>k__BackingField: 0
   <IsDead>k__BackingField: 0
-  <CenterOfMass>k__BackingField: {fileID: 0}
-  <MonsterData>k__BackingField: {fileID: 11400000, guid: a314028ac35e2c044a8819fb6324ff51, type: 2}
-  <MonsterName>k__BackingField: 
-  <RankType>k__BackingField: 0
-  <MoveType>k__BackingField: 0
-  <MaxHp>k__BackingField: 0
+  _monsterDataObject: {fileID: 11400000, guid: a314028ac35e2c044a8819fb6324ff51, type: 2}
+  monsterData:
+    MonsterName: 
+    RankType: 0
+    MoveType: 0
+    MaxHp: 0
+    MoveSpeed: 0
+    Acceleration: 0
+    JumpForce: {x: 0, y: 0}
   _curHp: 0
-  <MoveSpeed>k__BackingField: 0
-  <Acceleration>k__BackingField: 0
-  <JumpForce>k__BackingField: {x: 0, y: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
   <GroundCheckCollider>k__BackingField: {fileID: 1621067902094051443}
+  <CenterOfMass>k__BackingField: {fileID: 0}
   <BlinkEffect>k__BackingField: {fileID: 0}
   _targetDieTime: 4
   _elapsedDieTime: 0
@@ -1802,7 +1803,7 @@ Transform:
   m_GameObject: {fileID: 5885552443160089909}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3839621033731576139}

@@ -21,16 +21,13 @@ public sealed class Mushroom : MonsterBehavior, ILightCaptureListener
     {
         _elapsedDieTime += Time.deltaTime;
 
+        // 일정 시간이 지나면 죽는다
         if (_elapsedDieTime > _targetDieTime)
-        {
-            Die(true, true);
-        }
+            CurHp -= monsterData.MaxHp;
 
         // 자동 전환을 막는다
         if (CurrentState.IsAutoStateTransition)
-        {
             CurrentState.ElapsedStayTime = 0f;
-        }
     }
 
     public void OnLightExit(LightCapturer capturer, LightSource lightSource)

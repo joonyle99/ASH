@@ -14,6 +14,7 @@ public abstract class Evaluator : MonoBehaviour
 
     [Space]
 
+    private bool _startUsableFlag;
     [SerializeField] private bool _isUsable = true;
     public bool IsUsable
     {
@@ -50,6 +51,12 @@ public abstract class Evaluator : MonoBehaviour
     public virtual void Awake()
     {
         monsterBehavior = GetComponent<MonsterBehavior>();
+        _startUsableFlag = IsUsable;
+    }
+    public virtual void OnEnable()
+    {
+        IsDuringCoolTime = false;
+        IsUsable = _startUsableFlag;
     }
 
     /// <summary>

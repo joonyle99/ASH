@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Mushroom_Devour : Monster_Skill
+public class Mushroom_Devour : Monster_BodySkill
 {
     [SerializeField]
     private CutscenePlayerList _cutscenePlayerList;

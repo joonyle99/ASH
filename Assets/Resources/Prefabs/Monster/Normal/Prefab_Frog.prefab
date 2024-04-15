@@ -1345,7 +1345,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4094633951419829470}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -26.98, y: 6.08, z: 0}
+  m_LocalPosition: {x: -10, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1952,7 +1952,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5517317729978824787}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.96, y: 0, z: 0}
+  m_LocalPosition: {x: 10, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2120,20 +2120,21 @@ MonoBehaviour:
   <IsHitting>k__BackingField: 0
   <IsHurt>k__BackingField: 0
   <IsDead>k__BackingField: 0
-  <CenterOfMass>k__BackingField: {fileID: 1691325673}
-  <MonsterData>k__BackingField: {fileID: 11400000, guid: e6aca0f95f82abb4fbc1f113892d1ca5, type: 2}
-  <MonsterName>k__BackingField: 
-  <RankType>k__BackingField: 0
-  <MoveType>k__BackingField: 0
-  <MaxHp>k__BackingField: 0
+  _monsterDataObject: {fileID: 11400000, guid: e6aca0f95f82abb4fbc1f113892d1ca5, type: 2}
+  monsterData:
+    MonsterName: 
+    RankType: 0
+    MoveType: 0
+    MaxHp: 0
+    MoveSpeed: 0
+    Acceleration: 0
+    JumpForce: {x: 0, y: 0}
   _curHp: 0
-  <MoveSpeed>k__BackingField: 0
-  <Acceleration>k__BackingField: 0
-  <JumpForce>k__BackingField: {x: 0, y: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
   <GroundCheckCollider>k__BackingField: {fileID: 5517317730244132831}
+  <CenterOfMass>k__BackingField: {fileID: 1691325673}
   <BlinkEffect>k__BackingField: {fileID: 5247372131622839078}
 --- !u!114 &4084768817651031568
 MonoBehaviour:
@@ -2226,6 +2227,7 @@ MonoBehaviour:
   _interval: 0.08
   _duration: 0.9
   _isBlinking: 0
+  _spriteRenderers: []
 --- !u!114 &7921451255379820264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2315,7 +2317,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5517317730710916851}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.29, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2846,7 +2848,7 @@ Transform:
   m_GameObject: {fileID: 7623611832862475640}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 0.23536453, y: 0.23536453, z: 0.23536453}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8877866183907918808}

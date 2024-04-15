@@ -45,11 +45,8 @@ public static class MonsterDefine
     public enum MoveType
     {
         Null = 0,
-        GroundTurret,
-        GroundWalking,
-        GroundJumpping,
-        GroundFloating,
-        Fly,
+        Ground,
+        Fly
     }
 
     public static int BossHealthUnit = 10000;

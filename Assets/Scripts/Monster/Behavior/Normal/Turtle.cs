@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+
 public sealed class Turtle : MonsterBehavior
 {
     public void FixedUpdate()
@@ -30,6 +33,7 @@ public sealed class Turtle : MonsterBehavior
     }
     public override void Die(bool isHitBoxDisable = true, bool isDeathEffect = true)
     {
+        // 거북이는 히트박스 비활성화를 하지 않고, 사망 이펙트를 재생하지 않는다
         base.Die(false, false);
 
         // Trigger -> Collision

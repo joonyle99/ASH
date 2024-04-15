@@ -15,7 +15,7 @@ public abstract class Monster_Skill : MonoBehaviour
     [SerializeField] protected float forceY;
 
     [Space]
-
+    
     [SerializeField] protected GameObject hitEffect;
 
     protected delegate void MosnterSkillEvent();
