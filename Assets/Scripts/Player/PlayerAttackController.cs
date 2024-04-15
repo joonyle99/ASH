@@ -63,7 +63,8 @@ public class PlayerAttackController : MonoBehaviour
             foreach (var listener in listeners)
             {
                 Vector2 forceVector = new Vector2(_attackPowerX * Mathf.Sign(rayCastHit.transform.position.x - transform.position.x), _attackPowerY);
-                var result = listener.OnHit(new AttackInfo(_attackDamage, forceVector, AttackType.Player_BasicAttack));
+                var attackInfo = new AttackInfo(_attackDamage, forceVector, AttackType.Player_BasicAttack);
+                var result = listener.OnHit(attackInfo);
                 if (result == IAttackListener.AttackResult.Success)
                     attackResult = IAttackListener.AttackResult.Success;
             }

@@ -45,7 +45,8 @@ public class MonsterBodyHit : MonoBehaviour
                     {
                         // 플레이어를 타격
                         Vector2 forceVector = new Vector2(_forceX * Mathf.Sign(player.transform.position.x - this.transform.position.x), _forceY);
-                        IAttackListener.AttackResult attackResult = player.OnHit(new AttackInfo(_damage, forceVector, AttackType.Monster_BodyAttack));
+                        var attackInfo = new AttackInfo(_damage, forceVector, AttackType.Monster_BodyAttack);
+                        IAttackListener.AttackResult attackResult = player.OnHit(attackInfo);
 
                         // 타격 성공 시 히트 이펙트 생성
                         if (attackResult == IAttackListener.AttackResult.Success)

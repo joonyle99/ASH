@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Bat : MonsterBehavior
+public sealed class Bat : MonsterBehavior
 {
     [Header("Bat")]
     [Space]
@@ -30,8 +30,8 @@ public class Bat : MonsterBehavior
 
         if (FloatingMovementModule)
         {
-            FloatingMovementModule.SetSpeed(MoveSpeed);
-            FloatingMovementModule.SetAcceleration(Acceleration);
+            FloatingMovementModule.SetSpeed(monsterData.MoveSpeed);
+            FloatingMovementModule.SetAcceleration(monsterData.Acceleration);
         }
     }
 

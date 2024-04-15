@@ -19,8 +19,8 @@ public class AttackEvaluator : Evaluator
         // 공격 전 최종적으로 방향을 바꾼다.
         int chaseDir = Math.Sign(targetPoint.x - transform.position.x);
 
-        if (monsterBehavior.MoveType == MonsterDefine.MoveType.GroundWalking ||
-            monsterBehavior.MoveType == MonsterDefine.MoveType.GroundJumpping)
+        if (monsterBehavior.monsterData.MoveType == MonsterDefine.MoveType.GroundWalking ||
+            monsterBehavior.monsterData.MoveType == MonsterDefine.MoveType.GroundJumpping)
         {
             monsterBehavior.StartSetRecentDirAfterGrounded(chaseDir);
         }

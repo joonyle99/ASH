@@ -41,7 +41,8 @@ public abstract class Monster_Skill : MonoBehaviour
                             forceY);
 
                     // 플레이어에게 타격
-                    IAttackListener.AttackResult attackResult = player.OnHit(new AttackInfo(damage, forceVector, AttackType.Monster_SkillAttack));
+                    var attackInfo = new AttackInfo(damage, forceVector, AttackType.Monster_SkillAttack);
+                    IAttackListener.AttackResult attackResult = player.OnHit(attackInfo);
 
                     // 타격 성공 시 히트 이펙트 생성
                     if (attackResult == IAttackListener.AttackResult.Success)

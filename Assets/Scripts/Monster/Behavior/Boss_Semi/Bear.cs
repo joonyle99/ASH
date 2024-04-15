@@ -4,22 +4,22 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum BearAttackType
+public sealed class Bear : BossBehavior, ILightCaptureListener
 {
-    Null = 0,
+    public enum BearAttackType
+    {
+        Null = 0,
 
-    // Normal Attack
-    SlashRight,
-    SlashLeft,
-    BodySlam,
-    Stomp,
+        // Normal Attack
+        SlashRight,
+        SlashLeft,
+        BodySlam,
+        Stomp,
 
-    // Special Attack
-    EarthQuake = 10
-}
+        // Special Attack
+        EarthQuake = 10
+    }
 
-public class Bear : BossBehavior, ILightCaptureListener
-{
     #region Variable
 
     [Header("Bear")]
@@ -152,8 +152,8 @@ public class Bear : BossBehavior, ILightCaptureListener
     {
         base.SetUp();
 
-        MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
-        CurHp = MaxHp;
+        monsterData.MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
+        CurHp = monsterData.MaxHp;
     }
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {

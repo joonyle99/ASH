@@ -25,7 +25,7 @@ public class BossGroggyRageState : Boss_StateBase
         Boss.GroggyPostProcess();
 
         // 보스가 격노하면 이동속도 / 공격속도 증가
-        Boss.MoveSpeed *= 1.5f;
+        Boss.monsterData.MoveSpeed *= 1.5f;
         Boss.AttackEvaluator.TargetCheckCoolTime /= 1.5f;
 
         // 애니메이션 속도 증가

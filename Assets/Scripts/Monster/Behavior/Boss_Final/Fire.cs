@@ -1,16 +1,14 @@
-using UnityEngine;
-
-public enum FireAttackType
+public sealed class Fire : BossBehavior
 {
-    Null = 0,
+    public enum FireAttackType
+    {
+        Null = 0,
 
-    // Normal Attack
+        // Normal Attack
 
-    // Special Attack
-}
+        // Special Attack
+    }
 
-public class Fire : BossBehavior
-{
     public override void AttackPreProcess()
     {
 

@@ -2,28 +2,39 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MonsterAttackInfo
-{
-    public float Damage;
-    public Vector2 Force;
-
-    public MonsterAttackInfo()
-    {
-        Damage = 1f;
-        Force = Vector2.zero;
-    }
-    public MonsterAttackInfo(float damage, Vector2 force)
-    {
-        Damage = damage;
-        Force = force;
-    }
-}
-
 /// <summary>
 /// 몬스터의 기본 행동을 정의하는 추상클래스
 /// </summary>
 public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 {
+    /// <summary>
+    /// 몬스터 데이터를 캡슐화하는 클래스
+    /// cf) struct는 간단하고, 불변성을 가지며, 원본에 동적으로 수정할 필요가 없는 데이터를 저장할 때 사용
+    /// </summary>
+    [System.Serializable]
+    public class MonsterData
+    {
+        public string MonsterName;
+        public MonsterDefine.RankType RankType;
+        public MonsterDefine.MoveType MoveType;
+        public int MaxHp;
+        public float MoveSpeed;
+        public float Acceleration;
+        public Vector2 JumpForce;
+
+        public void PrintAllData()
+        {
+            // debug all data
+            Debug.Log($"MonsterName: {MonsterName}");
+            Debug.Log($"RankType: {RankType}");
+            Debug.Log($"MoveType: {MoveType}");
+            Debug.Log($"MaxHp: {MaxHp}");
+            Debug.Log($"MoveSpeed: {MoveSpeed}");
+            Debug.Log($"Acceleration: {Acceleration}");
+            Debug.Log($"JumpForce: {JumpForce}");
+        }
+    }
+
     #region Attribute
 
     // Basic Component
@@ -121,39 +132,16 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get;
         private set;
     }
-    [field: SerializeField]
-    public MonsterData MonsterData
-    {
-        get;
-        private set;
-    }
 
     [field: Space]
 
     [field: SerializeField]
-    public string MonsterName
+    public MonsterDataObject MonsterDataObject
     {
         get;
-        set;
+        private set;
     }
-    [field: SerializeField]
-    public MonsterDefine.RankType RankType
-    {
-        get;
-        protected set;
-    }
-    [field: SerializeField]
-    public MonsterDefine.MoveType MoveType
-    {
-        get;
-        protected set;
-    }
-    [field: SerializeField]
-    public int MaxHp
-    {
-        get;
-        set;
-    }
+    public MonsterData monsterData;
     [SerializeField] private int _curHp;
     public int CurHp
     {
@@ -169,24 +157,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             }
         }
     }
-    [field: SerializeField]
-    public float MoveSpeed
-    {
-        get;
-        set;
-    }
-    [field: SerializeField]
-    public float Acceleration
-    {
-        get;
-        set;
-    }
-    [field: SerializeField]
-    public Vector2 JumpForce
-    {
-        get;
-        set;
-    }
+
+    [field: Space]
 
     [field: Header("Ground Check")]
     [field: Space]
@@ -256,6 +228,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 바라보는 방향 설정
         RecentDir = DefaultDir;
 
+        // 현재 체력 설정
+        CurHp = monsterData.MaxHp;
+
         // 무게중심 설정
         if (!CenterOfMass) CenterOfMass = this.transform;
         RigidBody2D.centerOfMass = CenterOfMass.localPosition;
@@ -266,7 +241,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             return;
 
         // ground check
-        switch (MoveType)
+        switch (monsterData.MoveType)
         {
             case MonsterDefine.MoveType.GroundTurret:
             case MonsterDefine.MoveType.GroundWalking:
@@ -340,26 +315,25 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public virtual void SetUp()
     {
         // 몬스터의 이름
-        MonsterName = MonsterData.MonsterName.ToString();
+        monsterData.MonsterName = MonsterDataObject.Name.ToString();
 
         // 몬스터의 랭크
-        RankType = MonsterData.RankType;
+        monsterData.RankType = MonsterDataObject.RankType;
 
         // 몬스터의 행동 타입
-        MoveType = MonsterData.MoveType;
+        monsterData.MoveType = MonsterDataObject.MoveType;
 
         // 몬스터의 최대 체력
-        MaxHp = MonsterData.MaxHp;
-        CurHp = MaxHp;
+        monsterData.MaxHp = MonsterDataObject.MaxHp;
 
         // 몬스터의 이동속도
-        MoveSpeed = MonsterData.MoveSpeed;
+        monsterData.MoveSpeed = MonsterDataObject.MoveSpeed;
 
         // 몬스터의 가속도
-        Acceleration = MonsterData.Acceleration;
+        monsterData.Acceleration = MonsterDataObject.Acceleration;
 
         // 몬스터의 점프파워
-        JumpForce = MonsterData.JumpForce;
+        monsterData.JumpForce = MonsterDataObject.JumpForce;
     }
     public virtual void KnockBack(Vector2 forceVector)
     {

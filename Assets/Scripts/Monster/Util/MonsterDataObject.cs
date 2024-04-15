@@ -1,11 +1,11 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MonsterData", order = 1)]
-public class MonsterData : ScriptableObject
+[CreateAssetMenu(fileName = "MonsterDataObject", order = 1)]
+public class MonsterDataObject : ScriptableObject
 {
     // 몬스터 이름
     [field: SerializeField]
-    public MonsterDefine.MonsterName MonsterName { get; private set; }
+    public MonsterDefine.MonsterName Name { get; private set; }
 
     // 몬스터 랭크
     [field: SerializeField]
