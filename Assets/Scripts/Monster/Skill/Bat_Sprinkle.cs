@@ -8,8 +8,10 @@ public class Bat_Sprinkle : Monster_ProjectileSkill
     private Rigidbody2D _rigidbody;
     private SpriteRenderer _spriteRenderer;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         _rigidbody = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }

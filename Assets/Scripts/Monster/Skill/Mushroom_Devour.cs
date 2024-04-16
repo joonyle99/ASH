@@ -5,8 +5,10 @@ public class Mushroom_Devour : Monster_BodySkill
     [SerializeField]
     private CutscenePlayerList _cutscenePlayerList;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (_cutscenePlayerList)
         {
             monsterSkillEvent -= LightCutscene;

@@ -1248,10 +1248,11 @@ GameObject:
   - component: {fileID: 1621067903612610553}
   - component: {fileID: 1621067903612610058}
   - component: {fileID: 153955686}
+  - component: {fileID: 1351338438081458281}
   - component: {fileID: 3124748255850639288}
+  - component: {fileID: 6719385138528251887}
   - component: {fileID: 1621067903612610556}
   - component: {fileID: 1621067903612610559}
-  - component: {fileID: 1351338438081458281}
   m_Layer: 11
   m_Name: Monster_Mushroom
   m_TagString: Untagged
@@ -1383,9 +1384,6 @@ MonoBehaviour:
     m_Bits: 8
   <GroundCheckCollider>k__BackingField: {fileID: 1621067902094051443}
   <CenterOfMass>k__BackingField: {fileID: 0}
-  <RespawnBounds>k__BackingField:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
   _targetDieTime: 4
   _elapsedDieTime: 0
 --- !u!114 &153955686
@@ -1407,6 +1405,27 @@ MonoBehaviour:
   _isUsable: 1
   _targetEvaluatorCoolTime: 3
   _isDuringCoolTime: 0
+--- !u!114 &1351338438081458281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621067903612610548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c70566b394b6946b02a4d0967ab15a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SpriteRenderers>k__BackingField:
+  - {fileID: 1621067903435944438}
+  - {fileID: 1621067902774816758}
+  - {fileID: 1621067902401537610}
+  - {fileID: 1621067902713179112}
+  - {fileID: 1621067902452757492}
+  - {fileID: 1621067902401414551}
+  - {fileID: 1753008044180455857}
+  - {fileID: 1753008043251662672}
 --- !u!114 &3124748255850639288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1423,6 +1442,22 @@ MonoBehaviour:
   _duration: 2.5
   _particles:
   - {fileID: 5885552443160089908}
+--- !u!114 &6719385138528251887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1621067903612610548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59f27cfe9b42834dbce1df4844b1359, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _respawnMaterial: {fileID: 2100000, guid: 79831a002c6297040a192bfcdaae227b, type: 2}
+  _duration: 2
+  _bottomOffset: 1.04
+  _topOffset: 0.51
 --- !u!114 &1621067903612610556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1455,19 +1490,6 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &1351338438081458281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1621067903612610548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77c70566b394b6946b02a4d0967ab15a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <SpriteRenderers>k__BackingField: []
 --- !u!1 &1621067903666761739
 GameObject:
   m_ObjectHideFlags: 0
@@ -1675,7 +1697,7 @@ GameObject:
   - component: {fileID: 2342239083866205033}
   - component: {fileID: 5885552443500036368}
   - component: {fileID: 839993801014122013}
-  - component: {fileID: 5885552443500036364}
+  - component: {fileID: 8997777771972268176}
   m_Layer: 10
   m_Name: Devour
   m_TagString: Untagged
@@ -1765,8 +1787,8 @@ MonoBehaviour:
   forceX: 7
   forceY: 10
   hitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
-  _cutscenePlayerList: {fileID: 5885552443500036364}
---- !u!114 &5885552443500036364
+  _cutscenePlayerList: {fileID: 8997777771972268176}
+--- !u!114 &8997777771972268176
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1780,7 +1802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cutsceneDictionary:
   - name: Lighting Guide
-    cutscenePlayer: {fileID: 0}
+    cutscenePlayer: {fileID: 3007821914710986594, guid: 4572ef9783c7e8e4d857deec554a9cd5, type: 3}
 --- !u!1 &5885552443160089909
 GameObject:
   m_ObjectHideFlags: 0
@@ -1809,7 +1831,7 @@ Transform:
   m_GameObject: {fileID: 5885552443160089909}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3839621033731576139}
@@ -6856,6 +6878,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
+--- !u!212 &1753008043251662672 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5331770771802676314, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
+  m_PrefabInstance: {fileID: 5885552443125736202}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8097406939048309020 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2446134603135635990, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
@@ -6926,6 +6953,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
+--- !u!212 &1753008044180455857 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5331770771802676314, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
+  m_PrefabInstance: {fileID: 5885552444290407915}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8097406939931889661 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2446134603135635990, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}

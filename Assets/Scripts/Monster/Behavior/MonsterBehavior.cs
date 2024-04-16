@@ -140,9 +140,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         {
             _curHp = value;
 
+            // Debug.Log("CurHp is changed");
+
             // 체력이 0 이하가 되면 사망
             if (_curHp <= 0)
             {
+                // Debug.Log("Die");
+
                 _curHp = 0;
                 Die();
             }
@@ -177,8 +181,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get;
         private set;
     }
-    [field: SerializeField]
     public Bounds RespawnBounds
+    {
+        get;
+        private set;
+    }
+    public Vector3 FirstPosition
     {
         get;
         private set;
@@ -228,10 +236,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // Set center of mass
         if (!CenterOfMass) CenterOfMass = this.transform;
-        RigidBody2D.centerOfMass = CenterOfMass.localPosition;
+        if (RigidBody2D) RigidBody2D.centerOfMass = CenterOfMass.localPosition;
 
-        // Set respawn bounds
-        RespawnBounds = MainBodyCollider2D.bounds;  // 처음 몬스터가 위치한 곳으로 기본 세팅
+        // For respawn position
+        RespawnBounds = MainBodyCollider2D.bounds;      // basic setting
+        FirstPosition = transform.position;
     }
     protected virtual void Start()
     {
@@ -332,8 +341,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public virtual void KnockBack(Vector2 forceVector)
     {
-        var navMesh = GetComponent<NavMeshAgent>();
-        if (navMesh) navMesh.velocity = forceVector / 2.0f;
+        if (FloatingMovementModule)
+        {
+            // NavMeshAgent 전용 KnockBack
+            FloatingMovementModule.SetVelocity(forceVector / 2.0f);
+        }
         else
         {
             // 속도 초기화
@@ -357,7 +369,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public virtual void Die(bool isHitBoxDisable = true, bool isDeathProcess = true)
     {
         // Set Dead
-        IsDead = true;
+        IsDead = true;  // 거북이는 IsDead == true 여도 필드상에 존재할 수 있다.
 
         // Check that Animator has Die Trigger Param
         foreach (AnimatorControllerParameter param in Animator.parameters)
@@ -378,7 +390,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         gameObject.SetActive(true);
 
         // Set Position
-        transform.position = respawnPosition;
+        if (FloatingMovementModule) FloatingMovementModule.SetPosition(respawnPosition);
+        else transform.position = respawnPosition;
 
         // Respawn Process
         StartCoroutine(RespawnProcessCoroutine());
@@ -397,12 +410,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         CurHp = monsterData.MaxHp;
 
         // Init Condition
-        IsAttacking = false;
-        IsHiding = false;
-        IsGodMode = false;
-        IsHitting = false;
-        IsHurt = false;
-        IsDead = false;
+        if (IsAttacking) IsAttacking = false;
+        if (IsHiding) IsHiding = false;
+        if (IsGodMode) IsGodMode = false;
+        if (IsHitting) IsHitting = false;
+        if (IsHurt) IsHurt = false;
+        if (IsDead) IsDead = false;
 
         // Init State
         InitState();
@@ -410,7 +423,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public void SetRespawnBounds(Bounds bounds)
     {
         // 활동 영역을 설정하는 스크립트로부터 bounds를 전달받는다.
-
         RespawnBounds = bounds;
     }
     public void SetRecentDir(int targetDir)
@@ -418,18 +430,16 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // flip을 시킬지에 대한 값
         var flipValue = RecentDir * targetDir;
 
-        /*
         if (flipValue == 1)
         {
-            Debug.Log("recentDir == targetDir");
+            // Debug.Log("recentDir == targetDir");
             return;
         }
         if (flipValue == 0)
         {
-            Debug.Log("recentDir or targetDir is '0'");
+            // Debug.Log("recentDir or targetDir is '0'");
             return;
         }
-        */
 
         // 바라보는 방향 변경
         RecentDir = targetDir;
@@ -524,10 +534,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         yield return new WaitForSeconds(delay);
 
         // Stop movement
-        var navMeshMoveModule = GetComponent<FloatingMovementModule>();
-        if (navMeshMoveModule) navMeshMoveModule.SetStopAgent(true, true);
-        RigidBody2D.simulated = false;
         Animator.speed = 0;
+        RigidBody2D.simulated = false;
+        if (FloatingMovementModule)
+        {
+            FloatingMovementModule.SetStopAgent(true, true);
+            // FloatingMovementModule.Agent.enabled = false;
+            // FloatingMovementModule.SetPosition(Vector3.zero);
+        }
 
         // Wait until death effect is done
         yield return StartCoroutine(DeathEffectCoroutine());
@@ -557,10 +571,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         SetHitBoxDisable(false);
 
         // Resume movement
-        var navMeshMoveModule = GetComponent<FloatingMovementModule>();
-        if (navMeshMoveModule) navMeshMoveModule.SetStopAgent(false, false);
-        RigidBody2D.simulated = true;
         Animator.speed = 1;
+        RigidBody2D.simulated = true;
+        if (FloatingMovementModule)
+        {
+            FloatingMovementModule.SetStopAgent(false, false);
+            // FloatingMovementModule.Agent.enabled = true;
+        }
 
         // Reset Condition
         Initialize();

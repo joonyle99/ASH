@@ -27,8 +27,22 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
         yield return new WaitForSeconds(reviveTime);
 
         var respawnBounds = monster.RespawnBounds;
-        var respawnPos = new Vector3(Random.Range(respawnBounds.min.x, respawnBounds.max.x),
-            Random.Range(respawnBounds.min.y, respawnBounds.max.y), 0f);
+        var respawnPos = Vector3.zero;
+
+        if (monster.monsterData.MoveType == MonsterDefine.MoveType.Ground)
+        {
+            var posX = Random.Range(respawnBounds.min.x, respawnBounds.max.x);
+            var posY = monster.FirstPosition.y;
+
+            respawnPos = new Vector3(posX, posY, 0f);
+        }
+        else if (monster.monsterData.MoveType == MonsterDefine.MoveType.Fly)
+        {
+            var posX = Random.Range(respawnBounds.min.x, respawnBounds.max.x);
+            var posY = Random.Range(respawnBounds.min.y, respawnBounds.max.y);
+
+            respawnPos = new Vector3(posX, posY, 0f);
+        }
 
         monster.Respawn(respawnPos);
     }

@@ -18,6 +18,15 @@ public abstract class Monster_Skill : MonoBehaviour
     
     [SerializeField] protected GameObject hitEffect;
 
+    protected MonsterBehavior monster;
+    protected MaterialManager materialManager;
+
+    protected virtual void Awake()
+    {
+        monster = GetComponentInParent<MonsterBehavior>();
+        materialManager = GetComponent<MaterialManager>();
+    }
+
     protected delegate void MosnterSkillEvent();
     protected MosnterSkillEvent monsterSkillEvent;
 

@@ -314,12 +314,12 @@ GameObject:
   - component: {fileID: 57872128}
   - component: {fileID: 68886007787193403}
   - component: {fileID: 1617935343392802300}
+  - component: {fileID: 2840822553654775952}
   - component: {fileID: 6296443733435208325}
   - component: {fileID: 6195014887653608503}
   - component: {fileID: 68886007787193404}
-  - component: {fileID: 68886007787193405}
   - component: {fileID: 68886008199415118}
-  - component: {fileID: 2840822553654775952}
+  - component: {fileID: 68886007787193405}
   m_Layer: 11
   m_Name: Monster_Bear
   m_TagString: Untagged
@@ -568,6 +568,47 @@ MonoBehaviour:
   _isUsable: 1
   _targetEvaluatorCoolTime: 5
   _isDuringCoolTime: 0
+--- !u!114 &2840822553654775952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 68886007787193795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c70566b394b6946b02a4d0967ab15a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SpriteRenderers>k__BackingField:
+  - {fileID: 447106378040998752}
+  - {fileID: 2174213863286002380}
+  - {fileID: 8583957375754186357}
+  - {fileID: 5011539670470740834}
+  - {fileID: 2656152593879104866}
+  - {fileID: 7159009377419966858}
+  - {fileID: 8755974627073199766}
+  - {fileID: 5161701478252189269}
+  - {fileID: 3347956196588296281}
+  - {fileID: 6271138251721952430}
+  - {fileID: 1955364286050552074}
+  - {fileID: 5924133455786745794}
+  - {fileID: 600083718999928476}
+  - {fileID: 3771968234587509319}
+  - {fileID: 1798835274759982916}
+  - {fileID: 2236248409015872459}
+  - {fileID: 604119870574818208}
+  - {fileID: 7159009377722966359}
+  - {fileID: 7639767917670808777}
+  - {fileID: 6384377534830268038}
+  - {fileID: 2479620158137931940}
+  - {fileID: 8197828054056647032}
+  - {fileID: 8990264527943644282}
+  - {fileID: 338445334057131471}
+  - {fileID: 2402597542851975267}
+  - {fileID: 6350066971729599224}
+  - {fileID: 7477410348366657108}
+  - {fileID: 1689909350}
 --- !u!114 &6296443733435208325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -676,17 +717,6 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
---- !u!210 &68886007787193405
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 68886007787193795}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
 --- !u!114 &68886008199415118
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,24 +731,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cutsceneDictionary:
   - name: Lighting Guide
-    cutscenePlayer: {fileID: 0}
+    cutscenePlayer: {fileID: 8846120605949948911, guid: e650b79601b27824eb39f31e998ea6fb, type: 3}
   - name: 9th Attack Success
-    cutscenePlayer: {fileID: 0}
+    cutscenePlayer: {fileID: 8063060583375077730, guid: ad0bccb3cd88aa141b1915da77c80638, type: 3}
   - name: Bear Die
-    cutscenePlayer: {fileID: 0}
---- !u!114 &2840822553654775952
-MonoBehaviour:
+    cutscenePlayer: {fileID: 3712289898123124154, guid: 60bc7ea6dedf0e14fb8f214ca0eca8b2, type: 3}
+--- !u!210 &68886007787193405
+SortingGroup:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 68886007787193795}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77c70566b394b6946b02a4d0967ab15a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <SpriteRenderers>k__BackingField: []
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1 &68886007898307181
 GameObject:
   m_ObjectHideFlags: 0

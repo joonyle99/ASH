@@ -4907,6 +4907,7 @@ GameObject:
   - component: {fileID: 6190995042310891285}
   - component: {fileID: 6190995042310891284}
   - component: {fileID: 6190995042310891283}
+  - component: {fileID: 9013161100466640523}
   - component: {fileID: -2281094838506855948}
   m_Layer: 23
   m_Name: Bear_StalactiteAttackPrefab
@@ -5012,6 +5013,20 @@ MonoBehaviour:
     _pitchType: 1
     _pitchA: 0.8
     _pitchB: 1.2
+--- !u!114 &9013161100466640523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4981769418987962229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c70566b394b6946b02a4d0967ab15a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SpriteRenderers>k__BackingField:
+  - {fileID: 4593838716533725837}
 --- !u!114 &-2281094838506855948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5026,11 +5041,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
   _duration: 2
-  _timeOffsetAfterParticle: 0.2
   _particles:
   - {fileID: 751112765}
-  <SpriteRenderers>k__BackingField:
-  - {fileID: 4593838716533725837}
 --- !u!1 &5326780676511029834
 GameObject:
   m_ObjectHideFlags: 0

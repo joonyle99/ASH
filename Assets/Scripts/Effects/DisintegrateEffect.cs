@@ -36,7 +36,7 @@ public class DisintegrateEffect : MonoBehaviour
             particleHelper.gameObject.SetActive(true);
             particleHelper.transform.parent = null;
             particleHelper.transform.position = transform.position;
-            particleHelper.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+            // particleHelper.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
         }
 
         // Disintegrate Material Initialize

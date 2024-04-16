@@ -204,13 +204,13 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Hurt
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -266,12 +266,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b20407005a12ef949b87fcdaee3ebc51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  <ElapsedStayTime>k__BackingField: 0
 --- !u!114 &1942311039681200132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -284,12 +285,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60c70455c20fc264a950a05c473e6221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  <ElapsedStayTime>k__BackingField: 0
 --- !u!1102 &5308539884285074585
 AnimatorState:
   serializedVersion: 6
@@ -330,9 +332,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cdb5a8fb0acc8c4ea89b17d42356edd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isAutoStateTransition: 0
-  _targetTransitionParam: 
-  _minStayTime: 0
-  _maxStayTime: 0
-  _targetStayTime: 0
-  _elapsedStayTime: 0
+  isAutoStateTransition: 0
+  targetTransitionParam: 
+  stayTime:
+    Start: 0
+    End: 0
+  targetStayTime: 0
+  <ElapsedStayTime>k__BackingField: 0

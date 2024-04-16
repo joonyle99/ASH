@@ -1802,6 +1802,7 @@ GameObject:
   - component: {fileID: 2579944004464329306}
   - component: {fileID: 5369211660300451871}
   - component: {fileID: 671760447267284499}
+  - component: {fileID: 3206885801740689346}
   - component: {fileID: 6295828055657392841}
   - component: {fileID: 4386577300565921619}
   - component: {fileID: 723671115631068515}
@@ -1949,7 +1950,6 @@ MonoBehaviour:
     m_Bits: 8
   <GroundCheckCollider>k__BackingField: {fileID: 8825375826108273547}
   <CenterOfMass>k__BackingField: {fileID: 1716051017}
-  <BlinkEffect>k__BackingField: {fileID: 6295828055657392841}
 --- !u!114 &2579944004464329306
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1996,6 +1996,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _type: 1
+--- !u!114 &3206885801740689346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5369211660300451864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c70566b394b6946b02a4d0967ab15a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SpriteRenderers>k__BackingField:
+  - {fileID: 3372230108862641770}
+  - {fileID: 3019893956432574236}
+  - {fileID: 5453065680486219338}
+  - {fileID: 3432954956645000607}
+  - {fileID: 4348508734798145849}
+  - {fileID: 3306984968285612171}
+  - {fileID: 3796110287089251475}
+  - {fileID: 5159082013239871929}
+  - {fileID: 3371463556468993392}
+  - {fileID: 2691761832872030254}
+  - {fileID: 2749966169470333082}
+  - {fileID: 3292961850526436427}
+  - {fileID: 3601212714933642373}
+  - {fileID: 6973900255892647490}
+  - {fileID: 4629282688228727335}
 --- !u!114 &6295828055657392841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2012,7 +2040,6 @@ MonoBehaviour:
   _interval: 0.08
   _duration: 0.9
   _isBlinking: 0
-  _spriteRenderers: []
 --- !u!114 &4386577300565921619
 MonoBehaviour:
   m_ObjectHideFlags: 0

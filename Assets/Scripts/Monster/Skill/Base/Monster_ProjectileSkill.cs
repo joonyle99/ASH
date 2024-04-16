@@ -24,19 +24,24 @@ public class Monster_ProjectileSkill : Monster_Skill
             if (colliderSound != null)
                 SoundManager.Instance.PlaySFX(colliderSound);
 
-            var effect = GetComponent<DisintegrateEffect>();
-            if (effect)
-                StartCoroutine(DeathEffectCoroutine(effect));
+            if (materialManager && materialManager.DisintegrateEffect)
+                StartCoroutine(DeathProcessCoroutine(materialManager.DisintegrateEffect));
             else
-                Destroy(this.gameObject);
+                Destroy(gameObject);
         }
     }
 
-    private IEnumerator DeathEffectCoroutine(DisintegrateEffect effect)
+    private IEnumerator DeathProcessCoroutine(DisintegrateEffect effect)
     {
         GetComponent<Rigidbody2D>().simulated = false;
+
+        yield return StartCoroutine(DeathEffectCoroutine(effect));
+
+        Destroy(transform.root ? transform.root.gameObject : gameObject);
+    }
+    private IEnumerator DeathEffectCoroutine(DisintegrateEffect effect)
+    {
         effect.Play(effectDelay);
         yield return new WaitUntil(() => effect.IsEffectDone);
-        Destroy(transform.root ? transform.root.gameObject : gameObject);
     }
 }

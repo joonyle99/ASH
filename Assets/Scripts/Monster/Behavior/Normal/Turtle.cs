@@ -1,6 +1,3 @@
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
-
 public sealed class Turtle : MonsterBehavior
 {
     public void FixedUpdate()

@@ -11,24 +11,27 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IHurtableS
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
+        if (Monster.IsDead) return;
+
         var floatingChaseEvaluator = Monster.FloatingChaseEvaluator;
         var floatingPatrolModule = Monster.FloatingPatrolModule;
 
         if (floatingChaseEvaluator)
         {
-            if (!floatingChaseEvaluator.IsUsable) return;
-
-            // Target Within Range
-            if (floatingChaseEvaluator.IsTargetWithinRange())
+            if (floatingChaseEvaluator.IsUsable)
             {
-                if (Monster.FloatingMovementModule)
+                // Target Within Range
+                if (floatingChaseEvaluator.IsTargetWithinRange())
                 {
-                    // Move to Target for Chase
-                    Monster.FloatingMovementModule.MoveToDestination(floatingChaseEvaluator.TargetPosition);
-                }
+                    if (Monster.FloatingMovementModule)
+                    {
+                        // Move to Target for Chase
+                        Monster.FloatingMovementModule.MoveToDestination(floatingChaseEvaluator.TargetPosition);
 
-                // 추격 중이라면 Patrol은 생략한다
-                return;
+                        // Only Chase
+                        return;
+                    }
+                }
             }
         }
 

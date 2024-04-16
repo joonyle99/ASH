@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1679590112453342978}
   - component: {fileID: 1679590112453342977}
   - component: {fileID: 2007017996437501280}
+  - component: {fileID: 7949168248615444129}
   - component: {fileID: 1446741384077978874}
   m_Layer: 23
   m_Name: Bat_SprinkleAttackPrefab
@@ -160,6 +161,20 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 1
+--- !u!114 &7949168248615444129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679590112453342982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c70566b394b6946b02a4d0967ab15a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SpriteRenderers>k__BackingField:
+  - {fileID: 1679590112453342983}
 --- !u!114 &1446741384077978874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,11 +189,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
   _duration: 2
-  _timeOffsetAfterParticle: 0.2
   _particles:
   - {fileID: 314671143907008369}
-  <SpriteRenderers>k__BackingField:
-  - {fileID: 1679590112453342983}
 --- !u!1 &2053905738643962617
 GameObject:
   m_ObjectHideFlags: 0
