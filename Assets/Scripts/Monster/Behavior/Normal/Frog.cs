@@ -4,7 +4,7 @@ public sealed class Frog : MonsterBehavior
     {
         base.Awake();
 
-        AnimTransitionEvent -= GroundMoveToOtherCondition;
+        AnimTransitionEvent -= GroundMoveToOtherCondition;  // Prevent multiple subscriptions (Handler)
         AnimTransitionEvent += GroundMoveToOtherCondition;
     }
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)

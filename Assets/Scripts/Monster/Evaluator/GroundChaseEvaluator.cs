@@ -37,8 +37,8 @@ public class GroundChaseEvaluator : Evaluator
     {
         base.Awake();
 
-        evaluationEvent -= SetChaseDir;
-        evaluationEvent += SetChaseDir;
+        EvaluationEvent -= SetChaseDir;
+        EvaluationEvent += SetChaseDir;
     }
 
     public override Collider2D IsTargetWithinRange()

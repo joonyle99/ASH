@@ -1,16 +1,12 @@
-using System.Collections;
-using UnityEngine;
-
 public class HurtState : PlayerState
 {
-
     protected override bool OnEnter()
     {
         Animator.SetTrigger("Hurt");
 
         Player.IsHurt = true;
 
-        Player.BlinkEffect.Play();
+        Player.MaterialManager.BlinkEffect.Play();
 
         return true;
     }

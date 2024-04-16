@@ -1,76 +1,77 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(MaterialManager))]
 public class DisintegrateEffect : MonoBehaviour
 {
-    [SerializeField] Material _disintegrateMaterial;
-    [SerializeField] float _duration;
-    [SerializeField] float _timeOffsetAfterParticle = 0.2f;
-    [SerializeField] ParticleHelper _particle;
+    [SerializeField] private Material _disintegrateMaterial;
+    [SerializeField] private float _duration;
 
-    [SerializeField] float _bottomOffset;
-    [SerializeField] float _topOffset;
+    [Space]
 
-    // [ContextMenuItem("Get all", "GetAllSpriteRenderers")]
-    [SerializeField] SpriteRenderer [] _spriteRenderers;
+    [SerializeField] private ParticleHelper[] _particles;
 
-    public bool IsEffectDone { get; private set; } = false;
-    public float Duration => _duration;
+    [field: Space]
 
-    /*
-    void GetAllSpriteRenderers()
+    public bool IsEffectDone { get; private set; }
+
+    private MaterialManager materialManager;
+
+    private void Awake()
     {
-        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        materialManager = GetComponent<MaterialManager>();
     }
-    */
 
     public void Play(float delay = 0f)
     {
         StartCoroutine(ProgressCoroutine(delay));
     }
-    IEnumerator ProgressCoroutine(float delay)
+    private IEnumerator ProgressCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
 
-        // Disintegrate Effect Initialize
-        foreach (var renderer in _spriteRenderers)
+        // Particle System Control
+        foreach (var particleHelper in _particles)
         {
-            renderer.material = _disintegrateMaterial;
-            renderer.material.SetFloat("_Progress", 0);
-            renderer.material.SetFloat("_MinY", transform.position.y - _bottomOffset);
-            renderer.material.SetFloat("_MaxY", transform.position.y + _topOffset);
+            particleHelper.gameObject.SetActive(true);
+            particleHelper.transform.parent = null;
+            particleHelper.transform.position = transform.position;
+            particleHelper.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
         }
 
-        // Particle Effect
-        _particle.transform.parent = null;
-        _particle.transform.position = transform.position;
-        _particle.gameObject.SetActive(true);
-
-        yield return new WaitForSeconds(_timeOffsetAfterParticle);
+        // Disintegrate Material Initialize
+        materialManager.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 0f);
 
         // Disintegrate Effect Progress
         float eTime = 0f;
         while (eTime < _duration)
         {
             yield return null;
-            foreach (var renderer in _spriteRenderers)
-            {
-                renderer.material.SetFloat("_Progress", eTime / _duration);
-                // renderer.material.SetFloat("_MinY", transform.position.y - _bottomOffset);
-                // renderer.material.SetFloat("_MaxY", transform.position.y + _topOffset);
-            }
             eTime += Time.deltaTime;
+
+            materialManager.SetProgress("_Progress", eTime / _duration);
         }
+
+        yield return new WaitForSeconds(delay);
 
         IsEffectDone = true;
     }
-
-    private void OnDrawGizmosSelected()
+    public void Revert()
     {
-        float halfWidth = 1f;
+        IsEffectDone = false;
 
-        Gizmos.color = Color.grey;
-        Gizmos.DrawLine(new Vector3(transform.position .x - halfWidth, transform.position.y - _bottomOffset, 0), new Vector3(transform.position.x + halfWidth, transform.position.y - _bottomOffset, 0));
-        Gizmos.DrawLine(new Vector3(transform.position.x - halfWidth, transform.position.y + _topOffset, 0), new Vector3(transform.position.x + halfWidth, transform.position.y + _topOffset, 0));
+        // Disintegrate Material Initialize
+        materialManager.SetProgress("_Progress", 0f);
+
+        // Particle System Control
+        foreach (var particleHelper in _particles)
+        {
+            particleHelper.transform.parent = transform;
+            particleHelper.transform.position = Vector3.zero;
+            particleHelper.gameObject.SetActive(false);
+        }
+
+        // Init SpriteRenderers Material
+        materialManager.InitMaterial();
     }
 }

@@ -10,8 +10,8 @@ public class DieState : PlayerState
     [SerializeField] float _stayDuration;
     [SerializeField] float _spawnDuration;
 
-    DisintegrateEffect _disintegrateEffect;
-    public float DieDuration => _disintegrateEffect.Duration;
+    DisintegrateEffect_Old disintegrateEffectOld;
+    public float DieDuration => disintegrateEffectOld.Duration;
     public float SpawnDuration => _spawnDuration;
 
     [SerializeField] float _moveUpDistance = 4f;
@@ -44,9 +44,9 @@ public class DieState : PlayerState
         yield return new WaitForSeconds(_stayDuration);
 
         Player.SoundList.PlaySFX("Disintegrate");
-        _disintegrateEffect.Play();
+        disintegrateEffectOld.Play();
 
-        yield return new WaitForSeconds(_disintegrateEffect.Duration);
+        yield return new WaitForSeconds(disintegrateEffectOld.Duration);
 
         // æ¿ ¿ÁΩ√¿€
         yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
@@ -58,7 +58,7 @@ public class DieState : PlayerState
 
     void Awake()
     {
-        _disintegrateEffect = GetComponent<DisintegrateEffect>();
+        disintegrateEffectOld = GetComponent<DisintegrateEffect_Old>();
     }
 
     protected override bool OnEnter()

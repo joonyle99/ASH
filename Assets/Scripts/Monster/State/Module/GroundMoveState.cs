@@ -31,7 +31,10 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IHurtableSta
 
                 // 가깝지 않은 경우에만 방향 전환
                 if (!isTooClose)
+                {
+                    // Monster.SetRecentDir(chaseEvaluator.ChaseDir);
                     Monster.StartSetRecentDirAfterGrounded(chaseEvaluator.ChaseDir);
+                }
 
                 // 추격 판정기 작동 시 Patrol 판정기는 작동하지 않도록
                 return;
@@ -45,17 +48,26 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IHurtableSta
             {
                 // 오른쪽으로 간다
                 if (patrolEvaluator.IsLeftOfLeftPoint())
+                {
+                    // Monster.SetRecentDir(1);
                     Monster.StartSetRecentDirAfterGrounded(1);
+                }
                 // 왼쪽으로 간다
                 else if (patrolEvaluator.IsRightOfRightPoint())
+                {
+                    // Monster.SetRecentDir(-1);
                     Monster.StartSetRecentDirAfterGrounded(-1);
+                }
             }
             // 범위 안에 있는 경우
             else
             {
                 // 범위 안에서 Patrol 벽에 닿으면 반대 방향으로 간다
                 if (patrolEvaluator.IsTargetWithinRange())
+                {
+                    // Monster.SetRecentDir(-Monster.RecentDir);
                     Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
+                }
             }
         }
     }

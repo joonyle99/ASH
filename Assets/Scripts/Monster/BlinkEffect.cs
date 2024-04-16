@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(MaterialManager))]
 public class BlinkEffect : MonoBehaviour
 {
     [SerializeField] private Material _material;
@@ -11,12 +12,8 @@ public class BlinkEffect : MonoBehaviour
     private PlayerBehaviour _player;
     private MonsterBehavior _monster;
 
-    [SerializeField]
-    private SpriteRenderer[] _spriteRenderers;  // blink target spriteRenderers
-    public SpriteRenderer[] SpriteRenderers => _spriteRenderers;
-
-    private Material[] _originalMaterials;      // originalMaterial's count == spriteRenderer's count
     private Coroutine _blinkCoroutine;
+    private MaterialManager _materialManager;
 
     void Awake()
     {
@@ -24,32 +21,13 @@ public class BlinkEffect : MonoBehaviour
         _player = GetComponent<PlayerBehaviour>();
         _monster = GetComponent<MonsterBehavior>();
 
-        // 몬스터의 경우에만 자동으로 SpriteRenderer를 찾아서 넣어줌
-        if (_monster)
-            _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
-
-        // save original Materials
-        _originalMaterials = new Material[_spriteRenderers.Length];
-        for (int i = 0; i < _originalMaterials.Length; i++)
-            _originalMaterials[i] = _spriteRenderers[i].material;
+        _materialManager = GetComponent<MaterialManager>();
     }
 
-    public void InitMaterial()
-    {
-        // put original Material to spriteRenderer
-        for (int i = 0; i < _spriteRenderers.Length; i++)
-            _spriteRenderers[i].material = _originalMaterials[i];
-    }
-    public void ChangeMaterial(Material material)
-    {
-        // change material to spriteRenderer
-        foreach (var spriteRenderer in _spriteRenderers)
-            spriteRenderer.material = material;
-    }
     private IEnumerator BlinkCoroutine()
     {
         // first, change material to blink material
-        ChangeMaterial(_material);
+        _materialManager.SetMaterial(_material);
 
         _isBlinking = true;
         if (_player) _player.IsGodMode = _isBlinking;
@@ -58,14 +36,10 @@ public class BlinkEffect : MonoBehaviour
         float startTime = Time.time;
         while (startTime + _duration > Time.time)
         {
-            foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0.3f);
-
+            _materialManager.SetProgress("_FlashAmount", 0.3f);
             yield return new WaitForSeconds(_interval);
 
-            foreach (var spriteRenderer in _spriteRenderers)
-                spriteRenderer.material.SetFloat("_FlashAmount", 0f);
-
+            _materialManager.SetProgress("_FlashAmount", 0f);
             yield return new WaitForSeconds(_interval);
         }
 
@@ -76,7 +50,7 @@ public class BlinkEffect : MonoBehaviour
             yield break;
 
         // third, change material to original material
-        InitMaterial();
+        _materialManager.InitMaterial();
     }
     public void Play()
     {

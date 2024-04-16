@@ -10,8 +10,8 @@ public class AttackEvaluator : Evaluator
     {
         base.Awake();
 
-        evaluationEvent -= ChangeDir;
-        evaluationEvent += ChangeDir;
+        EvaluationEvent -= ChangeDir;
+        EvaluationEvent += ChangeDir;
     }
 
     private void ChangeDir(Vector3 targetPoint)
@@ -19,9 +19,12 @@ public class AttackEvaluator : Evaluator
         // 공격 전 최종적으로 방향을 바꾼다.
         int chaseDir = Math.Sign(targetPoint.x - transform.position.x);
 
-        if (monsterBehavior.monsterData.MoveType == MonsterDefine.MoveType.Ground)
-            monsterBehavior.StartSetRecentDirAfterGrounded(chaseDir);
+        if (monster.monsterData.MoveType == MonsterDefine.MoveType.Ground)
+        {
+            // monster.SetRecentDir(chaseDir);
+            monster.StartSetRecentDirAfterGrounded(chaseDir);
+        }
         else
-            monsterBehavior.SetRecentDir(chaseDir);
+            monster.SetRecentDir(chaseDir);
     }
 }

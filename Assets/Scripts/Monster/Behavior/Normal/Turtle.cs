@@ -31,7 +31,7 @@ public sealed class Turtle : MonsterBehavior
 
         return IAttackListener.AttackResult.Success;
     }
-    public override void Die(bool isHitBoxDisable = true, bool isDeathEffect = true)
+    public override void Die(bool isHitBoxDisable = true, bool isDeathProcess = true)
     {
         // 거북이는 히트박스 비활성화를 하지 않고, 사망 이펙트를 재생하지 않는다
         base.Die(false, false);

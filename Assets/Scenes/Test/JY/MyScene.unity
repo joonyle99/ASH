@@ -2712,18 +2712,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1322454706829155599, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _maxJumpCount
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1322454706829155599, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _longJumpPower
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1322454706829155599, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _inAirJumpPower
-      value: 14
-      objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -4875,6 +4863,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterList: []
+  respawnTimeRange:
+    Start: 15
+    End: 20
 --- !u!4 &903665509
 Transform:
   m_ObjectHideFlags: 0
@@ -5200,11 +5191,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -212.88
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.803348
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10707,10 +10698,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prefab_Bear
       objectReference: {fileID: 0}
-    - target: {fileID: 6195014887653608503, guid: 1d1a67366c4e4da49bd76dd5ff3b3bd8, type: 3}
-      propertyPath: _timeOffsetAfterParticle
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d1a67366c4e4da49bd76dd5ff3b3bd8, type: 3}
 --- !u!114 &68886008199415105 stripped
@@ -10926,17 +10913,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 48564136283920570, guid: ddd30e14f868ee74ca9ed0edc0c463a3, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 48564136283920570, guid: ddd30e14f868ee74ca9ed0edc0c463a3, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 48564136283920570, guid: ddd30e14f868ee74ca9ed0edc0c463a3, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.5
+    - target: {fileID: 23144706, guid: ddd30e14f868ee74ca9ed0edc0c463a3, type: 3}
+      propertyPath: m_Offset.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5517317729310175207, guid: ddd30e14f868ee74ca9ed0edc0c463a3, type: 3}
       propertyPath: m_Name
@@ -10986,8 +10965,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7921451255379820264, guid: ddd30e14f868ee74ca9ed0edc0c463a3, type: 3}
-      propertyPath: _timeOffsetAfterParticle
+    - target: {fileID: 5796473429928903289, guid: ddd30e14f868ee74ca9ed0edc0c463a3, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -11047,10 +11026,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3124748255850639288, guid: fb73fc644e1694e4f95fac0855a1d8c1, type: 3}
-      propertyPath: _timeOffsetAfterParticle
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5885552443500036364, guid: fb73fc644e1694e4f95fac0855a1d8c1, type: 3}
       propertyPath: _cutsceneDictionary.Array.data[0].cutscenePlayer
       value: 
@@ -11064,10 +11039,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4119070135592939043, guid: a21e5c36e776a8e42a6c0b1023ff75c4, type: 3}
-      propertyPath: _timeOffsetAfterParticle
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8241212123419817092, guid: a21e5c36e776a8e42a6c0b1023ff75c4, type: 3}
       propertyPath: m_RootOrder
       value: 15

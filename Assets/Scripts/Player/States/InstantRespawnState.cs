@@ -6,13 +6,13 @@ public class InstantRespawnState : PlayerState
     [SerializeField] InputSetterScriptableObject _stayStillSetter;
     [SerializeField] float _spawnDuration;
 
-    DisintegrateEffect _disintegrateEffect;
-    public float DieDuration => _disintegrateEffect.Duration;
+    DisintegrateEffect_Old disintegrateEffectOld;
+    public float DieDuration => disintegrateEffectOld.Duration;
     public float SpawnDuration => _spawnDuration;
 
     void Awake()
     {
-        _disintegrateEffect = GetComponent<DisintegrateEffect>();
+        disintegrateEffectOld = GetComponent<DisintegrateEffect_Old>();
     }
 
     protected override bool OnEnter()
@@ -21,7 +21,7 @@ public class InstantRespawnState : PlayerState
         Player.enabled = false;
         Animator.speed = 0;
         InputManager.Instance.ChangeInputSetter(_stayStillSetter);
-        _disintegrateEffect.Play();
+        disintegrateEffectOld.Play();
         Player.SoundList.PlaySFX("Disintegrate");
 
         return true;
@@ -41,7 +41,7 @@ public class InstantRespawnState : PlayerState
     IEnumerator SpawnCoroutine()
     {
         // change all player's spriteRenderer to original material
-        Player.BlinkEffect.InitMaterial();
+        Player.MaterialManager.InitMaterial();
 
         // reset player condition
         Player.enabled = true;
@@ -52,7 +52,7 @@ public class InstantRespawnState : PlayerState
         float eTime = 0f;
         while (eTime < _spawnDuration)
         {
-            foreach (var spriteRenderer in Player.BlinkEffect.SpriteRenderers)
+            foreach (var spriteRenderer in Player.MaterialManager.SpriteRenderers)
             {
                 Color color = spriteRenderer.color;
                 color.a = Mathf.Lerp(0, 1, eTime / _spawnDuration);

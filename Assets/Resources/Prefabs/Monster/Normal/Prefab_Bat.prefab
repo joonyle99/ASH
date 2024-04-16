@@ -199,7 +199,7 @@ MonoBehaviour:
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 72fb1d6f1c20b5342ad15619464e0e10, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 11bcf458ff56cbd44b280271aee562d7, type: 2}
 --- !u!114 &536029390823338697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,7 +244,7 @@ Transform:
   m_GameObject: {fileID: 536029391485816285}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 16.25307, y: 12.189803, z: 0.81265354}
+  m_LocalScale: {x: 16, y: 12, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8241212123419817092}
@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 536029391928586684}
   - component: {fileID: 536029391928586685}
   - component: {fileID: 536029391928586683}
+  - component: {fileID: 88900761}
   m_Layer: 9
   m_Name: Patrol Area
   m_TagString: Untagged
@@ -371,7 +372,7 @@ Transform:
   m_GameObject: {fileID: 536029391928586686}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 13.976999, y: 8.3862, z: 1.3977}
+  m_LocalScale: {x: 14, y: 8.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8241212123419817092}
@@ -455,6 +456,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &88900761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536029391928586686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae532a77d48a164da7b257e243f6045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _owner: {fileID: 3686014239526542607}
 --- !u!1 &1028049676279707775
 GameObject:
   m_ObjectHideFlags: 0
@@ -7770,6 +7784,7 @@ GameObject:
   - component: {fileID: 4119070135592939043}
   - component: {fileID: 8241212124184343094}
   - component: {fileID: 8241212124387651255}
+  - component: {fileID: 4730422786744565344}
   m_Layer: 11
   m_Name: Monster_Bat
   m_TagString: Untagged
@@ -7925,7 +7940,9 @@ MonoBehaviour:
     m_Bits: 0
   <GroundCheckCollider>k__BackingField: {fileID: 0}
   <CenterOfMass>k__BackingField: {fileID: 0}
-  <BlinkEffect>k__BackingField: {fileID: 7349952303861848815}
+  <RespawnBounds>k__BackingField:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
   _batSkillPrefab: {fileID: 2007017996437501280, guid: e98a801d4e584ec4ca7b2591c541fa95, type: 3}
   _shootPosition: {fileID: 6665625261890682485}
   _skillSprites:
@@ -8017,7 +8034,6 @@ MonoBehaviour:
   _interval: 0.08
   _duration: 0.9
   _isBlinking: 0
-  _spriteRenderers: []
 --- !u!114 &4119070135592939043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8032,24 +8048,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
   _duration: 2.5
-  _timeOffsetAfterParticle: 0.2
   _particles:
   - {fileID: 1173428890911020551}
-  <SpriteRenderers>k__BackingField:
-  - {fileID: 3306538263014290928}
-  - {fileID: 4180139956250542821}
-  - {fileID: 2518800093256980076}
-  - {fileID: 4968360119983610457}
-  - {fileID: 7339840506419333491}
-  - {fileID: 5913033815138866319}
-  - {fileID: 5540553279352469312}
-  - {fileID: 8602404647321515861}
-  - {fileID: 4970732112966406399}
-  - {fileID: 2069084214986241210}
-  - {fileID: 7612057670842762137}
-  - {fileID: 1764546735407327286}
-  - {fileID: 4165441323397597269}
-  - {fileID: 915370588718677600}
 --- !u!114 &8241212124184343094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8090,6 +8090,19 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &4730422786744565344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8287174373163788403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77c70566b394b6946b02a4d0967ab15a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <SpriteRenderers>k__BackingField: []
 --- !u!1 &8373513916681042968
 GameObject:
   m_ObjectHideFlags: 0

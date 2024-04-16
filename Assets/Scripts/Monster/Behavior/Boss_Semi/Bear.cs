@@ -172,7 +172,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
         return IAttackListener.AttackResult.Success;
     }
-    public override void Die(bool isHitBoxDisable = true, bool isDeathEffect = true)
+    public override void Die(bool isHitBoxDisable = true, bool isDeathProcess = true)
     {
         // Èæ°õÀº »ç¸Á ÀÌÆåÆ®¸¦ Àç»ýÇÏÁö ¾Ê´Â´Ù
         base.Die(true, false);
@@ -493,7 +493,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     }
     public IEnumerator DisintegrateEffectCoroutine()
     {
-        var effect = GetComponent<DisintegrateEffect_New>();
+        var effect = GetComponent<DisintegrateEffect>();
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
         Destroy(transform.root ? transform.root.gameObject : gameObject);

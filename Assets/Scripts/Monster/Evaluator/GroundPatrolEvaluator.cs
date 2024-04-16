@@ -21,9 +21,9 @@ public class GroundPatrolEvaluator : Evaluator
         _leftPoint = _patrolPoints.GetChild(0).GetComponent<Collider2D>();
         _rightPoint = _patrolPoints.GetChild(1).GetComponent<Collider2D>();
     }
-    public override void OnEnable()
+    public override void OnDisable()
     {
-        base.OnEnable();
+        base.OnDisable();
 
         _isOutOfPatrolRange = false;
     }

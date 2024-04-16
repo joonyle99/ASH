@@ -53,6 +53,8 @@ public abstract class Monster_StateBase : StateMachineBehaviour
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (Monster.IsDead) return;
+
         // auto change to next state
         if (isAutoStateTransition)
         {

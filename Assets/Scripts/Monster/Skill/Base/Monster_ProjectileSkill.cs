@@ -24,7 +24,7 @@ public class Monster_ProjectileSkill : Monster_Skill
             if (colliderSound != null)
                 SoundManager.Instance.PlaySFX(colliderSound);
 
-            var effect = GetComponent<DisintegrateEffect_New>();
+            var effect = GetComponent<DisintegrateEffect>();
             if (effect)
                 StartCoroutine(DeathEffectCoroutine(effect));
             else
@@ -32,7 +32,7 @@ public class Monster_ProjectileSkill : Monster_Skill
         }
     }
 
-    private IEnumerator DeathEffectCoroutine(DisintegrateEffect_New effect)
+    private IEnumerator DeathEffectCoroutine(DisintegrateEffect effect)
     {
         GetComponent<Rigidbody2D>().simulated = false;
         effect.Play(effectDelay);

@@ -11,8 +11,8 @@ public class FloatingChaseEvaluator : Evaluator
     {
         base.Awake();
 
-        evaluationEvent -= ChangeTarget;
-        evaluationEvent += ChangeTarget;
+        EvaluationEvent -= ChangeTarget;
+        EvaluationEvent += ChangeTarget;
     }
 
     /// <summary>
