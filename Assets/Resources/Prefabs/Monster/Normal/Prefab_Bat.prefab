@@ -355,8 +355,8 @@ GameObject:
   - component: {fileID: 536029391928586684}
   - component: {fileID: 536029391928586685}
   - component: {fileID: 536029391928586683}
-  - component: {fileID: 88900761}
   - component: {fileID: 7446310043044167427}
+  - component: {fileID: 1781701079}
   m_Layer: 9
   m_Name: Patrol Area
   m_TagString: Untagged
@@ -457,19 +457,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &88900761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 536029391928586686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ae532a77d48a164da7b257e243f6045, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _owner: {fileID: 3686014239526542607}
 --- !u!114 &7446310043044167427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,6 +473,19 @@ MonoBehaviour:
   m_Area: 0
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!114 &1781701079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536029391928586686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae532a77d48a164da7b257e243f6045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _monster: {fileID: 3686014239526542607}
 --- !u!1 &1028049676279707775
 GameObject:
   m_ObjectHideFlags: 0
@@ -7954,9 +7954,14 @@ MonoBehaviour:
     Acceleration: 0
     JumpForce: {x: 0, y: 0}
   respawnData:
-    Prefab: {fileID: 8241212123419817095}
-    FirstPosition: {x: 0, y: 0, z: 0}
-    RespawnBounds:
+    DefaultPrefabPosition: {x: 0, y: 0, z: 0}
+    PatrolArea:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+    PatrolPointA:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
+    PatrolPointB:
       m_Center: {x: 0, y: 0, z: 0}
       m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:

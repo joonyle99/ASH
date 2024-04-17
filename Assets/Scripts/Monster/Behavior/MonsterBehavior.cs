@@ -38,8 +38,22 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Serializable]
     public struct RespawnData
     {
-        public Vector3 FirstPosition;
+        /// <summary>
+        /// * 프리팹 구조 *
+        /// prefab_(monster name)
+        /// -> monster_(monster name)
+        /// </summary>
+        public Vector3 DefaultPrefabPosition;   // prefab_(monster name)의 기본 위치
+
+        // 박쥐
+        // Patrol Area 내부에서 랜덤으로 생성되어야 한다
+        // 박쥐 몬스터의 위치를 그냥 Bounds 내부로 랜덤 설정하면 된다 (간단)
         public Bounds RespawnBounds;
+
+        // 개구리
+        // Patrol Points 사이에서 Y값을 고려해 생성되어야 한다 (복잡)
+        // 기울어진 땅은 우선 생각하지 말고 해보자
+        public Line RespawnLine;
     }
 
     #region Attribute
@@ -335,7 +349,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // Death Effect
         if (isDeathProcess) StartCoroutine(DeathProcessCoroutine());
     }
-    public virtual void Respawn()
+    public virtual void RespawnProcess()
     {
         StartCoroutine(RespawnProcessCoroutine());
     }
@@ -371,7 +385,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (!CenterOfMass) CenterOfMass = this.transform;
         RigidBody2D.centerOfMass = CenterOfMass.localPosition;
 
-        respawnData.FirstPosition = transform.position;
+        respawnData.DefaultPrefabPosition = transform.root ? transform.root.position : transform.position;
 
         CurHp = monsterData.MaxHp;
     }
@@ -391,9 +405,15 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
 
     // basic
-    public void SetRespawnBounds(Bounds bounds)
+    public void SetPatrolArea(Bounds bounds)
     {
         respawnData.RespawnBounds = bounds;
+    }
+    public void SetPatrolPoints(Vector3 pointA, Vector3 pointB)
+    {
+        // new는 클래스 또는 구조체의 객체를 생성하고 메모리에 할당하기 위해 사용된다
+        // struct는 value type이기 때문에 class가 heap에 할당되는 것과 달리 stack에 할당된다.
+        respawnData.RespawnLine = new Line(pointA, pointB);
     }
     public void SetRecentDir(int targetDir)
     {
