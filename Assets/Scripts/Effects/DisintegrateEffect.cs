@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(MaterialManager))]
+[RequireComponent(typeof(MaterialController))]
 public class DisintegrateEffect : MonoBehaviour
 {
     [SerializeField] private Material _disintegrateMaterial;
@@ -15,11 +15,11 @@ public class DisintegrateEffect : MonoBehaviour
 
     public bool IsEffectDone { get; private set; }
 
-    private MaterialManager materialManager;
+    private MaterialController materialController;
 
     private void Awake()
     {
-        materialManager = GetComponent<MaterialManager>();
+        materialController = GetComponent<MaterialController>();
     }
 
     public void Play(float delay = 0f)
@@ -36,42 +36,24 @@ public class DisintegrateEffect : MonoBehaviour
             particleHelper.gameObject.SetActive(true);
             particleHelper.transform.parent = null;
             particleHelper.transform.position = transform.position;
-            // particleHelper.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+
+            // Destroy Particle System
+            Destroy(particleHelper.gameObject, particleHelper.GetLifeTime());
         }
 
         // Disintegrate Material Initialize
-        materialManager.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 0f);
+        materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 0f);
 
         // Disintegrate Effect Progress
-        float eTime = 0f;
+        var eTime = 0f;
         while (eTime < _duration)
         {
             yield return null;
             eTime += Time.deltaTime;
 
-            materialManager.SetProgress("_Progress", eTime / _duration);
+            materialController.SetProgress("_Progress", eTime / _duration);
         }
-
-        yield return new WaitForSeconds(delay);
 
         IsEffectDone = true;
-    }
-    public void Revert()
-    {
-        IsEffectDone = false;
-
-        // Disintegrate Material Initialize
-        materialManager.SetProgress("_Progress", 0f);
-
-        // Particle System Control
-        foreach (var particleHelper in _particles)
-        {
-            particleHelper.transform.parent = transform;
-            particleHelper.transform.position = Vector3.zero;
-            particleHelper.gameObject.SetActive(false);
-        }
-
-        // Init SpriteRenderers Material
-        materialManager.InitMaterial();
     }
 }

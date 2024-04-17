@@ -7,6 +7,7 @@ public sealed class Frog : MonsterBehavior
         AnimTransitionEvent -= GroundMoveToOtherCondition;  // Prevent multiple subscriptions (Handler)
         AnimTransitionEvent += GroundMoveToOtherCondition;
     }
+
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         base.OnHit(attackInfo);
@@ -21,7 +22,6 @@ public sealed class Frog : MonsterBehavior
 
         return IAttackListener.AttackResult.Success;
     }
-
     private bool GroundMoveToOtherCondition(string targetTransitionParam, Monster_StateBase currentState)
     {
         if (currentState is GroundMoveState)

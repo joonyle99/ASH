@@ -1925,6 +1925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c76c2d04c0a8214394fbdd70a230a6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _curHp: 0
   <DefaultDir>k__BackingField: -1
   <RecentDir>k__BackingField: 0
   <IsGround>k__BackingField: 0
@@ -1944,7 +1945,12 @@ MonoBehaviour:
     MoveSpeed: 0
     Acceleration: 0
     JumpForce: {x: 0, y: 0}
-  _curHp: 0
+  respawnData:
+    Prefab: {fileID: 4386577299594174848}
+    FirstPosition: {x: 0, y: 0, z: 0}
+    RespawnBounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8

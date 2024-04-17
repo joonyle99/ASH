@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MaterialManager : MonoBehaviour
+public class MaterialController : MonoBehaviour
 {
     [field: SerializeField]
     public SpriteRenderer[] SpriteRenderers

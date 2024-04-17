@@ -39,11 +39,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1107 &-1170482764735898410
 AnimatorStateMachine:
   serializedVersion: 6
@@ -91,11 +91,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 1
   targetTransitionParam: Idle
-  stayTime:
-    Start: 3
-    End: 9
+  stayTimeRange:
+    Start: 4
+    End: 7
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1102 &-1073161713574357576
 AnimatorState:
   serializedVersion: 6
@@ -284,11 +284,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!114 &5666523979645129969
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -303,11 +303,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 1
   targetTransitionParam: Move
-  stayTime:
+  stayTimeRange:
     Start: 1
-    End: 1
+    End: 3
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1102 &6361337815077287047
 AnimatorState:
   serializedVersion: 6

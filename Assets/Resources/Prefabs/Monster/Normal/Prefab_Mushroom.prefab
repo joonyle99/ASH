@@ -1359,6 +1359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a03394633a380ca44a864b9394b0f861, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _curHp: 0
   <DefaultDir>k__BackingField: -1
   <RecentDir>k__BackingField: 0
   <IsGround>k__BackingField: 0
@@ -1378,7 +1379,12 @@ MonoBehaviour:
     MoveSpeed: 0
     Acceleration: 0
     JumpForce: {x: 0, y: 0}
-  _curHp: 0
+  respawnData:
+    Prefab: {fileID: 1621067903465288224}
+    FirstPosition: {x: 0, y: 0, z: 0}
+    RespawnBounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
@@ -1802,7 +1808,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cutsceneDictionary:
   - name: Lighting Guide
-    cutscenePlayer: {fileID: 3007821914710986594, guid: 4572ef9783c7e8e4d857deec554a9cd5, type: 3}
+    cutscenePlayer: {fileID: 0}
 --- !u!1 &5885552443160089909
 GameObject:
   m_ObjectHideFlags: 0

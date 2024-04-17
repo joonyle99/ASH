@@ -6,7 +6,7 @@ public class HurtState : PlayerState
 
         Player.IsHurt = true;
 
-        Player.MaterialManager.BlinkEffect.Play();
+        Player.MaterialController.BlinkEffect.Play();
 
         return true;
     }

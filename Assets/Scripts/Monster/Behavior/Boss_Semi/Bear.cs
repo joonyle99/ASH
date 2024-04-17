@@ -130,8 +130,10 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     {
         base.Start();
 
-        // init
+        monsterData.MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
+        CurHp = monsterData.MaxHp;
         IsGodMode = true;
+
         RandomTargetAttackCount();
         RandomTargetHitCount();
         SetToRandomAttack();
@@ -147,13 +149,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
             if (GroundMovementModule)
                 GroundMovementModule.GroundWalking();
         }
-    }
-    public override void SetUp()
-    {
-        base.SetUp();
-
-        monsterData.MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
-        CurHp = monsterData.MaxHp;
     }
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {

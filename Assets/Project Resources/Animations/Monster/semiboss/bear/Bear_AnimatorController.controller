@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!114 &-8746908445737796623
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -82,11 +82,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1101 &-8048715455438902444
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -203,11 +203,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1102 &-6660057505160487257
 AnimatorState:
   serializedVersion: 6
@@ -756,121 +756,121 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Move
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Attack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: NextAttackNumber
     m_Type: 3
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Slash
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: BodySlam
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Stomp
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Earthquake
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Groggy
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Hurt
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Rage
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Shout
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Die
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: DieEnd
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: StartBlocking
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: EndBlocking
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Mul_MoveSpeed
     m_Type: 1
     m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Mul_IdleSpeed
     m_Type: 1
     m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Mul_SlashSpeed
     m_Type: 1
     m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Mul_EarthQuakeSpeed
     m_Type: 1
     m_DefaultFloat: 1
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -1020,11 +1020,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!114 &928836017559718987
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1039,11 +1039,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1101 &2850709450441104233
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1233,11 +1233,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!114 &4808319505629914693
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1252,11 +1252,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1102 &4882509322582488173
 AnimatorState:
   serializedVersion: 6
@@ -1299,11 +1299,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!114 &5594371275432896360
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1318,11 +1318,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1101 &6349460936609936028
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1359,11 +1359,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!114 &6877179253810289066
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1378,11 +1378,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 1
   targetTransitionParam: Move
-  stayTime:
-    Start: 2
-    End: 2
+  stayTimeRange:
+    Start: 1
+    End: 3
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1101 &7039698477984059101
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -1530,11 +1530,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 1
   targetTransitionParam: Idle
-  stayTime:
-    Start: 5
-    End: 5
+  stayTimeRange:
+    Start: 4
+    End: 7
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1102 &8366935142940052555
 AnimatorState:
   serializedVersion: 6
@@ -1649,11 +1649,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isAutoStateTransition: 1
   targetTransitionParam: Idle
-  stayTime:
+  stayTimeRange:
     Start: 4
-    End: 4
+    End: 6
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1101 &9134552200283719467
 AnimatorStateTransition:
   m_ObjectHideFlags: 1

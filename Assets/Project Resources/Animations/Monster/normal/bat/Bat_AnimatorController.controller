@@ -238,7 +238,7 @@ AnimatorStateMachine:
     m_Position: {x: 330, y: 210, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5783951152437486461}
-    m_Position: {x: 330, y: -10, z: 0}
+    m_Position: {x: 330, y: -50, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8101814436586712888}
     m_Position: {x: 330, y: 340, z: 0}
@@ -250,7 +250,7 @@ AnimatorStateMachine:
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 270, z: 0}
-  m_EntryPosition: {x: 50, y: 0, z: 0}
+  m_EntryPosition: {x: 50, y: 40, z: 0}
   m_ExitPosition: {x: 600, y: 270, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -5783951152437486461}
@@ -266,13 +266,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b20407005a12ef949b87fcdaee3ebc51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAutoStateTransition: 0
+  <IsAutoStateTransition>k__BackingField: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!114 &1942311039681200132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -285,13 +285,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60c70455c20fc264a950a05c473e6221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAutoStateTransition: 0
+  <IsAutoStateTransition>k__BackingField: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0
 --- !u!1102 &5308539884285074585
 AnimatorState:
   serializedVersion: 6
@@ -332,10 +332,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cdb5a8fb0acc8c4ea89b17d42356edd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAutoStateTransition: 0
+  <IsAutoStateTransition>k__BackingField: 0
   targetTransitionParam: 
-  stayTime:
+  stayTimeRange:
     Start: 0
     End: 0
   targetStayTime: 0
-  <ElapsedStayTime>k__BackingField: 0
+  ElapsedStayTime: 0

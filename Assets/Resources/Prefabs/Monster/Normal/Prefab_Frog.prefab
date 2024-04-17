@@ -57,7 +57,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 20, y: 0.5}
+  m_Size: {x: 20, y: 10}
   m_EdgeRadius: 0
 --- !u!114 &23144707
 MonoBehaviour:
@@ -310,7 +310,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 7951287674994505330}
   m_Bounds:
-    m_Center: {x: 0.009420097, y: -0.2202687, z: 0}
+    m_Center: {x: 0.009420097, y: -0.22026679, z: 0}
     m_Extent: {x: 0.73589027, y: 0.45805517, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -563,7 +563,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3175164499067490040}
   m_Bounds:
-    m_Center: {x: 0.009389579, y: -0.22026497, z: 0}
+    m_Center: {x: 0.009389579, y: -0.22026306, z: 0}
     m_Extent: {x: 0.7358901, y: 0.45805502, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1112,7 +1112,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 1237355561305278889}
   m_Bounds:
-    m_Center: {x: 0.00070506334, y: -0.22470182, z: 0}
+    m_Center: {x: 0.00070506334, y: -0.22469991, z: 0}
     m_Extent: {x: 0.7914153, y: 0.5151002, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -2185,6 +2185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 775e9edd06f8ffc4ab0e9a28b024e420, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _curHp: 0
   <DefaultDir>k__BackingField: -1
   <RecentDir>k__BackingField: 0
   <IsGround>k__BackingField: 0
@@ -2204,7 +2205,12 @@ MonoBehaviour:
     MoveSpeed: 0
     Acceleration: 0
     JumpForce: {x: 0, y: 0}
-  _curHp: 0
+  respawnData:
+    Prefab: {fileID: 5517317729310175207}
+    FirstPosition: {x: 0, y: 0, z: 0}
+    RespawnBounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
@@ -2809,7 +2815,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 8404162786085990350}
   m_Bounds:
-    m_Center: {x: 0.0052200556, y: -0.2265749, z: 0}
+    m_Center: {x: 0.0052200556, y: -0.22657299, z: 0}
     m_Extent: {x: 0.43064013, y: 0.5306351, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -7947,7 +7953,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 8709760740336623863}
   m_Bounds:
-    m_Center: {x: 0.0049794912, y: -0.22634995, z: 0}
+    m_Center: {x: 0.0049794912, y: -0.22634804, z: 0}
     m_Extent: {x: 0.62634003, y: 0.41086006, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

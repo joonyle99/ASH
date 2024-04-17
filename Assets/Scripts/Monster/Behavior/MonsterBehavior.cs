@@ -35,13 +35,20 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         }
     }
 
+    [Serializable]
+    public struct RespawnData
+    {
+        public Vector3 FirstPosition;
+        public Bounds RespawnBounds;
+    }
+
     #region Attribute
 
     // Basic Component
     public Rigidbody2D RigidBody2D { get; private set; }
     public Animator Animator { get; private set; }
-    public Collider2D MainBodyCollider2D { get; private set; }
-    public MaterialManager MaterialManager { get; private set; }
+    public Collider2D MainBodyCollider2D { get; private set; }      // circle collider 2d or box collider 2d
+    public MaterialController MaterialController { get; private set; }
     public SoundList SoundList { get; private set; }
 
     // State
@@ -59,7 +66,30 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public FloatingChaseEvaluator FloatingChaseEvaluator { get; private set; }
     public AttackEvaluator AttackEvaluator { get; private set; }
 
-    [field: Header("Condition")]
+    [Header("Condition")]
+    [Space]
+
+    [SerializeField] private int _curHp;
+    public int CurHp
+    {
+        get => _curHp;
+        set
+        {
+            _curHp = value;
+
+            // Debug.Log("CurHp is changed");
+
+            // 체력이 0 이하가 되면 사망
+            if (_curHp <= 0)
+            {
+                // Debug.Log("Die");
+
+                _curHp = 0;
+                Die();
+            }
+        }
+    }
+
     [field: Space]
 
     [field: SerializeField]
@@ -128,30 +158,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [SerializeField]
     private MonsterDataObject _monsterDataObject;
-
-    [Space]
-
     public MonsterData monsterData;
-    [SerializeField] private int _curHp;
-    public int CurHp
-    {
-        get => _curHp;
-        set
-        {
-            _curHp = value;
-
-            // Debug.Log("CurHp is changed");
-
-            // 체력이 0 이하가 되면 사망
-            if (_curHp <= 0)
-            {
-                // Debug.Log("Die");
-
-                _curHp = 0;
-                Die();
-            }
-        }
-    }
+    public RespawnData respawnData;
 
     [field: Space]
 
@@ -177,16 +185,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
     [field: SerializeField]
     public Transform CenterOfMass
-    {
-        get;
-        private set;
-    }
-    public Bounds RespawnBounds
-    {
-        get;
-        private set;
-    }
-    public Vector3 FirstPosition
     {
         get;
         private set;
@@ -217,7 +215,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         RigidBody2D = GetComponent<Rigidbody2D>();
         Animator = GetComponent<Animator>();
         MainBodyCollider2D = GetComponent<Collider2D>();
-        MaterialManager = GetComponent<MaterialManager>();
+        MaterialController = GetComponent<MaterialController>();
         SoundList = GetComponent<SoundList>();
 
         // Module
@@ -230,21 +228,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         GroundChaseEvaluator = GetComponent<GroundChaseEvaluator>();
         FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
-
-        // Set recentDir
-        RecentDir = DefaultDir;
-
-        // Set center of mass
-        if (!CenterOfMass) CenterOfMass = this.transform;
-        if (RigidBody2D) RigidBody2D.centerOfMass = CenterOfMass.localPosition;
-
-        // For respawn position
-        RespawnBounds = MainBodyCollider2D.bounds;      // basic setting
-        FirstPosition = transform.position;
     }
     protected virtual void Start()
     {
-        Initialize();
+        InitData();
+
+        InitCondition();
+
+        InitState();
     }
     protected virtual void Update()
     {
@@ -316,46 +307,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         }
     }
 
-    public virtual void SetUp()
-    {
-        // 몬스터의 이름
-        monsterData.MonsterName = _monsterDataObject.Name.ToString();
-
-        // 몬스터의 랭크
-        monsterData.RankType = _monsterDataObject.RankType;
-
-        // 몬스터의 행동 타입
-        monsterData.MoveType = _monsterDataObject.MoveType;
-
-        // 몬스터의 최대 체력
-        monsterData.MaxHp = _monsterDataObject.MaxHp;
-
-        // 몬스터의 이동속도
-        monsterData.MoveSpeed = _monsterDataObject.MoveSpeed;
-
-        // 몬스터의 가속도
-        monsterData.Acceleration = _monsterDataObject.Acceleration;
-
-        // 몬스터의 점프파워
-        monsterData.JumpForce = _monsterDataObject.JumpForce;
-    }
-    public virtual void KnockBack(Vector2 forceVector)
-    {
-        if (FloatingMovementModule)
-        {
-            // NavMeshAgent 전용 KnockBack
-            FloatingMovementModule.SetVelocity(forceVector / 2.0f);
-        }
-        else
-        {
-            // 속도 초기화
-            RigidBody2D.velocity = Vector2.zero;
-
-            // Monster의 Mass에 따른 보정
-            forceVector *= RigidBody2D.mass / 1.0f;
-            RigidBody2D.AddForce(forceVector, ForceMode2D.Impulse);
-        }
-    }
     public virtual IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         if (IsGodMode || IsDead)
@@ -382,48 +333,67 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         SetHitBoxDisable(isHitBoxDisable);
 
         // Death Effect
-        if (isDeathProcess) StartCoroutine(DeathProcessCoroutine(0.2f));
+        if (isDeathProcess) StartCoroutine(DeathProcessCoroutine());
     }
-    public virtual void Respawn(Vector3 respawnPosition)
+    public virtual void Respawn()
     {
-        // Enable gameObject
-        gameObject.SetActive(true);
-
-        // Set Position
-        if (FloatingMovementModule) FloatingMovementModule.SetPosition(respawnPosition);
-        else transform.position = respawnPosition;
-
-        // Respawn Process
         StartCoroutine(RespawnProcessCoroutine());
     }
 
-    // basic
-    public void Initialize()
+    // init
+    private void InitData()
     {
-        // SetUp MonsterData
-        SetUp();
+        // 몬스터의 이름
+        monsterData.MonsterName = _monsterDataObject.Name.ToString();
 
-        // Set Look Direction
-        SetRecentDir(DefaultDir);
+        // 몬스터의 랭크
+        monsterData.RankType = _monsterDataObject.RankType;
 
-        // Set Current HP
-        CurHp = monsterData.MaxHp;
+        // 몬스터의 행동 타입
+        monsterData.MoveType = _monsterDataObject.MoveType;
 
-        // Init Condition
-        if (IsAttacking) IsAttacking = false;
-        if (IsHiding) IsHiding = false;
-        if (IsGodMode) IsGodMode = false;
-        if (IsHitting) IsHitting = false;
-        if (IsHurt) IsHurt = false;
-        if (IsDead) IsDead = false;
+        // 몬스터의 최대 체력
+        monsterData.MaxHp = _monsterDataObject.MaxHp;
 
-        // Init State
-        InitState();
+        // 몬스터의 이동속도
+        monsterData.MoveSpeed = _monsterDataObject.MoveSpeed;
+
+        // 몬스터의 가속도
+        monsterData.Acceleration = _monsterDataObject.Acceleration;
+
+        // 몬스터의 점프파워
+        monsterData.JumpForce = _monsterDataObject.JumpForce;
     }
+    private void InitCondition()
+    {
+        RecentDir = DefaultDir;
+
+        if (!CenterOfMass) CenterOfMass = this.transform;
+        RigidBody2D.centerOfMass = CenterOfMass.localPosition;
+
+        respawnData.FirstPosition = transform.position;
+
+        CurHp = monsterData.MaxHp;
+    }
+    private void InitState()
+    {
+        // Bring Entry State
+        int initialPathHash = Animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
+        StateMachineBehaviour[] initialStates = Animator.GetBehaviours(initialPathHash, 0);
+        foreach (var initialState in initialStates)
+        {
+            if (initialState as Monster_StateBase)
+                _initialState = initialState as Monster_StateBase;
+        }
+
+        // Init Animation State
+        CurrentState = _initialState;
+    }
+
+    // basic
     public void SetRespawnBounds(Bounds bounds)
     {
-        // 활동 영역을 설정하는 스크립트로부터 bounds를 전달받는다.
-        RespawnBounds = bounds;
+        respawnData.RespawnBounds = bounds;
     }
     public void SetRecentDir(int targetDir)
     {
@@ -467,10 +437,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         if (useBlinkEffect)
         {
-            if (MaterialManager)
+            if (MaterialController)
             {
-                if (MaterialManager.BlinkEffect)
-                    MaterialManager.BlinkEffect.Play();
+                if (MaterialController.BlinkEffect)
+                    MaterialController.BlinkEffect.Play();
                 else
                     Debug.LogWarning("Blink Effect isn't attached");
             }
@@ -481,6 +451,24 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         if (onDamage)
             CurHp -= (int)attackInfo.Damage;
+    }
+    public void KnockBack(Vector2 forceVector)
+    {
+        if (FloatingMovementModule)
+        {
+            // NavMeshAgent 전용 KnockBack
+            // Debug.Log("KnockBack");
+            FloatingMovementModule.SetVelocity(forceVector / 2.0f);
+        }
+        else
+        {
+            // 속도 초기화
+            RigidBody2D.velocity = Vector2.zero;
+
+            // Monster의 Mass에 따른 보정
+            forceVector *= RigidBody2D.mass / 1.0f;
+            RigidBody2D.AddForce(forceVector, ForceMode2D.Impulse);
+        }
     }
     public void HurtProcess()
     {
@@ -529,82 +517,59 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
 
     // Death & Respawn
-    private IEnumerator DeathProcessCoroutine(float delay = 0f)
+    private IEnumerator DeathProcessCoroutine()
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(0.2f);
 
         // Stop movement
         Animator.speed = 0;
         RigidBody2D.simulated = false;
         if (FloatingMovementModule)
         {
-            FloatingMovementModule.SetStopAgent(true, true);
-            // FloatingMovementModule.Agent.enabled = false;
-            // FloatingMovementModule.SetPosition(Vector3.zero);
+            FloatingMovementModule.SetStopAgent(true);
+            FloatingMovementModule.SetVelocity(Vector3.zero);
         }
 
         // Wait until death effect is done
         yield return StartCoroutine(DeathEffectCoroutine());
 
-        // Notify Death to MonsterRespawnManager
-        MonsterRespawnManager.Instance.NotifyDeath(this);
-
         // Stop all coroutines on this behavior
         StopAllCoroutines();
 
-        // Disable gameObject
-        gameObject.SetActive(false);
+        // 제어권은 Monster Respawn Manager에게 넘긴다
+        MonsterRespawnManager.Instance.NotifyDeath(this);
     }
     private IEnumerator DeathEffectCoroutine()
     {
         // effect process
-        MaterialManager.DisintegrateEffect.Play();    // death effect needs delay for natural
-        yield return new WaitUntil(() => MaterialManager.DisintegrateEffect.IsEffectDone);
-        MaterialManager.DisintegrateEffect.Revert();
+        MaterialController.DisintegrateEffect.Play();
+        yield return new WaitUntil(() => MaterialController.DisintegrateEffect.IsEffectDone);
     }
     private IEnumerator RespawnProcessCoroutine()
     {
+        // stop before respawn effect
+        Animator.speed = 0;
+        if (FloatingMovementModule) FloatingMovementModule.SetStopAgent(true);
+        else RigidBody2D.simulated = false;
+        SetHitBoxDisable(true);
+
         // Wait until respawn effect is done
         yield return StartCoroutine(ReSpawnEffectCoroutine());
 
-        // HitBox Enable
-        SetHitBoxDisable(false);
-
-        // Resume movement
+        // resume after respawn effect
         Animator.speed = 1;
-        RigidBody2D.simulated = true;
-        if (FloatingMovementModule)
-        {
-            FloatingMovementModule.SetStopAgent(false, false);
-            // FloatingMovementModule.Agent.enabled = true;
-        }
-
-        // Reset Condition
-        Initialize();
+        if (FloatingMovementModule) FloatingMovementModule.SetStopAgent(false);
+        else RigidBody2D.simulated = true;
+        SetHitBoxDisable(false);
     }
     private IEnumerator ReSpawnEffectCoroutine()
     {
         // effect process
-        MaterialManager.RespawnEffect.Play();
-        yield return new WaitUntil(() => MaterialManager.RespawnEffect.IsEffectDone);
-        MaterialManager.RespawnEffect.Revert();
+        MaterialController.RespawnEffect.Play();
+        yield return new WaitUntil(() => MaterialController.RespawnEffect.IsEffectDone);
     }
 
     // state
-    private void InitState()
-    {
-        // Bring Entry State
-        int initialPathHash = Animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
-        StateMachineBehaviour[] initialStates = Animator.GetBehaviours(initialPathHash, 0);
-        foreach (var initialState in initialStates)
-        {
-            if (initialState as Monster_StateBase)
-                _initialState = initialState as Monster_StateBase;
-        }
-
-        // Init Animation State
-        CurrentState = _initialState;
-    }
     public void UpdateState(Monster_StateBase state)
     {
         CurrentState = state;
@@ -629,7 +594,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         myFunction?.Invoke();
     }
 
-    // Animator & Sound
+    // Wrapper
     public void SetAnimatorTrigger(string key)
     {
         Animator.SetTrigger(key);
@@ -637,6 +602,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public void PlaySound(string key)
     {
         SoundList.PlaySFX(key);
+    }
+    public void DestroyMonster()
+    {
+        Destroy(transform.root ? transform.root.gameObject : gameObject);
     }
 
     #endregion

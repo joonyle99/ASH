@@ -10,27 +10,20 @@ public static class MonsterDefine
         ㅡㅡNormalㅡㅡ,
 
         // Normal
-        박쥐 = 1001,
-        가시거북,
-        흙개구리,
-        물개구리,
-        껍질버섯,
-        종양슬라임,
-        슬러그라임,
-        들개,
-        늪부엉이,
-        진흙전갈,
-        박쥐공파리,
+        Bat = 1001,
+        Turtle,
+        Frog,
+        Mushroom,
 
         ㅡㅡSemiBossㅡㅡ,
 
         // SemiBoss
-        흑곰 = 2001,
+        Bear = 2001,
 
         ㅡㅡFinalBossㅡㅡ,
 
         // FinalBoss
-        불 = 3001,
+        Fire = 3001,
 
     }
 

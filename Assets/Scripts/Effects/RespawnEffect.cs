@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(MaterialManager))]
+[RequireComponent(typeof(MaterialController))]
 public class RespawnEffect : MonoBehaviour
 {
     [SerializeField] private Material _respawnMaterial;
@@ -16,14 +16,14 @@ public class RespawnEffect : MonoBehaviour
 
     public bool IsEffectDone { get; private set; }
 
-    private MaterialManager materialManager;
+    private MaterialController materialController;
 
     private float _minY;
     private float _maxY;
 
     private void Awake()
     {
-        materialManager = GetComponent<MaterialManager>();
+        materialController = GetComponent<MaterialController>();
 
         _minY = transform.position.y - _bottomOffset;
         _maxY = transform.position.y + _topOffset;
@@ -38,7 +38,8 @@ public class RespawnEffect : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         // Respawn Material Initialize
-        materialManager.SetMaterialAndProgress(_respawnMaterial, "_Origin", _minY);
+        materialController.SetMaterial(_respawnMaterial);
+        // materialController.SetMaterialAndProgress(_respawnMaterial, "_Origin", _minY);
 
         // Respawn Effect Progress
         var eTime = 0f;
@@ -48,27 +49,18 @@ public class RespawnEffect : MonoBehaviour
             eTime += Time.deltaTime;
 
             var currentHeight = Mathf.Lerp(_minY, _maxY, eTime / _duration);
-            materialManager.SetProgress("_Origin", currentHeight);
+            materialController.SetProgress("_Origin", currentHeight);
         }
 
-        yield return new WaitForSeconds(delay);
+        // Init SpriteRenderers
+        materialController.InitMaterial();
 
         IsEffectDone = true;
-    }
-    public void Revert()
-    {
-        IsEffectDone = false;
-
-        // Respawn Material Initialize
-        materialManager.SetProgress("_Origin", _minY);
-
-        // Init SpriteRenderers
-        materialManager.InitMaterial();
     }
 
     private void OnDrawGizmosSelected()
     {
-        float halfWidth = 1f;
+        const float halfWidth = 1f;
 
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector3(transform.position.x - halfWidth, transform.position.y - _bottomOffset, 0), new Vector3(transform.position.x + halfWidth, transform.position.y - _bottomOffset, 0));

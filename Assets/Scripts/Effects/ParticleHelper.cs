@@ -6,12 +6,13 @@ using UnityEngine;
 public class ParticleHelper : MonoBehaviour
 {
     ParticleSystem _particleSystem;
-    protected ParticleSystem ParticleSystem { get { return _particleSystem; } }
+    protected ParticleSystem ParticleSystem => _particleSystem;
 
     protected void Awake()
     {
         _particleSystem = GetComponent<ParticleSystem>();
     }
+
     public void SetStartSize(Vector3 size)
     {
         var main = _particleSystem.main;
@@ -43,7 +44,6 @@ public class ParticleHelper : MonoBehaviour
     {
         _particleSystem.Emit(count);
     }
-
     public void Play()
     {
         _particleSystem.Play();
@@ -51,5 +51,13 @@ public class ParticleHelper : MonoBehaviour
     public void Stop()
     {
         _particleSystem.Stop();
+    }
+
+    public float GetLifeTime()
+    {
+        var main = _particleSystem.main;
+        var totalDuration = main.duration + main.startLifetime.constantMax;
+
+        return totalDuration;
     }
 }

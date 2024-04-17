@@ -41,7 +41,7 @@ public class InstantRespawnState : PlayerState
     IEnumerator SpawnCoroutine()
     {
         // change all player's spriteRenderer to original material
-        Player.MaterialManager.InitMaterial();
+        Player.MaterialController.InitMaterial();
 
         // reset player condition
         Player.enabled = true;
@@ -52,7 +52,7 @@ public class InstantRespawnState : PlayerState
         float eTime = 0f;
         while (eTime < _spawnDuration)
         {
-            foreach (var spriteRenderer in Player.MaterialManager.SpriteRenderers)
+            foreach (var spriteRenderer in Player.MaterialController.SpriteRenderers)
             {
                 Color color = spriteRenderer.color;
                 color.a = Mathf.Lerp(0, 1, eTime / _spawnDuration);

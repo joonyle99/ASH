@@ -5,58 +5,52 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     [Header("Monster StateBase")]
     [Space]
 
-    [SerializeField] protected bool isAutoStateTransition = false;
-    public bool IsAutoStateTransition
-    {
-        get => isAutoStateTransition;
-        private set => isAutoStateTransition = value;
-    }
+    [SerializeField] private bool isAutoStateTransition;        // 커스텀 에디터에서 사용하기 때문에 프로퍼티가 아닌 필드로 선언
+    public bool IsAutoStateTransition => isAutoStateTransition;
 
     [Space]
 
+    [Tooltip("Transition trigger parameter name")]
     [SerializeField] protected string targetTransitionParam;
 
     [Space]
 
-    [SerializeField] protected Range stayTime;
-
-    [Space]
-
+    [SerializeField] protected Range stayTimeRange;
     [SerializeField] protected float targetStayTime;
-    [field: SerializeField] public float ElapsedStayTime
-    {
-        get;
-        set;
-    }
+    public float ElapsedStayTime;
 
     // Monster Behavior
     public MonsterBehavior Monster { get; private set; }
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        // Debug.Log($"{this.GetType().Name} enter");
+
         Monster = animator.GetComponent<MonsterBehavior>();     // Get Monster Behavior when State Enter
         Monster.UpdateState(this);                              // Update Monster State when State Enter
 
-        if (isAutoStateTransition)
+        if (IsAutoStateTransition)
         {
             ElapsedStayTime = 0f;
-            targetStayTime = stayTime.Random();
+            targetStayTime = stayTimeRange.Random();
         }
 
         if (Monster.FloatingMovementModule)
         {
-            // NavMesh Agent Stop
+            // when enter not movable state, set agent stop
             if (Monster.CurrentState is not IMovingState)
-                Monster.FloatingMovementModule.SetStopAgent(true, false);
+                Monster.FloatingMovementModule.SetStopAgent(true);
         }
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        // Debug.Log($"{this.GetType().Name} update");
+
         if (Monster.IsDead) return;
 
         // auto change to next state
-        if (isAutoStateTransition)
+        if (IsAutoStateTransition)
         {
             ElapsedStayTime += Time.deltaTime;
             if (ElapsedStayTime > targetStayTime)
@@ -69,17 +63,13 @@ public abstract class Monster_StateBase : StateMachineBehaviour
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        // Debug.Log($"{this.GetType().Name} exit");
+
         if (Monster.FloatingMovementModule)
         {
-            // NavMesh Agent Resume
+            // when exit not movable state, set agent resume
             if (Monster.CurrentState is not IMovingState)
-                Monster.FloatingMovementModule.SetStopAgent(false, false);
-        }
-
-        if (isAutoStateTransition)
-        {
-            ElapsedStayTime = 0f;
-            targetStayTime = 0f;
+                Monster.FloatingMovementModule.SetStopAgent(false);
         }
     }
 }

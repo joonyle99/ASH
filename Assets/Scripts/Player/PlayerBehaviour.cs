@@ -37,7 +37,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [Space]
 
     [SerializeField] private CapsuleCollider2D _bodyCollider;
-    [SerializeField] private MaterialManager _materialManager;
+    [SerializeField] private MaterialController materialController;
     [SerializeField] private SoundList _soundList;
     [SerializeField] private Rigidbody2D _handRigidbody;
 
@@ -125,7 +125,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     // ETC
     public CapsuleCollider2D BodyCollider => _bodyCollider;
-    public MaterialManager MaterialManager => _materialManager;
+    public MaterialController MaterialController => materialController;
     public SoundList SoundList => _soundList;
     public Rigidbody2D HandRigidBody => _handRigidbody;
 
@@ -146,7 +146,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         // ETC
         _bodyCollider = GetComponent<CapsuleCollider2D>();
-        _materialManager = GetComponent<MaterialManager>();
+        materialController = GetComponent<MaterialController>();
         _soundList = GetComponent<SoundList>();
     }
     protected override void Start()

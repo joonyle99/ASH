@@ -24,8 +24,8 @@ public class Monster_ProjectileSkill : Monster_Skill
             if (colliderSound != null)
                 SoundManager.Instance.PlaySFX(colliderSound);
 
-            if (materialManager && materialManager.DisintegrateEffect)
-                StartCoroutine(DeathProcessCoroutine(materialManager.DisintegrateEffect));
+            if (materialController && materialController.DisintegrateEffect)
+                StartCoroutine(DeathProcessCoroutine(materialController.DisintegrateEffect));
             else
                 Destroy(gameObject);
         }

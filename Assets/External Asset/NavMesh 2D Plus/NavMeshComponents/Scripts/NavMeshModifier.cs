@@ -4,6 +4,9 @@ using NavMeshPlus.Extensions;
 
 namespace NavMeshPlus.Components
 {
+    /// <summary>
+    /// 현재 월드 바인딩을 정의할 수 있는 방법은 명시적인 월드 바인딩 게임 오브젝트를 NavigationModifier로 도입하는 것 외에는 없습니다.
+    /// </summary>
     [ExecuteInEditMode]
     [AddComponentMenu("Navigation/Navigation Modifier", 32)]
     [HelpURL("https://github.com/Unity-Technologies/NavMeshComponents#documentation-draft")]

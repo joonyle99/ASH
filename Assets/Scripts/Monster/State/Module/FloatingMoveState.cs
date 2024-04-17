@@ -11,8 +11,6 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IHurtableS
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        if (Monster.IsDead) return;
-
         var floatingChaseEvaluator = Monster.FloatingChaseEvaluator;
         var floatingPatrolModule = Monster.FloatingPatrolModule;
 
@@ -28,7 +26,7 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IHurtableS
                         // Move to Target for Chase
                         Monster.FloatingMovementModule.MoveToDestination(floatingChaseEvaluator.TargetPosition);
 
-                        // Only Chase
+                        // Only Chase Run
                         return;
                     }
                 }

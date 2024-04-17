@@ -146,8 +146,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 536029390823338699}
-  - component: {fileID: 536029390823338698}
-  - component: {fileID: 536029390823338697}
+  - component: {fileID: 456224757}
+  - component: {fileID: 456224758}
   m_Layer: 0
   m_Name: NavMesh
   m_TagString: Untagged
@@ -170,7 +170,7 @@ Transform:
   m_Father: {fileID: 8241212123419817092}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &536029390823338698
+--- !u!114 &456224757
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -189,7 +189,7 @@ MonoBehaviour:
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_UseGeometry: 0
+  m_UseGeometry: 1
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
   m_IgnoreNavMeshObstacle: 1
@@ -199,8 +199,8 @@ MonoBehaviour:
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 11bcf458ff56cbd44b280271aee562d7, type: 2}
---- !u!114 &536029390823338697
+  m_NavMeshData: {fileID: 23800000, guid: 72fb1d6f1c20b5342ad15619464e0e10, type: 2}
+--- !u!114 &456224758
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 536029391485816284}
   - component: {fileID: 536029391485816281}
   - component: {fileID: 536029391485816282}
-  - component: {fileID: 536029391485816283}
+  - component: {fileID: 7446310043044167426}
   m_Layer: 9
   m_Name: Chase Area
   m_TagString: Untagged
@@ -292,7 +292,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -11
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0, g: 0.23121381, b: 1, a: 0.11764706}
+  m_Color: {r: 0, g: 0.23121381, b: 1, a: 0.27450982}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -328,7 +328,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &536029391485816283
+--- !u!114 &7446310043044167426
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -356,6 +356,7 @@ GameObject:
   - component: {fileID: 536029391928586685}
   - component: {fileID: 536029391928586683}
   - component: {fileID: 88900761}
+  - component: {fileID: 7446310043044167427}
   m_Layer: 9
   m_Name: Patrol Area
   m_TagString: Untagged
@@ -469,6 +470,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _owner: {fileID: 3686014239526542607}
+--- !u!114 &7446310043044167427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536029391928586686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
 --- !u!1 &1028049676279707775
 GameObject:
   m_ObjectHideFlags: 0
@@ -7772,9 +7789,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7190538845886001168}
   - component: {fileID: 8423484958374054348}
-  - component: {fileID: 5518662663477342309}
-  - component: {fileID: 8241212124387651248}
-  - component: {fileID: 8241212124387651251}
+  - component: {fileID: 6882244334612385148}
+  - component: {fileID: 2608774043884671144}
+  - component: {fileID: 7285007448765283248}
   - component: {fileID: 3686014239526542607}
   - component: {fileID: 8241212124387651252}
   - component: {fileID: 8241212124387651249}
@@ -7845,7 +7862,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!50 &5518662663477342309
+--- !u!58 &6882244334612385148
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8287174373163788403}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.67}
+  serializedVersion: 2
+  m_Radius: 1.22
+--- !u!50 &2608774043884671144
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -7866,23 +7899,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!58 &8241212124387651248
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8287174373163788403}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.67}
-  serializedVersion: 2
-  m_Radius: 1.27
---- !u!195 &8241212124387651251
+--- !u!195 &7285007448765283248
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7891,9 +7908,9 @@ NavMeshAgent:
   m_GameObject: {fileID: 8287174373163788403}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Radius: 1
+  m_Speed: 3
+  m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -7916,6 +7933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a892460cf4c14e4f908a3c84673621c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _curHp: 0
   <DefaultDir>k__BackingField: 0
   <RecentDir>k__BackingField: 0
   <IsGround>k__BackingField: 0
@@ -7935,7 +7953,12 @@ MonoBehaviour:
     MoveSpeed: 0
     Acceleration: 0
     JumpForce: {x: 0, y: 0}
-  _curHp: 0
+  respawnData:
+    Prefab: {fileID: 8241212123419817095}
+    FirstPosition: {x: 0, y: 0, z: 0}
+    RespawnBounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 0
