@@ -92,7 +92,8 @@ public static class MonsterDefine
     public enum MoveType
     {
         Null = 0,
-        Ground,
+        GroundNormal,
+        GroundTurret,
         Fly
     }
 

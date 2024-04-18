@@ -87,7 +87,7 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
     private void SetActionAreaInfo(RespawnDataSender respawnDataSender, MonsterDefine.MoveType moveType, MonsterBehavior.RespawnData respawnData)
     {
         // 지상 몬스터의 행동 반경 정보 설정
-        if (moveType == MonsterDefine.MoveType.Ground)
+        if (moveType == MonsterDefine.MoveType.GroundNormal)
         {
             // 행동 반경 정보를 가져온다
             respawnDataSender.ExtractActionAreaInfo(out var patrolPointA, out var patrolPointB);
@@ -110,6 +110,10 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
 
             // 변경된 리스폰 정보를 새롭게 생성된 객체에 할당해준다
             groundRespawnDataSender.UpdateRespawnData();
+        }
+        else if (moveType == MonsterDefine.MoveType.GroundTurret)
+        {
+
         }
         // 공중 몬스터의 행동 반경 정보 설정
         else if (moveType == MonsterDefine.MoveType.Fly)
@@ -152,7 +156,7 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
         var respawnPos = Vector3.zero;
 
         // 지상 몬스터의 리스폰 위치 설정
-        if (moveType == MonsterDefine.MoveType.Ground)
+        if (moveType == MonsterDefine.MoveType.GroundNormal)
         {
             var t = Random.Range(0.0f, 1.0f); // 0과 1 사이의 임의의 수
 
@@ -162,7 +166,11 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
 
             respawnPos = new Vector3(posX, posY, posZ);
 
-            Debug.DrawRay(respawnPos, Vector3.up, Color.red, 3f);
+            // Debug.DrawRay(respawnPos, Vector3.up, Color.red, 3f);
+        }
+        else if (moveType == MonsterDefine.MoveType.GroundTurret)
+        {
+            respawnPos = respawnData.DefaultPrefabPosition;
         }
         // 공중 몬스터의 리스폰 위치 설정
         else if (moveType == MonsterDefine.MoveType.Fly)

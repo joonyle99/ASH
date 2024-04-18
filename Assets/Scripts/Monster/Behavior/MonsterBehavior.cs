@@ -259,7 +259,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // ground check
         switch (monsterData.MoveType)
         {
-            case MonsterDefine.MoveType.Ground:
+            case MonsterDefine.MoveType.GroundNormal:
+            case MonsterDefine.MoveType.GroundTurret:
 
                 // ground rayCast
                 RaycastHit2D[] groundRayHits = Physics2D.BoxCastAll(GroundCheckCollider.transform.position,

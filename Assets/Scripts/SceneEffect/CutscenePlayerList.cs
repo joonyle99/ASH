@@ -19,7 +19,7 @@ public class CutscenePlayerList : MonoBehaviour
         if (cutscenePlayer != null)
             cutscenePlayer.Play();
         else
-            Debug.LogError("Cutscene not found: " + name);
+            Debug.LogWarning("Cutscene not found: " + name);
     }
 
     public CutscenePlayer FindCutscene(string name)

@@ -6,7 +6,7 @@ public class Mushroom_HideState : Monster_HideState
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        Monster.SetHitBoxDisable(false);
+        Monster.SetHitBoxDisable(true);
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -18,6 +18,6 @@ public class Mushroom_HideState : Monster_HideState
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
 
-        Monster.SetHitBoxDisable(true);
+        Monster.SetHitBoxDisable(false);
     }
 }

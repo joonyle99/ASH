@@ -1380,11 +1380,19 @@ MonoBehaviour:
     Acceleration: 0
     JumpForce: {x: 0, y: 0}
   respawnData:
-    Prefab: {fileID: 1621067903465288224}
-    FirstPosition: {x: 0, y: 0, z: 0}
-    RespawnBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
+    DefaultPrefabPosition: {x: 0, y: 0, z: 0}
+    groundRespawnData:
+      PatrolPointAPosition: {x: 0, y: 0, z: 0}
+      PatrolPointBPosition: {x: 0, y: 0, z: 0}
+    floatingRespawnData:
+      NavMeshData: {fileID: 0}
+      PatrolAreaPosition: {x: 0, y: 0, z: 0}
+      ChaseAreaPosition: {x: 0, y: 0, z: 0}
+      PatrolAreaScale: {x: 0, y: 0, z: 0}
+      ChaseAreaScale: {x: 0, y: 0, z: 0}
+      RespawnBounds:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
