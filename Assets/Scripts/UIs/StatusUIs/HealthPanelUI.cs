@@ -4,14 +4,32 @@ using UnityEngine.UI;
 public class HealthPanelUI : MonoBehaviour
 {
     [SerializeField] private Image[] _lifeIcons;
+    [SerializeField] private Image[] _iconBackgrounds;
+
+    private void Awake()
+    {
+        _iconBackgrounds = new Image[_lifeIcons.Length];
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < _lifeIcons.Length; i++)
+        {
+            var background = _lifeIcons[i].rectTransform.parent;
+            _iconBackgrounds[i] = background.GetComponent<Image>();
+        }
+    }
 
     private void Update()
     {
-        if (SceneContext.Current.Player == null) return;
-        UpdateLifeIcons(SceneContext.Current.Player.CurHp);
+        var player = SceneContext.Current.Player;
+
+        if (player == null) return;
+
+        UpdateLifeIcons(player.CurHp, player.MaxHp);
     }
 
-    private void UpdateLifeIcons(int curHp)
+    private void UpdateLifeIcons(int curHp, int maxHp)
     {
         // 총 10개의 생명 아이콘이 존재한다
 
@@ -34,12 +52,13 @@ public class HealthPanelUI : MonoBehaviour
         // 17, 18
         // 19, 20 -> 10번째 생명 아이콘 (19이면 절반만 차있고, 20이면 꽉 차있다)
 
-        // 필요한 아이콘만큼 채우기
+        // 플레이어의 현재 체력과 최대 체력을 Heath UI에 동기화 시킨다
         for (int i = 0; i < _lifeIcons.Length; i++)
         {
             // 각 아이콘에 해당하는 HP 범위 계산 (1 ~ 20)
             int hpUnit = 2 * (i + 1); // 2, 4, 6, 8, 10, 12 ...
 
+            // 현재 체력에 대한 동기화
             if (curHp >= hpUnit)
             {
                 _lifeIcons[i].fillAmount = 1f;
@@ -51,6 +70,16 @@ public class HealthPanelUI : MonoBehaviour
             else
             {
                 _lifeIcons[i].fillAmount = 0f;
+            }
+
+            // 최대 체력에 대한 동기화 (생명 아이콘의 배경을 컨트롤하며, 절반만 차는 경우가 없다)
+            if (maxHp >= hpUnit)
+            {
+                _iconBackgrounds[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                _iconBackgrounds[i].gameObject.SetActive(false);
             }
         }
     }

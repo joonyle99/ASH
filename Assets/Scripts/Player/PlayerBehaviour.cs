@@ -10,6 +10,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [Space]
 
     [SerializeField] private int _maxHp = 20;
+    [SerializeField] private int _startHp = 10;
     [SerializeField] private int _curHp;
 
     [Space]
@@ -92,9 +93,14 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         {
             _curHp = value;
 
-            if (_curHp > _maxHp) _curHp = _maxHp;
-            else if (_curHp < 0) _curHp = 0;
+            if (_curHp > _maxHp) _curHp = _maxHp;   // 최대 체력을 넘어갈 수는 없다
+            else if (_curHp < 0) _curHp = 0;        // 체력이 0 미만이 될 수는 없다
         }
+    }
+    public int MaxHp
+    {
+        get => _maxHp;
+        set => _maxHp = value;
     }
 
     // Input Property
@@ -200,7 +206,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     private void InitPlayer()
     {
         // 체력 초기화
-        _curHp = _maxHp;
+        _curHp = _startHp;
 
         // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);

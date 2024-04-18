@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// 몬스터의 기본 행동을 정의하는 추상클래스
@@ -63,6 +64,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public Animator Animator { get; private set; }
     public Collider2D MainBodyCollider2D { get; private set; }      // circle collider 2d or box collider 2d
     public MaterialController MaterialController { get; private set; }
+    public LifePieceDropper LifePieceDropper { get; private set; }
     public SoundList SoundList { get; private set; }
 
     // State
@@ -547,6 +549,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         {
             FloatingMovementModule.SetStopAgent(true);
             FloatingMovementModule.SetVelocity(Vector3.zero);
+        }
+
+        if (LifePieceDropper)
+        {
+            if (LifePieceDropper.IsDropChance())
+                LifePieceDropper.DropProcess(transform.position);
         }
 
         // Wait until death effect is done
