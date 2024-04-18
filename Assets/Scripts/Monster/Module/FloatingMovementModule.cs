@@ -35,6 +35,12 @@ public class FloatingMovementModule : MonoBehaviour
     }
     public void SetStopAgent(bool isStop)
     {
+        if (!_agent.isOnNavMesh)
+        {
+            Debug.LogWarning($"에이전트가 NavMesh 위에 없음");
+            return;
+        }
+
         _agent.isStopped = isStop;
     }
     public void MoveToDestination(Vector3 destPosition)

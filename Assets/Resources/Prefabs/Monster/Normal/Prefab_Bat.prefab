@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 536029390823338699}
   - component: {fileID: 456224757}
   - component: {fileID: 456224758}
+  - component: {fileID: 7446310043044167426}
   m_Layer: 0
   m_Name: NavMesh
   m_TagString: Untagged
@@ -166,9 +167,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 536029391928586684}
+  - {fileID: 536029391485816284}
   m_Father: {fileID: 8241212123419817092}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &456224757
 MonoBehaviour:
@@ -183,13 +186,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AgentTypeID: 0
-  m_CollectObjects: 0
+  m_CollectObjects: 2
   m_Size: {x: 10, y: 10, z: 10}
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_UseGeometry: 1
+  m_UseGeometry: 0
   m_DefaultArea: 0
   m_IgnoreNavMeshAgent: 1
   m_IgnoreNavMeshObstacle: 1
@@ -199,7 +202,7 @@ MonoBehaviour:
   m_VoxelSize: 0.16666667
   m_BuildHeightMesh: 0
   m_HideEditorLogs: 0
-  m_NavMeshData: {fileID: 23800000, guid: 72fb1d6f1c20b5342ad15619464e0e10, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!114 &456224758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,6 +219,19 @@ MonoBehaviour:
   m_UseMeshPrefab: {fileID: 0}
   m_CompressBounds: 0
   m_OverrideVector: {x: 1, y: 1, z: 1}
+--- !u!114 &7446310043044167426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536029390823338700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae532a77d48a164da7b257e243f6045, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  receiver: {fileID: 3686014239526542607}
 --- !u!1 &536029391485816285
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +243,7 @@ GameObject:
   - component: {fileID: 536029391485816284}
   - component: {fileID: 536029391485816281}
   - component: {fileID: 536029391485816282}
-  - component: {fileID: 7446310043044167426}
+  - component: {fileID: 3657722838198989620}
   m_Layer: 9
   m_Name: Chase Area
   m_TagString: Untagged
@@ -242,13 +258,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 536029391485816285}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 16, y: 12, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8241212123419817092}
-  m_RootOrder: 2
+  m_Father: {fileID: 536029390823338699}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &536029391485816281
 SpriteRenderer:
@@ -328,7 +344,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &7446310043044167426
+--- !u!114 &3657722838198989620
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -356,7 +372,6 @@ GameObject:
   - component: {fileID: 536029391928586685}
   - component: {fileID: 536029391928586683}
   - component: {fileID: 7446310043044167427}
-  - component: {fileID: 1781701079}
   m_Layer: 9
   m_Name: Patrol Area
   m_TagString: Untagged
@@ -371,13 +386,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 536029391928586686}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 14, y: 8.5, z: 1}
+  m_LocalScale: {x: 14, y: 8.499997, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8241212123419817092}
-  m_RootOrder: 1
+  m_Father: {fileID: 536029390823338699}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &536029391928586685
 SpriteRenderer:
@@ -473,19 +488,6 @@ MonoBehaviour:
   m_Area: 0
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
---- !u!114 &1781701079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 536029391928586686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ae532a77d48a164da7b257e243f6045, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _monster: {fileID: 3686014239526542607}
 --- !u!1 &1028049676279707775
 GameObject:
   m_ObjectHideFlags: 0
@@ -7742,8 +7744,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7190538845886001168}
-  - {fileID: 536029391928586684}
-  - {fileID: 536029391485816284}
   - {fileID: 536029390823338699}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -7955,15 +7955,18 @@ MonoBehaviour:
     JumpForce: {x: 0, y: 0}
   respawnData:
     DefaultPrefabPosition: {x: 0, y: 0, z: 0}
-    PatrolArea:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-    PatrolPointA:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
-    PatrolPointB:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
+    groundRespawnData:
+      PatrolPointAPosition: {x: 0, y: 0, z: 0}
+      PatrolPointBPosition: {x: 0, y: 0, z: 0}
+    floatingRespawnData:
+      NavMeshData: {fileID: 0}
+      PatrolAreaPosition: {x: 0, y: 0, z: 0}
+      ChaseAreaPosition: {x: 0, y: 0, z: 0}
+      PatrolAreaScale: {x: 0, y: 0, z: 0}
+      ChaseAreaScale: {x: 0, y: 0, z: 0}
+      RespawnBounds:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 0

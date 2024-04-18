@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [RequireComponent(typeof(MaterialController))]
@@ -18,15 +19,9 @@ public class RespawnEffect : MonoBehaviour
 
     private MaterialController materialController;
 
-    private float _minY;
-    private float _maxY;
-
     private void Awake()
     {
         materialController = GetComponent<MaterialController>();
-
-        _minY = transform.position.y - _bottomOffset;
-        _maxY = transform.position.y + _topOffset;
     }
 
     public void Play(float delay = 0f)
@@ -37,9 +32,11 @@ public class RespawnEffect : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
+        var minY = transform.position.y - _bottomOffset;
+        var maxY = transform.position.y + _topOffset;
+
         // Respawn Material Initialize
         materialController.SetMaterial(_respawnMaterial);
-        // materialController.SetMaterialAndProgress(_respawnMaterial, "_Origin", _minY);
 
         // Respawn Effect Progress
         var eTime = 0f;
@@ -48,7 +45,9 @@ public class RespawnEffect : MonoBehaviour
             yield return null;
             eTime += Time.deltaTime;
 
-            var currentHeight = Mathf.Lerp(_minY, _maxY, eTime / _duration);
+            var ratio = eTime / _duration;
+            var currentHeight = Mathf.Lerp(minY, maxY, ratio);
+
             materialController.SetProgress("_Origin", currentHeight);
         }
 

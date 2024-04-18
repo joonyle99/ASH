@@ -823,7 +823,7 @@ MonoBehaviour:
   - {fileID: 4084963794434729173}
   - {fileID: 6508070044191269653}
   m_Bounds:
-    m_Center: {x: 0.005279541, y: -0.30514804, z: 0}
+    m_Center: {x: 0.005279541, y: -0.30514994, z: 0}
     m_Extent: {x: 0.54999995, y: 0.38293996, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -1345,7 +1345,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4094633951419829470}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 2.58, z: 0}
+  m_LocalPosition: {x: -10, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1952,7 +1952,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5517317729978824787}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: 2.58, z: 0}
+  m_LocalPosition: {x: 10, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2134,9 +2134,18 @@ MonoBehaviour:
     JumpForce: {x: 0, y: 0}
   respawnData:
     DefaultPrefabPosition: {x: 0, y: 0, z: 0}
-    RespawnBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
+    groundRespawnData:
+      PatrolPointAPosition: {x: 0, y: 0, z: 0}
+      PatrolPointBPosition: {x: 0, y: 0, z: 0}
+    floatingRespawnData:
+      NavMeshData: {fileID: 0}
+      PatrolAreaPosition: {x: 0, y: 0, z: 0}
+      ChaseAreaPosition: {x: 0, y: 0, z: 0}
+      PatrolAreaScale: {x: 0, y: 0, z: 0}
+      ChaseAreaScale: {x: 0, y: 0, z: 0}
+      RespawnBounds:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
@@ -2371,7 +2380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a247a06ed819ea4596c63e5ce38db27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _monster: {fileID: 5517317730400959633}
+  receiver: {fileID: 5517317730400959633}
 --- !u!1 &5796473429928903289
 GameObject:
   m_ObjectHideFlags: 0
@@ -8276,7 +8285,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 2082004997917844342}
   m_Bounds:
-    m_Center: {x: -0.004395485, y: -0.230703, z: 0}
+    m_Center: {x: -0.004395485, y: -0.2307049, z: 0}
     m_Extent: {x: 0.56551504, y: 0.7865051, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
