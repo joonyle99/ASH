@@ -9,7 +9,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [Header("Player")]
     [Space]
 
-    [SerializeField] private int _maxHp = 10;
+    [SerializeField] private int _maxHp = 20;
     [SerializeField] private int _curHp;
 
     [Space]
