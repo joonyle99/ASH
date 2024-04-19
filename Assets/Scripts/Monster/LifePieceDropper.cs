@@ -5,9 +5,20 @@ public class LifePieceDropper : MonoBehaviour
     [SerializeField] private LifePiece _LifePiece;
     [SerializeField] private int _percentage;
 
+    private Range _range;
+
+    private void Awake()
+    {
+        _range = new Range(1, 101);
+    }
+
     public bool IsDropChance()
     {
-        var randomInt = Random.Range(1, 101);
+        int randomInt = (int)_range.Random();
+
+        Debug.Log($"Random Range: {_range.Start} ~ {_range.End - 1}");
+        Debug.Log($"Percentage: {_percentage}");
+
         return randomInt <= _percentage;
     }
 

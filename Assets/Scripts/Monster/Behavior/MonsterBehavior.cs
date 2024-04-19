@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using Random = UnityEngine.Random;
 
 /// <summary>
 /// 몬스터의 기본 행동을 정의하는 추상클래스
@@ -232,6 +231,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         Animator = GetComponent<Animator>();
         MainBodyCollider2D = GetComponent<Collider2D>();
         MaterialController = GetComponent<MaterialController>();
+        LifePieceDropper = GetComponent<LifePieceDropper>();
         SoundList = GetComponent<SoundList>();
 
         // Module
@@ -554,7 +554,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (LifePieceDropper)
         {
             if (LifePieceDropper.IsDropChance())
+            {
+                Debug.Log("생명 조각 드랍 성공 !");
                 LifePieceDropper.DropProcess(transform.position);
+            }
+            else
+            {
+                Debug.Log("생명 조각 드랍 실패 !");
+            }
         }
 
         // Wait until death effect is done
