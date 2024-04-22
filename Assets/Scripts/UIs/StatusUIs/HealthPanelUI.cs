@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,7 @@ public class HealthPanelUI : MonoBehaviour
     {
         for (int i = 0; i < _lifeIcons.Length; i++)
         {
+            // icon backgrounds images
             var background = _lifeIcons[i].rectTransform.parent;
             _iconBackgrounds[i] = background.GetComponent<Image>();
         }
@@ -61,26 +63,62 @@ public class HealthPanelUI : MonoBehaviour
             // 현재 체력에 대한 동기화
             if (curHp >= hpUnit)
             {
-                _lifeIcons[i].fillAmount = 1f;
+                if (_lifeIcons[i].fillAmount <= 0.5f)
+                {
+                    StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
+                    _lifeIcons[i].fillAmount = 1f;
+                }
             }
             else if (curHp >= hpUnit - 1)
             {
-                _lifeIcons[i].fillAmount = 0.5f;
+                if (_lifeIcons[i].fillAmount <= 0f)
+                {
+                    StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
+                    _lifeIcons[i].fillAmount = 0.5f;
+                }
             }
             else
             {
-                _lifeIcons[i].fillAmount = 0f;
+                if (_lifeIcons[i].fillAmount > 0f)
+                {
+                    StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
+                    _lifeIcons[i].fillAmount = 0f;
+                }
             }
 
             // 최대 체력에 대한 동기화 (생명 아이콘의 배경을 컨트롤하며, 절반만 차는 경우가 없다)
             if (maxHp >= hpUnit)
             {
-                _iconBackgrounds[i].gameObject.SetActive(true);
+                if (!_iconBackgrounds[i].gameObject.activeSelf)
+                {
+                    _iconBackgrounds[i].gameObject.SetActive(true);
+                }
             }
             else
             {
-                _iconBackgrounds[i].gameObject.SetActive(false);
+                if (_iconBackgrounds[i].gameObject.activeSelf)
+                {
+                    _iconBackgrounds[i].gameObject.SetActive(false);
+                }
             }
         }
+    }
+
+    private IEnumerator ShakeCoroutine(Transform iconTransform)
+    {
+        Debug.Log("Shake");
+
+        var initialPosition = iconTransform.localPosition;
+
+        var eTime = 0f;
+        while (eTime < 2f)
+        {
+            yield return null;
+            eTime += Time.deltaTime;
+
+            iconTransform.localPosition = initialPosition + Random.insideUnitSphere * 0.2f;
+        }
+
+        iconTransform.localPosition = initialPosition;
     }
 }

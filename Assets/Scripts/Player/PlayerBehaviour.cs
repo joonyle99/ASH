@@ -276,6 +276,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Time.timeScale = 1f;
     }
 
+    // about heal
+    public void RecoverHealth(int healingAmount)
+    {
+        CurHp += healingAmount;
+    }
+
     // respawn
     public void TriggerInstantRespawn(float damage)
     {
