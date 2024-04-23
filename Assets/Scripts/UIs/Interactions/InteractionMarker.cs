@@ -9,6 +9,7 @@ public class InteractionMarker : MonoBehaviour
     private InteractableObject _currentInteractable;
 
     private bool _isMarking;
+    public bool IsMarking => _isMarking;
 
     private void Awake()
     {

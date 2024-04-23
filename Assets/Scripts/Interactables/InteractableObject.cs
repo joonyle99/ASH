@@ -60,8 +60,9 @@ public abstract class InteractableObject : MonoBehaviour
     }
     public bool IsInteracting { get; private set; }
 
-    protected bool IsInteractionKeyUp =>  InputManager.Instance.State.InteractionKey.KeyUp;     // 상호작용 키를 떼는 순간
-    protected bool IsInteractionState => Player.CurrentStateIs<InteractionState>();             // 플레이어가 상호작용 상태인지
+    protected bool IsInteractionKeyUp =>  InputManager.Instance.State.InteractionKey.KeyUp;             // 상호작용 키를 떼는 순간인지
+    protected bool IsPlayerInteractionState => Player.CurrentStateIs<InteractionState>();               // 플레이어가 상호작용 상태인지
+    protected bool IsPlayerIsDirSync => Player.IsDirSync;                                               // 플레이어의 바로보는 방향과 입력 방향이 동기화 되었는지
 
     #endregion
 
@@ -80,6 +81,8 @@ public abstract class InteractableObject : MonoBehaviour
         IsInteracting = true;
 
         OnInteract();
+
+        Player.PlayerInteractionController.OnPlayerInteractionStart();     // 플레이어에게 상호작용 시작을 알린다
     }
     /// <summary>
     /// 플레이어와 상호작용을 종료하는 함수
@@ -90,7 +93,7 @@ public abstract class InteractableObject : MonoBehaviour
 
         OnInteractionExit();
 
-        Player.PlayerInteractionController.OnInteractionExit();     // 플레이어에게 따로 상호작용 종료를 알린다
+        Player.PlayerInteractionController.OnPlayerInteractionExit();     // 플레이어에게 상호작용 종료를 알린다
     }
 
     public void OnDestroy()
