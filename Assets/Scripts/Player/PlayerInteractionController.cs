@@ -9,11 +9,8 @@ public class PlayerInteractionController : MonoBehaviour
     [Header("Interaction Controller")]
     [Space]
 
-    // 범위 안의 상호작용 가능한 오브젝트 '후보' 리스트
-    [SerializeField] private List<InteractableObject> _interactionTargetList;
-
-    // 가까운 상호작용 가능한 오브젝트
-    [SerializeField] private InteractableObject _closetTarget;
+    [SerializeField] private List<InteractableObject> _interactionTargetList;   // 범위 안의 상호작용 가능한 오브젝트 '후보' 리스트
+    [SerializeField] private InteractableObject _closetTarget;                  // 가까운 상호작용 가능한 오브젝트
 
     public InteractableObject ClosetTarget
     {
@@ -36,9 +33,6 @@ public class PlayerInteractionController : MonoBehaviour
     private PlayerBehaviour _player;
     private InteractionMarker _interactionMarker;
 
-    // 가장 가까운 타겟이 없거나 해당 타겟이 상호작용 중이 아니라면
-    private bool IsReadyForPicking => _closetTarget == null || !_closetTarget.IsInteracting;
-
     private void Awake()
     {
         _player = GetComponent<PlayerBehaviour>();
@@ -50,17 +44,43 @@ public class PlayerInteractionController : MonoBehaviour
     }
     private void Update()
     {
-        if (IsReadyForPicking)
+        // 상호작용 대상 업데이트
+        if (_closetTarget && !_closetTarget.IsInteracting && _interactionTargetList.Count >= 1)
+        {
             PickClosestTarget();
+        }
 
-        CheckInteraction();
+        // 상호작용 대상이 있는 경우
+        if (ClosetTarget)
+        {
+            // 이미 상호작용 중이라면
+            if (ClosetTarget.IsInteracting)
+            {
+                // 대상에서 상호작용 업데이트 함수를 돌려준다
+                ClosetTarget.UpdateInteracting();
+            }
+            // 상호작용 중이 아니라면
+            else
+            {
+                // 상호작용 키를 입력받는다면
+                if (InputManager.Instance.State.InteractionKey.KeyDown)
+                {
+                    // 그리고 상호작용 가능한 상태라면
+                    if (_player.CanInteract)
+                    {
+                        // 상호작용 오브젝트에서의 상호작용 로직 실행
+                        ClosetTarget.Interact();
+                    }
+                }
+            }
+        }
     }
     private void FixedUpdate()
     {
-        if (_closetTarget != null)
+        if (ClosetTarget)
         {
-            if (_closetTarget.IsInteracting)
-                _closetTarget.FixedUpdateInteracting();
+            if (ClosetTarget.IsInteracting)
+                ClosetTarget.FixedUpdateInteracting();
         }
     }
 
@@ -70,7 +90,7 @@ public class PlayerInteractionController : MonoBehaviour
     public void OnPlayerInteractionStart()
     {
         // 모든 상호작용이 Interaction State로 전이돼야 하는 것은 아니다 (다이얼로그도 상호작용임)
-        if (_closetTarget.StateChange == InteractionStateChangeType.InteractionState)
+        if (ClosetTarget.StateChange == InteractionStateChangeType.InteractionState)
             _player.ChangeState<InteractionState>();
     }
     /// <summary>
@@ -88,8 +108,14 @@ public class PlayerInteractionController : MonoBehaviour
     /// <param name="target"></param>
     public void AddInteractionTarget(InteractableObject target)
     {
-        if(!_interactionTargetList.Contains(target))
+        if (!_interactionTargetList.Contains(target))
+        {
             _interactionTargetList.Add(target);
+
+            // 상호작용 타겟이 없는 경우 넣어준다
+            if (ClosetTarget == null)
+                ChangeClosetTarget(target);
+        }
     }
     /// <summary>
     /// 상호작용 가능한 오브젝트 후보 리스트에서 제거
@@ -98,38 +124,20 @@ public class PlayerInteractionController : MonoBehaviour
     public void RemoveInteractionTarget(InteractableObject target)
     {
         if (_interactionTargetList.Contains(target))
-            _interactionTargetList.Remove(target);
-    }
-
-    void CheckInteraction()
-    {
-        // 상호작용 대상이 있는 경우
-        if (_closetTarget)
         {
-            // 상호작용 키를 입력받는다면
-            if (InputManager.Instance.State.InteractionKey.KeyDown)
-            {
-                // 그리고 상호작용 가능한 상태라면
-                if (_player.CanInteract)
-                {
-                    // 상호작용 오브젝트에서의 상호작용 로직 실행
-                    _closetTarget.Interact();
-                }
-            }
+            _interactionTargetList.Remove(target);
 
-            // 이미 상호작용 중이라면
-            if (_closetTarget.IsInteracting)
-            {
-                // 대상에서 상호작용 업데이트 함수를 돌려준다
-                _closetTarget.UpdateInteracting();
-            }
+            // 상호작용 타겟이 같은 경우 제거해준다
+            if (ClosetTarget == target)
+                ClosetTarget = null;
         }
     }
+
     /// <summary>
     /// 상호작용 가능한 오브젝트 후보 리스트 중, 가장 가까운 타겟을 고른다
     /// closetTarget에 null이 들어갈 수 있다.
     /// </summary>
-    void PickClosestTarget()
+    public void PickClosestTarget()
     {
         // 리스트의 null을 제거하며 정리한다 (x == null인 경우 모든 x를 제거 *람다식*)
         // _interactionTargetList.RemoveAll(x => x == null);
@@ -137,7 +145,7 @@ public class PlayerInteractionController : MonoBehaviour
         var minDist = float.MaxValue;
         var minIndex = -1;
 
-        // 상호작용 후보 리스트를 순회
+        // 후보 리스트를 순회
         for (int i = 0; i < _interactionTargetList.Count; i++)
         {
             // 상호작용 기능 활성화 여부 판단
@@ -152,29 +160,25 @@ public class PlayerInteractionController : MonoBehaviour
             }
         }
 
-        // 상호작용 타겟이 없는 경우 closetTarget에 null을 넣는다
-        if (minIndex == -1)
-        {
-            ChangeClosetTarget(null);
-            return;
-        }
+        // 후보 리스트 중에서 상호작용 타겟이 없는 경우
+        if (minIndex == -1) return;
 
-        // 상호작용 중이 타겟이 중복이 아니라면
-        if (_interactionTargetList[minIndex] != _closetTarget)
+        // 중복이 아니라면 넣는다
+        if (_interactionTargetList[minIndex] != ClosetTarget)
+        {
             ChangeClosetTarget(_interactionTargetList[minIndex]);
+        }
     }
     /// <summary>
     /// 현재 상호작용 중인 오브젝트르 변경
     /// </summary>
     /// <param name="newTarget"></param>
-    void ChangeClosetTarget(InteractableObject newTarget)
+    public void ChangeClosetTarget(InteractableObject newTarget)
     {
-        if (_closetTarget == newTarget) return;
+        if (newTarget == null) return;
+        if (ClosetTarget == newTarget) return;
 
-        // null or object
-        _closetTarget = newTarget;
-
-        if(_closetTarget) _interactionMarker.EnableMarkerAt(_closetTarget);
+        ClosetTarget = newTarget;
+        _interactionMarker.EnableMarkerAt(ClosetTarget);
     }
-
 }

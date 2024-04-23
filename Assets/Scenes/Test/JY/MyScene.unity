@@ -4692,11 +4692,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -184.92651
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 23.336592
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -10884,6 +10884,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5383584076892876755}
   - component: {fileID: 5383584076892876756}
+  - component: {fileID: 5383584076892876757}
   m_Layer: 0
   m_Name: NPC_Cat Variant
   m_TagString: Untagged
@@ -10899,7 +10900,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5383584076892876753}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -158.96, y: 37.85, z: 0}
+  m_LocalPosition: {x: -181.71, y: 41.58, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10926,6 +10927,27 @@ MonoBehaviour:
   _stateChange: 0
   _animationType: 0
   _data: {fileID: 11400000, guid: 56452b722bccbe244829b17fc54242be, type: 2}
+--- !u!50 &5383584076892876757
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5383584076892876753}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0.2
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &5383584077091106493
 GameObject:
   m_ObjectHideFlags: 0
