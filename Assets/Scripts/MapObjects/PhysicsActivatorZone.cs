@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PhysicsActivatorZone : TriggerZone
 {
     [SerializeField] Rigidbody2D _targetRigidbody;
     [SerializeField] bool _freezeOnStart = true;
+
     private void Awake()
     {
         if (_freezeOnStart)

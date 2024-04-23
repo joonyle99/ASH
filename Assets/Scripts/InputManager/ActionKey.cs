@@ -13,10 +13,10 @@ public enum KeyState
 public struct ActionKey
 {
     public KeyState State;
-    public bool KeyDown { get { return State == KeyState.KeyDown; } }
-    public bool Pressing { get { return State == KeyState.Pressing || State == KeyState.KeyDown; } }
-    public bool KeyUp { get { return State == KeyState.KeyUp; } }
-    public bool None { get { return State == KeyState.None || State == KeyState.KeyUp; } }
+    public bool KeyDown => State == KeyState.KeyDown;
+    public bool Pressing => State is KeyState.Pressing or KeyState.KeyDown;
+    public bool KeyUp => State == KeyState.KeyUp;
+    public bool None => State is KeyState.None or KeyState.KeyUp;
 
     public void Update(KeyCode code)
     {

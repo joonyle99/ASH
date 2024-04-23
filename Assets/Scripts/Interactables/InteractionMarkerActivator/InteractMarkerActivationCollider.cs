@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InteractMarkerActivationCollider : MonoBehaviour
 {
@@ -15,12 +12,12 @@ public class InteractMarkerActivationCollider : MonoBehaviour
     {
         var player = collision.transform.GetComponent<PlayerBehaviour>();
         if(player != null)
-            player.PlayerInteractionController.AddInteractableInRange(_interactableObject);
+            player.PlayerInteractionController.AddInteractionTarget(_interactableObject);
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
         var player = collision.transform.GetComponent<PlayerBehaviour>();
         if (player != null)
-            player.PlayerInteractionController.RemoveInteractableInRange(_interactableObject);
+            player.PlayerInteractionController.RemoveInteractionTarget(_interactableObject);
     }
 }

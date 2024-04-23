@@ -8,14 +8,14 @@ public class InteractionState : PlayerState
 {
     protected override bool OnEnter()
     {
-        switch (Player.PlayerInteractionController.InteractionTarget.AnimationType)
+        switch (Player.PlayerInteractionController.Interactable.AnimationType)
         {
             case InteractionAnimationType.Push:
             case InteractionAnimationType.Roll:
                 Player.Animator.SetBool("IsPush", true);
                 break;
         }
-        if (Player.PlayerInteractionController.InteractionTarget.AnimationType != InteractionAnimationType.None)
+        if (Player.PlayerInteractionController.Interactable.AnimationType != InteractionAnimationType.None)
             Player.Animator.SetTrigger("Interact");
 
         return true;
@@ -29,7 +29,7 @@ public class InteractionState : PlayerState
 
     protected override bool OnExit()
     {
-        switch (Player.PlayerInteractionController.InteractionTarget.AnimationType)
+        switch (Player.PlayerInteractionController.Interactable.AnimationType)
         {
             case InteractionAnimationType.Push:
             case InteractionAnimationType.Roll:

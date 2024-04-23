@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PushableTree : InteractableObject
@@ -23,7 +21,7 @@ public class PushableTree : InteractableObject
     }
     public override void UpdateInteracting()
     {
-        if (IsInteractionKeyUp || IsPlayerStateChanged || _treeTrunk.PushedAngle > _interactionOverAngle)
+        if (IsInteractionKeyUp || !IsInteractionState || _treeTrunk.PushedAngle > _interactionOverAngle)
         {
             ExitInteraction();
         }

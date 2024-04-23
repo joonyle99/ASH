@@ -73,7 +73,7 @@ public class RollingStone : InteractableObject
         filter.layerMask = _playerMask;
         filter.useLayerMask= true;
         var contactCount = _interactionZone.OverlapCollider(filter, contacts);
-        if (IsInteractionKeyUp || IsPlayerStateChanged || (!_canPull && Player.RawInputs.Movement.x * _moveDirection < 0) ||
+        if (IsInteractionKeyUp || !IsInteractionState || (!_canPull && Player.RawInputs.Movement.x * _moveDirection < 0) ||
             contactCount == 0)
         {
             ExitInteraction();
