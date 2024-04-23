@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
+/// 플레이어의 생명력을 회복한다
 /// 생명 조각이 생성되면 퍼졌다가 플레이어에게 빨려들어온다
 /// </summary>
 public class LifePiece : MonoBehaviour
@@ -11,8 +12,8 @@ public class LifePiece : MonoBehaviour
     [Header("Time")]
     [Space]
 
-    [SerializeField] private float _waitForStartTime;
-    [SerializeField] private float _waitForGatheringTime;
+    [SerializeField] private float _waitForStartTime;           // ember가 멈추기 시작하는 시간
+    [SerializeField] private float _waitForGatheringTime;       // ember가 멈추고 기다리는 시간
 
     [Header("Velocity")]
     [Space]
@@ -34,18 +35,15 @@ public class LifePiece : MonoBehaviour
     private ParticleSystem _particleSystem;
     private ParticleSystem.VelocityOverLifetimeModule _velocityOverLifetimeModule;
 
-    private PlayerBehaviour _player;
-
     private void Awake()
     {
         _particleCounter = GetComponentInChildren<ParticleCounter>();
         _particleSystem = GetComponentInChildren<ParticleSystem>();
+
+        _velocityOverLifetimeModule = _particleSystem.velocityOverLifetime;
     }
     private void Start()
     {
-        _velocityOverLifetimeModule = _particleSystem.velocityOverLifetime;
-        _player = SceneContext.Current.Player;
-
         StartCoroutine(LifePieceCoroutine());
     }
 
@@ -88,14 +86,16 @@ public class LifePiece : MonoBehaviour
 
     private void TargetToPlayer()
     {
+        var player = SceneContext.Current.Player;
+
         // 모이는 위치를 플레이어로 변경
-        transform.position = _player.BodyCollider.bounds.center;
-        transform.parent = _player.transform;
+        transform.position = player.BodyCollider.bounds.center;
+        transform.parent = player.transform;
     }
 
     private void RecoverPlayerHealth()
     {
         // 체력 회복 프로세스
-        _player.RecoverHealth(_healingAmount);
+        SceneContext.Current.Player.RecoverHealth(_healingAmount);
     }
 }

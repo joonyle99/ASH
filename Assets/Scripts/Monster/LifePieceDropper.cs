@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// 일정 확률로 생명 조각을 드랍하도록 하는 클래스
+/// 일정 확률로 생명 조각을 드랍한다
 /// </summary>
 public class LifePieceDropper : MonoBehaviour
 {
@@ -28,7 +28,7 @@ public class LifePieceDropper : MonoBehaviour
 
     public void DropProcess(Vector3 dropPosition)
     {
-        StartCoroutine(DropProcessCoroutine(dropPosition, 1f));
+        StartCoroutine(DropProcessCoroutine(dropPosition, 0.5f));
     }
 
     private IEnumerator DropProcessCoroutine(Vector3 dropPosition, float dropDelay)

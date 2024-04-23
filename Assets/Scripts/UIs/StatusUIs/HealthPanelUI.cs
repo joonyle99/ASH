@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -65,7 +64,7 @@ public class HealthPanelUI : MonoBehaviour
             {
                 if (_lifeIcons[i].fillAmount <= 0.5f)
                 {
-                    StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
+                    // StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
                     _lifeIcons[i].fillAmount = 1f;
                 }
             }
@@ -73,7 +72,7 @@ public class HealthPanelUI : MonoBehaviour
             {
                 if (_lifeIcons[i].fillAmount <= 0f)
                 {
-                    StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
+                    // StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
                     _lifeIcons[i].fillAmount = 0.5f;
                 }
             }
@@ -81,7 +80,7 @@ public class HealthPanelUI : MonoBehaviour
             {
                 if (_lifeIcons[i].fillAmount > 0f)
                 {
-                    StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
+                    // StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
                     _lifeIcons[i].fillAmount = 0f;
                 }
             }
@@ -104,6 +103,7 @@ public class HealthPanelUI : MonoBehaviour
         }
     }
 
+    /*
     private IEnumerator ShakeCoroutine(Transform iconTransform)
     {
         Debug.Log("Shake");
@@ -121,4 +121,5 @@ public class HealthPanelUI : MonoBehaviour
 
         iconTransform.localPosition = initialPosition;
     }
+    */
 }
