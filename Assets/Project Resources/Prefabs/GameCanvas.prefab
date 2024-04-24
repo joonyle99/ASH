@@ -725,7 +725,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4950070036801773367}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -3068,7 +3068,7 @@ GameObject:
   - component: {fileID: 3737342738835799599}
   - component: {fileID: 3715568913468158616}
   m_Layer: 5
-  m_Name: NameText
+  m_Name: Speaker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3087,7 +3087,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4950070036801773367}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4685,9 +4685,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dialoguePanel: {fileID: 4950070036801773384}
+  _dialogue: {fileID: 4950070036778526826}
+  _speaker: {fileID: 3737342738835799599}
   _skipUI: {fileID: 495108584}
-  _dialogueText: {fileID: 4950070036778526826}
-  _nameText: {fileID: 3737342738835799599}
 --- !u!1 &4950070036778526824
 GameObject:
   m_ObjectHideFlags: 0
@@ -4701,7 +4701,7 @@ GameObject:
   - component: {fileID: 4950070036778526826}
   - component: {fileID: 436265025}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Dialogue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4759,7 +4759,7 @@ MonoBehaviour:
     colors."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6949a0c0c4cf8ca4099ee39100594830, type: 2}
-  m_sharedMaterial: {fileID: -1187495044015851074, guid: 877ba6484533bf24c8575786c577a9e9, type: 2}
+  m_sharedMaterial: {fileID: 7825681848100788585, guid: 6949a0c0c4cf8ca4099ee39100594830, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4822,7 +4822,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!114 &436265025
@@ -4871,8 +4871,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4950070036778526825}
-  - {fileID: 495108583}
   - {fileID: 4542215835900283485}
+  - {fileID: 495108583}
   m_Father: {fileID: 4950070036246423939}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

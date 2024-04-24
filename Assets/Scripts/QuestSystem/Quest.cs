@@ -4,6 +4,20 @@
 [System.Serializable]
 public class Quest
 {
-    private string _name;
+    public enum QuestType
+    {
+        Collect,
+        Kill,
+        Talk
+    }
+
+    public bool isActive;
+
+    public string title;
+    public QuestType type;
+    public string description;
+    public int reward;
+
+    // public QuestGOal goal;
 
 }

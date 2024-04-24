@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// 다이얼로그 세그먼트
 /// </summary>
-public class DialogueLine
+public class DialogueSegment
 {
     public string Speaker = "";                                 // 대화를 하는 캐릭터의 이름
     public string Text = "";                                    // 대사

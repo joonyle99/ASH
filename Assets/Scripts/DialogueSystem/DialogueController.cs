@@ -12,6 +12,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
     [SerializeField] private float _waitTimeAfterScriptEnd;     // 대화가 끝난 후 대기 시간
 
+    public bool IsDialogueActive => View.IsPanelActive;         // 다이얼로그 뷰가 활성화 중인지 여부
+
     private DialogueView _view;                                 // 다이얼로그 뷰 UI
     private DialogueView View
     {
@@ -22,8 +24,6 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             return _view;
         }
     }
-
-    public bool IsDialogueActive => View.IsPanelActive;         // 다이얼로그 뷰가 활성화 중인지 여부
 
     /// <summary>
     /// 다이얼로그 시작 함수
@@ -38,14 +38,14 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         StartCoroutine(DialogueCoroutine(data));
     }
     /// <summary>
-    /// 
+    /// 다이얼로그 시작 코루틴
     /// </summary>
     /// <param name="data"></param>
     /// <returns></returns>
     private IEnumerator DialogueCoroutine(DialogueData data)
     {
         // 다이얼로그 데이터를 통해 객체 생성
-        Dialogue dialogue = new Dialogue(data);
+        DialogueSequence dialogueSequence = new DialogueSequence(data);
 
         // 다이얼로그 데이터 입력 설정이 있으면 변경
         if (data.InputSetter != null)
@@ -57,13 +57,13 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         View.OpenPanel();
 
         // 다이얼로그 시퀀스 시작
-        while (!dialogue.IsOver)
+        while (!dialogueSequence.IsOver)
         {
-            // 다이얼로그 뷰 UI에 현재 라인을 표시
-            View.StartSingleLine(dialogue.CurrentLine);
+            // 다이얼로그 뷰 UI에 현재 세그먼트를 표시
+            View.StartNextSegment(dialogueSequence.CurrentSegment);
 
             // 다이얼로그 세그먼트가 끝날 때까지 대기
-            while (!View.IsCurrentLineOver)
+            while (!View.IsCurrentSegmentOver)
             {
                 yield return null;
 
@@ -85,7 +85,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             yield return StartCoroutine(View.ClearTextCoroutine(_waitTimeAfterScriptEnd));
 
             // 다음 다이얼로그 세그먼트로 이동
-            dialogue.MoveNext();
+            dialogueSequence.MoveNext();
         }
 
         // 다이얼로그 뷰 UI를 닫아준다

@@ -25,9 +25,9 @@ public class DialogueData : ScriptableObject
     /// 다이얼로그 세그먼트 처리를 통해 시퀀스를 반환한다
     /// </summary>
     /// <returns></returns>
-    public List<DialogueLine> GetDialogueSequence()
+    public List<DialogueSegment> GetDialogueSequence()
     {
-        List<DialogueLine> dialogueSequence = new List<DialogueLine>();
+        List<DialogueSegment> dialogueSequence = new List<DialogueSegment>();
         string [] scriptLines = HappyTools.TSVRead.SplitLines(_script.text);
         string speakerName = _defaultSpeaker;
         for (int i=0; i<scriptLines.Length; i++)
@@ -64,15 +64,16 @@ public class DialogueData : ScriptableObject
                 }
                 continue;
             }
+
             // TODO : @로 시작하는 특수 액션들에 대한 처리
 
-            DialogueLine line = new DialogueLine();
-            line.Text = scriptLines[i];
-            line.CharactersPerSecond = charactersPerSecond;
-            line.ShakeParams = shakeParams;
-            line.Speaker = speakerName;
+            DialogueSegment segment = new DialogueSegment();
+            segment.Text = scriptLines[i];
+            segment.CharactersPerSecond = charactersPerSecond;
+            segment.ShakeParams = shakeParams;
+            segment.Speaker = speakerName;
 
-            dialogueSequence.Add(line);
+            dialogueSequence.Add(segment);
         }
         return dialogueSequence;
     }
