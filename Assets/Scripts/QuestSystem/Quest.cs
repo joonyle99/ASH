@@ -1,9 +1,9 @@
-using UnityEngine;
-
 /// <summary>
-/// 각각의 독립된 퀘스트에 해당하는 클래스
+/// 퀘스트 정보
 /// </summary>
-public class Quest : MonoBehaviour
+[System.Serializable]
+public class Quest
 {
+    private string _name;
 
 }

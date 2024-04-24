@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -8,13 +7,24 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Dialogue Data", fileName = "New Dialogue Data")]
 public class DialogueData : ScriptableObject
 {
-    [SerializeField] string _defaultSpeaker;
-    [SerializeField] InputSetterScriptableObject _inputSetter;
-    [SerializeField] TextAsset _script;
-    [SerializeField] float _defaultCharactersPerSecond = 12;
-    [SerializeField] DialogueAction[] _actions;
+    [Header("DialogueData")]
+    [Space]
+
+    [SerializeField] private string _defaultSpeaker;                        // 대사 캐릭터 이름
+    [SerializeField] private TextAsset _script;                             // 대사 스크립트
+    [SerializeField] private float _defaultCharactersPerSecond = 12;        // 기본 글자 속도
+    [SerializeField] private InputSetterScriptableObject _inputSetter;      // 플레이어 입력 설정
+
+    [Space]
+
+    [SerializeField] private DialogueAction[] _actions;                     // 대화 액션
 
     public InputSetterScriptableObject InputSetter => _inputSetter;
+
+    /// <summary>
+    /// 다이얼로그 세그먼트 처리를 통해 시퀀스를 반환한다
+    /// </summary>
+    /// <returns></returns>
     public List<DialogueLine> GetDialogueSequence()
     {
         List<DialogueLine> dialogueSequence = new List<DialogueLine>();

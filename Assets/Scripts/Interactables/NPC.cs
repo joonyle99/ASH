@@ -1,15 +1,18 @@
 using UnityEngine;
 
 /// <summary>
-/// 상호작용 가능한 오브젝트 중
-/// 대화창을 띄우는 기능을 추가로 가진 Non-Player Character
+/// 대화 상호작용이 가능한 Non-Player Character
 /// </summary>
 public class NPC : InteractableObject
 {
     [Header("NPC")]
     [Space]
 
-    [SerializeField] DialogueData _data;
+    [SerializeField] private DialogueData _data;
+    [SerializeField] private Quest _quest;
+    [SerializeField] private bool _autoAcceptQuest;
+
+    // 퀘스트가 존재한다면 대화창이 모두 종료된다면 자동으로 퀘스트를 위임한다
 
     protected override void OnInteract()
     {

@@ -3,19 +3,30 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
+/// <summary>
+/// 다이얼로그를 출력하기 위한 뷰 UI
+/// </summary>
 public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
 {
-    [SerializeField] Image _dialoguePanel;
-    [SerializeField] Image _skipUI;
-    [SerializeField] TextMeshProUGUI _dialogueText;
-    [SerializeField] TextMeshProUGUI _nameText;
+    [Header("Dialogue View")]
+    [Space]
 
-    TextShaker _textShaker;
+    [SerializeField] private Image _dialoguePanel;
+    [SerializeField] private Image _skipUI;
+    [SerializeField] private TextMeshProUGUI _dialogueText;
+    [SerializeField] private TextMeshProUGUI _nameText;
 
-    DialogueLine _currentLine;
-    Coroutine _currentLineCoroutine;
+    // TODO: 퀘스트를 위해 수락 / 거절 버튼도 사용한다면 추가한다
+
+    private TextShaker _textShaker;
+
+    private DialogueLine _currentLine;
+    private Coroutine _currentLineCoroutine;
+
     public bool IsCurrentLineOver { get; private set; }
-    public bool IsPanelActive { get { return _dialoguePanel.gameObject.activeInHierarchy; } }
+    public bool IsPanelActive => _dialoguePanel.gameObject.activeInHierarchy;
+
     public void OpenPanel()
     {
         _dialogueText.text = "";
@@ -61,7 +72,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
             eTime += Time.deltaTime;
         }
     }
-    IEnumerator SingleLineCoroutine()
+    private IEnumerator SingleLineCoroutine()
     {
         StringBuilder stringBuilder = new StringBuilder(_currentLine.Text.Length);
         int textIndex = 0;
@@ -89,7 +100,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
         }
         CleanUpOnSingleLineOver();
     }
-    void CleanUpOnSingleLineOver()
+    private void CleanUpOnSingleLineOver()
     {
         IsCurrentLineOver = true;
         _dialogueText.text = _currentLine.Text;

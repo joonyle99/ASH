@@ -1,12 +1,19 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// 다이얼로그를 관리하는 컨트롤러
+/// 다이얼로그를 시작하고 종료하는 역할을 한다
+/// </summary>
 public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueController>
 {
+    [Header("Dialogue Controller")]
+    [Space]
 
-    [SerializeField] float _waitTimeAfterScriptEnd;
-    DialogueView _view;
-    DialogueView View
+    [SerializeField] private float _waitTimeAfterScriptEnd;     // 대화가 끝난 후 대기 시간
+
+    private DialogueView _view;                                 // 다이얼로그 뷰 UI
+    private DialogueView View
     {
         get
         {
@@ -15,46 +22,76 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             return _view;
         }
     }
-    public bool IsDialogueActive => View.IsPanelActive;
+
+    public bool IsDialogueActive => View.IsPanelActive;         // 다이얼로그 뷰가 활성화 중인지 여부
+
+    /// <summary>
+    /// 다이얼로그 시작 함수
+    /// </summary>
+    /// <param name="data">다이얼로그에 대한 모든 정보를 담는 데이터</param>
+    /// <param name="isFromCutscene">컷씬으로부터 온 다이얼로그인지 확인하기 위한 부울 값</param>
     public void StartDialogue(DialogueData data, bool isFromCutscene = false)
     {
-        if (IsDialogueActive)
-            return;
+        // 대화가 이미 진행 중이라면 종료
+        if (IsDialogueActive) return;
+
         StartCoroutine(DialogueCoroutine(data));
     }
-    IEnumerator DialogueCoroutine(DialogueData data)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns></returns>
+    private IEnumerator DialogueCoroutine(DialogueData data)
     {
+        // 다이얼로그 데이터를 통해 객체 생성
         Dialogue dialogue = new Dialogue(data);
-        //Disable Inputs
+
+        // 다이얼로그 데이터 입력 설정이 있으면 변경
         if (data.InputSetter != null)
         {
             InputManager.Instance.ChangeInputSetter(data.InputSetter);
         }
 
-        //Start Dialogue
+        // 다이얼로그 뷰 UI를 열어준다
         View.OpenPanel();
 
-        //Proceed Dialogue
+        // 다이얼로그 시퀀스 시작
         while (!dialogue.IsOver)
         {
+            // 다이얼로그 뷰 UI에 현재 라인을 표시
             View.StartSingleLine(dialogue.CurrentLine);
+
+            // 다이얼로그 세그먼트가 끝날 때까지 대기
             while (!View.IsCurrentLineOver)
             {
                 yield return null;
+
+                // 텍스트를 빠르게 표시
                 if (InputManager.Instance.State.InteractionKey.KeyDown)
                     View.FastForward();
             }
+
+            // 다음 Update까지 대기
             yield return null;
+
+            // 상호작용 키를 이용해 다이얼로그 세그먼트를 종료하기 전까지 대기한다
             yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
+
+            // 다이얼로그 세그먼트 종료 사운드 재생
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+
+            // 다이얼로그 세그먼트가 끝난 후 대기 시간만큼 대기
             yield return StartCoroutine(View.ClearTextCoroutine(_waitTimeAfterScriptEnd));
+
+            // 다음 다이얼로그 세그먼트로 이동
             dialogue.MoveNext();
         }
 
-        //Close Dialogue
+        // 다이얼로그 뷰 UI를 닫아준다
         View.ClosePanel();
 
-        //Retain control
+        // 다이얼로그 시퀀스가 끝났기 때문에 입력 설정을 기본값으로 변경
         if (data.InputSetter != null)
             InputManager.Instance.ChangeToDefaultSetter();
     }
