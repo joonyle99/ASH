@@ -9,8 +9,11 @@ public class PlayerInteractionController : MonoBehaviour
     [Header("Interaction Controller")]
     [Space]
 
-    [SerializeField] private List<InteractableObject> _interactionTargetList;   // 범위 안의 상호작용 가능한 오브젝트 '후보' 리스트
     [SerializeField] private InteractableObject _closetTarget;                  // 가까운 상호작용 가능한 오브젝트
+
+    [Space]
+
+    [SerializeField] private List<InteractableObject> _interactionTargetList;   // 범위 안의 상호작용 가능한 오브젝트 '후보' 리스트
 
     public InteractableObject ClosetTarget
     {
