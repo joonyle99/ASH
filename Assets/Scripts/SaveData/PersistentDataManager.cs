@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 using DataGroup = System.Collections.Generic.Dictionary<string, object>;
 
@@ -14,6 +15,17 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
 
     int _cheatSkillid = 0;
+
+    string path;
+    void Start()
+    {
+        path = Path.Combine(Application.dataPath + "/Data/", "database.json");
+
+        string fromJsonData = File.ReadAllText(Application.dataPath + "/Data" + "/database.json");
+
+        DataGroup data = new DataGroup();
+        data = JsonDataManager.ToDictionary<string, object>(fromJsonData);
+    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F8))
@@ -91,13 +103,18 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return;
         Instance._globalDataGroup[key] = value;
+        Instance.JsonSave();
     }
     public static void Set<T>(string groupName, string key, T value) where T : new()
     {
         if (Instance == null)
             return;
         if (Instance._dataGroups.ContainsKey(groupName))
+        {
             Instance._dataGroups[groupName][key] = value;
+            Instance.JsonSave();
+        }
+            
     }
     public static bool Has<T>(string key) where T : new()
     {
@@ -134,5 +151,11 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             Instance._dataGroups[groupName][key] = new T();
             return (T)Instance._dataGroups[groupName][key];
         }
+    }
+    public void JsonSave()
+    {
+        string json = JsonDataManager.ToJson(Instance._globalDataGroup);
+
+        File.WriteAllText(path, json);
     }
 }
