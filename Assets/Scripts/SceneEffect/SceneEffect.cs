@@ -1,10 +1,11 @@
 using UnityEngine;
 
-using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine.Events;
 using System.Text.RegularExpressions;
+using Com.LuisPedroFonseca.ProCamera2D;
 
 #if UNITY_EDITOR
+// 커스텀 에디터를 사용하기 위한 네임스페이스
 using UnityEditor;
 using UnityEditorInternal;
 #endif
@@ -24,10 +25,10 @@ public class SceneEffect
         FunctionCall,
         LifePurchase,
     }
-    public EffectType Type { get { return _type; } }
-    public bool IsCameraEffect { get { return _type == EffectType.CameraShake || _type == EffectType.ConstantCameraShake || _type == EffectType.StopConstantCameraShake; } }
+    public EffectType Type => _type;
+    public bool IsCameraEffect => _type == EffectType.CameraShake || _type == EffectType.ConstantCameraShake || _type == EffectType.StopConstantCameraShake;
 
-    [SerializeField][HideInInspector] EffectType _type = EffectType.Dialogue;
+    [SerializeField][HideInInspector] private EffectType _type = EffectType.Dialogue;
     [SerializeField][HideInInspector] public DialogueData DialogueData = null;
     [SerializeField][HideInInspector] public ShakePreset ShakeData = null;
     [SerializeField][HideInInspector] public ConstantShakePreset ConstantShakeData = null;
@@ -40,8 +41,8 @@ public class SceneEffect
 [CustomPropertyDrawer(typeof(SceneEffect))]
 public class SceneEffectDrawer : PropertyDrawer
 {
-    int HEIGHT = 18;
-    UnityEventDrawer _eventDrawer;
+    private int HEIGHT = 18;
+    private UnityEventDrawer _eventDrawer;
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
@@ -95,7 +96,7 @@ public class SceneEffectDrawer : PropertyDrawer
         EditorGUI.EndProperty();
     }
 
-    void DrawField(string fieldName, Rect position, SerializedProperty property, string inspectorName = "")
+    private void DrawField(string fieldName, Rect position, SerializedProperty property, string inspectorName = "")
     {
         if (inspectorName == "") inspectorName = SplitCamelCase(fieldName);
         Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent(inspectorName));
@@ -114,7 +115,7 @@ public class SceneEffectDrawer : PropertyDrawer
             "$1 $2"
         );
     }
-    float GetEventHeight(SerializedProperty property)
+    private float GetEventHeight(SerializedProperty property)
     {
         if (_eventDrawer == null)
             _eventDrawer = new UnityEventDrawer();

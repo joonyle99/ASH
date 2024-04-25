@@ -1,23 +1,44 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 하나의 다이얼로그에 대한 모든 정보를 담는 ScriptableObject.
+/// 하나의 다이얼로그에 대한 모든 정보를 담는 ScriptableObject
 /// </summary>
 [CreateAssetMenu(menuName = "Dialogue Data", fileName = "New Dialogue Data")]
 public class DialogueData : ScriptableObject
 {
-    [SerializeField] string _defaultSpeaker;
-    [SerializeField] InputSetterScriptableObject _inputSetter;
-    [SerializeField] TextAsset _script;
-    [SerializeField] float _defaultCharactersPerSecond = 12;
-    [SerializeField] DialogueAction[] _actions;
+    [Header("Dialogue Data")]
+    [Space]
+
+    [SerializeField] private string _defaultSpeaker;                        // 대사 캐릭터 이름
+    [SerializeField] private TextAsset _script;                             // 대사 스크립트
+    [SerializeField] private float _defaultCharactersPerSecond = 12;        // 기본 글자 속도
+    [SerializeField] private InputSetterScriptableObject _inputSetter;      // 플레이어 입력 설정
+
+    [Space]
+
+    [SerializeField] private DialogueAction[] _actions;                     // 대화 액션
+    
+    public QuestData QuestData { get; private set; }                        // 대화에 연결된 퀘스트 데이터
 
     public InputSetterScriptableObject InputSetter => _inputSetter;
-    public List<DialogueLine> GetDialogueSequence()
+
+    /// <summary>
+    /// NPC가 가지고 있는 QuestData를 DialogueData에 연결한다
+    /// </summary>
+    /// <param name="questData"></param>
+    public void LinkQuestData(QuestData questData)
     {
-        List<DialogueLine> dialogueSequence = new List<DialogueLine>();
+        this.QuestData = questData;
+    }
+
+    /// <summary>
+    /// 다이얼로그 세그먼트 처리를 통해 시퀀스를 반환한다
+    /// </summary>
+    /// <returns></returns>
+    public List<DialogueSegment> GetDialogueSequence()
+    {
+        List<DialogueSegment> dialogueSequence = new List<DialogueSegment>();
         string [] scriptLines = HappyTools.TSVRead.SplitLines(_script.text);
         string speakerName = _defaultSpeaker;
         for (int i=0; i<scriptLines.Length; i++)
@@ -54,15 +75,16 @@ public class DialogueData : ScriptableObject
                 }
                 continue;
             }
+
             // TODO : @로 시작하는 특수 액션들에 대한 처리
 
-            DialogueLine line = new DialogueLine();
-            line.Text = scriptLines[i];
-            line.CharactersPerSecond = charactersPerSecond;
-            line.ShakeParams = shakeParams;
-            line.Speaker = speakerName;
+            DialogueSegment segment = new DialogueSegment();
+            segment.Text = scriptLines[i];
+            segment.CharactersPerSecond = charactersPerSecond;
+            segment.ShakeParams = shakeParams;
+            segment.Speaker = speakerName;
 
-            dialogueSequence.Add(line);
+            dialogueSequence.Add(segment);
         }
         return dialogueSequence;
     }
