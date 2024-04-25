@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// 다이얼로그를 관리하는 컨트롤러
 /// 다이얼로그를 시작하고 종료하는 역할을 한다
 /// </summary>
 public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueController>
@@ -10,11 +9,11 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     [Header("Dialogue Controller")]
     [Space]
 
-    [SerializeField] private float _waitTimeAfterScriptEnd;     // 대화가 끝난 후 대기 시간
+    [SerializeField] private float _waitTimeAfterScriptEnd;             // 대화가 끝난 후 대기 시간
 
     public bool IsDialogueActive => View.IsDialoguePanelActive;         // 다이얼로그 뷰가 활성화 중인지 여부
 
-    private DialogueView _view;                                 // 다이얼로그 뷰 UI
+    private DialogueView _view;                                         // 다이얼로그 뷰 UI
     private DialogueView View
     {
         get
@@ -28,8 +27,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     /// <summary>
     /// 다이얼로그 시작 함수
     /// </summary>
-    /// <param name="data">다이얼로그에 대한 모든 정보를 담는 데이터</param>
-    /// <param name="isFromCutscene">컷씬으로부터 온 다이얼로그인지 확인하기 위한 부울 값</param>
+    /// <param name="data"></param>
+    /// <param name="isFromCutscene"></param>
     public void StartDialogue(DialogueData data, bool isFromCutscene = false)
     {
         // 대화가 이미 진행 중이라면 종료
@@ -44,14 +43,12 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     /// <returns></returns>
     private IEnumerator DialogueCoroutine(DialogueData data)
     {
-        // 다이얼로그 데이터를 통해 객체 생성
+        // 다이얼로그 데이터를 통해 다이얼로그 시퀀스 생성
         DialogueSequence dialogueSequence = new DialogueSequence(data);
 
-        // 다이얼로그 데이터 입력 설정이 있으면 변경
+        // 입력 설정이 있으면 변경
         if (data.InputSetter != null)
-        {
             InputManager.Instance.ChangeInputSetter(data.InputSetter);
-        }
 
         // 다이얼로그 뷰 UI를 열어준다
         View.OpenPanel();
@@ -62,35 +59,45 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             // 다이얼로그 뷰 UI에 현재 세그먼트를 표시
             View.StartNextSegment(dialogueSequence.CurrentSegment);
 
-            // 다이얼로그 세그먼트가 끝날 때까지 대기
+            // 진행중인 다이얼로그 세그먼트가 끝날 때까지 루프를 돌며 대기
             while (!View.IsCurrentSegmentOver)
             {
                 yield return null;
 
-                // 텍스트를 빠르게 표시
                 if (InputManager.Instance.State.InteractionKey.KeyDown)
                     View.FastForward();
             }
 
-            // 다음 Update까지 대기
+            // 다음 Update 프레임까지 대기하며 상호작용 키의 중복 입력을 방지
             yield return null;
 
-            // 상호작용 키를 이용해 다이얼로그 세그먼트를 종료하기 전까지 대기한다
             yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
 
-            // 다이얼로그 세그먼트 종료 사운드 재생
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
 
-            // 마지막 다이얼로그 세그먼트인 경우
+            // 마지막 다이얼로그 세그먼트인 경우 퀘스트 다이얼로그임을 확인한다
             if (dialogueSequence.IsLastSegment)
             {
-                if (data.QuestData != null)
+                if (data.QuestData.IsValidQuestData())
                 {
                     // 퀘스트 응답 패널을 연다
-                    View.OpenResponsePanel(data.QuestData);
+                    View.OpenResponsePanel();
 
-                    // 플레이어의 응답을 기다린다
-                    yield return new WaitUntil(() => !View.IsResponsePanelActive);
+                    // 퀘스트 응답 패널에 퀘스트 데이터를 전달
+                    View.SendQuestDataToResponsePanel(data.QuestData, out var response);
+
+                    // Handler: 이벤트가 발생했을 때 호출되는 함수를 지칭한다 (옵저버 패턴)
+                    var isClicked = false;
+                    void EventHandler()
+                    {
+                        isClicked = true;
+                        response.OnClicked -= EventHandler;
+                    }
+                    response.OnClicked -= EventHandler;
+                    response.OnClicked += EventHandler;
+
+                    // 해당 퀘스트가 수락 / 거절되기 전까지 대기
+                    yield return new WaitUntil(() => isClicked);
 
                     // 퀘스트 응답 종료 사운드 재생
                     SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");

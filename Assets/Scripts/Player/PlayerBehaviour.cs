@@ -9,8 +9,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [Header("Player")]
     [Space]
 
-    [SerializeField] private int _maxHp = 20;
-    [SerializeField] private int _startHp = 10;
+    [SerializeField] private int _limitHp = 20;
+    [SerializeField] private int _maxHp = 10;
+    [SerializeField] private int _startHp = 5;
     [SerializeField] private int _curHp;
 
     [Space]
@@ -100,7 +101,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public int MaxHp
     {
         get => _maxHp;
-        set => _maxHp = value;
+        set
+        {
+            _maxHp = value;
+
+            if (_maxHp > _limitHp) _maxHp = _limitHp; // 최대 체력은 제한된다
+            else if (_maxHp < 0) _maxHp = 0;          // 최대 체력은 0 미만이 될 수는 없다
+        }
     }
 
     // Input Property
@@ -276,11 +283,16 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Time.timeScale = 1f;
     }
 
-    // about heal
-    public void RecoverHealth(int healingAmount)
+    // about health
+    public void IncreaseMaxHp(int amount)
     {
-        CurHp += healingAmount;
+        MaxHp += amount;
     }
+    public void RecoverCurHp(int amount)
+    {
+        CurHp += amount;
+    }
+
 
     // respawn
     public void TriggerInstantRespawn(float damage)

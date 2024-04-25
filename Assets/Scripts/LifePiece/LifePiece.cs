@@ -96,6 +96,6 @@ public class LifePiece : MonoBehaviour
     private void RecoverPlayerHealth()
     {
         // 체력 회복 프로세스
-        SceneContext.Current.Player.RecoverHealth(_healingAmount);
+        SceneContext.Current.Player.RecoverCurHp(_healingAmount);
     }
 }

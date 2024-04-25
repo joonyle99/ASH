@@ -24,7 +24,6 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     private Coroutine _currentSegmentCoroutine;
 
     public bool IsCurrentSegmentOver { get; private set; }
-    public bool IsResponsePanelActive => _responsePanel.gameObject.activeInHierarchy;
     public bool IsDialoguePanelActive => _dialoguePanel.gameObject.activeInHierarchy;
 
     /// <summary>
@@ -38,17 +37,22 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
         _responsePanel.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _textShaker = _dialogue.GetComponent<TextShaker>();
-    }
+    } 
     /// <summary>
     /// 퀘스트 응답 패널 열기
     /// </summary>
-    public void OpenResponsePanel(Quest quest)
+    public void OpenResponsePanel()
     {
         _skipUI.gameObject.SetActive(false);
         _responsePanel.gameObject.SetActive(true);
-
-        var giver = _responsePanel.GetComponent<QuestGiver>();
-        giver.SetQuest(quest);
+    }
+    /// <summary>
+    /// 퀘스트 응답 패널에 퀘스트 전달
+    /// </summary>
+    public void SendQuestDataToResponsePanel(QuestData questData, out QuestResponse response)
+    {
+        response = _responsePanel.GetComponent<QuestResponse>();
+        response.ReceiveQuestData(questData);
     }
     /// <summary>
     /// 다이얼로그 뷰 UI 패널 닫기

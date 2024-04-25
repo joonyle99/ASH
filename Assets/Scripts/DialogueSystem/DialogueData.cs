@@ -2,12 +2,12 @@
 using UnityEngine;
 
 /// <summary>
-/// 하나의 다이얼로그에 대한 모든 정보를 담는 ScriptableObject.
+/// 하나의 다이얼로그에 대한 모든 정보를 담는 ScriptableObject
 /// </summary>
 [CreateAssetMenu(menuName = "Dialogue Data", fileName = "New Dialogue Data")]
 public class DialogueData : ScriptableObject
 {
-    [Header("DialogueData")]
+    [Header("Dialogue Data")]
     [Space]
 
     [SerializeField] private string _defaultSpeaker;                        // 대사 캐릭터 이름
@@ -17,19 +17,19 @@ public class DialogueData : ScriptableObject
 
     [Space]
 
-    [SerializeField] private Quest _questData;                              // 대화에 연결된 퀘스트
-
-    [Space]
-
     [SerializeField] private DialogueAction[] _actions;                     // 대화 액션
+    
+    public QuestData QuestData { get; private set; }                        // 대화에 연결된 퀘스트 데이터
 
     public InputSetterScriptableObject InputSetter => _inputSetter;
-    
-    public Quest QuestData => _questData;
 
-    public void LinkQuest(Quest quest)
+    /// <summary>
+    /// NPC가 가지고 있는 QuestData를 DialogueData에 연결한다
+    /// </summary>
+    /// <param name="questData"></param>
+    public void LinkQuestData(QuestData questData)
     {
-        _questData = quest;
+        this.QuestData = questData;
     }
 
     /// <summary>
