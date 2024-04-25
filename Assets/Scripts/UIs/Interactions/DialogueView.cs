@@ -16,14 +16,16 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     [SerializeField] private TextMeshProUGUI _dialogue;
     [SerializeField] private TextMeshProUGUI _speaker;
     [SerializeField] private Image _skipUI;
+    [SerializeField] private Image _responsePanel;
 
     private TextShaker _textShaker;
 
     private DialogueSegment currentSegment;
-    private Coroutine _currentsegmentCoroutine;
+    private Coroutine _currentSegmentCoroutine;
 
     public bool IsCurrentSegmentOver { get; private set; }
-    public bool IsPanelActive => _dialoguePanel.gameObject.activeInHierarchy;
+    public bool IsResponsePanelActive => _responsePanel.gameObject.activeInHierarchy;
+    public bool IsDialoguePanelActive => _dialoguePanel.gameObject.activeInHierarchy;
 
     /// <summary>
     /// 다이얼로그 뷰 UI 초기화 및 패널 열기
@@ -33,8 +35,20 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
         _dialogue.text = "";
         _speaker.text = "";
         _skipUI.gameObject.SetActive(false);
+        _responsePanel.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _textShaker = _dialogue.GetComponent<TextShaker>();
+    }
+    /// <summary>
+    /// 퀘스트 응답 패널 열기
+    /// </summary>
+    public void OpenResponsePanel(Quest quest)
+    {
+        _skipUI.gameObject.SetActive(false);
+        _responsePanel.gameObject.SetActive(true);
+
+        var giver = _responsePanel.GetComponent<QuestGiver>();
+        giver.SetQuest(quest);
     }
     /// <summary>
     /// 다이얼로그 뷰 UI 패널 닫기
@@ -48,7 +62,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     /// </summary>
     public void FastForward()
     {
-        StopCoroutine(_currentsegmentCoroutine);
+        StopCoroutine(_currentSegmentCoroutine);
         CleanUpOnSegmentOver();
     }
     /// <summary>
@@ -83,7 +97,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
         }
 
         // 다이얼로그 세그먼트 프로세스 코루틴 시작 및 저장
-        _currentsegmentCoroutine = StartCoroutine(SegmentCoroutine());
+        _currentSegmentCoroutine = StartCoroutine(SegmentCoroutine());
     }
     /// <summary>
     /// 다이얼로그 세그먼트 서서히 사라짐

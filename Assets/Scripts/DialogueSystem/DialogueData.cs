@@ -17,9 +17,20 @@ public class DialogueData : ScriptableObject
 
     [Space]
 
+    [SerializeField] private Quest _questData;                              // 대화에 연결된 퀘스트
+
+    [Space]
+
     [SerializeField] private DialogueAction[] _actions;                     // 대화 액션
 
     public InputSetterScriptableObject InputSetter => _inputSetter;
+    
+    public Quest QuestData => _questData;
+
+    public void LinkQuest(Quest quest)
+    {
+        _questData = quest;
+    }
 
     /// <summary>
     /// 다이얼로그 세그먼트 처리를 통해 시퀀스를 반환한다

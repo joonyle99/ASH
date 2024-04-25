@@ -12,7 +12,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
     [SerializeField] private float _waitTimeAfterScriptEnd;     // 대화가 끝난 후 대기 시간
 
-    public bool IsDialogueActive => View.IsPanelActive;         // 다이얼로그 뷰가 활성화 중인지 여부
+    public bool IsDialogueActive => View.IsDialoguePanelActive;         // 다이얼로그 뷰가 활성화 중인지 여부
 
     private DialogueView _view;                                 // 다이얼로그 뷰 UI
     private DialogueView View
@@ -80,6 +80,22 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
             // 다이얼로그 세그먼트 종료 사운드 재생
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+
+            // 마지막 다이얼로그 세그먼트인 경우
+            if (dialogueSequence.IsLastSegment)
+            {
+                if (data.QuestData != null)
+                {
+                    // 퀘스트 응답 패널을 연다
+                    View.OpenResponsePanel(data.QuestData);
+
+                    // 플레이어의 응답을 기다린다
+                    yield return new WaitUntil(() => !View.IsResponsePanelActive);
+
+                    // 퀘스트 응답 종료 사운드 재생
+                    SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+                }
+            }
 
             // 다이얼로그 세그먼트가 끝난 후 대기 시간만큼 대기
             yield return StartCoroutine(View.ClearTextCoroutine(_waitTimeAfterScriptEnd));

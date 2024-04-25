@@ -13,6 +13,7 @@ public class DialogueSequence
     private int _currentIndex;                                                      // 현재 다이얼로그 인덱스
 
     public DialogueSegment CurrentSegment => _dialogueSequence[_currentIndex];      // 현재 다이얼로그 라인
+    public bool IsLastSegment => _currentIndex == _dialogueSequence.Count - 1;      // 마지막 다이얼로그 세그먼트인지 여부
     public bool IsOver => _currentIndex >= _dialogueSequence.Count;                 // 다이얼로그가 끝났는지 여부
 
     public DialogueSequence(DialogueData data)
@@ -25,6 +26,9 @@ public class DialogueSequence
     {
         _currentIndex++;
 
-        return IsOver ? null : _dialogueSequence[_currentIndex];
+        if (IsOver)
+            return null;
+
+        return _dialogueSequence[_currentIndex];
     }
 }

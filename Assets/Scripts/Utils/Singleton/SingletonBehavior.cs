@@ -10,14 +10,18 @@ namespace joonyleTools
             {
                 if (_instance == null)
                 {
+                    // 씬 내에서 이미 존재하는 인스턴스를 찾는다
                     _instance = FindObjectOfType<T>();
 
+                    /*
+                    // 씬 내에서 인스턴스를 찾지 못했다면 새로 생성한다
                     if (_instance == null)
                     {
                         GameObject singletonObject = new GameObject(typeof(T).Name);
                         _instance = singletonObject.AddComponent<T>();
                         DontDestroyOnLoad(singletonObject);
                     }
+                    */
                 }
 
                 return _instance;

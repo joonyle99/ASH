@@ -1,3 +1,6 @@
+using UnityEngine;
+using UnityEngine.Events;
+
 /// <summary>
 /// 퀘스트 정보
 /// </summary>
@@ -6,17 +9,18 @@ public class Quest
 {
     public enum QuestType
     {
-        Collect,
         Kill,
+        Collect,
         Talk
     }
 
-    public bool isActive;
+    [SerializeField] private string _title;
+    [SerializeField] private string _description;
+    [SerializeField] private UnityEvent _reward;
 
-    public string title;
-    public QuestType type;
-    public string description;
-    public int reward;
+    public string Title => _title;
+    public string Description => _description;
+    public UnityEvent Reward => _reward;
 
     // public QuestGOal goal;
 
