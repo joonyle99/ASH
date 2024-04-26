@@ -10,6 +10,7 @@ public class NPC : InteractableObject
     [Space]
 
     [SerializeField] private DialogueData _dialogueData;
+    [Tooltip("you can link questData to dialogueData")]
     [SerializeField] private QuestData _questData;          // 유일하게 직렬화된 퀘스트 데이터 null이 될 수 없기 때문에 유효성 검사가 필요하다
 
     protected override void OnInteract()
