@@ -22,27 +22,35 @@ public class DisintegrateEffect : MonoBehaviour
         materialController = GetComponent<MaterialController>();
     }
 
-    public void Play(float delay = 0f)
+    public void Play(float delay = 0f, bool isRespawn = false)
     {
-        StartCoroutine(ProgressCoroutine(delay));
+        StartCoroutine(ProgressCoroutine(delay, isRespawn));
     }
-    private IEnumerator ProgressCoroutine(float delay)
+    private IEnumerator ProgressCoroutine(float delay, bool isRespawn)
     {
         yield return new WaitForSeconds(delay);
 
-        // Particle System Control
-        foreach (var particleHelper in _particles)
+        if (!isRespawn)
         {
-            particleHelper.gameObject.SetActive(true);
-            particleHelper.transform.parent = null;
-            particleHelper.transform.position = transform.position;
+            // Particle System Control
+            foreach (var particleHelper in _particles)
+            {
+                particleHelper.gameObject.SetActive(true);
+                particleHelper.transform.parent = null;
+                particleHelper.transform.position = transform.position;
 
-            // Destroy Particle System
-            Destroy(particleHelper.gameObject, particleHelper.GetLifeTime());
+                // Destroy Particle System
+                Destroy(particleHelper.gameObject, particleHelper.GetLifeTime());
+            }
+
+            // Disintegrate Material Initialize
+            materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 0f);
         }
-
-        // Disintegrate Material Initialize
-        materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 0f);
+        else
+        {
+            // Disintegrate Material Initialize
+            materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 1f);
+        }
 
         // Disintegrate Effect Progress
         var eTime = 0f;
@@ -51,7 +59,8 @@ public class DisintegrateEffect : MonoBehaviour
             yield return null;
             eTime += Time.deltaTime;
 
-            materialController.SetProgress("_Progress", eTime / _duration);
+            var ratio = !isRespawn ? Mathf.Clamp01(eTime / _duration) : Mathf.Clamp01(1f - eTime / _duration);
+            materialController.SetProgress("_Progress", ratio);
         }
 
         IsEffectDone = true;

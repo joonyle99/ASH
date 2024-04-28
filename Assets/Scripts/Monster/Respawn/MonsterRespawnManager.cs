@@ -12,7 +12,8 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
 
     protected override void Awake()
     {
-        base.Awake();
+        // TODO: 이미 Bootstrap에 자식으로 존재한다
+        // base.Awake();
 
         // 모든 몬스터를 찾는다
         var monsterArray = FindObjectsOfType<MonsterBehavior>();

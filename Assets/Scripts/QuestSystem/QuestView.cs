@@ -14,6 +14,8 @@ public class QuestView : MonoBehaviour
     public TextMeshProUGUI Description;
     public TextMeshProUGUI Number;
 
+    public TextMeshProUGUI Counter;
+
     public void OpenQuestPanel()
     {
         StartCoroutine(ControlPanelCoroutine(true));
@@ -65,6 +67,8 @@ public class QuestView : MonoBehaviour
         Title.text = questData.Title;
         Description.text = questData.Description;
         Number.text = "00 / " + questData.Goal.ToString();
+
+        Counter.text = "0 / " + questData.Goal.ToString();
     }
 
     public void ClosePanel()
