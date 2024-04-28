@@ -89,7 +89,7 @@ public class LifePiece : MonoBehaviour
         var player = SceneContext.Current.Player;
 
         // 모이는 위치를 플레이어로 변경
-        transform.position = player.BodyCollider.bounds.center;
+        transform.position = player.LightDestination.bounds.center;
         transform.parent = player.transform;
     }
 

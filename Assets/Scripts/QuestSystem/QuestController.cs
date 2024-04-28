@@ -16,9 +16,19 @@ public class QuestController : joonyleTools.SingletonBehavior<QuestController>
         }
     }
 
+    public QuestData CurrentQuest => _currentQuest;
+    public bool IsCurrentQuestActive => _currentQuest != null;
+
     // TODO: 퀘스트 이벤트를 등록하기 위한 대리자 변수
     public delegate void QuestEvent();
     public event QuestEvent questEvent;
+
+    protected override void Awake()
+    {
+        // TODO: 이미 Bootstrap에 자식으로 존재한다
+        // base.Awake();
+
+    }
 
     public void AcceptQuest(QuestData questData)
     {

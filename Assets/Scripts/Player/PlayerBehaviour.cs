@@ -43,6 +43,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] private MaterialController materialController;
     [SerializeField] private SoundList _soundList;
     [SerializeField] private Rigidbody2D _handRigidbody;
+    [SerializeField] private Collider2D _lightDestination;
 
     // Controller
     private PlayerMovementController _playerMovementController;
@@ -150,6 +151,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     // ETC
     public CapsuleCollider2D BodyCollider => _bodyCollider;
+    public Collider2D LightDestination => _lightDestination;
     public MaterialController MaterialController => materialController;
     public SoundList SoundList => _soundList;
     public Rigidbody2D HandRigidBody => _handRigidbody;

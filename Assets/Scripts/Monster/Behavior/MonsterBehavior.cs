@@ -555,13 +555,21 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         {
             if (LifePieceDropper.IsDropChance())
             {
-                Debug.Log("생명 조각 드랍 성공 !");
+                // Debug.Log("생명 조각 드랍 성공 !");
                 LifePieceDropper.DropProcess(transform.position);
             }
             else
             {
-                Debug.Log("생명 조각 드랍 실패 !");
+                // Debug.Log("생명 조각 드랍 실패 !");
             }
+        }
+
+        // TODO: 최대 생명력 회복 퀘스트 확인
+        if (QuestController.Instance.IsCurrentQuestActive)
+        {
+            // 해당 퀘스트에 해당하는 몬스터인지 확인
+
+            // 이벤트 발생으로 count를 증가 시킨다
         }
 
         // Wait until death effect is done
@@ -599,8 +607,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     private IEnumerator ReSpawnEffectCoroutine()
     {
         // effect process
-        MaterialController.RespawnEffect.Play();
-        yield return new WaitUntil(() => MaterialController.RespawnEffect.IsEffectDone);
+        MaterialController.DisintegrateEffect.Play(0f, true);
+        yield return new WaitUntil(() => MaterialController.DisintegrateEffect.IsEffectDone);
     }
 
     // state
