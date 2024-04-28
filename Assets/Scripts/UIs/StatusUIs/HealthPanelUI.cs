@@ -1,125 +1,67 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 플레이어의 체력 UI를 관리하는 클래스
+/// </summary>
 public class HealthPanelUI : MonoBehaviour
 {
-    [SerializeField] private Image[] _lifeIcons;
-    [SerializeField] private Image[] _iconBackgrounds;
+    [SerializeField] private Image[] _lifeIconsBacks;                   // 생명 아이콘 배경 이미지들
+    [SerializeField] private Image[] _lifeIcons;                        // 생명 아이콘 이미지들
+
+    private int[] _hpUnit;
+
+    private PlayerBehaviour _player;
 
     private void Awake()
     {
-        _iconBackgrounds = new Image[_lifeIcons.Length];
+        _hpUnit = new int[_lifeIconsBacks.Length];
+        _lifeIcons = new Image[_lifeIconsBacks.Length];
+
+        _player = FindFirstObjectByType<PlayerBehaviour>();
+
+        if (_player)
+        {
+            // Debug.Log($"health panel ui에 player가 등록되었습니다. {_player.gameObject.name}");
+
+            _player.OnHealthChanged -= UpdateLifeIcons;
+            _player.OnHealthChanged += UpdateLifeIcons;
+        }
     }
 
     private void Start()
     {
-        for (int i = 0; i < _lifeIcons.Length; i++)
+        for (int i = 0; i < _lifeIconsBacks.Length; i++)
         {
-            // icon backgrounds images
-            var background = _lifeIcons[i].rectTransform.parent;
-            _iconBackgrounds[i] = background.GetComponent<Image>();
+            // set hp unit
+            _hpUnit[i] = 2 * (i + 1);
+
+            // set icon backgrounds images
+            _lifeIcons[i] = _lifeIconsBacks[i].rectTransform.GetChild(0).GetComponent<Image>();
         }
     }
 
-    private void Update()
-    {
-        var player = SceneContext.Current.Player;
-
-        if (player == null) return;
-
-        UpdateLifeIcons(player.CurHp, player.MaxHp);
-    }
-
+    /// <summary>
+    /// 매 프레임마다 플레이어의 생명 아이콘을 업데이트한다
+    /// </summary>
+    /// <param name="curHp"></param>
+    /// <param name="maxHp"></param>
     private void UpdateLifeIcons(int curHp, int maxHp)
     {
-        // 총 10개의 생명 아이콘이 존재한다
+        var lifeIconCount = _lifeIconsBacks.Length;
 
-        // 각각의 생명 아이콘은 이렇게 나눌 수 있다
-        // 1. 꽉 차있는 상태
-        // 2. 절반만 차있는 상태
-        // 3. 비어있는 상태
-
-        // 이것을 player curHp와 어떻게 동기화해야 할까?
-
-        // curHp가
-        // 1, 2 -> 1번째 생명 아이콘
-        // 3, 4 -> 2번째 생명 아이콘
-        // 5, 6 -> ...
-        // 7, 8
-        // 9, 10
-        // 11, 12
-        // 13, 14
-        // 15, 16
-        // 17, 18
-        // 19, 20 -> 10번째 생명 아이콘 (19이면 절반만 차있고, 20이면 꽉 차있다)
-
-        // 플레이어의 현재 체력과 최대 체력을 Heath UI에 동기화 시킨다
-        for (int i = 0; i < _lifeIcons.Length; i++)
+        for (int i = 0; i < lifeIconCount; i++)
         {
-            // 각 아이콘에 해당하는 HP 범위 계산 (1 ~ 20)
-            int hpUnit = 2 * (i + 1); // 2, 4, 6, 8, 10, 12 ...
+            // check maxHp icon show
+            var isShow = maxHp >= _hpUnit[i] - 1;
+            _lifeIconsBacks[i].gameObject.SetActive(isShow);
 
-            // 현재 체력에 대한 동기화
-            if (curHp >= hpUnit)
-            {
-                if (_lifeIcons[i].fillAmount <= 0.5f)
-                {
-                    // StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
-                    _lifeIcons[i].fillAmount = 1f;
-                }
-            }
-            else if (curHp >= hpUnit - 1)
-            {
-                if (_lifeIcons[i].fillAmount <= 0f)
-                {
-                    // StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
-                    _lifeIcons[i].fillAmount = 0.5f;
-                }
-            }
-            else
-            {
-                if (_lifeIcons[i].fillAmount > 0f)
-                {
-                    // StartCoroutine(ShakeCoroutine(_lifeIcons[i].transform));
-                    _lifeIcons[i].fillAmount = 0f;
-                }
-            }
+            if (!isShow) continue;
 
-            // 최대 체력에 대한 동기화 (생명 아이콘의 배경을 컨트롤하며, 절반만 차는 경우가 없다)
-            if (maxHp >= hpUnit)
-            {
-                if (!_iconBackgrounds[i].gameObject.activeSelf)
-                {
-                    _iconBackgrounds[i].gameObject.SetActive(true);
-                }
-            }
-            else
-            {
-                if (_iconBackgrounds[i].gameObject.activeSelf)
-                {
-                    _iconBackgrounds[i].gameObject.SetActive(false);
-                }
-            }
+            // how much curHp icon show
+            if (curHp >= _hpUnit[i]) _lifeIcons[i].fillAmount = 1f;
+            else if (curHp >= _hpUnit[i] - 1) _lifeIcons[i].fillAmount = 0.5f;
+            else _lifeIcons[i].fillAmount = 0f;
         }
     }
-
-    /*
-    private IEnumerator ShakeCoroutine(Transform iconTransform)
-    {
-        Debug.Log("Shake");
-
-        var initialPosition = iconTransform.localPosition;
-
-        var eTime = 0f;
-        while (eTime < 2f)
-        {
-            yield return null;
-            eTime += Time.deltaTime;
-
-            iconTransform.localPosition = initialPosition + Random.insideUnitSphere * 0.2f;
-        }
-
-        iconTransform.localPosition = initialPosition;
-    }
-    */
 }
