@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener
 {
+    private const int LIMIT_HP = 20;
+
     #region Attribute
 
     [Header("Player")]
     [Space]
 
-    [SerializeField] private int _limitHp = 20;
-    [SerializeField] private int _maxHp = 10;
-    [SerializeField] private int _startHp = 5;
+    [SerializeField, Range(0, LIMIT_HP)] private int _maxHp = 10;
+    [SerializeField, Range(0, LIMIT_HP)] private int _startHp = 5;
     [SerializeField] private int _curHp;
 
     [Space]
@@ -49,6 +50,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     private PlayerInteractionController playerInteractionController;
     private PlayerLightSkillController playerLightSkillController;
     private PlayerHeadAimController playerHeadAimController;
+
+    public delegate void HealthChangeEvent(int curHp, int maxHp);
+    public event HealthChangeEvent OnHealthChanged;
 
     #endregion
 
@@ -95,7 +99,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
             _curHp = value;
 
             if (_curHp > _maxHp) _curHp = _maxHp;   // 최대 체력을 넘어갈 수는 없다
-            else if (_curHp < 0) _curHp = 0;        // 체력이 0 미만이 될 수는 없다
+            else if (_curHp <= 0)
+            {
+                _curHp = 0;                         // 체력이 0 미만이 될 수는 없다
+                ChangeState<DieState>();
+            }
+
+            OnHealthChanged?.Invoke(_curHp, _maxHp);
         }
     }
     public int MaxHp
@@ -105,8 +115,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         {
             _maxHp = value;
 
-            if (_maxHp > _limitHp) _maxHp = _limitHp; // 최대 체력은 제한된다
+            if (_maxHp > LIMIT_HP) _maxHp = LIMIT_HP; // 최대 체력은 제한된다
             else if (_maxHp < 0) _maxHp = 0;          // 최대 체력은 0 미만이 될 수는 없다
+
+            OnHealthChanged?.Invoke(_curHp, _maxHp);
         }
     }
 
@@ -191,13 +203,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // Change In Air State
         ChangeInAirState();
 
-        // Check Dead State
-        if (_curHp <= 0)
-        {
-            ChangeState<DieState>();
-            return;
-        }
-
         #endregion
 
         #region Animaotr Parameter
@@ -213,7 +218,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     private void InitPlayer()
     {
         // 체력 초기화
-        _curHp = _startHp;
+        CurHp = _startHp;
 
         // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);
@@ -251,9 +256,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         StartCoroutine(SlowMotionCoroutine(0.3f));
 
         TakeDamage((int)attackInfo.Damage);
-        // Change Die State
-        if (_curHp <= 0)
-            return IAttackListener.AttackResult.Success;
+
+        // die state
+        if (CurHp <= 0) return IAttackListener.AttackResult.Success;
 
         KnockBack(attackInfo.Force);
 
@@ -264,12 +269,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     private void TakeDamage(float damage)
     {
-        _curHp -= (int)damage;
-        if (_curHp <= 0)
-        {
-            _curHp = 0;
-            ChangeState<DieState>();
-        }
+        CurHp -= (int)damage;
     }
     public void KnockBack(Vector2 forceVector)
     {
@@ -291,6 +291,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public void RecoverCurHp(int amount)
     {
         CurHp += amount;
+
+        Debug.Log("체력 회복 성공");
     }
 
 
@@ -298,6 +300,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public void TriggerInstantRespawn(float damage)
     {
         TakeDamage(damage);
+
         if (CurHp > 0)
             InstantRespawn();
     }

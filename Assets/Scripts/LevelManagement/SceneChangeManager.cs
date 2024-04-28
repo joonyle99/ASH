@@ -1,6 +1,5 @@
 ﻿using LevelGraph;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,7 +20,6 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
             return new PassageData(sceneName, passageName);
         return result;
     }
-    //TEMP for game start
     private void Start()
     {
         SceneContext sceneContext = FindOrCreateSceneContext();
