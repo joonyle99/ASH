@@ -16,6 +16,10 @@ public class QuestController : joonyleTools.SingletonBehavior<QuestController>
         }
     }
 
+    // TODO: 퀘스트 이벤트를 등록하기 위한 대리자 변수
+    public delegate void QuestEvent();
+    public event QuestEvent questEvent;
+
     public void AcceptQuest(QuestData questData)
     {
         // 현재 실행 중인 퀘스트로 등록
