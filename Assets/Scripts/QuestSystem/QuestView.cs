@@ -21,9 +21,9 @@ public class QuestView : MonoBehaviour
         StartCoroutine(ControlPanelCoroutine(true));
     }
 
-    private IEnumerator ControlPanelCoroutine(bool isOpen)
+    private IEnumerator ControlPanelCoroutine(bool isOpen, float delay = 2f)
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(delay);
 
         var canvasGroup = QuestPanel.GetComponent<CanvasGroup>();
 
@@ -64,15 +64,15 @@ public class QuestView : MonoBehaviour
 
     public void DrawDataOnQuestPanel(QuestData questData)
     {
-        Title.text = questData.Title;
-        Description.text = questData.Description;
-        Number.text = "00 / " + questData.Goal.ToString();
+        // Title.text = questData.Title;
+        // Description.text = questData.Description;
+        // Number.text = "00 / " + questData.Goal.ToString();
 
-        Counter.text = "0 / " + questData.Goal.ToString();
+        Counter.text = questData.MonsterQuest.current.ToString() + " / " + questData.MonsterQuest.goal.ToString();
     }
 
     public void ClosePanel()
     {
-        StartCoroutine(ControlPanelCoroutine(false));
+        StartCoroutine(ControlPanelCoroutine(false, 4f));
     }
 }

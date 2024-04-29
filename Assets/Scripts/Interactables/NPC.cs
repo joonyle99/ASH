@@ -10,13 +10,14 @@ public class NPC : InteractableObject
     [Space]
 
     [SerializeField] private DialogueData _dialogueData;
+
     [Tooltip("you can link questData to dialogueData")]
-    [SerializeField] private QuestData _questData;          // 유일하게 직렬화된 퀘스트 데이터이다. null이 될 수 없기 때문에 유효성 검사가 필요하다
+    [SerializeField] private QuestData _questData;
 
     protected override void OnInteract()
     {
         // 퀘스트 데이터가 유효하다면 다이얼로그 데이터에 연결
-        if (_questData.IsValidQuestData())
+        if (_questData)
         {
             Debug.Log($"{gameObject.name}이(가) 소유한 퀘스트 데이터가 유효합니다. 다이얼로그에 연결합니다");
             _dialogueData.LinkQuestData(_questData);

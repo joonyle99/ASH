@@ -78,7 +78,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             // 마지막 다이얼로그 세그먼트인 경우 퀘스트 다이얼로그임을 확인한다
             if (dialogueSequence.IsLastSegment)
             {
-                if (data.QuestData.IsValidQuestData())
+                if (data.QuestData)
                 {
                     // 퀘스트 응답 패널을 연다
                     View.OpenResponsePanel();

@@ -3,39 +3,83 @@ using UnityEngine.Events;
 
 /// <summary>
 /// 고유한 퀘스트에 관한 정보를 담고 있는 클래스
+/// 현재로써는 일반몬스터 사냥 퀘스트만을 지원한다
 /// </summary>
 [System.Serializable]
-public class QuestData
+public class QuestData : MonoBehaviour
 {
-    public enum QuestType
+    [System.Serializable]
+    public class MonsterQuestData
     {
-        Kill,
-        Collect,
-        Talk
+        public int current;
+        public int goal;
+        public UnityEvent reward;
+
+        public MonsterQuestData()
+        {
+            this.current = 0;
+            this.goal = 10;
+            this.reward = new UnityEvent();
+        }
+
+        public MonsterQuestData(MonsterQuestData monsterQuestData)
+        {
+            this.current = monsterQuestData.current;
+            this.goal = monsterQuestData.goal;
+            this.reward = monsterQuestData.reward;
+        }
+
+        public void PrintData()
+        {
+            Debug.Log($"current: {current} / goal: {goal}");
+        }
     }
 
-    [SerializeField] private string _title;
-    [SerializeField] private string _description;
-    [SerializeField] private int _goal;
-    [SerializeField] private UnityEvent _reward;
+    [SerializeField] private MonsterQuestData _monsterQuest;    // 몬스터 사냥 퀘스트 데이터
+    private MonsterQuestData _initMonsterQuestData;              // 초기 몬스터 사냥 퀘스트 데이터
 
-    public bool IsActive { get; set; }
-    public string Title => _title;
-    public string Description => _description;
-    public int Goal => _goal;
-    public UnityEvent Reward => _reward;
+    public bool IsActive { get; set; }                          // 퀘스트 활성화 여부
+    public MonsterQuestData MonsterQuest
+    {
+        get => _monsterQuest;
+        private set => _monsterQuest = value;
+    }
+
+    private void Awake()
+    {
+        // 초기 데이터 저장
+        _initMonsterQuestData = new MonsterQuestData(_monsterQuest);
+
+        _initMonsterQuestData.PrintData();
+
+        _monsterQuest.PrintData();
+    }
 
     /// <summary>
-    /// 다이얼로그 데이터에 연결하기 위한 유효성 검사
+    /// 현재 진행 상황을 증가하고 퀘스트를 업데이트하는 메서드
     /// </summary>
-    /// <returns></returns>
-    public bool IsValidQuestData()
+    public void IncreaseCurrent()
     {
-        if (string.IsNullOrEmpty(_title) || string.IsNullOrWhiteSpace(_title)) return false;
-        if (string.IsNullOrEmpty(_description) || string.IsNullOrWhiteSpace(_description)) return false;
-        if (_goal <= 0) return false;
-        if (_reward == null || _reward.GetPersistentEventCount() == 0) return false;
+        MonsterQuest.current++;
 
-        return true;
+        QuestController.Instance.UpdateQuest();
+
+        if (MonsterQuest.current >= MonsterQuest.goal)
+        {
+            MonsterQuest.current = MonsterQuest.goal;
+
+            Debug.Log("퀘스트 완료");
+
+            QuestController.Instance.CompleteQuest();
+        }
+    }
+
+    public void InitializeQuestData()
+    {
+        _monsterQuest = _initMonsterQuestData;
+
+        _initMonsterQuestData.PrintData();
+
+        _monsterQuest.PrintData();
     }
 }

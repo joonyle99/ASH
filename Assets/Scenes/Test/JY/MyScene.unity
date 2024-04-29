@@ -2421,21 +2421,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1322454706829155597, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: _maxHp
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_RootOrder
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -165.53
+      value: -217.35
       objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 26.15
+      value: 11.39
       objectReference: {fileID: 0}
     - target: {fileID: 1322454706829173480, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4597,11 +4593,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 37.555176
+      value: -190.01202
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 561.92914
+      value: 18.36529
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9825,6 +9821,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
   m_PrefabInstance: {fileID: 2108508928}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2124196782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2124196784}
+  - component: {fileID: 2124196783}
+  m_Layer: 0
+  m_Name: MonsterQuestData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2124196783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124196782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08635833dea113e4b83ce529e1eef7ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _monsterQuest:
+    current: 0
+    goal: 1
+    reward:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1778825148}
+          m_TargetAssemblyTypeName: PlayerBehaviour, Assembly-CSharp
+          m_MethodName: IncreaseMaxHp
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 6
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!4 &2124196784
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124196782}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -190.01202, y: 18.36529, z: -0.6599579}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 31
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2130669571
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10159,7 +10217,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 311580694313734776}
   m_Bounds:
-    m_Center: {x: -0.020405263, y: -0.009520024, z: 0}
+    m_Center: {x: -0.020405263, y: -0.009520978, z: 0}
     m_Extent: {x: 0.43461, y: 0.40151998, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
@@ -10200,8 +10258,8 @@ MonoBehaviour:
   - {fileID: 2628357675484619987}
   - {fileID: 7499512868552636739}
   m_Bounds:
-    m_Center: {x: -0.04527998, y: -0.024864018, z: 0}
-    m_Extent: {x: 1.0527999, y: 0.71013606, z: 0}
+    m_Center: {x: -0.04527998, y: -0.024864495, z: 0}
+    m_Extent: {x: 1.0527999, y: 0.7101356, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -10258,8 +10316,8 @@ MonoBehaviour:
   - {fileID: 2002351550672689026}
   - {fileID: 4257508510427419135}
   m_Bounds:
-    m_Center: {x: 0.008475006, y: 0.4435038, z: 0}
-    m_Extent: {x: 0.9780354, y: 1.1869141, z: 0}
+    m_Center: {x: 0.008475006, y: 0.44350475, z: 0}
+    m_Extent: {x: 0.9780354, y: 1.186915, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
@@ -10634,7 +10692,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4386577299594174848, guid: b830d91fa9a7d134192fb6a32f3eeebe, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4386577299594174855, guid: b830d91fa9a7d134192fb6a32f3eeebe, type: 3}
       propertyPath: m_RootOrder
@@ -10823,7 +10881,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5383584076892876753}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -159.01, y: 27.52, z: 0}
+  m_LocalPosition: {x: -222.08, y: 12.58, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10850,25 +10908,7 @@ MonoBehaviour:
   _stateChange: 0
   _animationType: 0
   _dialogueData: {fileID: 11400000, guid: 56452b722bccbe244829b17fc54242be, type: 2}
-  _questData:
-    _title: "\uCD5C\uB300 \uC0DD\uBA85 \uD018\uC2A4\uD2B8"
-    _description: "\uC77C\uBC18 \uBAAC\uC2A4\uD130\uB97C \uC7A1\uC544\uC628\uB2E4"
-    _goal: 5
-    _reward:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1778825148}
-          m_TargetAssemblyTypeName: PlayerBehaviour, Assembly-CSharp
-          m_MethodName: IncreaseMaxHp
-          m_Mode: 3
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 5
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+  _questData: {fileID: 2124196783}
 --- !u!1 &5383584077091106493
 GameObject:
   m_ObjectHideFlags: 0
@@ -10975,7 +11015,7 @@ MonoBehaviour:
   m_BoneTransforms:
   - {fileID: 3654695973288455257}
   m_Bounds:
-    m_Center: {x: 0, y: -0.00460501, z: 0}
+    m_Center: {x: 0, y: -0.004605964, z: 0}
     m_Extent: {x: 0.22500008, y: 0.18889508, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

@@ -568,8 +568,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (QuestController.Instance.IsCurrentQuestActive)
         {
             // 해당 퀘스트에 해당하는 몬스터인지 확인
-
-            // 이벤트 발생으로 count를 증가 시킨다
+            if (monsterData.RankType.Equals(MonsterDefine.RankType.Normal) && !monsterData.MonsterName.Equals("Turtle"))
+            {
+                // 이벤트 발생으로 count를 증가 시킨다
+                QuestController.Instance.CurrentQuest.IncreaseCurrent();
+            }
         }
 
         // Wait until death effect is done
@@ -609,6 +612,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // effect process
         MaterialController.DisintegrateEffect.Play(0f, true);
         yield return new WaitUntil(() => MaterialController.DisintegrateEffect.IsEffectDone);
+        MaterialController.DisintegrateEffect.ResetIsEffectDone();      // 리스폰 전용 로직
     }
 
     // state

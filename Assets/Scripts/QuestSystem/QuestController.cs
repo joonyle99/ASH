@@ -45,13 +45,22 @@ public class QuestController : joonyleTools.SingletonBehavior<QuestController>
         View.OpenQuestPanel();
     }
 
+    public void UpdateQuest()
+    {
+        // 퀘스트 데이터를 뷰에 전달
+        View.DrawDataOnQuestPanel(_currentQuest);
+    }
+
     public void CompleteQuest()
     {
         // 퀘스트 보상 지급
-        _currentQuest.Reward?.Invoke();
+        _currentQuest.MonsterQuest.reward?.Invoke();
 
         // 퀘스트 비활성화
         _currentQuest.IsActive = false;
+
+        // 퀘스트 데이터 초기화
+        _currentQuest.InitializeQuestData();
 
         // 퀘스트 패널 닫기
         View.ClosePanel();
