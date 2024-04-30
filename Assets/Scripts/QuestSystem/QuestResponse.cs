@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -16,15 +17,14 @@ public class QuestResponse : MonoBehaviour
         _questData = questData;
     }
 
-    public void AcceptQuest()
+    public void AcceptClick()
     {
-        // 퀘스트를 수락한다
         QuestController.Instance.AcceptQuest(_questData);
         OnClicked?.Invoke();
     }
-    public void RejectQuest()
+    public void RejectClick()
     {
-        // 퀘스트를 거절한다
+        QuestController.Instance.RejectQuest(_questData);
         OnClicked?.Invoke();
     }
 }

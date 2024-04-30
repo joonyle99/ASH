@@ -564,14 +564,14 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             }
         }
 
-        // TODO: 최대 생명력 회복 퀘스트 확인
-        if (QuestController.Instance.IsCurrentQuestActive)
+        var currentQuest = QuestController.Instance.CurrentQuest;
+        if (currentQuest && currentQuest.IsActive)
         {
             // 해당 퀘스트에 해당하는 몬스터인지 확인
-            if (monsterData.RankType.Equals(MonsterDefine.RankType.Normal) && !monsterData.MonsterName.Equals("Turtle"))
+            if (monsterData.RankType.Equals(MonsterDefine.RankType.Normal)
+                && !monsterData.MonsterName.Equals("Turtle"))
             {
-                // 이벤트 발생으로 count를 증가 시킨다
-                QuestController.Instance.CurrentQuest.IncreaseCurrent();
+                currentQuest.IncreaseCount();
             }
         }
 

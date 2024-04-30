@@ -1,85 +1,104 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// 고유한 퀘스트에 관한 정보를 담고 있는 클래스
-/// 현재로써는 일반몬스터 사냥 퀘스트만을 지원한다
-/// </summary>
 [System.Serializable]
 public class QuestData : MonoBehaviour
 {
     [System.Serializable]
     public class MonsterQuestData
     {
-        public int current;
-        public int goal;
-        public UnityEvent reward;
+        [SerializeField] private int _monsterKilled;
+        [SerializeField] private int _killGoal;
+        [SerializeField] private UnityEvent _reward;
+
+        public int MonsterKilled => _monsterKilled;
+        public int KillGoal => _killGoal;
+        public UnityEvent Reward => _reward;
 
         public MonsterQuestData()
         {
-            this.current = 0;
-            this.goal = 10;
-            this.reward = new UnityEvent();
+            this._monsterKilled = 0;
+            this._killGoal = 5;
+            this._reward = new UnityEvent();
         }
-
         public MonsterQuestData(MonsterQuestData monsterQuestData)
         {
-            this.current = monsterQuestData.current;
-            this.goal = monsterQuestData.goal;
-            this.reward = monsterQuestData.reward;
+            this._monsterKilled = monsterQuestData._monsterKilled;
+            this._killGoal = monsterQuestData._killGoal;
+            this._reward = monsterQuestData._reward;
         }
 
-        public void PrintData()
+        public void IncreaseKillCount()
         {
-            Debug.Log($"current: {current} / goal: {goal}");
+            _monsterKilled++;
+            if (_monsterKilled >= _killGoal)
+                _monsterKilled = _killGoal;
+        }
+        public bool IsCompleteGoal()
+        {
+            return _monsterKilled >= _killGoal;
+        }
+        public void GiveReward()
+        {
+            _reward?.Invoke();
         }
     }
 
-    [SerializeField] private MonsterQuestData _monsterQuest;    // 몬스터 사냥 퀘스트 데이터
-    private MonsterQuestData _initMonsterQuestData;              // 초기 몬스터 사냥 퀘스트 데이터
+    #region Attribute
 
-    public bool IsActive { get; set; }                          // 퀘스트 활성화 여부
-    public MonsterQuestData MonsterQuest
-    {
-        get => _monsterQuest;
-        private set => _monsterQuest = value;
-    }
+    [SerializeField] private int _maxRepeatCount;                               // 퀘스트 반복 횟수
+    [SerializeField] private int _currentRepeatCount;                           // 현재 퀘스트 반복 횟수
+
+    [Space]
+
+    [SerializeField] private MonsterQuestData _monsterQuest;                    // 몬스터 사냥 퀘스트
+    public MonsterQuestData MonsterQuest => _monsterQuest;
+
+    private MonsterQuestData _initMonsterQuest;                                 // 초기 몬스터 사냥 퀘스트
+
+    public bool IsFirst { get; set; } = true;                                   // 퀘스트를 처음 받았는지 여부
+    public bool IsActive { get; set; } = false;                                 // 퀘스트 활성화 여부
+    public bool IsAcceptedBefore { get; set; } = false;                               // 퀘스트 수락 여부
+
+    #endregion
+
+    #region Function
 
     private void Awake()
     {
-        // 초기 데이터 저장
-        _initMonsterQuestData = new MonsterQuestData(_monsterQuest);
-
-        _initMonsterQuestData.PrintData();
-
-        _monsterQuest.PrintData();
+        // 데이터 복사를 통해 초기 데이터를 세팅한다
+        _initMonsterQuest = new MonsterQuestData(_monsterQuest);
     }
 
-    /// <summary>
-    /// 현재 진행 상황을 증가하고 퀘스트를 업데이트하는 메서드
-    /// </summary>
-    public void IncreaseCurrent()
+    public void IncreaseCount()
     {
-        MonsterQuest.current++;
+        _monsterQuest.IncreaseKillCount();
 
         QuestController.Instance.UpdateQuest();
-
-        if (MonsterQuest.current >= MonsterQuest.goal)
-        {
-            MonsterQuest.current = MonsterQuest.goal;
-
-            Debug.Log("퀘스트 완료");
-
-            QuestController.Instance.CompleteQuest();
-        }
     }
-
-    public void InitializeQuestData()
+    public bool IsComplete()
     {
-        _monsterQuest = _initMonsterQuestData;
-
-        _initMonsterQuestData.PrintData();
-
-        _monsterQuest.PrintData();
+        return _monsterQuest.IsCompleteGoal();
     }
+    public bool IsRepeatable()
+    {
+        return _currentRepeatCount < _maxRepeatCount;
+    }
+    public void CompleteQuestProcess()
+    {
+        _monsterQuest.GiveReward();
+
+        _currentRepeatCount++;
+
+        IsActive = false;
+
+        ResetProgress();
+    }
+    public void ResetProgress()
+    {
+        // _monsterQuest = _initMonsterQuest; // 이렇게 하면 참조 값 자체가 같이지기 때문에 복사 생성자를 이용한다
+        _monsterQuest = new MonsterQuestData(_initMonsterQuest);
+    }
+
+    #endregion
 }

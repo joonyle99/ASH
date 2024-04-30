@@ -10,15 +10,16 @@ using CanvasGroup = UnityEngine.CanvasGroup;
 public class QuestView : MonoBehaviour
 {
     public Image QuestPanel;
-    public TextMeshProUGUI Title;
-    public TextMeshProUGUI Description;
-    public TextMeshProUGUI Number;
-
     public TextMeshProUGUI Counter;
 
     public void OpenQuestPanel()
     {
         StartCoroutine(ControlPanelCoroutine(true));
+    }
+
+    public void ClosePanel()
+    {
+        StartCoroutine(ControlPanelCoroutine(false));
     }
 
     private IEnumerator ControlPanelCoroutine(bool isOpen, float delay = 2f)
@@ -34,7 +35,7 @@ public class QuestView : MonoBehaviour
         {
             canvasGroup.alpha = 0f;
 
-            QuestPanel.gameObject.SetActive(true);
+            canvasGroup.gameObject.SetActive(true);
 
             while (eTime < duration)
             {
@@ -58,21 +59,12 @@ public class QuestView : MonoBehaviour
 
             canvasGroup.alpha = 0f;
 
-            QuestPanel.gameObject.SetActive(false);
+            canvasGroup.gameObject.SetActive(false);
         }
     }
 
-    public void DrawDataOnQuestPanel(QuestData questData)
+    public void DrawUpdateDataOnPanel(QuestData questData)
     {
-        // Title.text = questData.Title;
-        // Description.text = questData.Description;
-        // Number.text = "00 / " + questData.Goal.ToString();
-
-        Counter.text = questData.MonsterQuest.current.ToString() + " / " + questData.MonsterQuest.goal.ToString();
-    }
-
-    public void ClosePanel()
-    {
-        StartCoroutine(ControlPanelCoroutine(false, 4f));
+        Counter.text = questData.MonsterQuest.MonsterKilled.ToString() + " / " + questData.MonsterQuest.KillGoal.ToString();
     }
 }
