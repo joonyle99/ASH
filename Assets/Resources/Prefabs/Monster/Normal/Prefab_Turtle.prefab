@@ -1134,7 +1134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4386577299594174855
 Transform:
   m_ObjectHideFlags: 0
@@ -1891,7 +1891,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 7, y: 5}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.05
 --- !u!50 &4508301471497315008
 Rigidbody2D:
   serializedVersion: 4
@@ -1946,11 +1946,19 @@ MonoBehaviour:
     Acceleration: 0
     JumpForce: {x: 0, y: 0}
   respawnData:
-    Prefab: {fileID: 4386577299594174848}
-    FirstPosition: {x: 0, y: 0, z: 0}
-    RespawnBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
+    DefaultPrefabPosition: {x: 0, y: 0, z: 0}
+    groundRespawnData:
+      PatrolPointAPosition: {x: 0, y: 0, z: 0}
+      PatrolPointBPosition: {x: 0, y: 0, z: 0}
+    floatingRespawnData:
+      NavMeshData: {fileID: 0}
+      PatrolAreaPosition: {x: 0, y: 0, z: 0}
+      ChaseAreaPosition: {x: 0, y: 0, z: 0}
+      PatrolAreaScale: {x: 0, y: 0, z: 0}
+      ChaseAreaScale: {x: 0, y: 0, z: 0}
+      RespawnBounds:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
