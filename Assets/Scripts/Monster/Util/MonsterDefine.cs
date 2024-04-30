@@ -73,6 +73,7 @@ public static class MonsterDefine
 
         // SemiBoss
         Bear = 2001,
+        BlackPanther,
 
         天天FinalBoss天天,
 
