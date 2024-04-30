@@ -391,7 +391,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 8.66, y: 10.144917}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.05
 --- !u!50 &68886007787193407
 Rigidbody2D:
   serializedVersion: 4
@@ -409,7 +409,7 @@ Rigidbody2D:
   m_AngularDrag: 0
   m_GravityScale: 5
   m_Material: {fileID: 6200000, guid: ea4460efb9324b34889b52a932903051, type: 2}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
@@ -446,11 +446,19 @@ MonoBehaviour:
     Acceleration: 0
     JumpForce: {x: 0, y: 0}
   respawnData:
-    Prefab: {fileID: 0}
-    FirstPosition: {x: 0, y: 0, z: 0}
-    RespawnBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0, y: 0, z: 0}
+    DefaultPrefabPosition: {x: 0, y: 0, z: 0}
+    groundRespawnData:
+      PatrolPointAPosition: {x: 0, y: 0, z: 0}
+      PatrolPointBPosition: {x: 0, y: 0, z: 0}
+    floatingRespawnData:
+      NavMeshData: {fileID: 0}
+      PatrolAreaPosition: {x: 0, y: 0, z: 0}
+      ChaseAreaPosition: {x: 0, y: 0, z: 0}
+      PatrolAreaScale: {x: 0, y: 0, z: 0}
+      ChaseAreaScale: {x: 0, y: 0, z: 0}
+      RespawnBounds:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
   <GroundCheckLayer>k__BackingField:
     serializedVersion: 2
     m_Bits: 8
@@ -24305,7 +24313,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4288290824222059685, guid: b0d63dc4f7f85384599921b9f8a3a2c1, type: 3}
       propertyPath: m_Name
-      value: BearBlocking
+      value: MonsterBlocking
       objectReference: {fileID: 0}
     - target: {fileID: 4288290824222059686, guid: b0d63dc4f7f85384599921b9f8a3a2c1, type: 3}
       propertyPath: m_RootOrder
@@ -24353,6 +24361,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4288290824222059687, guid: b0d63dc4f7f85384599921b9f8a3a2c1, type: 3}
       propertyPath: bear
+      value: 
+      objectReference: {fileID: 68886007787193792}
+    - target: {fileID: 4288290824222059687, guid: b0d63dc4f7f85384599921b9f8a3a2c1, type: 3}
+      propertyPath: monster
       value: 
       objectReference: {fileID: 68886007787193792}
     m_RemovedComponents: []
