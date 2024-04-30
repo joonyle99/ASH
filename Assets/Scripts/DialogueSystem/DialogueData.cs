@@ -29,7 +29,13 @@ public class DialogueData : ScriptableObject
     /// <param name="questData"></param>
     public void LinkQuestData(QuestData questData)
     {
+        Debug.Log("다이얼로그에 퀘스트 데이터 연결 성공");
         this.QuestData = questData;
+    }
+    public void UnlinkQuestData()
+    {
+        Debug.Log("다이얼로그에서 퀘스트 데이터 해제 성공");
+        this.QuestData = null;
     }
 
     /// <summary>

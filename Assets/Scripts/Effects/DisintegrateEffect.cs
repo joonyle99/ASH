@@ -63,6 +63,18 @@ public class DisintegrateEffect : MonoBehaviour
             materialController.SetProgress("_Progress", ratio);
         }
 
+        // 리스폰의 경우 초기화 작업이 필요하다
+        if (isRespawn)
+        {
+            materialController.SetProgress("_Progress", 1f);
+            materialController.InitMaterial();
+        }
+
         IsEffectDone = true;
+    }
+
+    public void ResetIsEffectDone()
+    {
+        IsEffectDone = false;
     }
 }
