@@ -34,13 +34,14 @@ public class GroundMovementModule : MonoBehaviour
             ? (-1) * Vector2.Perpendicular(groundNormal)
             : Vector2.Perpendicular(groundNormal);
 
-        Debug.DrawRay(_monster.groundRayHit.point, groundNormal, Color.cyan);
+        Debug.DrawRay(_monster.groundRayHit.point, groundNormal, Color.yellow);
 
         Vector2 targetVelocity = moveDirection * _monster.monsterData.MoveSpeed;
-        Vector2 velocityNeeded = targetVelocity - Vector2.Dot(_monster.RigidBody2D.velocity, moveDirection) * moveDirection;   // 경사면을 따라 움직이기 위한 벡터
+        Vector2 projectedVelocity = Vector2.Dot(_monster.RigidBody2D.velocity, moveDirection) * moveDirection;
+        Vector2 velocityNeeded = targetVelocity - projectedVelocity;
         Vector2 moveForce = velocityNeeded * _monster.monsterData.Acceleration;
 
-        Debug.DrawRay(transform.position, moveDirection, Color.cyan);
+        Debug.DrawRay(transform.position, moveForce, Color.red);
 
         _monster.RigidBody2D.AddForce(moveForce);
     }

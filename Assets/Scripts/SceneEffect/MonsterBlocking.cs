@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class BearBlocking : MonoBehaviour
+public class MonsterBlocking : MonoBehaviour
 {
-    public Bear bear;
+    public MonsterBehavior monster;
 
     private void Start()
     {
@@ -19,18 +19,18 @@ public class BearBlocking : MonoBehaviour
 
     public void StartBlocking()
     {
-        bear.enabled = false;
-        bear.SetAnimatorTrigger("StartBlocking");
+        monster.enabled = false;
+        monster.SetAnimatorTrigger("StartBlocking");
     }
 
     public void EndBlocking()
     {
-        bear.enabled = true;
-        bear.SetAnimatorTrigger("EndBlocking");
+        monster.enabled = true;
+        monster.SetAnimatorTrigger("EndBlocking");
     }
 
     public void EndBlocking_OnlyEnable()
     {
-        bear.enabled = true;
+        monster.enabled = true;
     }
 }

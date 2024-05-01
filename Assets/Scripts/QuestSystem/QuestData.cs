@@ -1,41 +1,104 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// 고유한 퀘스트에 관한 정보를 담고 있는 클래스
-/// </summary>
 [System.Serializable]
-public class QuestData
+public class QuestData : MonoBehaviour
 {
-    public enum QuestType
+    [System.Serializable]
+    public class MonsterQuestData
     {
-        Kill,
-        Collect,
-        Talk
+        [SerializeField] private int _monsterKilled;
+        [SerializeField] private int _killGoal;
+        [SerializeField] private UnityEvent _reward;
+
+        public int MonsterKilled => _monsterKilled;
+        public int KillGoal => _killGoal;
+        public UnityEvent Reward => _reward;
+
+        public MonsterQuestData()
+        {
+            this._monsterKilled = 0;
+            this._killGoal = 5;
+            this._reward = new UnityEvent();
+        }
+        public MonsterQuestData(MonsterQuestData monsterQuestData)
+        {
+            this._monsterKilled = monsterQuestData._monsterKilled;
+            this._killGoal = monsterQuestData._killGoal;
+            this._reward = monsterQuestData._reward;
+        }
+
+        public void IncreaseKillCount()
+        {
+            _monsterKilled++;
+            if (_monsterKilled >= _killGoal)
+                _monsterKilled = _killGoal;
+        }
+        public bool IsCompleteGoal()
+        {
+            return _monsterKilled >= _killGoal;
+        }
+        public void GiveReward()
+        {
+            _reward?.Invoke();
+        }
     }
 
-    [SerializeField] private string _title;
-    [SerializeField] private string _description;
-    [SerializeField] private int _goal;
-    [SerializeField] private UnityEvent _reward;
+    #region Attribute
 
-    public bool IsActive { get; set; }
-    public string Title => _title;
-    public string Description => _description;
-    public int Goal => _goal;
-    public UnityEvent Reward => _reward;
+    [SerializeField] private int _maxRepeatCount;                               // 퀘스트 반복 횟수
+    [SerializeField] private int _currentRepeatCount;                           // 현재 퀘스트 반복 횟수
 
-    /// <summary>
-    /// 다이얼로그 데이터에 연결하기 위한 유효성 검사
-    /// </summary>
-    /// <returns></returns>
-    public bool IsValidQuestData()
+    [Space]
+
+    [SerializeField] private MonsterQuestData _monsterQuest;                    // 몬스터 사냥 퀘스트
+    public MonsterQuestData MonsterQuest => _monsterQuest;
+
+    private MonsterQuestData _initMonsterQuest;                                 // 초기 몬스터 사냥 퀘스트
+
+    public bool IsFirst { get; set; } = true;                                   // 퀘스트를 처음 받았는지 여부
+    public bool IsActive { get; set; } = false;                                 // 퀘스트 활성화 여부
+    public bool IsAcceptedBefore { get; set; } = false;                               // 퀘스트 수락 여부
+
+    #endregion
+
+    #region Function
+
+    private void Awake()
     {
-        if (string.IsNullOrEmpty(_title) || string.IsNullOrWhiteSpace(_title)) return false;
-        if (string.IsNullOrEmpty(_description) || string.IsNullOrWhiteSpace(_description)) return false;
-        if (_goal <= 0) return false;
-        if (_reward == null || _reward.GetPersistentEventCount() == 0) return false;
-
-        return true;
+        // 데이터 복사를 통해 초기 데이터를 세팅한다
+        _initMonsterQuest = new MonsterQuestData(_monsterQuest);
     }
+
+    public void IncreaseCount()
+    {
+        _monsterQuest.IncreaseKillCount();
+
+        QuestController.Instance.UpdateQuest();
+    }
+    public bool IsComplete()
+    {
+        return _monsterQuest.IsCompleteGoal();
+    }
+    public bool IsRepeatable()
+    {
+        return _currentRepeatCount < _maxRepeatCount;
+    }
+    public void CompleteQuestProcess()
+    {
+        _monsterQuest.GiveReward();
+
+        _currentRepeatCount++;
+
+        IsActive = false;
+
+        ResetProgress();
+    }
+    public void ResetProgress()
+    {
+        // _monsterQuest = _initMonsterQuest; // 이렇게 하면 참조 값 자체가 같이지기 때문에 복사 생성자를 이용한다
+        _monsterQuest = new MonsterQuestData(_initMonsterQuest);
+    }
+
+    #endregion
 }

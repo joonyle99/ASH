@@ -11,7 +11,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
     [SerializeField] private float _waitTimeAfterScriptEnd;             // 대화가 끝난 후 대기 시간
 
-    public bool IsDialogueActive => View.IsDialoguePanelActive;         // 다이얼로그 뷰가 활성화 중인지 여부
+    public bool IsDialoguePanel => View.IsDialoguePanelActive;          // 대화 패널이 열려있는지 여부
+    public bool IsDialogueActive { get; set; } = false;                 // 대화가 진행 중인지 여부
 
     private DialogueView _view;                                         // 다이얼로그 뷰 UI
     private DialogueView View
@@ -24,38 +25,47 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         }
     }
 
-    /// <summary>
-    /// 다이얼로그 시작 함수
-    /// </summary>
-    /// <param name="data"></param>
-    /// <param name="isFromCutscene"></param>
     public void StartDialogue(DialogueData data, bool isFromCutscene = false)
     {
         // 대화가 이미 진행 중이라면 종료
-        if (IsDialogueActive) return;
+        if (IsDialoguePanel)
+        {
+            Debug.Log("대화가 이미 진행중입니다");
+            return;
+        }
 
         StartCoroutine(DialogueCoroutine(data));
     }
-    /// <summary>
-    /// 다이얼로그 시작 코루틴
-    /// </summary>
-    /// <param name="data"></param>
-    /// <returns></returns>
-    private IEnumerator DialogueCoroutine(DialogueData data)
+    public IEnumerator StartDialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
     {
-        // 다이얼로그 데이터를 통해 다이얼로그 시퀀스 생성
+        // 대화가 이미 진행 중이라면 종료
+        if (IsDialoguePanel && IsDialogueActive)
+        {
+            Debug.Log("대화가 이미 진행중입니다");
+            yield break;
+        }
+
+        yield return StartCoroutine(DialogueCoroutine(data, isContinueDialogue));
+    }
+    private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
+    {
+        // 1. 다이얼로그 시퀀스를 생성한다
         DialogueSequence dialogueSequence = new DialogueSequence(data);
 
-        // 입력 설정이 있으면 변경
+        // 2. 입력 설정이 있을 경우 변경
         if (data.InputSetter != null)
             InputManager.Instance.ChangeInputSetter(data.InputSetter);
 
-        // 다이얼로그 뷰 UI를 열어준다
+        // 3. 다이얼로그 뷰 UI를 열어준다
         View.OpenPanel();
 
-        // 다이얼로그 시퀀스 시작
+        IsDialogueActive = true;
+
+        // 4. 다이얼로그 시퀀스 시작
         while (!dialogueSequence.IsOver)
         {
+            #region Dialogue
+
             // 다이얼로그 뷰 UI에 현재 세그먼트를 표시
             View.StartNextSegment(dialogueSequence.CurrentSegment);
 
@@ -75,34 +85,51 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
 
+            #endregion
+
+            #region Quest
+
             // 마지막 다이얼로그 세그먼트인 경우 퀘스트 다이얼로그임을 확인한다
             if (dialogueSequence.IsLastSegment)
             {
-                if (data.QuestData.IsValidQuestData())
+                // 다이얼로그에 퀘스트가 등록되어 있는 경우
+                if (data.QuestData)
                 {
-                    // 퀘스트 응답 패널을 연다
-                    View.OpenResponsePanel();
-
-                    // 퀘스트 응답 패널에 퀘스트 데이터를 전달
-                    View.SendQuestDataToResponsePanel(data.QuestData, out var response);
-
-                    // Handler: 이벤트가 발생했을 때 호출되는 함수를 지칭한다 (옵저버 패턴)
-                    var isClicked = false;
-                    void EventHandler()
+                    // 퀘스트를 처음 받은 경우, 자동 수락
+                    if (data.QuestData.IsFirst)
                     {
-                        isClicked = true;
-                        response.OnClicked -= EventHandler;
+                        data.QuestData.IsFirst = false;
+
+                        QuestController.Instance.AcceptQuest(data.QuestData);
                     }
-                    response.OnClicked -= EventHandler;
-                    response.OnClicked += EventHandler;
+                    else
+                    {
+                        // 퀘스트 응답 패널을 연다
+                        View.OpenResponsePanel();
 
-                    // 해당 퀘스트가 수락 / 거절되기 전까지 대기
-                    yield return new WaitUntil(() => isClicked);
+                        // 퀘스트 응답 패널에 퀘스트 데이터를 전달
+                        View.SendQuestDataToResponsePanel(data.QuestData, out var response);
 
-                    // 퀘스트 응답 종료 사운드 재생
-                    SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+                        // Handler: 이벤트가 발생했을 때 호출되는 함수를 지칭한다 (옵저버 패턴)
+                        var isClicked = false;
+                        void ResponseHandler()
+                        {
+                            isClicked = true;
+                            response.OnClicked -= ResponseHandler;
+                        }
+                        response.OnClicked -= ResponseHandler;
+                        response.OnClicked += ResponseHandler;
+
+                        // 해당 퀘스트가 수락 / 거절되기 전까지 대기
+                        yield return new WaitUntil(() => isClicked);
+
+                        // 퀘스트 응답 종료 사운드 재생
+                        SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+                    }
                 }
             }
+
+            #endregion
 
             // 다이얼로그 세그먼트가 끝난 후 대기 시간만큼 대기
             yield return StartCoroutine(View.ClearTextCoroutine(_waitTimeAfterScriptEnd));
@@ -111,12 +138,14 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             dialogueSequence.MoveNext();
         }
 
-        // 다이얼로그 뷰 UI를 닫아준다
+        // 5. 다이얼로그 뷰 UI를 닫아준다
         View.ClosePanel();
 
-        // 다이얼로그 시퀀스가 끝났기 때문에 입력 설정을 기본값으로 변경
+        if (!isContinueDialogue)
+            IsDialogueActive = false;
+
+        // 6. 다이얼로그 시퀀스가 끝났기 때문에 입력 설정을 기본값으로 변경
         if (data.InputSetter != null)
             InputManager.Instance.ChangeToDefaultSetter();
     }
-
 }
