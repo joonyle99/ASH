@@ -6,7 +6,7 @@ using UnityEngine;
 
 public sealed class Bear : BossBehavior, ILightCaptureListener
 {
-    public enum BearAttackType
+    public enum AttackType
     {
         Null = 0,
 
@@ -27,8 +27,8 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
     [Tooltip("1 : Slash Right\r\n2 : Slash Left\r\n3 : BodySlam\r\n4 : Stomp")]
     [SerializeField] private Range _attackTypeRange;
-    [SerializeField] private BearAttackType _currentAttack;
-    [SerializeField] private BearAttackType _nextAttack;
+    [SerializeField] private AttackType _currentAttack;
+    [SerializeField] private AttackType _nextAttack;
 
     [Header("Slash")]
     [Space]
@@ -138,7 +138,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         RandomTargetHitCount();
         SetToRandomAttack();
     }
-
     public void FixedUpdate()
     {
         if (IsDead)
@@ -150,6 +149,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
                 GroundMovementModule.GroundWalking();
         }
     }
+
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         if (IsGodMode || IsDead)
@@ -169,7 +169,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     }
     public override void Die(bool isHitBoxDisable = true, bool isDeathProcess = true)
     {
-        // 흑곰은 사망 이펙트를 재생하지 않는다
+        // 보스는 사망 이펙트를 재생하지 않는다
         base.Die(true, false);
 
         StartCoroutine(SlowMotionCoroutine(5f));
@@ -187,19 +187,19 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
             _isLightingGuide = true;
     }
 
-    // base
+    // boss base
     public override void AttackPreProcess()
     {
         // 현재 공격 상태 변경
         _currentAttack = _nextAttack;
 
-        if (_currentAttack is BearAttackType.Null || _nextAttack is BearAttackType.Null)
+        if (_currentAttack is AttackType.Null || _nextAttack is AttackType.Null)
         {
             Debug.LogError("BearAttackType is Null");
             return;
         }
 
-        if (_currentAttack is BearAttackType.EarthQuake)
+        if (_currentAttack is AttackType.EarthQuake)
         {
             currentAttackCount = 0;
             EarthquakeCount++;
@@ -249,12 +249,12 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     private void SetToRandomAttack()
     {
         int nextAttackNumber = (int)_attackTypeRange.Random();
-        _nextAttack = (BearAttackType)nextAttackNumber;
+        _nextAttack = (AttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
     private void SetToEarthQuake()
     {
-        _nextAttack = BearAttackType.EarthQuake;
+        _nextAttack = AttackType.EarthQuake;
         Animator.SetInteger("NextAttackNumber", (int)_nextAttack);
     }
     public void CheckHurtState()
@@ -508,10 +508,9 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
     private void OnDrawGizmosSelected()
     {
-        // 천장
+        // 종유석 생성 범위
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector3(transform.position.x - 25f, _ceilingHeight, transform.position.z), new Vector3(transform.position.x + 25f, _ceilingHeight, transform.position.z));
-
         if (MainBodyCollider2D)
         {
             // 오른쪽 종유석 범위
