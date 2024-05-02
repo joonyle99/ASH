@@ -66,9 +66,12 @@ public abstract class Evaluator : MonoBehaviour
         // check if monster attached evaluator is dead
         if (monster.IsDead) return null;
 
-        // check target within range
+        // check target within range (only one target)
         Collider2D targetCollider = Physics2D.OverlapBox(checkCollider.transform.position, checkCollider.bounds.size, 0f, targetLayer);
         if (targetCollider == null) return null;
+
+        // 탐지한 대상의 이름을 출력
+        Debug.Log($"{targetCollider.gameObject.name}");
 
         // check player
         PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();
@@ -81,7 +84,16 @@ public abstract class Evaluator : MonoBehaviour
                 {
                     // 플레이어의 타겟 포인트 설정
                     Vector3 playerPos = player.transform.position + new Vector3(0f, player.BodyCollider.bounds.extents.y * 1.5f, 0f);
+
                     EvaluationEvent(playerPos);
+
+                    // playerPos을 중심으로하는 십자가 표시
+                    var vec1 = new Vector3(-1f, 1f, 0f);
+                    var vec2 = new Vector3(1f, -1f, 0f);
+                    var vec3 = new Vector3(-1f, -1f, 0f);
+                    var vec4 = new Vector3(1f, 1f, 0f);
+                    Debug.DrawLine(playerPos + vec1, playerPos + vec2, Color.red);
+                    Debug.DrawLine(playerPos + vec3, playerPos + vec4, Color.red);
                 }
             }
         }

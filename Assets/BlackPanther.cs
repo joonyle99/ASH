@@ -22,11 +22,24 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
+    [SerializeField] private float _pillarInterval;
     // VineMissile
+    [Header("VineMissile")]
+    [Space]
 
+    [SerializeField] private BlackPanther_VineMissile _missile;
+    [SerializeField] private int _missileCount;
+    [SerializeField] private float _missileInterval;
+    [SerializeField] private float _missileSpeed;
+    [SerializeField] private float _missileAngle;
+    private Vector2 _playerPos;
 
-    // VineColumn
+    // VinePillar
+    [Header("VinePillar")]
+    [Space]
 
+    // [SerializeField] private BlackPanther_VinePillar;
+    [SerializeField] private int _pillarCount;
 
     #endregion
 
@@ -39,6 +52,8 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
         // overwrite
         monsterData.MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
         CurHp = monsterData.MaxHp;
+
+        SetToRandomAttack();
     }
     public void FixedUpdate()
     {
@@ -89,22 +104,47 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     // boss base
     public override void AttackPreProcess()
     {
+        // 현재 공격 상태 변경
+        _currentAttack = _nextAttack;
 
+        if (_currentAttack is AttackType.Null || _nextAttack is AttackType.Null)
+        {
+            Debug.LogError("AttackType is Null");
+            return;
+        }
+
+        currentAttackCount++;
     }
     public override void AttackPostProcess()
     {
-
+        SetToRandomAttack();
     }
     public override void GroggyPreProcess()
     {
+        // 그로기 상태 진입 (더이상 손전등의 영향을 받지 않음)
+        IsGroggy = true;
 
+        // 몬스터의 MonsterBodyHit를 끈다 (플레이어를 타격할 수 없다)
+        SetHitBoxAttackable(false);
     }
     public override void GroggyPostProcess()
     {
+        // 그로기 상태 종료 (이제 손전등의 영향을 받음)
+        IsGroggy = false;
 
+        // 몬스터의 Body HitBox를 켠다 (플레이어를 타격할 수 있다)
+        SetHitBoxAttackable(true);
+
+        currentHitCount = 0;
     }
 
     // basic
+    private void SetToRandomAttack()
+    {
+        int nextAttackNumber = (int)_attackTypeRange.Random();
+        _nextAttack = (AttackType)nextAttackNumber;
+        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
+    }
     public void CheckHurtState()
     {
         if (IsDead) return;
@@ -115,6 +155,31 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
             SetAnimatorTrigger("Hurt");
         }
     }
+
+    // vine missile
+
+    public void VineMissilePre_AnimEvent()
+    {
+        // 플레이어 위치 확인
+    }
+
+    public void VineMissile01_AnimEvent()
+    {
+        // 미사일 발사
+    }
+
+    // vine pillar
+
+    public void VinePillarPre_AnimEvent()
+    {
+        // 플레이어 위치 확인
+    }
+
+    public void VinePillar01_AnimEvent()
+    {
+        // 기둥 생성
+    }
+
 
     // effects
     public IEnumerator SlowMotionCoroutine(float duration)

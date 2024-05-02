@@ -134,8 +134,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         CurHp = monsterData.MaxHp;
         IsGodMode = true;
 
-        RandomTargetAttackCount();
-        RandomTargetHitCount();
         SetToRandomAttack();
     }
     public void FixedUpdate()
@@ -195,7 +193,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
         if (_currentAttack is AttackType.Null || _nextAttack is AttackType.Null)
         {
-            Debug.LogError("BearAttackType is Null");
+            Debug.LogError("AttackType is Null");
             return;
         }
 

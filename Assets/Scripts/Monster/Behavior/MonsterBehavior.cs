@@ -309,7 +309,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         }
 
         // range based attack by evaluator
-        if (AttackEvaluator)
+        if (AttackEvaluator && AttackEvaluator.isActiveAndEnabled)
         {
             if (!AttackEvaluator.IsUsable) return;
             if (AttackEvaluator.IsDuringCoolTime) return;

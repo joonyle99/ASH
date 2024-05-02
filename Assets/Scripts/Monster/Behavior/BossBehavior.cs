@@ -39,6 +39,14 @@ public abstract class BossBehavior : MonsterBehavior
     [SerializeField] protected int targetHitCount;
     [SerializeField] protected int currentHitCount;
 
+    protected override void Start()
+    {
+        base.Start();
+
+        RandomTargetAttackCount();
+        RandomTargetHitCount();
+    }
+
     public abstract void AttackPreProcess();
     public abstract void AttackPostProcess();
     public abstract void GroggyPreProcess();
