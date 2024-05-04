@@ -22,7 +22,7 @@ public class ParticleCounter : MonoBehaviour
         _initialParticleCount = (int)_emissionModule.GetBurst(0).count.constant;
 
         // 타겟 콜라이더 세팅하기
-        var playerCollider = SceneContext.Current.Player.LightDestination;
+        var playerCollider = SceneContext.Current.Player.HeartCollider;
         _triggerModule.SetCollider(0, playerCollider);
     }
 

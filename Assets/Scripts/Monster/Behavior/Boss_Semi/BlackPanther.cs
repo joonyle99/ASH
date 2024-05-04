@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public sealed class BlackPanther : BossBehavior, ILightCaptureListener
@@ -9,7 +8,7 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
         Null = 0,
 
         VineMissile,
-        VineColumn
+        VinePillar
     }
 
     #region Variable
@@ -17,7 +16,7 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [Header("BlackPanther")]
     [Space]
 
-    [Tooltip("1 : VineMissile\r\n2 : VineColumn\r\n")]
+    [Tooltip("1 : VineMissile\r\n2 : VinePillar\r\n")]
     [SerializeField] private Range _attackTypeRange;
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
@@ -28,11 +27,16 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [Space]
 
     [SerializeField] private BlackPanther_VineMissile _missile;
-    [SerializeField] private int _missileCount;
-    [SerializeField] private float _missileInterval;
+    [SerializeField] private Transform _missileSpawnPoint;
     [SerializeField] private float _missileSpeed;
-    [SerializeField] private float _missileAngle;
-    private Vector2 _playerPos;
+
+    [Space]
+
+    [SerializeField] private ParticleSystem _sparkEffect;
+    [SerializeField] private ParticleSystem _smokeEffect;
+
+    private Vector2 _targetPos;
+    private BlackPanther_VineMissile _currentMissile;
 
     // VinePillar
     [Header("VinePillar")]
@@ -158,14 +162,32 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
 
     // vine missile
 
-    public void VineMissilePre_AnimEvent()
+    public void VineMissilePre01_AnimEvent()
     {
-        // 플레이어 위치 확인
+        var smoke = Instantiate(_smokeEffect, _missileSpawnPoint.position, Quaternion.Euler(-90, 0, 0));
+        smoke.Play();
+    }
+
+    public void VineMissilePre02_AnimEvent()
+    {
+        _targetPos = SceneContext.Current.Player.HeartCollider.bounds.center;
+        _currentMissile = Instantiate(_missile, _missileSpawnPoint.position, Quaternion.identity);
+
+        if (_currentMissile)
+        {
+            _currentMissile.Shake();
+        }
     }
 
     public void VineMissile01_AnimEvent()
     {
-        // 미사일 발사
+        if (_currentMissile)
+        {
+            _currentMissile.Shoot(_targetPos, _missileSpeed);
+
+            var spark = Instantiate(_sparkEffect, _missileSpawnPoint.position, _missileSpawnPoint.rotation);
+            spark.Play();
+        }
     }
 
     // vine pillar

@@ -71,7 +71,7 @@ public abstract class Evaluator : MonoBehaviour
         if (targetCollider == null) return null;
 
         // 탐지한 대상의 이름을 출력
-        Debug.Log($"{targetCollider.gameObject.name}");
+        // Debug.Log($"{targetCollider.gameObject.name}");
 
         // check player
         PlayerBehaviour player = targetCollider.GetComponent<PlayerBehaviour>();

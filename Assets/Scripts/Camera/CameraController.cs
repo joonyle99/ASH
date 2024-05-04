@@ -112,7 +112,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void ResetCameraSettings()
     {
         if (SceneContext.Current.Player != null)
-        StartFollow(SceneContext.Current.Player.transform);
+            StartFollow(SceneContext.Current.Player.transform);
 
        // OffsetX = _initialSettings.Offset.x;
        // OffsetY = _initialSettings.Offset.y;
