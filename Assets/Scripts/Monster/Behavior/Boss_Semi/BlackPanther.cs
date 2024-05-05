@@ -1,4 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public sealed class BlackPanther : BossBehavior, ILightCaptureListener
@@ -21,29 +25,44 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
-    [SerializeField] private float _pillarInterval;
-    // VineMissile
     [Header("VineMissile")]
     [Space]
 
     [SerializeField] private BlackPanther_VineMissile _missile;
+
+    [Space]
+
     [SerializeField] private Transform _missileSpawnPoint;
     [SerializeField] private float _missileSpeed;
 
     [Space]
 
-    [SerializeField] private ParticleSystem _sparkEffect;
     [SerializeField] private ParticleSystem _smokeEffect;
+    [SerializeField] private ParticleSystem _sparkEffect;
 
     private Vector2 _targetPos;
     private BlackPanther_VineMissile _currentMissile;
 
-    // VinePillar
     [Header("VinePillar")]
     [Space]
 
-    // [SerializeField] private BlackPanther_VinePillar;
+    [SerializeField] private BlackPanther_VinePillar _pillar;
+
+    [Space]
+
     [SerializeField] private int _pillarCount;
+    [SerializeField] private float _floorHeight;
+    [SerializeField] private float _pillarSpawnDistance;
+    [SerializeField] private float _minDistanceEachPillar;
+    [SerializeField] private float _minDistanceFromCaster;
+    [SerializeField] private Range _createTimeRange;
+
+    private List<float> _usedPosX;
+
+    [Space]
+
+    [SerializeField] private ParticleSystem _dustEffect;
+    [SerializeField] private float _distanceFromPillar;
 
     #endregion
 
@@ -161,16 +180,13 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     }
 
     // vine missile
-
     public void VineMissilePre01_AnimEvent()
     {
         var smoke = Instantiate(_smokeEffect, _missileSpawnPoint.position, Quaternion.Euler(-90, 0, 0));
         smoke.Play();
     }
-
     public void VineMissilePre02_AnimEvent()
     {
-        _targetPos = SceneContext.Current.Player.HeartCollider.bounds.center;
         _currentMissile = Instantiate(_missile, _missileSpawnPoint.position, Quaternion.identity);
 
         if (_currentMissile)
@@ -178,9 +194,10 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
             _currentMissile.Shake();
         }
     }
-
     public void VineMissile01_AnimEvent()
     {
+        _targetPos = SceneContext.Current.Player.HeartCollider.bounds.center;
+
         if (_currentMissile)
         {
             _currentMissile.Shoot(_targetPos, _missileSpeed);
@@ -191,17 +208,60 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     }
 
     // vine pillar
-
-    public void VinePillarPre_AnimEvent()
-    {
-        // ÇÃ·¹ÀÌ¾î À§Ä¡ È®ÀÎ
-    }
-
     public void VinePillar01_AnimEvent()
     {
-        // ±âµÕ »ý¼º
-    }
+        _usedPosX = new List<float>();
 
+        // ³ÕÄð ±âµÕ »ý¼º À§Ä¡ ¼³Á¤ ·ÎÁ÷
+        for (int i = 0; i < _pillarCount; ++i)
+        {
+            // reallocation count limit
+            var posReallocationCount = 0;
+
+            // calculate pillar spawn position
+            float newPosXInRange;
+            do
+            {
+                newPosXInRange = Random.Range(MainBodyCollider2D.bounds.min.x - _pillarSpawnDistance,
+                    MainBodyCollider2D.bounds.max.x + _pillarSpawnDistance);
+
+                posReallocationCount++;
+
+            } while ((_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistanceEachPillar) ||
+                      Mathf.Abs(MainBodyCollider2D.bounds.center.x - newPosXInRange) <= _minDistanceFromCaster) &&
+                     posReallocationCount <= 20);
+
+            // store posX
+            _usedPosX.Add(newPosXInRange);
+        }
+
+        // ³ÕÄð ±âµÕ »ý¼º Àü, À§ÇèÀ» ¾Ë¸®´Â Èë ÀÌÆåÆ®
+        foreach (var posX in _usedPosX)
+        {
+            var leftPos = new Vector2(posX - _distanceFromPillar, _floorHeight);
+            var rightPos = new Vector2(posX + _distanceFromPillar, _floorHeight);
+
+            var leftDust = Instantiate(_dustEffect, leftPos, Quaternion.Euler(0f, 0f, 180f));
+            var rightDust = Instantiate(_dustEffect, rightPos, Quaternion.identity);
+
+            leftDust.Play();
+            rightDust.Play();
+        }
+
+        // ³ÕÄð ±âµÕ »ý¼º
+        foreach (var posX in _usedPosX)
+        {
+            StartCoroutine(CreateVinePillar(posX));
+        }
+    }
+    public IEnumerator CreateVinePillar(float createPosX)
+    {
+        yield return new WaitForSeconds(_createTimeRange.Random());
+
+        var pos = new Vector2(createPosX, _floorHeight);
+        var pillar = Instantiate(_pillar, pos, Quaternion.identity);
+        pillar.Opacity(0.5f);
+    }
 
     // effects
     public IEnumerator SlowMotionCoroutine(float duration)
@@ -215,6 +275,23 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
 
     private void OnDrawGizmosSelected()
     {
+        // ³ÕÄð ±âµÕÀÌ »ý¼ºµÇ´Â ¶¥ÀÇ À§Ä¡
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(new Vector3(transform.position.x - 25f, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x + 25f, _floorHeight, transform.position.z));
 
+        // ³ÕÄð ±âµÕÀÌ »ý¼ºµÇ´Â ¹üÀ§
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(new Vector3(transform.position.x - _pillarSpawnDistance, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x - _pillarSpawnDistance, _floorHeight + 5f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(transform.position.x + _pillarSpawnDistance, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x + _pillarSpawnDistance, _floorHeight + 5f, transform.position.z));
+
+        // ½ÃÀüÀÚ·ÎºÎÅÍ ¶³¾îÁø °Å¸®
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(new Vector3(transform.position.x - _minDistanceFromCaster, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x - _minDistanceFromCaster, _floorHeight + 3f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(transform.position.x + _minDistanceFromCaster, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x + _minDistanceFromCaster, _floorHeight + 3f, transform.position.z));
     }
 }
