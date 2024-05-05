@@ -29,12 +29,10 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [Space]
 
     [SerializeField] private BlackPanther_VineMissile _missile;
-
-    [Space]
-
     [SerializeField] private Transform _missileSpawnPoint;
     [SerializeField] private float _missileSpeed;
 
+    [Header("VineMissile - VFX")]
     [Space]
 
     [SerializeField] private ParticleSystem _smokeEffect;
@@ -48,21 +46,19 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
 
     [SerializeField] private BlackPanther_VinePillar _pillar;
 
-    [Space]
-
     [SerializeField] private int _pillarCount;
     [SerializeField] private float _floorHeight;
-    [SerializeField] private float _pillarSpawnDistance;
-    [SerializeField] private float _minDistanceEachPillar;
-    [SerializeField] private float _minDistanceFromCaster;
+    [SerializeField] private float _pillarFarDistFromCaster;
+    [SerializeField] private float _minDistEachPillar;
     [SerializeField] private Range _createTimeRange;
 
     private List<float> _usedPosX;
 
+    [Header("VinePillar - VFX")]
     [Space]
 
     [SerializeField] private ParticleSystem _dustEffect;
-    [SerializeField] private float _distanceFromPillar;
+    [SerializeField] private float _dustDistFromPillar;
 
     #endregion
 
@@ -180,31 +176,24 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     }
 
     // vine missile
-    public void VineMissilePre01_AnimEvent()
+    public void VineMissilePre_AnimEvent()
     {
-        var smoke = Instantiate(_smokeEffect, _missileSpawnPoint.position, Quaternion.Euler(-90, 0, 0));
+        var smoke = Instantiate(_smokeEffect, _missileSpawnPoint.position, Quaternion.identity);
         smoke.Play();
-    }
-    public void VineMissilePre02_AnimEvent()
-    {
-        _currentMissile = Instantiate(_missile, _missileSpawnPoint.position, Quaternion.identity);
-
-        if (_currentMissile)
-        {
-            _currentMissile.Shake();
-        }
     }
     public void VineMissile01_AnimEvent()
     {
         _targetPos = SceneContext.Current.Player.HeartCollider.bounds.center;
 
-        if (_currentMissile)
-        {
-            _currentMissile.Shoot(_targetPos, _missileSpeed);
+        var dir = (_targetPos - (Vector2)_missileSpawnPoint.position).normalized;
+        var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
-            var spark = Instantiate(_sparkEffect, _missileSpawnPoint.position, _missileSpawnPoint.rotation);
-            spark.Play();
-        }
+        _currentMissile = Instantiate(_missile, _missileSpawnPoint.position, Quaternion.Euler(0f, 0f, angle));
+        _currentMissile.SetActor(this);
+        _currentMissile.Shoot(dir, _missileSpeed);
+
+        var spark = Instantiate(_sparkEffect, _missileSpawnPoint.position, Quaternion.Euler(0f, -90f * RecentDir, 0f));
+        spark.Play();
     }
 
     // vine pillar
@@ -222,24 +211,34 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
             float newPosXInRange;
             do
             {
-                newPosXInRange = Random.Range(MainBodyCollider2D.bounds.min.x - _pillarSpawnDistance,
-                    MainBodyCollider2D.bounds.max.x + _pillarSpawnDistance);
+                newPosXInRange = Random.Range(transform.position.x - _pillarFarDistFromCaster,
+                    transform.position.x + _pillarFarDistFromCaster);
 
                 posReallocationCount++;
 
-            } while ((_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistanceEachPillar) ||
-                      Mathf.Abs(MainBodyCollider2D.bounds.center.x - newPosXInRange) <= _minDistanceFromCaster) &&
+            } while ((_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistEachPillar) ||
+                      (newPosXInRange >= MainBodyCollider2D.bounds.min.x &&
+                       newPosXInRange <= MainBodyCollider2D.bounds.max.x)) &&
                      posReallocationCount <= 20);
 
             // store posX
             _usedPosX.Add(newPosXInRange);
         }
 
+        var vec1 = new Vector2(-1f, 1f);
+        var vec2 = new Vector2(1f, -1f);
+        var vec3 = new Vector2(-1f, -1f);
+        var vec4 = new Vector2(1f, 1f);
+
         // ³ÕÄð ±âµÕ »ý¼º Àü, À§ÇèÀ» ¾Ë¸®´Â Èë ÀÌÆåÆ®
         foreach (var posX in _usedPosX)
         {
-            var leftPos = new Vector2(posX - _distanceFromPillar, _floorHeight);
-            var rightPos = new Vector2(posX + _distanceFromPillar, _floorHeight);
+            var leftPos = new Vector2(posX - _dustDistFromPillar, _floorHeight);
+            var rightPos = new Vector2(posX + _dustDistFromPillar, _floorHeight);
+
+            var position = new Vector2(posX, _floorHeight);
+            Debug.DrawLine(position + vec1, position + vec2, Color.red, 2f);
+            Debug.DrawLine(position + vec3, position + vec4, Color.red, 2f);
 
             var leftDust = Instantiate(_dustEffect, leftPos, Quaternion.Euler(0f, 0f, 180f));
             var rightDust = Instantiate(_dustEffect, rightPos, Quaternion.identity);
@@ -282,16 +281,23 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
 
         // ³ÕÄð ±âµÕÀÌ »ý¼ºµÇ´Â ¹üÀ§
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(new Vector3(transform.position.x - _pillarSpawnDistance, _floorHeight, transform.position.z),
-            new Vector3(transform.position.x - _pillarSpawnDistance, _floorHeight + 5f, transform.position.z));
-        Gizmos.DrawLine(new Vector3(transform.position.x + _pillarSpawnDistance, _floorHeight, transform.position.z),
-            new Vector3(transform.position.x + _pillarSpawnDistance, _floorHeight + 5f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(transform.position.x - _pillarFarDistFromCaster, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x - _pillarFarDistFromCaster, _floorHeight + 5f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(transform.position.x + _pillarFarDistFromCaster, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x + _pillarFarDistFromCaster, _floorHeight + 5f, transform.position.z));
 
-        // ½ÃÀüÀÚ·ÎºÎÅÍ ¶³¾îÁø °Å¸®
+        // ³ÕÄð ±âµÕ »çÀÌ ÃÖ¼Ò °Å¸®
         Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(new Vector3(transform.position.x - _minDistanceFromCaster, _floorHeight, transform.position.z),
-            new Vector3(transform.position.x - _minDistanceFromCaster, _floorHeight + 3f, transform.position.z));
-        Gizmos.DrawLine(new Vector3(transform.position.x + _minDistanceFromCaster, _floorHeight, transform.position.z),
-            new Vector3(transform.position.x + _minDistanceFromCaster, _floorHeight + 3f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(transform.position.x - _minDistEachPillar / 2f, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x - _minDistEachPillar / 2f, _floorHeight + 3f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(transform.position.x + _minDistEachPillar / 2f, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x + _minDistEachPillar / 2f, _floorHeight + 3f, transform.position.z));
+
+        // Èë¸ÕÁöÀÇ ³ÕÄð ±âµÕÀ¸·ÎºÎÅÍÀÇ ÃÖ¼Ò °Å¸®
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(new Vector3(transform.position.x - _dustDistFromPillar / 2f, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x - _dustDistFromPillar / 2f, _floorHeight + 1f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(transform.position.x + _dustDistFromPillar / 2f, _floorHeight, transform.position.z),
+            new Vector3(transform.position.x + _dustDistFromPillar / 2f, _floorHeight + 1f, transform.position.z));
     }
 }

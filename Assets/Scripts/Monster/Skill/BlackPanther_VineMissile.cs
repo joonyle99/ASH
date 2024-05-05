@@ -2,17 +2,9 @@ using UnityEngine;
 
 public class BlackPanther_VineMissile : Monster_ProjectileSkill
 {
-    [SerializeField] private GameObject projectileEffect;
-
-    public void Shake()
+    public void Shoot(Vector3 dir, float speed)
     {
-        projectileEffect.SetActive(true);
-    }
-
-    public void Shoot(Vector3 targetPos, float speed)
-    {
-        var moveDir = (targetPos - transform.position).normalized;
-        var force = moveDir * speed;
+        var force = dir * speed;
         rigidBody2D.AddForce(force, ForceMode2D.Impulse);
     }
 }

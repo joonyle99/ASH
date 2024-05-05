@@ -26,7 +26,7 @@ public abstract class BossBehavior : MonsterBehavior
     [Space]
 
     [Header("Attack Count")]
-    [Tooltip("Count of attacks for EarthQuake")]
+    [Tooltip("Count of attacks for Ultimate Skill")]
     [SerializeField] protected RangeInt attackCountRange;
     [SerializeField] protected int targetAttackCount;
     [SerializeField] protected int currentAttackCount;
@@ -61,7 +61,6 @@ public abstract class BossBehavior : MonsterBehavior
         else if (attackCountRange.End <= 0)
             Debug.LogError("maxTargetCount <= 0");
 
-        // 4번 ~ 7번 공격 후 지진 공격
         targetAttackCount = Random.Range(attackCountRange.Start, attackCountRange.End);
     }
     protected void RandomTargetHitCount()
