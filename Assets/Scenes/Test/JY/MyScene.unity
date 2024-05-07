@@ -6119,11 +6119,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -292
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 67.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8681,6 +8681,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8102155473089344358, guid: d56b87557a2d32340bf36655f72d7ef8, type: 3}
   m_PrefabInstance: {fileID: 1398524449}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1416274717 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1416274717, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+  m_PrefabInstance: {fileID: 5269891688261802350}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1424086533 stripped
 Transform:
@@ -13129,7 +13134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 68886008778280820, guid: 1d1a67366c4e4da49bd76dd5ff3b3bd8, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d1a67366c4e4da49bd76dd5ff3b3bd8, type: 3}
@@ -13614,6 +13619,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1416274717, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057885, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _luminescence
+      value: 
+      objectReference: {fileID: 1416274717}
+    - target: {fileID: 5269891687269057886, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _targetEvaluatorCoolTime
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5269891689077851826, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
       propertyPath: m_RootOrder
       value: 22

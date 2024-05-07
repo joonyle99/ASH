@@ -408,7 +408,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
 
     // basic
-    public void SetGroundRespawnData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, Line respawnLine)
+    public void SetGroundRespawnData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, joonyle99.Line respawnLine)
     {
         respawnData.groundRespawnData = new GroundRespawnData(patrolPointAPosition, patrolPointBPosition, respawnLine);
     }
