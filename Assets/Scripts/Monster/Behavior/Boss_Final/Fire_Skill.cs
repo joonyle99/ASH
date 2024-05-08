@@ -15,6 +15,11 @@ public class Fire_Skill : MonoBehaviour
 
     public ParticleSystem fireBall;
 
+    [Header("AshPillar")]
+    [Space]
+
+    public AshPillar ashPillar;
+
     public void FlameBeam()
     {
         var eachBeamAngle = 360f / beamCount;
@@ -29,12 +34,27 @@ public class Fire_Skill : MonoBehaviour
 
     public void FireBallDrop()
     {
-        fireBall.Play();
+        var fireBallObject = Instantiate(fireBall, transform.position, Quaternion.identity);
+
+        var velocityModule = fireBallObject.velocityOverLifetime;
+        
+        // direction
+        var vec1 = new Vector2(1f, -1f).normalized;
+        var vec2 = new Vector2(-1f, -1f).normalized;
+        var vec3 = new Vector2(0f, -1f).normalized;
+
+        velocityModule.x = new ParticleSystem.MinMaxCurve(vec1.x, vec1.x);
+        velocityModule.y = new ParticleSystem.MinMaxCurve(vec1.y, vec1.y);
+
+        fireBallObject.Play();
     }
 
     public void AshPillarShift()
     {
-
+        var dir = Random.Range(0, 2) == 0 ? 1 : -1;
+        var pos = transform.position + Vector3.right * (-1) * dir * 10f;
+        var ash = Instantiate(ashPillar, pos, Quaternion.identity);
+        ash.SetDirection(dir);
     }
 
     public void FlamePillarExplosion()
@@ -47,6 +67,7 @@ public class Fire_Skill : MonoBehaviour
         yield return new WaitForSeconds(duration);
 
         // FlameBeam();
-        FireBallDrop();
+        // FireBallDrop();
+        AshPillarShift();
     }
 }
