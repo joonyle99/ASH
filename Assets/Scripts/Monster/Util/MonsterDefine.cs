@@ -11,9 +11,9 @@ public struct GroundRespawnData
     public Vector3 PatrolPointAPosition;
     public Vector3 PatrolPointBPosition;
 
-    public Line RespawnLine;            // 두 점 사이의 임의의 점 위치에서 리스폰된다
+    public joonyle99.Line RespawnLine;            // 두 점 사이의 임의의 점 위치에서 리스폰된다
 
-    public GroundRespawnData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, Line respawnLine)
+    public GroundRespawnData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, joonyle99.Line respawnLine)
     {
         PatrolPointAPosition = patrolPointAPosition;
         PatrolPointBPosition = patrolPointBPosition;

@@ -17,7 +17,7 @@ public class GroundRespawnDataSender : RespawnDataSender
     private Vector3 _pointA;
     private Vector3 _pointB;
 
-    private Line _respawnLine;
+    private joonyle99.Line _respawnLine;
 
     public void Awake()
     {
@@ -51,7 +51,7 @@ public class GroundRespawnDataSender : RespawnDataSender
 
         // new는 클래스 또는 구조체의 객체를 생성하고 메모리에 할당하기 위해 사용된다
         // struct는 value type이기 때문에 class가 heap에 할당되는 것과 달리 stack에 할당된다.
-        _respawnLine = new Line(_pointA, _pointB);
+        _respawnLine = new joonyle99.Line(_pointA, _pointB);
 
         // 인스턴스의 초기 데이터(값)를 전달한다
         receiver.SetGroundRespawnData(_patrolPointA.transform.position, _patrolPointB.transform.position, _respawnLine);

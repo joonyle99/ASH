@@ -104,12 +104,14 @@ public abstract class Evaluator : MonoBehaviour
 
     private IEnumerator CoolTimeCoroutine()
     {
+        Debug.Log("타이머 시작");
         IsDuringCoolTime = true;
 
         // 쿨타임 시간만큼 대기
         yield return new WaitForSeconds(_targetEvaluatorCoolTime);
 
         IsDuringCoolTime = false;
+        Debug.Log("타이머 종료");
     }
     public virtual MonsterBehavior.ActionDelegate StartEvaluatorCoolTime()
     {

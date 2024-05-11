@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
+using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
@@ -24,6 +25,9 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [SerializeField] private Range _attackTypeRange;
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
+
+    [Tooltip("Luminescence")]
+    [SerializeField] private GameObject _luminescence;
 
     [Header("VineMissile")]
     [Space]
@@ -60,6 +64,8 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [SerializeField] private ParticleSystem _dustEffect;
     [SerializeField] private float _dustDistFromPillar;
 
+    public bool isActiveLuminescence => _luminescence.activeInHierarchy;
+
     #endregion
 
     #region Function
@@ -95,8 +101,6 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
         HitProcess(attackInfo, false, false);
 
         // 체력 감소
-        // TotalHitCount++;
-        currentHitCount++;
         CurHp -= MonsterDefine.BossHealthUnit;
 
         CheckHurtState();
@@ -126,17 +130,25 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
         // 현재 공격 상태 변경
         _currentAttack = _nextAttack;
 
+        if (!isActiveLuminescence)
+        {
+            IsGodMode = true;
+        }
+
         if (_currentAttack is AttackType.Null || _nextAttack is AttackType.Null)
         {
             Debug.LogError("AttackType is Null");
             return;
         }
-
-        currentAttackCount++;
     }
     public override void AttackPostProcess()
     {
         SetToRandomAttack();
+
+        if (!isActiveLuminescence)
+        {
+            IsGodMode = false;
+        }
     }
     public override void GroggyPreProcess()
     {
@@ -153,8 +165,6 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
 
         // 몬스터의 Body HitBox를 켠다 (플레이어를 타격할 수 있다)
         SetHitBoxAttackable(true);
-
-        currentHitCount = 0;
     }
 
     // basic
@@ -168,11 +178,21 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     {
         if (IsDead) return;
 
-        // 그로기 상태 해제되며 피격
-        if (currentHitCount >= targetHitCount)
+        if (!isActiveLuminescence)
+        {
+            IsGodMode = true;
+            SetAnimatorTrigger("Roar");
+            return;
+        }
+
+        if (CurrentStateIs<BossGroggyState>())
         {
             SetAnimatorTrigger("Hurt");
         }
+    }
+    public void SetActiveLuminescence(bool isBool)
+    {
+        _luminescence.SetActive(isBool);
     }
 
     // vine missile
@@ -225,20 +245,14 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
             _usedPosX.Add(newPosXInRange);
         }
 
-        var vec1 = new Vector2(-1f, 1f);
-        var vec2 = new Vector2(1f, -1f);
-        var vec3 = new Vector2(-1f, -1f);
-        var vec4 = new Vector2(1f, 1f);
-
         // 넝쿨 기둥 생성 전, 위험을 알리는 흙 이펙트
         foreach (var posX in _usedPosX)
         {
             var leftPos = new Vector2(posX - _dustDistFromPillar, _floorHeight);
             var rightPos = new Vector2(posX + _dustDistFromPillar, _floorHeight);
 
-            var position = new Vector2(posX, _floorHeight);
-            Debug.DrawLine(position + vec1, position + vec2, Color.red, 2f);
-            Debug.DrawLine(position + vec3, position + vec4, Color.red, 2f);
+            // for debug
+            joonyle99.Util.DrawX(new Vector2(posX, _floorHeight));
 
             var leftDust = Instantiate(_dustEffect, leftPos, Quaternion.Euler(0f, 0f, 180f));
             var rightDust = Instantiate(_dustEffect, rightPos, Quaternion.identity);
@@ -259,7 +273,7 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
 
         var pos = new Vector2(createPosX, _floorHeight);
         var pillar = Instantiate(_pillar, pos, Quaternion.identity);
-        pillar.Opacity(0.5f);
+        pillar.Opacity();
     }
 
     // effects

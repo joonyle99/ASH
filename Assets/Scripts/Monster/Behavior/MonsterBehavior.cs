@@ -318,7 +318,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             {
                 if (AttackEvaluator.IsTargetWithinRange())
                 {
-                    StartChangeStateCoroutine("Attack", CurrentState, AttackEvaluator.StartEvaluatorCoolTime());
+                    StartChangeStateCoroutine("Attack", CurrentState, AttackEvaluator.StartEvaluatorCoolTime(), 1f);
                 }
             }
         }
@@ -408,7 +408,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
 
     // basic
-    public void SetGroundRespawnData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, Line respawnLine)
+    public void SetGroundRespawnData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, joonyle99.Line respawnLine)
     {
         respawnData.groundRespawnData = new GroundRespawnData(patrolPointAPosition, patrolPointBPosition, respawnLine);
     }
@@ -624,15 +624,17 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         return CurrentState is TState;
     }
-    public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState, ActionDelegate myFunction = null)
+    public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState, ActionDelegate myFunction = null, float duration = 0f)
     {
-        StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState, myFunction));
+        StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState, myFunction, duration));
     }
-    private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState, ActionDelegate myFunction)
+    private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState, ActionDelegate myFunction, float duration)
     {
         // 애니메이션 전이 조건이 있는 경우 조건을 만족할 때까지 대기
         if (AnimTransitionEvent != null)
             yield return new WaitUntil(() => AnimTransitionEvent(targetTransitionParam, currentState));
+
+        yield return new WaitForSeconds(duration);
 
         Animator.SetTrigger(targetTransitionParam);
 
