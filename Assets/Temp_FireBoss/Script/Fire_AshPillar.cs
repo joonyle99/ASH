@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class AshPillar : MonoBehaviour
+public class Fire_AshPillar : MonoBehaviour
 {
     public int direction;
     public float speed;

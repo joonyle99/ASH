@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
 
-public class Bear_GroundWave : Monster_Skill
+public class Bear_GroundWave : Monster_IndependentSkill
 {
-    [Header("Bear GroundWave")]
+    [Header("Ground Wave")]
     [Space]
 
     [SerializeField] private Vector2 _moveDir = Vector2.zero;
@@ -13,7 +13,7 @@ public class Bear_GroundWave : Monster_Skill
 
     [Space]
 
-    [SerializeField] private bool isStopped = false;
+    [SerializeField] private bool isStopped;
 
     private void Update()
     {
@@ -21,8 +21,8 @@ public class Bear_GroundWave : Monster_Skill
             return;
 
         // 프레임당 이동 벡터 및 거리 계산
-        Vector2 frameMoveVector = _moveDir * Time.deltaTime * _speed;
-        float frameMoveDistance = frameMoveVector.magnitude;
+        var frameMoveVector = _speed * _moveDir * Time.deltaTime;
+        var frameMoveDistance = frameMoveVector.magnitude;
         transform.Translate(frameMoveVector);
 
         // 프레임당 이동 거리 누적
@@ -44,9 +44,15 @@ public class Bear_GroundWave : Monster_Skill
 
     public IEnumerator DestroyProcess()
     {
+        // TODO: 일정 거리 도달 시 Collider2D 컴포넌트를 비활성화 하는데, Trail에 따른 정교한 충돌 처리가 필요하다면 파티클 시스템의 Collision을 사용한다.
+
         isStopped = true;
-        GetComponent<Collider2D>().enabled = false;
-        yield return new WaitForSeconds(2f);
-        Destroy(this.gameObject);
+
+        var col = GetComponent<Collider2D>();       // 일정 거리에 도달하면 콜라이더 비활성화
+        col.enabled = false;
+
+        yield return new WaitForSeconds(2f);        // Trail을 마저 출력한 후 파괴한다
+
+        DestroyIndependentSkill();
     }
 }

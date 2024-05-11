@@ -1,5 +1,10 @@
 using UnityEngine;
 
+/// <summary>
+/// 몬스터 스킬의 베이스 클래스로 
+/// Actor, TargetLayer, Hit Info, 등
+/// 몬스터 스킬 사용에 필요한 기본 데이터를 담는다.
+/// </summary>
 public abstract class Monster_Skill : MonoBehaviour
 {
     [Header("Monster Skill")]
@@ -18,17 +23,15 @@ public abstract class Monster_Skill : MonoBehaviour
     
     [SerializeField] protected GameObject hitEffect;
 
-    protected MonsterBehavior monster;
     protected MaterialController materialController;
 
     protected virtual void Awake()
     {
-        monster = GetComponentInParent<MonsterBehavior>();
         materialController = GetComponent<MaterialController>();
     }
 
-    protected delegate void MosnterSkillEvent();
-    protected MosnterSkillEvent monsterSkillEvent;
+    protected delegate void MonsterSkillEvent();
+    protected MonsterSkillEvent monsterSkillEvent;
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
@@ -65,8 +68,8 @@ public abstract class Monster_Skill : MonoBehaviour
         }
     }
 
-    public void SetActor(MonsterBehavior actor)
+    public void SetActor(MonsterBehavior act)
     {
-        this.actor = actor;
+        this.actor = act;
     }
 }

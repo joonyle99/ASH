@@ -1,8 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-public class BlackPanther_VinePillar : Monster_AreaSkill
+public class BlackPanther_VinePillar : Monster_IndependentSkill
 {
+    [Header("VinePillar")]
+    [Space]
+
     public Renderer[] effectRenderers;
     public Collider2D hitCollider;
 

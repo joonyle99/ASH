@@ -1,18 +1,18 @@
 using UnityEngine;
 
-public class Bat_Sprinkle : Monster_ProjectileSkill
+public class Bat_Sprinkle : Monster_IndependentSkill
 {
     [Header("Bat_Sprinkle")]
     [Space]
 
-    private Rigidbody2D _rigidbody;
+    private Rigidbody2D _rigid;
     private SpriteRenderer _spriteRenderer;
 
     protected override void Awake()
     {
         base.Awake();
 
-        _rigidbody = GetComponent<Rigidbody2D>();
+        _rigid = GetComponent<Rigidbody2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
@@ -23,6 +23,6 @@ public class Bat_Sprinkle : Monster_ProjectileSkill
 
     public void Shoot(Vector3 throwForce)
     {
-        _rigidbody.AddForce(throwForce, ForceMode2D.Impulse);
+        _rigid.AddForce(throwForce, ForceMode2D.Impulse);
     }
 }
