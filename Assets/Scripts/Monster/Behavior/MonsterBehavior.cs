@@ -524,7 +524,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             Collider2D hitBoxCollider = hitBox.GetComponent<Collider2D>();
             if (hitBoxCollider)
             {
-                hitBoxCollider.isTrigger = isStepable;
+                hitBoxCollider.isTrigger = !isStepable;
                 hitBox.gameObject.layer = LayerMask.NameToLayer(isStepable ? "Default" : "MonsterHitBox");
             }
         }
