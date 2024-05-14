@@ -8,57 +8,63 @@ public class DieState : PlayerState
     [SerializeField] InputSetterScriptableObject _stayStillSetter;
     [SerializeField] float _moveUpDelay;
     [SerializeField] float _stayDuration;
-    [SerializeField] float _spawnDuration;
-
-    DisintegrateEffect_Old disintegrateEffectOld;
-    public float DieDuration => disintegrateEffectOld.Duration;
-    public float SpawnDuration => _spawnDuration;
 
     [SerializeField] float _moveUpDistance = 4f;
     [SerializeField] float _moveUpDuration = 1.5f;
 
     private float _previousGravityScale;
+    private MaterialController _materialController;
+
+    private void Awake()
+    {
+        _materialController = GetComponent<MaterialController>();
+    }
 
     private IEnumerator MoveUp()
     {
         yield return new WaitForSeconds(_moveUpDelay);
 
-        // 위로 이동
-        _previousGravityScale = Player.Rigidbody.gravityScale;
-        Player.Rigidbody.gravityScale = 0f;
-        Player.Rigidbody.velocity = Vector2.zero;
+        var playerRigidBody = Player.Rigidbody;
 
-        Vector2 originalPos = Player.Rigidbody.position;
-        Vector2 targetPos = Player.Rigidbody.position + Vector2.up * _moveUpDistance;
-        float eTime = 0f;
+        // 위로 이동
+        _previousGravityScale = playerRigidBody.gravityScale;
+        playerRigidBody.gravityScale = 0f;
+        playerRigidBody.velocity = Vector2.zero;
+
+        Vector2 originalPos = playerRigidBody.position;
+        Vector2 targetPos = playerRigidBody.position + Vector2.up * _moveUpDistance;
+
+        var eTime = 0f;
         while(eTime < _moveUpDuration)
         {
-            Player.Rigidbody.MovePosition(Vector2.Lerp(originalPos, targetPos, Curves.EaseOut(eTime / _moveUpDuration)));
             yield return null;
             eTime += Time.deltaTime;
+            playerRigidBody.MovePosition(Vector2.Lerp(originalPos, targetPos, Curves.EaseOut(eTime / _moveUpDuration)));
         }
 
-        Player.Rigidbody.simulated = false;
+        // 플레이어 정지
+        playerRigidBody.simulated = false;
         Player.enabled = false;
 
         yield return new WaitForSeconds(_stayDuration);
 
         Player.SoundList.PlaySFX("Disintegrate");
-        disintegrateEffectOld.Play();
+        _materialController.DisintegrateEffect.Play();
 
-        yield return new WaitForSeconds(disintegrateEffectOld.Duration);
+        yield return new WaitUntil(() => _materialController.DisintegrateEffect.IsEffectDone);
 
-        // 씬 재시작
+        // TODO: 씬 재시작
         yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
-        string passageName = SceneContext.Current.EntrancePassage.PassageName;
-        if (SceneContext.Current.EntrancePassage == null)
-            passageName = "";
-        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
-    }
 
-    void Awake()
-    {
-        disintegrateEffectOld = GetComponent<DisintegrateEffect_Old>();
+        /*
+        if (SceneContext.Current.EntrancePassage == null)
+        {
+           string passageName = SceneContext.Current.EntrancePassage.PassageName;
+            passageName = "";
+        }
+        */
+
+        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
     }
 
     protected override bool OnEnter()
