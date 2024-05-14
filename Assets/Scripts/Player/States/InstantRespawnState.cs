@@ -3,26 +3,19 @@ using UnityEngine;
 
 public class InstantRespawnState : PlayerState
 {
-    [SerializeField] InputSetterScriptableObject _stayStillSetter;
-    [SerializeField] float _spawnDuration;
+    [Header("Instant Respawn State")]
+    [Space]
 
-    DisintegrateEffect_Old disintegrateEffectOld;
-    public float DieDuration => disintegrateEffectOld.Duration;
-    public float SpawnDuration => _spawnDuration;
+    [SerializeField] private InputSetterScriptableObject _stayStillSetter;
+    [SerializeField] private float _spawnDuration;
 
-    void Awake()
-    {
-        disintegrateEffectOld = GetComponent<DisintegrateEffect_Old>();
-    }
+    private PlayerBehaviour _player;
 
     protected override bool OnEnter()
     {
-        Player.Rigidbody.simulated = false;
-        Player.enabled = false;
-        Animator.speed = 0;
-        InputManager.Instance.ChangeInputSetter(_stayStillSetter);
-        disintegrateEffectOld.Play();
-        Player.SoundList.PlaySFX("Disintegrate");
+        Debug.Log("Instant Respawn Enter");
+
+        StartCoroutine(EnterCoroutine());
 
         return true;
     }
@@ -33,56 +26,47 @@ public class InstantRespawnState : PlayerState
     }
     protected override bool OnExit()
     {
-        InputManager.Instance.ChangeToDefaultSetter();
+        Debug.Log("Instant Respawn Exit");
+
+        StartCoroutine(ExitCoroutine());
 
         return true;
     }
 
-    IEnumerator SpawnCoroutine()
+    private IEnumerator EnterCoroutine()
     {
-        // change all player's spriteRenderer to original material
-        Player.MaterialController.InitMaterial();
+        InputManager.Instance.ChangeInputSetter(_stayStillSetter);
 
-        // reset player condition
-        Player.enabled = true;
-        Animator.speed = 1;
+        Animator.speed = 0;
+        Player.enabled = false;
+        Player.Rigidbody.simulated = false;
         Player.Rigidbody.velocity = Vector2.zero;
 
-        // 
-        float eTime = 0f;
-        while (eTime < _spawnDuration)
-        {
-            foreach (var spriteRenderer in Player.MaterialController.SpriteRenderers)
-            {
-                Color color = spriteRenderer.color;
-                color.a = Mathf.Lerp(0, 1, eTime / _spawnDuration);
-                spriteRenderer.color = color;
-            }
-            eTime += Time.deltaTime;
-            yield return null;
-        }
+        Player.SoundList.PlaySFX("Disintegrate");
+        Player.MaterialController.DisintegrateEffect.Play(0f, false);
 
-        // TODO: ÀÌ ºÎºÐÀÌ ¹ºÁö ±î¸Ô¾ú´Ù
-        /*
-        Player.InitSpriteRendererAlpha();
+        yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
+        Player.MaterialController.DisintegrateEffect.ResetIsEffectDone();
 
-        public void InitSpriteRendererAlpha()
-        {
-            foreach (var renderer in SpriteRenderers)
-            {
-                Color color = renderer.color;
-                color.a = 1;
-                renderer.color = color;
-            }
-        }
-        */
+        SceneContext.Current.InstantRespawn();
 
-        Player.Rigidbody.simulated = true;
-
-        ChangeState<IdleState>();
+        _player = Player;
     }
-    public void Respawn()
+
+    private IEnumerator ExitCoroutine()
     {
-        StartCoroutine(SpawnCoroutine());
+        _player.MaterialController.DisintegrateEffect.Play(0f, true);
+
+        yield return new WaitUntil(() => _player.MaterialController.DisintegrateEffect.IsEffectDone);
+        _player.MaterialController.DisintegrateEffect.ResetIsEffectDone();
+
+        _player.Rigidbody.velocity = Vector2.zero;
+        _player.Rigidbody.simulated = true;
+        _player.enabled = true;
+        _player.Animator.speed = 1;
+
+        InputManager.Instance.ChangeToDefaultSetter();
+
+        _player = null;
     }
 }

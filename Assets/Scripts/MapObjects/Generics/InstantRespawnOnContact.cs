@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class InstantRespawnOnContact : TriggerZone
 {
-    [SerializeField] readonly float _damage = 1;
+    [SerializeField] private float _damage = 1;
 
     public override void OnPlayerEnter(PlayerBehaviour player)
     {

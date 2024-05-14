@@ -306,12 +306,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         TakeDamage(damage);
 
         if (CurHp > 0)
-            InstantRespawn();
+            ChangeState<InstantRespawnState>();
     }
-    public void InstantRespawn()
+    public void DieProcess()
     {
-        ChangeState<InstantRespawnState>(true);
-        SceneContext.Current.InstantRespawn();
+
+    }
+    public void RespawnProcess()
+    {
+
     }
 
     // anim

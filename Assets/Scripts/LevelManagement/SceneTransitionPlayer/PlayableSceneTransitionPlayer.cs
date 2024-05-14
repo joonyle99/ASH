@@ -35,25 +35,29 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         yield return StartCoroutine(entrance.PlayerExitCoroutine());
     }
 
-    IEnumerator InstantRespawnEffectCoroutine(Vector3 spawnPosition)
+    private IEnumerator InstantRespawnEffectCoroutine(Vector3 spawnPosition)
     {
-        var respawnState = SceneContext.Current.Player.GetComponent<InstantRespawnState>();
-        yield return new WaitForSeconds(respawnState.DieDuration);
+        var player = SceneContext.Current.Player;
+
         //yield return FadeCoroutine(_respawnFadeDuration, FadeType.Darken);
+
         yield return new WaitForSeconds(_respawnDelay);
 
         float eTime = 0f;
         var originalPosition = SceneContext.Current.Player.transform.position;
+
         while (eTime < _capeFlyDuration)
         {
-            SceneContext.Current.Player.transform.position = Vector3.Lerp(originalPosition, spawnPosition, Curves.EaseOut(eTime/_capeFlyDuration));
             yield return null;
             eTime += Time.deltaTime;
+            SceneContext.Current.Player.transform.position = Vector3.Lerp(originalPosition, spawnPosition, Curves.EaseOut(eTime/_capeFlyDuration));
         }
+
         SceneContext.Current.Player.transform.position = spawnPosition;
 
         //yield return FadeCoroutine(_respawnFadeDuration, FadeType.Lighten);
-        respawnState.Respawn();
+
+        player.ChangeState<IdleState>();
     }
 
     // TODO : Global 플레이어 상태 관리 오브젝트로 옮겨야함
