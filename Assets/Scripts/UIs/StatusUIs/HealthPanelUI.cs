@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 /// <summary>
 /// 플레이어의 체력 UI를 관리하는 클래스
@@ -22,10 +24,12 @@ public class HealthPanelUI : MonoBehaviour
 
         if (_player)
         {
-            // Debug.Log($"health panel ui에 player가 등록되었습니다. {_player.gameObject.name}");
-
             _player.OnHealthChanged -= UpdateLifeIcons;
             _player.OnHealthChanged += UpdateLifeIcons;
+        }
+        else
+        {
+            Debug.LogError($"health panel ui에서 Player 정보를 찾지 못했습니다. (Player Name: {_player.gameObject.name})");
         }
     }
 
@@ -41,27 +45,33 @@ public class HealthPanelUI : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 매 프레임마다 플레이어의 생명 아이콘을 업데이트한다
-    /// </summary>
-    /// <param name="curHp"></param>
-    /// <param name="maxHp"></param>
     private void UpdateLifeIcons(int curHp, int maxHp)
     {
+        // 플레이어의 체력에 변동이 있는 경우 호출되는 함수
+
         var lifeIconCount = _lifeIconsBacks.Length;
 
         for (int i = 0; i < lifeIconCount; i++)
         {
             // check maxHp icon show
-            var isShow = maxHp >= _hpUnit[i] - 1;
-            _lifeIconsBacks[i].gameObject.SetActive(isShow);
+            var isFrontShow = maxHp >= _hpUnit[i] - 1;
+            _lifeIconsBacks[i].gameObject.SetActive(isFrontShow);
 
-            if (!isShow) continue;
+            if (!isFrontShow) continue;
 
             // how much curHp icon show
-            if (curHp >= _hpUnit[i]) _lifeIcons[i].fillAmount = 1f;
-            else if (curHp >= _hpUnit[i] - 1) _lifeIcons[i].fillAmount = 0.5f;
-            else _lifeIcons[i].fillAmount = 0f;
+            if (curHp >= _hpUnit[i])
+            {
+                _lifeIcons[i].DOFillAmount(1f, 0.5f).SetEase(Ease.OutCirc);
+            }
+            else if (curHp >= _hpUnit[i] - 1)
+            {
+                _lifeIcons[i].DOFillAmount(0.5f, 0.5f).SetEase(Ease.OutCirc);
+            }
+            else
+            {
+                _lifeIcons[i].DOFillAmount(0f, 0.5f).SetEase(Ease.OutCirc);
+            }
         }
     }
 }
