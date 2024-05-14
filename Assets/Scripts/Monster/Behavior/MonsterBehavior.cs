@@ -318,7 +318,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
             {
                 if (AttackEvaluator.IsTargetWithinRange())
                 {
-                    StartChangeStateCoroutine("Attack", CurrentState, AttackEvaluator.StartEvaluatorCoolTime(), 1f);
+                    StartChangeStateCoroutine("Attack", CurrentState, AttackEvaluator.StartEvaluatorCoolTime(), 0f);
                 }
             }
         }
