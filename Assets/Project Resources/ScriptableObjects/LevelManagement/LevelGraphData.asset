@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7888092096887817785
+--- !u!114 &-8549225434947937734
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
-  Guid: 663b17a57f390764884816d4daac5a17
-  graphPosition: {x: 203, y: 42}
-  SceneName: Boss_1
+  Guid: 01754ea45a8636849b5d8a3e82c1709a
+  graphPosition: {x: 189, y: 172.12}
+  SceneName: Boss_2-1
   Scene:
-    sceneAsset: {fileID: 102900000, guid: 8022db8fd7901954bb97eb0dbd31e359, type: 3}
-    scenePath: Assets/Scenes/ActualBuild/Boss_1.unity
+    sceneAsset: {fileID: 102900000, guid: 3ab4ccefe21bfd14b94616e27eec5b40, type: 3}
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1302/Boss_2-1.unity"
   PassageNames:
-  - 1to2
-  - Enterance
+  - 2_Enterance
+  - 2_1to2
 --- !u!114 &-7774507360984267180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -34,14 +34,35 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: a86034c9def8e014cb4ef867b5af3dba
-  graphPosition: {x: 589, y: 143}
+  graphPosition: {x: 459, y: 10}
   SceneName: Boss_4
   Scene:
     sceneAsset: {fileID: 102900000, guid: e97ad917cccf7304faffaef789b55c7c, type: 3}
-    scenePath: Assets/Scenes/ActualBuild/Boss_4.unity
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1301/Boss_4.unity"
   PassageNames:
   - 4to2
   - doortoBoss
+--- !u!114 &-7527865572305963327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 7706dd7d7aa635f4da4b6bef0f6947cd
+  graphPosition: {x: -158.69995, y: 170.06201}
+  SceneName: 2-2
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: b323f55d883919f49ac31be0c383af6d, type: 3}
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1302/2-2.unity"
+  PassageNames:
+  - 2-2Enterance
+  - 2-2Exit
 --- !u!114 &-2869098507112400628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +80,7 @@ MonoBehaviour:
   SceneName: 1-2
   Scene:
     sceneAsset: {fileID: 102900000, guid: fa04e3865a4c91840bd47855814f89f1, type: 3}
-    scenePath: Assets/Scenes/ActualBuild/1-2.unity
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1301/1-2.unity"
   PassageNames:
   - Entrance
   - to1-3
@@ -80,10 +101,10 @@ MonoBehaviour:
   SceneName: 1-1
   Scene:
     sceneAsset: {fileID: 102900000, guid: 6a4dcc1de365f3f4e86e4318c7ff9cd1, type: 3}
-    scenePath: Assets/Scenes/ActualBuild/1-1.unity
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1301/1-1.unity"
   PassageNames:
   - Exit_1
---- !u!114 &-1493074355644229260
+--- !u!114 &-54880549468766112
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,16 +116,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
-  Guid: caa1ad0b955ba424b89163fb112642a4
-  graphPosition: {x: 375, y: 18}
-  SceneName: Boss_2
+  Guid: 2b8a0d347435927469bfc1881a8587ca
+  graphPosition: {x: 146, y: 0}
+  SceneName: Boss_1-1
   Scene:
-    sceneAsset: {fileID: 102900000, guid: 826783374fa299a4088f5a288b4ae10c, type: 3}
-    scenePath: Assets/Scenes/ActualBuild/Boss_2.unity
+    sceneAsset: {fileID: 102900000, guid: 163f37c1df4136c4bafa53bde3df988e, type: 3}
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1301/Boss_1-1.unity"
   PassageNames:
-  - 2to1
-  - 2to3
-  - 2to4
+  - enterance
+  - 1to2
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,12 +140,18 @@ MonoBehaviour:
   _nodes:
   - {fileID: -2014745427570758710}
   - {fileID: -2869098507112400628}
-  - {fileID: -7888092096887817785}
   - {fileID: 4282995401228220758}
   - {fileID: 1782720182068067114}
   - {fileID: -7774507360984267180}
   - {fileID: 7502026196269074928}
-  - {fileID: -1493074355644229260}
+  - {fileID: 1548732423987265482}
+  - {fileID: -7527865572305963327}
+  - {fileID: 1655520567709727503}
+  - {fileID: -8549225434947937734}
+  - {fileID: 7866461471819680855}
+  - {fileID: 9204795922427404133}
+  - {fileID: -54880549468766112}
+  - {fileID: 7444888783089578622}
   _edges:
   - EntranceScene: {fileID: -2869098507112400628}
     ExitScene: {fileID: 4282995401228220758}
@@ -135,38 +161,120 @@ MonoBehaviour:
     ExitScene: {fileID: -2869098507112400628}
     EntrancePassage: Exit_1
     ExitPassgage: Entrance
-  - EntranceScene: {fileID: 4282995401228220758}
-    ExitScene: {fileID: -7888092096887817785}
-    EntrancePassage: BossEnterance
-    ExitPassgage: Enterance
   - EntranceScene: {fileID: -7774507360984267180}
     ExitScene: {fileID: 7502026196269074928}
     EntrancePassage: doortoBoss
     ExitPassgage: DungeontoBoss
-  - EntranceScene: {fileID: -7888092096887817785}
-    ExitScene: {fileID: -1493074355644229260}
+  - EntranceScene: {fileID: 4282995401228220758}
+    ExitScene: {fileID: -54880549468766112}
+    EntrancePassage: BossEnterance
+    ExitPassgage: enterance
+  - EntranceScene: {fileID: 1782720182068067114}
+    ExitScene: {fileID: 7444888783089578622}
+    EntrancePassage: 3to2
+    ExitPassgage: 2to3
+  - EntranceScene: {fileID: -7774507360984267180}
+    ExitScene: {fileID: 7444888783089578622}
+    EntrancePassage: 4to2
+    ExitPassgage: 2to4
+  - EntranceScene: {fileID: 1548732423987265482}
+    ExitScene: {fileID: -7527865572305963327}
+    EntrancePassage: 2-1Exit
+    ExitPassgage: 2-2Enterance
+  - EntranceScene: {fileID: -7527865572305963327}
+    ExitScene: {fileID: 1548732423987265482}
+    EntrancePassage: 2-2Enterance
+    ExitPassgage: 2-1Exit
+  - EntranceScene: {fileID: -7527865572305963327}
+    ExitScene: {fileID: 1655520567709727503}
+    EntrancePassage: 2-2Exit
+    ExitPassgage: 2-3Enterance
+  - EntranceScene: {fileID: 1655520567709727503}
+    ExitScene: {fileID: -7527865572305963327}
+    EntrancePassage: 2-3Enterance
+    ExitPassgage: 2-2Exit
+  - EntranceScene: {fileID: 1655520567709727503}
+    ExitScene: {fileID: -8549225434947937734}
+    EntrancePassage: 2-3Exti
+    ExitPassgage: 2_Enterance
+  - EntranceScene: {fileID: -8549225434947937734}
+    ExitScene: {fileID: 1655520567709727503}
+    EntrancePassage: 2_Enterance
+    ExitPassgage: 2-3Exti
+  - EntranceScene: {fileID: -8549225434947937734}
+    ExitScene: {fileID: 7866461471819680855}
+    EntrancePassage: 2_1to2
+    ExitPassgage: 2_2to1
+  - EntranceScene: {fileID: 7866461471819680855}
+    ExitScene: {fileID: -8549225434947937734}
+    EntrancePassage: 2_2to1
+    ExitPassgage: 2_1to2
+  - EntranceScene: {fileID: 7866461471819680855}
+    ExitScene: {fileID: 9204795922427404133}
+    EntrancePassage: 2_2to3
+    ExitPassgage: 2_3to2
+  - EntranceScene: {fileID: 9204795922427404133}
+    ExitScene: {fileID: 7866461471819680855}
+    EntrancePassage: 2_3to2
+    ExitPassgage: 2_2to3
+  - EntranceScene: {fileID: -54880549468766112}
+    ExitScene: {fileID: 7444888783089578622}
     EntrancePassage: 1to2
     ExitPassgage: 2to1
-  - EntranceScene: {fileID: -1493074355644229260}
-    ExitScene: {fileID: -7888092096887817785}
+  - EntranceScene: {fileID: 7444888783089578622}
+    ExitScene: {fileID: -54880549468766112}
     EntrancePassage: 2to1
     ExitPassgage: 1to2
-  - EntranceScene: {fileID: -1493074355644229260}
+  - EntranceScene: {fileID: 7444888783089578622}
     ExitScene: {fileID: 1782720182068067114}
     EntrancePassage: 2to3
     ExitPassgage: 3to2
-  - EntranceScene: {fileID: 1782720182068067114}
-    ExitScene: {fileID: -1493074355644229260}
-    EntrancePassage: 3to2
-    ExitPassgage: 2to3
-  - EntranceScene: {fileID: -1493074355644229260}
+  - EntranceScene: {fileID: 7444888783089578622}
     ExitScene: {fileID: -7774507360984267180}
     EntrancePassage: 2to4
     ExitPassgage: 4to2
-  - EntranceScene: {fileID: -7774507360984267180}
-    ExitScene: {fileID: -1493074355644229260}
-    EntrancePassage: 4to2
-    ExitPassgage: 2to4
+--- !u!114 &1548732423987265482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 9f5551a7cd75a934492549340839b607
+  graphPosition: {x: -323, y: 168}
+  SceneName: 2-1
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 3d61a5a287d9b2c4a9375e6b3d09b8c4, type: 3}
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1302/2-1.unity"
+  PassageNames:
+  - 2-1Enterance
+  - 2-1Exit
+--- !u!114 &1655520567709727503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: d2ac59f7f5b63b742acf286d2e997b96
+  graphPosition: {x: 17, y: 173.44}
+  SceneName: 2-3
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 58f9288c13f48a24384664b6d8d26ad6, type: 3}
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1302/2-3.unity"
+  PassageNames:
+  - 2-3Enterance
+  - 2-3Exti
 --- !u!114 &1782720182068067114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,11 +288,11 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: bf49829ce3af9434a9aa0e9ad8f51807
-  graphPosition: {x: 516, y: -35}
+  graphPosition: {x: 470, y: -167.88002}
   SceneName: Boss_3
   Scene:
     sceneAsset: {fileID: 102900000, guid: 72f1195d20496374d998c0b65d4973fc, type: 3}
-    scenePath: Assets/Scenes/ActualBuild/Boss_3.unity
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1301/Boss_3.unity"
   PassageNames:
   - 3to2
 --- !u!114 &4282995401228220758
@@ -204,10 +312,32 @@ MonoBehaviour:
   SceneName: 1-3
   Scene:
     sceneAsset: {fileID: 102900000, guid: 3a2e83d96fffbf8468965b94d69161d4, type: 3}
-    scenePath: Assets/Scenes/ActualBuild/1-3.unity
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1301/1-3.unity"
   PassageNames:
   - Enterance3
   - BossEnterance
+--- !u!114 &7444888783089578622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 15adc4c2e3681ff44b8f5af4ccb47263
+  graphPosition: {x: 296.31998, y: 1}
+  SceneName: Boss_1-2
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: a7b551d46bc52054faec370258286065, type: 3}
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1301/Boss_1-2.unity"
+  PassageNames:
+  - 2to1
+  - 2to3
+  - 2to4
 --- !u!114 &7502026196269074928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -221,10 +351,52 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: 7732a4dededa2d94cb3b1fc8c336e436
-  graphPosition: {x: 777, y: 38}
+  graphPosition: {x: 768.36, y: -50.880005}
   SceneName: Boss_Bear
   Scene:
     sceneAsset: {fileID: 102900000, guid: 64ad9372827e0274995c7c8cb208ac6c, type: 3}
     scenePath: Assets/Scenes/ActualBuild/Boss_Bear.unity
   PassageNames:
   - DungeontoBoss
+--- !u!114 &7866461471819680855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: c6d0ce4750b7061448cde9b5c2c33f90
+  graphPosition: {x: 366.76, y: 173.16}
+  SceneName: Boss_2-2
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 4436373a34258aa4ba608b1a8939c048, type: 3}
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1302/Boss_2-2.unity"
+  PassageNames:
+  - 2_2to1
+  - 2_2to3
+--- !u!114 &9204795922427404133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: edeca792acf4c8c41843e57f897478c3
+  graphPosition: {x: 512, y: 173.76}
+  SceneName: Boss_2-3
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 6e28cccfd871427479013076c4fd03a6, type: 3}
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1302/Boss_2-3.unity"
+  PassageNames:
+  - 2_3to2
+  - 2_3toBoss
