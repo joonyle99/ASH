@@ -73864,7 +73864,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initialState: {fileID: 1322454706829155586}
   _maxHp: 10
-  _startHp: 10
+  _startHp: 2
   _curHp: 0
   _isHurt: 0
   _isGodMode: 0
@@ -74165,10 +74165,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stayStillSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+  _dieEffectDelay: 1.5
   _moveUpDuration: 1.5
   _moveUpDistance: 4
-  _moveUpDelay: 0.3
-  _stayDuration: 0.3
+  _stayInAirDuration: 0.5
 --- !u!114 &1315810198230770270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74182,7 +74182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _stayStillSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-  _spawnDuration: 0.3
 --- !u!114 &3064736143565219573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74255,7 +74254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _disintegrateMaterial: {fileID: 2100000, guid: b8e6a925a5eefc7469262558e74560e2, type: 2}
-  _duration: 2.5
+  _duration: 3
   _particles: []
 --- !u!114 &623491974
 MonoBehaviour:
@@ -74334,6 +74333,14 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
+  - _key: SE_Die_02(Short)
+    _clip: {fileID: 8300000, guid: 0cada7c1d7076ad4682a5b1986bcd5bc, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 0.7
+    _pitchB: 0
   - _key: SE_Die_01(long)
     _clip: {fileID: 8300000, guid: 75ed8fd3b743e6e4ea5f49beaa2d75d6, type: 3}
     _volumeType: 0
@@ -74341,14 +74348,6 @@ MonoBehaviour:
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
-    _pitchB: 0
-  - _key: Disintegrate
-    _clip: {fileID: 8300000, guid: 0cada7c1d7076ad4682a5b1986bcd5bc, type: 3}
-    _volumeType: 0
-    _volumeA: 1
-    _volumeB: 0
-    _pitchType: 0
-    _pitchA: 0.7
     _pitchB: 0
 --- !u!1 &1333824105377632535
 GameObject:
