@@ -1,14 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TitleSceneManager : MonoBehaviour
 {
+    //[SerializeField] PassageData _initialPassageData;
+
     private void Start()
     {
         SoundManager.Instance.PlayCommonBGM("MainTheme");
     }
-    //[SerializeField] PassageData _initialPassageData;
 
     public void QuitGame()
     {
@@ -19,10 +19,12 @@ public class TitleSceneManager : MonoBehaviour
     {
         StartCoroutine(SceneChangeCoroutine(sceneName));
     }
+
     public void OpenPrologueScene()
     {
         StartCoroutine(OpenPrologueSceneCoroutine());
     }
+
     IEnumerator OpenPrologueSceneCoroutine()
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
