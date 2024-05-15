@@ -25,12 +25,12 @@ public class TitleSceneManager : MonoBehaviour
     }
     IEnumerator OpenPrologueSceneCoroutine()
     {
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
         SceneChangeManager.Instance.ChangeToScene("PrologueScene");
     }
     IEnumerator SceneChangeCoroutine(string sceneName)
     {
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
         SceneChangeManager.Instance.ChangeToScene(sceneName, ()=>  SoundManager.Instance.PlayCommonBGM("Exploration1"));
     }
 }

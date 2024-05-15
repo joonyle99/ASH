@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,14 +7,14 @@ public class SceneTransitionPlayer : MonoBehaviour
     [SerializeField] Image _fadeImage;
     [SerializeField] float _fadeDuration;
 
-    protected float FadeDuration { get { return _fadeDuration; } }
+    protected float FadeDuration => _fadeDuration;
 
-    public virtual IEnumerator ExitEffectCoroutine()
+    public virtual IEnumerator ExitSceneEffectCoroutine()
     {
         yield return FadeCoroutine(_fadeDuration, FadeType.Darken);
     }
 
-    public virtual IEnumerator EnterEffectCoroutine()
+    public virtual IEnumerator EnterSceneEffectCoroutine()
     {
         yield return FadeCoroutine(_fadeDuration, FadeType.Lighten);
     }

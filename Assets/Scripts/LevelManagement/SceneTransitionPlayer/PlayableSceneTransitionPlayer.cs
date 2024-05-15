@@ -15,14 +15,14 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     [SerializeField] float _respawnFadeDuration = 0.5f;
     [SerializeField] float _respawnDelay = 0.5f;
     [SerializeField] float _capeFlyDuration = 1f;
-    public override IEnumerator ExitEffectCoroutine()
+    public override IEnumerator ExitSceneEffectCoroutine()
     {
         SceneEffectManager.Current.Camera.DisableCameraFollow();
 
         yield return FadeCoroutine(TransitionDuration, FadeType.Darken);
     }
 
-    public override IEnumerator EnterEffectCoroutine()
+    public override IEnumerator EnterSceneEffectCoroutine()
     {
         StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
         Passage entrance = SceneContext.Current.EntrancePassage;

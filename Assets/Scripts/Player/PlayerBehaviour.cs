@@ -370,7 +370,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     public void PlaySound_SE_Die_02()
     {
-        _soundList.PlaySFX("SE_Die_02");
+        _soundList.PlaySFX("SE_Die_02(Short)");
     }
 
     public void PlaySound(string key)

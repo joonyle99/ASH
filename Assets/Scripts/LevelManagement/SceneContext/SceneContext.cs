@@ -22,8 +22,9 @@ public class SceneContext : MonoBehaviour
 
     [SerializeField] CheckpointManager _checkpointManager;
 
-    public CheckpointManager CheckPointManager { get { return _checkpointManager; } }
-    private PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer { get { return SceneTransitionPlayer as PlayableSceneTransitionPlayer; } }
+    public CheckpointManager CheckPointManager => _checkpointManager;
+    private PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer => SceneTransitionPlayer as PlayableSceneTransitionPlayer;
+
     protected void Awake()
     {
         Current = this;

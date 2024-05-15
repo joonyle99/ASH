@@ -12,25 +12,21 @@ public class DieState : PlayerState
 
     [Space]
 
-    [SerializeField] private float _moveUpDuration = 1.5f;
-    [SerializeField] private float _moveUpDistance = 4f;
+    [SerializeField] private float _dieEffectDelay = 0.3f;
 
     [Space]
 
-    [SerializeField] private float _moveUpDelay;
-    [SerializeField] private float _stayDuration;
+    [SerializeField] private float _moveUpDuration = 1.5f;
+    [SerializeField] private float _moveUpDistance = 4f;
+    [SerializeField] private float _stayInAirDuration = 0.3f;
 
     private float _previousGravityScale;
 
+    private PlayerBehaviour _player;
+
     protected override bool OnEnter()
     {
-        Animator.SetTrigger("Die");
-
-        Player.IsDead = true;
-
-        InputManager.Instance.ChangeInputSetter(_stayStillSetter);
-
-        StartCoroutine(MoveUp());
+        StartCoroutine(EnterCoroutine());
 
         return true;
     }
@@ -46,60 +42,89 @@ public class DieState : PlayerState
     }
     protected override bool OnExit()
     {
-        /*
-        Player.IsDead = false;
-        Animator.SetBool("IsDead", Player.IsDead);
-
-        InputManager.Instance.ChangeToDefaultSetter();
-        */
+        StartCoroutine(ExitCoroutine());
 
         return true;
     }
 
-    private IEnumerator MoveUp()
+    private IEnumerator EnterCoroutine()
     {
-        yield return new WaitForSeconds(_moveUpDelay);
+        _player = Player;
 
+        InputManager.Instance.ChangeInputSetter(_stayStillSetter);
+
+        _player.SoundList.PlaySFX("SE_Die_02(Short)");
+
+        _player.Animator.SetTrigger("Die");
+
+        _player.IsDead = true;
+
+        yield return new WaitForSeconds(_dieEffectDelay);
+
+        yield return StartCoroutine(MoveUpEffectCoroutine());
+
+        yield return new WaitForSeconds(_stayInAirDuration);
+
+        _player.PlaySound_SE_Die_01();
+        _player.MaterialController.DisintegrateEffect.Play();
+
+        yield return new WaitUntil(() => _player.MaterialController.DisintegrateEffect.IsEffectDone);
+
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
+
+        Debug.Log($"scene name: {SceneManager.GetActiveScene().name}");
+        Debug.Log($"passage name: {SceneContext.Current.EntrancePassage.PassageName}"); // TODO: 여기에 접근이 안된다
+
+        // SceneChangeManager.Instance.ChangeToPlayableScene(, );
+
+        /*
+        if (SceneContext.Current.EntrancePassage == null)
+        {
+           var passageName = SceneContext.Current.EntrancePassage.PassageName;
+           passageName = "";
+        }
+        */
+    }
+
+    private IEnumerator ExitCoroutine()
+    {
+        yield return null;
+
+        _player.Animator.SetTrigger("EndDie");
+
+        _player.IsDead = false;
+
+        InputManager.Instance.ChangeToDefaultSetter();
+
+        _player = null;
+    }
+
+    private IEnumerator MoveUpEffectCoroutine()
+    {
         var playerRigidBody = Player.Rigidbody;
 
-        // 위로 이동
+        // 1. preparing to move up
         _previousGravityScale = playerRigidBody.gravityScale;
         playerRigidBody.gravityScale = 0f;
         playerRigidBody.velocity = Vector2.zero;
 
-        Vector2 originalPos = playerRigidBody.position;
-        Vector2 targetPos = playerRigidBody.position + Vector2.up * _moveUpDistance;
+        // 2. set from & to position
+        Vector2 currentPosition = playerRigidBody.position;
+        Vector2 targetPosition = playerRigidBody.position + Vector2.up * _moveUpDistance;
 
+        // 3. move from originalPos to targetPos by easing function
         var eTime = 0f;
         while (eTime < _moveUpDuration)
         {
             yield return null;
             eTime += Time.deltaTime;
-            playerRigidBody.MovePosition(Vector2.Lerp(originalPos, targetPos, Curves.EaseOut(eTime / _moveUpDuration)));
+            var nextFramePosition =
+                Vector2.Lerp(currentPosition, targetPosition, Curves.EaseOut(eTime / _moveUpDuration));
+            playerRigidBody.MovePosition(nextFramePosition);
         }
 
-        // 플레이어 정지
+        // 4. pause player
         playerRigidBody.simulated = false;
         Player.enabled = false;
-
-        yield return new WaitForSeconds(_stayDuration);
-
-        Player.SoundList.PlaySFX("Disintegrate");
-        Player.MaterialController.DisintegrateEffect.Play();
-
-        yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
-
-        // TODO: 씬 재시작
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
-
-        /*
-        if (SceneContext.Current.EntrancePassage == null)
-        {
-           string passageName = SceneContext.Current.EntrancePassage.PassageName;
-            passageName = "";
-        }
-        */
-
-        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
     }
 }

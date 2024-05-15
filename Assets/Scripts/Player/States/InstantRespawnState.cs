@@ -7,14 +7,11 @@ public class InstantRespawnState : PlayerState
     [Space]
 
     [SerializeField] private InputSetterScriptableObject _stayStillSetter;
-    [SerializeField] private float _spawnDuration;
 
     private PlayerBehaviour _player;
 
     protected override bool OnEnter()
     {
-        Debug.Log("Instant Respawn Enter");
-
         StartCoroutine(EnterCoroutine());
 
         return true;
@@ -26,8 +23,6 @@ public class InstantRespawnState : PlayerState
     }
     protected override bool OnExit()
     {
-        Debug.Log("Instant Respawn Exit");
-
         StartCoroutine(ExitCoroutine());
 
         return true;
@@ -37,18 +32,18 @@ public class InstantRespawnState : PlayerState
     {
         InputManager.Instance.ChangeInputSetter(_stayStillSetter);
 
-        Animator.speed = 0;
+        Player.Animator.speed = 0;
         Player.enabled = false;
         Player.Rigidbody.simulated = false;
         Player.Rigidbody.velocity = Vector2.zero;
 
-        Player.SoundList.PlaySFX("Disintegrate");
+        Player.SoundList.PlaySFX("SE_Die_02(Short)");
         Player.MaterialController.DisintegrateEffect.Play(0f, false);
 
         yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
         Player.MaterialController.DisintegrateEffect.ResetIsEffectDone();
 
-        SceneContext.Current.InstantRespawn();
+        SceneContext.Current.InstantRespawn();  // move to check point & change to idle state
 
         _player = Player;
     }

@@ -18,11 +18,11 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
     [SerializeField] float _waitDuration = 1f;
     [SerializeField] float _playerSpawnTiming = 0.3f;
     [SerializeField] float _delayAfterSpawn = 2f;
-    public override IEnumerator EnterEffectCoroutine()
+    public override IEnumerator EnterSceneEffectCoroutine()
     {
         if (PersistentDataManager.Get<bool>("seenPlayerFirstSpawn"))
         {
-            yield return base.EnterEffectCoroutine();
+            yield return base.EnterSceneEffectCoroutine();
         }
         else
         {

@@ -37,7 +37,7 @@ public class Passage : TriggerZone
     IEnumerator ExitSceneCutsceneCoroutine()
     {
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitEffectCoroutine();
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
     }
     IEnumerator ExitSceneCoroutine()
     {
