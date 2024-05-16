@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class PrologueManager : MonoBehaviour
@@ -11,14 +10,19 @@ public class PrologueManager : MonoBehaviour
     {
         public List<string> Lines;
     }
+
     [SerializeField] float _fadeInDuration = 0.3f;
     [SerializeField] float _fadeOutDuration = 0.3f;
     [SerializeField] float _lineWaitDuration = 2f;
     [SerializeField] float _pageWaitDuration = 2f;
+
+    [Space]
+
     [SerializeField] TextMeshProUGUI _proceedText;
     [SerializeField] TextMeshProUGUI[] _texts;
     [SerializeField] List<Script> _scripts;
-    void Start()
+
+    private void Start()
     {
         _proceedText.gameObject.SetActive(false);
         StartCoroutine(PlayScripts());
@@ -31,14 +35,16 @@ public class PrologueManager : MonoBehaviour
             StartCoroutine(StartGame());
         }
     }
-    IEnumerator StartGame()
+
+    private IEnumerator StartGame()
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
         SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "");
+
         // play bgm
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.7f);
     }
-    IEnumerator PlayScripts()
+    private IEnumerator PlayScripts()
     {
         foreach(var script in _scripts)
         {
@@ -69,24 +75,7 @@ public class PrologueManager : MonoBehaviour
 
         yield return StartGame();
     }
-    IEnumerator FadeInProceedText()
-    {
-        Color color = _proceedText.color;
-        color.a = 0;
-        _proceedText.color = color;
-        _proceedText.gameObject.SetActive(true);
-        float eTime = 0f;
-        while (eTime < _fadeInDuration)
-        {
-            color.a = eTime / _fadeInDuration;
-            _proceedText.color = color;
-            yield return null;
-            eTime += Time.deltaTime;
-        }
-        color.a = 1; 
-        _proceedText.color = color;
-    }
-    IEnumerator PlayScript(Script script)
+    private IEnumerator PlayScript(Script script)
     {
         for(int i=0; i<_texts.Length; i++)
         {
@@ -117,5 +106,22 @@ public class PrologueManager : MonoBehaviour
             _texts[i].color = color;
             yield return new WaitForSeconds(_lineWaitDuration);
         }
+    }
+    private IEnumerator FadeInProceedText()
+    {
+        Color color = _proceedText.color;
+        color.a = 0;
+        _proceedText.color = color;
+        _proceedText.gameObject.SetActive(true);
+        float eTime = 0f;
+        while (eTime < _fadeInDuration)
+        {
+            color.a = eTime / _fadeInDuration;
+            _proceedText.color = color;
+            yield return null;
+            eTime += Time.deltaTime;
+        }
+        color.a = 1; 
+        _proceedText.color = color;
     }
 }
