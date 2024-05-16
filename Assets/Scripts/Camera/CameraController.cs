@@ -1,43 +1,53 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 using Com.LuisPedroFonseca.ProCamera2D;
-using JetBrains.Annotations;
-using Unity.VisualScripting.Antlr3.Runtime;
-using System.Net;
 
 public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
-    ProCamera2D _proCamera;
-    ProCamera2DShake _shakeComponent;
-    ProCamera2DZoomToFitTargets _fitComponent;
-
-    public float OffsetX
-    {
-        get { return _proCamera.OffsetX; }
-        set { _proCamera.OffsetX = value;}
-    }
-    public float OffsetY
-    {
-        get { return _proCamera.OffsetY; }
-        set { _proCamera.OffsetY = value; }
-    }
     struct InitialSettings
     {
         public Vector2 Offset;
         public Vector2 FollowSmoothness;
     }
-    InitialSettings _initialSettings;
 
-    void Awake()
+    private InitialSettings _initialSettings;
+
+    private ProCamera2D _proCamera;
+    private ProCamera2DShake _shakeComponent;
+    private ProCamera2DZoomToFitTargets _fitComponent;
+
+    public float OffsetX
+    {
+        get => _proCamera.OffsetX;
+        set => _proCamera.OffsetX = value;
+    }
+    public float OffsetY
+    {
+        get => _proCamera.OffsetY;
+        set => _proCamera.OffsetY = value;
+    }
+
+    private void Awake()
     {
         _proCamera = GetComponent<ProCamera2D>();
-        _shakeComponent = _proCamera.GetComponent<ProCamera2DShake>();
-        _fitComponent = _proCamera.GetComponent <ProCamera2DZoomToFitTargets>();
-        _initialSettings.Offset = new Vector2(OffsetX, OffsetY);
-        _initialSettings.FollowSmoothness = new Vector2(_proCamera.HorizontalFollowSmoothness, _proCamera.VerticalFollowSmoothness);
+        _shakeComponent = GetComponent<ProCamera2DShake>();
+        _fitComponent = GetComponent<ProCamera2DZoomToFitTargets>();
+
+        _initialSettings = new InitialSettings
+        {
+            Offset = new Vector2(OffsetX, OffsetY),
+            FollowSmoothness = new Vector2(_proCamera.HorizontalFollowSmoothness, _proCamera.VerticalFollowSmoothness)
+        };
     }
+
+    private void Start()
+    {
+        // Test
+        // TestShake();
+    }
+
+    // settings
     public void OnSceneContextBuilt()
     {
         _proCamera.enabled = true;
@@ -45,6 +55,19 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
             _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
         SnapFollow();
     }
+    public void ResetCameraSettings()
+    {
+        if (SceneContext.Current.Player != null)
+            StartFollow(SceneContext.Current.Player.transform);
+
+        // OffsetX = _initialSettings.Offset.x;
+        // OffsetY = _initialSettings.Offset.y;
+
+        _proCamera.HorizontalFollowSmoothness = _initialSettings.FollowSmoothness.x;
+        _proCamera.VerticalFollowSmoothness = _initialSettings.FollowSmoothness.y;
+    }
+
+    // effect: follow
     public void AddFollowTarget(Transform target)
     {
         _proCamera.AddCameraTarget(target);
@@ -85,7 +108,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         StartCoroutine(SnapFollowCoroutine());
     }
-    IEnumerator SnapFollowCoroutine()
+    private IEnumerator SnapFollowCoroutine()
     {
         float originalSmoothnessX = _proCamera.HorizontalFollowSmoothness;
         float originalSmoothnessY = _proCamera.VerticalFollowSmoothness;
@@ -96,6 +119,8 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.VerticalFollowSmoothness = originalSmoothnessY;
 
     }
+
+    // effect: shake
     public void StartShake(ShakePreset preset)
     {
         _shakeComponent.Shake(preset);
@@ -109,16 +134,14 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         _shakeComponent.StopConstantShaking(smooth);
     }
-    public void ResetCameraSettings()
+
+    // TEST FUNCTION
+    public void TestShake()
     {
-        if (SceneContext.Current.Player != null)
-            StartFollow(SceneContext.Current.Player.transform);
+        var defaultShakePreset = _shakeComponent.ShakePresets[0];
+        var defaultConstantShakePreset = _shakeComponent.ConstantShakePresets[0];
 
-       // OffsetX = _initialSettings.Offset.x;
-       // OffsetY = _initialSettings.Offset.y;
-        _proCamera.HorizontalFollowSmoothness = _initialSettings.FollowSmoothness.x;
-        _proCamera.VerticalFollowSmoothness = _initialSettings.FollowSmoothness.y;
+        // StartShake(defaultShakePreset);
+        StartConstantShake(defaultConstantShakePreset);
     }
-
-
 }
