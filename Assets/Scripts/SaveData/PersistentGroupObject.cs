@@ -1,10 +1,4 @@
-using System.Collections;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
-
-
 
 public class PersistentGroupObject : MonoBehaviour
 {
@@ -15,6 +9,7 @@ public class PersistentGroupObject : MonoBehaviour
     {
         PersistentDataManager.TryAddDataGroup(_groupName);
     }
+
     private void OnDestroy()
     {
         if (_removeOnDestroy)

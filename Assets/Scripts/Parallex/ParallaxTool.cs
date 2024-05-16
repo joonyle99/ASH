@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -11,29 +9,55 @@ public class ParallaxTool : MonoBehaviour
 {
     public enum VolumetricLightType { DistanceBased, LayerBased}
 
-    [SerializeField] GameObject _backgroundParent;
+    [SerializeField] private GameObject _backgroundParent;
 
-    [Tooltip("각 레이어 별 최소 z 값을 지정합니다. \n마지막 레이어는 이전 레이어의 최소 z값보다 작은 모든 이미지를 포함합니다.")]
-    [SerializeField] ParallaxBoundaries _parallaxBoundaries= new ParallaxBoundaries();
+    [Space]
+
+    [Tooltip("각 레이어 별 최소 z 값을 지정합니다.\n마지막 레이어는 이전 레이어의 최소 z값보다 작은 모든 이미지를 포함합니다.")]
+    [SerializeField] private ParallaxBoundaries _parallaxBoundaries = new ParallaxBoundaries();
 
     [Header("Volumetric Light")]
-    [SerializeField][Tooltip("안개 효과 색")] Color _volumetricLightColor = Color.white;
-    [SerializeField][Tooltip("안개 효과 강도")][Range(0f, 1f)] float _volumeOpacity = 1f;
-
+    [Space]
+    
+    [Tooltip("안개 효과 색")]
+    [SerializeField] private Color _volumetricLightColor = Color.white;
+    [Tooltip("안개 효과 강도")] [Range(0f, 1f)]
+    [SerializeField] private float _volumeOpacity = 1f;
     [Tooltip("안개효과 적용 방식\n DistanceBased : 거리를 기준으로 투명도 설정\n LayerBased : 같은 안개 이미지를 겹겹이 쌓아서 생성")]
-    [SerializeField] VolumetricLightType _volumeType = VolumetricLightType.DistanceBased;
+    [SerializeField] private VolumetricLightType _volumeType = VolumetricLightType.DistanceBased;
+
+    [Space]
 
     [Tooltip("Distance Based 방식 사용 시 월드의 최대 깊이")]
-    [SerializeField]float _volumeDepth = 200f;
+    [SerializeField] private float _volumeDepth = 200f;
 
     [Header("Global Light")]
-    [Tooltip("월드 전체에 적용 될 빛의 색")]
-    [SerializeField] Color _globalLightColor = Color.white;
-    [Tooltip("월드 전체에 적용 될 빛의 세기")]
-    [SerializeField] float _globalLightIntensity = 1f;
+    [Space]
 
-    SpriteRenderer[] _volumetricLights;
-    Light2D _globalLight;
+    [Tooltip("월드 전체에 적용 될 빛의 색")]
+    [SerializeField] private Color _globalLightColor = Color.white;
+    [Tooltip("월드 전체에 적용 될 빛의 세기")]
+    [SerializeField] private float _globalLightIntensity = 1f;
+
+    private SpriteRenderer[] _volumetricLights;
+    private Light2D _globalLight;
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (EditorUtility.IsPersistent(gameObject))
+            return;
+        _parallaxBoundaries.OnValidate();
+        SetVolumetricLights();
+        SetGlobalLight();
+    }
+#endif
+
+    private void Reset()
+    {
+        _parallaxBoundaries.SetSortingLayers(SortingLayer.layers);
+    }
+
     public void SortLayers()
     {
         SetVolumetricLights();
@@ -41,7 +65,7 @@ public class ParallaxTool : MonoBehaviour
         var allSprites = _backgroundParent.transform.GetComponentsInChildren<SpriteRenderer>();
         // TODO : Parallax 영향 안받을 오브젝트들에 대한 처리 방법
         //
-        for (int i=0; i<allSprites.Length; i++)
+        for (int i = 0; i < allSprites.Length; i++)
         {
             if (allSprites[i].transform.parent == transform)
             {
@@ -53,27 +77,13 @@ public class ParallaxTool : MonoBehaviour
 
 
     }
-#if UNITY_EDITOR
-    private void OnValidate()
-    {
-        if (EditorUtility.IsPersistent(gameObject))
-            return;
-        _parallaxBoundaries.OnValidate();
-        SetVolumetricLights();
-        SetGlobalLight();
-    }
-#endif
-    private void Reset()
-    {
-        _parallaxBoundaries.SetSortingLayers(SortingLayer.layers);
-    }
-    void SetGlobalLight()
+    public void SetGlobalLight()
     {
         _globalLight = GetComponentInChildren<Light2D>();
         _globalLight.intensity = _globalLightIntensity;
         _globalLight.color = _globalLightColor;
     }
-    void SetVolumetricLights()
+    public void SetVolumetricLights()
     {
         _volumetricLights = GetComponentsInChildren<SpriteRenderer>(true);
         var minBoundaries = _parallaxBoundaries.GetEnabledMinBoundaries();

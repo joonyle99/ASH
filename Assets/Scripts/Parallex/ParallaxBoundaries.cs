@@ -14,10 +14,6 @@ public class ParallaxBoundaries
     [SerializeField] [HideInInspector] bool [] _enables;
     [SerializeField] [HideInInspector] int _lastEnabled = -1;
 
-
-    public ParallaxBoundaries()
-    {
-    }
     public List<float> GetEnabledMinBoundaries()
     {
         List<float> result = new List<float>();

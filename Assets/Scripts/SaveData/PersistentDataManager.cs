@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
@@ -8,16 +7,15 @@ using DataGroup = System.Collections.Generic.Dictionary<string, object>;
 
 public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<PersistentDataManager>
 {
-    Dictionary<string, DataGroup> _dataGroups = new Dictionary<string, DataGroup>();
-    DataGroup _globalDataGroup = new DataGroup();
+    [SerializeField] private SkillOrderData _skillOrderData;
 
-    [SerializeField] SkillOrderData _skillOrderData;
+    private Dictionary<string, DataGroup> _dataGroups = new Dictionary<string, DataGroup>();
+    private DataGroup _globalDataGroup = new DataGroup();
 
+    private int _cheatSkillId = 0;
+    private string path;
 
-    int _cheatSkillid = 0;
-
-    string path;
-    void Start()
+    private void Start()
     {
         path = Path.Combine(Application.dataPath + "/Data/", "database.json");
     }
@@ -25,15 +23,16 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     {
         if (Input.GetKeyDown(KeyCode.F8))
         {
-            PersistentDataManager.Set<bool>(PersistentDataManager.SkillOrderData[_cheatSkillid].Key, true);
+            PersistentDataManager.Set<bool>(PersistentDataManager.SkillOrderData[_cheatSkillId].Key, true);
             PersistentDataManager.UpdateValue<int>("skillPiece", x => x + 3);
-            _cheatSkillid++;
+            _cheatSkillId++;
         }
         if (Input.GetKeyDown(KeyCode.F4))
         {
             PersistentDataManager.Set<bool>("Light", true);
         }
     }
+
     public static SkillOrderData SkillOrderData => Instance._skillOrderData;
     public static bool TryAddDataGroup(string groupName)
     {
@@ -153,7 +152,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
         File.WriteAllText(path, json);
     }
-
     public void JsonLoad()
     {
         DataGroup data = new DataGroup();

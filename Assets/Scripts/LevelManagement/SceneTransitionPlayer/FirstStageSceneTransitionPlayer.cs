@@ -1,8 +1,5 @@
-﻿using Com.LuisPedroFonseca.ProCamera2D;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
-using Utils;
 
 /*
  * 이 클래스가 담당하는 것: 씬 전환/재시작 시 fade 등의 화면 전환 효과 
@@ -12,12 +9,13 @@ using Utils;
 public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
 {
     [Header("First enter cutscene")]
-    [SerializeField] InputSetterScriptableObject _stayStillInputSetter;
-    [SerializeField] Transform _spawnPoint;
-    [SerializeField] GameObject _spawnFireEffectOnScene;
-    [SerializeField] float _waitDuration = 1f;
-    [SerializeField] float _playerSpawnTiming = 0.3f;
-    [SerializeField] float _delayAfterSpawn = 2f;
+    [SerializeField] private InputSetterScriptableObject _stayStillInputSetter;
+    [SerializeField] private  Transform _spawnPoint;
+    [SerializeField] private  GameObject _spawnFireEffectOnScene;
+    [SerializeField] private  float _waitDuration = 1f;
+    [SerializeField] private  float _playerSpawnTiming = 0.3f;
+    [SerializeField] private  float _delayAfterSpawn = 2f;
+
     public override IEnumerator EnterSceneEffectCoroutine()
     {
         if (PersistentDataManager.Get<bool>("seenPlayerFirstSpawn"))
