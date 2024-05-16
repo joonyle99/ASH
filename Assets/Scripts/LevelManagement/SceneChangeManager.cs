@@ -7,10 +7,27 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
 {
     public bool IsChanging { get; private set; } = false;
 
-    //TEMP : 게임 글로벌 데이터를 저장하는 곳으로 이동
-    [SerializeField] LevelGraphData _levelGraphData;
-    [SerializeField] SceneTransitionPlayer _defaultSceneTransitionPlayer;
+    // TEMP : 게임 글로벌 데이터를 저장하는 곳으로 이동
+    [SerializeField] private LevelGraphData _levelGraphData;
+    [SerializeField] private SceneTransitionPlayer _defaultSceneTransitionPlayer;
 
+    private void Start()
+    {
+        SceneContext sceneContext = FindOrCreateSceneContext();
+        Result buildResult = sceneContext.BuildPlayable("");
+    }
+
+    public SceneContext FindOrCreateSceneContext()
+    {
+        SceneContext sceneContext = FindFirstObjectByType<SceneContext>();
+
+        if (sceneContext == null)
+        {
+            GameObject go = new GameObject("SceneContext (Created)");
+            sceneContext = go.AddComponent<SceneContext>();
+        }
+        return sceneContext;
+    }
     public PassageData GetNextPassageData(string passageName)
     {
         string sceneName = SceneManager.GetActiveScene().name;
@@ -20,21 +37,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
             return new PassageData(sceneName, passageName);
         return result;
     }
-    private void Start()
-    {
-        SceneContext sceneContext = FindOrCreateSceneContext();
-        Result buildResult = sceneContext.BuildPlayable("");
-    }
-    SceneContext FindOrCreateSceneContext()
-    {
-        SceneContext sceneContext = FindFirstObjectByType<SceneContext>();
-        if (sceneContext == null)
-        {
-            GameObject go = new GameObject("SceneContext (Created)");
-            sceneContext = go.AddComponent<SceneContext>();
-        }
-        return sceneContext;
-    }
+
     public void ChangeToPlayableScene(string sceneName, string passageName)
     {
         if (IsChanging)
@@ -51,7 +54,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
         StartCoroutine(ChangeToSceneCoroutine(sceneName, null));
     }
 
-    IEnumerator ChangeToSceneCoroutine(string sceneName, System.Action changeDoneCallback)
+    private IEnumerator ChangeToSceneCoroutine(string sceneName, System.Action changeDoneCallback)
     {
         IsChanging = true;
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
@@ -64,7 +67,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
         if (changeDoneCallback != null)
             changeDoneCallback.Invoke();
     }
-    IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string passageName)
+    private IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string passageName)
     {
         IsChanging = true;
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);

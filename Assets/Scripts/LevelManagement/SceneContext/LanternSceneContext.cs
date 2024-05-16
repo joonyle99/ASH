@@ -1,9 +1,7 @@
 ﻿using Com.LuisPedroFonseca.ProCamera2D;
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -20,7 +18,7 @@ public sealed class LanternSceneContext : SceneContext
         public bool IsConnectionDone => IsConnected && Beam.IsShootingDone;
     }
     public new static LanternSceneContext Current { get; private set; }
-    public LightDoor LightDoor { get { return _lightDoor; } }
+    public LightDoor LightDoor => _lightDoor;
 
     [SerializeField] LightBeam _beamPrefab;
     [SerializeField] LayerMask _beamObstacleLayers;
