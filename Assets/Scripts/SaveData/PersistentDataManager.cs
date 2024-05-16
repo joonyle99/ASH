@@ -20,11 +20,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     void Start()
     {
         path = Path.Combine(Application.dataPath + "/Data/", "database.json");
-
-        string fromJsonData = File.ReadAllText(Application.dataPath + "/Data" + "/database.json");
-
-        DataGroup data = new DataGroup();
-        data = JsonDataManager.ToDictionary<string, object>(fromJsonData);
     }
     private void Update()
     {
@@ -157,5 +152,20 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         string json = JsonDataManager.ToJson(Instance._globalDataGroup);
 
         File.WriteAllText(path, json);
+    }
+
+    public void JsonLoad()
+    {
+        DataGroup data = new DataGroup();
+
+        if (!File.Exists(path))
+        {
+            JsonSave();
+        } else
+        {
+            string fromJsonData = File.ReadAllText(Application.dataPath + "/Data" + "/database.json");
+
+            data = JsonDataManager.ToDictionary<string, object>(fromJsonData);
+        }
     }
 }
