@@ -26,6 +26,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] private bool _isCanAttack = true;
     [SerializeField] private bool _isCanDash = true;
 
+    [Header("Cape")]
+    [Space]
+
+    [SerializeField] private Renderer[] _capeRenderers;
+
     [Header("Effects")]
     [Space]
 
@@ -244,6 +249,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         {
             if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();
+        }
+    }
+
+    public void SetCapeIntensity(float intensity)
+    {
+        foreach (var capeRenderer in _capeRenderers)
+        {
+            var capeColor = capeRenderer.material.GetColor("_GlowColor");
+            capeColor.r *= intensity;
+            capeColor.g *= intensity;
+            capeColor.b *= intensity;
+            capeRenderer.material.SetColor("_GlowColor", capeColor);
         }
     }
 

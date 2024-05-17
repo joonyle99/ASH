@@ -5,14 +5,14 @@ using UnityEngine.Rendering.Universal;
 
 public class LightNPC : MonoBehaviour
 {
-    [SerializeField] BezierCurvePath _curvePath;
-    [SerializeField] float _moveToStartingPointDuration = 1f;
-    [SerializeField] float _curveMovementDuration = 2f;
-    [SerializeField] float _flashMaxRadius = 60f;
-    [SerializeField] float _flashStartDuration = 0.1f;
-    [SerializeField] float _flashDuration = 0.4f;
-    [SerializeField] float _flashEndDuration = 0.5f;
-    [SerializeField] Light2D _flashLight;
+    [SerializeField] private BezierCurvePath _curvePath;
+    [SerializeField] private float _moveToStartingPointDuration = 1f;
+    [SerializeField] private float _curveMovementDuration = 2f;
+    [SerializeField] private float _flashMaxRadius = 60f;
+    [SerializeField] private float _flashStartDuration = 0.1f;
+    [SerializeField] private float _flashDuration = 0.4f;
+    [SerializeField] private float _flashEndDuration = 0.5f;
+    [SerializeField] private Light2D _flashLight;
     
     public void StartStartingPointMovement()
     {
@@ -23,7 +23,7 @@ public class LightNPC : MonoBehaviour
         _curvePath.ControlPoints[_curvePath.Length - 1].position = SceneContext.Current.Player.HandRigidBody.transform.position;
         StartCoroutine(CurveMovementCoroutine());
     }
-    IEnumerator MoveToStartingPointCoroutine()
+    private IEnumerator MoveToStartingPointCoroutine()
     {
         Vector3 originalPosition = transform.position;
         float eTime = 0f;
@@ -36,7 +36,7 @@ public class LightNPC : MonoBehaviour
         }
         transform.position = _curvePath.ControlPoints[0].position;
     }
-    IEnumerator CurveMovementCoroutine()
+    private IEnumerator CurveMovementCoroutine()
     {
         float eTime = 0f;
         while (eTime < _curveMovementDuration)
@@ -48,7 +48,7 @@ public class LightNPC : MonoBehaviour
         }
         yield return FlashCoroutine();
     }
-    IEnumerator FlashCoroutine()
+    private IEnumerator FlashCoroutine()
     {
         float eTime = 0f;
         while (eTime < _flashStartDuration)
@@ -67,6 +67,10 @@ public class LightNPC : MonoBehaviour
             yield return null;
             eTime += Time.deltaTime;
         }
+
+        // 플레이어의 Cape Material을 변경한다
+        SceneContext.Current.Player.SetCapeIntensity(15f);
+
         Destroy(gameObject);
     }
 }
