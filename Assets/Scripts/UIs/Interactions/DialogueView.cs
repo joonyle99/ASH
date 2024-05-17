@@ -20,7 +20,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
 
     private TextShaker _textShaker;
 
-    private DialogueSegment currentSegment;
+    private DialogueSegment _currentSegment;
     private Coroutine _currentSegmentCoroutine;
 
     public bool IsCurrentSegmentOver { get; private set; }
@@ -75,7 +75,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     private void CleanUpOnSegmentOver()
     {
         IsCurrentSegmentOver = true;
-        _dialogue.text = currentSegment.Text;
+        _dialogue.text = _currentSegment.Text;
         _skipUI.gameObject.SetActive(true);     // 스킵 UI 활성화
     }
     /// <summary>
@@ -84,12 +84,16 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     /// <param name="segment"></param>
     public void StartNextSegment(DialogueSegment segment)
     {
-        // 세그먼트 설정
-        currentSegment = segment;
         IsCurrentSegmentOver = false;
+
+        // 세그먼트 초기화
+        _dialogue.text = "";
+        _dialogue.alpha = 1f;
         _skipUI.gameObject.SetActive(false);
+
+        // 세그먼트 설정
+        _currentSegment = segment;
         _speaker.text = segment.Speaker;
-        _dialogue.alpha = 1;
 
         // Set shake
         if (segment.ShakeParams == TextShakeParams.None)
@@ -113,9 +117,9 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
         float eTime = 0;
         while (eTime < duration)
         {
-            _dialogue.alpha = 1 - (eTime / duration) * (eTime / duration);
             yield return null;
             eTime += Time.deltaTime;
+            _dialogue.alpha = 1f - (eTime / duration) * (eTime / duration);      // easing function: x^2
         }
     }
     /// <summary>
@@ -125,7 +129,7 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
     private IEnumerator SegmentCoroutine()
     {
         // 세그먼트의 대사만큼 StringBuilder 생성
-        StringBuilder stringBuilder = new StringBuilder(currentSegment.Text.Length);
+        StringBuilder stringBuilder = new StringBuilder(_currentSegment.Text.Length);
 
         int textIndex = 0;
 
@@ -135,17 +139,17 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
             // TODO: 사실 잘 모르겠다. 왜 stringBuilder에 추가하는지
             // '<'와 '>' 사이의 문자열을 추출해 stringBuilder에 추가
             // 이는 텍스트 태그를 파싱하기 위함
-            if (currentSegment.Text[textIndex] == '<')
+            if (_currentSegment.Text[textIndex] == '<')
             {
-                int to = currentSegment.Text.IndexOf('>', textIndex);
-                string textTag = currentSegment.Text.Substring(textIndex, to + 1 - textIndex);
+                int to = _currentSegment.Text.IndexOf('>', textIndex);
+                string textTag = _currentSegment.Text.Substring(textIndex, to + 1 - textIndex);
                 stringBuilder.Append(textTag);
                 textIndex = to;
             }
             // 일반 텍스트를 stringBuilder에 추가
             else
             {
-                stringBuilder.Append(currentSegment.Text[textIndex]);
+                stringBuilder.Append(_currentSegment.Text[textIndex]);
                 _dialogue.text = stringBuilder.ToString();
 
                 // 글자 출력 사운드 재생
@@ -156,10 +160,10 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
             textIndex++;
 
             // 세그먼트의 대사를 모두 출력했을 경우 종료
-            if (textIndex == currentSegment.Text.Length)
+            if (textIndex == _currentSegment.Text.Length)
                 break;
 
-            yield return new WaitForSeconds(currentSegment.CharShowInterval);
+            yield return new WaitForSeconds(_currentSegment.CharShowInterval);
         }
 
         // 세그먼트 마무리 단계

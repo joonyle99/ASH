@@ -9,7 +9,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     [Header("Dialogue Controller")]
     [Space]
 
-    [SerializeField] private float _waitTimeAfterScriptEnd;             // 대화가 끝난 후 대기 시간
+    [SerializeField] private float _dialogueSegmentFadeTime;
 
     public bool IsDialoguePanel => View.IsDialoguePanelActive;          // 대화 패널이 열려있는지 여부
     public bool IsDialogueActive { get; set; } = false;                 // 대화가 진행 중인지 여부
@@ -132,7 +132,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             #endregion
 
             // 다이얼로그 세그먼트가 끝난 후 대기 시간만큼 대기
-            yield return StartCoroutine(View.ClearTextCoroutine(_waitTimeAfterScriptEnd));
+            yield return StartCoroutine(View.ClearTextCoroutine(_dialogueSegmentFadeTime));
 
             // 다음 다이얼로그 세그먼트로 이동
             dialogueSequence.MoveNext();
