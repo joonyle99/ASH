@@ -1,23 +1,25 @@
 using System;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class GroundWallDetector : MonoBehaviour
 {
     [Header("Ground Check")]
     [Space]
 
-    [SerializeField] LayerMask _groundLayer;
-    [SerializeField] Transform _groundCheckTrans;
-    [SerializeField] Transform _groundAboveCheckTrans;
-    [SerializeField] float _groundCheckRadius;
-    [SerializeField] float _groundAboveCheckLength;
+    [SerializeField] private LayerMask _groundLayer;
+    [SerializeField] private Transform _groundCheckTrans;
+    [SerializeField] private Transform _groundAboveCheckTrans;
+    [SerializeField] private float _groundCheckRadius;
+    [SerializeField] private float _groundCheckDistance;
+    [SerializeField] private float _groundAboveCheckLength;
 
     [Header("Climb Check")]
     [Space]
 
-    [SerializeField] LayerMask _climbLayer;
-    [SerializeField] Transform _climbCheckTrans;
-    [SerializeField] float _climbCheckLength;
+    [SerializeField] private LayerMask _climbLayer;
+    [SerializeField] private Transform _climbCheckTrans;
+    [SerializeField] private float _climbCheckLength;
 
     private PlayerBehaviour _player;
 
@@ -29,7 +31,18 @@ public class GroundWallDetector : MonoBehaviour
     void Update()
     {
         // Check Ground
-        _player.GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
+        var circleCastTarget = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f,
+            _groundLayer);
+
+        if (circleCastTarget)
+            _player.GroundHit = circleCastTarget;
+        else
+        {
+            var rayCastTarget = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance,
+                _groundLayer);
+
+            _player.GroundHit = rayCastTarget;
+        }
 
         // Check Upward
         _player.UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _groundAboveCheckLength, _groundLayer);
@@ -55,12 +68,12 @@ public class GroundWallDetector : MonoBehaviour
 
         // Draw Ground Check
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
+        Gizmos.DrawRay(_groundCheckTrans.position, Vector3.down * _groundCheckDistance);
 
         // Draw Ground Above Check
-        Gizmos.DrawLine(_groundAboveCheckTrans.position,
-            _groundAboveCheckTrans.position + Vector3.up * _groundAboveCheckLength);
+        Gizmos.DrawRay(_groundAboveCheckTrans.position, Vector3.up * _groundAboveCheckLength);
 
         // Draw Wall Check
-        Gizmos.DrawLine(_climbCheckTrans.position, _climbCheckTrans.position + _player.PlayerLookDir3D * _climbCheckLength);
+        Gizmos.DrawRay(_climbCheckTrans.position, _player.PlayerLookDir3D * _climbCheckLength);
     }
 }
