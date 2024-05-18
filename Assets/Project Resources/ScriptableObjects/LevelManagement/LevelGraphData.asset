@@ -103,7 +103,7 @@ MonoBehaviour:
     sceneAsset: {fileID: 102900000, guid: 6a4dcc1de365f3f4e86e4318c7ff9cd1, type: 3}
     scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1301/1-1.unity"
   PassageNames:
-  - Enter 1-1
+  - Exit 1-1
 --- !u!114 &-54880549468766112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,7 +159,7 @@ MonoBehaviour:
     ExitPassgage: Enter 1-3
   - EntranceScene: {fileID: -2014745427570758710}
     ExitScene: {fileID: -2869098507112400628}
-    EntrancePassage: Enter 1-1
+    EntrancePassage: Exit 1-1
     ExitPassgage: Enter 1-2
   - EntranceScene: {fileID: -7774507360984267180}
     ExitScene: {fileID: 7502026196269074928}
@@ -233,6 +233,10 @@ MonoBehaviour:
     ExitScene: {fileID: -7774507360984267180}
     EntrancePassage: Exit Boss_1-2 (to 4)
     ExitPassgage: Enter Boss_1-4
+  - EntranceScene: {fileID: -2869098507112400628}
+    ExitScene: {fileID: -2014745427570758710}
+    EntrancePassage: Enter 1-2
+    ExitPassgage: Exit 1-1
 --- !u!114 &1548732423987265482
 MonoBehaviour:
   m_ObjectHideFlags: 0

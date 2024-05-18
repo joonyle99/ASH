@@ -27,7 +27,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             PersistentDataManager.UpdateValue<int>("skillPiece", x => x + 3);
             _cheatSkillId++;
         }
-        if (Input.GetKeyDown(KeyCode.F4))
+
+        if (Input.GetKeyDown(KeyCode.F7) || Input.GetKeyDown(KeyCode.F4))
         {
             PersistentDataManager.Set<bool>("Light", true);
         }
