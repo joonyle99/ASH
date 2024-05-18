@@ -41,13 +41,14 @@ public class RespawnEffect : MonoBehaviour
         var eTime = 0f;
         while (eTime < _duration)
         {
-            yield return null;
-            eTime += Time.deltaTime;
-
             var ratio = eTime / _duration;
             var currentHeight = Mathf.Lerp(minY, maxY, ratio);
 
             materialController.SetProgress("_Origin", currentHeight);
+
+            yield return null;
+
+            eTime += Time.deltaTime;
         }
 
         // Init SpriteRenderers

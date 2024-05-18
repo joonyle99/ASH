@@ -19,9 +19,6 @@ public class BlackPanther_VinePillar : Monster_IndependentSkill
         var eTime = 0f;
         while (eTime < duration)
         {
-            yield return null;
-            eTime += Time.deltaTime;
-
             var ratio = eTime / duration;
 
             if (!hitCollider.enabled && ratio > 0.4f)
@@ -33,6 +30,10 @@ public class BlackPanther_VinePillar : Monster_IndependentSkill
             {
                 effectRenderer.material.SetFloat("_Alpha", ratio);
             }
+
+            yield return null;
+
+            eTime += Time.deltaTime;
         }
     }
 }

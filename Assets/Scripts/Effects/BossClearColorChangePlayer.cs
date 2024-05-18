@@ -30,8 +30,9 @@ public class BossClearColorChangePlayer : MonoBehaviour
             foreach (var target in _changeTargets)
                 target.SetProgress(eTime / _duration);
 
-            eTime += Time.deltaTime;
             yield return null;
+
+            eTime += Time.deltaTime;
         }
 
         isEndEffect = true;

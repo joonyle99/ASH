@@ -41,14 +41,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] private ParticleHelper _dashEffect;
     [SerializeField] private ParticleHelper _dashTrailEffect;
 
-    [Header("ETC")]
+    [Header("Collider")]
     [Space]
 
     [SerializeField] private CapsuleCollider2D _bodyCollider;
-    [SerializeField] private MaterialController materialController;
-    [SerializeField] private SoundList _soundList;
     [SerializeField] private Rigidbody2D _handRigidbody;
     [SerializeField] private Collider2D _heartCollider;
+
+    [Header("ETC")]
+    [Space]
+
+    [SerializeField] private MaterialController materialController;
+    [SerializeField] private SoundList _soundList;
 
     // Controller
     private PlayerMovementController _playerMovementController;
@@ -256,6 +260,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     {
         foreach (var capeRenderer in _capeRenderers)
         {
+            // linear -> gamma (gamma correction) -> linear (opposite gamma correction)
             var capeColor = capeRenderer.material.GetColor("_GlowColor");
             capeColor.r *= intensity;
             capeColor.g *= intensity;

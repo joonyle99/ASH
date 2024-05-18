@@ -42,10 +42,10 @@ public class BabyBearController : MonoBehaviour
         float eTime = 0f;
         while (eTime < _time)
         {
-            eTime += Time.deltaTime;
             var nextPosition = Vector3.MoveTowards(transform.position, transform.position + Vector3.left, _speed * Time.deltaTime);    // 앞으로 이동할 거리가 maxDistanceDelta를 넘지 않는다면 그만큼 이동
             transform.position = nextPosition;
             yield return null;
+            eTime += Time.deltaTime;
         }
         yield return null;
 

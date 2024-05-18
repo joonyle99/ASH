@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -22,11 +20,13 @@ public class Passage : TriggerZone
     [SerializeField] float _exitTimeOut = 1f;
 
     bool _isPlayerExiting;
+
     void Awake()
     {
         if (_playerSpawnPoint == null)
             _playerSpawnPoint = transform;
     }
+
     public override void OnActivatorEnter(TriggerActivator activator)
     {
         if (_isPlayerExiting || !_canEnter)
@@ -34,11 +34,6 @@ public class Passage : TriggerZone
         StartCoroutine(ExitSceneCoroutine());
     }
 
-    IEnumerator ExitSceneCutsceneCoroutine()
-    {
-        InputManager.Instance.ChangeInputSetter(_enterInputSetter);
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-    }
     IEnumerator ExitSceneCoroutine()
     {
         Cutscene _exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine(), false);
@@ -47,9 +42,17 @@ public class Passage : TriggerZone
         var nextPassageData = SceneChangeManager.Instance.GetNextPassageData(name);
         string nextSceneName = nextPassageData.SceneName;
 
+        // Debug.Log(name);
+        // Debug.Log(nextSceneName);
+
         yield return new WaitUntil(() => _exitSceneCutscene.IsDone);
 
         SceneChangeManager.Instance.ChangeToPlayableScene(nextSceneName, nextPassageData.PassageName);
+    }
+    IEnumerator ExitSceneCutsceneCoroutine()
+    {
+        InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
     }
     public override void OnPlayerExit(PlayerBehaviour player)
     {

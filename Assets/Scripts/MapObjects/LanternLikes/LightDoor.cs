@@ -1,39 +1,38 @@
-using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections;
 using UnityEngine;
 
 public class LightDoor : LanternLike
 {
-    public override Transform LightPoint { get { return _lightStone.transform; } }
-    [SerializeField] SpriteRenderer _lightStone;
-    Animator _animator;
-    Collider2D _collider;
-    CameraController _cameraController;
-    public bool IsOpened => CurrentState == State.Opened;
     public enum State
     {
         Closed, Opening, Opened, Closing
     }
+
     public State CurrentState { get; private set; } = State.Closed;
 
-    
+    [Header("LightDoor")]
+    [Space]
 
-    PreserveState _statePreserver;
+    [SerializeField] private SpriteRenderer _lightStone;
 
+    private Animator _animator;
+    private Collider2D _collider;
+    private CameraController _cameraController;
 
-    SceneEffectEvent _recentEvent;
-    private void OnDestroy()
-    {
-        if (_statePreserver)
-            _statePreserver.Save("opened", CurrentState == State.Opened);
-    }
+    private PreserveState _statePreserver;
+    private SceneEffectEvent _recentEvent;
+
+    public override Transform LightPoint => _lightStone.transform;
+    public bool IsOpened => CurrentState == State.Opened;
 
     private void Awake()
     {
         _collider = GetComponent<Collider2D>();
         _animator = GetComponent<Animator>();
         _cameraController = Camera.main.GetComponent<CameraController>();
+
         _statePreserver = GetComponent<PreserveState>();
+
         if (_statePreserver && _statePreserver.Load("opened", false))
         {
             _collider.enabled = false;
@@ -54,12 +53,22 @@ public class LightDoor : LanternLike
             IsLightOn = true;
         }
     }
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+            _statePreserver.Save("opened", CurrentState == State.Opened);
+    }
+
     public override void OnBeamConnected(LightBeam beam)
     {
         StartCoroutine(LightenStoneCoroutine());
     }
-
-    IEnumerator LightenStoneCoroutine()
+    public override void OnBeamDisconnected(LightBeam beam)
+    {
+        _collider.isTrigger = false;
+        _animator.SetTrigger("Close");
+    }
+    private IEnumerator LightenStoneCoroutine()
     {
         float eTime = 0f;
         float duration = 0.15f;
@@ -70,11 +79,6 @@ public class LightDoor : LanternLike
             eTime += Time.deltaTime;
         }
         _lightStone.color = new Color(1, 1, 1, 1);
-    }
-    public override void OnBeamDisconnected(LightBeam beam)
-    {
-        _collider.isTrigger = false;
-        _animator.SetTrigger("Close");
     }
     public IEnumerator OpenCoroutine()
     {
