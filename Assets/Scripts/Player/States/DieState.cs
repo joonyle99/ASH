@@ -116,11 +116,11 @@ public class DieState : PlayerState
         var eTime = 0f;
         while (eTime < _moveUpDuration)
         {
-            yield return null;
-            eTime += Time.deltaTime;
             var nextFramePosition =
                 Vector2.Lerp(currentPosition, targetPosition, Curves.EaseOut(eTime / _moveUpDuration));
             playerRigidBody.MovePosition(nextFramePosition);
+            yield return null;
+            eTime += Time.deltaTime;
         }
 
         // 4. pause player

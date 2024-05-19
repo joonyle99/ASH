@@ -653,7 +653,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     public void DestroyMonster()
     {
-        Destroy(transform.root ? transform.root.gameObject : gameObject);
+        Destroy(transform.parent ? transform.parent.gameObject : gameObject);
     }
 
     #endregion

@@ -5,19 +5,19 @@ using UnityEngine;
 
 public class DoorOpenAnimation : MonoBehaviour
 {
-    [SerializeField] float _doorOpenDelay;
-    [SerializeField] float _stopShakeTiming = 2f;
-    [SerializeField] ConstantShakePreset _doorOpenPreset;
+    [SerializeField] private float _doorOpenDelay;
+    [SerializeField] private float _stopShakeTiming = 2f;
+    [SerializeField] private ConstantShakePreset _doorOpenPreset;
 
-    [SerializeField] SoundList _soundList;
-    [SerializeField] float _openSoundInterval;
-    [SerializeField] int _openSoundRepeat;
-    [SerializeField] float _preheatSoundInterval;
-    [SerializeField] int _preheadSoundRepeat;
+    [SerializeField] private SoundList _soundList;
+    [SerializeField] private float _openSoundInterval;
+    [SerializeField] private int _openSoundRepeat;
+    [SerializeField] private float _preheatSoundInterval;
+    [SerializeField] private int _preheadSoundRepeat;
 
     [SerializeField] ParticleHelper _dustParticle;
 
-    Animator _animator;
+    private Animator _animator;
     private void Awake()
     {
         _animator = GetComponent<Animator>();   
@@ -34,7 +34,7 @@ public class DoorOpenAnimation : MonoBehaviour
         _dustParticle.Stop();
         SceneEffectManager.Current.Camera.StopConstantShake();
     }
-    IEnumerator PlaySoundCoroutine(string key, float interval, int count)
+    private IEnumerator PlaySoundCoroutine(string key, float interval, int count)
     {
         for (int i = 0; i < count; i++)
         {

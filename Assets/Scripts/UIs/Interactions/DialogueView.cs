@@ -117,9 +117,9 @@ public class DialogueView : HappyTools.SingletonBehaviour<DialogueView>
         float eTime = 0;
         while (eTime < duration)
         {
+            _dialogue.alpha = 1f - (eTime / duration) * (eTime / duration);      // easing function: x^2
             yield return null;
             eTime += Time.deltaTime;
-            _dialogue.alpha = 1f - (eTime / duration) * (eTime / duration);      // easing function: x^2
         }
     }
     /// <summary>

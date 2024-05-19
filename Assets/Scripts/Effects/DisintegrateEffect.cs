@@ -56,11 +56,12 @@ public class DisintegrateEffect : MonoBehaviour
         var eTime = 0f;
         while (eTime < _duration)
         {
-            yield return null;
-            eTime += Time.deltaTime;
-
             var ratio = !isRespawn ? Mathf.Clamp01(eTime / _duration) : Mathf.Clamp01(1f - eTime / _duration);
             materialController.SetProgress("_Progress", ratio);
+
+            yield return null;
+
+            eTime += Time.deltaTime;
         }
 
         // 리스폰의 경우 초기화 작업이 필요하다

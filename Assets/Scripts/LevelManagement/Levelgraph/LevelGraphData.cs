@@ -16,8 +16,11 @@ namespace LevelGraph
 
         public PassageData GetExitPassageData(PassageData entrancePassageData)
         {
+            Debug.Log(entrancePassageData.SceneName);
+            Debug.Log(entrancePassageData.PassageName);
+
             PassageData exitPassageData = new PassageData();
-            int match= _edges.FindIndex(data => data.EntranceScene.SceneName == entrancePassageData.SceneName && data.EntrancePassage == entrancePassageData.PassageName);
+            int match = _edges.FindIndex(data => data.EntranceScene.SceneName == entrancePassageData.SceneName && data.EntrancePassage == entrancePassageData.PassageName);
             if (match == -1)
             {
                 Debug.LogWarning(string.Format("Exit for {0}/{1} not set", entrancePassageData.SceneName, entrancePassageData.PassageName));
@@ -28,7 +31,6 @@ namespace LevelGraph
                 return entrancePassageData;
             }
             exitPassageData.SceneName = _edges[match].ExitScene.SceneName;
-
             exitPassageData.PassageName = _edges[match].ExitPassgage;
 
             return exitPassageData;

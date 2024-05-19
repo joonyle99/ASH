@@ -9,12 +9,7 @@ public class PlayerInteractionController : MonoBehaviour
     [Header("Interaction Controller")]
     [Space]
 
-    [SerializeField] private InteractableObject _closetTarget;                  // 가까운 상호작용 가능한 오브젝트
-
-    [Space]
-
-    [SerializeField] private List<InteractableObject> _interactionTargetList;   // 범위 안의 상호작용 가능한 오브젝트 '후보' 리스트
-
+    [SerializeField] private InteractableObject _closetTarget;                  // 현재 상호작용 중인 오브젝트
     public InteractableObject ClosetTarget
     {
         get => _closetTarget;
@@ -33,8 +28,12 @@ public class PlayerInteractionController : MonoBehaviour
         }
     }
 
-    private PlayerBehaviour _player;
+    [Space]
+
+    [SerializeField] private List<InteractableObject> _interactionTargetList;               // 범위 안의 상호작용 가능한 오브젝트 리스트
+
     private InteractionMarker _interactionMarker;
+    private PlayerBehaviour _player;
 
     private void Awake()
     {
@@ -68,6 +67,8 @@ public class PlayerInteractionController : MonoBehaviour
                 // 상호작용 키를 입력받는다면
                 if (InputManager.Instance.State.InteractionKey.KeyDown)
                 {
+                    Debug.Log("Interact");
+
                     // 그리고 상호작용 가능한 상태라면
                     if (_player.CanInteract)
                     {

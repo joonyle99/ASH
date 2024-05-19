@@ -1,14 +1,23 @@
-﻿/// <summary>
+﻿using UnityEngine;
+
+/// <summary>
 /// 플레이어와의 상호작용을 위한 트리거존
 /// 해당 트리거존은 '상호작용이 가능한 오브젝트'의 자식으로 존재한다
 /// </summary>
 public class InteractMarkerActivationZone : TriggerZone
 {
-    private InteractableObject _interactionObject;
+    [SerializeField] private InteractableObject _interactionObject;
 
     private void Awake()
     {
-        _interactionObject = GetComponentInParent<InteractableObject>();
+        if (_interactionObject == null)
+            _interactionObject = GetComponentInParent<InteractableObject>();
+
+        if (_interactionObject == null)
+            _interactionObject = GetComponent<InteractableObject>();
+
+        if (_interactionObject == null)
+            _interactionObject = GetComponentInChildren<InteractableObject>();
     }
 
     /// <summary>

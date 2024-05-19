@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 5562433878876408089}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5.7645, y: -1.4308, z: 0}
-  m_LocalScale: {x: 1.2691, y: 2.3184, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5562433879305355062}
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8699ac7e483e21944a586d99f1b89431, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,11 +99,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be044ca93df86c4eb969c30e0221149, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactionMarkerPoint: {fileID: 5562433878957099126}
   _isInteractable: 1
+  _interactionMarkerPoint: {fileID: 5562433878957099126}
+  _stateChange: 0
   _animationType: 0
-  _stateChange: 1
-  _data: {fileID: 11400000, guid: 7ac6ea4e0636e904ca4913861b10c868, type: 2}
+  _dialogueData: {fileID: 11400000, guid: 68c3113fc2868264b8d45ba7ac335d6a, type: 2}
 --- !u!1 &5562433878957099125
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,4 +206,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9192b4ea5acf7241b68c579c1caae69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactableObject: {fileID: 0}
+  triggerActivators: []
+  _interactionObject: {fileID: 0}

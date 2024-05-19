@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
 public sealed class LanternSceneContext : SceneContext
 {
     [System.Serializable]
@@ -17,16 +16,21 @@ public sealed class LanternSceneContext : SceneContext
         public bool IsConnected => Beam != null && Beam.gameObject.activeInHierarchy;
         public bool IsConnectionDone => IsConnected && Beam.IsShootingDone;
     }
-    public new static LanternSceneContext Current { get; private set; }
-    public LightDoor LightDoor => _lightDoor;
+
+    [Header("Lantern Scene Context")]
+    [Space]
+
+    [SerializeField] List<LanternRelation> _lanternRelations;
 
     [SerializeField] LightBeam _beamPrefab;
     [SerializeField] LayerMask _beamObstacleLayers;
     [SerializeField] LightConnectionSparkEffect _sparkEffectPrefab;
     [SerializeField] LightDoor _lightDoor;
     [SerializeField] float _silenceTimeOnStart = 2f;
-    [SerializeField] List<LanternRelation> _lanternRelations;
+
     [Header("Last Connection Camera Effect")]
+    [Space]
+
     [SerializeField] Transform _lastConnectionCameraPoint;
     [SerializeField] InputSetterScriptableObject _lastConnectionInputSetter;
     [SerializeField] float _cameraLastLanternStayDuration;
@@ -45,18 +49,9 @@ public sealed class LanternSceneContext : SceneContext
     bool _StopCheckingConnections = false;
     bool _isSilenced = true;
 
-    
+    public new static LanternSceneContext Current { get; private set; }
+    public LightDoor LightDoor => _lightDoor;
 
-    public void RecordActivationTime(LanternLike lantern)
-    {
-        _lanternActivationOrder.Remove(lantern);
-        _lanternActivationOrder.Add(lantern);
-    }
-    IEnumerator UnsilenceCoroutine()
-    {
-        yield return new WaitForSeconds(_silenceTimeOnStart);
-        _isSilenced = false;
-    }
     private new void Awake()
     {
         base.Awake();
@@ -72,30 +67,6 @@ public sealed class LanternSceneContext : SceneContext
         }
         StartCoroutine(UnsilenceCoroutine());
 
-    }
-    
-    public bool IsAllRelationsFullyConnected(params LanternLike [] exceptions)
-    {
-        foreach(var relation in _lanternRelations)
-        {
-            if (exceptions.Count(x => x == relation.A || x == relation.B) > 0)
-                continue;
-            if (!relation.IsConnectionDone)
-                return false;
-        }
-        return true;
-    }
-    public HashSet<LanternLike> GetRelatedLanterns(LanternLike lantern)
-    {
-        HashSet<LanternLike> result = new HashSet<LanternLike>();
-        foreach(var relation in _lanternRelations)
-        {
-            if (relation.A == lantern)
-                result.Add(relation.B);
-            else if (relation.B == lantern)
-                result.Add(relation.A);
-        }
-        return result;
     }
     private void Update()
     {
@@ -120,6 +91,41 @@ public sealed class LanternSceneContext : SceneContext
                 }
             }
         }
+    }
+    
+    public void RecordActivationTime(LanternLike lantern)
+    {
+        _lanternActivationOrder.Remove(lantern);
+        _lanternActivationOrder.Add(lantern);
+    }
+    IEnumerator UnsilenceCoroutine()
+    {
+        yield return new WaitForSeconds(_silenceTimeOnStart);
+        _isSilenced = false;
+    }
+
+    public bool IsAllRelationsFullyConnected(params LanternLike [] exceptions)
+    {
+        foreach(var relation in _lanternRelations)
+        {
+            if (exceptions.Count(x => x == relation.A || x == relation.B) > 0)
+                continue;
+            if (!relation.IsConnectionDone)
+                return false;
+        }
+        return true;
+    }
+    public HashSet<LanternLike> GetRelatedLanterns(LanternLike lantern)
+    {
+        HashSet<LanternLike> result = new HashSet<LanternLike>();
+        foreach(var relation in _lanternRelations)
+        {
+            if (relation.A == lantern)
+                result.Add(relation.B);
+            else if (relation.B == lantern)
+                result.Add(relation.A);
+        }
+        return result;
     }
     bool CanRayBeReached(LanternLike a, LanternLike b)
     {
@@ -217,7 +223,7 @@ public sealed class LanternSceneContext : SceneContext
     IEnumerator ConnectionCoroutine(LanternRelation relation)
     {
         if(!_isSilenced)
-        _soundList.PlaySFX("SE_Lantern_Line");
+            _soundList.PlaySFX("SE_Lantern_Line");
         relation.Beam.gameObject.SetActive(true);
         if (!_isSilenced)
             yield return new WaitUntil(()=>relation.Beam.IsShootingDone);
