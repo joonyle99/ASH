@@ -26,7 +26,8 @@ public class RollingStone : InteractableObject
 
     float _moveDirection = 0;
 
-    public bool IsBreakable { get { return _attackableComponent == null; } }
+    public bool IsBreakable => _attackableComponent == null;
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
@@ -89,7 +90,6 @@ public class RollingStone : InteractableObject
             Player.Rigidbody.AddForce(Player.RawInputs.Movement * 70);
         if (_clampSpeed)
             _rigidbody.velocity = Vector2.ClampMagnitude(_rigidbody.velocity, _maxRollSpeed);
-
     }
     protected override void OnInteractionExit()
     {

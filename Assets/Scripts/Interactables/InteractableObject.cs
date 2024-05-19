@@ -6,7 +6,6 @@ public enum InteractionAnimationType
 
     Push,
     Roll,
-    Pull,
 }
 
 public enum InteractionStateChangeType

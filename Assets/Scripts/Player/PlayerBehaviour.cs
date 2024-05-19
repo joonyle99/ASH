@@ -222,8 +222,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetBool("IsGroundSupported", IsGroundedSupported);
+
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
+
         Animator.SetBool("IsDirSync", IsDirSync);
+        Animator.SetBool("IsOppositeDirSync", IsOppositeDirSync);
 
         #endregion
     }
