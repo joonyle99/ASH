@@ -33,16 +33,11 @@ public class GroundWallDetector : MonoBehaviour
         // Check Ground
         var circleCastTarget = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f,
             _groundLayer);
+        _player.GroundHit = circleCastTarget;
 
-        if (circleCastTarget)
-            _player.GroundHit = circleCastTarget;
-        else
-        {
-            var rayCastTarget = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance,
-                _groundLayer);
-
-            _player.GroundHit = rayCastTarget;
-        }
+        var rayCastTarget = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance,
+            _groundLayer);
+        _player.GroundHit2 = rayCastTarget;
 
         // Check Upward
         _player.UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _groundAboveCheckLength, _groundLayer);

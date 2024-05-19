@@ -252,8 +252,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         InitCondition();
 
         InitState();
-
-        Debug.Log($"{this.gameObject.name}ÀÇ position : {this.transform.position}");
     }
     protected virtual void Update()
     {

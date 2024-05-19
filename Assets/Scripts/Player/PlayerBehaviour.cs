@@ -83,6 +83,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     // Condition Property
     public bool IsGrounded => GroundHit;
+    public bool IsGroundedSupported => GroundHit || GroundHit2;
     public bool IsTouchedWall => ClimbHit;
     public bool IsClimbable { get; set; }
     public bool IsClimbJump { get; set; }
@@ -150,6 +151,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     // RayCastHit
     public RaycastHit2D GroundHit { get; set; }
+    public RaycastHit2D GroundHit2 { get; set; }
     public RaycastHit2D ClimbHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
 
@@ -219,6 +221,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         #region Animaotr Parameter
 
         Animator.SetBool("IsGround", IsGrounded);
+        Animator.SetBool("IsGroundSupported", IsGroundedSupported);
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
         Animator.SetBool("IsDirSync", IsDirSync);
 
@@ -249,7 +252,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     private void ChangeInAirState()
     {
-        if (!IsGrounded)
+        if (!IsGroundedSupported)
         {
             if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();

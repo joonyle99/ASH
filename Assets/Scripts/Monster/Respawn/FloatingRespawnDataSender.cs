@@ -41,8 +41,6 @@ public class FloatingRespawnDataSender : RespawnDataSender
     /// </summary>
     public override void UpdateRespawnData()
     {
-        Debug.Log("Update Respawn Data");
-
         _navMeshData = _navMeshSurface.navMeshData;     // baked action area
         _respawnBounds = _patrolArea.bounds;            // patrolArea의 트랜스폼을 바꿨지만 fixedUpdate가 실행되지는 않은 상태이기 때문에 bounds가 기본값을 가지고 있다
 
