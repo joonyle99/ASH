@@ -15,16 +15,34 @@ public class DisintegrateEffect : MonoBehaviour
 
     public bool IsEffectDone { get; private set; }
 
-    private MaterialController materialController;
+    private MaterialController _materialController;
+
+    public Coroutine disintegrateCoroutine;
 
     private void Awake()
     {
-        materialController = GetComponent<MaterialController>();
+        _materialController = GetComponent<MaterialController>();
     }
 
     public void Play(float delay = 0f, bool isRespawn = false)
     {
-        StartCoroutine(ProgressCoroutine(delay, isRespawn));
+        // blink effect 실행 중이라면, 종료하고 disintegrate effect를 실행한다
+        if (_materialController.BlinkEffect)
+        {
+            if (_materialController.BlinkEffect.blinkCoroutine != null)
+            {
+                _materialController.BlinkEffect.StopCoroutine(_materialController.BlinkEffect.blinkCoroutine);
+                _materialController.BlinkEffect.blinkCoroutine = null;
+            }
+        }
+
+        if (disintegrateCoroutine != null)
+        {
+            StopCoroutine(disintegrateCoroutine);
+            disintegrateCoroutine = null;
+        }
+
+        disintegrateCoroutine = StartCoroutine(ProgressCoroutine(delay, isRespawn));
     }
     private IEnumerator ProgressCoroutine(float delay, bool isRespawn)
     {
@@ -44,12 +62,12 @@ public class DisintegrateEffect : MonoBehaviour
             }
 
             // Disintegrate Material Initialize
-            materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 0f);
+            _materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 0f);
         }
         else
         {
             // Disintegrate Material Initialize
-            materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 1f);
+            _materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 1f);
         }
 
         // Disintegrate Effect Progress
@@ -57,7 +75,7 @@ public class DisintegrateEffect : MonoBehaviour
         while (eTime < _duration)
         {
             var ratio = !isRespawn ? Mathf.Clamp01(eTime / _duration) : Mathf.Clamp01(1f - eTime / _duration);
-            materialController.SetProgress("_Progress", ratio);
+            _materialController.SetProgress("_Progress", ratio);
 
             yield return null;
 
@@ -67,11 +85,13 @@ public class DisintegrateEffect : MonoBehaviour
         // 리스폰의 경우 초기화 작업이 필요하다
         if (isRespawn)
         {
-            materialController.SetProgress("_Progress", 1f);
-            materialController.InitMaterial();
+            _materialController.SetProgress("_Progress", 1f);
+            _materialController.InitMaterial();
         }
 
         IsEffectDone = true;
+
+        disintegrateCoroutine = null;
     }
 
     public void ResetIsEffectDone()

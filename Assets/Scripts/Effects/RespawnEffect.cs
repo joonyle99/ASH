@@ -16,16 +16,20 @@ public class RespawnEffect : MonoBehaviour
 
     public bool IsEffectDone { get; private set; }
 
-    private MaterialController materialController;
+    private Coroutine _respawnCo;
+    private MaterialController _materialController;
 
     private void Awake()
     {
-        materialController = GetComponent<MaterialController>();
+        _materialController = GetComponent<MaterialController>();
     }
 
     public void Play(float delay = 0f)
     {
-        StartCoroutine(ProgressCoroutine(delay));
+        if (_respawnCo != null)
+            StopCoroutine(_respawnCo);
+
+        _respawnCo = StartCoroutine(ProgressCoroutine(delay));
     }
     IEnumerator ProgressCoroutine(float delay)
     {
@@ -35,7 +39,7 @@ public class RespawnEffect : MonoBehaviour
         var maxY = transform.position.y + _topOffset;
 
         // Respawn Material Initialize
-        materialController.SetMaterial(_respawnMaterial);
+        _materialController.SetMaterial(_respawnMaterial);
 
         // Respawn Effect Progress
         var eTime = 0f;
@@ -44,7 +48,7 @@ public class RespawnEffect : MonoBehaviour
             var ratio = eTime / _duration;
             var currentHeight = Mathf.Lerp(minY, maxY, ratio);
 
-            materialController.SetProgress("_Origin", currentHeight);
+            _materialController.SetProgress("_Origin", currentHeight);
 
             yield return null;
 
@@ -52,7 +56,7 @@ public class RespawnEffect : MonoBehaviour
         }
 
         // Init SpriteRenderers
-        materialController.InitMaterial();
+        _materialController.InitMaterial();
 
         IsEffectDone = true;
     }

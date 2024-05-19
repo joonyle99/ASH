@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 public class FloatingRespawnDataSender : RespawnDataSender
 {
-    [Header("FloatingRespawnDataSender")]
+    [Header("Floating RespawnData Sender")]
     [Space]
 
     private NavMeshSurface _navMeshSurface;
@@ -14,8 +14,7 @@ public class FloatingRespawnDataSender : RespawnDataSender
     private BoxCollider2D _patrolArea;
     private BoxCollider2D _chaseArea;
 
-    // by - product
-    private Bounds _respawnBounds;
+    private Bounds _respawnBounds;      // monster will respawn in this bound (patrol area)
 
     public void Awake()
     {
@@ -24,15 +23,11 @@ public class FloatingRespawnDataSender : RespawnDataSender
         _patrolArea = transform.GetChild(0).GetComponent<BoxCollider2D>();
         _chaseArea = transform.GetChild(1).GetComponent<BoxCollider2D>();
     }
-    public void Start()
-    {
-        UpdateRespawnData();
-    }
 
     /// <summary>
     /// float respawn data sender는
     /// patrol area / chase area의 boxCollider2D를
-    /// action area info로 가지고 있다
+    /// action area info로 가지고 있는데, 이를 추출한다.
     /// </summary>
     /// <param name="boxCollider1">patrol area's boxCollider 2D</param>
     /// <param name="boxCollider2">chase area's boxCollider 2D</param>
@@ -46,7 +41,9 @@ public class FloatingRespawnDataSender : RespawnDataSender
     /// </summary>
     public override void UpdateRespawnData()
     {
-        _navMeshData = _navMeshSurface.navMeshData;
+        Debug.Log("Update Respawn Data");
+
+        _navMeshData = _navMeshSurface.navMeshData;     // baked action area
         _respawnBounds = _patrolArea.bounds;            // patrolArea의 트랜스폼을 바꿨지만 fixedUpdate가 실행되지는 않은 상태이기 때문에 bounds가 기본값을 가지고 있다
 
         // 인스턴스의 초기 데이터(_navMeshData를 제외하고는 모두 값)를 전달한다

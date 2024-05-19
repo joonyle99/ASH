@@ -12,8 +12,9 @@ public class BlinkEffect : MonoBehaviour
     private PlayerBehaviour _player;
     private MonsterBehavior _monster;
 
-    private Coroutine _blinkCoroutine;
-    private MaterialController materialController;
+    private MaterialController _materialController;
+
+    public Coroutine blinkCoroutine;
 
     private void Awake()
     {
@@ -21,22 +22,23 @@ public class BlinkEffect : MonoBehaviour
         _player = GetComponent<PlayerBehaviour>();
         _monster = GetComponent<MonsterBehavior>();
 
-        materialController = GetComponent<MaterialController>();
+        _materialController = GetComponent<MaterialController>();
     }
 
     public void Play()
     {
-        // blink effect 실행 도중이면 중지하고 다시 시작
+        if (blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+            blinkCoroutine = null;
+        }
 
-        if (_blinkCoroutine != null)
-            StopCoroutine(_blinkCoroutine);
-
-        _blinkCoroutine = StartCoroutine(BlinkCoroutine());
+        blinkCoroutine = StartCoroutine(BlinkCoroutine());
     }
     private IEnumerator BlinkCoroutine()
     {
         // first, change material to blink material
-        materialController.SetMaterial(_material);
+        _materialController.SetMaterial(_material);
 
         _isBlinking = true;
         if (_player) _player.IsGodMode = _isBlinking;
@@ -45,10 +47,10 @@ public class BlinkEffect : MonoBehaviour
         var startTime = Time.time;
         while (startTime + _duration > Time.time)
         {
-            materialController.SetProgress("_FlashAmount", 0.3f);
+            _materialController.SetProgress("_FlashAmount", 0.3f);
             yield return new WaitForSeconds(_interval);
 
-            materialController.SetProgress("_FlashAmount", 0f);
+            _materialController.SetProgress("_FlashAmount", 0f);
             yield return new WaitForSeconds(_interval);
         }
 
@@ -60,6 +62,9 @@ public class BlinkEffect : MonoBehaviour
             yield break;
 
         // third, change material to original material
-        materialController.InitMaterial();
+        _materialController.InitMaterial();
+
+        // when effect ended, coroutine is also ended
+        blinkCoroutine = null;
     }
 }

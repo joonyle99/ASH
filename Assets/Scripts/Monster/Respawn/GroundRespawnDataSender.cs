@@ -3,7 +3,7 @@ using UnityEngine;
 // [ExecuteInEditMode]
 public class GroundRespawnDataSender : RespawnDataSender
 {
-    [Header("GroundRespawnDataSender")]
+    [Header("Ground Respawn Data Sender")]
     [Space]
 
     // main
@@ -23,10 +23,6 @@ public class GroundRespawnDataSender : RespawnDataSender
     {
         _patrolPointA = transform.GetChild(0).GetComponent<BoxCollider2D>();
         _patrolPointB = transform.GetChild(1).GetComponent<BoxCollider2D>();
-    }
-    public void Start()
-    {
-        UpdateRespawnData();
     }
 
     /// <summary>

@@ -255,7 +255,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
                 ChangeState<InAirState>();
         }
     }
-
     public void SetCapeIntensity(float intensity)
     {
         foreach (var capeRenderer in _capeRenderers)

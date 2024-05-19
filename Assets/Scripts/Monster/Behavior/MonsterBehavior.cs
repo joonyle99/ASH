@@ -48,12 +48,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 개구리
         // Patrol Points 사이에서 Y값을 고려해 생성되어야 한다 (복잡)
         // 기울어진 땅은 우선 생각하지 말고 해보자
-        public GroundRespawnData groundRespawnData;
+        public GroundRespawnData GroundRespawnData;
 
         // 박쥐
         // Patrol Area 내부에서 랜덤으로 생성되어야 한다
         // 박쥐 몬스터의 위치를 그냥 Bounds 내부로 랜덤 설정하면 된다 (간단)
-        public FloatingRespawnData floatingRespawnData;
+        public FloatingRespawnData FloatingRespawnData;
     }
 
     #region Attribute
@@ -252,6 +252,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         InitCondition();
 
         InitState();
+
+        Debug.Log($"{this.gameObject.name}의 position : {this.transform.position}");
     }
     protected virtual void Update()
     {
@@ -388,7 +390,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (!CenterOfMass) CenterOfMass = this.transform;
         RigidBody2D.centerOfMass = CenterOfMass.localPosition;
 
-        respawnData.DefaultPrefabPosition = transform.root ? transform.root.position : transform.position;
+        respawnData.DefaultPrefabPosition = transform.parent.position;
 
         CurHp = monsterData.MaxHp;
     }
@@ -410,11 +412,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     // basic
     public void SetGroundRespawnData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, joonyle99.Line respawnLine)
     {
-        respawnData.groundRespawnData = new GroundRespawnData(patrolPointAPosition, patrolPointBPosition, respawnLine);
+        respawnData.GroundRespawnData = new GroundRespawnData(patrolPointAPosition, patrolPointBPosition, respawnLine);
     }
     public void SetFloatingRespawnData(NavMeshData navMeshData, Vector3 patrolAreaPosition, Vector3 chaseAreaPosition, Vector3 patrolAreaScale, Vector3 chaseAreaScale, Bounds respawnBounds)
     {
-        respawnData.floatingRespawnData = new FloatingRespawnData(navMeshData, patrolAreaPosition, chaseAreaPosition, patrolAreaScale, chaseAreaScale, respawnBounds);
+        respawnData.FloatingRespawnData = new FloatingRespawnData(navMeshData, patrolAreaPosition, chaseAreaPosition, patrolAreaScale, chaseAreaScale, respawnBounds);
     }
     public void SetRecentDir(int targetDir)
     {
@@ -460,10 +462,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         {
             if (MaterialController)
             {
-                if (MaterialController.BlinkEffect)
-                    MaterialController.BlinkEffect.Play();
-                else
-                    Debug.LogWarning("Blink Effect isn't attached");
+                MaterialController?.BlinkEffect.Play();
             }
         }
 
