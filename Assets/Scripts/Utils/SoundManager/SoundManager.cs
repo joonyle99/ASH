@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
 {
@@ -108,5 +110,4 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
             Debug.LogWarning("No BGM matching: " + key);
         }
     }
-
 }
