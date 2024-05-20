@@ -24,18 +24,12 @@ public class MaterialController : MonoBehaviour
         get;
         private set;
     }
-    public RespawnEffect RespawnEffect
-    {
-        get;
-        private set;
-    }
 
     private void Awake()
     {
         // effects
         BlinkEffect = GetComponent<BlinkEffect>();
         DisintegrateEffect = GetComponent<DisintegrateEffect>();
-        RespawnEffect = GetComponent<RespawnEffect>();
 
         // save original Materials
         OriginalMaterials = new Material[SpriteRenderers.Length];
@@ -65,5 +59,10 @@ public class MaterialController : MonoBehaviour
             spriteRenderer.material = material;
             spriteRenderer.material.SetFloat(key, progress);
         }
+    }
+
+    public void InitMaterialForRespawn()
+    {
+        DisintegrateEffect.InitMaterialAndProgressForRespawn();
     }
 }

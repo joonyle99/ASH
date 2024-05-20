@@ -38,7 +38,7 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
         var resourcePath = "Prefabs/Monster/Normal/Prefab_" + monsterData.MonsterName;
         var prefabResource = Resources.Load<GameObject>(resourcePath);
 
-        // Debug.Log("인스턴스 생성 바로 직전");
+        Debug.Log("인스턴스 생성 바로 직전");
 
         // 어떤 타입의 몬스터이든, 몬스터를 담은 프리팹의 리스폰 위치는 이전 프리팹의 위치와 동일하다
         // 
@@ -46,7 +46,7 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
         // 해당 게임 오브젝트가 처음 활성화되고 난 '다음 프레임'에서 처음으로 Start() 메소드 실행. 즉, 인스턴스가 생성된 후 처음으로 그 프레임이 시작할 때 호출
         var prefabInstance = Instantiate(prefabResource, respawnData.DefaultPrefabPosition, Quaternion.identity);
 
-        // Debug.Log("인스턴스 생성 바로 직후");
+        Debug.Log("인스턴스 생성 바로 직후");
 
         // 새로 생성한 몬스터를 사망 이전의 정보를 토대로 업데이트한다.
 
@@ -54,6 +54,16 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
         var respawnDataSender = prefabInstance.GetComponentInChildren<RespawnDataSender>();
         // 실질적인 몬스터를 추출한다
         var monsterBehavior = prefabInstance.GetComponentInChildren<MonsterBehavior>();
+
+        // 몬스터의 Material을 변경해줘야 1프레임 동안 이미지가 보이는 버그를 수정할 수 있다.
+        monsterBehavior.GetComponent<MaterialController>().InitMaterialForRespawn();
+
+        // 몬스터의 Evaluator를 잠시 대기시켜줘야 리스폰이 완료된 이후에 작동한다.
+        var evaluators = monsterBehavior.GetComponents<Evaluator>();
+        foreach (var evaluator in evaluators)
+        {
+            evaluator.StartCoroutine(evaluator.WaitForRespawn());
+        }
 
         // * 행동 반경 데이터를 이용해 몬스터의 행동 반경 정보를 변경 *
         UpdateActionAreaInfo(respawnDataSender, monsterData.MoveType, respawnData);
@@ -76,6 +86,8 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
     /// <param name="respawnData"></param>
     private void UpdateActionAreaInfo(RespawnDataSender respawnDataSender, MonsterDefine.MoveType moveType, MonsterBehavior.RespawnData respawnData)
     {
+        Debug.Log("활동 영역 정보 업데이트");
+
         // 지상 몬스터의 행동 반경 정보 설정
         if (moveType == MonsterDefine.MoveType.GroundNormal)
         {
@@ -149,6 +161,8 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
     /// <param name="respawnData"></param>
     private void UpdateMonsterRespawnPosition(Transform monsterTransform, MonsterDefine.MoveType moveType, MonsterBehavior.RespawnData respawnData)
     {
+        Debug.Log("몬스터 리스폰 위치 업데이트");
+
         var respawnPos = Vector3.zero;
 
         // 지상 몬스터의 리스폰 위치 설정

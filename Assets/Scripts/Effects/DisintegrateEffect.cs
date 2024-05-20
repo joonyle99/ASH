@@ -50,6 +50,8 @@ public class DisintegrateEffect : MonoBehaviour
 
         if (!isRespawn)
         {
+            Debug.Log("die effect coroutine");
+
             // Particle System Control
             foreach (var particleHelper in _particles)
             {
@@ -62,12 +64,14 @@ public class DisintegrateEffect : MonoBehaviour
             }
 
             // Disintegrate Material Initialize
-            _materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 0f);
+            InitMaterialAndProgressForDie();
         }
         else
         {
+            Debug.Log("respawn effect coroutine");
+
             // Disintegrate Material Initialize
-            _materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 1f);
+            InitMaterialAndProgressForRespawn();
         }
 
         // Disintegrate Effect Progress
@@ -97,5 +101,14 @@ public class DisintegrateEffect : MonoBehaviour
     public void ResetIsEffectDone()
     {
         IsEffectDone = false;
+    }
+
+    public void InitMaterialAndProgressForDie()
+    {
+        _materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 0f);
+    }
+    public void InitMaterialAndProgressForRespawn()
+    {
+        _materialController.SetMaterialAndProgress(_disintegrateMaterial, "_Progress", 1f);
     }
 }

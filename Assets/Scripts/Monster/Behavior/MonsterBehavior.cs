@@ -165,6 +165,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get;
         set;
     }
+    [field: SerializeField]
+    public bool IsRespawn
+    {
+        get;
+        set;
+    } = false;
 
     [Header("Monster Data")]
     [Space]
@@ -504,10 +510,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     // hitBox
     public void SetHitBoxDisable(bool isDisable)
     {
-        var prefab = transform.parent;
-
         // includeInactive : true -> 비활성화된 자식 오브젝트도 검색
-        var hitBox = prefab.GetComponentInChildren<MonsterBodyHit>(true);
+        var hitBox = GetComponentInChildren<MonsterBodyHit>(true);
 
         if (hitBox)
             hitBox.gameObject.SetActive(!isDisable);
@@ -603,6 +607,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         if (FloatingMovementModule) FloatingMovementModule.SetStopAgent(false);
         else RigidBody2D.simulated = true;
         SetHitBoxDisable(false);
+
+        IsRespawn = true;
     }
     private IEnumerator ReSpawnEffectCoroutine()
     {
