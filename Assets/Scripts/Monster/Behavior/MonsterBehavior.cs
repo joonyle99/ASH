@@ -38,21 +38,19 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     [Serializable]
     public struct RespawnData
     {
-        /// <summary>
-        /// * 프리팹 구조 *
-        /// prefab_(monster name)
-        /// -> monster_(monster name)
-        /// </summary>
-        public Vector3 DefaultPrefabPosition;   // prefab_(monster name)의 기본 위치
+        // * 프리팹 구조 *
+        // prefab_(monster name)
+        // -> monster_(monster name)
+
+        // prefab_(monster name)의 기본 위치
+        public Vector3 DefaultPrefabPosition;
 
         // 개구리
-        // Patrol Points 사이에서 Y값을 고려해 생성되어야 한다 (복잡)
-        // 기울어진 땅은 우선 생각하지 말고 해보자
+        // Patrol Point 사이에서 생성된다.
         public GroundRespawnData GroundRespawnData;
 
         // 박쥐
-        // Patrol Area 내부에서 랜덤으로 생성되어야 한다
-        // 박쥐 몬스터의 위치를 그냥 Bounds 내부로 랜덤 설정하면 된다 (간단)
+        // Patrol Area 내부에서 랜덤으로 생성된다.
         public FloatingRespawnData FloatingRespawnData;
     }
 
@@ -100,7 +98,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
                 // Debug.Log("Die");
 
                 _curHp = 0;
-                Die();
+                Die(true, true);
             }
         }
     }
@@ -334,10 +332,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         return IAttackListener.AttackResult.Success;
     }
-    public virtual void Die(bool isHitBoxDisable = true, bool isDeathProcess = true)
+    public virtual void Die(bool isHitBoxDisable, bool isDeathProcess)
     {
         // Set Dead
-        IsDead = true;  // 거북이는 IsDead == true 여도 필드상에 존재할 수 있다.
+        IsDead = true;
 
         // Check that Animator has Die Trigger Param
         foreach (AnimatorControllerParameter param in Animator.parameters)
@@ -347,7 +345,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         }
 
         // HitBox Disable
-        SetHitBoxDisable(isHitBoxDisable);
+        if (isHitBoxDisable) SetHitBoxDisable(true);
 
         // Death Effect
         if (isDeathProcess) StartCoroutine(DeathProcessCoroutine());
@@ -506,8 +504,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     // hitBox
     public void SetHitBoxDisable(bool isDisable)
     {
+        var prefab = transform.parent;
+
         // includeInactive : true -> 비활성화된 자식 오브젝트도 검색
-        var hitBox = GetComponentInChildren<MonsterBodyHit>(true);
+        var hitBox = prefab.GetComponentInChildren<MonsterBodyHit>(true);
 
         if (hitBox)
             hitBox.gameObject.SetActive(!isDisable);

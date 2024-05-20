@@ -104,7 +104,7 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
 
         return IAttackListener.AttackResult.Success;
     }
-    public override void Die(bool isHitBoxDisable = true, bool isDeathProcess = true)
+    public override void Die(bool isHitBoxDisable, bool isDeathProcess)
     {
         // 보스는 사망 이펙트를 재생하지 않는다
         base.Die(true, false);
