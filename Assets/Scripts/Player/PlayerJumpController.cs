@@ -67,8 +67,13 @@ public class PlayerJumpController : MonoBehaviour
             StartJumpQueueCoroutine();
 
         // Reset jump count
-        if (_player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<WallState>())
-            ResetJumpCount();
+        if(_remainingJumpCount < MaxJumpCount)
+        {
+            if ((_player.CurrentStateIs<IdleState>() && _player.IsGrounded) || _player.CurrentStateIs<WallState>())
+            {
+                ResetJumpCount();
+            }
+        }
 
         // Check left time after platform
         if (_player.IsGrounded || _player.CurrentStateIs<WallState>()) _timeAfterPlatformLeft = 0f;
