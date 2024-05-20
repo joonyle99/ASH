@@ -30,10 +30,6 @@ public class MaterialController : MonoBehaviour
         private set;
     }
 
-    public bool isDuringBlinkEffect;
-    public bool isDuringDisintegrateEffect;
-    public bool isDuringRespawnEffect;
-
     private void Awake()
     {
         // effects

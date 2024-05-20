@@ -8,17 +8,16 @@ public sealed class Mushroom : MonsterBehavior, ILightCaptureListener
     [SerializeField] private float _targetDieTime = 4f;
     [SerializeField] private float _elapsedDieTime;
 
-    public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
+    public void OnLightStay(LightCapturer capturer, LightSource lightSource)
     {
         if (CurrentStateIs<Monster_IdleState>())
         {
+            Debug.Log("Hide State로 전이한다");
+
             // 빛에 닿으면 숨는다
             SetAnimatorTrigger("Hide");
         }
-    }
 
-    public void OnLightStay(LightCapturer capturer, LightSource lightSource)
-    {
         _elapsedDieTime += Time.deltaTime;
 
         // 일정 시간이 지나면 죽는다
@@ -26,8 +25,11 @@ public sealed class Mushroom : MonsterBehavior, ILightCaptureListener
             CurHp -= monsterData.MaxHp;
 
         // 자동 전환을 막는다
-        if (CurrentState.IsAutoStateTransition)
-            CurrentState.ElapsedStayTime = 0f;
+        if (CurrentStateIs<Monster_HideState>())
+        {
+            if (CurrentState.IsAutoStateTransition)
+                CurrentState.ElapsedStayTime = 0f;
+        }
     }
 
     public void OnLightExit(LightCapturer capturer, LightSource lightSource)

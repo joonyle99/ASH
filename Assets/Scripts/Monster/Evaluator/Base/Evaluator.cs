@@ -47,6 +47,11 @@ public abstract class Evaluator : MonoBehaviour
         monster = GetComponent<MonsterBehavior>();
         _startUsableFlag = IsUsable;
     }
+    public virtual void Start()
+    {
+        if (IsUsable)
+            StartCoroutine(UsableDelayCoroutine(1f));
+    }
     public virtual void OnDisable()
     {
         IsUsable = _startUsableFlag;
@@ -102,6 +107,14 @@ public abstract class Evaluator : MonoBehaviour
         return targetCollider;
     }
 
+    private IEnumerator UsableDelayCoroutine(float time)
+    {
+        IsUsable = false;
+
+        yield return new WaitForSeconds(time);
+
+        IsUsable = true;
+    }
     private IEnumerator CoolTimeCoroutine()
     {
         // Debug.Log("타이머 시작");

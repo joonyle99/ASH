@@ -5432,6 +5432,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2446134603135635990, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
   m_PrefabInstance: {fileID: 2054156056098637972}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &6160806952438977742 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5331770771802676314, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
+  m_PrefabInstance: {fileID: 2054156056098637972}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5065250559319982505
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5558,6 +5563,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
+--- !u!212 &4047145014745235835 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5331770771802676314, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
+  m_PrefabInstance: {fileID: 8202209091418447137}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5775430841690296119 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2446134603135635990, guid: 33ea17097504fc14c8ef35c2dd613d74, type: 3}
@@ -6116,6 +6126,11 @@ MonoBehaviour:
   - {fileID: 644745292316011429}
   - {fileID: 6449185150894933084}
   - {fileID: 6562863470153613868}
+  - {fileID: 4047145014745235835}
+  - {fileID: 6160806952438977742}
+  isDuringBlinkEffect: 0
+  isDuringDisintegrateEffect: 0
+  isDuringRespawnEffect: 0
 --- !u!114 &3753330446923127294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6166,10 +6181,10 @@ MonoBehaviour:
     JumpForce: {x: 0, y: 0}
   respawnData:
     DefaultPrefabPosition: {x: 0, y: 0, z: 0}
-    groundRespawnData:
+    GroundRespawnData:
       PatrolPointAPosition: {x: 0, y: 0, z: 0}
       PatrolPointBPosition: {x: 0, y: 0, z: 0}
-    floatingRespawnData:
+    FloatingRespawnData:
       NavMeshData: {fileID: 0}
       PatrolAreaPosition: {x: 0, y: 0, z: 0}
       ChaseAreaPosition: {x: 0, y: 0, z: 0}
