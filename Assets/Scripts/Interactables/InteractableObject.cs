@@ -57,7 +57,13 @@ public abstract class InteractableObject : MonoBehaviour
         get => _isInteractable;
         protected set => _isInteractable = value;
     }
-    public bool IsInteracting { get; private set; }
+
+    private bool _isInteracting;
+    public bool IsInteracting
+    {
+        get => _isInteracting;
+        private set => _isInteracting = value;
+    }
 
     protected bool IsInteractionKeyUp =>  InputManager.Instance.State.InteractionKey.KeyUp;             // 상호작용 키를 떼는 순간인지
     protected bool IsPlayerInteractionState => Player.CurrentStateIs<InteractionState>();               // 플레이어가 상호작용 상태인지

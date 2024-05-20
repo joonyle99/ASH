@@ -15,16 +15,18 @@ public class PlayerInteractionController : MonoBehaviour
         get => _closetTarget;
         set
         {
-            _closetTarget = value;
-
             // 이벤트 방식
-            if (_closetTarget == null)
+            if (_closetTarget != null && value == null)
             {
+                ClosetTarget.ExitInteraction();
+
                 if (_interactionMarker.IsMarking)
                 {
                     _interactionMarker.DisableMarker();
                 }
             }
+
+            _closetTarget = value;
         }
     }
 
@@ -58,6 +60,8 @@ public class PlayerInteractionController : MonoBehaviour
             // 이미 상호작용 중이라면
             if (ClosetTarget.IsInteracting)
             {
+                // Debug.Log("Interacting");
+
                 // 대상에서 상호작용 업데이트 함수를 돌려준다
                 ClosetTarget.UpdateInteracting();
             }
@@ -67,7 +71,7 @@ public class PlayerInteractionController : MonoBehaviour
                 // 상호작용 키를 입력받는다면
                 if (InputManager.Instance.State.InteractionKey.KeyDown)
                 {
-                    Debug.Log("Interact");
+                    // Debug.Log("Interact");
 
                     // 그리고 상호작용 가능한 상태라면
                     if (_player.CanInteract)
@@ -95,7 +99,9 @@ public class PlayerInteractionController : MonoBehaviour
     {
         // 모든 상호작용이 Interaction State로 전이돼야 하는 것은 아니다 (다이얼로그도 상호작용임)
         if (ClosetTarget.StateChange == InteractionStateChangeType.InteractionState)
+        {
             _player.ChangeState<InteractionState>();
+        }
     }
     /// <summary>
     /// 상호작용이 종료되면 Idle 상태로 전환한다
@@ -103,7 +109,9 @@ public class PlayerInteractionController : MonoBehaviour
     public void OnPlayerInteractionExit()
     {
         if (_player.CurrentStateIs<InteractionState>())
+        {
             _player.ChangeState<IdleState>();
+        }
     }
 
     /// <summary>

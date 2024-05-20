@@ -9,6 +9,7 @@ public class RollingStone : InteractableObject
 
     [SerializeField] bool _stopOnRelease = false;
     [SerializeField] bool _canPull = false;
+
     [SerializeField] Collider2D _interactionZone;
     [SerializeField] LayerMask _playerMask;
 
@@ -42,7 +43,17 @@ public class RollingStone : InteractableObject
 
     private void Update()
     {
-        if (_rigidbody.velocity.sqrMagnitude > 0.4f && _rigidbody.GetContacts(new Collider2D[1]) > 0)
+        // contacts count
+        Collider2D[] colliderArray = new Collider2D[1];
+        var contactsCount = _rigidbody.GetContacts(colliderArray);
+
+        var isStoneMoving = Mathf.Abs(_rigidbody.velocity.x) > 0.4f;
+        var isStoneContact = contactsCount > 0;
+
+        var isStonePushed = isStoneMoving && isStoneContact;
+
+        // 플레이어가 돌을 직접 미는 경우
+        if (isStonePushed)
         {
             if (!_rollAudio.isPlaying)
             {
@@ -51,18 +62,31 @@ public class RollingStone : InteractableObject
 
                 _dustParticle.Play();
             }
-            _rollAudioTiming = 1f;
+            else
+            {
+                // 기존 음량으로 설정
+                if (_rollAudioTiming < 1f)
+                {
+                    _rollAudioTiming = 1f;
+                    _rollAudio.volume = _rollAudioOriginalVolume * _rollAudioTiming;
+                }
+            }
         }
+        // 자연스럽게 서서히 멈추는 경우
         else
         {
-            _rollAudioTiming -= Time.deltaTime;
-            _rollAudio.volume = _rollAudioOriginalVolume * _rollAudioTiming;
-            if (_rollAudio.isPlaying && _rollAudioTiming <= 0f)
+            if (_rollAudio.isPlaying)
             {
-                _rollAudioTiming = 0f;
-                _rollAudio.Stop();
+                _rollAudioTiming -= Time.deltaTime;
+                _rollAudio.volume = _rollAudioOriginalVolume * _rollAudioTiming;
 
-                _dustParticle.Stop();
+                if (_rollAudioTiming <= 0f)
+                {
+                    _rollAudioTiming = 0f;
+                    _rollAudio.Stop();
+
+                    _dustParticle.Stop();
+                }
             }
         }
     }
@@ -70,10 +94,14 @@ public class RollingStone : InteractableObject
     {
         List<Collider2D> contacts = new List<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D();
+
         filter.layerMask = _playerMask;
-        filter.useLayerMask= true;
+        filter.useLayerMask = true;
+
         var contactCount = _interactionZone.OverlapCollider(filter, contacts);
-        if (IsInteractionKeyUp || !IsPlayerInteractionState || (!_canPull && Player.RawInputs.Movement.x * _moveDirection < 0) ||
+
+        if (IsInteractionKeyUp || !IsPlayerInteractionState ||
+            (!_canPull && Player.RawInputs.Movement.x * _moveDirection < 0) ||
             contactCount == 0)
         {
             ExitInteraction();
