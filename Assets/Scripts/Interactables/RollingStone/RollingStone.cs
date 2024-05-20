@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RollingStone : InteractableObject
 {
-    [SerializeField] bool _clampSpeed = false;
+    [SerializeField] bool _isMaxClampSpeed = true;
     [SerializeField] float _maxRollSpeed;
     [SerializeField] float _pushPower;
 
@@ -15,8 +15,8 @@ public class RollingStone : InteractableObject
 
     [SerializeField] ParticleHelper _dustParticle;
 
-    [SerializeField] SoundList _soundList;
-    [SerializeField] float _pushSoundInterval;
+    // [SerializeField] SoundList _soundList;
+    // [SerializeField] float _pushSoundInterval;
 
     [SerializeField] AudioSource _rollAudio;
     Rigidbody2D _rigidbody;
@@ -109,15 +109,42 @@ public class RollingStone : InteractableObject
     }
     public override void FixedUpdateInteracting()
     {
-        if (_canPull && Player.RawInputs.Movement.x * _moveDirection < 0)
-            _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower * 0.7f);
-        else
+        var isDirSync = Player.RawInputs.Movement.x * _moveDirection > 0f;
+        var isOppositeDirSync = Player.RawInputs.Movement.x * _moveDirection < 0f;
+        var isMoveDirNoneSync = Player.RawInputs.Movement.x * _rigidbody.velocity.x < 0f;
+
+        if (isDirSync)
+        {
+            // Debug.Log("민다");
+
+            // Rolling Stone의 x축 방향의 속도와 플레이어가 미는 방향이 다르면 속도를 0으로 만들어준다.
+            if (isMoveDirNoneSync)
+                _rigidbody.velocity = Vector2.zero;
+
             _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower);
 
-        if (Player.RawInputs.Movement.x * _moveDirection > 0)
-            Player.Rigidbody.AddForce(Player.RawInputs.Movement * 70);
-        if (_clampSpeed)
+            // 플레이어도 함께 이동한다
+            Player.Rigidbody.AddForce(Player.RawInputs.Movement * 70f);
+        }
+        else if (isOppositeDirSync)
+        {
+            if (_canPull)
+            {
+                // Debug.Log("당긴다");
+
+                // Rolling Stone의 x축 방향의 속도와 플레이어가 미는 방향이 다르면 속도를 0으로 만들어준다.
+                if (isMoveDirNoneSync)
+                    _rigidbody.velocity = Vector2.zero;
+
+                _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower * 0.7f);
+            }
+        }
+
+        if (_isMaxClampSpeed)
+        {
+            // Debug.Log("경사면에서의 최대 속도 조정 중");
             _rigidbody.velocity = Vector2.ClampMagnitude(_rigidbody.velocity, _maxRollSpeed);
+        }
     }
     protected override void OnInteractionExit()
     {

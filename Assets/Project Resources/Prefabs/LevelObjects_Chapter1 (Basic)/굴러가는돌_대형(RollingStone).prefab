@@ -9966,7 +9966,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9192b4ea5acf7241b68c579c1caae69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactableObject: {fileID: 1284470426582742949}
+  triggerActivators: []
+  _interactionObject: {fileID: 0}
 --- !u!60 &1706213875
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -19955,8 +19956,9 @@ PolygonCollider2D:
       - {x: -2.963787, y: -0.6299727}
       - {x: -2.4513214, y: -1.7809896}
       - {x: -1.5149997, y: -2.624057}
-      - {x: -0.31672087, y: -3.0134013}
-      - {x: 0.93632185, y: -2.881701}
+      - {x: -0.5452441, y: -2.947056}
+      - {x: 0.408795, y: -2.9457078}
+      - {x: 1.3137741, y: -2.7584457}
       - {x: 2.027466, y: -2.2517285}
       - {x: 2.768043, y: -1.2324115}
 --- !u!114 &1284470426582742949
@@ -19971,11 +19973,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc0bff52c27078c4a90c1ff58e5a05a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactionMarkerPoint: {fileID: 0}
   _isInteractable: 1
-  _animationType: 1
+  _interactionMarkerPoint: {fileID: 0}
   _stateChange: 1
-  _clampSpeed: 1
+  _animationType: 1
+  _isMaxClampSpeed: 1
   _maxRollSpeed: 2
   _pushPower: 600
   _stopOnRelease: 0
@@ -19985,8 +19987,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   _dustParticle: {fileID: 4411306129150711099}
-  _soundList: {fileID: 7537142565806814644}
-  _pushSoundInterval: 1.5
   _rollAudio: {fileID: 7969468135733862207}
 --- !u!114 &1857939148
 MonoBehaviour:
