@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeonManager>
@@ -12,9 +8,10 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     [SerializeField] SoundClipData _bossDungeonBGM;
 
     public int CurrentKeyCount => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount");
-
     public bool AllKeysCollected => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount") == _maxKeyCount;
-    BossKey[] _bossKeys; 
+
+    BossKey[] _bossKeys;
+
     new void Awake()
     {
         base.Awake();
@@ -23,6 +20,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
             SoundManager.Instance.PlayBGM(_bossDungeonBGM.Clip, _bossDungeonBGM.Volume);
         }
     }
+
     public void OnKeyObtained(BossKey key)
     {
         GameUIManager.AddBossKey();

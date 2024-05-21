@@ -73,6 +73,10 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
                 effect.Function?.Invoke();
             }
         }
+
         IsPlaying = false;
+
+        // 플레이어 무적 상태 해제
+        SceneContext.Current.Player.IsGodMode = false;
     }
 }

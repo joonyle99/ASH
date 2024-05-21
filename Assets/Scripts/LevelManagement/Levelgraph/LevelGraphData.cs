@@ -16,8 +16,8 @@ namespace LevelGraph
 
         public PassageData GetExitPassageData(PassageData entrancePassageData)
         {
-            Debug.Log(entrancePassageData.SceneName);
-            Debug.Log(entrancePassageData.PassageName);
+            // Debug.Log(entrancePassageData.SceneName);
+            // Debug.Log(entrancePassageData.PassageName);
 
             PassageData exitPassageData = new PassageData();
             int match = _edges.FindIndex(data => data.EntranceScene.SceneName == entrancePassageData.SceneName && data.EntrancePassage == entrancePassageData.PassageName);

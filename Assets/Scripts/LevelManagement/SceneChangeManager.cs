@@ -32,8 +32,6 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
     {
         string sceneName = SceneManager.GetActiveScene().name;
 
-        Debug.Log(sceneName);
-
         var result = _levelGraphData.GetExitPassageData(new PassageData(sceneName, passageName));
         if (result.SceneName == "")
             return new PassageData(sceneName, passageName);

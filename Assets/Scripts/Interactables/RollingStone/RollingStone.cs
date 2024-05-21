@@ -109,9 +109,9 @@ public class RollingStone : InteractableObject
     }
     public override void FixedUpdateInteracting()
     {
-        var isDirSync = Player.RawInputs.Movement.x * _moveDirection > 0f;
-        var isOppositeDirSync = Player.RawInputs.Movement.x * _moveDirection < 0f;
-        var isMoveDirNoneSync = Player.RawInputs.Movement.x * _rigidbody.velocity.x < 0f;
+        var isDirSync = Player.RawInputs.Movement.x * _moveDirection > 0.1f;
+        var isOppositeDirSync = Player.RawInputs.Movement.x * _moveDirection < -0.1f;
+        var isMoveDirNoneSync = Player.RawInputs.Movement.x * _rigidbody.velocity.x < -0.1f;
 
         if (isDirSync)
         {

@@ -53,10 +53,12 @@ public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
         int index = _sceneEvents.BinarySearch(sceneEvent, _eventComparator);
         if (index < 0)
             index = 0;
+
         _sceneEvents.Insert(index, sceneEvent);
 
         if (_currentState != State.Cutscene)
             RefreshSceneEventStates();
+
         return sceneEvent;
     }
     public void RemoveSceneEvent(SceneEffectEvent sceneEvent)

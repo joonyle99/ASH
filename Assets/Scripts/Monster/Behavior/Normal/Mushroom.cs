@@ -8,18 +8,6 @@ public sealed class Mushroom : MonsterBehavior, ILightCaptureListener
     [SerializeField] private float _targetDieTime = 4f;
     [SerializeField] private float _elapsedDieTime;
 
-    protected override void Awake()
-    {
-        Debug.Log("Awake Callback");
-        base.Awake();
-    }
-
-    protected override void Start()
-    {
-        Debug.Log("Start Callback");
-        base.Start();
-    }
-
     public void OnLightStay(LightCapturer capturer, LightSource lightSource)
     {
         if (IsDead) return;
