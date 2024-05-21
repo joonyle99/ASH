@@ -457,6 +457,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     }
     public IEnumerator ChangeImageCoroutine()
     {
+        /*
         // 사망 이미지로 변경하기 위한 가림막 효과
         foreach (var effect in DisintegrateEffects)
             effect.gameObject.SetActive(true);  // play on awake effect
@@ -464,6 +465,9 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         // 파티클이 어느정도 나올때까지 대기
         var endParticleTime = DisintegrateEffects[0].main.duration;
         yield return new WaitForSeconds(endParticleTime / 2f);
+        */
+
+        // TODO: 페이드 인 / 아웃 이펙트로 보스 죽는 거 가려줘야함
 
         // 넉다운 이미지로 변경
         SetAnimatorTrigger("DieEnd");
@@ -493,11 +497,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     }
     public IEnumerator PlayCutSceneCoroutine(string name)
     {
-        // Debug.Log("9번째 공격 성공, 컷씬 실행을 대기합니다");
-
         yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
-
-        // Debug.Log("Monster_IdleState이므로 컷씬을 실행합니다");
 
         _cutscenePlayerList.PlayCutscene(name);
     }
@@ -509,6 +509,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         // 종유석 생성 범위
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector3(transform.position.x - 25f, _ceilingHeight, transform.position.z), new Vector3(transform.position.x + 25f, _ceilingHeight, transform.position.z));
+
         if (MainBodyCollider2D)
         {
             // 오른쪽 종유석 범위
@@ -520,7 +521,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
             Gizmos.color = Color.green;
             Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.Start, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.Start, _ceilingHeight - 3f, transform.position.z));
             Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.End, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.End, _ceilingHeight - 3f, transform.position.z));
-
         }
     }
 }
