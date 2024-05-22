@@ -30,19 +30,19 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
-    [Header("Slash")]
+    [Header("Skill: Slash")]
     [Space]
 
     [SerializeField] private Bear_Slash _slash01;
     [SerializeField] private Bear_Slash _slash02;
     private Vector2 _playerPos;
 
-    [Header("BodySlam")]
+    [Header("Skill: BodySlam")]
     [Space]
 
     [SerializeField] private float _bodySlamLength;
 
-    [Header("Stomp")]
+    [Header("Skill: Stomp")]
     [Space]
 
     [SerializeField] private Bear_Stomp _stomp;
@@ -64,7 +64,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     [SerializeField] private Range _normalStalactiteRange;
     [SerializeField] private Range _rageStalactiteRange;
 
-    [Header("Earthquake")]
+    [Header("Skill: Earthquake")]
     [Space]
 
     [SerializeField] private Transform _waveSpawnPoint;
@@ -74,6 +74,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     [Header("Die End VFX")]
     [Space]
 
+    [SerializeField] private GameObject _bossKnockDownGameObject;
     [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;         // 색이 서서히 돌아오는 효과
     [SerializeField] private ParticleSystem[] DisintegrateEffects;                          // 잿가루 효과 파티클
 
@@ -84,8 +85,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
     [Space]
 
-    [SerializeField]
-    private bool _isLightingGuide;
+    [SerializeField] private bool _isLightingGuide;
     [SerializeField] private int _earthquakeCount;
     public int EarthquakeCount
     {
@@ -95,8 +95,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
     [Space]
 
-    [SerializeField]
-    private bool _is9thAttackSuccess;
+    [SerializeField] private bool _is9thAttackSuccess;
     [SerializeField] private int _totalHitCount;
     public int TotalHitCount
     {
@@ -118,6 +117,9 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     [Space]
 
     [SerializeField] private float _distanceFromTarget;
+
+    [Space]
+
     [SerializeField] InputSetterScriptableObject _moveRightInputSetter;
     [SerializeField] InputSetterScriptableObject _moveLeftInputSetter;
     [SerializeField] InputSetterScriptableObject _stayStillInputSetter;
@@ -425,19 +427,30 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     {
         yield return new WaitForSeconds(1f);
 
+        // TODO: draw ray로 디버깅 하면서 테스트하기 정확하지가 않다.
+
         var player = SceneContext.Current.Player;
+        Debug.DrawRay(player.transform.position, Vector3.down * 3f, Color.cyan, 10f);
+
         var playerPosX = player.transform.position.x;
         var bearToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
-        var targetPosX = transform.position.x + (bearToPlayerDir) * _distanceFromTarget;
+        Debug.DrawRay(transform.position, Vector3.right * bearToPlayerDir * 3f, Color.cyan, 10f);
 
-        var playerMoveDir1 = System.Math.Sign(targetPosX - playerPosX);
-        yield return StartCoroutine(MoveCoroutine(playerMoveDir1, targetPosX));
+        var playerMoveTargetPosX = transform.position.x + (bearToPlayerDir) * _distanceFromTarget;
+        Debug.DrawRay(new Vector3(playerMoveTargetPosX, transform.position.y, transform.position.z), Vector3.down * 3f, Color.cyan, 10f);
+
+        var playerMoveDir = System.Math.Sign(playerMoveTargetPosX - playerPosX);
+        Debug.DrawRay(player.transform.position, Vector3.right * playerMoveDir * 3f, Color.cyan, 10f);
+
+        Debug.DrawRay(transform.position + Vector3.up, Vector3.right * bearToPlayerDir * _distanceFromTarget, Color.cyan, 10f);
+
+        yield return StartCoroutine(MoveCoroutine(playerMoveDir, playerMoveTargetPosX));
 
         // 만약 플레이어가 뒤돌고 있다면 방향을 돌려준다
         if (bearToPlayerDir == player.RecentDir)
         {
-            var playerMoveDir2 = (-1) * playerMoveDir1;
-            yield return StartCoroutine(MoveCoroutine(playerMoveDir2, targetPosX + playerMoveDir2 * 0.5f));
+            var playerMoveDir2 = (-1) * playerMoveDir;
+            yield return StartCoroutine(MoveCoroutine(playerMoveDir2, playerMoveTargetPosX + playerMoveDir2 * 0.1f));
         }
 
         InputManager.Instance.ChangeInputSetter(_stayStillInputSetter);
@@ -457,7 +470,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     }
     public IEnumerator ChangeImageCoroutine()
     {
-        /*
         // 사망 이미지로 변경하기 위한 가림막 효과
         foreach (var effect in DisintegrateEffects)
             effect.gameObject.SetActive(true);  // play on awake effect
@@ -465,9 +477,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         // 파티클이 어느정도 나올때까지 대기
         var endParticleTime = DisintegrateEffects[0].main.duration;
         yield return new WaitForSeconds(endParticleTime / 2f);
-        */
-
-        // TODO: 페이드 인 / 아웃 이펙트로 보스 죽는 거 가려줘야함
 
         // 넉다운 이미지로 변경
         SetAnimatorTrigger("DieEnd");
@@ -483,6 +492,16 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         SoundManager.Instance.StopBGM();
 
         yield return new WaitUntil(() => bossClearColorChangeEffect.isEndEffect);
+
+        Debug.Log("넉다운 이미지 비활성화");
+
+        var images = _bossKnockDownGameObject.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var spriteRenderer in images)
+        {
+            var color = spriteRenderer.color;
+            color.a = 0f;
+            spriteRenderer.color = color;
+        }
     }
     public void DisintegrateEffect()
     {
@@ -493,7 +512,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         var effect = GetComponent<DisintegrateEffect>();
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
-        Destroy(transform.root ? transform.root.gameObject : gameObject);
+        Destroy(transform.parent ? transform.parent.gameObject : gameObject);
     }
     public IEnumerator PlayCutSceneCoroutine(string name)
     {

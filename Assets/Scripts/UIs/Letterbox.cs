@@ -16,6 +16,16 @@ public class Letterbox : MonoBehaviour
         SetHeight(0);
     }
 
+    void SetHeight(float height)
+    {
+        _topImage.rectTransform.sizeDelta = new Vector2(_topImage.rectTransform.sizeDelta.x, height);
+        _bottomImage.rectTransform.sizeDelta = new Vector2(_bottomImage.rectTransform.sizeDelta.x, height);
+    }
+
+    /// <summary>
+    /// top / bottom letter box open
+    /// </summary>
+    /// <param name="instant">immediately open</param>
     public void Open(bool instant = false)
     {
         StartCoroutine(OpenCoroutine(instant));
@@ -43,11 +53,6 @@ public class Letterbox : MonoBehaviour
         _topImage.color = color;
         _bottomImage.color = color;
         SetHeight(_letterboxHeight);
-    }
-    void SetHeight(float height)
-    {
-        _topImage.rectTransform.sizeDelta = new Vector2(_topImage.rectTransform.sizeDelta.x, height);
-        _bottomImage.rectTransform.sizeDelta = new Vector2(_bottomImage.rectTransform.sizeDelta.x, height);
     }
     public void Close()
     {

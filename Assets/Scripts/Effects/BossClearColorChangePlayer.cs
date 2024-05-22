@@ -24,6 +24,8 @@ public class BossClearColorChangePlayer : MonoBehaviour
     }
     IEnumerator PlayEffectCoroutine()
     {
+        Debug.Log("색 변화 시작");
+
         float eTime = 0f;
         while (eTime < _duration)
         {
@@ -36,5 +38,7 @@ public class BossClearColorChangePlayer : MonoBehaviour
         }
 
         isEndEffect = true;
+
+        Debug.Log("색 변화 종료");
     }
 }
