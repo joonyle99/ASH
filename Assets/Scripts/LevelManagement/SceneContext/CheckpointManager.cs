@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class CheckpointManager : MonoBehaviour
@@ -15,6 +12,7 @@ public class CheckpointManager : MonoBehaviour
     public Result BuildPlayable()
     {
         Result buildResult = Result.Success;
+
         if (SceneContext.Current.Player != null)
             LatestCheckpointPosition = SceneContext.Current.Player.transform.position;
         else
@@ -22,5 +20,4 @@ public class CheckpointManager : MonoBehaviour
 
         return buildResult;
     }
-
 }

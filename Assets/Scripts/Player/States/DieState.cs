@@ -8,10 +8,6 @@ public class DieState : PlayerState
     [Header("Die State")]
     [Space]
 
-    [SerializeField] InputSetterScriptableObject _stayStillSetter;
-
-    [Space]
-
     [SerializeField] private float _dieEffectDelay = 0.3f;
 
     [Space]
@@ -51,7 +47,7 @@ public class DieState : PlayerState
     {
         _player = Player;
 
-        InputManager.Instance.ChangeInputSetter(_stayStillSetter);
+        InputManager.Instance.ChangeToStayStillSetter();
 
         _player.SoundList.PlaySFX("SE_Die_02(Short)");
 
@@ -73,19 +69,10 @@ public class DieState : PlayerState
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
         Debug.Log($"scene name: {SceneManager.GetActiveScene().name}");
-        Debug.Log($"passage name: {SceneContext.Current.EntrancePassage.PassageName}"); // TODO: 여기에 접근이 안된다
+        Debug.Log($"passage name: {SceneContext.Current.EntrancePassage.PassageName}");
 
-        // SceneChangeManager.Instance.ChangeToPlayableScene(, );
-
-        /*
-        if (SceneContext.Current.EntrancePassage == null)
-        {
-           var passageName = SceneContext.Current.EntrancePassage.PassageName;
-           passageName = "";
-        }
-        */
+        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
     }
-
     private IEnumerator ExitCoroutine()
     {
         yield return null;

@@ -71,6 +71,6 @@ public class OptionManager : MonoBehaviour
     IEnumerator OpenTitleSceneCoroutine()
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-        SceneChangeManager.Instance.ChangeToScene("TitleScene");
+        SceneChangeManager.Instance.ChangeToNonPlayableScene("TitleScene");
     }
 }

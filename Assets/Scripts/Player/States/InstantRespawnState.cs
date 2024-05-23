@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class InstantRespawnState : PlayerState
 {
-    [Header("Instant Respawn State")]
-    [Space]
-
-    [SerializeField] private InputSetterScriptableObject _stayStillSetter;
-
     private PlayerBehaviour _player;
 
     protected override bool OnEnter()
@@ -30,7 +25,7 @@ public class InstantRespawnState : PlayerState
 
     private IEnumerator EnterCoroutine()
     {
-        InputManager.Instance.ChangeInputSetter(_stayStillSetter);
+        InputManager.Instance.ChangeToStayStillSetter();
 
         Player.Animator.speed = 0;
         Player.enabled = false;

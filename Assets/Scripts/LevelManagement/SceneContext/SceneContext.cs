@@ -1,11 +1,10 @@
 using UnityEngine;
 using System.Linq;
-using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
 
 /// <summary>
 /// 현재 씬에 대한 동작은 모두 담당함.
-/// 씬의 주요 오브젝트에 대한 레퍼런스를 갖고 있음
+/// 씬의 '주요 오브젝트'에 대한 레퍼런스를 갖고 있음
 /// </summary>
 public class SceneContext : MonoBehaviour
 {
@@ -16,13 +15,11 @@ public class SceneContext : MonoBehaviour
     public ProCamera2D Camera { get; private set; }
 
     // extra
-    public Passage EntrancePassage { get; private set; }
+    public Passage EntrancePassage { get; private set; }                                                                                // 씬의 입구
     public SceneTransitionPlayer SceneTransitionPlayer { get; private set; }
     private PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer => SceneTransitionPlayer as PlayableSceneTransitionPlayer;
 
-    private List<Passage> _passages = new();
-
-    [SerializeField] private CheckpointManager _checkpointManager;
+    [SerializeField] private CheckpointManager _checkpointManager;          // 체크포인트 매니저
     public CheckpointManager CheckPointManager => _checkpointManager;
 
     protected void Awake()
@@ -30,6 +27,7 @@ public class SceneContext : MonoBehaviour
         Current = this;
         Camera = FindObjectOfType<ProCamera2D>();
 
+        // SceneContext에 체크포인트 매니저를 추가한다
         if (_checkpointManager == null)
         {
             _checkpointManager = GetComponentInChildren<CheckpointManager>();
@@ -45,51 +43,47 @@ public class SceneContext : MonoBehaviour
         Result buildResult = Result.Success;
 
         // local function
-        void UpdateBuildResult<T>(T reference)
+        void CheckBuildResult<T>(T target)
         {
-            if (reference == null)
+            if (target == null)
             {
-                Debug.LogWarning("No " + typeof(T).Name + " in scene!");
+                Debug.LogWarning($"There is No {typeof(T).Name} in scene !");
 
-                if(buildResult == Result.Success)
+                if (buildResult == Result.Success)
                     buildResult = Result.Fail;
             }
         }
 
-        var transitionPlayers = FindObjectsOfType<PlayableSceneTransitionPlayer>();
+        // find references
 
+        // 1. player
+        Player = FindFirstObjectByType<PlayerBehaviour>();
+
+        // 2. scene transition player
+        var playableTransitions = FindObjectsOfType<PlayableSceneTransitionPlayer>();
         var count = 0;
-        while(count < transitionPlayers.Length)
+        while (count < playableTransitions.Length)
         {
-            if (transitionPlayers[count].GetComponent<SceneChangeManager>() == null)
+            // scene change manager가 아닌 scene transition player를 찾는다. (ex: Initial Scene Transition Player) 
+            if (playableTransitions[count].GetComponent<SceneChangeManager>() == null)
             {
-                SceneTransitionPlayer = transitionPlayers[count];
+                SceneTransitionPlayer = playableTransitions[count];
+                Debug.Log($"Scene Transition Player: {SceneTransitionPlayer.gameObject.name}");
                 break;
             }
             count++;
         }
 
-        // Find
-        Player = FindFirstObjectByType<PlayerBehaviour>();
-        _passages = FindObjectsByType<Passage>(FindObjectsSortMode.None).ToList();
-        EntrancePassage = _passages.Find(x => x.PassageName == entranceName);
-
-        if (EntrancePassage == null)
-        {
-            Debug.LogWarning("Passage " + entranceName + " is not found in this scene !!");
-
-            if (_passages.Count > 0)
-            {
-                EntrancePassage = _passages.Find(x => x.PassageName == "Entrance");
-            }
-        }
+        // 3. entrance
+        var passages = FindObjectsByType<Passage>(FindObjectsSortMode.None);
+        EntrancePassage = passages.ToList().Find(x => x.PassageName == entranceName);
 
         // update
-        UpdateBuildResult(Player);
-        UpdateBuildResult(_passages);
-        UpdateBuildResult(SceneTransitionPlayer);
+        CheckBuildResult(Player);
+        CheckBuildResult(SceneTransitionPlayer);
+        CheckBuildResult(EntrancePassage);
 
-        // Build CheckpointManager
+        // build
         Result checkpointBuildResult = _checkpointManager.BuildPlayable();
         if (checkpointBuildResult == Result.Fail)
             buildResult = Result.Fail;
@@ -102,15 +96,24 @@ public class SceneContext : MonoBehaviour
         if (defaultBuildResult == Result.Fail)
             buildResult = Result.Fail;
 
+        Debug.Log($"SceneContext 정상적 빌드 성공 여부: {buildResult == Result.Success}");
+
         return buildResult;
     }
     public Result DefaultBuild()
     {
         Result buildResult = Result.Success;
 
-        // find refs
         if (SceneTransitionPlayer == null)
+        {
             SceneTransitionPlayer = FindFirstObjectByType<SceneTransitionPlayer>();
+
+            if (SceneTransitionPlayer == null)
+            {
+                Debug.LogError("There is No Any Scene Transition Player in scene ! (even SceneChangeManager)");
+                buildResult = Result.Fail;
+            }
+        }
 
         // broadcast OnLoad()
         if (buildResult == Result.Success)

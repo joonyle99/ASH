@@ -1,31 +1,42 @@
 ﻿using LevelGraph;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// 씬 전환을 담당하는 매니저
+/// </summary>
 public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManager>, ISceneContextBuildListener
 {
-    public bool IsChanging { get; private set; } = false;
+    public bool IsChanging { get; private set; }
 
-    // TEMP : 게임 글로벌 데이터를 저장하는 곳으로 이동
-    [SerializeField] private LevelGraphData _levelGraphData;
-    [SerializeField] private SceneTransitionPlayer _defaultSceneTransitionPlayer;
+    [SerializeField] private LevelGraphData _levelGraphData;                        // 레벨 그래프
+    [SerializeField] private SceneTransitionPlayer _defaultSceneTransitionPlayer;   // 기본적으로 사용할 씬 전환 플레이어 (Either Playable or None Playable)
 
     private void Start()
     {
-        SceneContext sceneContext = FindOrCreateSceneContext();
-        Result buildResult = sceneContext.BuildPlayable("");
+        SceneContext sceneContext = FindOrCreateSceneContext();                     // 씬 컨텍스트 생성
+
+        var passagesInCurrentScene = FindObjectsByType<Passage>(FindObjectsSortMode.None);
+        var firstEntranceName = "Enter " + SceneManager.GetActiveScene().name;
+        var hasEntrance = passagesInCurrentScene.ToList().Find(passage => passage.PassageName == firstEntranceName);
+        var entranceName = hasEntrance ? firstEntranceName : "";
+
+        Result buildResult = sceneContext.BuildPlayable(entranceName);              // 씬 컨텍스트 빌드
     }
 
     public SceneContext FindOrCreateSceneContext()
     {
         SceneContext sceneContext = FindFirstObjectByType<SceneContext>();
 
+        // SceneContext를 생성해주는 경우
         if (sceneContext == null)
         {
             GameObject go = new GameObject("SceneContext (Created)");
             sceneContext = go.AddComponent<SceneContext>();
         }
+
         return sceneContext;
     }
     public PassageData GetNextPassageData(string passageName)
@@ -38,6 +49,10 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
         return result;
     }
 
+    public void ChangeToNonPlayableScene(string sceneName, System.Action changeDoneCallback = null)
+    {
+        StartCoroutine(ChangeToNonPlayableSceneCoroutine(sceneName, changeDoneCallback));
+    }
     public void ChangeToPlayableScene(string sceneName, string passageName)
     {
         if (IsChanging)
@@ -45,16 +60,8 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
 
         StartCoroutine(ChangeToPlayableSceneCoroutine(sceneName, passageName));
     }
-    public void ChangeToScene(string sceneName, System.Action changeDoneCallback)
-    {
-        StartCoroutine(ChangeToSceneCoroutine(sceneName, changeDoneCallback));
-    }
-    public void ChangeToScene(string sceneName)
-    {
-        StartCoroutine(ChangeToSceneCoroutine(sceneName, null));
-    }
 
-    private IEnumerator ChangeToSceneCoroutine(string sceneName, System.Action changeDoneCallback)
+    private IEnumerator ChangeToNonPlayableSceneCoroutine(string sceneName, System.Action changeDoneCallback)
     {
         IsChanging = true;
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
@@ -64,8 +71,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
         Result buildResult = sceneContext.BuildPlayable("");
         IsChanging = false;
 
-        if (changeDoneCallback != null)
-            changeDoneCallback.Invoke();
+        changeDoneCallback?.Invoke();
     }
     private IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string passageName)
     {

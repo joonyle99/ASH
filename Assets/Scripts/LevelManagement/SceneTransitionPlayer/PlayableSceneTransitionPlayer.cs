@@ -21,11 +21,11 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     public override IEnumerator EnterSceneEffectCoroutine()
     {
         StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
+
         Passage entrance = SceneContext.Current.EntrancePassage;
-        if (entrance == null)
-        {
-            yield break;
-        }
+
+        if (entrance == null) yield break;
+
         SceneEffectManager.Current.Camera.SnapFollow();
 
         yield return StartCoroutine(entrance.PlayerExitCoroutine());
