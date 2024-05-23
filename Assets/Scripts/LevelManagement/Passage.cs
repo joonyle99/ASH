@@ -34,6 +34,7 @@ public class Passage : TriggerZone
     {
         if (_isPlayerExiting || !_canEnter)
             return;
+
         StartCoroutine(ExitSceneCoroutine());
     }
 
@@ -44,9 +45,6 @@ public class Passage : TriggerZone
 
         var nextPassageData = SceneChangeManager.Instance.GetNextPassageData(name);
         string nextSceneName = nextPassageData.SceneName;
-
-        // Debug.Log(name);
-        // Debug.Log(nextSceneName);
 
         yield return new WaitUntil(() => _exitSceneCutscene.IsDone);
 

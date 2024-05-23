@@ -39,7 +39,7 @@ public class PrologueManager : MonoBehaviour
     private IEnumerator StartGame()
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-        SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "");
+        SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "Enter 1-1");
 
         // play bgm
         SoundManager.Instance.PlayCommonBGM("Exploration1", 0.7f);
