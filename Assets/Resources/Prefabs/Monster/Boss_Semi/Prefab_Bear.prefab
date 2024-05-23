@@ -467,10 +467,10 @@ MonoBehaviour:
   <CenterOfMass>k__BackingField: {fileID: 68886007898307180}
   <IsGroggy>k__BackingField: 0
   <IsRage>k__BackingField: 0
-  finalTargetHurtCount: 1
+  finalTargetHurtCount: 18
   attackCountRange:
-    Start: 1
-    End: 1
+    Start: 2
+    End: 4
   targetAttackCount: 0
   currentAttackCount: 0
   hitCountRange:
@@ -485,7 +485,7 @@ MonoBehaviour:
   _nextAttack: 0
   _slash01: {fileID: 7501307551420893577, guid: 0e4912bd354e0a745b23c90eeca2032d, type: 3}
   _slash02: {fileID: 7501307551420893577, guid: 8d76e949b7f36ac4198f8bb85cbfb2ae, type: 3}
-  _bodySlamLength: 60
+  _bodySlamPower: 60
   _stomp: {fileID: 9197840957116043268}
   _stompEffectPrefab: {fileID: 4196376847951404993, guid: 8c9746120f8843545ba62bd1c65a294a, type: 3}
   _stalactitePrefab: {fileID: 6190995042310891283, guid: e11f98982e6347c47be5d6f4d5fbc091, type: 3}
@@ -501,7 +501,6 @@ MonoBehaviour:
     Start: 0
     End: 20
   _minDistanceEach: 0.5
-  _usedPosX: []
   _normalStalactiteRange:
     Start: 7
     End: 7
@@ -511,22 +510,19 @@ MonoBehaviour:
   _waveSpawnPoint: {fileID: 1528936702}
   _waveSkillPrefab: {fileID: 1687034788766365448, guid: 839e0876f9e523a42bb75e4004df8274, type: 3}
   _earthquakeCameraShake: {fileID: 11400000, guid: f0baf86e91dbdea4baab2071a43edb5a, type: 2}
-  _bossKnockDownGameObject: {fileID: 509879458300447807}
+  _cutscenePlayerList: {fileID: 68886008199415118}
+  _isLightingGuide: 0
+  _earthquakeCount: 0
+  _is9ThAttackSuccess: 0
+  _totalHitCount: 0
   bossClearColorChangeEffect: {fileID: 0}
-  DisintegrateEffects:
+  _disintegrateEffects:
   - {fileID: 5403583929865551525}
   - {fileID: 5403583929826336060}
   - {fileID: 5403583928566379217}
   - {fileID: 5403583929368315107}
-  _cutscenePlayerList: {fileID: 68886008199415118}
-  _isLightingGuide: 0
-  _earthquakeCount: 0
-  _is9thAttackSuccess: 0
-  _totalHitCount: 0
-  _distanceFromTarget: 6
-  _moveRightInputSetter: {fileID: 11400000, guid: d64c3139295c5ec4697d66ad6a58d04f, type: 2}
-  _moveLeftInputSetter: {fileID: 11400000, guid: bda65bfa556fab147895b7d4385ad239, type: 2}
-  _stayStillInputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+  _bossKnockDownGameObject: {fileID: 509879458300447807}
+  _distanceFromBear: 6
 --- !u!114 &57872128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -748,7 +744,7 @@ MonoBehaviour:
     cutscenePlayer: {fileID: 0}
   - name: 9th Attack Success
     cutscenePlayer: {fileID: 0}
-  - name: Bear Die
+  - name: Final CutScene
     cutscenePlayer: {fileID: 0}
 --- !u!210 &68886007787193405
 SortingGroup:
