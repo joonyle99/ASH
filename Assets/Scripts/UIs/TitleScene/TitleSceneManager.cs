@@ -42,6 +42,9 @@ public class TitleSceneManager : MonoBehaviour
     IEnumerator SceneChangeCoroutine(string sceneName)
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-        SceneChangeManager.Instance.ChangeToNonPlayableScene(sceneName, ()=>  SoundManager.Instance.PlayCommonBGM("Exploration1"));
+        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, "Enter " + sceneName.ToString());
+
+        // play bgm
+        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.7f);
     }
 }
