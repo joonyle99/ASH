@@ -206,6 +206,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         if (InputManager.Instance.State.AttackKey.KeyDown && CanAttack)
             _playerAttackController.CastAttack();
 
+        // TEMP: 체력 회복
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            RecoverCurHp(2);
+        }
+
         #endregion
 
         #region Basic Behavior
