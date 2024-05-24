@@ -1,12 +1,16 @@
-using HappyTools;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
 public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
 {
+    private enum State { Idle, SceneEvent, Cutscene }
+
+    private State _currentState = State.Idle;
+    private CameraController _currentCamera;
+    private List<SceneEffectEvent> _sceneEvents;
+    private List<Cutscene> _cutSceneQueue;
+    private SceneEventComparator _eventComparator;
+
     public static SceneEffectManager Current { get; private set; }
     public CameraController Camera
     {
@@ -17,18 +21,27 @@ public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
             return _currentCamera;
         }
     }
-    CameraController _currentCamera;
-    enum State { Idle, SceneEvent, Cutscene }
-    State _currentState = State.Idle;
-    List<SceneEffectEvent> _sceneEvents = new List<SceneEffectEvent>();
-    List<Cutscene> _cutSceneQueue = new List<Cutscene>();
 
-
-    SceneEventComparator _eventComparator = new SceneEventComparator();
-    void Awake()
+    private void Awake()
     {
         Current = this;
+
+        _sceneEvents = new List<SceneEffectEvent>();
+        _cutSceneQueue = new List<Cutscene>();
+        _eventComparator = new SceneEventComparator();
     }
+    void Update()
+    {
+        if ( _currentState == State.SceneEvent)
+        {
+            foreach (var sceneEvent in _sceneEvents)
+            {
+                if (sceneEvent.Enabled)
+                    sceneEvent.OnUpdate();
+            }
+        }
+    }
+
     public void OnSceneContextBuilt()
     {
         if (_currentState == State.Idle )
@@ -118,17 +131,7 @@ public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
                 enable = false;
         }
     }
-    void Update()
-    {
-        if ( _currentState == State.SceneEvent)
-        {
-            foreach (var sceneEvent in _sceneEvents)
-            {
-                if (sceneEvent.Enabled)
-                    sceneEvent.OnUpdate();
-            }
-        }
-    }
+
     //Idle : 그냥 평시, 아무런 카메라효과도 없는 default 상태. 카메라가 플레이어 쫓아다님. 이 상태는 사전정의될수있음
 
     //MajorEvent : 평시와 컷씬 사이로, 오브젝트들은 전부 작동하지만 카메라효과가 일부 적용된 상태. 카메라 focus가 바뀌거나

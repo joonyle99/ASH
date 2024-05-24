@@ -10,16 +10,19 @@ public class Passage : TriggerZone
     [Tooltip("플레이어가 여기로 들어가서 다음 스테이지로 갈 때")][SerializeField] InputSetterScriptableObject _enterInputSetter;
     [Tooltip("플레이어가 이전 스테이지에서 여기로 나올 때")][SerializeField] InputSetterScriptableObject _exitInputSetter;
 
-    [SerializeField] Transform _playerSpawnPoint;
+    [SerializeField] private Transform _playerSpawnPoint;
 
     public string PassageName => name;
     public InputSetterScriptableObject EnterInputSetter => _enterInputSetter;
     public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
 
-    [SerializeField] bool _canEnter = true;
-    [SerializeField] float _exitTimeOut = 1f;
+    [SerializeField] private bool _canEnter = true;
+    [SerializeField] private float _exitTimeOut = 1f;
 
-    bool _isPlayerExiting;
+    [SerializeField] private bool _isStartingPassage;
+    public bool IsStartingPassage => _isStartingPassage;
+
+    private bool _isPlayerExiting;
 
     void Awake()
     {
@@ -31,6 +34,7 @@ public class Passage : TriggerZone
     {
         if (_isPlayerExiting || !_canEnter)
             return;
+
         StartCoroutine(ExitSceneCoroutine());
     }
 
@@ -41,9 +45,6 @@ public class Passage : TriggerZone
 
         var nextPassageData = SceneChangeManager.Instance.GetNextPassageData(name);
         string nextSceneName = nextPassageData.SceneName;
-
-        // Debug.Log(name);
-        // Debug.Log(nextSceneName);
 
         yield return new WaitUntil(() => _exitSceneCutscene.IsDone);
 

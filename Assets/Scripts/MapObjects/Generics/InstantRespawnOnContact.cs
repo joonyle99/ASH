@@ -14,7 +14,7 @@ public class InstantRespawnOnContact : TriggerZone
         // 활성화된 오브젝트가 몬스터라면
         if (activator.Type == ActivatorType.Monster)
         {
-            // 거북이를 사망시킨다
+            // 그리고 거북이라면
             var turtle = activator.GetComponent<Turtle>();
             if (turtle) turtle.CurHp -= turtle.monsterData.MaxHp;
         }

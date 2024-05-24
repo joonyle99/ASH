@@ -9,7 +9,8 @@ using System.Collections;
 public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
 {
     [Header("First enter cutscene")]
-    [SerializeField] private InputSetterScriptableObject _stayStillInputSetter;
+    [Space]
+
     [SerializeField] private  Transform _spawnPoint;
     [SerializeField] private  GameObject _spawnFireEffectOnScene;
     [SerializeField] private  float _waitDuration = 1f;
@@ -30,7 +31,7 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
             GameUIManager.OpenLetterbox(true);
             StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
 
-            InputManager.Instance.ChangeInputSetter(_stayStillInputSetter);
+            InputManager.Instance.ChangeToStayStillSetter();
 
             yield return new WaitForSeconds(_waitDuration);
             _spawnFireEffectOnScene.SetActive(true);

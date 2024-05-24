@@ -15,17 +15,58 @@ public struct InputState
 
 public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 {
-    [SerializeField] InputSetterScriptableObject _defaultInputSetter;
+    [SerializeField] private InputSetterScriptableObject _defaultInputSetter;
 
-    IInputSetter _currentSetter;
+    [Space]
 
-    InputState _cachedState;
+    [SerializeField] private InputSetterScriptableObject _moveRightInputSetter;
+    [SerializeField] private InputSetterScriptableObject _moveLeftInputSetter;
+    [SerializeField] private InputSetterScriptableObject _stayStillInputSetter;
+
+    private IInputSetter _currentSetter;
+
+    private InputState _cachedState;
     public InputState State => _cachedState;
 
     public void ChangeToDefaultSetter()
     {
+        if (_defaultInputSetter == null)
+        {
+            Debug.LogError("Default Input Setter is not set");
+            return;
+        }
+
         ChangeInputSetter(_defaultInputSetter);
     }
+    public void ChangeToMoveRightSetter()
+    {
+        if (_moveRightInputSetter == null)
+        {
+            Debug.LogError("Move Right Input Setter is not set");
+            return;
+        }
+
+        ChangeInputSetter(_moveRightInputSetter);
+    }
+    public void ChangeToMoveLeftSetter()
+    {
+        if (_moveLeftInputSetter == null)
+        {
+            Debug.LogError("Move Left Input Setter is not set");
+            return;
+        }
+        ChangeInputSetter(_moveLeftInputSetter);
+    }
+    public void ChangeToStayStillSetter()
+    {
+        if (_stayStillInputSetter == null)
+        {
+            Debug.LogError("Stay Still Input Setter is not set");
+            return;
+        }
+        ChangeInputSetter(_stayStillInputSetter);
+    }
+
 
     public void ChangeInputSetter(IInputSetter setter)
     {

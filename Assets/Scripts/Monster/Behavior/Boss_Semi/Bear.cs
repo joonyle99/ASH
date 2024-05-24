@@ -30,19 +30,19 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
-    [Header("Slash")]
+    [Header("Skill: Slash")]
     [Space]
 
     [SerializeField] private Bear_Slash _slash01;
     [SerializeField] private Bear_Slash _slash02;
     private Vector2 _playerPos;
 
-    [Header("BodySlam")]
+    [Header("Skill: BodySlam")]
     [Space]
 
-    [SerializeField] private float _bodySlamLength;
+    [SerializeField] private float _bodySlamPower;
 
-    [Header("Stomp")]
+    [Header("Skill: Stomp")]
     [Space]
 
     [SerializeField] private Bear_Stomp _stomp;
@@ -57,25 +57,20 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     [SerializeField] private Range _createSizeRange;
     [SerializeField] private Range _distanceRange;
     [SerializeField] private float _minDistanceEach;
-    [SerializeField] private List<float> _usedPosX;
+
+    private List<float> _usedPosX;
 
     [Space]
 
     [SerializeField] private Range _normalStalactiteRange;
     [SerializeField] private Range _rageStalactiteRange;
 
-    [Header("Earthquake")]
+    [Header("Skill: Earthquake")]
     [Space]
 
     [SerializeField] private Transform _waveSpawnPoint;
     [SerializeField] private Bear_GroundWave _waveSkillPrefab;
     [SerializeField] private ShakePreset _earthquakeCameraShake;
-
-    [Header("Die End VFX")]
-    [Space]
-
-    [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;         // 색이 서서히 돌아오는 효과
-    [SerializeField] private ParticleSystem[] DisintegrateEffects;                          // 잿가루 효과 파티클
 
     [Header("Cutscene")]
     [Space]
@@ -84,19 +79,27 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
     [Space]
 
-    [SerializeField]
-    private bool _isLightingGuide;
+    [SerializeField] private bool _isLightingGuide;
     [SerializeField] private int _earthquakeCount;
     public int EarthquakeCount
     {
         get => _earthquakeCount;
-        private set => _earthquakeCount = value;
+        private set
+        {
+            _earthquakeCount = value;
+
+            if(_earthquakeCount >= 3 && !_isLightingGuide)
+            {
+                _isLightingGuide = true;
+
+                StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
+            }
+        }
     }
 
     [Space]
 
-    [SerializeField]
-    private bool _is9thAttackSuccess;
+    [SerializeField] private bool _is9ThAttackSuccess;
     [SerializeField] private int _totalHitCount;
     public int TotalHitCount
     {
@@ -105,22 +108,24 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         {
             _totalHitCount = value;
 
-            if (_totalHitCount >= 9 && !_is9thAttackSuccess)
+            if (_totalHitCount >= 9 && !_is9ThAttackSuccess)
             {
-                _is9thAttackSuccess = true;
+                _is9ThAttackSuccess = true;
 
-                // 9번째 공격 성공 컷씬 시작
-                StartCoroutine(PlayCutSceneCoroutine("9th Attack Success"));
+                StartCoroutine(PlayCutSceneInRunning("9th Attack Success"));
             }
         }
     }
 
+    [Header("After Dead")]
     [Space]
 
-    [SerializeField] private float _distanceFromTarget;
-    [SerializeField] InputSetterScriptableObject _moveRightInputSetter;
-    [SerializeField] InputSetterScriptableObject _moveLeftInputSetter;
-    [SerializeField] InputSetterScriptableObject _stayStillInputSetter;
+    [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;             // 색이 서서히 돌아오는 효과
+    [SerializeField] private ParticleSystem[] _disintegrateEffects;                             // 잿가루 효과 파티클
+    [SerializeField] private GameObject _bossKnockDownGameObject;                               // 넉다음 이미지 오브젝트
+    [Space]
+
+    [SerializeField] private float _distanceFromBear;                                           // 흑곰으로부터 떨어져야하는 거리
 
     #endregion
 
@@ -214,12 +219,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         }
         else
             SetToRandomAttack();
-
-        if (EarthquakeCount >= 3 && !_isLightingGuide)
-        {
-            _isLightingGuide = true;
-            StartCoroutine(PlayCutSceneCoroutine("Lighting Guide"));
-        }
     }
     public override void GroggyPreProcess()
     {
@@ -322,7 +321,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     }
     public void BodySlam01_AnimEvent()
     {
-        RigidBody2D.AddForce(_bodySlamLength * Vector2.right * RecentDir, ForceMode2D.Impulse);
+        RigidBody2D.AddForce(_bodySlamPower * Vector2.right * RecentDir, ForceMode2D.Impulse);
     }
     public void BodySlam02_AnimEvent()
     {
@@ -427,24 +426,37 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
         var player = SceneContext.Current.Player;
         var playerPosX = player.transform.position.x;
-        var bearToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
-        var targetPosX = transform.position.x + (bearToPlayerDir) * _distanceFromTarget;
+        Debug.DrawRay(player.transform.position, Vector3.down * 5f, Color.cyan, 10f);
 
-        var playerMoveDir1 = System.Math.Sign(targetPosX - playerPosX);
-        yield return StartCoroutine(MoveCoroutine(playerMoveDir1, targetPosX));
+        var bearToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
+        Debug.DrawRay(transform.position + Vector3.up, Vector3.right * bearToPlayerDir * _distanceFromBear, Color.cyan, 10f);
+
+        var playerMoveTargetPosX = transform.position.x + (bearToPlayerDir) * _distanceFromBear;
+        Debug.DrawRay(new Vector3(playerMoveTargetPosX, transform.position.y, transform.position.z), Vector3.down * 5f, Color.cyan, 10f);
+
+        var playerMoveDir = System.Math.Sign(playerMoveTargetPosX - playerPosX);
+        Debug.DrawRay(player.transform.position, Vector3.right * playerMoveDir * 5f, Color.cyan, 10f);
+
+        yield return StartCoroutine(MoveCoroutine(playerMoveDir, playerMoveTargetPosX));
 
         // 만약 플레이어가 뒤돌고 있다면 방향을 돌려준다
         if (bearToPlayerDir == player.RecentDir)
         {
-            var playerMoveDir2 = (-1) * playerMoveDir1;
-            yield return StartCoroutine(MoveCoroutine(playerMoveDir2, targetPosX + playerMoveDir2 * 0.5f));
+            var dirForLookToBear = (-1) * playerMoveDir;
+            yield return StartCoroutine(MoveCoroutine(dirForLookToBear, playerMoveTargetPosX + dirForLookToBear * 0.1f));
         }
 
-        InputManager.Instance.ChangeInputSetter(_stayStillInputSetter);
+        InputManager.Instance.ChangeToStayStillSetter();
     }
     public IEnumerator MoveCoroutine(int moveDir, float targetPosX)
     {
-        InputManager.Instance.ChangeInputSetter(moveDir > 0 ? _moveRightInputSetter : _moveLeftInputSetter);
+        var isRight = moveDir > 0;
+
+        if (isRight)
+            InputManager.Instance.ChangeToMoveRightSetter();
+        else
+            InputManager.Instance.ChangeToMoveLeftSetter();
+
         yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.1f);
     }
     public IEnumerator AfterDeathCoroutine()
@@ -452,22 +464,18 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         yield return StartCoroutine(ChangeImageCoroutine());
         yield return StartCoroutine(ChangeBackgroundCoroutine());
 
-        // 사망 컷씬 시작
-        _cutscenePlayerList.PlayCutscene("Bear Die");
+        // 최종 컷씬 재생
+        _cutscenePlayerList.PlayCutscene("Final CutScene");
     }
     public IEnumerator ChangeImageCoroutine()
     {
-        /*
         // 사망 이미지로 변경하기 위한 가림막 효과
-        foreach (var effect in DisintegrateEffects)
+        foreach (var effect in _disintegrateEffects)
             effect.gameObject.SetActive(true);  // play on awake effect
 
         // 파티클이 어느정도 나올때까지 대기
-        var endParticleTime = DisintegrateEffects[0].main.duration;
+        var endParticleTime = _disintegrateEffects[0].main.duration;
         yield return new WaitForSeconds(endParticleTime / 2f);
-        */
-
-        // TODO: 페이드 인 / 아웃 이펙트로 보스 죽는 거 가려줘야함
 
         // 넉다운 이미지로 변경
         SetAnimatorTrigger("DieEnd");
@@ -483,6 +491,14 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         SoundManager.Instance.StopBGM();
 
         yield return new WaitUntil(() => bossClearColorChangeEffect.isEndEffect);
+
+        var knockDownSprites = _bossKnockDownGameObject.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var sprite in knockDownSprites)
+        {
+            var color = sprite.color;
+            color.a = 0f;
+            sprite.color = color;
+        }
     }
     public void DisintegrateEffect()
     {
@@ -493,9 +509,9 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         var effect = GetComponent<DisintegrateEffect>();
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
-        Destroy(transform.root ? transform.root.gameObject : gameObject);
+        Destroy(transform.parent ? transform.parent.gameObject : gameObject);
     }
-    public IEnumerator PlayCutSceneCoroutine(string name)
+    public IEnumerator PlayCutSceneInRunning(string name)
     {
         yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
 
@@ -510,17 +526,16 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector3(transform.position.x - 25f, _ceilingHeight, transform.position.z), new Vector3(transform.position.x + 25f, _ceilingHeight, transform.position.z));
 
-        if (MainBodyCollider2D)
-        {
-            // 오른쪽 종유석 범위
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.Start, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.Start, _ceilingHeight - 3f, transform.position.z));
-            Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.End, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.End, _ceilingHeight - 3f, transform.position.z));
+        if (MainBodyCollider2D) return;
 
-            // 왼쪽 종유석 범위
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.Start, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.Start, _ceilingHeight - 3f, transform.position.z));
-            Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.End, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.End, _ceilingHeight - 3f, transform.position.z));
-        }
+        // 오른쪽 종유석 범위
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.Start, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.Start, _ceilingHeight - 3f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.End, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.End, _ceilingHeight - 3f, transform.position.z));
+
+        // 왼쪽 종유석 범위
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.Start, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.Start, _ceilingHeight - 3f, transform.position.z));
+        Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.End, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.End, _ceilingHeight - 3f, transform.position.z));
     }
 }

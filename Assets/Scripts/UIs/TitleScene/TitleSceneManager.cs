@@ -25,14 +25,23 @@ public class TitleSceneManager : MonoBehaviour
         StartCoroutine(OpenPrologueSceneCoroutine());
     }
 
+    /// <summary>
+    /// 프롤로그 씬으로 전환합니다
+    /// </summary>
+    /// <returns></returns>
     IEnumerator OpenPrologueSceneCoroutine()
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-        SceneChangeManager.Instance.ChangeToScene("PrologueScene");
+        SceneChangeManager.Instance.ChangeToNonPlayableScene("PrologueScene");
     }
+    /// <summary>
+    /// 해당 씬으로 전환합니다
+    /// </summary>
+    /// <param name="sceneName">이동하려는 씬 이름</param>
+    /// <returns></returns>
     IEnumerator SceneChangeCoroutine(string sceneName)
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-        SceneChangeManager.Instance.ChangeToScene(sceneName, ()=>  SoundManager.Instance.PlayCommonBGM("Exploration1"));
+        SceneChangeManager.Instance.ChangeToNonPlayableScene(sceneName, ()=>  SoundManager.Instance.PlayCommonBGM("Exploration1"));
     }
 }

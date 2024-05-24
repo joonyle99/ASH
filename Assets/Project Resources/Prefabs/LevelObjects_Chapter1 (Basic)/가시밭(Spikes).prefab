@@ -94,11 +94,11 @@ GameObject:
   m_Component:
   - component: {fileID: 6355395281014684382}
   - component: {fileID: 6355395281014684383}
+  - component: {fileID: 1129854490}
   - component: {fileID: 6355395281014684377}
   - component: {fileID: 7892648401539103136}
   - component: {fileID: 2924479491306100990}
   - component: {fileID: 1129854489}
-  - component: {fileID: 1129854490}
   m_Layer: 0
   m_Name: "\uAC00\uC2DC\uBC2D(Spikes)"
   m_TagString: Untagged
@@ -119,6 +119,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2102115315}
+  - {fileID: 1259065969474196779}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -148,6 +149,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5.158799, y: 1.2875882}
   m_EdgeRadius: 0
+--- !u!114 &1129854490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6355395281014684323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5394a3473b60e8b4db9335414bd390b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundList: {fileID: 1129854489}
+  _logVelocity: 0
+  _conditions:
+  - PlayOnce: 0
+    Velocity: 0
+    ObjectType: 8
+    Key: SE_CrashRock_hit
 --- !u!114 &6355395281014684377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,7 +180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d19ae556a86c5a4b922c054525f2308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 1
+  triggerActivators: []
+  _damage: 2
 --- !u!114 &7892648401539103136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,22 +228,73 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
---- !u!114 &1129854490
-MonoBehaviour:
+--- !u!1001 &5137246442489362151
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 6355395281014684382}
+    m_Modifications:
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880077, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_Size.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6211083734808880078, guid: db5188649965c334487de5f03f5ee606, type: 3}
+      propertyPath: m_Name
+      value: "\uAC00\uC2DC\uBC2D\uB545"
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: db5188649965c334487de5f03f5ee606, type: 3}
+--- !u!4 &1259065969474196779 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6211083734808880076, guid: db5188649965c334487de5f03f5ee606, type: 3}
+  m_PrefabInstance: {fileID: 5137246442489362151}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6355395281014684323}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5394a3473b60e8b4db9335414bd390b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _soundList: {fileID: 1129854489}
-  _logVelocity: 0
-  _conditions:
-  - PlayOnce: 0
-    Velocity: 0
-    ObjectType: 8
-    Key: SE_CrashRock_hit

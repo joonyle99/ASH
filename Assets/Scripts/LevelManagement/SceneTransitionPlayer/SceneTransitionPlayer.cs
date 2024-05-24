@@ -2,22 +2,18 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 씬이 전환될 때, 화면이 Fade In / Out 되는 전환 효과
+/// </summary>
 public class SceneTransitionPlayer : MonoBehaviour
 {
+    protected enum FadeType { Lighten, Darken }
+
     [SerializeField] Image _fadeImage;
     [SerializeField] float _fadeDuration;
 
     protected float FadeDuration => _fadeDuration;
 
-    public virtual IEnumerator ExitSceneEffectCoroutine()
-    {
-        yield return FadeCoroutine(_fadeDuration, FadeType.Darken);
-    }
-
-    public virtual IEnumerator EnterSceneEffectCoroutine()
-    {
-        yield return FadeCoroutine(_fadeDuration, FadeType.Lighten);
-    }
     public void SetFadeImageAlpha(float alpha)
     {
         Color color = _fadeImage.color;
@@ -25,13 +21,20 @@ public class SceneTransitionPlayer : MonoBehaviour
         _fadeImage.color = color;
     }
 
-    protected enum FadeType { Lighten, Darken}
+    public virtual IEnumerator EnterSceneEffectCoroutine()
+    {
+        yield return FadeCoroutine(_fadeDuration, FadeType.Lighten);
+    }
+    public virtual IEnumerator ExitSceneEffectCoroutine()
+    {
+        yield return FadeCoroutine(_fadeDuration, FadeType.Darken);
+    }
     protected IEnumerator FadeCoroutine(float duration, FadeType fadeType)
     {
         float from = fadeType == FadeType.Darken ? 0f : 1f;
         float to = fadeType == FadeType.Darken ? 1f : 0f;
 
-        if(_fadeImage == null)
+        if (_fadeImage == null)
         {
             Debug.LogWarning("No Fade Image!!");
             yield break;
