@@ -17,7 +17,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
     private void Start()
     {
-        path = Path.Combine(Application.dataPath + "/Data/", "database.json");
+        path = Path.Combine(Application.dataPath, "database.json");
     }
     private void Update()
     {
