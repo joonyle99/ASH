@@ -8,10 +8,19 @@ public class PlayerHeadAimController : MonoBehaviour
 
     [SerializeField] Transform _target;
     [SerializeField] float _speed = 5f;
+
+    [Space]
+
     [SerializeField] float _rightMin = 0.9f;
     [SerializeField] float _rightMax = 1.9f;
+
+    [Space]
+
     [SerializeField] float _leftMin = 0.4f;
     [SerializeField] float _leftMax = 1.4f;
+
+    [Space]
+
     [SerializeField] float _cameraSpeed = 1f;
     [SerializeField] float _cameraMin = 0.08f;
     [SerializeField] float _cameraMax = 0.68f;

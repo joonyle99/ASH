@@ -249,7 +249,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
 
-                playerHeadAimController.HeadAimControlOnFlip();
+                // playerHeadAimController.HeadAimControlOnFlip();
             }
         }
     }
