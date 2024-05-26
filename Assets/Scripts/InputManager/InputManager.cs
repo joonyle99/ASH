@@ -67,7 +67,6 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
         ChangeInputSetter(_stayStillInputSetter);
     }
 
-
     public void ChangeInputSetter(IInputSetter setter)
     {
         if (setter == _currentSetter)

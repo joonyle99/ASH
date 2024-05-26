@@ -27,7 +27,7 @@ public class RotationViewer : MonoBehaviour
     public bool isPlayer = false;
 
     public int recentDirFlag = 1;
-    public StateBase stateFlag = new IdleState();
+    public StateBase stateFlag;
 
     // Update is called once per frame
     void Update()

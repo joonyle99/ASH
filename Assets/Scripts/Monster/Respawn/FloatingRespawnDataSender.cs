@@ -1,6 +1,7 @@
 using NavMeshPlus.Components;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class FloatingRespawnDataSender : RespawnDataSender
 {
@@ -22,6 +23,9 @@ public class FloatingRespawnDataSender : RespawnDataSender
 
         _patrolArea = transform.GetChild(0).GetComponent<BoxCollider2D>();
         _chaseArea = transform.GetChild(1).GetComponent<BoxCollider2D>();
+
+        // SceneManager.sceneLoaded -= OnSceneLoaded;
+        // SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     /// <summary>
@@ -63,6 +67,17 @@ public class FloatingRespawnDataSender : RespawnDataSender
     public void BakeNavMesh()
     {
         // _navMeshSurface.BuildNavMeshAsync();
+        _navMeshSurface.BuildNavMesh();
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("씬이 로드되어 기존의 NavMesh를 제거 후, 새로운 NavMesh를 굽습니다");
+
+        _navMeshSurface = GetComponent<NavMeshSurface>();
+
+        // 씬 로드 시 기존의 NavMesh를 제거하고 새로운 NavMesh를 굽는다
+        _navMeshSurface.RemoveData();
         _navMeshSurface.BuildNavMesh();
     }
 

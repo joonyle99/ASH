@@ -1,6 +1,5 @@
 using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DoorOpenAnimation : MonoBehaviour

@@ -45,8 +45,10 @@ public class Monster_IndependentSkill : Monster_Skill
         // 스킬 파괴 레이어와 충돌
         if ((1 << collision.gameObject.layer & destroyLayer.value) > 0)
         {
+            /*
             if (colliderSound != null)
                 SoundManager.Instance.PlaySFX(colliderSound);
+            */
 
             if (materialController && materialController.DisintegrateEffect)
                 StartCoroutine(DestroyCoroutine(materialController.DisintegrateEffect));

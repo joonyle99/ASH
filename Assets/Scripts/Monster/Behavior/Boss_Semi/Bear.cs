@@ -526,7 +526,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector3(transform.position.x - 25f, _ceilingHeight, transform.position.z), new Vector3(transform.position.x + 25f, _ceilingHeight, transform.position.z));
 
-        if (MainBodyCollider2D) return;
+        if (! MainBodyCollider2D) return;
 
         // 오른쪽 종유석 범위
         Gizmos.color = Color.yellow;
