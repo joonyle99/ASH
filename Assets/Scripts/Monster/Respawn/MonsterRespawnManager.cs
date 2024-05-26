@@ -193,6 +193,7 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
 
             respawnPos = new Vector3(posX, posY, posZ);
 
+            // floating monster는 warp를 사용한다
             monsterTransform.GetComponent<FloatingMovementModule>().SetPosition(respawnPos);
             return;
         }

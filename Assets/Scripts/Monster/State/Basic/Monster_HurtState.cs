@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Monster_HurtState : Monster_StateBase
+public class Monster_HurtState : Monster_StateBase, IMovingState
 {
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

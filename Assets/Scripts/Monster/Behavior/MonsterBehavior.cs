@@ -548,8 +548,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         RigidBody2D.simulated = false;
         if (FloatingMovementModule)
         {
-            FloatingMovementModule.SetStopAgent(true);
             FloatingMovementModule.SetVelocity(Vector3.zero);
+            FloatingMovementModule.SetStopAgent(true);
         }
 
         if (LifePieceDropper)

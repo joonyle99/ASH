@@ -39,7 +39,9 @@ public abstract class Monster_StateBase : StateMachineBehaviour
         {
             // when enter not movable state, set agent stop
             if (Monster.CurrentState is not IMovingState)
+            {
                 Monster.FloatingMovementModule.SetStopAgent(true);
+            }
         }
     }
 
@@ -67,9 +69,10 @@ public abstract class Monster_StateBase : StateMachineBehaviour
 
         if (Monster.FloatingMovementModule)
         {
-            // when exit not movable state, set agent resume
             if (Monster.CurrentState is not IMovingState)
+            {
                 Monster.FloatingMovementModule.SetStopAgent(false);
+            }
         }
     }
 }
