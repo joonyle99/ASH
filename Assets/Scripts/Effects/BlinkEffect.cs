@@ -8,6 +8,7 @@ public class BlinkEffect : MonoBehaviour
     [SerializeField] private float _interval = 0.08f;
     [SerializeField] private float _duration = 0.9f;
     [SerializeField] private bool _isBlinking;
+    public bool IsBlinking => _isBlinking;
 
     private PlayerBehaviour _player;
     private MonsterBehavior _monster;
