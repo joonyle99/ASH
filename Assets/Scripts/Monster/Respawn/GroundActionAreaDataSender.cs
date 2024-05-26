@@ -1,9 +1,9 @@
 using UnityEngine;
 
 // [ExecuteInEditMode]
-public class GroundRespawnDataSender : RespawnDataSender
+public class GroundActionAreaDataSender : ActionAreaDataSender
 {
-    [Header("Ground Respawn Data Sender")]
+    [Header("Ground ActionArea Data Sender")]
     [Space]
 
     // main
@@ -17,7 +17,7 @@ public class GroundRespawnDataSender : RespawnDataSender
     private Vector3 _pointA;
     private Vector3 _pointB;
 
-    private joonyle99.Line _respawnLine;
+    private joonyle99.Line3D respawnLine3D;
 
     public void Awake()
     {
@@ -37,7 +37,7 @@ public class GroundRespawnDataSender : RespawnDataSender
         boxCollider1 = _patrolPointA;
         boxCollider2 = _patrolPointB;
     }
-    public override void UpdateRespawnData()
+    public override void UpdateActionAreaData()
     {
         _boundsOfPointA = _patrolPointA.bounds;
         _boundsOfPointB = _patrolPointB.bounds;
@@ -47,10 +47,10 @@ public class GroundRespawnDataSender : RespawnDataSender
 
         // new는 클래스 또는 구조체의 객체를 생성하고 메모리에 할당하기 위해 사용된다
         // struct는 value type이기 때문에 class가 heap에 할당되는 것과 달리 stack에 할당된다.
-        _respawnLine = new joonyle99.Line(_pointA, _pointB);
+        respawnLine3D = new joonyle99.Line3D(_pointA, _pointB);
 
         // 인스턴스의 초기 데이터(값)를 전달한다
-        receiver.SetGroundRespawnData(_patrolPointA.transform.position, _patrolPointB.transform.position, _respawnLine);
+        receiver.SetGroundActionAreaData(_patrolPointA.transform.position, _patrolPointB.transform.position, respawnLine3D);
     }
 
     private void OnDrawGizmos()
@@ -59,6 +59,6 @@ public class GroundRespawnDataSender : RespawnDataSender
 
         // 두 Patrol Point 사이에 선을 긋는다
         Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(_respawnLine.pointA, _respawnLine.pointB);
+        Gizmos.DrawLine(respawnLine3D.pointA, respawnLine3D.pointB);
     }
 }

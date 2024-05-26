@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using joonyle99;
 using joonyleTools;
 using UnityEngine;
 
@@ -21,49 +22,73 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
         MonsterList = new List<MonsterBehavior>(monsterArray);
     }
 
+    public void NotifyDeath(MonsterBehavior monsterBehavior)
+    {
+        if (!MonsterList.Contains(monsterBehavior))
+        {
+            Debug.LogWarning("This monster doesn't exist in the list");
+            return;
+        }
+
+        var respawnTime = RespawnTimeRange.Random();
+        StartCoroutine(RespawnCoroutine(monsterBehavior, respawnTime));
+    }
+    private IEnumerator RespawnCoroutine(MonsterBehavior monsterBehavior, float respawnTime)
+    {
+        // 데이터를 가져온다
+        var monsterData = monsterBehavior.monsterData;
+        var respawnData = monsterBehavior.respawnData;
+
+        RemoveProcess(monsterBehavior);
+
+        yield return new WaitForSeconds(respawnTime);
+
+        AddProcess(monsterData, respawnData);
+    }
+
     private void RemoveProcess(MonsterBehavior monster)
     {
-        // 몬스터 목록에서 제거한다
         //Debug.Log($"removed monster hash code: {monster.GetHashCode()}");
+
+        // 몬스터를 리스트에서 제거한다
         MonsterList.Remove(monster);
 
         // 몬스터를 씬에서 삭제한다
-        monster.DestroyMonster();
+        monster.DestroyMonsterPrefab();
     }
     private void AddProcess(MonsterBehavior.MonsterData monsterData, MonsterBehavior.RespawnData respawnData)
     {
-        Debug.Log("Monster Add Process");
+        // Debug.Log("Monster Add Process");
 
         // 프리팹(몬스터를 담은)을 로드한다
         var resourcePath = "Prefabs/Monster/Normal/Prefab_" + monsterData.MonsterName;
         var prefabResource = Resources.Load<GameObject>(resourcePath);
 
-        Debug.Log("인스턴스 생성 바로 직전");
+        // Debug.Log("인스턴스 생성 바로 직전");
 
-        // 어떤 타입의 몬스터이든, 몬스터를 담은 프리팹의 리스폰 위치는 이전 프리팹의 위치와 동일하다
         // 
-        // 새로운 인스턴스가 생성되면 즉시 Awake() 메소드가 호출. 즉 Instantiate 호출이 완료되자마자 바로 실행
-        // 해당 게임 오브젝트가 처음 활성화되고 난 '다음 프레임'에서 처음으로 Start() 메소드 실행. 즉, 인스턴스가 생성된 후 처음으로 그 프레임이 시작할 때 호출
+        // 설명:
+        //      어떤 타입의 몬스터이든, 몬스터를 담은 프리팹의 리스폰 위치는 이전 프리팹의 위치와 동일하다
+        // 
+        // 추가:
+        //      1. Instantiate(): 새로운 게임 오브젝트가 생성되고 메모리에 할당된다.
+        //      2. Awake(): 오브젝트가 메모리에 할당되자마자 즉시 호출된다. (컴포넌트나 스크립트 초기화 작업에 적합)
+        //      3. OnEnable(): 오브젝트가 활성화 상태로 전환될 때 호출된다.
+        //      4. MemberFunction(): 첫번째 초기화 작업인 Awake()와 OnEnable() 이후에, 그리고 Start()가 호출되기 전 호출된다.
+        //      5. Start(): Awake()와 OnEnable() 이후, 첫번째 프레임이 Update() 되기전에 호출된다.
         var prefabInstance = Instantiate(prefabResource, respawnData.DefaultPrefabPosition, Quaternion.identity);
 
-        Debug.Log("인스턴스 생성 바로 직후");
+        // Debug.Log("인스턴스 생성 바로 직후");
 
         // 새로 생성한 몬스터를 사망 이전의 정보를 토대로 업데이트한다.
 
         // 행동 반경 정보를 추출한다
-        var respawnDataSender = prefabInstance.GetComponentInChildren<RespawnDataSender>();
-        // 실질적인 몬스터를 추출한다
+        var respawnDataSender = prefabInstance.GetComponentInChildren<ActionAreaDataSender>();
+        // 프리팹의 자식에 있는 실질적인 몬스터를 추출한다
         var monsterBehavior = prefabInstance.GetComponentInChildren<MonsterBehavior>();
 
-        // 몬스터의 Material을 변경해줘야 1프레임 동안 이미지가 보이는 버그를 수정할 수 있다.
-        monsterBehavior.GetComponent<MaterialController>().InitMaterialForRespawn();
-
-        // 몬스터의 Evaluator를 잠시 대기시켜줘야 리스폰이 완료된 이후에 작동한다.
-        var evaluators = monsterBehavior.GetComponents<Evaluator>();
-        foreach (var evaluator in evaluators)
-        {
-            evaluator.StartCoroutine(evaluator.WaitForRespawn());
-        }
+        // TEMP: 임시 함수
+        InstantFunction(monsterBehavior);
 
         // * 행동 반경 데이터를 이용해 몬스터의 행동 반경 정보를 변경 *
         UpdateActionAreaInfo(respawnDataSender, monsterData.MoveType, respawnData);
@@ -75,82 +100,59 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
 
         // 몬스터 목록에 추가한다
         MonsterList.Add(monsterBehavior);
+
         //Debug.Log($"added monster hash code: {monster.GetHashCode()}");
     }
 
     /// <summary>
     /// Prefab_MonsterName의 행동 반경을 설정
     /// </summary>
-    /// <param name="respawnDataSender"></param>
+    /// <param name="actionAreaDataSender"></param>
     /// <param name="moveType"></param>
     /// <param name="respawnData"></param>
-    private void UpdateActionAreaInfo(RespawnDataSender respawnDataSender, MonsterDefine.MoveType moveType, MonsterBehavior.RespawnData respawnData)
+    private void UpdateActionAreaInfo(ActionAreaDataSender actionAreaDataSender, MonsterDefine.MoveType moveType, MonsterBehavior.RespawnData respawnData)
     {
-        Debug.Log("활동 영역 정보 업데이트");
+        Debug.Log("리스폰된 몬스터의 활동 영역 정보를 업데이트");
 
         // 지상 몬스터의 행동 반경 정보 설정
         if (moveType == MonsterDefine.MoveType.GroundNormal)
         {
             // 행동 반경 정보를 가져온다
-            respawnDataSender.ExtractActionAreaInfo(out var patrolPointA, out var patrolPointB);
+            actionAreaDataSender.ExtractActionAreaInfo(out var patrolPointA, out var patrolPointB);
 
             // * 새로운 행동 반경 정보에 기존의 것을 덮어 씌운다 *
 
             // 위치 조정
-            patrolPointA.transform.position = respawnData.GroundRespawnData.PatrolPointAPosition;
-            patrolPointB.transform.position = respawnData.GroundRespawnData.PatrolPointBPosition;
+            patrolPointA.transform.position = respawnData.groundActionAreaData.PatrolPointAPosition;
+            patrolPointB.transform.position = respawnData.groundActionAreaData.PatrolPointBPosition;
 
             // transform의 변경사항이 즉시 물리 엔진에 반영되어, bounds가 transform과 동기화된다
-            Physics2D.SyncTransforms();
-
-            var groundRespawnDataSender = respawnDataSender as GroundRespawnDataSender;
-            if (groundRespawnDataSender == null)
-            {
-                Debug.LogError("GroundRespawnDataSender가 없습니다");
-                return;
-            }
+            UnityEngine.Physics2D.SyncTransforms();
 
             // 변경된 리스폰 정보를 새롭게 생성된 객체에 할당해준다
-            groundRespawnDataSender.UpdateRespawnData();
-        }
-        else if (moveType == MonsterDefine.MoveType.GroundTurret)
-        {
-
+            actionAreaDataSender.UpdateActionAreaData();
         }
         // 공중 몬스터의 행동 반경 정보 설정
         else if (moveType == MonsterDefine.MoveType.Fly)
         {
             // 행동 반경 정보를 가져온다
-            respawnDataSender.ExtractActionAreaInfo(out var patrolArea, out var chaseArea);
+            actionAreaDataSender.ExtractActionAreaInfo(out var patrolArea, out var chaseArea);
 
             // * 새로운 행동 반경 정보에 기존의 것을 덮어 씌운다 *
 
             // 위치 조정
-            patrolArea.transform.position = respawnData.FloatingRespawnData.PatrolAreaPosition;
-            chaseArea.transform.position = respawnData.FloatingRespawnData.ChaseAreaPosition;
+            patrolArea.transform.position = respawnData.floatingActionAreaData.PatrolAreaPosition;
+            chaseArea.transform.position = respawnData.floatingActionAreaData.ChaseAreaPosition;
 
             // 크기 조정
-            patrolArea.transform.localScale = respawnData.FloatingRespawnData.PatrolAreaScale;
-            chaseArea.transform.localScale = respawnData.FloatingRespawnData.ChaseAreaScale;
+            patrolArea.transform.localScale = respawnData.floatingActionAreaData.PatrolAreaScale;
+            chaseArea.transform.localScale = respawnData.floatingActionAreaData.ChaseAreaScale;
 
             // transform의 변경사항이 즉시 물리 엔진에 반영되어, bounds가 transform과 동기화된다
-            Physics2D.SyncTransforms();
-
-            var floatingRespawnDataSender = respawnDataSender as FloatingRespawnDataSender;
-            if (floatingRespawnDataSender == null)
-            {
-                Debug.LogError("FloatingRespawnDataSender가 없습니다");
-                return;
-            }
-
-            // 기존의 NavMesh 데이터를 적용한다
-            floatingRespawnDataSender.SetNavMeshData(respawnData.FloatingRespawnData.NavMeshData);
+            UnityEngine.Physics2D.SyncTransforms();
 
             // 변경된 리스폰 정보를 새롭게 생성된 객체에 할당해준다
-            floatingRespawnDataSender.UpdateRespawnData();
-
-            // 변경된 행동 반경 정보로 런타임에 NavMesh 굽기
-            floatingRespawnDataSender.BakeNavMesh();
+            actionAreaDataSender.UpdateActionAreaData();
         }
     }
     /// <summary>
@@ -161,17 +163,30 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
     /// <param name="respawnData"></param>
     private void UpdateMonsterRespawnPosition(Transform monsterTransform, MonsterDefine.MoveType moveType, MonsterBehavior.RespawnData respawnData)
     {
-        Debug.Log("몬스터 리스폰 위치 업데이트");
+        Debug.Log("리스폰된 몬스터의 리스폰 위치 업데이트");
 
         var respawnPos = Vector3.zero;
 
         // 지상 몬스터의 리스폰 위치 설정
         if (moveType == MonsterDefine.MoveType.GroundNormal)
         {
-            var t = Random.Range(0.0f, 1.0f); // 0과 1 사이의 임의의 수
+            var t = Random.Range(0f, 1f);
 
-            var posX = Mathf.Lerp(respawnData.GroundRespawnData.RespawnLine.pointA.x, respawnData.GroundRespawnData.RespawnLine.pointB.x, t);
-            var posY = Mathf.Lerp(respawnData.GroundRespawnData.RespawnLine.pointA.y, respawnData.GroundRespawnData.RespawnLine.pointB.y, t);
+            var pointAx = respawnData.groundActionAreaData.respawnLine3D.pointA.x;
+            var pointBx = respawnData.groundActionAreaData.respawnLine3D.pointB.x;
+
+            var pointAy = respawnData.groundActionAreaData.respawnLine3D.pointA.y;
+            var pointBy = respawnData.groundActionAreaData.respawnLine3D.pointB.y;
+
+            var pointA = new Vector2(pointAx, pointAy);
+            var pointB = new Vector2(pointBx, pointBy);
+
+            var respawnLine = new Line2D(pointA, pointB);
+
+            var respawnPoint = Line2D.Lerp(respawnLine, t);
+
+            var posX = respawnPoint.x;
+            var posY = respawnPoint.y;
             var posZ = respawnData.DefaultPrefabPosition.z;
 
             respawnPos = new Vector3(posX, posY, posZ);
@@ -185,7 +200,7 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
         // 공중 몬스터의 리스폰 위치 설정
         else if (moveType == MonsterDefine.MoveType.Fly)
         {
-            var respawnBounds = respawnData.FloatingRespawnData.RespawnBounds;
+            var respawnBounds = respawnData.floatingActionAreaData.RespawnBounds;
 
             var posX = Random.Range(respawnBounds.min.x, respawnBounds.max.x);
             var posY = Random.Range(respawnBounds.min.y, respawnBounds.max.y);
@@ -201,26 +216,16 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
         monsterTransform.position = respawnPos;
     }
 
-    public void NotifyDeath(MonsterBehavior monsterBehavior)
+    private void InstantFunction(MonsterBehavior monsterBehavior)
     {
-        if (!MonsterList.Contains(monsterBehavior))
+        // TEMP: 몬스터의 Material을 변경해줘야 1프레임 동안 이미지가 보이는 버그를 수정할 수 있다.
+        monsterBehavior.GetComponent<MaterialController>().InitMaterialForRespawn();
+
+        // TEMP: 몬스터의 Evaluator를 잠시 대기시켜줘야 리스폰이 완료된 이후에 작동한다.
+        var evaluators = monsterBehavior.GetComponents<Evaluator>();
+        foreach (var evaluator in evaluators)
         {
-            Debug.LogWarning("몬스터 리스트에 제거하려는 몬스터가 존재하지 않습니다");
-            return;
+            evaluator.StartCoroutine(evaluator.WaitForRespawn());
         }
-
-        StartCoroutine(RespawnCoroutine(monsterBehavior, RespawnTimeRange.Random()));
-    }
-    private IEnumerator RespawnCoroutine(MonsterBehavior monsterBehavior, float respawnTime)
-    {
-        // 몬스터의 데이터를 가져온다
-        var monsterData = monsterBehavior.monsterData;
-        var respawnData = monsterBehavior.respawnData;
-
-        RemoveProcess(monsterBehavior);
-
-        yield return new WaitForSeconds(respawnTime);
-
-        AddProcess(monsterData, respawnData);
     }
 }
