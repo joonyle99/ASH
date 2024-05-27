@@ -5614,11 +5614,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -81.48154
+      value: -51.165257
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.962252
+      value: 9.7598715
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -7552,8 +7552,6 @@ MonoBehaviour:
   skillObject: {fileID: 647554849}
   _fadeInDuration: 0.3
   _fadeOffDuration: 0.3
-  images: []
-  textMeshs: []
 --- !u!61 &141963124
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14625,6 +14623,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &228607633 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+  m_PrefabInstance: {fileID: 1403407735}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &229320129
 GameObject:
   m_ObjectHideFlags: 0
@@ -20363,7 +20366,6 @@ MonoBehaviour:
   _respawnFadeDuration: 0.5
   _respawnDelay: 0.5
   _capeFlyDuration: 1
-  _stayStillInputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
   _spawnPoint: {fileID: 852467512}
   _spawnFireEffectOnScene: {fileID: 837613625}
   _waitDuration: 1
@@ -39116,8 +39118,6 @@ MonoBehaviour:
   skillObject: {fileID: 2060585210}
   _fadeInDuration: 0.3
   _fadeOffDuration: 0.3
-  images: []
-  textMeshs: []
 --- !u!61 &1082315213
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -43280,6 +43280,7 @@ Transform:
   - {fileID: 1150005346}
   - {fileID: 12701634}
   - {fileID: 950391709}
+  - {fileID: 228607633}
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -46471,6 +46472,75 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3cb3c9e888ac9f4d89c5bcc08aaaaff, type: 3}
+--- !u!1001 &1403407735
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1281063986}
+    m_Modifications:
+    - target: {fileID: 1300435719244356301, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719244356305, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: -1.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_RootOrder
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -55.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 18.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.0070338063
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484139, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435719616484142, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_Name
+      value: Gimmick_Swing Variant 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300435720106280133, guid: 965754521f8350947928d491e28b369c, type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: -0.89000034
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 965754521f8350947928d491e28b369c, type: 3}
 --- !u!1 &1405117342
 GameObject:
   m_ObjectHideFlags: 0
@@ -46623,8 +46693,6 @@ MonoBehaviour:
   skillObject: {fileID: 821798906}
   _fadeInDuration: 0.3
   _fadeOffDuration: 0.3
-  images: []
-  textMeshs: []
 --- !u!61 &1410477059
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -48785,6 +48853,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerActivators: []
+  _interactionObject: {fileID: 0}
 --- !u!1001 &1499883987
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61247,8 +61316,6 @@ MonoBehaviour:
   skillObject: {fileID: 151212102}
   _fadeInDuration: 0.3
   _fadeOffDuration: 0.3
-  images: []
-  textMeshs: []
 --- !u!61 &1872692598
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -64425,8 +64492,6 @@ MonoBehaviour:
   skillObject: {fileID: 725924489}
   _fadeInDuration: 0.3
   _fadeOffDuration: 0.3
-  images: []
-  textMeshs: []
 --- !u!61 &1999290032
 BoxCollider2D:
   m_ObjectHideFlags: 0
