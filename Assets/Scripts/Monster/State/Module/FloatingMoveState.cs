@@ -35,13 +35,20 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IHurtableS
 
         if (floatingPatrolModule)
         {
-            // Patrol Point Update
-            floatingPatrolModule.UpdatePatrolPoint();
-
             if (Monster.FloatingMovementModule)
             {
-                // Move to Target for Patrol
-                Monster.FloatingMovementModule.MoveToDestination(floatingPatrolModule.TargetPosition);
+                var isArrived = Monster.FloatingMovementModule.CheckArrivedToTarget();
+
+                if (isArrived)
+                {
+                    Debug.Log("NavMesh Agent has arrived, Determine the next destination.");
+
+                    // Set Random Target Position
+                    floatingPatrolModule.SetRandomTargetPos();
+
+                    // Move to Target for Patrol
+                    Monster.FloatingMovementModule.MoveToDestination(floatingPatrolModule.TargetPosition);
+                }
             }
         }
     }

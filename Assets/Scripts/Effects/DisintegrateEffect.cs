@@ -50,7 +50,7 @@ public class DisintegrateEffect : MonoBehaviour
 
         if (!isRespawn)
         {
-            Debug.Log("die effect coroutine");
+            Debug.Log($"Disintegrate Effect in {name}");
 
             // Particle System Control
             foreach (var particleHelper in _particles)
@@ -68,7 +68,7 @@ public class DisintegrateEffect : MonoBehaviour
         }
         else
         {
-            Debug.Log("respawn effect coroutine");
+            Debug.Log($"Respawn Effect in {name}");
 
             // Disintegrate Material Initialize
             InitMaterialAndProgressForRespawn();

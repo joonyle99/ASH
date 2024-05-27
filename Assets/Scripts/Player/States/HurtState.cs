@@ -1,4 +1,4 @@
-public class HurtState : PlayerState
+public class HurtState : PlayerState, IAttackableState
 {
     protected override bool OnEnter()
     {

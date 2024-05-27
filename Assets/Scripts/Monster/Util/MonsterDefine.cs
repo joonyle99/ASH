@@ -6,19 +6,19 @@ using UnityEngine.AI;
 /// 지상 몬스터의 리스폰 데이터를 가진 구조체
 /// </summary>
 [Serializable]
-public struct GroundRespawnData
+public struct GroundActionAreaData
 {
     public Vector3 PatrolPointAPosition;
     public Vector3 PatrolPointBPosition;
 
-    public joonyle99.Line RespawnLine;            // 두 점 사이의 임의의 점 위치에서 리스폰된다
+    public joonyle99.Line3D respawnLine3D;            // 두 점 사이의 임의의 점 위치에서 리스폰된다
 
-    public GroundRespawnData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, joonyle99.Line respawnLine)
+    public GroundActionAreaData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, joonyle99.Line3D respawnLine3D)
     {
         PatrolPointAPosition = patrolPointAPosition;
         PatrolPointBPosition = patrolPointBPosition;
 
-        RespawnLine = respawnLine;
+        this.respawnLine3D = respawnLine3D;
     }
 }
 
@@ -26,10 +26,8 @@ public struct GroundRespawnData
 /// 공중 몬스터의 리스폰 데이터를 가진 구조체
 /// </summary>
 [Serializable]
-public struct FloatingRespawnData
+public struct FloatingActionAreaData
 {
-    public NavMeshData NavMeshData;
-
     public Vector3 PatrolAreaPosition;
     public Vector3 ChaseAreaPosition;
 
@@ -38,10 +36,8 @@ public struct FloatingRespawnData
 
     public Bounds RespawnBounds;        // 해당 영역의 랜덤 위치에서 리스폰된다
 
-    public FloatingRespawnData(NavMeshData navMeshData, Vector3 patrolAreaPosition, Vector3 chaseAreaPosition, Vector3 patrolAreaScale, Vector3 chaseAreaScale, Bounds respawnBounds)
+    public FloatingActionAreaData(Vector3 patrolAreaPosition, Vector3 chaseAreaPosition, Vector3 patrolAreaScale, Vector3 chaseAreaScale, Bounds respawnBounds)
     {
-        NavMeshData = navMeshData;
-
         PatrolAreaPosition = patrolAreaPosition;
         ChaseAreaPosition = chaseAreaPosition;
 

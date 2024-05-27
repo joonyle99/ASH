@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public abstract class RespawnDataSender : MonoBehaviour
+public abstract class ActionAreaDataSender : MonoBehaviour
 {
-    [Header("Respawn Data Sender")]
+    [Header("ActionArea Data Sender")]
     [Space]
 
     [SerializeField]
@@ -10,9 +10,9 @@ public abstract class RespawnDataSender : MonoBehaviour
 
     protected void Start()
     {
-        UpdateRespawnData();
+        UpdateActionAreaData();
     }
 
+    public abstract void UpdateActionAreaData();
     public abstract void ExtractActionAreaInfo(out BoxCollider2D boxCollider1, out BoxCollider2D boxCollider2);
-    public abstract void UpdateRespawnData();
 }

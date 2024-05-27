@@ -1,14 +1,14 @@
 using NavMeshPlus.Components;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
-public class FloatingRespawnDataSender : RespawnDataSender
+public class FloatingActionAreaDataSender : ActionAreaDataSender
 {
-    [Header("Floating RespawnData Sender")]
+    [Header("Floating ActionArea Data Sender")]
     [Space]
 
     private NavMeshSurface _navMeshSurface;
-    private NavMeshData _navMeshData;
 
     // main
     private BoxCollider2D _patrolArea;
@@ -25,28 +25,27 @@ public class FloatingRespawnDataSender : RespawnDataSender
     }
 
     /// <summary>
-    /// float respawn data sender는
-    /// patrol area / chase area의 boxCollider2D를
-    /// action area info로 가지고 있는데, 이를 추출한다.
+    /// Patrol Area / Chase Area의 boxCollider2D를 추출한다.
     /// </summary>
-    /// <param name="boxCollider1">patrol area's boxCollider 2D</param>
-    /// <param name="boxCollider2">chase area's boxCollider 2D</param>
-    public override void ExtractActionAreaInfo(out BoxCollider2D boxCollider1, out BoxCollider2D boxCollider2)
+    /// <param name="patrolArea"></param>
+    /// <param name="chaseArea"></param>
+    public override void ExtractActionAreaInfo(out BoxCollider2D patrolArea, out BoxCollider2D chaseArea)
     {
-        boxCollider1 = _patrolArea;
-        boxCollider2 = _chaseArea;
+        patrolArea = _patrolArea;
+        chaseArea = _chaseArea;
     }
     /// <summary>
-    /// receiver에게 전달하기 위한 리스폰 데이터를 업데이트한다
+    /// Receiver에게 전달하기 위한 행동 반경 데이터를 업데이트한다
     /// </summary>
-    public override void UpdateRespawnData()
+    public override void UpdateActionAreaData()
     {
-        _navMeshData = _navMeshSurface.navMeshData;     // baked action area
-        _respawnBounds = _patrolArea.bounds;            // patrolArea의 트랜스폼을 바꿨지만 fixedUpdate가 실행되지는 않은 상태이기 때문에 bounds가 기본값을 가지고 있다
+        _respawnBounds = _patrolArea.bounds;
 
-        // 인스턴스의 초기 데이터(_navMeshData를 제외하고는 모두 값)를 전달한다
-        receiver.SetFloatingRespawnData(_navMeshData, _patrolArea.transform.position, _chaseArea.transform.position,
+        // receiver에게 
+        receiver.SetFloatingActionAreaData(_patrolArea.transform.position, _chaseArea.transform.position,
             _patrolArea.transform.localScale, _chaseArea.transform.localScale, _respawnBounds);
+
+        BakeNewNavMesh();
     }
 
     /// <summary>
@@ -60,9 +59,10 @@ public class FloatingRespawnDataSender : RespawnDataSender
     /// <summary>
     /// bake navMesh at runtime code
     /// </summary>
-    public void BakeNavMesh()
+    public void BakeNewNavMesh()
     {
         // _navMeshSurface.BuildNavMeshAsync();
+        _navMeshSurface.RemoveData();
         _navMeshSurface.BuildNavMesh();
     }
 

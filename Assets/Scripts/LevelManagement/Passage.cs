@@ -35,20 +35,30 @@ public class Passage : TriggerZone
         if (_isPlayerExiting || !_canEnter)
             return;
 
+        // 다음 씬으로 넘어간다
         StartCoroutine(ExitSceneCoroutine());
     }
 
+    /// <summary>
+    /// 다음 씬으로 넘어가기 위한 로직
+    /// </summary>
+    /// <returns></returns>
     IEnumerator ExitSceneCoroutine()
     {
-        Cutscene _exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine(), false);
-        SceneEffectManager.Current.PushCutscene(_exitSceneCutscene);
+        // * push cutscene
+        Cutscene exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine(), false);
+        SceneEffectManager.Current.PushCutscene(exitSceneCutscene);
 
-        var nextPassageData = SceneChangeManager.Instance.GetNextPassageData(name);
-        string nextSceneName = nextPassageData.SceneName;
+        // # load next passage data
+        var fromPassageName = name;
+        var toPassageData = SceneChangeManager.Instance.GetNextPassageData(fromPassageName);          // this passage에 대응되는 next passage의 data를 가져온다
+        var toSceneName = toPassageData.SceneName;
 
-        yield return new WaitUntil(() => _exitSceneCutscene.IsDone);
+        // * wait cutscene
+        yield return new WaitUntil(() => exitSceneCutscene.IsDone);
 
-        SceneChangeManager.Instance.ChangeToPlayableScene(nextSceneName, nextPassageData.PassageName);
+        // # change to next scene
+        SceneChangeManager.Instance.ChangeToPlayableScene(toSceneName, toPassageData.PassageName);
     }
     IEnumerator ExitSceneCutsceneCoroutine()
     {

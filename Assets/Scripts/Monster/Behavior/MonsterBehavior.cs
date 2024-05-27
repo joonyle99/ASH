@@ -47,11 +47,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         // 개구리
         // Patrol Point 사이에서 생성된다.
-        public GroundRespawnData GroundRespawnData;
+        public GroundActionAreaData groundActionAreaData;
 
         // 박쥐
         // Patrol Area 내부에서 랜덤으로 생성된다.
-        public FloatingRespawnData FloatingRespawnData;
+        public FloatingActionAreaData floatingActionAreaData;
     }
 
     #region Attribute
@@ -412,13 +412,13 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
 
     // basic
-    public void SetGroundRespawnData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, joonyle99.Line respawnLine)
+    public void SetGroundActionAreaData(Vector3 patrolPointAPosition, Vector3 patrolPointBPosition, joonyle99.Line3D respawnLine3D)
     {
-        respawnData.GroundRespawnData = new GroundRespawnData(patrolPointAPosition, patrolPointBPosition, respawnLine);
+        respawnData.groundActionAreaData = new GroundActionAreaData(patrolPointAPosition, patrolPointBPosition, respawnLine3D);
     }
-    public void SetFloatingRespawnData(NavMeshData navMeshData, Vector3 patrolAreaPosition, Vector3 chaseAreaPosition, Vector3 patrolAreaScale, Vector3 chaseAreaScale, Bounds respawnBounds)
+    public void SetFloatingActionAreaData(Vector3 patrolAreaPosition, Vector3 chaseAreaPosition, Vector3 patrolAreaScale, Vector3 chaseAreaScale, Bounds respawnBounds)
     {
-        respawnData.FloatingRespawnData = new FloatingRespawnData(navMeshData, patrolAreaPosition, chaseAreaPosition, patrolAreaScale, chaseAreaScale, respawnBounds);
+        respawnData.floatingActionAreaData = new FloatingActionAreaData(patrolAreaPosition, chaseAreaPosition, patrolAreaScale, chaseAreaScale, respawnBounds);
     }
     public void SetRecentDir(int targetDir)
     {
@@ -548,8 +548,8 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         RigidBody2D.simulated = false;
         if (FloatingMovementModule)
         {
-            FloatingMovementModule.SetStopAgent(true);
             FloatingMovementModule.SetVelocity(Vector3.zero);
+            FloatingMovementModule.SetStopAgent(true);
         }
 
         if (LifePieceDropper)
@@ -654,9 +654,10 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     {
         SoundList.PlaySFX(key);
     }
-    public void DestroyMonster()
+    public void DestroyMonsterPrefab()
     {
-        Destroy(transform.parent ? transform.parent.gameObject : gameObject);
+        // parent: prefab_monsterName
+        Destroy(transform.parent.gameObject);
     }
 
     #endregion

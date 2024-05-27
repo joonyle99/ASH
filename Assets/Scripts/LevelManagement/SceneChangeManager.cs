@@ -39,14 +39,20 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
 
         return sceneContext;
     }
-    public PassageData GetNextPassageData(string passageName)
+    public PassageData GetNextPassageData(string fromPassageName)
     {
-        string sceneName = SceneManager.GetActiveScene().name;
+        var fromSceneName = SceneManager.GetActiveScene().name;
 
-        var result = _levelGraphData.GetExitPassageData(new PassageData(sceneName, passageName));
-        if (result.SceneName == "")
-            return new PassageData(sceneName, passageName);
-        return result;
+        var fromPassageData = new PassageData(fromSceneName, fromPassageName);
+        var toPassageData = _levelGraphData.GetExitPassageData(fromPassageData);
+
+        if (toPassageData.SceneName == "")
+        {
+            Debug.LogWarning("To Passage Data has no scene name");
+            return new PassageData(fromSceneName, fromPassageName);
+        }
+
+        return toPassageData;
     }
 
     public void ChangeToNonPlayableScene(string sceneName, System.Action changeDoneCallback = null)

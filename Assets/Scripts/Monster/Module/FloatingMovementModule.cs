@@ -12,14 +12,23 @@ public class FloatingMovementModule : MonoBehaviour
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
-
+    }
+    private void Start()
+    {
         _agent.updateRotation = false;
         _agent.updateUpAxis = false;
+
+        _agent.autoBraking = true;
     }
 
     public void SetPosition(Vector3 position)
     {
-        _agent.Warp(position);
+        bool result = _agent.Warp(position);
+
+        if (!result)
+        {
+            Debug.LogWarning("NavMesh Agent - SetPosition() is failed");
+        }
     }
     public void SetSpeed(float speed)
     {
@@ -37,7 +46,7 @@ public class FloatingMovementModule : MonoBehaviour
     {
         if (!_agent.isOnNavMesh)
         {
-            Debug.LogWarning($"에이전트가 NavMesh 위에 없음");
+            Debug.LogWarning($"NavMesh Agent - isOnNavMesh is failed");
             return;
         }
 
@@ -45,6 +54,15 @@ public class FloatingMovementModule : MonoBehaviour
     }
     public void MoveToDestination(Vector3 destPosition)
     {
-        _agent.SetDestination(destPosition);
+        bool result = _agent.SetDestination(destPosition);
+
+        if (!result)
+        {
+            Debug.LogWarning("NavMesh Agent - SetDestination() is failed");
+        }
+    }
+    public bool CheckArrivedToTarget()
+    {
+        return _agent.remainingDistance < 0.3f;
     }
 }

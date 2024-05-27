@@ -57,9 +57,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     // Controller
     private PlayerMovementController _playerMovementController;
     private PlayerAttackController _playerAttackController;
-    private PlayerInteractionController playerInteractionController;
-    private PlayerLightSkillController playerLightSkillController;
-    private PlayerHeadAimController playerHeadAimController;
+    private PlayerInteractionController _playerInteractionController;
+    private PlayerLightSkillController _playerLightSkillController;
+    private PlayerHeadAimController _playerHeadAimController;
 
     public delegate void HealthChangeEvent(int curHp, int maxHp);
     public event HealthChangeEvent OnHealthChanged;
@@ -68,12 +68,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     #region Properties
 
-    // Can Property
+    /// <summary>
+    /// 플레이어가 공격을 할 수 있는 상태를 나타냄
+    /// </summary>
     public bool CanAttack
     {
-        get => _isCanAttack && (CurrentState is IAttackableState) && (playerLightSkillController.IsLightButtonPressable && !playerLightSkillController.IsLightWorking);
+        get => _isCanAttack && CurrentState is IAttackableState &&
+               _playerLightSkillController.IsLightButtonPressable &&
+               !_playerLightSkillController.IsLightWorking;
+
         set => _isCanAttack = value;
     }
+
     public bool CanDash
     {
         get => _isCanDash && PersistentDataManager.Get<bool>("Dash");
@@ -157,7 +163,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     // Component
     public PlayerAttackController PlayerAttackController => _playerAttackController;
-    public PlayerInteractionController PlayerInteractionController => playerInteractionController;
+    public PlayerInteractionController PlayerInteractionController => _playerInteractionController;
     public PlayerMovementController PlayerMovementController => _playerMovementController;
 
     // ETC
@@ -177,10 +183,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         // Controller
         _playerAttackController = GetComponent<PlayerAttackController>();
-        playerInteractionController = GetComponent<PlayerInteractionController>();
+        _playerInteractionController = GetComponent<PlayerInteractionController>();
         _playerMovementController = GetComponent<PlayerMovementController>();
-        playerLightSkillController = GetComponent<PlayerLightSkillController>();
-        playerHeadAimController = GetComponent<PlayerHeadAimController>();
+        _playerLightSkillController = GetComponent<PlayerLightSkillController>();
+        _playerHeadAimController = GetComponent<PlayerHeadAimController>();
 
         // ETC
         _bodyCollider = GetComponent<CapsuleCollider2D>();
@@ -203,8 +209,17 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         #region Input
 
+        // Attack
         if (InputManager.Instance.State.AttackKey.KeyDown && CanAttack)
+        {
             _playerAttackController.CastAttack();
+        }
+
+        // TEMP: Recover Cheat HP
+        if (Input.GetKeyDown(KeyCode.BackQuote))
+        {
+            RecoverCurHp(2);
+        }
 
         #endregion
 
@@ -344,9 +359,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     }
 
-    // anim
     public void FinishState_AnimEvent()
     {
+        // from hurt state
+
         ChangeState<IdleState>();
     }
 
