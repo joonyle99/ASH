@@ -28,7 +28,7 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
                 var info = new ItemObtainPanel.ItemObtainInfo();
                 info.MainText = "스킬 조각을 획득하였습니다.";
                 info.DetailText = "다음 스킬 해금까지 앞으로 필요한 스킬 조각 "+(3-skillPieceCount%3).ToString()+"개";
-                GameUIManager.OpenSkillPieceObtainPanel(info);
+                GameUIManager.OpenItemObtainPanel(info);
                 SceneContext.Current.StartCoroutine(PlaySoundCoroutine("Piece", 0.25f));
             }
         }

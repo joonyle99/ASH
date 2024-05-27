@@ -7,6 +7,7 @@ public class BossKeyPanel : MonoBehaviour
     [SerializeField] BossKeySlot[] _keySlots;
 
     int _currentKeyCount = 0;
+
     public void SetKeyCountInstant(int keyCount)
     {
         _currentKeyCount = keyCount;

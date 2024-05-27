@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 137252186}
   - component: {fileID: 137252187}
   m_Layer: 5
-  m_Name: StatusUIs
+  m_Name: StatusUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -955,7 +955,7 @@ RectTransform:
   - {fileID: 1510705051}
   - {fileID: 1968851319}
   m_Father: {fileID: 4950070036961960987}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1725,7 +1725,7 @@ RectTransform:
   - {fileID: 327448485}
   - {fileID: 141859941}
   m_Father: {fileID: 4950070036961960987}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2171,7 +2171,7 @@ GameObject:
   - component: {fileID: 1890369864}
   - component: {fileID: 1890369865}
   m_Layer: 5
-  m_Name: Letterbox
+  m_Name: LetterBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2973,7 +2973,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3665692235434956357
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3157,7 +3157,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6572383785242768322
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3234,7 +3234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5316638590853411937
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3705,7 +3705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4960061287057045892
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4197,7 +4197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6648804840859277109
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4274,7 +4274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2356384347152911743
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5039,7 +5039,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8934745177309048064
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5185,7 +5185,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4950070036215958279}
-  - component: {fileID: 4950070036215958298}
   - component: {fileID: 4950070036215958296}
   m_Layer: 5
   m_Name: InteractionMarker
@@ -5216,14 +5215,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 242, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &4950070036215958298
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4950070036215958278}
-  m_CullTransparentMesh: 1
 --- !u!114 &4950070036215958296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5561,8 +5552,8 @@ RectTransform:
   - {fileID: 4950070036246423939}
   - {fileID: 2450191535672775563}
   - {fileID: 4950070036215958279}
-  - {fileID: 990059625}
   - {fileID: 1521399395}
+  - {fileID: 990059625}
   - {fileID: 715143340736479523}
   - {fileID: 600131802311226952}
   - {fileID: 6667823130145653626}
@@ -5649,14 +5640,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c943670c347cee247a78db4bbe8eeae1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemObtainPanel: {fileID: 990059632}
-  _itemObtainPanelDuration: 2
+  _statusUI: {fileID: 137252187}
+  _bossKeyPanel: {fileID: 3859233511134783917}
   _skillObtainPanel: {fileID: 1521399399}
   _skillObtainPanelDuration: 4
-  _bossKeyPanel: {fileID: 3859233511134783917}
+  _itemObtainPanel: {fileID: 990059632}
+  _itemObtainPanelDuration: 2
+  _letterBox: {fileID: 1890369865}
   _lifePurchasePanel: {fileID: 2866375218213953258}
-  _statusUIs: {fileID: 137252187}
-  _letterbox: {fileID: 1890369865}
 --- !u!114 &1825046115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5827,7 +5818,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1853097361852154751
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6214,7 +6205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4692505425256268916
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7613,7 +7604,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7505275151047311316
 RectTransform:
   m_ObjectHideFlags: 0

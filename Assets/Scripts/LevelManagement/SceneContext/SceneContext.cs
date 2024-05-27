@@ -117,8 +117,13 @@ public class SceneContext : MonoBehaviour
         // broadcast OnLoad()
         if (buildResult == Result.Success)
         {
-            foreach (ISceneContextBuildListener listener in FindObjectsOfType<MonoBehaviour>().OfType<ISceneContextBuildListener>())
+            var monoBehaviour = FindObjectsOfType<MonoBehaviour>();
+            var buildListener = monoBehaviour.OfType<ISceneContextBuildListener>();
+
+            foreach (var listener in buildListener)
             {
+                Debug.Log($"{name} listener call");
+
                 listener.OnSceneContextBuilt();
             }
         }
