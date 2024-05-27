@@ -6150,6 +6150,7 @@ MonoBehaviour:
   <IsHitting>k__BackingField: 0
   <IsHurt>k__BackingField: 0
   <IsDead>k__BackingField: 0
+  <IsRespawn>k__BackingField: 0
   _monsterDataObject: {fileID: 11400000, guid: a314028ac35e2c044a8819fb6324ff51, type: 2}
   monsterData:
     MonsterName: 
@@ -6161,11 +6162,10 @@ MonoBehaviour:
     JumpForce: {x: 0, y: 0}
   respawnData:
     DefaultPrefabPosition: {x: 0, y: 0, z: 0}
-    GroundRespawnData:
+    groundActionAreaData:
       PatrolPointAPosition: {x: 0, y: 0, z: 0}
       PatrolPointBPosition: {x: 0, y: 0, z: 0}
-    FloatingRespawnData:
-      NavMeshData: {fileID: 0}
+    floatingActionAreaData:
       PatrolAreaPosition: {x: 0, y: 0, z: 0}
       ChaseAreaPosition: {x: 0, y: 0, z: 0}
       PatrolAreaScale: {x: 0, y: 0, z: 0}
@@ -6178,7 +6178,7 @@ MonoBehaviour:
     m_Bits: 8
   <GroundCheckCollider>k__BackingField: {fileID: 8352838660497131247}
   <CenterOfMass>k__BackingField: {fileID: 0}
-  _targetDieTime: 4
+  _targetDieTime: 2.5
   _elapsedDieTime: 0
 --- !u!114 &5885552443500036367
 MonoBehaviour:

@@ -31,7 +31,9 @@ public abstract class Monster_Skill : MonoBehaviour
     }
 
     protected delegate void MonsterSkillEvent();
+    protected delegate void MonsterSkillCutScene();
     protected MonsterSkillEvent monsterSkillEvent;
+    protected MonsterSkillCutScene monsterSkillCutScene;
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
@@ -62,6 +64,7 @@ public abstract class Monster_Skill : MonoBehaviour
                         Vector2 playerPos = player.transform.position;
                         Instantiate(hitEffect, playerPos + Random.insideUnitCircle * 0.3f, Quaternion.identity);
                         monsterSkillEvent?.Invoke();
+                        monsterSkillCutScene?.Invoke();
                     }
                 }
             }
