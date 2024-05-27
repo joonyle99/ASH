@@ -80,7 +80,6 @@ public class SceneContext : MonoBehaviour
 
         // update
         CheckBuildResult(Player);
-        CheckBuildResult(SceneTransitionPlayer);
         CheckBuildResult(EntrancePassage);
 
         // build
