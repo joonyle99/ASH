@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 /// <summary>
 /// Must have : [RequireComponent(typeof(DestructEventCaller))]
 /// DestructEventCaller will call OnDestruction() when object is destructed.
@@ -9,6 +8,7 @@ public interface IDestructionListener
 {
     public void OnDestruction();
 }
+
 public class DestructEventCaller : MonoBehaviour
 {
     IDestructionListener[] _listeners; 

@@ -68,5 +68,19 @@ public class TutorialZone : TriggerZone
 
             eTime += Time.deltaTime;
         }
+
+        // set final alpha
+        foreach (var image in _images)
+        {
+            var color = image.color;
+            color.a = to;
+            image.color = color;
+        }
+        foreach (var text in _texts)
+        {
+            var color = text.color;
+            color.a = to;
+            text.color = color;
+        }
     }
 }
