@@ -8,15 +8,17 @@ public class PlayerLightSkillController : MonoBehaviour
 
     [SerializeField] private bool _isLightableState;
     [SerializeField] private bool _isLightWorking;
-    public bool IsLightWorking { get => _isLightWorking; }
+    public bool IsLightWorking => _isLightWorking;
+
     [SerializeField] private bool _isLightButtonPressable = true;
-    public bool IsLightButtonPressable { get => _isLightButtonPressable; }
+    public bool IsLightButtonPressable => _isLightButtonPressable;
+
     [SerializeField] private float _rotateSpeed;
     [SerializeField] private float _maxAngle;
     [SerializeField] private float _curAngle;
     [SerializeField] private float _lightAngleValue;
 
-    public float PlayerDir { get => this.transform.localScale.x; }
+    public float PlayerDir => this.transform.localScale.x;
 
     private PlayerBehaviour _player;
 
