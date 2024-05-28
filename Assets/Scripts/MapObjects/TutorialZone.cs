@@ -45,7 +45,7 @@ public class TutorialZone : TriggerZone
     IEnumerator FadeAllCoroutine(float from, float to, float duration)
     {
         float eTime = 0f;
-        while (eTime < duration)
+        while (eTime <= duration)
         {
             Color[] tempColors = new Color[_images.Length + _texts.Length];
 
@@ -64,8 +64,9 @@ public class TutorialZone : TriggerZone
                 _texts[i].color = tempColors[_images.Length + i];
             }
 
-            eTime += Time.deltaTime;
             yield return null;
+
+            eTime += Time.deltaTime;
         }
     }
 }

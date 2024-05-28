@@ -97,6 +97,9 @@ public class PlayerInteractionController : MonoBehaviour
     /// </summary>
     public void OnPlayerInteractionStart()
     {
+        // 상호작용 UI 잠시 끄기
+        _interactionMarker.DeactivateMarker();
+
         // 모든 상호작용이 Interaction State로 전이돼야 하는 것은 아니다 (다이얼로그도 상호작용임)
         if (ClosetTarget.StateChange == InteractionStateChangeType.InteractionState)
         {
@@ -108,6 +111,9 @@ public class PlayerInteractionController : MonoBehaviour
     /// </summary>
     public void OnPlayerInteractionExit()
     {
+        // 상호작용 UI 다시 켜기
+        _interactionMarker.ActivateMarker();
+
         if (_player.CurrentStateIs<InteractionState>())
         {
             _player.ChangeState<IdleState>();
@@ -191,6 +197,6 @@ public class PlayerInteractionController : MonoBehaviour
         if (ClosetTarget == newTarget) return;
 
         ClosetTarget = newTarget;
-        _interactionMarker.EnableMarkerAt(ClosetTarget);
+        _interactionMarker.EnableMarker(ClosetTarget);
     }
 }

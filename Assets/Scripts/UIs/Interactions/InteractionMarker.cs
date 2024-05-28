@@ -26,7 +26,7 @@ public class InteractionMarker : MonoBehaviour
             UpdateMarkerPos(_currentObject.InteractionMarkerPoint);
     }
 
-    public void EnableMarkerAt(InteractableObject interactionObject)
+    public void EnableMarker(InteractableObject interactionObject)
     {
         gameObject.SetActive(true);                     // UI 게임 오브젝트 활성화
         _isMarking = true;
@@ -40,6 +40,18 @@ public class InteractionMarker : MonoBehaviour
         _isMarking = false;
         gameObject.SetActive(false);
     }
+
+    public void ActivateMarker()
+    {
+        gameObject.SetActive(true);
+        _isMarking = true;
+    }
+    public void DeactivateMarker()
+    {
+        _isMarking = false;
+        gameObject.SetActive(false);
+    }
+
     public void UpdateMarkerPos(Vector3 markerPosAtWorlds)
     {
         var markerPosAtScreen = Camera.main.WorldToScreenPoint(markerPosAtWorlds);

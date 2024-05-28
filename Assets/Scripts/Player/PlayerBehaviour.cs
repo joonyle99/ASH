@@ -53,6 +53,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     [SerializeField] private MaterialController materialController;
     [SerializeField] private SoundList _soundList;
+    [SerializeField] private Transform _interactionMarkerPoint;
 
     // Controller
     private PlayerMovementController _playerMovementController;
@@ -172,6 +173,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     public MaterialController MaterialController => materialController;
     public SoundList SoundList => _soundList;
     public Rigidbody2D HandRigidBody => _handRigidbody;
+    public Transform InteractionMarker => _interactionMarkerPoint;
 
     #endregion
 

@@ -47,7 +47,7 @@ public abstract class InteractableObject : MonoBehaviour
         get
         {
             if (_interactionMarkerPoint == null)
-                return SceneContext.Current.Player.transform.position;
+                return SceneContext.Current.Player.InteractionMarker.position;
 
             return _interactionMarkerPoint.position;
         }
