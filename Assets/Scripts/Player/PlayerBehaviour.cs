@@ -265,8 +265,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
             {
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
-
-                // playerHeadAimController.HeadAimControlOnFlip();
             }
         }
     }
@@ -352,15 +350,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         if (CurHp > 0)
             ChangeState<InstantRespawnState>();
     }
-    public void DieProcess()
-    {
 
-    }
-    public void RespawnProcess()
-    {
-
-    }
-
+    // etc
     public void FinishState_AnimEvent()
     {
         // from hurt state

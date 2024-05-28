@@ -26,6 +26,7 @@ public abstract class InteractableObject : MonoBehaviour
     [Space]
 
     [SerializeField] private bool _isInteractable = true;                   // 상호작용 가능 여부
+    [SerializeField] private bool _isInteracting = false;                   // 상호작용 중인지 여부
     [SerializeField] private Transform _interactionMarkerPoint;             // 상호작용 마커 포인트 (가이드 텍스트가 출력되는 위치)
 
     [Space]
@@ -57,12 +58,10 @@ public abstract class InteractableObject : MonoBehaviour
         get => _isInteractable;
         protected set => _isInteractable = value;
     }
-
-    private bool _isInteracting;
     public bool IsInteracting
     {
         get => _isInteracting;
-        private set => _isInteracting = value;
+        set => _isInteracting = value;
     }
 
     protected bool IsInteractionKeyUp =>  InputManager.Instance.State.InteractionKey.KeyUp;             // 상호작용 키를 떼는 순간인지
@@ -73,21 +72,22 @@ public abstract class InteractableObject : MonoBehaviour
 
     #region Function
 
-    protected abstract void OnInteract();                   // 상호작용 시작 시 호출되는 함수 (모든 상호작용 오브젝트가 구현하도록 한다)
-    public virtual void UpdateInteracting() { }             // 상호작용 동안 호출되는 업데이트 함수
-    public virtual void FixedUpdateInteracting() { }        // 상호작용 동안 호출되는 물리 업데이트 함수
-    protected virtual void OnInteractionExit() { }          // 상호작용 종료 시 호출되는 함수 (모든 상호작용 오브젝트가 구현하지는 않도록 한다)
+    protected abstract void OnObjectInteractionEnter();             // 상호작용 시작 시 호출되는 함수 (모든 상호작용 오브젝트가 구현하도록 한다)
+    protected virtual void OnObjectInteractionExit() { }            // 상호작용 종료 시 호출되는 함수 (모든 상호작용 오브젝트가 구현하지는 않도록 한다)
+
+    public virtual void UpdateInteracting() { }                     // 상호작용 동안 호출되는 업데이트 함수
+    public virtual void FixedUpdateInteracting() { }                // 상호작용 동안 호출되는 물리 업데이트 함수
 
     /// <summary>
     /// 플레이이어와 상호작용을 시작하는 함수
     /// </summary>
-    public void Interact()
+    public void EnterInteraction()
     {
         IsInteracting = true;
 
-        OnInteract();
+        OnObjectInteractionEnter();
 
-        Player.PlayerInteractionController.OnPlayerInteractionStart();     // 플레이어에게 상호작용 시작을 알린다
+        Player.PlayerInteractionController.OnPlayerInteractionEnter();     // 플레이어에게 상호작용 시작을 알린다
     }
     /// <summary>
     /// 플레이어와 상호작용을 종료하는 함수
@@ -96,16 +96,17 @@ public abstract class InteractableObject : MonoBehaviour
     {
         IsInteracting = false;
 
-        OnInteractionExit();
+        OnObjectInteractionExit();
 
         Player.PlayerInteractionController.OnPlayerInteractionExit();     // 플레이어에게 상호작용 종료를 알린다
     }
 
     public void OnDestroy()
     {
-        if (!IsInteracting) return;
-
-        ExitInteraction();
+        if (IsInteracting)
+        {
+            ExitInteraction();
+        }
     }
 
     #endregion

@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 플레이어 기준에서 상호작용 가능한 오브젝트를 컨트롤한다
+/// 플레이어가 상호작용 가능한 오브젝트를 컨트롤한다
 /// </summary>
 public class PlayerInteractionController : MonoBehaviour
 {
+    #region Variable
+
     [Header("Interaction Controller")]
     [Space]
 
@@ -15,11 +17,13 @@ public class PlayerInteractionController : MonoBehaviour
         get => _closetTarget;
         set
         {
-            // 이벤트 방식
+            // 3. 플레이어와 오브젝트의 상호작용이 거리가 멀어져 끝난 경우 (feat. InteractionMarker.cs)
             if (_closetTarget != null && value == null)
             {
+                // 오브젝트의 상호작용 종료 함수를 호출
                 ClosetTarget.ExitInteraction();
 
+                // 상호작용 마커 UI 비활성화
                 if (_interactionMarker.IsMarking)
                 {
                     _interactionMarker.DisableMarker();
@@ -34,8 +38,12 @@ public class PlayerInteractionController : MonoBehaviour
 
     [SerializeField] private List<InteractableObject> _interactionTargetList;               // 범위 안의 상호작용 가능한 오브젝트 리스트
 
-    private InteractionMarker _interactionMarker;
     private PlayerBehaviour _player;
+    private InteractionMarker _interactionMarker;
+
+    #endregion
+
+    #region Function
 
     private void Awake()
     {
@@ -48,37 +56,45 @@ public class PlayerInteractionController : MonoBehaviour
     }
     private void Update()
     {
-        // 상호작용 대상 업데이트
-        if (_closetTarget && !_closetTarget.IsInteracting && _interactionTargetList.Count >= 1)
+        if (!ClosetTarget) return;
+
+        var isInteracting = ClosetTarget.IsInteracting;
+        var isInteractable = ClosetTarget.IsInteractable;
+
+        // 4. 플레이어가 상호작용을 끝마친 경우 (feat. InteractionMarker.cs)
+        if (!isInteractable)
         {
-            PickClosestTarget();
+            ClosetTarget.ExitInteraction();
+
+            if (_interactionMarker.IsMarking)
+            {
+                _interactionMarker.DisableMarker();
+            }
+
+            return;
         }
 
-        // 상호작용 대상이 있는 경우
-        if (ClosetTarget)
+        if (isInteracting)
         {
-            // 이미 상호작용 중이라면
-            if (ClosetTarget.IsInteracting)
+            ClosetTarget.UpdateInteracting();
+        }
+        else
+        {
+            if (_interactionTargetList.Count >= 2)
             {
-                // Debug.Log("Interacting");
+                var isPickedNewTarget = PickClosestTarget();
 
-                // 대상에서 상호작용 업데이트 함수를 돌려준다
-                ClosetTarget.UpdateInteracting();
-            }
-            // 상호작용 중이 아니라면
-            else
-            {
-                // 상호작용 키를 입력받는다면
-                if (InputManager.Instance.State.InteractionKey.KeyDown)
+                if (isPickedNewTarget)
                 {
-                    // Debug.Log("Interact");
+                    return;
+                }
+            }
 
-                    // 그리고 상호작용 가능한 상태라면
-                    if (_player.CanInteract)
-                    {
-                        // 상호작용 오브젝트에서의 상호작용 로직 실행
-                        ClosetTarget.Interact();
-                    }
+            if (InputManager.Instance.State.InteractionKey.KeyDown)
+            {
+                if (_player.CanInteract)
+                {
+                    ClosetTarget.EnterInteraction();
                 }
             }
         }
@@ -95,11 +111,8 @@ public class PlayerInteractionController : MonoBehaviour
     /// <summary>
     /// 상호작용이 시작되면 Interaction 상태로 전환한다
     /// </summary>
-    public void OnPlayerInteractionStart()
+    public void OnPlayerInteractionEnter()
     {
-        // 상호작용 UI 잠시 끄기
-        _interactionMarker.DeactivateMarker();
-
         // 모든 상호작용이 Interaction State로 전이돼야 하는 것은 아니다 (다이얼로그도 상호작용임)
         if (ClosetTarget.StateChange == InteractionStateChangeType.InteractionState)
         {
@@ -111,9 +124,6 @@ public class PlayerInteractionController : MonoBehaviour
     /// </summary>
     public void OnPlayerInteractionExit()
     {
-        // 상호작용 UI 다시 켜기
-        _interactionMarker.ActivateMarker();
-
         if (_player.CurrentStateIs<InteractionState>())
         {
             _player.ChangeState<IdleState>();
@@ -132,7 +142,7 @@ public class PlayerInteractionController : MonoBehaviour
 
             // 상호작용 타겟이 없는 경우 넣어준다
             if (ClosetTarget == null)
-                ChangeClosetTarget(target);
+                SetClosetTarget(target);
         }
     }
     /// <summary>
@@ -153,50 +163,61 @@ public class PlayerInteractionController : MonoBehaviour
 
     /// <summary>
     /// 상호작용 가능한 오브젝트 후보 리스트 중, 가장 가까운 타겟을 고른다
-    /// closetTarget에 null이 들어갈 수 있다.
     /// </summary>
-    public void PickClosestTarget()
+    public bool PickClosestTarget()
     {
-        // 리스트의 null을 제거하며 정리한다 (x == null인 경우 모든 x를 제거 *람다식*)
-        // _interactionTargetList.RemoveAll(x => x == null);
+        InteractableObject newClosetTarget = FindClosestTarget();
 
-        var minDist = float.MaxValue;
-        var minIndex = -1;
-
-        // 후보 리스트를 순회
-        for (int i = 0; i < _interactionTargetList.Count; i++)
-        {
-            // 상호작용 기능 활성화 여부 판단
-            if (!_interactionTargetList[i].IsInteractable) continue;
-
-            // 제곱근 연산은 뉴튼 랩슨 알고리즘을 사용하며 계산 비용이 크기 때문에 제곱의 형태로 반환
-            var nowDist = Vector3.SqrMagnitude(_interactionTargetList[i].transform.position - transform.position);
-            if (nowDist < minDist)
-            {
-                minDist = nowDist;
-                minIndex = i;
-            }
-        }
-
-        // 후보 리스트 중에서 상호작용 타겟이 없는 경우
-        if (minIndex == -1) return;
+        if (newClosetTarget == null) return false;
 
         // 중복이 아니라면 넣는다
-        if (_interactionTargetList[minIndex] != ClosetTarget)
+        if (newClosetTarget != ClosetTarget)
         {
-            ChangeClosetTarget(_interactionTargetList[minIndex]);
+            SetClosetTarget(newClosetTarget);
+            return true;
         }
+
+        return false;
+    }
+    /// <summary>
+    /// 후보 리스트에서 가장 가까운 타겟을 찾는다
+    /// </summary>
+    /// <returns></returns>
+    public InteractableObject FindClosestTarget()
+    {
+        InteractableObject closestTarget = null;
+        var minDist = float.MaxValue;
+
+        foreach (var target in _interactionTargetList)
+        {
+            if (!target.IsInteractable) continue;
+
+            var sqrDist = (target.transform.position - transform.position).sqrMagnitude;
+
+            if (!(sqrDist < minDist)) continue;
+
+            minDist = sqrDist;
+            closestTarget = target;
+        }
+
+        return closestTarget;
     }
     /// <summary>
     /// 현재 상호작용 중인 오브젝트르 변경
     /// </summary>
     /// <param name="newTarget"></param>
-    public void ChangeClosetTarget(InteractableObject newTarget)
+    public void SetClosetTarget(InteractableObject newTarget)
     {
+        // 새로운 타겟이 없다면 리턴
         if (newTarget == null) return;
+        // 이미 같은 타겟이라면 리턴
         if (ClosetTarget == newTarget) return;
 
         ClosetTarget = newTarget;
+
+        // 1. 플레이어가 상호작용 가능한 오브젝트의 트리거 박스에 들어간 경우 (feat. InteractionMarker.cs)
         _interactionMarker.EnableMarker(ClosetTarget);
     }
+
+    #endregion
 }

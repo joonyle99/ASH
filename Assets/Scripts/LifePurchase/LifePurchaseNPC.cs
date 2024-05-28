@@ -5,7 +5,7 @@ using UnityEngine;
 public class LifePurchaseNPC : InteractableObject
 {
     [SerializeField] CutscenePlayer _cutscenePlayer;
-    protected override void OnInteract()
+    protected override void OnObjectInteractionEnter()
     {
         _cutscenePlayer.Play();
     }

@@ -29,7 +29,7 @@ public class BossDoor : InteractableObject
     }
     // Start is called before the first frame update
 
-    protected override void OnInteract()
+    protected override void OnObjectInteractionEnter()
     {
         if (BossDungeonManager.Instance.AllKeysCollected)
         {

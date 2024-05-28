@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
 {
-    static GameUIManager _instance;
+    private static GameUIManager _instance;
 
     [Header("Status")]
     [Space]

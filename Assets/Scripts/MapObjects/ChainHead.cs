@@ -34,7 +34,7 @@ public class ChainHead : InteractableObject
             _moveAudio.Stop();
         }
     }
-    protected override void OnInteract()
+    protected override void OnObjectInteractionEnter()
     {
         _soundList.PlaySFX("Grab");
         _handle.ConnectTo(Player.HandRigidBody);
@@ -44,7 +44,7 @@ public class ChainHead : InteractableObject
         _playerLimittingJoint.connectedAnchor = Player.HandRigidBody.position - Player.Rigidbody.position;
         _playerLimittingJoint.distance = _chainLength;
     }
-    protected override void OnInteractionExit()
+    protected override void OnObjectInteractionExit()
     {
         _handle.Disconnect();
         _playerLimittingJoint.enabled = false;

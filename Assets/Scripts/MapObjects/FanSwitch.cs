@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FanSwitch : InteractableObject
@@ -9,13 +8,13 @@ public class FanSwitch : InteractableObject
     [SerializeField] float _cameraMoveDuration;
     [SerializeField] InputSetterScriptableObject _InputSetter;
 
-    protected override void OnInteract()
+    protected override void OnObjectInteractionEnter()
     {
         this.IsInteractable = false;
         SceneEffectManager.Current.PushCutscene(new Cutscene(this, CoEpicMoment())); // ÄÆ¾À ½ÃÀÛ
     }
 
-    protected override void OnInteractionExit()
+    protected override void OnObjectInteractionExit()
     {
         this.IsInteractable = true;
     }

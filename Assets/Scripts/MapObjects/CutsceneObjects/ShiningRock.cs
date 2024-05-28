@@ -19,7 +19,7 @@ public class ShiningRock : InteractableObject, IAttackListener
     {
         _lightNPC.SetActive(false);
     }
-    protected override void OnInteract()
+    protected override void OnObjectInteractionEnter()
     {
         if (!_hasPlayedDialogue)
         {

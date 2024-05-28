@@ -11,7 +11,7 @@ public class PushableTree : InteractableObject
 
     public bool IsFallen => _treeTrunk.PushedAngle > _interactionOverAngle;
 
-    protected override void OnInteract()
+    protected override void OnObjectInteractionEnter()
     {
         _moveDirection = Player.RecentDir;
     }

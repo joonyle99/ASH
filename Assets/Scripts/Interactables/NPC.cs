@@ -10,7 +10,7 @@ public class NPC : InteractableObject
 
     [SerializeField] private DialogueData _dialogueData;
 
-    protected override void OnInteract()
+    protected override void OnObjectInteractionEnter()
     {
         DialogueController.Instance.StartDialogue(_dialogueData);
     }

@@ -14,7 +14,7 @@ public class Merchant : InteractableObject
     [Tooltip("you can link questData to dialogueData")]
     [SerializeField] private QuestData _questData;
 
-    protected override void OnInteract()
+    protected override void OnObjectInteractionEnter()
     {
         StartCoroutine(OnInteractCoroutine());
     }

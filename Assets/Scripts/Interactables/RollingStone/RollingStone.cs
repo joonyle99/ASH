@@ -35,7 +35,7 @@ public class RollingStone : InteractableObject
         _attackableComponent = GetComponent<IAttackListener>();
         _rollAudioOriginalVolume = _rollAudio.volume;
     }
-    protected override void OnInteract()
+    protected override void OnObjectInteractionEnter()
     {
         //Player.MovementController.enabled = true;
         _moveDirection = Player.PlayerLookDir2D.x;
@@ -146,7 +146,7 @@ public class RollingStone : InteractableObject
             _rigidbody.velocity = Vector2.ClampMagnitude(_rigidbody.velocity, _maxRollSpeed);
         }
     }
-    protected override void OnInteractionExit()
+    protected override void OnObjectInteractionExit()
     {
         if (_stopOnRelease)
             _rigidbody.velocity *= 0.1f;
