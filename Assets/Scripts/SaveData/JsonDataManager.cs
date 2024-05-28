@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 [Serializable]
 public class DataDictionary<TKey, TValue>
@@ -15,9 +16,77 @@ public class JsonDataArray<TKey, TValue>
 {
     public List<DataDictionary<TKey, TValue>> data;
 }
-public static class JsonDataManager
+
+[Serializable]
+public class SaveData
 {
-    public static string ToJson<TKey, TValue>(Dictionary<TKey, TValue> dic)
+    public enum type
+    {
+        String,
+        Float,
+        Vector3
+    }
+    public JsonDataArray<string, string> testDic = new JsonDataArray<string, string>();
+}
+
+
+public class JsonDataManager : MonoBehaviour
+{
+    private string path;
+
+    private void Start()
+    {
+        path = Path.Combine(Application.dataPath, "database.json");
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            JsonSave();
+        }
+    }
+
+    public void JsonSave()
+    {
+        SaveData saveData = new SaveData();
+
+        Dictionary<string, string> testData = new Dictionary<string, string>();
+
+        float volume = 1.0f;
+
+        string testName = "testBGMVolume";
+        string name = testName + "/" + SaveData.type.Float;
+
+        testData.Add(name, volume.ToString());
+
+        saveData.testDic = DictionaryConvert(testData);
+
+        string json = JsonUtility.ToJson(saveData, true);
+
+        File.WriteAllText(path, json);
+
+        Debug.Log("¿˙¿Â");
+    }
+    public void JsonLoad()
+    {
+        SaveData data = new SaveData();
+
+        if (!File.Exists(path))
+        {
+            JsonSave();
+        }
+        else
+        {
+            string fromJsonData = File.ReadAllText(Application.dataPath + "/database.json");
+
+            Dictionary<string, string> dataDic = new Dictionary<string, string>();
+
+            dataDic = ToDictionary<string, string>(fromJsonData);
+        }
+    }
+
+    public JsonDataArray<TKey, TValue> DictionaryConvert<TKey, TValue>(Dictionary<TKey, TValue> dic)
     {
         List<DataDictionary<TKey, TValue>> dataList = new List<DataDictionary<TKey, TValue>>();
         DataDictionary<TKey, TValue> dataDictionary;
@@ -33,10 +102,10 @@ public static class JsonDataManager
         JsonDataArray<TKey, TValue> arrayJson = new JsonDataArray<TKey, TValue>();
         arrayJson.data = dataList;
 
-        return JsonUtility.ToJson(arrayJson, true);
+        return arrayJson;
     }
 
-    public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(string path)
+    public Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(string path)
     {
         JsonDataArray<TKey, TValue> dataList = JsonUtility.FromJson<JsonDataArray<TKey, TValue>>(path);
 

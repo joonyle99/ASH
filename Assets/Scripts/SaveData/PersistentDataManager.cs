@@ -13,12 +13,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     private DataGroup _globalDataGroup = new DataGroup();
 
     private int _cheatSkillId = 0;
-    private string path;
-
-    private void Start()
-    {
-        path = Path.Combine(Application.dataPath, "database.json");
-    }
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F8))
@@ -98,7 +93,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return;
         Instance._globalDataGroup[key] = value;
-        Instance.JsonSave();
     }
     public static void Set<T>(string groupName, string key, T value) where T : new()
     {
@@ -107,7 +101,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance._dataGroups.ContainsKey(groupName))
         {
             Instance._dataGroups[groupName][key] = value;
-            Instance.JsonSave();
         }
             
     }
@@ -145,26 +138,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         {
             Instance._dataGroups[groupName][key] = new T();
             return (T)Instance._dataGroups[groupName][key];
-        }
-    }
-    public void JsonSave()
-    {
-        string json = JsonDataManager.ToJson(Instance._globalDataGroup);
-
-        File.WriteAllText(path, json);
-    }
-    public void JsonLoad()
-    {
-        DataGroup data = new DataGroup();
-
-        if (!File.Exists(path))
-        {
-            JsonSave();
-        } else
-        {
-            string fromJsonData = File.ReadAllText(Application.dataPath + "/Data" + "/database.json");
-
-            data = JsonDataManager.ToDictionary<string, object>(fromJsonData);
         }
     }
 }
