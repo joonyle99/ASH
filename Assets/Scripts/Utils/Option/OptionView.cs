@@ -1,7 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class OptionView : MonoBehaviour
 {
@@ -129,5 +131,20 @@ public class OptionView : MonoBehaviour
         _optionPanel.gameObject.SetActive(false);
 
         SceneContext.Current.Player.enabled = true;
+    }
+
+    public void ReStartGame()
+    {
+        Debug.Log("게임을 재시작 합니다.");
+
+        StartCoroutine(ReStartCoroutine());
+    }
+    private IEnumerator ReStartCoroutine()
+    {
+        // TODO: Time.TimeScale == 0f 인 경우에 씬이 넘어가지 않는다.
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
+        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
+
+        Debug.Log("End ReStart Coroutine");
     }
 }

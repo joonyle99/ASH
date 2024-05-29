@@ -68,8 +68,8 @@ public class DieState : PlayerState
 
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        Debug.Log($"scene name: {SceneManager.GetActiveScene().name}");
-        Debug.Log($"passage name: {SceneContext.Current.EntrancePassage.PassageName}");
+        // Debug.Log($"scene name: {SceneManager.GetActiveScene().name}");
+        // Debug.Log($"passage name: {SceneContext.Current.EntrancePassage.PassageName}");
 
         SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
     }
