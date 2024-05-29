@@ -27,6 +27,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     [Space]
 
     [SerializeField] private Letterbox _letterBox;
+    [SerializeField] private OptionView _optionView;
     [SerializeField] private LifePurchasePanel _lifePurchasePanel;
 
     public static bool IsLifePurchasePanelOpen => _instance._lifePurchasePanel.gameObject.activeInHierarchy;
@@ -112,6 +113,12 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     {
         _instance._letterBox.Close();
         _instance._statusUI.alpha = 1;
+    }
+    
+    // option view
+    public static void OpenOptionView()
+    {
+        _instance._optionView.TogglePanel();
     }
 
     // life purchase
