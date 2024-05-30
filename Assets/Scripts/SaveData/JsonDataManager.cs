@@ -20,23 +20,20 @@ public class JsonDataArray<TKey, TValue>
 [Serializable]
 public class SaveData
 {
-    public enum type
-    {
-        String,
-        Float,
-        Vector3
-    }
-    public JsonDataArray<string, string> testDic = new JsonDataArray<string, string>();
+    public Dictionary<string, string> saveDataGroup = new Dictionary<string, string>();
 }
 
 
-public class JsonDataManager : MonoBehaviour
+public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManager>
 {
     private string path;
+
+    public static SaveData _globalSaveData = new SaveData();
 
     private void Start()
     {
         path = Path.Combine(Application.dataPath, "database.json");
+        JsonLoad();
     }
 
     private void Update()
@@ -47,27 +44,53 @@ public class JsonDataManager : MonoBehaviour
         }
     }
 
-    public void JsonSave()
+    public static void Add(string key, string value)
     {
-        SaveData saveData = new SaveData();
+        if(Instance == null)
+        {
+            return;
+        }
 
-        Dictionary<string, string> testData = new Dictionary<string, string>();
+        if(Has(key))
+        {
+            Set(key, value);
+        } else
+        {
+            _globalSaveData.saveDataGroup.Add(key, value);
+        }
+    }
 
-        float volume = 1.0f;
+    public static void Set(string key, string value)
+    {
+        if(Instance == null)
+        {
+            return;
+        }
 
-        string testName = "testBGMVolume";
-        string name = testName + "/" + SaveData.type.Float;
+        _globalSaveData.saveDataGroup[key] = value;
+    }
 
-        testData.Add(name, volume.ToString());
+    public static bool Has(string key)
+    {
+        if(Instance == null)
+        {
+            return false;
+        }
 
-        saveData.testDic = DictionaryConvert(testData);
+        return _globalSaveData.saveDataGroup.ContainsKey(key);
+    }
 
-        string json = JsonUtility.ToJson(saveData, true);
+    public static void JsonSave()
+    {
+        JsonDataArray<string, string> arrayJson = Instance.DictionaryConvert(_globalSaveData.saveDataGroup);
 
-        File.WriteAllText(path, json);
+        string json = JsonUtility.ToJson(arrayJson, true);
+
+        File.WriteAllText(Instance.path, json);
 
         Debug.Log("¿˙¿Â");
     }
+
     public void JsonLoad()
     {
         SaveData data = new SaveData();
@@ -83,6 +106,8 @@ public class JsonDataManager : MonoBehaviour
             Dictionary<string, string> dataDic = new Dictionary<string, string>();
 
             dataDic = ToDictionary<string, string>(fromJsonData);
+
+            _globalSaveData.saveDataGroup = dataDic;
         }
     }
 

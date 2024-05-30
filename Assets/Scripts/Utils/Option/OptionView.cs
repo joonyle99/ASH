@@ -31,14 +31,16 @@ public class OptionView : MonoBehaviour
     private void Awake()
     {
         // subscribe slider event to control volume
-        _bgmSlider.onValueChanged.AddListener(SetBgmVolume);
-        _sfxSlider.onValueChanged.AddListener(SetSfxVolume);
+        _bgmSlider.onValueChanged.AddListener(SoundManager.Instance.SetBgmVolume);
+        _bgmSlider.onValueChanged.AddListener(SetBgmValue);
+
+        _sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSfxVolume);
+        _sfxSlider.onValueChanged.AddListener(SetSfxValue);
     }
     private void Start()
     {
         // set slider value
-        SetBgmValue();
-        SetSfxValue();
+        InitialSetting();
     }
 
     public void TogglePanel()
@@ -53,42 +55,15 @@ public class OptionView : MonoBehaviour
         }
     }
 
-    public void SetBgmVolume(float volume)
+    public void SetBgmValue(float volume)
     {
-        if (volume < 0.01f)
-        {
-            _audioMixer.SetFloat("BGM", -80);
-        }
-        else
-        {
-            _audioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20);
-        }
-
-        SetBgmValue();
-    }
-    public void SetSfxVolume(float volume)
-    {
-        if (volume == 0)
-        {
-            _audioMixer.SetFloat("SFX", -80);
-        }
-        else
-        {
-            _audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
-        }
-
-        SetSfxValue();
-    }
-
-    public void SetBgmValue()
-    {
-        int bgmVolume = Mathf.FloorToInt(_bgmSlider.value * 100f);
+        int bgmVolume = Mathf.FloorToInt(volume * 100f);
 
         _bgmValue.text = bgmVolume.ToString();
     }
-    public void SetSfxValue()
+    public void SetSfxValue(float volume)
     {
-        int sfxVolume = Mathf.FloorToInt(_sfxSlider.value * 100f);
+        int sfxVolume = Mathf.FloorToInt(volume * 100f);
 
         _sfxValue.text = sfxVolume.ToString();
     }
@@ -146,5 +121,28 @@ public class OptionView : MonoBehaviour
         SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
 
         Debug.Log("End ReStart Coroutine");
+    }
+
+    public void ApplyTestButton()
+    {
+        JsonDataManager.JsonSave();
+    }
+
+    private void InitialSetting()
+    {
+        float bgmVolume = 1f;
+        float sfxVolume = 1f;
+
+        if (JsonDataManager.Has("BGMVolume"))
+            bgmVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["BGMVolume"]);
+
+        if (JsonDataManager.Has("SFXVolume"))
+            sfxVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["SFXVolume"]);
+
+        SetBgmValue(bgmVolume);
+        SetSfxValue(sfxVolume);
+
+        _bgmSlider.value = bgmVolume;
+        _sfxSlider.value = sfxVolume;
     }
 }

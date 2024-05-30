@@ -15,6 +15,8 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
     [SerializeField] AudioSource _sfxPlayer;
     [SerializeField] AudioSource _bgmPlayer;
 
+    [SerializeField] AudioMixer _audioMixer;
+
     const int PitchPrecision = 1000;
 
     SoundList [] _soundLists;
@@ -30,6 +32,11 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
                 _soundListIndicies[_soundLists[i].Datas[j].Key] = i;
         }
         _pitchedAudioSources[1 * PitchPrecision] = _sfxPlayer;
+    }
+
+    protected void Start()
+    {
+        InitialVolumeSetting();
     }
     public void PlaySFXPitched(AudioClip clip, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
@@ -109,5 +116,47 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
         {
             Debug.LogWarning("No BGM matching: " + key);
         }
+    }
+
+    public void SetBgmVolume(float volume)
+    {
+        if (volume < 0.01f)
+        {
+            _audioMixer.SetFloat("BGM", -80);
+        }
+        else
+        {
+            _audioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20);
+        }
+
+        JsonDataManager.Add("BGMVolume", volume.ToString());
+    }
+    public void SetSfxVolume(float volume)
+    {
+        if (volume == 0)
+        {
+            _audioMixer.SetFloat("SFX", -80);
+        }
+        else
+        {
+            _audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
+        }
+
+        JsonDataManager.Add("SFXVolume", volume.ToString());
+    }
+
+    public void InitialVolumeSetting()
+    {
+        float bgmVolume = 1f;
+        float sfxVolume = 1f;
+
+        if (JsonDataManager.Has("BGMVolume"))
+            bgmVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["BGMVolume"]);
+
+        if (JsonDataManager.Has("SFXVolume"))
+            sfxVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["SFXVolume"]);
+
+        SetBgmVolume(bgmVolume);
+        SetSfxVolume(sfxVolume);
     }
 }
