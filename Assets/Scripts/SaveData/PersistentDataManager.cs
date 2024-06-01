@@ -14,12 +14,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
     private int _cheatSkillId = 0;
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        Debug.Log($"PersistentDataManager의 Awake -> Instance는 존재하나요? {Instance != null}");
-    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F8))
