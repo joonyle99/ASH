@@ -19,7 +19,7 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
 
     public override IEnumerator EnterSceneEffectCoroutine()
     {
-        if (PersistentDataManager.Get<bool>("seenPlayerFirstSpawn"))
+        if (PersistentDataManager.GetByGlobal<bool>("seenPlayerFirstSpawn"))
         {
             yield return base.EnterSceneEffectCoroutine();
         }
@@ -42,7 +42,7 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
 
             GameUIManager.CloseLetterbox();
             InputManager.Instance.ChangeToDefaultSetter();
-            PersistentDataManager.Set("seenPlayerFirstSpawn", true);
+            PersistentDataManager.SetByGlobal("seenPlayerFirstSpawn", true);
         }
     }
 

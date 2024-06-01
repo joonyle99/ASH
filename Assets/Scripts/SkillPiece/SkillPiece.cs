@@ -10,16 +10,16 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
     {
         if (activator.Type == ActivatorType.Player)
         {
-            PersistentDataManager.UpdateValue<int>("skillPiece", x => x + 1);
+            PersistentDataManager.UpdateValueByGlobal<int>("skillPiece", x => x + 1);
             Destruction.Destruct(gameObject);
-            int skillPieceCount = PersistentDataManager.Get<int>("skillPiece");
+            int skillPieceCount = PersistentDataManager.GetByGlobal<int>("skillPiece");
             if (skillPieceCount % 3 == 0)
             {
                 var info = new SkillObtainPanel.SkillInfo();
                 info.Icon = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].UnlockImage;
                 info.MainText = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].Name;
                 info.DetailText = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].DetailText;
-                PersistentDataManager.Set<bool>(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key, true);
+                PersistentDataManager.SetByGlobal<bool>(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key, true);
                 GameUIManager.OpenSkillObtainPanel(info);
                 SceneContext.Current.StartCoroutine(PlaySoundCoroutine("Skill", 0.25f));
             }

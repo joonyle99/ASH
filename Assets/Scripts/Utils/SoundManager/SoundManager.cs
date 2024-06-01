@@ -1,43 +1,45 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.UI;
 
-public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
+public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
 {
-    Dictionary<int, AudioSource> _pitchedAudioSources = new Dictionary<int, AudioSource>();
+    [SerializeField] private GameObject _soundListParent;
 
-    [SerializeField] GameObject _soundListParent;
+    [SerializeField] private AudioSource _sfxPlayer;
+    [SerializeField] private AudioSource _bgmPlayer;
 
-    [SerializeField] AudioSource _sfxPlayer;
-    [SerializeField] AudioSource _bgmPlayer;
+    [SerializeField] private AudioMixer _audioMixer;
 
-    [SerializeField] AudioMixer _audioMixer;
+    private const int PitchPrecision = 1000;
 
-    const int PitchPrecision = 1000;
+    private SoundList[] _soundLists;
+    private Dictionary<string, int> _soundListIndexMap = new Dictionary<string, int>();
+    private Dictionary<int, AudioSource> _pitchedAudioSources = new Dictionary<int, AudioSource>();
 
-    SoundList [] _soundLists;
-    Dictionary<string, int> _soundListIndicies  = new Dictionary<string, int>();
     protected override void Awake()
     {
         base.Awake();
 
         _soundLists = _soundListParent.GetComponentsInChildren<SoundList>();
-        for(int i = 0; i< _soundLists.Length; i++)
+
+        for (int i = 0; i < _soundLists.Length; i++)
         {
             for (int j = 0; j < _soundLists[i].Datas.Count; j++)
-                _soundListIndicies[_soundLists[i].Datas[j].Key] = i;
+            {
+                _soundListIndexMap[_soundLists[i].Datas[j].Key] = i;
+            }
         }
+
         _pitchedAudioSources[1 * PitchPrecision] = _sfxPlayer;
     }
-
     protected void Start()
     {
         InitialVolumeSetting();
     }
+
     public void PlaySFXPitched(AudioClip clip, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
         if (pitchMultiplier < 0)
@@ -77,7 +79,7 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
         StartCoroutine(BGMFadeOutCoroutine(duration));
         _bgmPlayer.Stop();
     }
-    IEnumerator BGMFadeOutCoroutine(float duration)
+    private IEnumerator BGMFadeOutCoroutine(float duration)
     {
         float eTime = 0f;
         float originalChannelVolume = _bgmPlayer.volume;
@@ -97,9 +99,9 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
 
     public void PlayCommonSFXPitched(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
-        if (_soundListIndicies.ContainsKey(key))
+        if (_soundListIndexMap.ContainsKey(key))
         {
-            _soundLists[_soundListIndicies[key]].PlaySFXPitched(key, pitchMultiplier, volumeMultiplier);
+            _soundLists[_soundListIndexMap[key]].PlaySFXPitched(key, pitchMultiplier, volumeMultiplier);
         }
         else
         {
@@ -108,9 +110,9 @@ public class SoundManager : HappyTools.SingletonBehaviour<SoundManager>
     }
     public void PlayCommonBGM(string key, float volumeMultiplier = 1f)
     {
-        if (_soundListIndicies.ContainsKey(key))
+        if (_soundListIndexMap.ContainsKey(key))
         {
-            _soundLists[_soundListIndicies[key]].PlayBGM(key, volumeMultiplier);
+            _soundLists[_soundListIndexMap[key]].PlayBGM(key, volumeMultiplier);
         }
         else
         {

@@ -4,7 +4,7 @@ namespace HappyTools
 {
     /// <summary>
     /// This SingletonBehaviour logs null if instance is not created and tries to access it.
-    /// If another instance of this is created, the new instance is destroyed.
+    /// If another instance of this is created, the 'new' instance is destroyed.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class SingletonBehaviourFixed<T> : MonoBehaviour where T : MonoBehaviour
@@ -16,18 +16,14 @@ namespace HappyTools
                 if (instance == null)
                 {
                     instance = (T)FindObjectOfType(typeof(T));
-                    /*
+
                     if (instance == null)
-                    {
-                        Debug.LogWarning("No object of " + typeof(T).Name + " is not found, therefore created");
-                        var go = new GameObject(typeof(T).Name);
-                        instance = go.AddComponent<T>();
-                    }
-                    */
+                        Debug.LogError("No object of " + typeof(T).Name + " is no found");
                 }
                 return instance;
             }
         }
+
         static T instance = null;
 
         protected virtual void Awake()
@@ -35,6 +31,7 @@ namespace HappyTools
             if (instance == null)
             {
                 instance = GetComponent<T>();
+
                 if (transform.parent == null)
                     DontDestroyOnLoad(gameObject);
             }
@@ -42,8 +39,6 @@ namespace HappyTools
             {
                 Destroy(gameObject);
             }
-
         }
     }
-
 }

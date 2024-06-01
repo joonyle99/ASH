@@ -18,8 +18,8 @@ public class LifePurchasePanel : MonoBehaviour
     int _price = 100;
     void UpdateUIs()
     {
-        int currentGold = PersistentDataManager.Get<int>("gold");
-        _availableText.text = (PersistentDataManager.Get<int>("gold") / _price).ToString();
+        int currentGold = PersistentDataManager.GetByGlobal<int>("gold");
+        _availableText.text = (PersistentDataManager.GetByGlobal<int>("gold") / _price).ToString();
         _priceText.text = _price.ToString();
         _countText.text = _currentCount.ToString();
         _totalPriceText.text = (_price * _currentCount).ToString();
@@ -28,7 +28,7 @@ public class LifePurchasePanel : MonoBehaviour
     }
     public void Open()
     {
-        _currentCount = PersistentDataManager.Get<int>("gold") / _price;
+        _currentCount = PersistentDataManager.GetByGlobal<int>("gold") / _price;
         UpdateUIs();
         gameObject.SetActive(true);
     }
@@ -43,7 +43,7 @@ public class LifePurchasePanel : MonoBehaviour
     }
     public void Purchase()
     {
-        PersistentDataManager.UpdateValue<int>("gold", x => x - _currentCount * _price);
+        PersistentDataManager.UpdateValueByGlobal<int>("gold", x => x - _currentCount * _price);
         // TODO : life +
     }
 }

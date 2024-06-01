@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// 씬 전환을 담당하는 매니저
 /// </summary>
-public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManager>, ISceneContextBuildListener
+public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChangeManager>, ISceneContextBuildListener
 {
     public bool IsChanging { get; private set; }
 

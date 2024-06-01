@@ -10,6 +10,14 @@ public class TitleSceneManager : MonoBehaviour
         SoundManager.Instance.PlayCommonBGM("MainTheme");
     }
 
+    public void OpenPrologueScene()
+    {
+        StartCoroutine(OpenPrologueSceneCoroutine());
+    }
+    public void ChangeScene(string sceneName)
+    {
+        StartCoroutine(SceneChangeCoroutine(sceneName));
+    }
     public void QuitGame()
     {
 #if UNITY_EDITOR
@@ -17,16 +25,6 @@ public class TitleSceneManager : MonoBehaviour
 #else
         Application.Quit();
 #endif
-    }
-
-    public void ChangeScene(string sceneName)
-    {
-        StartCoroutine(SceneChangeCoroutine(sceneName));
-    }
-
-    public void OpenPrologueScene()
-    {
-        StartCoroutine(OpenPrologueSceneCoroutine());
     }
 
     /// <summary>

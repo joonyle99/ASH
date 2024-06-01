@@ -23,7 +23,6 @@ public class SaveData
     public Dictionary<string, string> saveDataGroup = new Dictionary<string, string>();
 }
 
-
 public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManager>
 {
     private string path;

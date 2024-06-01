@@ -4,7 +4,7 @@ namespace HappyTools
 {
     /// <summary>
     /// This SingletonBehaviour logs null if instance is not created and tries to access it.
-    /// If another instance of this is created, the old instance is destroyed.
+    /// If another instance of this is created, the 'old' instance is destroyed.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehaviour
@@ -23,19 +23,22 @@ namespace HappyTools
                 return instance;
             }
         }
+
         static T instance = null;
 
         protected virtual void Awake()
         {
-            if (instance != null)
+            if (instance == null)
+            {
+                instance = GetComponent<T>();
+
+                if (transform.parent == null)
+                    DontDestroyOnLoad(gameObject);
+            }
+            else
             {
                 Destroy(Instance.gameObject);
             }
-
-            instance = GetComponent<T>();
-            if(transform.parent == null)
-                DontDestroyOnLoad(gameObject);
         }
     }
-
 }

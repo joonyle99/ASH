@@ -83,7 +83,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
     public bool CanDash
     {
-        get => _isCanDash && PersistentDataManager.Get<bool>("Dash");
+        get => _isCanDash && PersistentDataManager.GetByGlobal<bool>("Dash");
         set => _isCanDash = value;
     }
     public bool CanInteract => CurrentState is IInteractableState;
@@ -201,9 +201,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         // init player
         InitPlayer();
-
-        // TEMP
-        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.7f);
     }
     protected override void Update()
     {

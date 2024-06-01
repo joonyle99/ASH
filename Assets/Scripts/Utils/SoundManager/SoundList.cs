@@ -18,10 +18,7 @@ public class SoundList : MonoBehaviour
             _soundMap[_soundDatas[i].Key] = i;
         }
     }
-    public bool Exists(string key)
-    {
-        return _soundDatas.Exists(x=>x.Key == key);
-    }
+
     public void PlaySFX(string key, float volumeMultiplier = 1f)
     {
         if(_soundMap.ContainsKey(key))
@@ -66,5 +63,10 @@ public class SoundList : MonoBehaviour
         {
             SoundManager.Instance.PlayCommonBGM(key, volumeMultiplier);
         }
+    }
+
+    public bool Exists(string key)
+    {
+        return _soundDatas.Exists(x=>x.Key == key);
     }
 }

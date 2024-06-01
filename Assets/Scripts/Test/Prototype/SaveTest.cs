@@ -17,11 +17,11 @@ public class SaveTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            PersistentDataManager.UpdateValue<int>("data1", x => x + 1);
+            PersistentDataManager.UpdateValueByGlobal<int>("data1", x => x + 1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            PersistentDataManager.UpdateRef<TestDataType>("data2", x => { x.x += 1; x.y += 'a'; });
+            PersistentDataManager.UpdateRefByGlobal<TestDataType>("data2", x => { x.x += 1; x.y += 'a'; });
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
@@ -37,8 +37,8 @@ public class SaveTest : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("data1:" + PersistentDataManager.Get<int>("data1"));
-            Debug.Log("data2:" + PersistentDataManager.Get<TestDataType>("data2").y);
+            Debug.Log("data1:" + PersistentDataManager.GetByGlobal<int>("data1"));
+            Debug.Log("data2:" + PersistentDataManager.GetByGlobal<TestDataType>("data2").y);
             Debug.Log("data2:" + PersistentDataManager.Get<TestDataType>("group1", "data2").y);
         }
     }

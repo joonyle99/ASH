@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 1936599611}
   - component: {fileID: 1936599612}
   m_Layer: 0
-  m_Name: UISounds
+  m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -402,8 +402,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1936599611}
-  - {fileID: 2982186649098803188}
   - {fileID: 4571639335519981462}
+  - {fileID: 2982186649098803188}
   m_Father: {fileID: 8633755868666026086}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -469,7 +469,7 @@ GameObject:
   - component: {fileID: 2982186649098803188}
   - component: {fileID: 4546631648026187599}
   m_Layer: 0
-  m_Name: MapGimmicks
+  m_Name: Gimmick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -488,7 +488,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2100785251}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4546631648026187599
 MonoBehaviour:
@@ -554,7 +554,7 @@ GameObject:
   - component: {fileID: 4571639335519981462}
   - component: {fileID: 4442451728977817274}
   m_Layer: 0
-  m_Name: BGMs
+  m_Name: BGM
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -573,7 +573,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2100785251}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4442451728977817274
 MonoBehaviour:
@@ -604,8 +604,48 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: BossBattle
+  - _key: Exploration2
+    _clip: {fileID: 8300000, guid: 28f2797281dc84b4993261762d4ef204, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: BoseDungeon1
+    _clip: {fileID: 8300000, guid: b6f7812db3b7a2a4c9d3a4627a2d106a, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: BoseDungeon2
+    _clip: {fileID: 0}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: BossBattle1
     _clip: {fileID: 8300000, guid: 76096fc0560f53645bf4335d6c9044d0, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: BossBattle2
+    _clip: {fileID: 0}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+  - _key: BossBattle3
+    _clip: {fileID: 0}
     _volumeType: 0
     _volumeA: 1
     _volumeB: 0

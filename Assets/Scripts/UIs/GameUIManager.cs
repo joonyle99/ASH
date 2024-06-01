@@ -40,7 +40,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     {
         /*
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            PersistentDataManager.UpdateValue<int>("gold", x => x + 100);
+            PersistentDataManager.UpdateValueByGlobal<int>("gold", x => x + 100);
         */
     }
 

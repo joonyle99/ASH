@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,8 +21,10 @@ public class SkillOrderData : ScriptableObject
         public string Key;
         public SkillData Data;
     }
-    [SerializeField] List<SkillData> _skillDatas=  new List<SkillData>();
-    [SerializeField] List<SkillElement> _skillDictionary = new List<SkillElement>();
+
+    [SerializeField] private List<SkillData> _skillDatas=  new List<SkillData>();
+    [SerializeField] private List<SkillElement> _skillDictionary = new List<SkillElement>();
+
     public SkillData this[int i]
     {
         get
@@ -37,6 +38,7 @@ public class SkillOrderData : ScriptableObject
             }
         }
     }
+
     public SkillData GetFromDict(string key)
     {
         return _skillDictionary.Find(x=> x.Key == key).Data;
