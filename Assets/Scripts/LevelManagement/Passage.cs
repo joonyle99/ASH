@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -12,13 +13,14 @@ public class Passage : TriggerZone
 
     [SerializeField] private Transform _playerSpawnPoint;
 
+    [SerializeField] private bool _canEnter = true;
+    [SerializeField] private float _exitTimeOut = 1f;
+
     public string PassageName => name;
     public InputSetterScriptableObject EnterInputSetter => _enterInputSetter;
     public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
 
-    [SerializeField] private bool _canEnter = true;
-    [SerializeField] private float _exitTimeOut = 1f;
-
+    // TEMP
     [SerializeField] private bool _isStartingPassage;
     public bool IsStartingPassage => _isStartingPassage;
 
@@ -27,7 +29,7 @@ public class Passage : TriggerZone
     void Awake()
     {
         if (_playerSpawnPoint == null)
-            _playerSpawnPoint = transform;
+            _playerSpawnPoint = this.transform;
     }
 
     public override void OnActivatorEnter(TriggerActivator activator)
@@ -38,12 +40,16 @@ public class Passage : TriggerZone
         // 다음 씬으로 넘어간다
         StartCoroutine(ExitSceneCoroutine());
     }
+    public override void OnPlayerExit(PlayerBehaviour player)
+    {
+        if (!_isPlayerExiting)
+            return;
 
-    /// <summary>
-    /// 다음 씬으로 넘어가기 위한 로직
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator ExitSceneCoroutine()
+        _isPlayerExiting = false;
+    }
+
+    // 다음 씬으로 넘어가기 위한 로직
+    private IEnumerator ExitSceneCoroutine()
     {
         // * push cutscene
         Cutscene exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine(), false);
@@ -60,16 +66,13 @@ public class Passage : TriggerZone
         // # change to next scene
         SceneChangeManager.Instance.ChangeToPlayableScene(toSceneName, toPassageData.PassageName);
     }
-    IEnumerator ExitSceneCutsceneCoroutine()
+    private IEnumerator ExitSceneCutsceneCoroutine()
     {
+        // 씬을 나가는 컷씬에서 플레이어의 입력을 받지 않도록 설정
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+
+        // 씬을 나가는 효과
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-    }
-    public override void OnPlayerExit(PlayerBehaviour player)
-    {
-        if (!_isPlayerExiting)
-            return;
-        _isPlayerExiting = false;
     }
     
     //Passage를 통해 밖으로 나옴

@@ -14,7 +14,6 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     [Header("Respawn")]
     [Space]
 
-    [SerializeField] float _respawnFadeDuration = 0.5f;
     [SerializeField] float _respawnDelay = 0.5f;
     [SerializeField] float _capeFlyDuration = 1f;
 
@@ -37,6 +36,11 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         yield return FadeCoroutine(TransitionDuration, FadeType.Darken);
     }
 
+    // TODO : Global 플레이어 상태 관리 오브젝트로 옮겨야함
+    public void PlayInstantRespawnEffect(Vector3 spawnPosition)
+    {
+        StartCoroutine(InstantRespawnEffectCoroutine(spawnPosition));
+    }
     private IEnumerator InstantRespawnEffectCoroutine(Vector3 spawnPosition)
     {
         var player = SceneContext.Current.Player;
@@ -60,11 +64,5 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         //yield return FadeCoroutine(_respawnFadeDuration, FadeType.Lighten);
 
         player.ChangeState<IdleState>();
-    }
-
-    // TODO : Global 플레이어 상태 관리 오브젝트로 옮겨야함
-    public void PlayInstantRespawnEffect(Vector3 spawnPosition)
-    {
-        StartCoroutine(InstantRespawnEffectCoroutine(spawnPosition));
     }
 }

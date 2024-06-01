@@ -40,15 +40,18 @@ public class SceneTransitionPlayer : MonoBehaviour
             yield break;
         }
 
-        float eTime = 0f;
         Color imageColor = _fadeImage.color;
+
+        float eTime = 0f;
         while (eTime < duration)
         {
             imageColor.a = Mathf.Lerp(from, to, eTime / duration);
             _fadeImage.color = imageColor;
+
             yield return null;
             eTime += Time.deltaTime;
         }
+
         imageColor.a = to;
         _fadeImage.color = imageColor;
     }

@@ -85,14 +85,14 @@ public class SceneChangeManager : HappyTools.SingletonBehaviour<SceneChangeManag
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         yield return new WaitUntil(() => load.isDone);
 
-        SceneContext sceneContext= FindOrCreateSceneContext();
+        SceneContext sceneContext = FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable(passageName);
         IsChanging = false;
     }
 
     public void OnSceneContextBuilt()
     {
-            SceneEffectManager.Current.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false));
+        SceneEffectManager.Current.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false));
 
         if (SceneContext.Current.SceneTransitionPlayer != _defaultSceneTransitionPlayer)
             _defaultSceneTransitionPlayer.SetFadeImageAlpha(0);

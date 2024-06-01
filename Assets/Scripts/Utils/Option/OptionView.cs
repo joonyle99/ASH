@@ -4,6 +4,7 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System;
 
 public class OptionView : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class OptionView : MonoBehaviour
     [SerializeField] private Toggle _windowedToggle;
 
     private bool _isPause = false;
+    public bool IsPause => _isPause;
 
     private void Awake()
     {
@@ -110,17 +112,15 @@ public class OptionView : MonoBehaviour
 
     public void ReStartGame()
     {
-        Debug.Log("게임을 재시작 합니다.");
-
         StartCoroutine(ReStartCoroutine());
     }
     private IEnumerator ReStartCoroutine()
     {
-        // TODO: Time.TimeScale == 0f 인 경우에 씬이 넘어가지 않는다.
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
+        Resume();
 
-        Debug.Log("End ReStart Coroutine");
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
+
+        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
     }
 
     public void ApplyTestButton()
