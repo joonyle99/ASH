@@ -53,7 +53,7 @@ public class Passage : TriggerZone
     {
         // * push cutscene
         Cutscene exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine(), false);
-        SceneEffectManager.Current.PushCutscene(exitSceneCutscene);
+        SceneEffectManager.Instance.PushCutscene(exitSceneCutscene);
 
         // # load next passage data
         var fromPassageName = name;

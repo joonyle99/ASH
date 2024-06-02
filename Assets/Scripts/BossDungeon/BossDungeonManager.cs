@@ -3,7 +3,7 @@ using UnityEngine;
 public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeonManager>
 {
     [SerializeField] private int _maxKeyCount = 3;
-    [SerializeField] private string _dataGroupName = "BossDungeon";
+    [SerializeField] private string _dataGroupName = "BossDungeon1";
     [SerializeField] private DialogueData _firstKeyDialogue;
     [SerializeField] private SoundClipData _bossDungeonBGM;
 
@@ -12,10 +12,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
 
     private void Start()
     {
-        if (PersistentDataManager.TryAddDataGroup(_dataGroupName))
-        {
-            SoundManager.Instance.PlayBGM(_bossDungeonBGM.Clip, _bossDungeonBGM.Volume);
-        }
+        PersistentDataManager.TryAddDataGroup(_dataGroupName);
     }
 
     public void OnKeyObtained(BossKey key)
@@ -28,5 +25,10 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
         {
             DialogueController.Instance.StartDialogue(_firstKeyDialogue);
         }
+    }
+
+    public void PlayBossDungeon1Bgm()
+    {
+        SoundManager.Instance.PlayBGM(_bossDungeonBGM.Clip, _bossDungeonBGM.Volume);
     }
 }

@@ -92,7 +92,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
     public void OnSceneContextBuilt()
     {
-        SceneEffectManager.Current.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false));
+        SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false));
 
         if (SceneContext.Current.SceneTransitionPlayer != _defaultSceneTransitionPlayer)
             _defaultSceneTransitionPlayer.SetFadeImageAlpha(0);

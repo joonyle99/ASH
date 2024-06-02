@@ -9,8 +9,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     [SerializeField] private SkillOrderData _skillOrderData;
     public static SkillOrderData SkillOrderData => Instance._skillOrderData;
 
-    private Dictionary<string, DataGroup> _dataGroups = new();
-    private DataGroup _globalDataGroup = new();
+    private Dictionary<string, DataGroup> _dataGroups = new();      // 플레이 데이터를 저장하는데 사용
+    private DataGroup _globalDataGroup = new();                     // 영구적 데이터를 저장하는데 사용
 
     private int _cheatSkillId = 0;
 
@@ -18,14 +18,14 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     {
         if (Input.GetKeyDown(KeyCode.F8))
         {
-            PersistentDataManager.SetByGlobal<bool>(PersistentDataManager.SkillOrderData[_cheatSkillId].Key, true);
-            PersistentDataManager.UpdateValueByGlobal<int>("skillPiece", x => x + 3);
+            SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
+            UpdateValueByGlobal<int>("skillPiece", x => x + 3);
             _cheatSkillId++;
         }
 
         if (Input.GetKeyDown(KeyCode.F7) || Input.GetKeyDown(KeyCode.F4))
         {
-            PersistentDataManager.SetByGlobal<bool>("Light", true);
+            SetByGlobal<bool>("Light", true);
         }
     }
 

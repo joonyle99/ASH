@@ -11,7 +11,7 @@ public class FanSwitch : InteractableObject
     protected override void OnObjectInteractionEnter()
     {
         this.IsInteractable = false;
-        SceneEffectManager.Current.PushCutscene(new Cutscene(this, CoEpicMoment())); // 컷씬 시작
+        SceneEffectManager.Instance.PushCutscene(new Cutscene(this, CoEpicMoment())); // 컷씬 시작
     }
 
     protected override void OnObjectInteractionExit()
@@ -40,7 +40,7 @@ public class FanSwitch : InteractableObject
 
         for (int i = 0; i < _windZoneArr.Length; i++)
         {
-            SceneEffectManager.Current.Camera.StartFollow(_windZoneArr[i].transform);   // 카메라 연출 => 바람장치 있는곳으로 카메라 이동
+            SceneEffectManager.Instance.Camera.StartFollow(_windZoneArr[i].transform);   // 카메라 연출 => 바람장치 있는곳으로 카메라 이동
             yield return new WaitForSeconds(_cameraMoveDuration);
             // 켜지는 연출
             _windZoneArr[i].GetComponent<WindArea>().SetActive();   // 실제로 켜짐

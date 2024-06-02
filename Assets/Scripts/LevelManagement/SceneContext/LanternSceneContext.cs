@@ -170,7 +170,7 @@ public sealed class LanternSceneContext : SceneContext
         if (relation.A.transform == _lightDoor.transform || relation.B.transform == _lightDoor.transform)
         {
             if (!_lightDoor.IsOpened)
-                SceneEffectManager.Current.PushCutscene(new Cutscene(this, LastConnectionCameraCoroutine(relation)));   
+                SceneEffectManager.Instance.PushCutscene(new Cutscene(this, LastConnectionCameraCoroutine(relation)));   
         }
         else
         {
@@ -194,24 +194,24 @@ public sealed class LanternSceneContext : SceneContext
         _StopCheckingConnections = true;
 
         //랜턴으로 카메라 이동 후 대기
-        SceneEffectManager.Current.Camera.StartFollow(relation.A.transform == _lightDoor ? relation.B.LightPoint : relation.A.LightPoint);
+        SceneEffectManager.Instance.Camera.StartFollow(relation.A.transform == _lightDoor ? relation.B.LightPoint : relation.A.LightPoint);
         InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
         yield return new WaitForSeconds(_cameraLastLanternStayDuration);
 
         //레이저 발사
-        SceneEffectManager.Current.Camera.StartConstantShake(_beamShootingPreset);
+        SceneEffectManager.Instance.Camera.StartConstantShake(_beamShootingPreset);
         StartCoroutine(ConnectionCoroutine(relation));
         _lastConnectionCameraPoint.position = relation.Beam.CurrentShootingPosition;
-        SceneEffectManager.Current.Camera.StartFollow(_lastConnectionCameraPoint);
+        SceneEffectManager.Instance.Camera.StartFollow(_lastConnectionCameraPoint);
         while (!relation.Beam.IsShootingDone)
         {
             _lastConnectionCameraPoint.position = relation.Beam.CurrentShootingPosition;
             yield return null;
         }
         _soundList.PlaySFX("SE_LightDoor_Contact");
-        SceneEffectManager.Current.Camera.StartShake(_beamHitDoorPreset);
+        SceneEffectManager.Instance.Camera.StartShake(_beamHitDoorPreset);
         yield return new WaitForSeconds(_lastBeamDuration);
-        SceneEffectManager.Current.Camera.StopConstantShake();
+        SceneEffectManager.Instance.Camera.StopConstantShake();
 
         relation.Beam.gameObject.SetActive(false);
         //빔 사라진 후 문열기 시작

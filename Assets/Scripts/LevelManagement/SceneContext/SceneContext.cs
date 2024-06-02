@@ -122,7 +122,7 @@ public class SceneContext : MonoBehaviour
 
             foreach (var listener in buildListener)
             {
-                Debug.Log($"{name} listener call");
+                Debug.Log($"SceneContextBuildListener: {name}");
 
                 listener.OnSceneContextBuilt();
             }

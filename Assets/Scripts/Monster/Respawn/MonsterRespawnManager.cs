@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using joonyle99;
-using joonyleTools;
 using UnityEngine;
 
-public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
+public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterRespawnManager>
 {
     // 씬에 존재하는 모든 몬스터 리스트
     public List<MonsterBehavior> MonsterList;
@@ -14,8 +13,7 @@ public class MonsterRespawnManager : SingletonBehavior<MonsterRespawnManager>
 
     protected override void Awake()
     {
-        // TODO: 이미 Bootstrap에 자식으로 존재한다
-        // base.Awake();
+        base.Awake();
 
         // 모든 몬스터를 찾고, 리스트에 추가한다
         var monsterArray = FindObjectsOfType<MonsterBehavior>();

@@ -1,10 +1,8 @@
-using UnityEngine;
-
 /// <summary>
 /// 실행 중인 퀘스트를 관리하고
 /// 퀘스트 데이터를 뷰에 전달하는 클래스
 /// </summary>
-public class QuestController : joonyleTools.SingletonBehavior<QuestController>
+public class QuestController : HappyTools.SingletonBehaviourFixed<QuestController>
 {
     private QuestData _currentQuest;        // 현재 실행 중인 퀘스트
     private QuestView _view;
@@ -19,12 +17,6 @@ public class QuestController : joonyleTools.SingletonBehavior<QuestController>
     }
 
     public QuestData CurrentQuest => _currentQuest;
-
-    protected override void Awake()
-    {
-        // TODO: 이미 Bootstrap에 자식으로 존재한다
-        // base.Awake();
-    }
 
     public void AcceptQuest(QuestData questData)
     {

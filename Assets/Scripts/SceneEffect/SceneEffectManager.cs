@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
+public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffectManager>, ISceneContextBuildListener
 {
     private enum State { Idle, SceneEvent, Cutscene }
 
@@ -10,8 +10,6 @@ public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
     private List<SceneEffectEvent> _sceneEvents;
     private List<Cutscene> _cutSceneQueue;
     private SceneEventComparator _eventComparator;
-
-    public static SceneEffectManager Current { get; private set; }
     public CameraController Camera
     {
         get
@@ -22,9 +20,9 @@ public class SceneEffectManager : MonoBehaviour, ISceneContextBuildListener
         }
     }
 
-    private void Awake()
+    protected override void Awake()
     {
-        Current = this;
+        base.Awake();
 
         _sceneEvents = new List<SceneEffectEvent>();
         _cutSceneQueue = new List<Cutscene>();

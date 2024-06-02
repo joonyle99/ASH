@@ -25,13 +25,13 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
 
         if (entrance == null) yield break;
 
-        SceneEffectManager.Current.Camera.SnapFollow();
+        SceneEffectManager.Instance.Camera.SnapFollow();
 
         yield return StartCoroutine(entrance.PlayerExitCoroutine());
     }
     public override IEnumerator ExitSceneEffectCoroutine()
     {
-        SceneEffectManager.Current.Camera.DisableCameraFollow();
+        SceneEffectManager.Instance.Camera.DisableCameraFollow();
 
         yield return FadeCoroutine(TransitionDuration, FadeType.Darken);
     }
