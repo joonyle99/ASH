@@ -7,7 +7,7 @@ using TMPro;
 /// <summary>
 /// 다이얼로그를 출력하기 위한 뷰 UI
 /// </summary>
-public class DialogueView : HappyTools.SingletonBehaviourFixed<DialogueView>
+public class DialogueView : MonoBehaviour
 {
     [Header("Dialogue View")]
     [Space]

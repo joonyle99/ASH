@@ -18,7 +18,7 @@ namespace HappyTools
                     instance = (T)FindObjectOfType(typeof(T));
 
                     if (instance == null)
-                        Debug.LogError("No object of " + typeof(T).Name + " is no found");
+                        Debug.LogError($"No object of [ {typeof(T).Name} ] is no found");
                 }
                 return instance;
             }
@@ -28,24 +28,27 @@ namespace HappyTools
 
         protected virtual void Awake()
         {
+            // if instance is null, attach own component to this instance
             if (instance == null)
             {
                 instance = GetComponent<T>();
 
-                Debug.Log($"{typeof(T).Name} is created");
+                Debug.Log($"[ {typeof(T).Name} ] is created");
 
+                // if instance doesn't have bootstrapper parent
                 if (transform.parent == null)
                 {
-                    DontDestroyOnLoad(gameObject);
+                    DontDestroyOnLoad(this.gameObject);
 
-                    Debug.Log($"{typeof(T).Name} is Don't Destroy On Load");
+                    Debug.Log($"[ {typeof(T).Name} ] is Don't Destroy On Load");
                 }
             }
+            // if instance is not null, destroy new instance
             else
             {
-                Destroy(gameObject);
+                Destroy(this.gameObject);
 
-                Debug.Log($"Destroy {typeof(T).Name}'s new instance");
+                Debug.Log($"Destroy [ {typeof(T).Name} ]'s new instance");
             }
         }
     }

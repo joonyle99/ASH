@@ -10,13 +10,11 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     public int CurrentKeyCount => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount");
     public bool AllKeysCollected => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount") == _maxKeyCount;
 
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-
         if (PersistentDataManager.TryAddDataGroup(_dataGroupName))
         {
-            // SoundManager.Instance.PlayBGM(_bossDungeonBGM.Clip, _bossDungeonBGM.Volume);
+            SoundManager.Instance.PlayBGM(_bossDungeonBGM.Clip, _bossDungeonBGM.Volume);
         }
     }
 

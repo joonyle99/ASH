@@ -32,12 +32,20 @@ namespace HappyTools
             {
                 instance = GetComponent<T>();
 
+                Debug.Log($"{typeof(T).Name} is created");
+
                 if (transform.parent == null)
+                {
                     DontDestroyOnLoad(gameObject);
+
+                    Debug.Log($"{typeof(T).Name} is Don't Destroy On Load");
+                }
             }
             else
             {
                 Destroy(Instance.gameObject);
+
+                Debug.Log($"Destroy {typeof(T).Name}'s old instance");
             }
         }
     }

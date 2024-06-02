@@ -4,7 +4,6 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using System;
 
 public class OptionView : MonoBehaviour
 {
