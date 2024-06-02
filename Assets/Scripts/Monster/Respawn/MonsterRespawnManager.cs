@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using joonyle99;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterRespawnManager>
 {
@@ -14,6 +15,8 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     protected override void Awake()
     {
         base.Awake();
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
         // 모든 몬스터를 찾고, 리스트에 추가한다
         var monsterArray = FindObjectsOfType<MonsterBehavior>();
@@ -225,5 +228,15 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         {
             evaluator.StartCoroutine(evaluator.WaitForRespawn());
         }
+    }
+
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // MonsterList를 비운다
+        MonsterList.Clear();
+
+        // 모든 몬스터를 찾고, 리스트에 추가한다
+        var monsterArray = FindObjectsOfType<MonsterBehavior>();
+        MonsterList = new List<MonsterBehavior>(monsterArray);
     }
 }

@@ -24,6 +24,9 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         var entranceName = hasEntrance ? firstEntranceName : "";
 
         Result buildResult = sceneContext.BuildPlayable(entranceName);              // 씬 컨텍스트 빌드
+
+        // TEMP
+        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.7f);
     }
 
     public SceneContext FindOrCreateSceneContext()

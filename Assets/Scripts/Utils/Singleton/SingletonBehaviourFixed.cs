@@ -19,7 +19,7 @@ namespace HappyTools
 
                     if (instance == null)
                     {
-                        Debug.LogError(
+                        Debug.LogWarning(
                             $"No object of [ {typeof(T).Name} ] is no found \n {new System.Diagnostics.StackTrace()}");
                     }
                 }

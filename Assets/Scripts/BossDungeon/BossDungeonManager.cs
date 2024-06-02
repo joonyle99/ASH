@@ -12,7 +12,10 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
 
     private void Start()
     {
-        PersistentDataManager.TryAddDataGroup(_dataGroupName);
+        if (PersistentDataManager.TryAddDataGroup(_dataGroupName))
+        {
+            SoundManager.Instance.PlayBGM(_bossDungeonBGM.Clip, _bossDungeonBGM.Volume);
+        }
     }
 
     public void OnKeyObtained(BossKey key)
@@ -25,10 +28,5 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
         {
             DialogueController.Instance.StartDialogue(_firstKeyDialogue);
         }
-    }
-
-    public void PlayBossDungeon1Bgm()
-    {
-        SoundManager.Instance.PlayBGM(_bossDungeonBGM.Clip, _bossDungeonBGM.Volume);
     }
 }

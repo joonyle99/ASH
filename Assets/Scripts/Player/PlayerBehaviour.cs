@@ -29,7 +29,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [Header("Cape")]
     [Space]
 
-    [SerializeField] private Renderer[] _capeRenderers;
+    [SerializeField] private Material _capeLightBeforeMaterial;
+    private Color _capeLightBeforeColor;
 
     [Header("Effects")]
     [Space]
@@ -278,15 +279,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     public void SetCapeIntensity(float intensity)
     {
-        foreach (var capeRenderer in _capeRenderers)
-        {
-            // linear -> gamma (gamma correction) -> linear (opposite gamma correction)
-            var capeColor = capeRenderer.material.GetColor("_GlowColor");
-            capeColor.r *= intensity;
-            capeColor.g *= intensity;
-            capeColor.b *= intensity;
-            capeRenderer.material.SetColor("_GlowColor", capeColor);
-        }
+        var capeColor = _capeLightBeforeMaterial.GetColor("_GlowColor");
+        capeColor.r *= intensity;
+        capeColor.g *= intensity;
+        capeColor.b *= intensity;
+        _capeLightBeforeMaterial.SetColor("_GlowColor", capeColor);
     }
 
     // about hit
