@@ -27,7 +27,7 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
         {
             SceneContext.Current.Player.transform.position = _spawnPoint.position;
             SceneContext.Current.Player.gameObject.SetActive(false);
-            SceneEffectManager.Current.Camera.SnapFollow();
+            SceneEffectManager.Instance.Camera.SnapFollow();
             GameUIManager.OpenLetterbox(true);
             StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
 

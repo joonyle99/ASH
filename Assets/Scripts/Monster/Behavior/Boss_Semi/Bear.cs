@@ -389,7 +389,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     public void Earthquake01_AnimEvent()
     {
         // earthQuake camera shake
-        SceneEffectManager.Current.Camera.StartShake(_earthquakeCameraShake);
+        SceneEffectManager.Instance.Camera.StartShake(_earthquakeCameraShake);
         // earthQuake sound
         PlaySound("Earthquake");
 

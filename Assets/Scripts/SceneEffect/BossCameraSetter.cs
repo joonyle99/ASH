@@ -20,13 +20,13 @@ public class BossCameraSetter : MonoBehaviour
     public void Activate()
     {
         _event = new BossCameraEvent(transform, _cameraOffsetY);
-        SceneEffectManager.Current.PushSceneEvent(_event);
+        SceneEffectManager.Instance.PushSceneEvent(_event);
         foreach (var t in _invisibleWalls)
             t.gameObject.SetActive(true);
     }
     public void Deactivate()
     {
-        SceneEffectManager.Current.RemoveSceneEvent(_event);
+        SceneEffectManager.Instance.RemoveSceneEvent(_event);
         foreach (var t in _invisibleWalls)
             t.gameObject.SetActive(false);
     }
@@ -43,8 +43,8 @@ class BossCameraEvent : SceneEffectEvent
     }
     public override void OnEnter() 
     {
-        SceneEffectManager.Current.Camera.FollowOnly(_transform);
-        SceneEffectManager.Current.Camera.OffsetY = _offsetY;
+        SceneEffectManager.Instance.Camera.FollowOnly(_transform);
+        SceneEffectManager.Instance.Camera.OffsetY = _offsetY;
     }
     public override void OnExit()
     {

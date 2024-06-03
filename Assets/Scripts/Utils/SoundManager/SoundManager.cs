@@ -64,6 +64,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     {
         if (replayIfSameClip && clip == _bgmPlayer.clip)
             return;
+
         _bgmPlayer.Stop();
         _bgmPlayer.clip = clip;
         _bgmPlayer.volume = volumeMultiplier;

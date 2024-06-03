@@ -23,7 +23,7 @@ public class DoorOpenAnimation : MonoBehaviour
     }
     public IEnumerator OpenCoroutine()
     {
-        SceneEffectManager.Current.Camera.StartConstantShake(_doorOpenPreset);
+        SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);
         _dustParticle.Play();
         StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open_Low", _preheatSoundInterval, _preheadSoundRepeat));
         yield return new WaitForSeconds(_doorOpenDelay);
@@ -31,7 +31,7 @@ public class DoorOpenAnimation : MonoBehaviour
         StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open", _openSoundInterval, _openSoundRepeat));
         yield return new WaitForSeconds(_stopShakeTiming);
         _dustParticle.Stop();
-        SceneEffectManager.Current.Camera.StopConstantShake();
+        SceneEffectManager.Instance.Camera.StopConstantShake();
     }
     private IEnumerator PlaySoundCoroutine(string key, float interval, int count)
     {

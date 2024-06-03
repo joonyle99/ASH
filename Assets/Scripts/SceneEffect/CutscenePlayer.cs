@@ -20,7 +20,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     {
         if (!_played && _playOnce)
         {
-            SceneEffectManager.Current.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
+            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
             _played = true;
 
             // 플레이어를 무적 상태로 만든다
@@ -36,15 +36,15 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
 
             if (effect.Type == SceneEffect.EffectType.CameraShake)
             {
-                SceneEffectManager.Current.Camera.StartShake(effect.ShakeData);
+                SceneEffectManager.Instance.Camera.StartShake(effect.ShakeData);
             }
             else if (effect.Type == SceneEffect.EffectType.ConstantCameraShake)
             {
-                SceneEffectManager.Current.Camera.StartConstantShake(effect.ConstantShakeData);
+                SceneEffectManager.Instance.Camera.StartConstantShake(effect.ConstantShakeData);
             }
             else if (effect.Type == SceneEffect.EffectType.StopConstantCameraShake)
             {
-                SceneEffectManager.Current.Camera.StopConstantShake(effect.Time);
+                SceneEffectManager.Instance.Camera.StopConstantShake(effect.Time);
             }
             else if (effect.Type == SceneEffect.EffectType.Dialogue)
             {

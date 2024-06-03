@@ -69,7 +69,7 @@ public class LightNPC : MonoBehaviour
         }
 
         // 플레이어의 Cape Material을 변경한다
-        SceneContext.Current.Player.SetCapeIntensity(15f);
+        SceneContext.Current.Player.ChangeCapeMaterial();
 
         Destroy(gameObject);
     }

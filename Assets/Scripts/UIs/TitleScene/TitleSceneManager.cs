@@ -45,8 +45,5 @@ public class TitleSceneManager : MonoBehaviour
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
         SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, "Enter " + sceneName.ToString());
-
-        // play bgm
-        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.7f);
     }
 }

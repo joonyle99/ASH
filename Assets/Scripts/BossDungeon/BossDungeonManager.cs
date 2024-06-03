@@ -3,7 +3,7 @@ using UnityEngine;
 public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeonManager>
 {
     [SerializeField] private int _maxKeyCount = 3;
-    [SerializeField] private string _dataGroupName = "BossDungeon";
+    [SerializeField] private string _dataGroupName = "BossDungeon1";
     [SerializeField] private DialogueData _firstKeyDialogue;
     [SerializeField] private SoundClipData _bossDungeonBGM;
 

@@ -18,7 +18,10 @@ namespace HappyTools
                     instance = (T)FindObjectOfType(typeof(T));
 
                     if (instance == null)
-                        Debug.LogError($"No object of [ {typeof(T).Name} ] is no found");
+                    {
+                        Debug.LogWarning(
+                            $"No object of [ {typeof(T).Name} ] is no found \n {new System.Diagnostics.StackTrace()}");
+                    }
                 }
                 return instance;
             }
@@ -50,6 +53,11 @@ namespace HappyTools
 
                 Debug.Log($"Destroy [ {typeof(T).Name} ]'s new instance");
             }
+        }
+
+        protected virtual void OnDestroy()
+        {
+            Debug.Log($"Destroyed {typeof(T).Name} instance");
         }
     }
 }

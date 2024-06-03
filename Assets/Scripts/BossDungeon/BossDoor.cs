@@ -34,7 +34,7 @@ public class BossDoor : InteractableObject
         if (BossDungeonManager.Instance.AllKeysCollected)
         {
             _soundList.PlaySFX("Open");
-            SceneEffectManager.Current.PushCutscene(new Cutscene(this, OpenCoroutine()));
+            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenCoroutine()));
         }
         else
         {
@@ -56,8 +56,8 @@ public class BossDoor : InteractableObject
     IEnumerator OpenCoroutine()
     {
         InputManager.Instance.ChangeInputSetter(_stayStillInputSetter);
-        SceneEffectManager.Current.Camera.RemoveFollowTarget(SceneContext.Current.Player.transform);
-        SceneEffectManager.Current.Camera.AddFollowTarget(transform);
+        SceneEffectManager.Instance.Camera.RemoveFollowTarget(SceneContext.Current.Player.transform);
+        SceneEffectManager.Instance.Camera.AddFollowTarget(transform);
         yield return _doorOpenAnimation.OpenCoroutine();
         yield return new WaitUntil(() => _passage.activeSelf);
         yield return new WaitForSeconds(_goInDelay);
@@ -69,7 +69,7 @@ public class BossDoor : InteractableObject
     }
     public void AnimEvent_OnOpenDone()
     {
-        SceneEffectManager.Current.Camera.StopConstantShake();
+        SceneEffectManager.Instance.Camera.StopConstantShake();
         _passage.SetActive(true); 
         _collider.enabled = false;
     }

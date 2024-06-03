@@ -30,6 +30,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [Space]
 
     [SerializeField] private Renderer[] _capeRenderers;
+    [SerializeField] private Material _capeLightAfterMaterial;
 
     [Header("Effects")]
     [Space]
@@ -276,16 +277,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
                 ChangeState<InAirState>();
         }
     }
-    public void SetCapeIntensity(float intensity)
+    public void ChangeCapeMaterial()
     {
         foreach (var capeRenderer in _capeRenderers)
         {
-            // linear -> gamma (gamma correction) -> linear (opposite gamma correction)
-            var capeColor = capeRenderer.material.GetColor("_GlowColor");
-            capeColor.r *= intensity;
-            capeColor.g *= intensity;
-            capeColor.b *= intensity;
-            capeRenderer.material.SetColor("_GlowColor", capeColor);
+            capeRenderer.material = _capeLightAfterMaterial;
         }
     }
 

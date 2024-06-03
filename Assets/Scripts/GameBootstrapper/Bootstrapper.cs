@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Bootstrapper : HappyTools.GameBootstrapper
 {
     public override void InitGame()

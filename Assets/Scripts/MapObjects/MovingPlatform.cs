@@ -40,7 +40,7 @@ public class MovingPlatform : ToggleableObject
     protected override void OnTurnedOff()
     {
         if (!_isMoving)
-            _recentEvent = SceneEffectManager.Current.PushSceneEvent(new SceneEvents.FollowObjects(SceneEffectEvent.EventPriority.MovingObjects,
+            _recentEvent = SceneEffectManager.Instance.PushSceneEvent(new SceneEvents.FollowObjects(SceneEffectEvent.EventPriority.MovingObjects,
                                                         SceneEffectEvent.MergePolicy.PlayTogether, transform));
         _isMoving = true;
     }
@@ -48,7 +48,7 @@ public class MovingPlatform : ToggleableObject
     protected override void OnTurnedOn()
     {
         if (!_isMoving)
-            _recentEvent = SceneEffectManager.Current.PushSceneEvent(new SceneEvents.FollowObjects(SceneEffectEvent.EventPriority.MovingObjects,
+            _recentEvent = SceneEffectManager.Instance.PushSceneEvent(new SceneEvents.FollowObjects(SceneEffectEvent.EventPriority.MovingObjects,
                                                         SceneEffectEvent.MergePolicy.PlayTogether, transform));
         _isMoving = true;
         //SoundManager.Instance.PlaySFX(_workSound);
@@ -90,7 +90,7 @@ public class MovingPlatform : ToggleableObject
     void OnStop()
     {
         _isMoving = false;
-        SceneEffectManager.Current.RemoveSceneEvent(_recentEvent);
+        SceneEffectManager.Instance.RemoveSceneEvent(_recentEvent);
         _moveAudio.Stop();
     }
 
