@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SkillPiece : MonoBehaviour, ITriggerListener
@@ -10,9 +9,9 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
     {
         if (activator.Type == ActivatorType.Player)
         {
-            PersistentDataManager.UpdateValueByGlobal<int>("_skillPiece", x => x + 1);
+            PersistentDataManager.UpdateValueByGlobal<int>("SkillPiece", x => x + 1);
             Destruction.Destruct(gameObject);
-            int skillPieceCount = PersistentDataManager.GetByGlobal<int>("_skillPiece");
+            int skillPieceCount = PersistentDataManager.GetByGlobal<int>("SkillPiece");
             if (skillPieceCount % 3 == 0)
             {
                 var info = new SkillObtainPanel.SkillInfo();
@@ -37,6 +36,5 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
     {
         yield return new WaitForSeconds(delay);
         _soundList.PlaySFX(key);
-
     }
 }

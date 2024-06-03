@@ -111,12 +111,15 @@ public class OptionView : MonoBehaviour
 
     public void ReStartGame()
     {
-        StartCoroutine(ReStartCoroutine());
+        Resume();
+
+        // 씬 재시작이 아닌 체크 포인트에서 재시작 하도록 수정
+        SceneContext.Current.Player.TriggerInstantRespawn(0f);
+
+        // StartCoroutine(ReStartCoroutine());
     }
     private IEnumerator ReStartCoroutine()
     {
-        Resume();
-
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
         SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);

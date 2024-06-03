@@ -1,7 +1,26 @@
-using UnityEngine;
-
 public sealed class Turtle : MonsterBehavior
 {
+    private PreserveState _statePreserver;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        _statePreserver = GetComponent<PreserveState>();
+    }
+    protected override void Start()
+    {
+        base.Start();
+
+        if (_statePreserver)
+        {
+            bool isDead = _statePreserver.LoadState("_isDead", IsDead);
+            if (isDead)
+            {
+                Die(false, false);
+            }
+        }
+    }
     public void FixedUpdate()
     {
         if (IsDead)
@@ -13,6 +32,16 @@ public sealed class Turtle : MonsterBehavior
                 GroundMovementModule.GroundWalking();
         }
     }
+
+    // destroy function
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_isDead", IsDead);
+        }
+    }
+
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         // ** 거북이는 Dead 상태에서도 Hit가 가능하다 **

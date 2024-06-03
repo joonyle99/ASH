@@ -153,6 +153,7 @@ GameObject:
   m_Component:
   - component: {fileID: 646087600954455177}
   - component: {fileID: 646087600954455179}
+  - component: {fileID: 3567344840681289148}
   m_Layer: 0
   m_Name: "\uB098\uBB34_\uB300\uD615(FallingTreeByCrush)"
   m_TagString: Untagged
@@ -188,6 +189,19 @@ SortingGroup:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -3
+--- !u!114 &3567344840681289148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 646087600954455176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9a6cd664b27ef044abc2eaf010943b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _treeTrunk: {fileID: 3116136071688909463}
 --- !u!1001 &287882996158995247
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -286,3 +300,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 795335243596778812, guid: 351c81547cb26124a9b884fc5345a8cb, type: 3}
   m_PrefabInstance: {fileID: 287882996158995247}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3116136071688909463 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2936480204146796984, guid: 351c81547cb26124a9b884fc5345a8cb, type: 3}
+  m_PrefabInstance: {fileID: 287882996158995247}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5ef380be2a5cff488d710504a9ee2c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

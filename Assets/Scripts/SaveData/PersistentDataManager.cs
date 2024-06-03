@@ -21,19 +21,28 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     {
         if (Input.GetKeyDown(KeyCode.F8))
         {
+            // 
             SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
-            UpdateValueByGlobal<int>("_skillPiece", x => x + 3);
+
+            // 
+            UpdateValueByGlobal<int>("SkillPiece", x => x + 3);
+
             _cheatSkillId++;
         }
 
         if (Input.GetKeyDown(KeyCode.F7) || Input.GetKeyDown(KeyCode.F4))
         {
-            SetByGlobal<bool>("_light", true);
+            SetByGlobal<bool>("LightSkill", true);
         }
 
-        if (Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             PrintDataGroup();
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            PrintGlobalDataGroup();
         }
     }
 
@@ -186,6 +195,22 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             }
 
             logMessage += "==================================================\n\n";
+        }
+
+        Debug.Log(logMessage);
+    }
+    public static void PrintGlobalDataGroup()
+    {
+        if (Instance == null) return;
+
+        string logMessage = "";
+
+        foreach (var dataGroup in Instance._globalDataGroup)
+        {
+            logMessage += $"Key ====> {dataGroup.Key}";
+            logMessage += "\n";
+            logMessage += $"Value ====> {dataGroup.Value}";
+            logMessage += "\n\n";
         }
 
         Debug.Log(logMessage);

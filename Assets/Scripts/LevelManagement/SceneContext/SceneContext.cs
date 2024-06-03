@@ -68,7 +68,7 @@ public class SceneContext : MonoBehaviour
             if (playableTransitions[count].GetComponent<SceneChangeManager>() == null)
             {
                 SceneTransitionPlayer = playableTransitions[count];
-                Debug.Log($"Scene Transition Player: {SceneTransitionPlayer.gameObject.name}");
+                // Debug.Log($"Scene Transition Player: {SceneTransitionPlayer.gameObject.name}");
                 break;
             }
             count++;
