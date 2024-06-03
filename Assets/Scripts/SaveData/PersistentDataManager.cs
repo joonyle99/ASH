@@ -4,6 +4,9 @@ using UnityEngine;
 
 using DataGroup = System.Collections.Generic.Dictionary<string, object>;
 
+/// <summary>
+/// 지속성있는 데이터를 관리하는 클래스
+/// </summary>
 public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<PersistentDataManager>
 {
     [SerializeField] private SkillOrderData _skillOrderData;
@@ -26,6 +29,11 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Input.GetKeyDown(KeyCode.F7) || Input.GetKeyDown(KeyCode.F4))
         {
             SetByGlobal<bool>("Light", true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            PrintDataGroup();
         }
     }
 
@@ -154,5 +162,30 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             Instance._globalDataGroup[key] = new T();
             return (T)Instance._globalDataGroup[key];
         }
+    }
+
+    public static void PrintDataGroup()
+    {
+        if (Instance == null) return;
+
+        string logMessage = "";
+
+        foreach (var dataGroup in Instance._dataGroups)
+        {
+            logMessage += $"Data Group Name: [[ {dataGroup.Key} ]]\n";
+            logMessage += "\n";
+
+            foreach (var data in dataGroup.Value)
+            {
+                logMessage += $"Key ====> {data.Key}";
+                logMessage += "\n";
+                logMessage += $"Value ====> {data.Value}";
+                logMessage += "\n\n";
+            }
+
+            logMessage += "==================================================\n\n";
+        }
+
+        Debug.Log(logMessage);
     }
 }

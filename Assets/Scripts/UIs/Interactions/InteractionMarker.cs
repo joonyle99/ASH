@@ -62,7 +62,7 @@ public class InteractionMarker : MonoBehaviour
     {
         if (!interactionObject.IsInteractable) return;
 
-        Debug.Log("Enable Marker");
+        // Debug.Log("Enable Marker");
 
         gameObject.SetActive(true);
 
@@ -72,7 +72,7 @@ public class InteractionMarker : MonoBehaviour
     }
     public void DisableMarker()
     {
-        Debug.Log("Disable Marker");
+        // Debug.Log("Disable Marker");
 
         gameObject.SetActive(false);
 
@@ -84,7 +84,7 @@ public class InteractionMarker : MonoBehaviour
     {
         if (_canvasGroup.alpha > 0.99f) return;
         
-        Debug.Log("Visible Marker");
+        // Debug.Log("Visible Marker");
 
         _canvasGroup.alpha = 1f;
     }
@@ -92,7 +92,7 @@ public class InteractionMarker : MonoBehaviour
     {
         if (_canvasGroup.alpha < 0.01f) return;
 
-        Debug.Log("Invisible Marker");
+        // Debug.Log("Invisible Marker");
 
         _canvasGroup.alpha = 0f;
     }

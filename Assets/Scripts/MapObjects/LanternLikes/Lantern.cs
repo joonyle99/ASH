@@ -85,9 +85,9 @@ public class Lantern : LanternLike, ILightCaptureListener
         }
 
         _statePreserver = GetComponent<PreserveState>();
-        if (_statePreserver != null )
+        if (_statePreserver)
         {
-            bool isOn = _statePreserver.Load("isOn", IsLightOn);
+            bool isOn = _statePreserver.LoadState("isOn", IsLightOn);
             if (isOn)
             {
                 _isExplodeDone = true;
@@ -104,9 +104,9 @@ public class Lantern : LanternLike, ILightCaptureListener
     }
     void OnDestroy()
     {
-        if (_statePreserver != null)
+        if (_statePreserver)
         {
-            _statePreserver.Save("isOn", IsLightOn);
+            _statePreserver.SaveState("isOn", IsLightOn);
         }
     }
     void Update()

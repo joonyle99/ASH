@@ -3,38 +3,64 @@ using UnityEngine;
 
 public class RollingStone : InteractableObject
 {
-    [SerializeField] bool _isMaxClampSpeed = true;
-    [SerializeField] float _maxRollSpeed;
-    [SerializeField] float _pushPower;
+    [SerializeField] private bool _isMaxClampSpeed = true;
+    [SerializeField] private float _maxRollSpeed;
+    [SerializeField] private float _pushPower;
 
-    [SerializeField] bool _stopOnRelease = false;
-    [SerializeField] bool _canPull = false;
+    [SerializeField] private bool _stopOnRelease = false;
+    [SerializeField] private bool _canPull = false;
 
-    [SerializeField] Collider2D _interactionZone;
-    [SerializeField] LayerMask _playerMask;
+    [SerializeField] private Collider2D _interactionZone;
+    [SerializeField] private LayerMask _playerMask;
 
-    [SerializeField] ParticleHelper _dustParticle;
+    [SerializeField] private ParticleHelper _dustParticle;
 
     // [SerializeField] SoundList _soundList;
     // [SerializeField] float _pushSoundInterval;
 
-    [SerializeField] AudioSource _rollAudio;
-    Rigidbody2D _rigidbody;
-    IAttackListener _attackableComponent;
+    [SerializeField] private AudioSource _rollAudio;
+    private Rigidbody2D _rigidbody;
+    private PreserveState _statePreserver;
+    private IAttackListener _attackableComponent;
 
-    float _rollAudioTiming = 0f;
-    float _rollAudioOriginalVolume;
+    private float _rollAudioTiming = 0f;
+    private float _rollAudioOriginalVolume;
 
-    float _moveDirection = 0;
+    private float _moveDirection = 0;
 
     public bool IsBreakable => _attackableComponent == null;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        _statePreserver = GetComponent<PreserveState>();
         _attackableComponent = GetComponent<IAttackListener>();
+
+        // TODO: 고유한 데이터 불러오기
+        if (_statePreserver)
+        {
+            bool isInteractable = _statePreserver.LoadState("isInteractable", IsInteractable);
+            if (isInteractable)
+            {
+                IsInteractable = true;
+            }
+        }
+
         _rollAudioOriginalVolume = _rollAudio.volume;
     }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        // TODO: 고유한 데이터 저장하기
+        if (_statePreserver)
+        {
+            /*
+            _statePreserver.SaveState<bool>("isInteractable", IsInteractable);
+            */
+        }
+    }
+
     protected override void OnObjectInteractionEnter()
     {
         //Player.MovementController.enabled = true;
@@ -150,6 +176,7 @@ public class RollingStone : InteractableObject
     {
         if (_stopOnRelease)
             _rigidbody.velocity *= 0.1f;
+
         //Player.MovementController.enabled = false;
     }
 }

@@ -36,14 +36,14 @@ namespace HappyTools
             {
                 instance = GetComponent<T>();
 
-                Debug.Log($"[ {typeof(T).Name} ] is created");
+                // Debug.Log($"[ {typeof(T).Name} ] is created");
 
                 // if instance doesn't have bootstrapper parent
                 if (transform.parent == null)
                 {
                     DontDestroyOnLoad(this.gameObject);
 
-                    Debug.Log($"[ {typeof(T).Name} ] is Don't Destroy On Load");
+                    // Debug.Log($"[ {typeof(T).Name} ] is Don't Destroy On Load");
                 }
             }
             // if instance is not null, destroy new instance
@@ -51,13 +51,13 @@ namespace HappyTools
             {
                 Destroy(this.gameObject);
 
-                Debug.Log($"Destroy [ {typeof(T).Name} ]'s new instance");
+                // Debug.Log($"Destroy [ {typeof(T).Name} ]'s new instance");
             }
         }
 
         protected virtual void OnDestroy()
         {
-            Debug.Log($"Destroyed {typeof(T).Name} instance");
+            // Debug.Log($"Destroyed {typeof(T).Name} instance");
         }
     }
 }

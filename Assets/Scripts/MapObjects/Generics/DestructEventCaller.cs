@@ -2,13 +2,15 @@ using UnityEngine;
 
 /// <summary>
 /// Must have : [RequireComponent(typeof(DestructEventCaller))]
-/// DestructEventCaller will call OnDestruction() when object is destructed.
 /// </summary>
 public interface IDestructionListener
 {
     public void OnDestruction();
 }
 
+/// <summary>
+/// DestructEventCaller will call OnDestruction() when object is destructed.
+/// </summary>
 public class DestructEventCaller : MonoBehaviour
 {
     IDestructionListener[] _listeners; 
@@ -30,11 +32,11 @@ public static class Destruction
     public static void Destruct(GameObject gameObject)
     {
         gameObject.GetComponentInChildren<DestructEventCaller>().InvokeDestruct();
-        GameObject.Destroy(gameObject);
+        Object.Destroy(gameObject);
     }
     public static void Destruct(DestructEventCaller destructor)
     {
         destructor.InvokeDestruct();
-        GameObject.Destroy(destructor.gameObject);
+        Object.Destroy(destructor.gameObject);
     }
 }

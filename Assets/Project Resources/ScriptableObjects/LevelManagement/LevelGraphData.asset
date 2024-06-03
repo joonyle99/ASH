@@ -153,6 +153,8 @@ MonoBehaviour:
   - {fileID: -8549225434947937734}
   - {fileID: 7866461471819680855}
   - {fileID: 9204795922427404133}
+  - {fileID: 6541317259009004356}
+  - {fileID: 4950347600049706145}
   _edges:
   - EntranceScene: {fileID: -2014745427570758710}
     ExitScene: {fileID: -2869098507112400628}
@@ -246,6 +248,14 @@ MonoBehaviour:
     ExitScene: {fileID: 7866461471819680855}
     EntrancePassage: Enter Boss_2-3
     ExitPassgage: Exit Boss_2-2
+  - EntranceScene: {fileID: 6541317259009004356}
+    ExitScene: {fileID: 4950347600049706145}
+    EntrancePassage: Enter MyScene 1
+    ExitPassgage: Enter MyScene 2
+  - EntranceScene: {fileID: 4950347600049706145}
+    ExitScene: {fileID: 6541317259009004356}
+    EntrancePassage: Enter MyScene 2
+    ExitPassgage: Enter MyScene 1
 --- !u!114 &1548732423987265482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,6 +338,46 @@ MonoBehaviour:
   PassageNames:
   - Enter 1-3
   - Exit 1-3
+--- !u!114 &4950347600049706145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 7e03284bcbb19d940814808a03572e2a
+  graphPosition: {x: -562, y: 151.5}
+  SceneName: MyScene 2
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 5f86d4819251eca48a5da2e6120019ef, type: 3}
+    scenePath: Assets/Scenes/Test/JY/MyScene 2.unity
+  PassageNames:
+  - Enter MyScene 2
+--- !u!114 &6541317259009004356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: efeb75cdee1e15d4890083e09fb702da
+  graphPosition: {x: -562, y: 50.5}
+  SceneName: MyScene 1
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 5748af87c3d5c1e4d9a248581a85856b, type: 3}
+    scenePath: Assets/Scenes/Test/JY/MyScene 1.unity
+  PassageNames:
+  - Enter MyScene 1
 --- !u!114 &7444888783089578622
 MonoBehaviour:
   m_ObjectHideFlags: 0

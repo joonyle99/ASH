@@ -27,7 +27,7 @@ public class WindArea : MonoBehaviour
         _statePreserver = GetComponent<PreserveState>();
 
         if(_statePreserver != null)
-            _isStartActive = _statePreserver.Load("isActive", gameObject.activeSelf);
+            _isStartActive = _statePreserver.LoadState("isActive", gameObject.activeSelf);
 
         gameObject.SetActive(_isStartActive);
     }

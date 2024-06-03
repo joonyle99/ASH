@@ -89,6 +89,8 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         Result buildResult = sceneContext.BuildPlayable(passageName);
         IsChanging = false;
 
+        #region TEMP
+
         // 현재 씬에 해당하는 BGM 출력
 
         // 탐험 구간 1-1 ~ 1-3은 Exploration1
@@ -110,7 +112,10 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
             case "Boss_1-4":
                 SoundManager.Instance.PlayCommonBGM("BoseDungeon1");
                 break;
+
         }
+
+        #endregion
     }
 
     public void OnSceneContextBuilt()

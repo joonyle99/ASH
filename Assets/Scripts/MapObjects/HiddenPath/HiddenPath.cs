@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class HiddenPath : MonoBehaviour, ILightCaptureListener
@@ -25,7 +23,7 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            if (_statePreserver.Load<bool>("opened", false))
+            if (_statePreserver.LoadState<bool>("opened", false))
             {
                 Destroy(_lightCapturer);
                 Destroy(_destroyingCollidersParent);
@@ -39,7 +37,7 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     {
         if (_statePreserver)
         {
-            _statePreserver.Save("opened", _lightCapturer == null);
+            _statePreserver.SaveState("opened", _lightCapturer == null);
         }
     }
     IEnumerator OpenPathCoroutine()

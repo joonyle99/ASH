@@ -101,7 +101,7 @@ public abstract class InteractableObject : MonoBehaviour
         Player.PlayerInteractionController.OnPlayerInteractionExit();     // 플레이어에게 상호작용 종료를 알린다
     }
 
-    public void OnDestroy()
+    protected virtual void OnDestroy()
     {
         if (IsInteracting)
         {
