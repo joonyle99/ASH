@@ -57,7 +57,7 @@ public class PreserveState : MonoBehaviour, IDestructionListener
         // 트랜스폼 데이터 불러오기
         if (_preserveTransform)
         {
-            ApplyState<TransformState>(_groupName, TransformKey, transformState =>
+            LoadAndApplyState<TransformState>(_groupName, TransformKey, transformState =>
             {
                 // Debug.Log($"Apply Transform");
                 transform.localPosition = transformState.Position;
@@ -69,7 +69,7 @@ public class PreserveState : MonoBehaviour, IDestructionListener
         // 파괴 상태 불러오기
         if (_preserveDestruction)
         {
-            ApplyState<bool>(_groupName, DestructionKey, destruct =>
+            LoadAndApplyState<bool>(_groupName, DestructionKey, destruct =>
             {
                 if (destruct)
                 {
@@ -113,41 +113,7 @@ public class PreserveState : MonoBehaviour, IDestructionListener
         }
     }
 
-    /// <summary>
-    /// 오브젝트의 상태를 저장한다
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="additionalKey"></param>
-    /// <param name="value"></param>
-    public void SaveState<T>(string additionalKey, T value) where T : new()
-    {
-        PersistentDataManager.Set(_groupName, _ID + additionalKey, value);
-    }
-    /// <summary>
-    /// 오브젝트의 상태를 불러온다
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="additionalKey"></param>
-    /// <param name="defaultValue"></param>
-    /// <returns></returns>
-    public T LoadState<T>(string additionalKey, T defaultValue) where T : new()
-    {
-        if (PersistentDataManager.Has<T>(_groupName, _ID + additionalKey))
-        {
-            return PersistentDataManager.Get<T>(_groupName, _ID + additionalKey);
-        }
-
-        return defaultValue;
-    }
-
-    /// <summary>
-    /// 저장된 데이터를 불러와 적용한다
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="groupName"></param>
-    /// <param name="key"></param>
-    /// <param name="loadAction"></param>
-    private static void ApplyState<T>(string groupName, string key, Action<T> loadAction) where T : new()
+    private static void LoadAndApplyState<T>(string groupName, string key, Action<T> loadAction) where T : new()
     {
         // 데이터가 존재한다면
         if (PersistentDataManager.Has<T>(groupName, key))
@@ -158,5 +124,18 @@ public class PreserveState : MonoBehaviour, IDestructionListener
             // 데이터를 적용한다
             loadAction.Invoke(state);
         }
+    }
+    public T LoadState<T>(string additionalKey, T defaultValue) where T : new()
+    {
+        if (PersistentDataManager.Has<T>(_groupName, _ID + additionalKey))
+        {
+            return PersistentDataManager.Get<T>(_groupName, _ID + additionalKey);
+        }
+
+        return defaultValue;
+    }
+    public void SaveState<T>(string additionalKey, T value) where T : new()
+    {
+        PersistentDataManager.Set(_groupName, _ID + additionalKey, value);
     }
 }

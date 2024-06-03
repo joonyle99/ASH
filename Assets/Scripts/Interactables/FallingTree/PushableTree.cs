@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PushableTree : InteractableObject
@@ -8,12 +9,30 @@ public class PushableTree : InteractableObject
     [SerializeField] private Transform _forcePoint;
 
     private float _moveDirection = 0;
+    private PreserveState _statePreserver;
 
     public bool IsFallen => _treeTrunk.PushedAngle > _interactionOverAngle;
 
-    protected override void OnObjectInteractionEnter()
+    private void Awake()
     {
-        _moveDirection = Player.RecentDir;
+        // Debug.Log("pushable tree awake");
+
+        _statePreserver = GetComponent<PreserveState>();
+
+        if (_statePreserver)
+        {
+            bool isInteractable = _statePreserver.LoadState("_isInteractable", IsInteractable);
+            if (isInteractable)
+            {
+                IsInteractable = true;
+            }
+
+            var treeTransform = new TransformState(_treeTrunk.transform);
+            var newTreeTransform = _statePreserver.LoadState("_isFallingTreeTransform", treeTransform);
+            _treeTrunk.transform.localPosition = newTreeTransform.Position;
+            _treeTrunk.transform.localRotation = newTreeTransform.Rotation;
+            _treeTrunk.transform.localScale = newTreeTransform.Scale;
+        }
     }
     private void Update()
     {
@@ -24,6 +43,23 @@ public class PushableTree : InteractableObject
                 IsInteractable = false;
             }
         }
+    }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_isInteractable", IsInteractable);
+
+            // falling tree의 데이터를 저장한다.
+            _statePreserver.SaveState("_isFallingTreeTransform", new TransformState(_treeTrunk.transform));
+        }
+    }
+
+    protected override void OnObjectInteractionEnter()
+    {
+        _moveDirection = Player.RecentDir;
     }
     public override void UpdateInteracting()
     {

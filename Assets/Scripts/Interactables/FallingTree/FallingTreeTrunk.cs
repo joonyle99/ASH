@@ -6,18 +6,22 @@ using UnityEngine;
 public class FallingTreeTrunk : MonoBehaviour
 {
     [SerializeField] SoundList _soundList;
+    [SerializeField] float _soundPlayAngle = 10;
 
     Rigidbody2D _rigidbody;
+    public Rigidbody2D Rigidbody => _rigidbody;
 
     bool _isFallingSoundPlayed = false;
-    [SerializeField] float _soundPlayAngle = 10;
     float _originalRotation;
 
-    public Rigidbody2D Rigidbody { get {  return _rigidbody; } }
     public float PushedAngle => Mathf.Abs(Mathf.DeltaAngle(_originalRotation, transform.rotation.eulerAngles.z));
+
     private void Awake()
     {
+        // Debug.Log("falling tree awake");
+
         _originalRotation = transform.rotation.eulerAngles.z;
+
         _rigidbody = GetComponent<Rigidbody2D>();
     }
     private void Update()
@@ -31,6 +35,4 @@ public class FallingTreeTrunk : MonoBehaviour
             }
         }
     }
-
-
 }

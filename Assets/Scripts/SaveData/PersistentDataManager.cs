@@ -22,13 +22,13 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Input.GetKeyDown(KeyCode.F8))
         {
             SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
-            UpdateValueByGlobal<int>("skillPiece", x => x + 3);
+            UpdateValueByGlobal<int>("_skillPiece", x => x + 3);
             _cheatSkillId++;
         }
 
         if (Input.GetKeyDown(KeyCode.F7) || Input.GetKeyDown(KeyCode.F4))
         {
-            SetByGlobal<bool>("Light", true);
+            SetByGlobal<bool>("_light", true);
         }
 
         if (Input.GetKeyDown(KeyCode.D))
@@ -43,9 +43,11 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return false;
 
+        // 이미 존재하는 데이터 그룹이라면 추가하지 않는다
         if (HasDataGroup(groupName))
             return false;
 
+        // 새로운 데이터 그룹을 생성한다
         Instance._dataGroups[groupName] = new DataGroup();
 
         return true;
@@ -178,9 +180,9 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             foreach (var data in dataGroup.Value)
             {
                 logMessage += $"Key ====> {data.Key}";
-                logMessage += "\n";
-                logMessage += $"Value ====> {data.Value}";
                 logMessage += "\n\n";
+                // logMessage += $"Value ====> {data.Value}";
+                // logMessage += "\n\n";
             }
 
             logMessage += "==================================================\n\n";

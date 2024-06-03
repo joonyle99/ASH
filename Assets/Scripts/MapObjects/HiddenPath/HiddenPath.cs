@@ -23,7 +23,7 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            if (_statePreserver.LoadState<bool>("opened", false))
+            if (_statePreserver.LoadState<bool>("_opened", false))
             {
                 Destroy(_lightCapturer);
                 Destroy(_destroyingCollidersParent);
@@ -37,7 +37,7 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     {
         if (_statePreserver)
         {
-            _statePreserver.SaveState("opened", _lightCapturer == null);
+            _statePreserver.SaveState("_opened", _lightCapturer == null);
         }
     }
     IEnumerator OpenPathCoroutine()
