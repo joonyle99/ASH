@@ -24,9 +24,6 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         var entranceName = hasEntrance ? firstEntranceName : "";
 
         Result buildResult = sceneContext.BuildPlayable(entranceName);              // 씬 컨텍스트 빌드
-
-        // TEMP
-        SoundManager.Instance.PlayCommonBGM("Exploration1", 0.7f);
     }
 
     public SceneContext FindOrCreateSceneContext()
@@ -91,6 +88,29 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         SceneContext sceneContext = FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable(passageName);
         IsChanging = false;
+
+        // 현재 씬에 해당하는 BGM 출력
+
+        // 탐험 구간 1-1 ~ 1-3은 Exploration1
+        // 보스 던전 1-1 ~ 1-4는 BoseDungeon1
+
+        // 탐험 구간 2-1 ~ 2-3은 Exploration2
+        // 보스 던전 2-1 ~ 2-4는 BoseDungeon2
+
+        switch (sceneName)
+        {
+            case "1-1":
+            case "1-2":
+            case "1-3":
+                SoundManager.Instance.PlayCommonBGM("Exploration1");
+                break;
+            case "Boss_1-1":
+            case "Boss_1-2":
+            case "Boss_1-3":
+            case "Boss_1-4":
+                SoundManager.Instance.PlayCommonBGM("BoseDungeon1");
+                break;
+        }
     }
 
     public void OnSceneContextBuilt()

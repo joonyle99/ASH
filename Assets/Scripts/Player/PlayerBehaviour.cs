@@ -29,8 +29,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [Header("Cape")]
     [Space]
 
-    [SerializeField] private Material _capeLightBeforeMaterial;
-    private Color _capeLightBeforeColor;
+    [SerializeField] private Renderer[] _capeRenderers;
+    [SerializeField] private Material _capeLightAfterMaterial;
 
     [Header("Effects")]
     [Space]
@@ -277,13 +277,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
                 ChangeState<InAirState>();
         }
     }
-    public void SetCapeIntensity(float intensity)
+    public void ChangeCapeMaterial()
     {
-        var capeColor = _capeLightBeforeMaterial.GetColor("_GlowColor");
-        capeColor.r *= intensity;
-        capeColor.g *= intensity;
-        capeColor.b *= intensity;
-        _capeLightBeforeMaterial.SetColor("_GlowColor", capeColor);
+        foreach (var capeRenderer in _capeRenderers)
+        {
+            capeRenderer.material = _capeLightAfterMaterial;
+        }
     }
 
     // about hit
