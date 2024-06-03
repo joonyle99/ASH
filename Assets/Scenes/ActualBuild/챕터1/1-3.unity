@@ -217,6 +217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 18099508}
   - component: {fileID: 18099507}
+  - component: {fileID: 18099509}
   m_Layer: 0
   m_Name: CutScenePlayer_Mushroom
   m_TagString: Untagged
@@ -290,6 +291,22 @@ Transform:
   m_Father: {fileID: 1334326770}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &18099509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 18099506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: Exploration1
+  _ID: 3_10
+  _preserveTransform: 1
+  _preserveDestruction: 1
 --- !u!1 &32954287
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,11 +404,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -33.172947
+      value: -41.270874
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.4148655
+      value: 0.7049
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -870,6 +887,7 @@ GameObject:
   - component: {fileID: 102679664}
   - component: {fileID: 102679666}
   - component: {fileID: 5278967498834756049}
+  - component: {fileID: 5278967498834756050}
   m_Layer: 10
   m_Name: CutscenePlayer4
   m_TagString: Untagged
@@ -21282,3 +21300,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   triggerActivators: []
   _reportTargetObject: {fileID: 102679663}
+--- !u!114 &5278967498834756050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102679663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: Exploration1
+  _ID: 3_11
+  _preserveTransform: 1
+  _preserveDestruction: 1

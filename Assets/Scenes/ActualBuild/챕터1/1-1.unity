@@ -5285,11 +5285,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 58.41
+      value: 176.53336
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 11.02
+      value: -1.5022088
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6842,6 +6842,7 @@ GameObject:
   m_Component:
   - component: {fileID: 165229428}
   - component: {fileID: 165229427}
+  - component: {fileID: 165229429}
   m_Layer: 0
   m_Name: CutscenePlayer_AppearLightNPC
   m_TagString: Untagged
@@ -7047,6 +7048,22 @@ Transform:
   m_Father: {fileID: 2085975900}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &165229429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165229426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: Exploration1
+  _ID: 1_14
+  _preserveTransform: 1
+  _preserveDestruction: 1
 --- !u!1 &168947831
 GameObject:
   m_ObjectHideFlags: 0
@@ -30917,6 +30934,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b830d91fa9a7d134192fb6a32f3eeebe, type: 3}
+--- !u!1 &1149755495 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4386577299594174848, guid: b830d91fa9a7d134192fb6a32f3eeebe, type: 3}
+  m_PrefabInstance: {fileID: 1149755494}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1167013780
 GameObject:
   m_ObjectHideFlags: 0
@@ -31824,6 +31846,22 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4386577299594174855, guid: b830d91fa9a7d134192fb6a32f3eeebe, type: 3}
   m_PrefabInstance: {fileID: 1149755494}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1226229099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1149755495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: Exploration1
+  _ID: 1_16
+  _preserveTransform: 1
+  _preserveDestruction: 1
 --- !u!1 &1227132524
 GameObject:
   m_ObjectHideFlags: 0
@@ -54588,6 +54626,7 @@ GameObject:
   - component: {fileID: 5278967499808215535}
   - component: {fileID: 5278967499808215533}
   - component: {fileID: 1545114702}
+  - component: {fileID: 5278967499808215537}
   m_Layer: 10
   m_Name: CutscenePlayer_CrumblingGround
   m_TagString: Untagged
@@ -54595,6 +54634,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &5278967499808215537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5278967499808215536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: Exploration1
+  _ID: 1_13
+  _preserveTransform: 1
+  _preserveDestruction: 1
 --- !u!114 &5278967500371340741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54859,6 +54914,7 @@ GameObject:
   - component: {fileID: 5278967500371340741}
   - component: {fileID: 1653155942}
   - component: {fileID: 1342049315}
+  - component: {fileID: 5278967500371340761}
   m_Layer: 10
   m_Name: CutscenePlayer_ObtainLightSkill
   m_TagString: Untagged
@@ -54866,6 +54922,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &5278967500371340761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5278967500371340760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: Exploration1
+  _ID: 1_12
+  _preserveTransform: 1
+  _preserveDestruction: 1
 --- !u!212 &6438969771368237930
 SpriteRenderer:
   m_ObjectHideFlags: 0
