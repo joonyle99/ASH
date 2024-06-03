@@ -1,12 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Experimental.Rendering.Universal;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-
 
 public class Lantern : LanternLike, ILightCaptureListener
 {

@@ -4,6 +4,7 @@ using UnityEngine;
 public class SkillPiece : MonoBehaviour, ITriggerListener
 {
     [SerializeField] SoundList _soundList;
+
     //조각 없애고 생기는건 씬 단위에서 리스트로 보관해 이용
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {

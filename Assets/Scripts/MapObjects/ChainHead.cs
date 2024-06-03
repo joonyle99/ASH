@@ -4,7 +4,7 @@ using UnityEditor;
 #endif
 
 public class ChainHead : InteractableObject
-{ 
+{
     [SerializeField] WaypointPath _rail;
     float _chainLength { get { return _pieceCount * _pieceOffset; } }
 
@@ -22,6 +22,7 @@ public class ChainHead : InteractableObject
 
     int _currentRailSection = 0;
     float _moveSoundTimer = 0f;
+
     private void Update()
     {
         Vector3 angleVector = (_rail[_currentRailSection + 1].position - _rail[_currentRailSection].position);
@@ -57,16 +58,22 @@ public class ChainHead : InteractableObject
     }
     public override void FixedUpdateInteracting()
     {
+        // 플레이어의 위치를 가져옴
         Vector3 playerPos = SceneContext.Current.Player.transform.position;
+
+        // 객체와 플레이어 사이의 거리가 _chainLength보다 큰지 확인
         if (Vector3.Distance(transform.position, playerPos) > _chainLength)
         {
+            // 교차점을 저장할 객체 생성
             Intersection intersection = new Intersection();
+
+            // _rail 리스트의 각 구간을 순회하며 교차점 찾기
             for (int i = 0; i < _rail.Count - 1; i++)
             {
                 var result = IntersectionWithPlayer(_rail[i].position, _rail[i + 1].position, playerPos);
-                if (result.Intersects)
+                if (result.isIntersects)
                 {
-                    if (!intersection.Intersects)
+                    if (!intersection.isIntersects)
                     {
                         intersection = result;
                         _currentRailSection = i;
@@ -78,7 +85,9 @@ public class ChainHead : InteractableObject
                     }
                 }
             }
-            if (intersection.Intersects)
+
+            // 교차점이 있으면 객체의 위치를 교차점으로 이동
+            if (intersection.isIntersects)
             {
                 transform.position = intersection.Point;
                 _playerLimittingJoint.enabled = false;
@@ -86,6 +95,7 @@ public class ChainHead : InteractableObject
                     _moveAudio.Play();
                 _moveSoundTimer = 1.7f;
             }
+            // 교차점이 없으면 플레이어의 이동을 제한하거나 허용
             else
             {
                 if (Player.RawInputs.Movement.x >= 0 && transform.position.x < Player.transform.position.x
@@ -96,6 +106,7 @@ public class ChainHead : InteractableObject
                 _playerLimittingJoint.enabled = true;
             }
         }
+        // 객체와 플레이어 사이의 거리가 _chainLength 이하인 경우
         else
         {
             _playerLimittingJoint.enabled = false;
@@ -103,7 +114,7 @@ public class ChainHead : InteractableObject
             Player.PlayerMovementController.EnableMovementExternal(this);
         }
     }
-    
+
     Vector3 AngleToVector(float degree)
     {
         return new Vector3(Mathf.Cos(degree * Mathf.Deg2Rad), Mathf.Sin(degree * Mathf.Deg2Rad), 0);
@@ -131,12 +142,11 @@ public class ChainHead : InteractableObject
         _lastChainPiece.transform.position = upperPiece.transform.position + _pieceOffset * AngleToVector(upperPiece.transform.rotation.eulerAngles.z);
         _lastChainPiece.connectedBody = upperPiece;
         //_lastChainPiece.transform.SetAsLastSibling();
-
     }
     struct Intersection
     {
         public Vector3 Point;
-        public bool Intersects;
+        public bool isIntersects;
     }
     Intersection IntersectionWithPlayer(Vector3 p0, Vector3 p1, Vector3 playerPos)
     {
@@ -149,7 +159,7 @@ public class ChainHead : InteractableObject
 
         float D = b * b - 4 * a * c;
         if (D < 0)
-            result.Intersects = false;
+            result.isIntersects = false;
         else
         {
             float t1 = (-b - Mathf.Sqrt(D)) / (2 * a);
@@ -157,15 +167,15 @@ public class ChainHead : InteractableObject
             if (0 <= t1 && t1 <= 1)
             {
                 result.Point = m * t1 + p0;
-                result.Intersects = true;
+                result.isIntersects = true;
             }
             if (0 <= t2 && t2 <= 1)
             {
                 Vector3 newIntersection = m * t2 + p0;
                 //TODO : Distance on the rail
-                if (!result.Intersects || Vector3.SqrMagnitude(transform.position - result.Point) > Vector3.SqrMagnitude(transform.position - newIntersection))
+                if (!result.isIntersects || Vector3.SqrMagnitude(transform.position - result.Point) > Vector3.SqrMagnitude(transform.position - newIntersection))
                     result.Point = newIntersection;
-                result.Intersects = true;
+                result.isIntersects = true;
             }
         }
         return result;
@@ -175,8 +185,6 @@ public class ChainHead : InteractableObject
         Gizmos.DrawWireSphere(transform.position, _chainLength);
     }
 }
-
-
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(ChainHead))]
