@@ -36,10 +36,9 @@ public class RollingStone : InteractableObject
         _statePreserver = GetComponent<PreserveState>();
         _attackableComponent = GetComponent<IAttackListener>();
 
-        // TODO: 고유한 데이터 불러오기
         if (_statePreserver)
         {
-            bool isInteractable = _statePreserver.LoadState("isInteractable", IsInteractable);
+            bool isInteractable = _statePreserver.LoadState("_isInteractable", IsInteractable);
             if (isInteractable)
             {
                 IsInteractable = true;
@@ -52,21 +51,11 @@ public class RollingStone : InteractableObject
     {
         base.OnDestroy();
 
-        // TODO: 고유한 데이터 저장하기
         if (_statePreserver)
         {
-            /*
-            _statePreserver.SaveState<bool>("isInteractable", IsInteractable);
-            */
+            _statePreserver.SaveState("_isInteractable", IsInteractable);
         }
     }
-
-    protected override void OnObjectInteractionEnter()
-    {
-        //Player.MovementController.enabled = true;
-        _moveDirection = Player.PlayerLookDir2D.x;
-    }
-
     private void Update()
     {
         // contacts count
@@ -115,6 +104,12 @@ public class RollingStone : InteractableObject
                 }
             }
         }
+    }
+
+    protected override void OnObjectInteractionEnter()
+    {
+        //Player.MovementController.enabled = true;
+        _moveDirection = Player.PlayerLookDir2D.x;
     }
     public override void UpdateInteracting()
     {

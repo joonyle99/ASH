@@ -25,7 +25,7 @@ public class MovingPlatform : ToggleableObject
         _statePreserver = GetComponent<PreserveState>();
 
         if (_statePreserver)
-            _travelDistance = _statePreserver.LoadState("travelDistance", 0f);
+            _travelDistance = _statePreserver.LoadState("_travelDistance", 0f);
     }
     private void OnValidate()
     {
@@ -35,7 +35,7 @@ public class MovingPlatform : ToggleableObject
     private void OnDestroy()
     {
         if (_statePreserver)
-            _statePreserver.SaveState("travelDistance", _travelDistance);
+            _statePreserver.SaveState("_travelDistance", _travelDistance);
     }
 
     protected override void OnTurnedOff()

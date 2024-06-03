@@ -10,9 +10,9 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
     {
         if (activator.Type == ActivatorType.Player)
         {
-            PersistentDataManager.UpdateValueByGlobal<int>("skillPiece", x => x + 1);
+            PersistentDataManager.UpdateValueByGlobal<int>("_skillPiece", x => x + 1);
             Destruction.Destruct(gameObject);
-            int skillPieceCount = PersistentDataManager.GetByGlobal<int>("skillPiece");
+            int skillPieceCount = PersistentDataManager.GetByGlobal<int>("_skillPiece");
             if (skillPieceCount % 3 == 0)
             {
                 var info = new SkillObtainPanel.SkillInfo();

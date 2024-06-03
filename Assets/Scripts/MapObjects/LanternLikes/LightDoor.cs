@@ -33,7 +33,7 @@ public class LightDoor : LanternLike
 
         _statePreserver = GetComponent<PreserveState>();
 
-        if (_statePreserver && _statePreserver.LoadState("opened", false))
+        if (_statePreserver && _statePreserver.LoadState("_opened", false))
         {
             _collider.enabled = false;
             CurrentState = State.Opened;
@@ -56,7 +56,7 @@ public class LightDoor : LanternLike
     private void OnDestroy()
     {
         if (_statePreserver)
-            _statePreserver.SaveState("opened", CurrentState == State.Opened);
+            _statePreserver.SaveState("_opened", CurrentState == State.Opened);
     }
 
     public override void OnBeamConnected(LightBeam beam)
@@ -66,7 +66,7 @@ public class LightDoor : LanternLike
     public override void OnBeamDisconnected(LightBeam beam)
     {
         _collider.isTrigger = false;
-        _animator.SetTrigger("Close");
+        _animator.SetTrigger("_Close");
     }
     private IEnumerator LightenStoneCoroutine()
     {
