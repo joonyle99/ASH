@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class CutscenePlayer : MonoBehaviour, ITriggerListener
@@ -10,6 +11,29 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     [SerializeField] List<SceneEffect> _sequence;
 
     public bool IsPlaying { get; private set; } = false;
+
+    private PreserveState _statePreserver;
+
+    private void Awake()
+    {
+        _statePreserver = GetComponent<PreserveState>();
+
+        if (_statePreserver)
+        {
+            bool played = _statePreserver.LoadState("_played", _played);
+            if (played)
+            {
+                _played = true;
+            }
+        }
+    }
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_played", _played);
+        }
+    }
 
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
@@ -30,7 +54,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
     {
         IsPlaying = true;
-        for (int i=0; i<sequence.Count; i++)
+        for (int i = 0; i < sequence.Count; i++)
         {
             var effect = sequence[i];
 

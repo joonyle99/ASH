@@ -39,7 +39,7 @@ public class PlayerLightSkillController : MonoBehaviour
         }
 
         // Light Source ON / OFF
-        if (_isLightableState && PersistentDataManager.GetByGlobal<bool>("_light"))
+        if (_isLightableState && PersistentDataManager.GetByGlobal<bool>("LightSkill"))
         {
             if (inputState.LightKey.KeyDown && _isLightButtonPressable)
             {
