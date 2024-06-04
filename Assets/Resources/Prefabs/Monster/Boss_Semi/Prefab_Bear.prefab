@@ -448,11 +448,10 @@ MonoBehaviour:
     JumpForce: {x: 0, y: 0}
   respawnData:
     DefaultPrefabPosition: {x: 0, y: 0, z: 0}
-    GroundRespawnData:
+    groundActionAreaData:
       PatrolPointAPosition: {x: 0, y: 0, z: 0}
       PatrolPointBPosition: {x: 0, y: 0, z: 0}
-    FloatingRespawnData:
-      NavMeshData: {fileID: 0}
+    floatingActionAreaData:
       PatrolAreaPosition: {x: 0, y: 0, z: 0}
       ChaseAreaPosition: {x: 0, y: 0, z: 0}
       PatrolAreaScale: {x: 0, y: 0, z: 0}
@@ -490,7 +489,7 @@ MonoBehaviour:
   _stompEffectPrefab: {fileID: 4196376847951404993, guid: 8c9746120f8843545ba62bd1c65a294a, type: 3}
   _stalactitePrefab: {fileID: 6190995042310891283, guid: e11f98982e6347c47be5d6f4d5fbc091, type: 3}
   _stalactiteCount: 4
-  _ceilingHeight: 1
+  _ceilingHeight: 5
   _createTimeRange:
     Start: 0.5
     End: 1.5
@@ -511,9 +510,8 @@ MonoBehaviour:
   _waveSkillPrefab: {fileID: 1687034788766365448, guid: 839e0876f9e523a42bb75e4004df8274, type: 3}
   _earthquakeCameraShake: {fileID: 11400000, guid: f0baf86e91dbdea4baab2071a43edb5a, type: 2}
   _cutscenePlayerList: {fileID: 68886008199415118}
-  _isLightingGuide: 0
-  _earthquakeCount: 0
-  _is9ThAttackSuccess: 0
+  _isLightGuide: 0
+  _totalEarthquakeCount: 0
   _totalHitCount: 0
   bossClearColorChangeEffect: {fileID: 0}
   _disintegrateEffects:
@@ -742,7 +740,7 @@ MonoBehaviour:
   _cutsceneDictionary:
   - name: Lighting Guide
     cutscenePlayer: {fileID: 0}
-  - name: 9th Attack Success
+  - name: Change RageState
     cutscenePlayer: {fileID: 0}
   - name: Final CutScene
     cutscenePlayer: {fileID: 0}

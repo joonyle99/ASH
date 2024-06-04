@@ -23,7 +23,8 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
-    [Tooltip("Luminescence")]
+    [Space]
+
     [SerializeField] private GameObject _luminescence;
 
     [Header("VineMissile")]
@@ -85,7 +86,12 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
         if (CurrentStateIs<GroundMoveState>())
         {
             if (GroundMovementModule)
-                GroundMovementModule.GroundWalking();
+                GroundMovementModule.WalkGround();
+        }
+        else
+        {
+            if (GroundMovementModule)
+                GroundMovementModule.AffectGravity();
         }
     }
 
@@ -202,6 +208,9 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
         _targetPos = SceneContext.Current.Player.HeartCollider.bounds.center;
 
         var dir = (_targetPos - (Vector2)_missileSpawnPoint.position).normalized;
+
+        // TODO: dir의 x 방향이 몬스터가 바라보는 방향과 다르다면..?
+
         var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
         _currentMissile = Instantiate(_missile, _missileSpawnPoint.position, Quaternion.Euler(0f, 0f, angle));

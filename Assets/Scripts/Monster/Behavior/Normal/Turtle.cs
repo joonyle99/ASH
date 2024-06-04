@@ -29,7 +29,12 @@ public sealed class Turtle : MonsterBehavior
         if (CurrentStateIs<GroundMoveState>())
         {
             if (GroundMovementModule)
-                GroundMovementModule.GroundWalking();
+                GroundMovementModule.WalkGround();
+        }
+        else
+        {
+            if (GroundMovementModule)
+                GroundMovementModule.AffectGravity();
         }
     }
 

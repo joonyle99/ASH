@@ -19,7 +19,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
 
     private void Start()
     {
-        SoundManager.Instance.PlayBGM(_bossDungeonBGM.Clip, _bossDungeonBGM.Volume);
+        SoundManager.Instance.PlayCommonBGM("BoseDungeon1");
     }
 
     public void OnKeyObtained(BossKey key)

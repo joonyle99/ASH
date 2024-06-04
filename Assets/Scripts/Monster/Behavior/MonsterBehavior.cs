@@ -21,18 +21,6 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         public float MoveSpeed;
         public float Acceleration;
         public Vector2 JumpForce;
-
-        public void PrintAllData()
-        {
-            // debug all data
-            Debug.Log($"MonsterName: {MonsterName}");
-            Debug.Log($"RankType: {RankType}");
-            Debug.Log($"MoveType: {MoveType}");
-            Debug.Log($"MaxHp: {MaxHp}");
-            Debug.Log($"MoveSpeed: {MoveSpeed}");
-            Debug.Log($"Acceleration: {Acceleration}");
-            Debug.Log($"JumpForce: {JumpForce}");
-        }
     }
 
     [Serializable]

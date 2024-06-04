@@ -343,7 +343,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     {
         TakeDamage(damage);
 
-        if (CurHp > 0)
+        if (CurHp > 0 && !IsDead)
             ChangeState<InstantRespawnState>();
     }
 

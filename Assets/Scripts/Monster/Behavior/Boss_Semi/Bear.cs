@@ -79,27 +79,24 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
     [Space]
 
-    [SerializeField] private bool _isLightingGuide;
-    [SerializeField] private int _earthquakeCount;
-    public int EarthquakeCount
+    [SerializeField] private bool _isLightGuide;
+    [SerializeField] private int _totalEarthquakeCount;
+    public int TotalEarthquakeCount
     {
-        get => _earthquakeCount;
+        get => _totalEarthquakeCount;
         private set
         {
-            _earthquakeCount = value;
+            _totalEarthquakeCount = value;
 
-            if(_earthquakeCount >= 3 && !_isLightingGuide)
+            if(_totalEarthquakeCount == 3 && !_isLightGuide)
             {
-                _isLightingGuide = true;
+                Debug.Log("Lighting Guide 컷씬 호출");
 
+                _isLightGuide = true;
                 StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
             }
         }
     }
-
-    [Space]
-
-    [SerializeField] private bool _is9ThAttackSuccess;
     [SerializeField] private int _totalHitCount;
     public int TotalHitCount
     {
@@ -108,11 +105,11 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         {
             _totalHitCount = value;
 
-            if (_totalHitCount >= 9 && !_is9ThAttackSuccess)
+            if (_totalHitCount == finalTargetHurtCount / 2)
             {
-                _is9ThAttackSuccess = true;
+                Debug.Log("Change RageState 컷씬 호출");
 
-                StartCoroutine(PlayCutSceneInRunning("9th Attack Success"));
+                StartCoroutine(PlayCutSceneInRunning("Change RageState"));
             }
         }
     }
@@ -149,7 +146,12 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         if (CurrentStateIs<GroundMoveState>())
         {
             if (GroundMovementModule)
-                GroundMovementModule.GroundWalking();
+                GroundMovementModule.WalkGround();
+        }
+        else
+        {
+            if (GroundMovementModule)
+                GroundMovementModule.AffectGravity();
         }
     }
 
@@ -186,8 +188,8 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         // 그로기 상태로 진입
         SetAnimatorTrigger("Groggy");
 
-        if (!_isLightingGuide)
-            _isLightingGuide = true;
+        if (!_isLightGuide)
+            _isLightGuide = true;
     }
 
     // boss base
@@ -205,7 +207,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         if (_currentAttack is AttackType.EarthQuake)
         {
             currentAttackCount = 0;
-            EarthquakeCount++;
+            TotalEarthquakeCount++;
         }
         else
             currentAttackCount++;
@@ -275,7 +277,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         var dirBearToPlayer = System.Math.Sign(playerPos.x - transform.position.x);
 
         // 바라보는 방향에 플레이어가 있는지
-        bool isPlayerInLookDirection = dirBearToPlayer == RecentDir;
+        var isPlayerInLookDirection = dirBearToPlayer == RecentDir;
 
         // 바라보는 방향에 플레이어가 있다면
         if (isPlayerInLookDirection)
@@ -511,11 +513,17 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         yield return new WaitUntil(() => effect.IsEffectDone);
         Destroy(transform.parent ? transform.parent.gameObject : gameObject);
     }
-    public IEnumerator PlayCutSceneInRunning(string name)
+    private IEnumerator PlayCutSceneInRunning(string cutsceneName)
     {
         yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
 
-        _cutscenePlayerList.PlayCutscene(name);
+        _cutscenePlayerList.PlayCutscene(cutsceneName);
+    }
+    private IEnumerator PlayCutSceneInRunning(CutscenePlayer cutscenePlayer)
+    {
+        yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
+
+        _cutscenePlayerList.PlayCutscene(cutscenePlayer);
     }
 
     #endregion

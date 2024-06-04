@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 /// <summary>
@@ -12,7 +13,7 @@ public class Monster_IndependentSkill : Monster_Skill
 
     [SerializeField] protected LayerMask destroyLayer;
     [SerializeField] protected float effectDelay;
-    [SerializeField] protected SoundClipData colliderSound;
+    // [SerializeField] protected SoundClipData colliderSound;
 
     [Space]
 
@@ -35,7 +36,7 @@ public class Monster_IndependentSkill : Monster_Skill
     }
     private void Start()
     {
-        StartCoroutine(AutoDestroy());
+        StartCoroutine(AutoDestroy(lifeTime));
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
@@ -57,20 +58,18 @@ public class Monster_IndependentSkill : Monster_Skill
         }
     }
 
-    private IEnumerator AutoDestroy()
+    private IEnumerator AutoDestroy(float time)
     {
-        if (lifeTime < 0.1f)
-        {
-            Debug.LogWarning($"lifeTime이 {lifeTime}이기 때문에 Auto Destroy 기능은 실행되지 않습니다");
-            yield break;
-        }
+        if (time < 0.1f) yield break;
 
-        yield return new WaitForSeconds(lifeTime);
+        yield return new WaitForSeconds(time);
 
         DestroyIndependentSkill();
     }
     public void DestroyIndependentSkill()
     {
+        Debug.Log($"{this.name} 스킬 오브젝트가 파괴됩니다.");
+
         if (transform.root != null)
         {
             Destroy(transform.root.gameObject);

@@ -9,13 +9,25 @@ public class GroundMovementModule : MonoBehaviour
         _monster = GetComponent<MonsterBehavior>();
     }
 
-    public void GroundWalking()
+    public void AffectGravity()
+    {
+        // 공중에 있는 경우 추가적인 중력을 적용하지 않는다
+        if (_monster.IsInAir)
+            return;
+
+        Vector2 groundNormal = _monster.groundRayHit.normal;
+        float groundAngle = Mathf.Abs(Mathf.Atan2(groundNormal.y, groundNormal.x) * Mathf.Rad2Deg - 90f);
+
+        // 기울어진 땅에서 미끄럼 방지
+        if (groundAngle < 70f)
+            _monster.RigidBody2D.AddForce(-groundNormal * 250f);
+    }
+
+    public void WalkGround()
     {
         // 공중에 있는 경우 이동하지 않는다
         if (_monster.IsInAir)
-        {
             return;
-        }
 
         // 추가로 상대와의 거리가 너무 가까워지면 추격을 중단
         if (_monster.GroundChaseEvaluator)

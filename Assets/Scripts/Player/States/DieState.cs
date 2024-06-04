@@ -16,8 +16,6 @@ public class DieState : PlayerState
     [SerializeField] private float _moveUpDistance = 4f;
     [SerializeField] private float _stayInAirDuration = 0.3f;
 
-    private float _previousGravityScale;
-
     private PlayerBehaviour _player;
 
     protected override bool OnEnter()
@@ -68,10 +66,32 @@ public class DieState : PlayerState
 
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        // Debug.Log($"scene name: {SceneManager.GetActiveScene().name}");
-        // Debug.Log($"passage name: {SceneContext.Current.EntrancePassage.PassageName}");
+        // 현재 씬에 있는 입구로 이동한다
+        var sceneName = SceneManager.GetActiveScene().name;
+        var passageName = SceneContext.Current.EntrancePassage.PassageName;
 
-        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
+        // Debug.Log($"scene name: {sceneName}");
+        // Debug.Log($"passage name: {passageName}");
+
+        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+
+        SoundManager.Instance.StopBGM();
+
+        switch (sceneName)
+        {
+            case "1-1":
+            case "1-2":
+            case "1-3":
+                SoundManager.Instance.PlayCommonBGM("Exploration1");
+                break;
+            case "Boss_1-1":
+            case "Boss_1-2":
+            case "Boss_1-3":
+            case "Boss_1-4":
+            case "Boss_Bear":
+                SoundManager.Instance.PlayCommonBGM("BoseDungeon1");
+                break;
+        }
     }
     private IEnumerator ExitCoroutine()
     {
@@ -91,7 +111,6 @@ public class DieState : PlayerState
         var playerRigidBody = Player.Rigidbody;
 
         // 1. preparing to move up
-        _previousGravityScale = playerRigidBody.gravityScale;
         playerRigidBody.gravityScale = 0f;
         playerRigidBody.velocity = Vector2.zero;
 

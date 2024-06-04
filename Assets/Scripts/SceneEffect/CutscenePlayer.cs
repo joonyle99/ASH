@@ -11,6 +11,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     [SerializeField] List<SceneEffect> _sequence;
 
     public bool IsPlaying { get; private set; } = false;
+    public bool IsPlayed => _played;
 
     private PreserveState _statePreserver;
 
@@ -35,23 +36,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
         }
     }
 
-    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
-    {
-        if (activator.Type == ActivatorType.Player)
-            Play();
-    }
-    public void Play()
-    {
-        if (!_played && _playOnce)
-        {
-            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
-            _played = true;
-
-            // 플레이어를 무적 상태로 만든다
-            SceneContext.Current.Player.IsGodMode = true;
-        }
-    }
-    IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
+    private IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
     {
         IsPlaying = true;
         for (int i = 0; i < sequence.Count; i++)
@@ -102,5 +87,21 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
 
         // 플레이어 무적 상태 해제
         SceneContext.Current.Player.IsGodMode = false;
+    }
+    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
+    {
+        if (activator.Type == ActivatorType.Player)
+            Play();
+    }
+    public void Play()
+    {
+        if (!_played && _playOnce)
+        {
+            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
+            _played = true;
+
+            // 플레이어를 무적 상태로 만든다
+            SceneContext.Current.Player.IsGodMode = true;
+        }
     }
 }

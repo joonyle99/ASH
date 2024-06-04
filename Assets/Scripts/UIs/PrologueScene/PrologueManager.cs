@@ -40,6 +40,7 @@ public class PrologueManager : MonoBehaviour
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
         SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "Enter 1-1");
+        SoundManager.Instance.PlayCommonBGM("Exploration1");
     }
     private IEnumerator PlayScripts()
     {
@@ -49,7 +50,6 @@ public class PrologueManager : MonoBehaviour
             yield return FadeInProceedText();
             yield return new WaitUntil(() => Input.anyKeyDown);
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Button");
-
 
             Color color = _proceedText.color;
             color.a = 0;

@@ -50,7 +50,7 @@ public class DisintegrateEffect : MonoBehaviour
 
         if (!isRespawn)
         {
-            Debug.Log($"Disintegrate Effect in {name}");
+            // Debug.Log($"Disintegrate Effect in {name}");
 
             // Particle System Control
             foreach (var particleHelper in _particles)
