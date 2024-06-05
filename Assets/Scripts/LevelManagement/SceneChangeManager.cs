@@ -16,14 +16,20 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
     private void Start()
     {
-        SceneContext sceneContext = FindOrCreateSceneContext();                     // 씬 컨텍스트 생성
+        // 씬 컨텍스트 생성
+        SceneContext sceneContext = FindOrCreateSceneContext();
 
         var passagesInCurrentScene = FindObjectsByType<Passage>(FindObjectsSortMode.None);
-        var firstEntranceName = "Enter " + SceneManager.GetActiveScene().name;
+        var sceneName = SceneManager.GetActiveScene().name;
+        var firstEntranceName = "Enter " + sceneName;
         var hasEntrance = passagesInCurrentScene.ToList().Find(passage => passage.PassageName == firstEntranceName);
         var entranceName = hasEntrance ? firstEntranceName : "";
 
-        Result buildResult = sceneContext.BuildPlayable(entranceName);              // 씬 컨텍스트 빌드
+        // 씬 컨텍스트 빌드
+        Result buildResult = sceneContext.BuildPlayable(entranceName);
+
+        // 씬에 대한 BGM 재생
+        SoundManager.Instance.PlayCommonBGMForScene(sceneName);
     }
 
     public SceneContext FindOrCreateSceneContext()
@@ -78,6 +84,9 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         IsChanging = false;
 
         changeDoneCallback?.Invoke();
+
+        // 씬에 대한 BGM 재생
+        SoundManager.Instance.PlayCommonBGMForScene(sceneName);
     }
     private IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string passageName)
     {
@@ -88,6 +97,9 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         SceneContext sceneContext = FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable(passageName);
         IsChanging = false;
+
+        // 씬에 대한 BGM 재생
+        SoundManager.Instance.PlayCommonBGMForScene(sceneName);
     }
 
     public void OnSceneContextBuilt()

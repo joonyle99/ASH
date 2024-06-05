@@ -15,9 +15,9 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
 
     private const int PitchPrecision = 1000;
 
-    private SoundList[] _soundLists;
-    private Dictionary<string, int> _soundListIndexMap = new Dictionary<string, int>();
-    private Dictionary<int, AudioSource> _pitchedAudioSources = new Dictionary<int, AudioSource>();
+    private SoundList[] _soundLists; // ui, bgm, gimmick ...
+    private Dictionary<string, int> _soundListIndexMap = new();
+    private Dictionary<int, AudioSource> _pitchedAudioSources = new();
 
     protected override void Awake()
     {
@@ -25,11 +25,14 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
 
         _soundLists = _soundListParent.GetComponentsInChildren<SoundList>();
 
-        for (int i = 0; i < _soundLists.Length; i++)
+        // each sound list
+        for (int soundListIndex = 0; soundListIndex < _soundLists.Length; soundListIndex++)
         {
-            for (int j = 0; j < _soundLists[i].Datas.Count; j++)
+            // each sound data in sound list
+            for (int soundDataIndex = 0; soundDataIndex < _soundLists[soundListIndex].Datas.Count; soundDataIndex++)
             {
-                _soundListIndexMap[_soundLists[i].Datas[j].Key] = i;
+                var soundDataKey = _soundLists[soundListIndex].Datas[soundDataIndex].Key;
+                _soundListIndexMap[soundDataKey] = soundListIndex;
             }
         }
 
@@ -40,6 +43,53 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
         InitialVolumeSetting();
     }
 
+    // volume setting
+    public void InitialVolumeSetting()
+    {
+        float bgmVolume = 1f;
+        float sfxVolume = 1f;
+
+        if (JsonDataManager.Has("BGMVolume"))
+            bgmVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["BGMVolume"]);
+
+        if (JsonDataManager.Has("SFXVolume"))
+            sfxVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["SFXVolume"]);
+
+        SetBgmVolume(bgmVolume);
+        SetSfxVolume(sfxVolume);
+    }
+    public void SetSfxVolume(float volume)
+    {
+        if (volume == 0)
+        {
+            _audioMixer.SetFloat("SFX", -80);
+        }
+        else
+        {
+            _audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
+        }
+
+        JsonDataManager.Add("SFXVolume", volume.ToString());
+    }
+    public void SetBgmVolume(float volume)
+    {
+        if (volume < 0.01f)
+        {
+            _audioMixer.SetFloat("BGM", -80);
+        }
+        else
+        {
+            _audioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20);
+        }
+
+        JsonDataManager.Add("BGMVolume", volume.ToString());
+    }
+
+    // play sound
+    public void PlaySFX(SoundClipData soundData, float volumeMultiplier = 1f)
+    {
+        PlaySFXPitched(soundData.Clip, soundData.Pitch, volumeMultiplier);
+    }
     public void PlaySFXPitched(AudioClip clip, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
         if (pitchMultiplier < 0)
@@ -56,14 +106,17 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
 
         _pitchedAudioSources[pitch].PlayOneShot(clip, volumeMultiplier);        // 새로운 사운드 출력
     }
-    public void PlaySFX(SoundClipData soundData, float volumeMultiplier = 1f)
-    {
-        PlaySFXPitched(soundData.Clip, soundData.Pitch, volumeMultiplier);
-    }
     public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f, bool replayIfSameClip = false)
     {
-        if (replayIfSameClip && clip == _bgmPlayer.clip)
+        if (!replayIfSameClip && clip == _bgmPlayer.clip)
+        {
+            Debug.LogWarning($"already playing this audio clip" +
+                             $"\n" +
+                             $"new audio source: {clip.name}" +
+                             $"\n" +
+                             $"old audio source: {_bgmPlayer.clip}");
             return;
+        }
 
         _bgmPlayer.Stop();
         _bgmPlayer.clip = clip;
@@ -71,6 +124,53 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
         _bgmPlayer.Play();
     }
 
+    // play common sound (searching in sound list)
+    public void PlayCommonSFXPitched(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
+    {
+        if (_soundListIndexMap.ContainsKey(key))
+        {
+            _soundLists[_soundListIndexMap[key]].PlaySFXPitched(key, pitchMultiplier, volumeMultiplier);
+        }
+        else
+        {
+            Debug.LogWarning("No SFX matching: " + key);
+        }
+    }
+    public void PlayCommonBGM(string key, float volumeMultiplier = 1f)
+    {
+        if (_soundListIndexMap.TryGetValue(key, out var soundListIndex))
+        {
+            _soundLists[soundListIndex].PlayBGM(key, volumeMultiplier);
+            return;
+        }
+
+        Debug.LogWarning("No BGM matching: " + key);
+    }
+    public void PlayCommonBGMForScene(string sceneName)
+    {
+        switch (sceneName)
+        {
+            case "TitleScene":
+                PlayCommonBGM("MainTheme");
+                break;
+            case "1-1":
+            case "1-2":
+            case "1-3":
+                PlayCommonBGM("Exploration1");
+                break;
+            case "Boss_1-1":
+            case "Boss_1-2":
+            case "Boss_1-3":
+            case "Boss_1-4":
+            case "Boss_Bear":
+                PlayCommonBGM("BossDungeon1");
+                break;
+            default:
+                break;
+        }
+    }
+
+    // stop sound
     public void StopBGM()
     {
         _bgmPlayer.Stop();
@@ -96,70 +196,5 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
         if (!_bgmPlayer.isPlaying)
             yield break;
         _bgmPlayer.Stop();
-    }
-
-    public void PlayCommonSFXPitched(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
-    {
-        if (_soundListIndexMap.ContainsKey(key))
-        {
-            _soundLists[_soundListIndexMap[key]].PlaySFXPitched(key, pitchMultiplier, volumeMultiplier);
-        }
-        else
-        {
-            Debug.LogWarning("No SFX matching: " + key);
-        }
-    }
-    public void PlayCommonBGM(string key, float volumeMultiplier = 1f)
-    {
-        if (_soundListIndexMap.ContainsKey(key))
-        {
-            _soundLists[_soundListIndexMap[key]].PlayBGM(key, volumeMultiplier);
-        }
-        else
-        {
-            Debug.LogWarning("No BGM matching: " + key);
-        }
-    }
-
-    public void SetBgmVolume(float volume)
-    {
-        if (volume < 0.01f)
-        {
-            _audioMixer.SetFloat("BGM", -80);
-        }
-        else
-        {
-            _audioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20);
-        }
-
-        JsonDataManager.Add("BGMVolume", volume.ToString());
-    }
-    public void SetSfxVolume(float volume)
-    {
-        if (volume == 0)
-        {
-            _audioMixer.SetFloat("SFX", -80);
-        }
-        else
-        {
-            _audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
-        }
-
-        JsonDataManager.Add("SFXVolume", volume.ToString());
-    }
-
-    public void InitialVolumeSetting()
-    {
-        float bgmVolume = 1f;
-        float sfxVolume = 1f;
-
-        if (JsonDataManager.Has("BGMVolume"))
-            bgmVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["BGMVolume"]);
-
-        if (JsonDataManager.Has("SFXVolume"))
-            sfxVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["SFXVolume"]);
-
-        SetBgmVolume(bgmVolume);
-        SetSfxVolume(sfxVolume);
     }
 }

@@ -74,24 +74,6 @@ public class DieState : PlayerState
         // Debug.Log($"passage name: {passageName}");
 
         SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
-
-        SoundManager.Instance.StopBGM();
-
-        switch (sceneName)
-        {
-            case "1-1":
-            case "1-2":
-            case "1-3":
-                SoundManager.Instance.PlayCommonBGM("Exploration1");
-                break;
-            case "Boss_1-1":
-            case "Boss_1-2":
-            case "Boss_1-3":
-            case "Boss_1-4":
-            case "Boss_Bear":
-                SoundManager.Instance.PlayCommonBGM("BoseDungeon1");
-                break;
-        }
     }
     private IEnumerator ExitCoroutine()
     {

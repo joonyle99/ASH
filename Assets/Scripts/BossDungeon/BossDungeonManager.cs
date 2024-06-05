@@ -17,11 +17,6 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
         PersistentDataManager.TryAddDataGroup(_dataGroupName);
     }
 
-    private void Start()
-    {
-        SoundManager.Instance.PlayCommonBGM("BoseDungeon1");
-    }
-
     public void OnKeyObtained(BossKey key)
     {
         PersistentDataManager.UpdateValue<int>(_dataGroupName, "bossKeyCount", x => x + 1);

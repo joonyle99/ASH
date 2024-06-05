@@ -5,11 +5,6 @@ public class TitleSceneManager : MonoBehaviour
 {
     //[SerializeField] PassageData _initialPassageData;
 
-    private void Start()
-    {
-        SoundManager.Instance.PlayCommonBGM("MainTheme");
-    }
-
     public void OpenPrologueScene()
     {
         StartCoroutine(OpenPrologueSceneCoroutine());
