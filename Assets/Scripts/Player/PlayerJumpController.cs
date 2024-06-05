@@ -69,7 +69,7 @@ public class PlayerJumpController : MonoBehaviour
         // Reset jump count
         if(_remainingJumpCount < MaxJumpCount)
         {
-            if ((_player.CurrentStateIs<IdleState>() && _player.IsGrounded) || _player.CurrentStateIs<WallState>())
+            if (((_player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<RunState>()) && _player.IsGrounded) || _player.CurrentStateIs<WallState>())
             {
                 ResetJumpCount();
             }

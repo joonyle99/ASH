@@ -92,6 +92,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     // Condition Property
     public bool IsGrounded => GroundHit;
     public bool IsGroundedSupported => GroundHit || GroundHit2;
+    public bool IsUpWardGrounded => UpwardGroundHit;
     public bool IsTouchedWall => ClimbHit;
     public bool IsClimbable { get; set; }
     public bool IsClimbJump { get; set; }
@@ -240,6 +241,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
 
         Animator.SetBool("IsGround", IsGrounded);
         Animator.SetBool("IsGroundSupported", IsGroundedSupported);
+        Animator.SetBool("IsUpwardGround", IsUpWardGrounded);
 
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
 

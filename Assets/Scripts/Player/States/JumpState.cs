@@ -8,6 +8,7 @@ public class JumpState : PlayerState
     {
         _jumpController = Player.GetComponent<PlayerJumpController>();
 
+        Player.Animator.SetTrigger("Jump");
         Player.Animator.SetBool("IsJump", true);
 
         // Wall Jump
@@ -22,6 +23,27 @@ public class JumpState : PlayerState
 
     protected override bool OnUpdate()
     {
+        if (Player.IsUpWardGrounded)
+        {
+            Player.Animator.SetBool("IsJump", false);
+            StateBase state = Player.PreviousState;
+
+            if (state is IdleState)
+            {
+                Player.Animator.SetTrigger("ToIdle");
+                ChangeState<IdleState>();
+                return true;
+            }
+            else if (state is RunState)
+            {
+                Player.Animator.SetTrigger("ToRun");
+                ChangeState<RunState>();
+                return true;
+            }
+
+            return true;
+        }
+
         return true;
     }
     protected override bool OnFixedUpdate()
@@ -31,6 +53,10 @@ public class JumpState : PlayerState
 
     protected override bool OnExit()
     {
+        Player.Animator.ResetTrigger("Jump");
+        Player.Animator.ResetTrigger("ToIdle");
+        Player.Animator.ResetTrigger("ToRun");
+
         return true;
     }
 }

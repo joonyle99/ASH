@@ -40,7 +40,9 @@ public class GroundWallDetector : MonoBehaviour
         _player.GroundHit2 = rayCastTarget;
 
         // Check Upward
-        _player.UpwardGroundHit = Physics2D.Raycast(transform.position, Vector2.up, _groundAboveCheckLength, _groundLayer);
+        _player.UpwardGroundHit = Physics2D.Raycast(_groundAboveCheckTrans.position, Vector2.up, _groundAboveCheckLength, _groundLayer);
+        if (_player.UpwardGroundHit)
+            Debug.Log("UpWard Ground Hit");
 
         // Check Climb
         _player.ClimbHit = Physics2D.Raycast(_climbCheckTrans.position, _player.PlayerLookDir2D, _climbCheckLength, _climbLayer);
@@ -55,7 +57,7 @@ public class GroundWallDetector : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if(_player == null)
+        if (_player == null)
             return;
 
         // set color
