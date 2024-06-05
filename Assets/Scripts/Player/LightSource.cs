@@ -1,11 +1,6 @@
-using Com.LuisPedroFonseca.ProCamera2D.TopDownShooter;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class LightSource : MonoBehaviour
 {
@@ -68,7 +63,7 @@ public class LightSource : MonoBehaviour
         {
             var capturer = col.GetComponent<LightCapturer>();
             if (capturer != null)
-                capturer.OnLightHitted(this);
+                capturer.OnLightHit(this);
         }
     }
 
