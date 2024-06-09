@@ -57,6 +57,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
             PlayCutscene(cutscene);
         else
             _cutSceneQueue.Add(cutscene);
+
         DisableAllSceneEvents();
     }
     public SceneEffectEvent PushSceneEvent(SceneEffectEvent sceneEvent)
