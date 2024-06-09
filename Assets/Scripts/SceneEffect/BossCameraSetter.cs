@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BossCameraSetter : MonoBehaviour
@@ -10,6 +8,7 @@ public class BossCameraSetter : MonoBehaviour
     Transform[] _invisibleWalls; 
 
     BossCameraEvent _event;
+
     private void Start()
     {
         foreach (var t in _invisibleWalls)
@@ -17,6 +16,7 @@ public class BossCameraSetter : MonoBehaviour
         if (_activateOnStart)
             Activate();
     }
+
     public void Activate()
     {
         _event = new BossCameraEvent(transform, _cameraOffsetY);
@@ -41,8 +41,11 @@ class BossCameraEvent : SceneEffectEvent
         _transform = transform;
         _offsetY = offsetY;
     }
-    public override void OnEnter() 
+    public override void OnEnter()
     {
+        Debug.Log($"SceneEffectManager.Instance.Camera.OffsetY: {SceneEffectManager.Instance.Camera.OffsetY}\n" +
+                  $"_offsetY: {_offsetY}");
+
         SceneEffectManager.Instance.Camera.FollowOnly(_transform);
         SceneEffectManager.Instance.Camera.OffsetY = _offsetY;
     }

@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         public Vector2 FollowSmoothness;
     }
 
-    private InitialSettings _initialSettings;
+    // private InitialSettings _initialSettings;
 
     private ProCamera2D _proCamera;
     private ProCamera2DShake _shakeComponent;
@@ -34,11 +34,13 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _shakeComponent = GetComponent<ProCamera2DShake>();
         _fitComponent = GetComponent<ProCamera2DZoomToFitTargets>();
 
+        /*
         _initialSettings = new InitialSettings
         {
             Offset = new Vector2(OffsetX, OffsetY),
             FollowSmoothness = new Vector2(_proCamera.HorizontalFollowSmoothness, _proCamera.VerticalFollowSmoothness)
         };
+        */
     }
 
     private void Start()
@@ -51,20 +53,28 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void OnSceneContextBuilt()
     {
         _proCamera.enabled = true;
-        if (SceneContext.Current.Player != null)
+        if (SceneContext.Current.Player)
             _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
         SnapFollow();
     }
     public void ResetCameraSettings()
     {
-        if (SceneContext.Current.Player != null)
+        if (SceneContext.Current.Player)
             StartFollow(SceneContext.Current.Player.transform);
 
         // OffsetX = _initialSettings.Offset.x;
         // OffsetY = _initialSettings.Offset.y;
 
+        /*
+        Debug.Log(
+            $"_proCamera.HorizontalFollowSmoothness: {_proCamera.HorizontalFollowSmoothness}\n" +
+            $"_proCamera.VerticalFollowSmoothness: {_proCamera.VerticalFollowSmoothness}\n" +
+            $"_initialSettings.FollowSmoothness.x: {_initialSettings.FollowSmoothness.x}\n" +
+            $"_initialSettings.FollowSmoothness.y: {_initialSettings.FollowSmoothness.y}");
+
         _proCamera.HorizontalFollowSmoothness = _initialSettings.FollowSmoothness.x;
         _proCamera.VerticalFollowSmoothness = _initialSettings.FollowSmoothness.y;
+        */
     }
 
     // effect: follow
