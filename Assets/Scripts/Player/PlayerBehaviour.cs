@@ -26,12 +26,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] private bool _isCanAttack = true;
     [SerializeField] private bool _isCanDash = true;
 
-    [Header("Cape")]
-    [Space]
-
-    [SerializeField] private Renderer[] _capeRenderers;
-    [SerializeField] private Material _capeLightAfterMaterial;
-
     [Header("Effects")]
     [Space]
 
@@ -42,12 +36,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] private ParticleHelper _dashEffect;
     [SerializeField] private ParticleHelper _dashTrailEffect;
 
-    [Header("Collider")]
+    [Header("Parts")]
     [Space]
 
     [SerializeField] private CapsuleCollider2D _bodyCollider;
     [SerializeField] private Rigidbody2D _handRigidbody;
     [SerializeField] private Collider2D _heartCollider;
+    [SerializeField] private Material _capeMaterial;
 
     [Header("ETC")]
     [Space]
@@ -279,12 +274,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
                 ChangeState<InAirState>();
         }
     }
-    public void ChangeCapeMaterial()
+    public void SetCapeEmission(float intensity)
     {
-        foreach (var capeRenderer in _capeRenderers)
-        {
-            capeRenderer.material = _capeLightAfterMaterial;
-        }
+        // material 자체의 밝기를 조절한다
+        _capeMaterial.SetFloat("_Intensity", intensity);
     }
 
     // about hit

@@ -41,8 +41,6 @@ public class GroundWallDetector : MonoBehaviour
 
         // Check Upward
         _player.UpwardGroundHit = Physics2D.Raycast(_groundAboveCheckTrans.position, Vector2.up, _groundAboveCheckLength, _groundLayer);
-        if (_player.UpwardGroundHit)
-            Debug.Log("UpWard Ground Hit");
 
         // Check Climb
         _player.ClimbHit = Physics2D.Raycast(_climbCheckTrans.position, _player.PlayerLookDir2D, _climbCheckLength, _climbLayer);
