@@ -5,7 +5,6 @@ public class BossDoor : InteractableObject
 {
     [SerializeField] GameObject _passage;
     [SerializeField] float _goInDelay = 1f;
-    [SerializeField] InputSetterScriptableObject _stayStillInputSetter;
     [SerializeField] InputSetterScriptableObject _enterInputSetter;
 
     [SerializeField] SoundList _soundList;
@@ -52,7 +51,7 @@ public class BossDoor : InteractableObject
     }
     IEnumerator OpenCoroutine()
     {
-        InputManager.Instance.ChangeInputSetter(_stayStillInputSetter);
+        InputManager.Instance.ChangeToStayStillSetter();
         SceneEffectManager.Instance.Camera.RemoveFollowTarget(SceneContext.Current.Player.transform);
         SceneEffectManager.Instance.Camera.AddFollowTarget(transform);
         yield return _doorOpenAnimation.OpenCoroutine();
