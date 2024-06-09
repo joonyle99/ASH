@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -20,6 +19,15 @@ public class HealthPanelUI : MonoBehaviour
         _hpUnit = new int[_lifeIconsBacks.Length];
         _lifeIcons = new Image[_lifeIconsBacks.Length];
 
+        for (int i = 0; i < _lifeIconsBacks.Length; i++)
+        {
+            // set hp unit
+            _hpUnit[i] = 2 * (i + 1);
+
+            // set icon backgrounds images
+            _lifeIcons[i] = _lifeIconsBacks[i].rectTransform.GetChild(0).GetComponent<Image>();
+        }
+
         _player = FindFirstObjectByType<PlayerBehaviour>();
 
         if (_player)
@@ -30,18 +38,6 @@ public class HealthPanelUI : MonoBehaviour
         else
         {
             Debug.LogError($"health panel ui에서 Player 정보를 찾지 못했습니다. (Player Name: {_player.gameObject.name})");
-        }
-    }
-
-    private void Start()
-    {
-        for (int i = 0; i < _lifeIconsBacks.Length; i++)
-        {
-            // set hp unit
-            _hpUnit[i] = 2 * (i + 1);
-
-            // set icon backgrounds images
-            _lifeIcons[i] = _lifeIconsBacks[i].rectTransform.GetChild(0).GetComponent<Image>();
         }
     }
 
