@@ -31,7 +31,7 @@ public sealed class Turtle : MonsterBehavior
             if (GroundMovementModule)
                 GroundMovementModule.WalkGround();
         }
-        else
+        else if (CurrentStateIs<Monster_IdleState>())
         {
             if (GroundMovementModule)
                 GroundMovementModule.AffectGravity();
