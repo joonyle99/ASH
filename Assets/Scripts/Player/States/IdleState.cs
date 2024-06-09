@@ -13,8 +13,6 @@ public class IdleState : PlayerState, IAttackableState, IJumpableState, IInterac
 
     protected override bool OnEnter()
     {
-
-
         return true;
     }
 

@@ -118,8 +118,10 @@ public class PlayerJumpController : MonoBehaviour
     {
         _remainingJumpCount = MaxJumpCount;
     }
-    private void CastJump()
+    public void CastJump()
     {
+        // Debug.Log("cast jump");
+
         _isJumpKeyQueued = false;
         _isLongJumping = true;
         _isStartJump = _remainingJumpCount == MaxJumpCount;
@@ -158,7 +160,17 @@ public class PlayerJumpController : MonoBehaviour
     /// </summary>
     public void BasicJump()
     {
-        var jumpPower = _isStartJump ? _startJumpPower : _inAirJumpPower;
+        var jumpPower = 0f;
+
+        if (_isStartJump)
+        {
+            jumpPower = _startJumpPower;
+        }
+        else
+        {
+            jumpPower = _inAirJumpPower;
+            _player.Animator.ResetTrigger("Jump");
+        }
 
         // 현재의 velocity.y를 초기화 시킨다
         _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, 0f);
@@ -194,12 +206,8 @@ public class PlayerJumpController : MonoBehaviour
     /// </summary>
     public void EndWallJump()
     {
-        // 한번에 2개의 점프가 깎인다.
-        _remainingJumpCount = 0;
-
         Vector2 endWallJumpForce = new Vector2(_player.Rigidbody.velocity.x, _wallEndJumpPower);
 
         _player.Rigidbody.AddForce(endWallJumpForce, ForceMode2D.Impulse);
-
     }
 }

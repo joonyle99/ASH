@@ -115,7 +115,6 @@ public class InAirState : PlayerState, IAttackableState, IJumpableState
     protected override bool OnExit()
     {
         Player.Animator.SetBool("IsInAir", false);
-        Player.Animator.SetBool("IsJump", false);
 
         return true;
     }

@@ -19,6 +19,7 @@ public class WallGrabState : WallState
         Player.Rigidbody.gravityScale = 0f;
         Player.Rigidbody.velocity = Vector2.zero;
 
+        Animator.SetTrigger("Grab");
         Animator.SetBool("IsGrab", true);
 
         transform.position = new Vector3(wallHitPos.x - 0.5f * Player.PlayerLookDir2D.x, transform.position.y, transform.position.z);

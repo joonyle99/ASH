@@ -16,12 +16,9 @@ public abstract class WallState : PlayerState, IJumpableState
 
     protected override bool OnEnter()
     {
-        Player.Animator.SetTrigger("Wall");
-        Player.Animator.SetBool("IsWall", true);
-
         if (!Player.ClimbHit)
         {
-            Debug.LogError($"ClimbHit is Null. Changes to Idle State");
+            Debug.LogWarning($"ClimbHit is Null. Changes to Idle State");
             ChangeState<IdleState>();
             return false;
         }
@@ -55,8 +52,6 @@ public abstract class WallState : PlayerState, IJumpableState
 
     protected override bool OnExit()
     {
-        Player.Animator.SetBool("IsWall", false);
-
         return true;
     }
 

@@ -9,7 +9,7 @@ public class WallClimbState : WallState
 
     private float _prevGravity;
 
-    bool IsAboveWall { get { return Player.transform.position.y > wallHitPos.y; } }
+    bool IsAboveWall => Player.transform.position.y > wallHitPos.y;
 
     protected override bool OnEnter()
     {
@@ -31,7 +31,7 @@ public class WallClimbState : WallState
             // Wall End Jump
             if (!Player.IsTouchedWall && IsAboveWall)
             {
-                ChangeState<JumpState>();
+                Player.GetComponent<PlayerJumpController>().CastJump();
                 return true;
             }
 
