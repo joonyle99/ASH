@@ -251,10 +251,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c6ebe641b0e6a4bad42c0d7b75edc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactionMarkerPoint: {fileID: 1095145399}
   _isInteractable: 1
-  _animationType: 0
+  _isInteracting: 0
+  _interactionMarkerPoint: {fileID: 1095145399}
   _stateChange: 0
+  _animationType: 0
   _passage: {fileID: 5904064001357719047}
   _goInDelay: 3
   _stayStillInputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
@@ -411,7 +412,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9192b4ea5acf7241b68c579c1caae69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactableObject: {fileID: 0}
+  triggerActivators: []
+  _interactionObject: {fileID: 0}
 --- !u!61 &627304411078616325
 BoxCollider2D:
   m_ObjectHideFlags: 0
