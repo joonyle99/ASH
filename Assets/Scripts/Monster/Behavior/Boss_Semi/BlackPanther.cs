@@ -120,7 +120,8 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {
-        if (IsDead || IsGroggy) return;
+        if (IsDead || IsGroggy || !IsCapturable)
+            return;
 
         // 그로기 상태로 진입
         SetAnimatorTrigger("Groggy");

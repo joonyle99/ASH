@@ -79,23 +79,13 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
     [Space]
 
-    [SerializeField] private bool _isLightGuide;
+    [SerializeField] private bool _isAbleLightGuide = true;
+    [SerializeField] private bool _isAbleChangeRage = true;
     [SerializeField] private int _totalEarthquakeCount;
     public int TotalEarthquakeCount
     {
         get => _totalEarthquakeCount;
-        private set
-        {
-            _totalEarthquakeCount = value;
-
-            if(_totalEarthquakeCount == 3 && !_isLightGuide)
-            {
-                Debug.Log("Lighting Guide ÄÆ¾À È£Ãâ");
-
-                _isLightGuide = true;
-                StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
-            }
-        }
+        private set => _totalEarthquakeCount = value;
     }
     [SerializeField] private int _totalHitCount;
     public int TotalHitCount
@@ -105,10 +95,11 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         {
             _totalHitCount = value;
 
-            if (_totalHitCount == finalTargetHurtCount / 2)
+            if (_totalHitCount == finalTargetHurtCount / 2 && _isAbleChangeRage)
             {
                 Debug.Log("Change RageState ÄÆ¾À È£Ãâ");
 
+                _isAbleChangeRage = false;
                 StartCoroutine(PlayCutSceneInRunning("Change RageState"));
             }
         }
@@ -182,14 +173,14 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {
-        if (IsGroggy)
+        if (IsDead || IsGroggy || !IsCapturable)
             return;
 
         // ±×·Î±â »óÅÂ·Î ÁøÀÔ
         SetAnimatorTrigger("Groggy");
 
-        if (!_isLightGuide)
-            _isLightGuide = true;
+        if (_isAbleLightGuide)
+            _isAbleLightGuide = false;
     }
 
     // boss base
@@ -206,14 +197,33 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
         if (_currentAttack is AttackType.EarthQuake)
         {
+            // Debug.Log("Earth QuakeÀÇ Attack Pre Process");
+
             currentAttackCount = 0;
             TotalEarthquakeCount++;
+
+            IsCapturable = true;
         }
         else
             currentAttackCount++;
     }
     public override void AttackPostProcess()
     {
+        if (_currentAttack is AttackType.EarthQuake)
+        {
+            // Debug.Log("Earth QuakeÀÇ Attack Post Process");
+
+            if (_totalEarthquakeCount == 3 && _isAbleLightGuide)
+            {
+                Debug.Log("Lighting Guide ÄÆ¾À È£Ãâ");
+
+                _isAbleLightGuide = false;
+                StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
+            }
+
+            IsCapturable = false;
+        }
+
         if (currentAttackCount >= targetAttackCount)
         {
             SetToEarthQuake();

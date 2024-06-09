@@ -159,6 +159,12 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         get;
         set;
     } = false;
+    [field: SerializeField]
+    public bool IsCapturable
+    {
+        get;
+        set;
+    }
 
     [Header("Monster Data")]
     [Space]
