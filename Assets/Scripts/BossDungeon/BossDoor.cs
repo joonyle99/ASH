@@ -31,7 +31,7 @@ public class BossDoor : InteractableObject
 
     protected override void OnObjectInteractionEnter()
     {
-        if (BossDungeonManager.Instance.AllKeysCollected)
+        if (BossDungeonManager.Instance.IsAllKeysCollected)
         {
             _soundList.PlaySFX("Open");
             SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenCoroutine()));
@@ -43,7 +43,7 @@ public class BossDoor : InteractableObject
     }
     public override void UpdateInteracting()
     {
-        if (BossDungeonManager.Instance.AllKeysCollected)
+        if (BossDungeonManager.Instance.IsAllKeysCollected)
         {
 
         }

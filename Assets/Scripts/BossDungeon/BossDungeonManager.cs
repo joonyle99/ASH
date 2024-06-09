@@ -8,7 +8,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     [SerializeField] private SoundClipData _bossDungeonBGM;
 
     public int CurrentKeyCount => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount");
-    public bool AllKeysCollected => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount") == _maxKeyCount;
+    public bool IsAllKeysCollected => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount") == _maxKeyCount;
 
     protected override void Awake()
     {

@@ -46,7 +46,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
 
     public void OnSceneContextBuilt()
     {
-        if (BossDungeonManager.Instance != null)
+        if (BossDungeonManager.Instance)
         {
             // Debug.Log("Open BossKeyPanel");
 
