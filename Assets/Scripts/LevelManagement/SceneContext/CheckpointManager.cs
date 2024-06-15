@@ -9,7 +9,7 @@ public class CheckpointManager : MonoBehaviour
         LatestCheckpointPosition = checkpoint.SpawnPosition;
     }
 
-    public Result BuildPlayable()
+    public Result CheckPointBuild()
     {
         Result buildResult = Result.Success;
 

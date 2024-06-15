@@ -2,20 +2,16 @@ using System.Collections;
 using UnityEngine;
 
 using Com.LuisPedroFonseca.ProCamera2D;
+using UnityEngine.Rendering.Universal;
 
+/// <summary>
+/// 각각의 Main 카메라에 붙어있는 컴포넌트
+/// 씬 컨텍스트 빌드 시 OnSceneContextBuilt() 함수가 호출된다.
+/// </summary>
 public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
-    struct InitialSettings
-    {
-        public Vector2 Offset;
-        public Vector2 FollowSmoothness;
-    }
-
-    // private InitialSettings _initialSettings;
-
     private ProCamera2D _proCamera;
     private ProCamera2DShake _shakeComponent;
-    private ProCamera2DZoomToFitTargets _fitComponent;
 
     public float OffsetX
     {
@@ -32,29 +28,20 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         _proCamera = GetComponent<ProCamera2D>();
         _shakeComponent = GetComponent<ProCamera2DShake>();
-        _fitComponent = GetComponent<ProCamera2DZoomToFitTargets>();
-
-        /*
-        _initialSettings = new InitialSettings
-        {
-            Offset = new Vector2(OffsetX, OffsetY),
-            FollowSmoothness = new Vector2(_proCamera.HorizontalFollowSmoothness, _proCamera.VerticalFollowSmoothness)
-        };
-        */
-    }
-
-    private void Start()
-    {
-        // Test
-        // TestShake();
     }
 
     // settings
     public void OnSceneContextBuilt()
     {
+        Debug.Log("call OnSceneContextBuilt");
+
         _proCamera.enabled = true;
+
         if (SceneContext.Current.Player)
             _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
+        else
+            Debug.LogWarning("Player not found in the scene");
+
         SnapFollow();
     }
     public void ResetCameraSettings()
@@ -86,48 +73,59 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         _proCamera.AddCameraTargets(targets);
     }
-    public void FollowOnly(Transform target)
+    public void RemoveFollowTarget(Transform target)
     {
-        _proCamera.RemoveAllCameraTargets();
-        _proCamera.AddCameraTarget(target);
+        _proCamera.RemoveCameraTarget(target);
     }
     public void RemoveFollowTargets(Transform[] targets)
     {
+        // _proCamera.RemoveAllCameraTargets();
+
         foreach (var target in targets)
         {
-            if (target != null)
-                _proCamera.RemoveCameraTarget(target);
+            _proCamera.RemoveCameraTarget(target);
         }
     }
     public void StartFollow(Transform target, bool removeExisting = true)
     {
         if (removeExisting)
-            _proCamera.RemoveAllCameraTargets();            
+            _proCamera.RemoveAllCameraTargets();
+        
         _proCamera.AddCameraTarget(target);
     }
-    public void RemoveFollowTarget(Transform target)
+    public void FollowOnly(Transform target)
     {
-        _proCamera.RemoveCameraTarget(target);
+        _proCamera.RemoveAllCameraTargets();
+        _proCamera.AddCameraTarget(target);
     }
     public void DisableCameraFollow()
     {
+        // 0에 가까울 수록 빠르게 따라감
         _proCamera.HorizontalFollowSmoothness = 100f;
         _proCamera.VerticalFollowSmoothness = 100f;
     }
     public void SnapFollow()
     {
-        StartCoroutine(SnapFollowCoroutine());
+        // StartCoroutine(SnapFollowCoroutine());
     }
     private IEnumerator SnapFollowCoroutine()
     {
+        Debug.Log("call snap follow coroutine");
+
         float originalSmoothnessX = _proCamera.HorizontalFollowSmoothness;
         float originalSmoothnessY = _proCamera.VerticalFollowSmoothness;
+
+        // Debug.Log($"_proCamera.HorizontalFollowSmoothness: {_proCamera.HorizontalFollowSmoothness} \n _proCamera.VerticalFollowSmoothness: {_proCamera.VerticalFollowSmoothness}");
+
         _proCamera.HorizontalFollowSmoothness = 0;
         _proCamera.VerticalFollowSmoothness = 0;
+
         yield return null;
+
         _proCamera.HorizontalFollowSmoothness = originalSmoothnessX;
         _proCamera.VerticalFollowSmoothness = originalSmoothnessY;
 
+        // Debug.Log($"_proCamera.HorizontalFollowSmoothness: {_proCamera.HorizontalFollowSmoothness} \n _proCamera.VerticalFollowSmoothness: {_proCamera.VerticalFollowSmoothness}");
     }
 
     // effect: shake

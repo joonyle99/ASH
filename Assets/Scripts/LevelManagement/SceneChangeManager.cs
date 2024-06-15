@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 씬 전환을 담당하는 매니저
+/// SceneChangeManager GameObject
+///     -> SceneChangeManager
+///     -> SceneTransitionPlayer
+///     -> PlayerableSceneTransitionPlayer
 /// </summary>
 public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChangeManager>, ISceneContextBuildListener
 {

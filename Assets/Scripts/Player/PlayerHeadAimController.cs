@@ -1,5 +1,3 @@
-using System;
-using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 
 public class PlayerHeadAimController : MonoBehaviour
@@ -38,7 +36,7 @@ public class PlayerHeadAimController : MonoBehaviour
     }
     void Start()
     {
-        _defaultCameraOffsetY = SceneContext.Current.Camera.OffsetY;
+        _defaultCameraOffsetY = SceneContext.Current.ProCamera.OffsetY;
         _defaultHeadAimValue = _player.Animator.GetFloat("HeadAimValue");
 
         headAimValue = _defaultHeadAimValue;
@@ -97,24 +95,24 @@ public class PlayerHeadAimController : MonoBehaviour
 
     private void CameraOffsetControl()
     {
-        var cameraPosY = SceneContext.Current.Camera.OffsetY;
+        var cameraPosY = SceneContext.Current.ProCamera.OffsetY;
 
         cameraPosY += Time.deltaTime * cameraMoveSpeed * _cameraMoveDir;
         cameraPosY = Mathf.Clamp(cameraPosY, _defaultCameraOffsetY - cameraOffsetLimit,
             _defaultCameraOffsetY + cameraOffsetLimit);
         cameraPosY = Mathf.Clamp(cameraPosY, -1f, 1f);
 
-        SceneContext.Current.Camera.OffsetY = cameraPosY;
+        SceneContext.Current.ProCamera.OffsetY = cameraPosY;
     }
     private void CameraOffsetReturn()
     {
-        var cameraPosY = SceneContext.Current.Camera.OffsetY;
+        var cameraPosY = SceneContext.Current.ProCamera.OffsetY;
         _cameraMoveDir = cameraPosY > _defaultCameraOffsetY ? -1f : 1f;
 
         if (Mathf.Abs(cameraPosY - _defaultCameraOffsetY) > 0.001f)
         {
             cameraPosY += Time.deltaTime * cameraReturnMoveSpeed * _cameraMoveDir;
-            SceneContext.Current.Camera.OffsetY = cameraPosY;
+            SceneContext.Current.ProCamera.OffsetY = cameraPosY;
         }
     }
 }

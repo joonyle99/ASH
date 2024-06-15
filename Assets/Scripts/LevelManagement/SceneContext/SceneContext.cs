@@ -12,7 +12,7 @@ public class SceneContext : MonoBehaviour
 
     // basic
     public PlayerBehaviour Player { get; private set; }
-    public ProCamera2D Camera { get; private set; }
+    public ProCamera2D ProCamera { get; private set; }
 
     // extra
     public Passage EntrancePassage { get; private set; }                                                                                // 씬의 입구
@@ -25,7 +25,7 @@ public class SceneContext : MonoBehaviour
     protected void Awake()
     {
         Current = this;
-        Camera = FindObjectOfType<ProCamera2D>();
+        ProCamera = FindObjectOfType<ProCamera2D>();
 
         // SceneContext에 체크포인트 매니저를 추가한다
         if (_checkpointManager == null)
@@ -83,7 +83,7 @@ public class SceneContext : MonoBehaviour
         CheckBuildResult(EntrancePassage);
 
         // build
-        Result checkpointBuildResult = _checkpointManager.BuildPlayable();
+        Result checkpointBuildResult = _checkpointManager.CheckPointBuild();
         if (checkpointBuildResult == Result.Fail)
             buildResult = Result.Fail;
 
@@ -114,17 +114,17 @@ public class SceneContext : MonoBehaviour
             }
         }
 
-        // broadcast OnLoad()
+        // broadcast to all scene context build listener
         if (buildResult == Result.Success)
         {
-            var monoBehaviour = FindObjectsOfType<MonoBehaviour>();
-            var buildListener = monoBehaviour.OfType<ISceneContextBuildListener>();
+            var monoBehaviours = FindObjectsOfType<MonoBehaviour>();
+            var buildListeners = monoBehaviours.OfType<ISceneContextBuildListener>();
 
-            foreach (var listener in buildListener)
+            foreach (var buildListener in buildListeners)
             {
                 // Debug.Log($"SceneContextBuildListener: {name}");
 
-                listener.OnSceneContextBuilt();
+                buildListener.OnSceneContextBuilt();
             }
         }
 
