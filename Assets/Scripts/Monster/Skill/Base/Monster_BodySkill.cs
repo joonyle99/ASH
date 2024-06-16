@@ -11,7 +11,7 @@ public class Monster_BodySkill : Monster_Skill
         base.Awake();
 
         // BodySkill의 경우 Actor를 자동으로 설정해준다
-        actor = GetComponent<MonsterBehavior>() ?? GetComponentInParent<MonsterBehavior>();
+        actor = GetComponent<MonsterBehaviour>() ?? GetComponentInParent<MonsterBehaviour>();
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)

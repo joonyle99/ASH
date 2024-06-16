@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public sealed class Bear : BossBehavior, ILightCaptureListener
+public sealed class Bear : BossBehaviour, ILightCaptureListener
 {
     public enum AttackType
     {
-        Null = 0,
+        None = 0,
 
         // Normal Attack
         SlashRight,
@@ -16,33 +16,33 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         BodySlam,
         Stomp,
 
-        // Special Attack
+        // Ultimate Attack
         EarthQuake = 10
     }
 
     #region Variable
 
-    [Header("Bear")]
+    [Header("――――――― Bear Behaviour ―――――――")]
     [Space]
 
-    [Tooltip("1 : Slash Right\r\n2 : Slash Left\r\n3 : BodySlam\r\n4 : Stomp")]
+    [Tooltip("1 : Slash Right\n2 : Slash Left\n3 : BodySlam\n4 : Stomp")]
     [SerializeField] private Range _attackTypeRange;
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
-    [Header("Skill: Slash")]
+    [Header("____ Slash ____")]
     [Space]
 
     [SerializeField] private Bear_Slash _slash01;
     [SerializeField] private Bear_Slash _slash02;
     private Vector2 _playerPos;
 
-    [Header("Skill: BodySlam")]
+    [Header("____ BodySlam ____")]
     [Space]
 
     [SerializeField] private float _bodySlamPower;
 
-    [Header("Skill: Stomp")]
+    [Header("____ Stomp ____")]
     [Space]
 
     [SerializeField] private Bear_Stomp _stomp;
@@ -53,10 +53,13 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
 
     [SerializeField] private int _stalactiteCount;
     [SerializeField] private float _ceilingHeight;
+
+    [Space]
+
+    [SerializeField] private float _minDistanceEach;
     [SerializeField] private Range _createTimeRange;
     [SerializeField] private Range _createSizeRange;
     [SerializeField] private Range _distanceRange;
-    [SerializeField] private float _minDistanceEach;
 
     private List<float> _usedPosX;
 
@@ -65,7 +68,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     [SerializeField] private Range _normalStalactiteRange;
     [SerializeField] private Range _rageStalactiteRange;
 
-    [Header("Skill: Earthquake")]
+    [Header("____ Earthquake ____")]
     [Space]
 
     [SerializeField] private Transform _waveSpawnPoint;
@@ -75,34 +78,12 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     [Header("Cutscene")]
     [Space]
 
-    [SerializeField] private CutscenePlayerList _cutscenePlayerList;
-
-    [Space]
-
     [SerializeField] private bool _isAbleLightGuide = true;
-    [SerializeField] private bool _isAbleChangeRage = true;
     [SerializeField] private int _totalEarthquakeCount;
     public int TotalEarthquakeCount
     {
         get => _totalEarthquakeCount;
         private set => _totalEarthquakeCount = value;
-    }
-    [SerializeField] private int _totalHitCount;
-    public int TotalHitCount
-    {
-        get => _totalHitCount;
-        private set
-        {
-            _totalHitCount = value;
-
-            if (_totalHitCount == finalTargetHurtCount / 2 && _isAbleChangeRage)
-            {
-                Debug.Log("Change RageState 컷씬 호출");
-
-                _isAbleChangeRage = false;
-                StartCoroutine(PlayCutSceneInRunning("Change RageState"));
-            }
-        }
     }
 
     [Header("After Dead")]
@@ -111,6 +92,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;             // 색이 서서히 돌아오는 효과
     [SerializeField] private ParticleSystem[] _disintegrateEffects;                             // 잿가루 효과 파티클
     [SerializeField] private GameObject _bossKnockDownGameObject;                               // 넉다음 이미지 오브젝트
+
     [Space]
 
     [SerializeField] private float _distanceFromBear;                                           // 흑곰으로부터 떨어져야하는 거리
@@ -123,11 +105,11 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     {
         base.Start();
 
-        monsterData.MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
-        CurHp = monsterData.MaxHp;
-        IsGodMode = true;
-
         SetToRandomAttack();
+
+        // 흑곰은 기본적으로 무적 상태이다
+        // 빛 스킬을 맞았을 경우에만 무적 상태가 해제된다
+        IsGodMode = true;
     }
     public void FixedUpdate()
     {
@@ -144,31 +126,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
             if (GroundMovementModule)
                 GroundMovementModule.AffectGravity();
         }
-    }
-
-    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
-    {
-        if (IsGodMode || IsDead)
-            return IAttackListener.AttackResult.Fail;
-
-        // Hit Process
-        HitProcess(attackInfo, false, false);
-
-        // 체력 감소
-        TotalHitCount++;
-        currentHitCount++;
-        CurHp -= MonsterDefine.BossHealthUnit;
-
-        CheckHurtState();
-
-        return IAttackListener.AttackResult.Success;
-    }
-    public override void Die(bool isHitBoxDisable, bool isDeathProcess)
-    {
-        // 보스는 사망 이펙트를 재생하지 않는다
-        base.Die(true, false);
-
-        StartCoroutine(SlowMotionCoroutine(5f));
     }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
@@ -188,12 +145,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     {
         // 현재 공격 상태 변경
         _currentAttack = _nextAttack;
-
-        if (_currentAttack is AttackType.Null || _nextAttack is AttackType.Null)
-        {
-            Debug.LogError("AttackType is Null");
-            return;
-        }
 
         if (_currentAttack is AttackType.EarthQuake)
         {
@@ -258,23 +209,22 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     private void SetToRandomAttack()
     {
         int nextAttackNumber = (int)_attackTypeRange.Random();
-        _nextAttack = (AttackType)nextAttackNumber;
-        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
+
+        if (System.Enum.IsDefined(typeof(AttackType), nextAttackNumber))
+        {
+            _nextAttack = (AttackType)nextAttackNumber;
+            Animator.SetInteger("NextAttackNumber", nextAttackNumber);
+        }
+        else
+        {
+            Debug.LogError("<color=red>Invalid AttackType generated</color>");
+            _nextAttack = AttackType.None;
+        }
     }
     private void SetToEarthQuake()
     {
         _nextAttack = AttackType.EarthQuake;
         Animator.SetInteger("NextAttackNumber", (int)_nextAttack);
-    }
-    public void CheckHurtState()
-    {
-        if (IsDead) return;
-
-        // 그로기 상태 해제되며 피격
-        if (currentHitCount >= targetHitCount)
-        {
-            SetAnimatorTrigger("Hurt");
-        }
     }
 
     // slash
@@ -420,12 +370,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
     }
 
     // effects
-    public IEnumerator SlowMotionCoroutine(float duration)
-    {
-        Time.timeScale = 0.3f;
-        yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1f;
-    }
     public void StartAfterDeath()
     {
         // 병렬적으로 코루틴을 실행
@@ -477,7 +421,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         yield return StartCoroutine(ChangeBackgroundCoroutine());
 
         // 최종 컷씬 재생
-        _cutscenePlayerList.PlayCutscene("Final CutScene");
+        cutscenePlayerList.PlayCutscene("Final CutScene");
     }
     public IEnumerator ChangeImageCoroutine()
     {
@@ -523,18 +467,6 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         yield return new WaitUntil(() => effect.IsEffectDone);
         Destroy(transform.parent ? transform.parent.gameObject : gameObject);
     }
-    private IEnumerator PlayCutSceneInRunning(string cutsceneName)
-    {
-        yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
-
-        _cutscenePlayerList.PlayCutscene(cutsceneName);
-    }
-    private IEnumerator PlayCutSceneInRunning(CutscenePlayer cutscenePlayer)
-    {
-        yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
-
-        _cutscenePlayerList.PlayCutscene(cutscenePlayer);
-    }
 
     #endregion
 
@@ -544,7 +476,7 @@ public sealed class Bear : BossBehavior, ILightCaptureListener
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector3(transform.position.x - 25f, _ceilingHeight, transform.position.z), new Vector3(transform.position.x + 25f, _ceilingHeight, transform.position.z));
 
-        if (! MainBodyCollider2D) return;
+        if (!MainBodyCollider2D) return;
 
         // 오른쪽 종유석 범위
         Gizmos.color = Color.yellow;

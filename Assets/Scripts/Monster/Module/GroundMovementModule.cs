@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class GroundMovementModule : MonoBehaviour
 {
-    private MonsterBehavior _monster;
+    private MonsterBehaviour _monster;
 
     void Awake()
     {
-        _monster = GetComponent<MonsterBehavior>();
+        _monster = GetComponent<MonsterBehaviour>();
     }
 
     public void AffectGravity()

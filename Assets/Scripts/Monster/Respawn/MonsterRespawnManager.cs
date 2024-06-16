@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterRespawnManager>
 {
     // 씬에 존재하는 모든 몬스터 리스트
-    public List<MonsterBehavior> MonsterList;
+    public List<MonsterBehaviour> MonsterList;
 
     // 몬스터가 사망 후에 리스폰 되기까지의 시간
     public Range RespawnTimeRange;
@@ -19,11 +19,11 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         // 모든 몬스터를 찾고, 리스트에 추가한다
-        var monsterArray = FindObjectsOfType<MonsterBehavior>();
-        MonsterList = new List<MonsterBehavior>(monsterArray);
+        var monsterArray = FindObjectsOfType<MonsterBehaviour>();
+        MonsterList = new List<MonsterBehaviour>(monsterArray);
     }
 
-    public void NotifyDeath(MonsterBehavior monsterBehavior)
+    public void NotifyDeath(MonsterBehaviour monsterBehavior)
     {
         if (!MonsterList.Contains(monsterBehavior))
         {
@@ -34,7 +34,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         var respawnTime = RespawnTimeRange.Random();
         StartCoroutine(RespawnCoroutine(monsterBehavior, respawnTime));
     }
-    private IEnumerator RespawnCoroutine(MonsterBehavior monsterBehavior, float respawnTime)
+    private IEnumerator RespawnCoroutine(MonsterBehaviour monsterBehavior, float respawnTime)
     {
         // 데이터를 가져온다
         var monsterData = monsterBehavior.monsterData;
@@ -47,7 +47,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         AddProcess(monsterData, respawnData);
     }
 
-    private void RemoveProcess(MonsterBehavior monster)
+    private void RemoveProcess(MonsterBehaviour monster)
     {
         //Debug.Log($"removed monster hash code: {monster.GetHashCode()}");
 
@@ -57,7 +57,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         // 몬스터를 씬에서 삭제한다
         monster.DestroyMonsterPrefab();
     }
-    private void AddProcess(MonsterBehavior.MonsterData monsterData, MonsterBehavior.RespawnData respawnData)
+    private void AddProcess(MonsterBehaviour.MonsterData monsterData, MonsterBehaviour.RespawnData respawnData)
     {
         // Debug.Log("Monster Add Process");
 
@@ -86,7 +86,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         // 행동 반경 정보를 추출한다
         var respawnDataSender = prefabInstance.GetComponentInChildren<ActionAreaDataSender>();
         // 프리팹의 자식에 있는 실질적인 몬스터를 추출한다
-        var monsterBehavior = prefabInstance.GetComponentInChildren<MonsterBehavior>();
+        var monsterBehavior = prefabInstance.GetComponentInChildren<MonsterBehaviour>();
 
         // TEMP: 임시 함수
         InstantFunction(monsterBehavior);
@@ -111,7 +111,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     /// <param name="actionAreaDataSender"></param>
     /// <param name="moveType"></param>
     /// <param name="respawnData"></param>
-    private void UpdateActionAreaInfo(ActionAreaDataSender actionAreaDataSender, MonsterDefine.MoveType moveType, MonsterBehavior.RespawnData respawnData)
+    private void UpdateActionAreaInfo(ActionAreaDataSender actionAreaDataSender, MonsterDefine.MoveType moveType, MonsterBehaviour.RespawnData respawnData)
     {
         Debug.Log("리스폰된 몬스터의 활동 영역 정보를 업데이트");
 
@@ -162,7 +162,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     /// <param name="monsterTransform"></param>
     /// <param name="moveType"></param>
     /// <param name="respawnData"></param>
-    private void UpdateMonsterRespawnPosition(Transform monsterTransform, MonsterDefine.MoveType moveType, MonsterBehavior.RespawnData respawnData)
+    private void UpdateMonsterRespawnPosition(Transform monsterTransform, MonsterDefine.MoveType moveType, MonsterBehaviour.RespawnData respawnData)
     {
         Debug.Log("리스폰된 몬스터의 리스폰 위치 업데이트");
 
@@ -217,7 +217,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         monsterTransform.position = respawnPos;
     }
 
-    private void InstantFunction(MonsterBehavior monsterBehavior)
+    private void InstantFunction(MonsterBehaviour monsterBehavior)
     {
         // TEMP: 몬스터의 Material을 변경해줘야 1프레임 동안 이미지가 보이는 버그를 수정할 수 있다.
         monsterBehavior.GetComponent<MaterialController>().InitMaterialForRespawn();
@@ -236,7 +236,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         MonsterList.Clear();
 
         // 모든 몬스터를 찾고, 리스트에 추가한다
-        var monsterArray = FindObjectsOfType<MonsterBehavior>();
-        MonsterList = new List<MonsterBehavior>(monsterArray);
+        var monsterArray = FindObjectsOfType<MonsterBehaviour>();
+        MonsterList = new List<MonsterBehaviour>(monsterArray);
     }
 }

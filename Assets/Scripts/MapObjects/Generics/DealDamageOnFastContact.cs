@@ -30,7 +30,7 @@ public class DealDamageOnFastContact : MonoBehaviour, ICollisionWithPlayerListen
             OnPlayerEnter(player);
             return;
         }
-        MonsterBehavior monster = collision.transform.GetComponent<MonsterBehavior>();
+        MonsterBehaviour monster = collision.transform.GetComponent<MonsterBehaviour>();
         if (monster != null)
         {
             if (_rigidbody.velocity.sqrMagnitude > Mathf.Pow(_threatVelocityThreshold, 2))

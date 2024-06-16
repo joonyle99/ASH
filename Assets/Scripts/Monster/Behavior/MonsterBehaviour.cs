@@ -6,7 +6,7 @@ using UnityEngine.AI;
 /// <summary>
 /// 몬스터의 기본 행동을 정의하는 추상클래스
 /// </summary>
-public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
+public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 {
     /// <summary>
     /// 몬스터 데이터를 캡슐화하는 클래스
@@ -33,11 +33,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // prefab_(monster name)의 기본 위치
         public Vector3 DefaultPrefabPosition;
 
-        // 개구리
+        // Ground 몬스터
         // Patrol Point 사이에서 생성된다.
         public GroundActionAreaData groundActionAreaData;
 
-        // 박쥐
+        // Floating 몬스터
         // Patrol Area 내부에서 랜덤으로 생성된다.
         public FloatingActionAreaData floatingActionAreaData;
     }
@@ -66,6 +66,9 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     public GroundChaseEvaluator GroundChaseEvaluator { get; private set; }
     public FloatingChaseEvaluator FloatingChaseEvaluator { get; private set; }
     public AttackEvaluator AttackEvaluator { get; private set; }
+
+    [Header("――――――― Monster Behaviour ―――――――")]
+    [Space]
 
     [Header("Condition")]
     [Space]
@@ -245,11 +248,11 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
     protected virtual void Start()
     {
-        InitData();
+        InitMonsterData();
 
-        InitCondition();
+        InitMonsterCondition();
 
-        InitState();
+        InitMonsterState();
     }
     protected virtual void Update()
     {
@@ -356,7 +359,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
     }
 
     // init
-    private void InitData()
+    private void InitMonsterData()
     {
         // 몬스터의 이름
         monsterData.MonsterName = _monsterDataObject.Name.ToString();
@@ -379,7 +382,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
         // 몬스터의 점프파워
         monsterData.JumpForce = _monsterDataObject.JumpForce;
     }
-    private void InitCondition()
+    private void InitMonsterCondition()
     {
         RecentDir = DefaultDir;
 
@@ -390,7 +393,7 @@ public abstract class MonsterBehavior : MonoBehaviour, IAttackListener
 
         CurHp = monsterData.MaxHp;
     }
-    private void InitState()
+    private void InitMonsterState()
     {
         // Bring Entry State
         int initialPathHash = Animator.GetCurrentAnimatorStateInfo(0).fullPathHash;

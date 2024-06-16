@@ -34,7 +34,7 @@ public abstract class Evaluator : MonoBehaviour
         set => _isDuringCoolTime = value;
     }
 
-    protected MonsterBehavior monster;
+    protected MonsterBehaviour monster;
     private Coroutine _coolTimeCoroutine;
 
     // 판독 이벤트 정의
@@ -44,7 +44,7 @@ public abstract class Evaluator : MonoBehaviour
 
     public virtual void Awake()
     {
-        monster = GetComponent<MonsterBehavior>();
+        monster = GetComponent<MonsterBehaviour>();
         _startUsableFlag = IsUsable;
     }
     public virtual void OnDisable()
@@ -113,7 +113,7 @@ public abstract class Evaluator : MonoBehaviour
         IsDuringCoolTime = false;
         // Debug.Log("타이머 종료");
     }
-    public virtual MonsterBehavior.ActionDelegate StartEvaluatorCoolTime()
+    public virtual MonsterBehaviour.ActionDelegate StartEvaluatorCoolTime()
     {
         if (_targetEvaluatorCoolTime < 0.01f)
         {

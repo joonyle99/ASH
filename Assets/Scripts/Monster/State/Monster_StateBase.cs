@@ -20,13 +20,13 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     public float ElapsedStayTime;
 
     // Monster Behavior
-    public MonsterBehavior Monster { get; private set; }
+    public MonsterBehaviour Monster { get; private set; }
 
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         // Debug.Log($"{this.GetType().Name} enter");
 
-        Monster = animator.GetComponent<MonsterBehavior>();     // Get Monster Behavior when State Enter
+        Monster = animator.GetComponent<MonsterBehaviour>();     // Get Monster Behavior when State Enter
         Monster.UpdateState(this);                              // Update Monster State when State Enter
 
         if (IsAutoStateTransition)

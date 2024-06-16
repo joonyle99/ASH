@@ -6,7 +6,7 @@ public abstract class ActionAreaDataSender : MonoBehaviour
     [Space]
 
     [SerializeField]
-    protected MonsterBehavior receiver;
+    protected MonsterBehaviour receiver;
 
     protected void Start()
     {

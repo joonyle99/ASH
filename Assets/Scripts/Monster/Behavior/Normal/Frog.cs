@@ -1,4 +1,4 @@
-public sealed class Frog : MonsterBehavior
+public sealed class Frog : MonsterBehaviour
 {
     protected override void Awake()
     {

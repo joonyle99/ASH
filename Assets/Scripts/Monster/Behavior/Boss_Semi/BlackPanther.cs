@@ -3,22 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public sealed class BlackPanther : BossBehavior, ILightCaptureListener
+public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 {
     public enum AttackType
     {
-        Null = 0,
+        None = 0,
 
+        // Normal Attack
         VineMissile,
-        VinePillar
+        VinePillar,
+
+        // Ultimate Attack
     }
 
     #region Variable
 
-    [Header("BlackPanther")]
+    [Header("――――――― BlackPanther Behaviour ―――――――")]
     [Space]
 
-    [Tooltip("1 : VineMissile\r\n2 : VinePillar\r\n")]
+    [Tooltip("1 : VineMissile\n2 : VinePillar")]
     [SerializeField] private Range _attackTypeRange;
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
@@ -26,8 +29,9 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [Space]
 
     [SerializeField] private GameObject _luminescence;
+    public bool isActiveLuminescence => _luminescence.activeInHierarchy;
 
-    [Header("VineMissile")]
+    [Header("____ VineMissile ____")]
     [Space]
 
     [SerializeField] private BlackPanther_VineMissile _missile;
@@ -43,7 +47,7 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     private Vector2 _targetPos;
     private BlackPanther_VineMissile _currentMissile;
 
-    [Header("VinePillar")]
+    [Header("____ VinePillar ____")]
     [Space]
 
     [SerializeField] private BlackPanther_VinePillar _pillar;
@@ -62,8 +66,6 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     [SerializeField] private ParticleSystem _dustEffect;
     [SerializeField] private float _dustDistFromPillar;
 
-    public bool isActiveLuminescence => _luminescence.activeInHierarchy;
-
     #endregion
 
     #region Function
@@ -71,10 +73,6 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
     protected override void Start()
     {
         base.Start();
-
-        // overwrite
-        monsterData.MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
-        CurHp = monsterData.MaxHp;
 
         SetToRandomAttack();
     }
@@ -95,29 +93,6 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
         }
     }
 
-    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
-    {
-        if (IsGodMode || IsDead)
-            return IAttackListener.AttackResult.Fail;
-
-        // Hit Process
-        HitProcess(attackInfo, false, false);
-
-        // 체력 감소
-        CurHp -= MonsterDefine.BossHealthUnit;
-
-        CheckHurtState();
-
-        return IAttackListener.AttackResult.Success;
-    }
-    public override void Die(bool isHitBoxDisable, bool isDeathProcess)
-    {
-        // 보스는 사망 이펙트를 재생하지 않는다
-        base.Die(true, false);
-
-        StartCoroutine(SlowMotionCoroutine(5f));
-    }
-
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {
         if (IsDead || IsGroggy || !IsCapturable)
@@ -133,25 +108,11 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
         // 현재 공격 상태 변경
         _currentAttack = _nextAttack;
 
-        if (!isActiveLuminescence)
-        {
-            IsGodMode = true;
-        }
-
-        if (_currentAttack is AttackType.Null || _nextAttack is AttackType.Null)
-        {
-            Debug.LogError("AttackType is Null");
-            return;
-        }
+        currentAttackCount++;
     }
     public override void AttackPostProcess()
     {
         SetToRandomAttack();
-
-        if (!isActiveLuminescence)
-        {
-            IsGodMode = false;
-        }
     }
     public override void GroggyPreProcess()
     {
@@ -168,29 +129,24 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
 
         // 몬스터의 Body HitBox를 켠다 (플레이어를 타격할 수 있다)
         SetHitBoxAttackable(true);
+
+        currentHitCount = 0;
     }
 
     // basic
     private void SetToRandomAttack()
     {
         int nextAttackNumber = (int)_attackTypeRange.Random();
-        _nextAttack = (AttackType)nextAttackNumber;
-        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
-    }
-    public void CheckHurtState()
-    {
-        if (IsDead) return;
 
-        if (!isActiveLuminescence)
+        if (System.Enum.IsDefined(typeof(AttackType), nextAttackNumber))
         {
-            IsGodMode = true;
-            SetAnimatorTrigger("Roar");
-            return;
+            _nextAttack = (AttackType)nextAttackNumber;
+            Animator.SetInteger("NextAttackNumber", nextAttackNumber);
         }
-
-        if (CurrentStateIs<BossGroggyState>())
+        else
         {
-            SetAnimatorTrigger("Hurt");
+            Debug.LogError("<color=red>Invalid AttackType generated</color>");
+            _nextAttack = AttackType.None;
         }
     }
     public void SetActiveLuminescence(bool isBool)
@@ -237,7 +193,7 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
             float newPosXInRange;
             do
             {
-                newPosXInRange = Random.Range(transform.position.x - _pillarFarDistFromCaster,
+                newPosXInRange = UnityEngine.Random.Range(transform.position.x - _pillarFarDistFromCaster,
                     transform.position.x + _pillarFarDistFromCaster);
 
                 posReallocationCount++;
@@ -280,14 +236,6 @@ public sealed class BlackPanther : BossBehavior, ILightCaptureListener
         var pos = new Vector2(createPosX, _floorHeight);
         var pillar = Instantiate(_pillar, pos, Quaternion.identity);
         pillar.Opacity();
-    }
-
-    // effects
-    public IEnumerator SlowMotionCoroutine(float duration)
-    {
-        Time.timeScale = 0.3f;
-        yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1f;
     }
 
     #endregion

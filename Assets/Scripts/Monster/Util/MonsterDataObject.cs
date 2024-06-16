@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "MonsterDataObject", order = 1)]
+[CreateAssetMenu(fileName = "MonsterData", menuName = "Monster/MonsterData", order = 0)]
 public class MonsterDataObject : ScriptableObject
 {
     // 몬스터 이름

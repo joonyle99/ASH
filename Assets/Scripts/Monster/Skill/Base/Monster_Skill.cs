@@ -10,7 +10,7 @@ public abstract class Monster_Skill : MonoBehaviour
     [Header("Monster Skill")]
     [Space]
 
-    [SerializeField] protected MonsterBehavior actor;
+    [SerializeField] protected MonsterBehaviour actor;
     [SerializeField] protected LayerMask targetLayer;
 
     [Space]
@@ -71,7 +71,7 @@ public abstract class Monster_Skill : MonoBehaviour
         }
     }
 
-    public void SetActor(MonsterBehavior act)
+    public void SetActor(MonsterBehaviour act)
     {
         this.actor = act;
     }

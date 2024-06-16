@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public sealed class Mushroom : MonsterBehavior, ILightCaptureListener
+public sealed class Mushroom : MonsterBehaviour, ILightCaptureListener
 {
     [Header("Mushroom")]
     [Space]

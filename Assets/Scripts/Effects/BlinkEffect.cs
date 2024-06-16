@@ -11,7 +11,7 @@ public class BlinkEffect : MonoBehaviour
     public bool IsBlinking => _isBlinking;
 
     private PlayerBehaviour _player;
-    private MonsterBehavior _monster;
+    private MonsterBehaviour _monster;
 
     private MaterialController _materialController;
 
@@ -21,7 +21,7 @@ public class BlinkEffect : MonoBehaviour
     {
         // subject
         _player = GetComponent<PlayerBehaviour>();
-        _monster = GetComponent<MonsterBehavior>();
+        _monster = GetComponent<MonsterBehaviour>();
 
         _materialController = GetComponent<MaterialController>();
     }

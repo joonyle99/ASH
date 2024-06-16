@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MonsterBlocking : MonoBehaviour
 {
-    public MonsterBehavior monster;
+    public MonsterBehaviour monster;
 
     private void Start()
     {

@@ -1,4 +1,4 @@
-public sealed class Turtle : MonsterBehavior
+public sealed class Turtle : MonsterBehaviour
 {
     private PreserveState _statePreserver;
 

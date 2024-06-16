@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public sealed class Bat : MonsterBehavior
+public sealed class Bat : MonsterBehaviour
 {
     [Header("Bat")]
     [Space]

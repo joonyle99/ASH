@@ -1,4 +1,4 @@
-public sealed class Fire : BossBehavior
+public sealed class Fire : BossBehaviour
 {
     public enum FireAttackType
     {

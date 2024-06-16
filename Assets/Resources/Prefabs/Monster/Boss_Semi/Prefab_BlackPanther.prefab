@@ -3117,6 +3117,7 @@ MonoBehaviour:
   <IsHurt>k__BackingField: 0
   <IsDead>k__BackingField: 0
   <IsRespawn>k__BackingField: 0
+  <IsCapturable>k__BackingField: 0
   _monsterDataObject: {fileID: 11400000, guid: 5a327d6de20afb044a1c081cf3935a83, type: 2}
   monsterData:
     MonsterName: 
@@ -3146,7 +3147,7 @@ MonoBehaviour:
   <CenterOfMass>k__BackingField: {fileID: 5269891688089487433}
   <IsGroggy>k__BackingField: 0
   <IsRage>k__BackingField: 0
-  finalTargetHurtCount: 6
+  finalTargetHurtCount: 18
   attackCountRange:
     Start: 1
     End: 1
@@ -3157,6 +3158,9 @@ MonoBehaviour:
     End: 1
   targetHitCount: 0
   currentHitCount: 0
+  _totalHitCount: 0
+  cutscenePlayerList: {fileID: 0}
+  _isAbleChangeRage: 1
   _attackTypeRange:
     Start: 1
     End: 2
@@ -3390,7 +3394,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b2e3d95dc54be64c939388064af2c83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cutsceneDictionary: []
+  _cutsceneDictionary:
+  - name: Change RageState
+    cutscenePlayer: {fileID: 0}
 --- !u!210 &5269891687269057860
 SortingGroup:
   m_ObjectHideFlags: 0
