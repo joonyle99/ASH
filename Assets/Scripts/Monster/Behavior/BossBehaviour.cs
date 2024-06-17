@@ -49,9 +49,6 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     [SerializeField] protected CutscenePlayerList cutscenePlayerList;
 
-    [Space]
-
-    [SerializeField] private bool _isAbleChangeRage = true;
     public int TotalHitCount
     {
         get => _totalHitCount;
@@ -59,11 +56,10 @@ public abstract class BossBehaviour : MonsterBehaviour
         {
             _totalHitCount = value;
 
-            if (_totalHitCount == finalTargetHurtCount / 2 && _isAbleChangeRage)
+            if (_totalHitCount == finalTargetHurtCount / 2 && !IsRage)
             {
                 Debug.Log("Change RageState ÄÆ¾À È£Ãâ");
 
-                _isAbleChangeRage = false;
                 StartCoroutine(PlayCutSceneInRunning("Change RageState"));
             }
         }

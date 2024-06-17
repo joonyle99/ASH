@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 /// <summary>
@@ -34,8 +35,18 @@ public abstract class Evaluator : MonoBehaviour
         set => _isDuringCoolTime = value;
     }
 
+    [Space]
+
+    [SerializeField] private bool _useWaitingEvent;
+    public bool UseWaitingEvent
+    {
+        get => _useWaitingEvent;
+        set => _useWaitingEvent = value;
+    }
+
     protected MonsterBehaviour monster;
     private Coroutine _coolTimeCoroutine;
+    private Coroutine _waitCoroutine;
 
     // 판독 이벤트 정의
     protected delegate void EvaluationDelegate(Vector3 targetPoint);        // void EvaluationDelegate(Vector3 targetPoint)이라는 델리게이트(대리자) 선언
@@ -104,16 +115,16 @@ public abstract class Evaluator : MonoBehaviour
 
     private IEnumerator CoolTimeCoroutine()
     {
-        // Debug.Log("타이머 시작");
+        Debug.Log($"{GetType().Name}의 타이머 시작");
         IsDuringCoolTime = true;
 
         // 쿨타임 시간만큼 대기
         yield return new WaitForSeconds(_targetEvaluatorCoolTime);
 
         IsDuringCoolTime = false;
-        // Debug.Log("타이머 종료");
+        Debug.Log($"{GetType().Name}의 타이머 종료");
     }
-    public virtual MonsterBehaviour.ActionDelegate StartEvaluatorCoolTime()
+    public virtual MonsterBehaviour.ActionDelegate StartCoolTime()
     {
         if (_targetEvaluatorCoolTime < 0.01f)
         {
@@ -129,7 +140,17 @@ public abstract class Evaluator : MonoBehaviour
         // 필요하다면 추가 메서드를 반환
         return null;
     }
+    protected virtual IEnumerator WaitEventCoroutine()
+    {
+        yield return null;
+    }
+    public void StartWaitingEvent()
+    {
+        if (_waitCoroutine != null)
+            StopCoroutine(_waitCoroutine);
 
+        _waitCoroutine = StartCoroutine(WaitEventCoroutine());
+    }
     public IEnumerator WaitForRespawn()
     {
         if (!_startUsableFlag) yield break;

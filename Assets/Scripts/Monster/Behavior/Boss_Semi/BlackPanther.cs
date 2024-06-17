@@ -105,6 +105,9 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     // boss base
     public override void AttackPreProcess()
     {
+        if (!IsGodMode)
+            IsGodMode = true;
+
         // 현재 공격 상태 변경
         _currentAttack = _nextAttack;
 
@@ -112,6 +115,9 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
     public override void AttackPostProcess()
     {
+        if (IsGodMode)
+            IsGodMode = false;
+
         SetToRandomAttack();
     }
     public override void GroggyPreProcess()

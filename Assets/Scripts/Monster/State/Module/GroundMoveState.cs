@@ -14,14 +14,19 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IHurtableSta
         var chaseEvaluator = Monster.GroundChaseEvaluator;          // 추격 판정기
         var patrolEvaluator = Monster.GroundPatrolEvaluator;        // 순찰 판정기
 
-        // 추격 판정기가 사용 가능한 경우
-        if (chaseEvaluator?.IsUsable == true)
+        // 추격 판정기가 사용 가능한 경우인지 확인한다
+        if (chaseEvaluator?.IsUsable == true && !chaseEvaluator.IsDuringCoolTime)
         {
+            Debug.Log("chase evaluator");
+
             // 추격 대상이 범위 안에 있는지 확인
             var targetCollider = chaseEvaluator.IsTargetWithinRange();
+
+            // 추격 대상이 있는 경우
             if (targetCollider)
             {
-                // 추가로 상대와의 거리가 x보다 가까워지면 추격을 중단
+                /*
+                // 상대와의 거리가 x보다 가까워지면 추격을 중단
                 var distSquared = Vector3.SqrMagnitude(targetCollider.transform.position - Monster.transform.position);
                 var maxDistSquared = chaseEvaluator.MaxChaseDistance * chaseEvaluator.MaxChaseDistance;
                 var isTooClose = distSquared < maxDistSquared;
@@ -29,26 +34,34 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IHurtableSta
                 // 값이 변했을 때만 업데이트
                 if (chaseEvaluator.IsTooClose != isTooClose)
                     chaseEvaluator.IsTooClose = isTooClose;
+                */
 
                 // 가깝지 않은 경우에만 방향 전환
-                if (!isTooClose)
+                // if (!isTooClose)
+                if (true)
                 {
+                    // 방향 전환
                     // Monster.SetRecentDir(chaseEvaluator.ChaseDir);
                     Monster.StartSetRecentDirAfterGrounded(chaseEvaluator.ChaseDir);
 
-                    // TODO: 여기에서 Chase Evaluator의 쿨타임을 시작한다
-                    // chaseEvaluator.StartEvaluatorCoolTime();
-
-
+                    // TODO: 여기에서 Chase Evaluator의 기다린다
+                    if (chaseEvaluator.UseWaitingEvent)
+                    {
+                        chaseEvaluator.StartWaitingEvent();
+                    }
+                    else
+                    {
+                        chaseEvaluator.StartCoolTime();
+                    }
                 }
 
                 // 추격 판정기가 작동 중이면 순찰 판정기는 작동하지 않도록
                 return;
             }
         }
-        
-        // 순찰 판정기가 사용 가능한 경우
-        if (patrolEvaluator?.IsUsable == true)
+
+        // 순찰 판정기가 사용 가능한 경우인지 확인한다
+        if (patrolEvaluator?.IsUsable == true && !patrolEvaluator.IsDuringCoolTime)
         {
             // 범위 바깥에 있는 경우
             if (patrolEvaluator.IsOutOfPatrolRange())
@@ -73,7 +86,7 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IHurtableSta
                 if (patrolEvaluator.IsTargetWithinRange())
                 {
                     // Monster.SetRecentDir(-Monster.RecentDir);
-                    Monster.StartSetRecentDirAfterGrounded(-Monster.RecentDir);
+                    Monster.StartSetRecentDirAfterGrounded((-1) * Monster.RecentDir);
                 }
             }
         }
