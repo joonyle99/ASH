@@ -11,9 +11,10 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IHurtableSta
     {
         base.OnStateUpdate(animator, stateInfo, layerIndex);
 
-        var chaseEvaluator = Monster.GroundChaseEvaluator;
-        var patrolEvaluator = Monster.GroundPatrolEvaluator;
+        var chaseEvaluator = Monster.GroundChaseEvaluator;          // 추격 판정기
+        var patrolEvaluator = Monster.GroundPatrolEvaluator;        // 순찰 판정기
 
+        // 추격 판정기가 사용 가능한 경우
         if (chaseEvaluator?.IsUsable == true)
         {
             // 추격 대상이 범위 안에 있는지 확인
@@ -34,13 +35,19 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IHurtableSta
                 {
                     // Monster.SetRecentDir(chaseEvaluator.ChaseDir);
                     Monster.StartSetRecentDirAfterGrounded(chaseEvaluator.ChaseDir);
+
+                    // TODO: 여기에서 Chase Evaluator의 쿨타임을 시작한다
+                    // chaseEvaluator.StartEvaluatorCoolTime();
+
+
                 }
 
-                // 추격 판정기 작동 시 Patrol 판정기는 작동하지 않도록
+                // 추격 판정기가 작동 중이면 순찰 판정기는 작동하지 않도록
                 return;
             }
         }
         
+        // 순찰 판정기가 사용 가능한 경우
         if (patrolEvaluator?.IsUsable == true)
         {
             // 범위 바깥에 있는 경우

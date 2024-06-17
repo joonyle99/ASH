@@ -3,8 +3,9 @@ using UnityEngine;
 
 /// <summary>
 /// 지상 몬스터가 대상이 추격 범위 안에 들어왔는지 판단하고 방향을 전환하는 클래스
+/// Chase Evaluator와 달리 쿨타임을 가지고 있어, 추격을 시작할 때만 방향을 전환한다.
 /// </summary>
-public class GroundChaseEvaluator : Evaluator
+public class GroundRushEvaluator : Evaluator
 {
     [field: Header("Ground Chase Evaluator")]
     [field: Space]
