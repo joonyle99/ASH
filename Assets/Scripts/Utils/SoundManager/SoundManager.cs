@@ -49,6 +49,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
         float bgmVolume = 1f;
         float sfxVolume = 1f;
 
+        // JsonLoad 예제
         if (JsonDataManager.Has("BGMVolume"))
             bgmVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["BGMVolume"]);
 
@@ -69,6 +70,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
             _audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
         }
 
+        // JsonSave 예제
         JsonDataManager.Add("SFXVolume", volume.ToString());
     }
     public void SetBgmVolume(float volume)

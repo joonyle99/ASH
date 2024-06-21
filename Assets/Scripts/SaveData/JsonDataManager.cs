@@ -43,6 +43,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         }
     }
 
+    // 새로운 데이터 추가시 사용
     public static void Add(string key, string value)
     {
         if(Instance == null)
@@ -59,6 +60,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         }
     }
 
+    // 들어가있는 데이터 수정시 사용
     public static void Set(string key, string value)
     {
         if(Instance == null)
@@ -69,6 +71,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         _globalSaveData.saveDataGroup[key] = value;
     }
 
+    // 데이터가 있는지 비교
     public static bool Has(string key)
     {
         if(Instance == null)
@@ -79,6 +82,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         return _globalSaveData.saveDataGroup.ContainsKey(key);
     }
 
+    // JSON 파일로 저장
     public static void JsonSave()
     {
         JsonDataArray<string, string> arrayJson = Instance.DictionaryConvert(_globalSaveData.saveDataGroup);
@@ -90,6 +94,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         Debug.Log("저장");
     }
 
+    // JSON 파일 불러오기
     public void JsonLoad()
     {
         SaveData data = new SaveData();
@@ -110,6 +115,9 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         }
     }
 
+    // Dictionary를 List로 변환할 때 사용
+    // Dictionary 자체로 JSON에 저장할수 없기 때문에 사용
+    // JsonSave 함수에서 사용됨
     public JsonDataArray<TKey, TValue> DictionaryConvert<TKey, TValue>(Dictionary<TKey, TValue> dic)
     {
         List<DataDictionary<TKey, TValue>> dataList = new List<DataDictionary<TKey, TValue>>();
@@ -129,6 +137,9 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         return arrayJson;
     }
 
+    // List를 Dictionary로 변환할 때 사용
+    // Json파일로 받아온 데이터가 List로 되어있기 때문에 Dictionary로 변환할때 사용
+    // JsonLoad 함수에서 사용
     public Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(string path)
     {
         JsonDataArray<TKey, TValue> dataList = JsonUtility.FromJson<JsonDataArray<TKey, TValue>>(path);
