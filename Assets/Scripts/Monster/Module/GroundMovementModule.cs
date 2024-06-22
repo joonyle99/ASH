@@ -9,7 +9,7 @@ public class GroundMovementModule : MonoBehaviour
         _monster = GetComponent<MonsterBehaviour>();
     }
 
-    public void AffectGravity()
+    public void AffectGravity(float gravityPower = 250f)
     {
         // 공중에 있는 경우 추가적인 중력을 적용하지 않는다
         if (_monster.IsInAir)
@@ -20,7 +20,7 @@ public class GroundMovementModule : MonoBehaviour
 
         // 기울어진 땅에서 미끄럼 방지
         if (groundAngle < 70f)
-            _monster.RigidBody2D.AddForce(-groundNormal * 250f);
+            _monster.RigidBody2D.AddForce(-groundNormal * gravityPower);
     }
 
     public void WalkGround()

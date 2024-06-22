@@ -17,7 +17,7 @@ public class GroundMoveState : Monster_StateBase, IAttackableState, IHurtableSta
         // 추격 판정기가 사용 가능한 경우인지 확인한다
         if (chaseEvaluator?.IsUsable == true && !chaseEvaluator.IsDuringCoolTime)
         {
-            Debug.Log("chase evaluator");
+            // Debug.Log("chase evaluator");
 
             // 추격 대상이 범위 안에 있는지 확인
             var targetCollider = chaseEvaluator.IsTargetWithinRange();

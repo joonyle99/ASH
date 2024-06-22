@@ -26,17 +26,21 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
-    [Space]
-
-    [SerializeField] private GameObject _luminescence;
-    public bool isActiveLuminescence => _luminescence.activeInHierarchy;
-
     [Header("____ VineMissile ____")]
     [Space]
 
     [SerializeField] private BlackPanther_VineMissile _missile;
     [SerializeField] private Transform _missileSpawnPoint;
     [SerializeField] private float _missileSpeed;
+
+    [Space]
+
+    [SerializeField] private int _totalMissileCount;
+    public int TotalMissileCount
+    {
+        get => _totalMissileCount;
+        private set => _totalMissileCount = value;
+    }
 
     [Header("VineMissile - VFX")]
     [Space]
@@ -89,7 +93,10 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         else
         {
             if (GroundMovementModule)
+            {
+                // Debug.Log($"Affect Gravity in [{CurrentState.GetType()}] state");
                 GroundMovementModule.AffectGravity();
+            }
         }
     }
 
@@ -105,20 +112,53 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     // boss base
     public override void AttackPreProcess()
     {
-        if (!IsGodMode)
-            IsGodMode = true;
-
         // 현재 공격 상태 변경
         _currentAttack = _nextAttack;
 
         currentAttackCount++;
+        
+        if(_currentAttack == AttackType.VineMissile)
+        {
+            _totalMissileCount++;
+        }
+
+        if (IsRage)
+        {
+            // TODO: 3번째 미사일 때만 IsCapturable = true로 변경
+            if (_totalMissileCount % 3 == 0)
+            {
+                if (!IsCapturable)
+                {
+                    IsCapturable = true;
+                }
+            }
+        }
+        else
+        {
+            if (!IsGodMode)
+                IsGodMode = true;
+        }
     }
     public override void AttackPostProcess()
     {
-        if (IsGodMode)
-            IsGodMode = false;
-
         SetToRandomAttack();
+
+        if (IsRage)
+        {
+            // TODO: 3번째 미사일 때만 IsCapturable = false로 변경
+            if (_totalMissileCount % 3 == 0)
+            {
+                if (IsCapturable)
+                {
+                    IsCapturable = false;
+                }
+            }
+        }
+        else
+        {
+            if (IsGodMode)
+                IsGodMode = false;
+        }
     }
     public override void GroggyPreProcess()
     {
@@ -154,10 +194,6 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
             Debug.LogError("<color=red>Invalid AttackType generated</color>");
             _nextAttack = AttackType.None;
         }
-    }
-    public void SetActiveLuminescence(bool isBool)
-    {
-        _luminescence.SetActive(isBool);
     }
 
     // vine missile

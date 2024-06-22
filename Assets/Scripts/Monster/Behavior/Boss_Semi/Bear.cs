@@ -200,9 +200,6 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         SetHitBoxAttackable(true);
 
         currentHitCount = 0;
-
-        if (IsRage)
-            _stalactiteCount = Random.Range((int)_rageStalactiteRange.Start, (int)_rageStalactiteRange.End + 1);
     }
 
     // basic
@@ -294,7 +291,9 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     public void Stomp01_AnimEvent()
     {
         // set stalactite count
-        _stalactiteCount = Random.Range((int)_normalStalactiteRange.Start, (int)_normalStalactiteRange.End + 1);
+        _stalactiteCount = IsRage ?
+            Random.Range((int)_rageStalactiteRange.Start, (int)_rageStalactiteRange.End + 1)
+            : Random.Range((int)_normalStalactiteRange.Start, (int)_normalStalactiteRange.End + 1);
 
         // init stored stalactite pos
         _usedPosX = new List<float>();

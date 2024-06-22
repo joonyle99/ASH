@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     // settings
     public void OnSceneContextBuilt()
     {
-        Debug.Log("call OnSceneContextBuilt");
+        // Debug.Log("call OnSceneContextBuilt");
 
         _proCamera.enabled = true;
 

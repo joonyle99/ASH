@@ -1,19 +1,12 @@
 using UnityEngine;
 
-public class BlackPanther_RoarState : Boss_StateBase
+public class Bear_RageState : Boss_StateBase
 {
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        var blackPanther = (BlackPanther)Boss;
-
-        // TODO: 흑표범 포효 연출을 실행시킨다
-        Debug.Log("흑표범 연출 시작");
-
-        // TODO: 흑표범 빛 문양은 연출 안에 포함되어야 하는데 임시로 여기에 작성한다
-        if (!blackPanther.isActiveLuminescence)
-            blackPanther.SetActiveLuminescence(true);
+        Boss.IsRage = true;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -24,5 +17,15 @@ public class BlackPanther_RoarState : Boss_StateBase
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
+
+        // 보스가 격노하면 이동속도 / 공격속도 증가
+        Boss.monsterData.MoveSpeed *= 1.5f;
+        Boss.AttackEvaluator.TargetCheckCoolTime /= 1.5f;
+
+        // 애니메이션 속도 증가
+        animator.SetFloat("Mul_IdleSpeed", 1.3f);
+        animator.SetFloat("Mul_MoveSpeed", 1.3f);
+        animator.SetFloat("Mul_SlashSpeed", 1.3f);
+        animator.SetFloat("Mul_EarthQuakeSpeed", 1.3f);
     }
 }

@@ -68,7 +68,7 @@ public class Monster_IndependentSkill : Monster_Skill
     }
     public void DestroyIndependentSkill()
     {
-        Debug.Log($"{this.name} 스킬 오브젝트가 파괴됩니다.");
+        // Debug.Log($"{this.name} 스킬 오브젝트가 파괴됩니다.");
 
         if (transform.root != null)
         {

@@ -1,16 +1,16 @@
 using UnityEngine;
 
-public class BossGroggyRageState : Boss_StateBase
+public class BlackPanther_RageState : Boss_StateBase
 {
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
-        // 무적 시작. 피격될 수 없다.
-        Boss.IsGodMode = true;
-
-        // 격노 상태 시작
         Boss.IsRage = true;
+        Boss.IsGodMode = Boss.IsRage;
+
+        if (!Boss.isActiveLuminescence)
+            Boss.SetActiveLuminescence(true);
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -21,17 +21,5 @@ public class BossGroggyRageState : Boss_StateBase
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         base.OnStateExit(animator, stateInfo, layerIndex);
-
-        Boss.GroggyPostProcess();
-
-        // 보스가 격노하면 이동속도 / 공격속도 증가
-        Boss.monsterData.MoveSpeed *= 1.5f;
-        Boss.AttackEvaluator.TargetCheckCoolTime /= 1.5f;
-
-        // 애니메이션 속도 증가
-        animator.SetFloat("Mul_IdleSpeed", 1.3f);
-        animator.SetFloat("Mul_MoveSpeed", 1.3f);
-        animator.SetFloat("Mul_SlashSpeed", 1.3f);
-        animator.SetFloat("Mul_EarthQuakeSpeed", 1.3f);
     }
 }

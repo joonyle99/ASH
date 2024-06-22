@@ -6,7 +6,7 @@ public class BlackPanther_VinePillar : Monster_IndependentSkill
     [Header("VinePillar")]
     [Space]
 
-    public Renderer[] effectRenderers;
+    public Renderer effectRenderer;
     public Collider2D hitCollider;
 
     public void Opacity(float duration = 0.5f)
@@ -26,10 +26,7 @@ public class BlackPanther_VinePillar : Monster_IndependentSkill
                 hitCollider.enabled = true;
             }
 
-            foreach (var effectRenderer in effectRenderers)
-            {
-                effectRenderer.material.SetFloat("_Alpha", ratio);
-            }
+            effectRenderer.material.SetFloat("_Alpha", ratio);
 
             yield return null;
 

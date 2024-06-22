@@ -24,6 +24,11 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     [Space]
 
+    [SerializeField] protected GameObject luminescence;
+    public bool isActiveLuminescence => luminescence.activeInHierarchy;
+
+    [Space]
+
     [Tooltip("final target hurt count x boss health unit = MaxHp")]
     [SerializeField] protected int finalTargetHurtCount;        // 보스 몬스터의 최대 피격 횟수
 
@@ -116,6 +121,11 @@ public abstract class BossBehaviour : MonsterBehaviour
     public abstract void AttackPostProcess();       // 공격 시 후처리 함수
     public abstract void GroggyPreProcess();        // 그로기 상태 시 전처리 함수
     public abstract void GroggyPostProcess();       // 그로기 상태 시 후처리 함수
+
+    public void SetActiveLuminescence(bool isBool)
+    {
+        luminescence.SetActive(isBool);
+    }
 
     private void CheckHurtState()
     {

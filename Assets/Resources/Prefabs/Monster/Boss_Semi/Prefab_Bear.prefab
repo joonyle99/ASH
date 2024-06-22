@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 1689909349}
   - component: {fileID: 1689909350}
   m_Layer: 0
-  m_Name: Luminescence
+  m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -467,6 +467,7 @@ MonoBehaviour:
   <CenterOfMass>k__BackingField: {fileID: 68886007898307180}
   <IsGroggy>k__BackingField: 0
   <IsRage>k__BackingField: 0
+  luminescence: {fileID: 68886008862167435}
   finalTargetHurtCount: 18
   attackCountRange:
     Start: 2
@@ -480,7 +481,6 @@ MonoBehaviour:
   currentHitCount: 0
   _totalHitCount: 0
   cutscenePlayerList: {fileID: 0}
-  _isAbleChangeRage: 1
   _attackTypeRange:
     Start: 1
     End: 5
@@ -554,6 +554,7 @@ MonoBehaviour:
   _isUsable: 1
   _targetEvaluatorCoolTime: 0.7
   _isDuringCoolTime: 0
+  _useWaitingEvent: 0
   <ChaseDir>k__BackingField: 1
   <MaxChaseDistance>k__BackingField: 3
   <IsChasing>k__BackingField: 0
@@ -577,6 +578,7 @@ MonoBehaviour:
   _isUsable: 1
   _targetEvaluatorCoolTime: 5
   _isDuringCoolTime: 0
+  _useWaitingEvent: 0
 --- !u!114 &2840822553654775952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -949,7 +951,7 @@ GameObject:
   - component: {fileID: 68886008862167433}
   - component: {fileID: 68886008862167432}
   m_Layer: 14
-  m_Name: Forehead_LightCapturer
+  m_Name: Luminescence
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24382,7 +24384,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8098683574932484912, guid: 6a93010b5d148cd498331cb359aa95e9, type: 3}
       propertyPath: m_Name
-      value: Luminescence Light
+      value: Light
       objectReference: {fileID: 0}
     - target: {fileID: 8098683574932484913, guid: 6a93010b5d148cd498331cb359aa95e9, type: 3}
       propertyPath: m_RootOrder
