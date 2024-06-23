@@ -16,7 +16,9 @@ public class FloatingMoveState : Monster_StateBase, IAttackableState, IHurtableS
 
         if (floatingChaseEvaluator)
         {
-            if (floatingChaseEvaluator.IsUsable)
+            if (floatingChaseEvaluator.IsUsable &&
+                !floatingChaseEvaluator.IsDuringCoolTime &&
+                !floatingChaseEvaluator.IsWaitingEvent)
             {
                 // Target Within Range
                 if (floatingChaseEvaluator.IsTargetWithinRange())

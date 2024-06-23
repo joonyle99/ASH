@@ -9,11 +9,10 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         None = 0,
 
-        // Normal Attack
+        Rush1,
         VineMissile,
+        Rush2,
         VinePillar,
-
-        // Ultimate Attack
     }
 
     #region Variable
@@ -21,14 +20,14 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [Header("――――――― BlackPanther Behaviour ―――――――")]
     [Space]
 
-    [Tooltip("1 : VineMissile\n2 : VinePillar")]
-    [SerializeField] private Range _attackTypeRange;
+    [Tooltip("1: Rush1\n2 : VineMissile\n3 : Rush2\n2 : VinePillar")]
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
     [Header("____ VineMissile ____")]
     [Space]
 
+    [SerializeField] private bool _isMissiling;
     [SerializeField] private BlackPanther_VineMissile _missile;
     [SerializeField] private Transform _missileSpawnPoint;
     [SerializeField] private float _missileSpeed;
@@ -54,8 +53,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [Header("____ VinePillar ____")]
     [Space]
 
+    [SerializeField] private bool _isPillaring;
     [SerializeField] private BlackPanther_VinePillar _pillar;
-
     [SerializeField] private int _pillarCount;
     [SerializeField] private float _floorHeight;
     [SerializeField] private float _pillarFarDistFromCaster;
@@ -74,18 +73,26 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
     #region Function
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        AttackEvaluator.WaitEvent -= HandleFunc;
+        AttackEvaluator.WaitEvent += HandleFunc;
+    }
     protected override void Start()
     {
         base.Start();
 
-        SetToRandomAttack();
+        SetToFirstAttack();
     }
     public void FixedUpdate()
     {
         if (IsDead)
             return;
 
-        if (CurrentStateIs<GroundMoveState>())
+        if (CurrentStateIs<BossAttackState>() &&
+            (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2))
         {
             if (GroundMovementModule)
                 GroundMovementModule.WalkGround();
@@ -93,10 +100,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         else
         {
             if (GroundMovementModule)
-            {
-                // Debug.Log($"Affect Gravity in [{CurrentState.GetType()}] state");
                 GroundMovementModule.AffectGravity();
-            }
         }
     }
 
@@ -116,11 +120,9 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         _currentAttack = _nextAttack;
 
         currentAttackCount++;
-        
-        if(_currentAttack == AttackType.VineMissile)
-        {
+
+        if (_currentAttack == AttackType.VineMissile)
             _totalMissileCount++;
-        }
 
         if (IsRage)
         {
@@ -128,9 +130,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
             if (_totalMissileCount % 3 == 0)
             {
                 if (!IsCapturable)
-                {
                     IsCapturable = true;
-                }
             }
         }
         else
@@ -141,7 +141,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
     public override void AttackPostProcess()
     {
-        SetToRandomAttack();
+        SetToNextAttack();
 
         if (IsRage)
         {
@@ -180,23 +180,35 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
 
     // basic
-    private void SetToRandomAttack()
+    private void SetToFirstAttack()
     {
-        int nextAttackNumber = (int)_attackTypeRange.Random();
+        int nextAttackNumber = (int)AttackType.Rush1;
+        _nextAttack = (AttackType)nextAttackNumber;
+        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
+    }
+    private void SetToNextAttack()
+    {
+        int nextAttackNumber = (int)_currentAttack + 1;
 
-        if (System.Enum.IsDefined(typeof(AttackType), nextAttackNumber))
-        {
-            _nextAttack = (AttackType)nextAttackNumber;
-            Animator.SetInteger("NextAttackNumber", nextAttackNumber);
-        }
-        else
-        {
-            Debug.LogError("<color=red>Invalid AttackType generated</color>");
-            _nextAttack = AttackType.None;
-        }
+        // AttackType의 마지막 값을 넘어가면 첫 번째 값으로 돌아갑니다.
+        if (nextAttackNumber > (int)AttackType.VinePillar)
+            nextAttackNumber = (int)AttackType.Rush1;
+
+        // 다음 공격 타입을 설정합니다.
+        _nextAttack = (AttackType)nextAttackNumber;
+        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
 
     // vine missile
+    public void StartMissile()
+    {
+        Debug.Log("start missile");
+        _isMissiling = true;
+    }
+    public void EndMissile()
+    {
+        _isMissiling = false;
+    }
     public void VineMissilePre_AnimEvent()
     {
         var smoke = Instantiate(_smokeEffect, _missileSpawnPoint.position, Quaternion.identity);
@@ -221,6 +233,14 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
 
     // vine pillar
+    public void StartPillar()
+    {
+        _isPillaring = true;
+    }
+    public void EndPillar()
+    {
+        _isPillaring = false;
+    }
     public void VinePillar01_AnimEvent()
     {
         _usedPosX = new List<float>();
@@ -278,6 +298,59 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         var pos = new Vector2(createPosX, _floorHeight);
         var pillar = Instantiate(_pillar, pos, Quaternion.identity);
         pillar.Opacity();
+    }
+
+    private IEnumerator HandleFunc()
+    {
+        switch (_nextAttack)
+        {
+            case AttackType.Rush1:
+            case AttackType.Rush2:
+                yield return StartCoroutine(WaitEventCoroutine_Rush());
+                break;
+            case AttackType.VineMissile:
+                yield return StartCoroutine(WaitEventCoroutine_VineMissile());
+                break;
+            case AttackType.VinePillar:
+                yield return StartCoroutine(WaitEventCoroutine_VinePillar());
+                break;
+        }
+    }
+
+    private IEnumerator WaitEventCoroutine_Rush()
+    {
+        // TODO: 플레이어에게 돌진할 때만 방향을 전환할 수 있도록
+        // 1. 사용 가능한 상태가 된다
+        // 2. 플레이어 방향으로 추격 방향을 설정한다
+        // 3. 플레이어 뒷편으로 이동할 때까지 사용을 제한한다 (쿨타임을 건다)
+        // 4. 다시 1로 돌아간다
+
+        // 플레이어 뒷편으로 지나갈 때까지 기다려야 한다
+
+        var player = SceneContext.Current.Player;
+        var dir = Mathf.Sign(player.transform.position.x - transform.position.x);
+        var targetPosX = player.transform.position.x + dir * 30f;
+
+        Vector3 startPoint = new Vector3(targetPosX, transform.position.y, transform.position.z);
+        Vector3 endPoint = new Vector3(targetPosX, transform.position.y + 5f, transform.position.z);
+        Debug.DrawLine(startPoint, endPoint, Color.cyan, 1f);
+
+        yield return new WaitUntil(() => Mathf.Abs(transform.position.x - targetPosX) < 0.5f);
+
+        Animator.SetTrigger("Stop");
+    }
+    private IEnumerator WaitEventCoroutine_VineMissile()
+    {
+        // 애니메이션이 끝날때까지 기다려야 한다
+        Debug.Log("wait missile ending");
+
+        yield return new WaitUntil(() => !_isMissiling);
+    }
+    private IEnumerator WaitEventCoroutine_VinePillar()
+    {
+        // 애니메이션이 끝날때까지 기다려야 한다
+
+        yield return new WaitUntil(() => !_isPillaring);
     }
 
     #endregion
