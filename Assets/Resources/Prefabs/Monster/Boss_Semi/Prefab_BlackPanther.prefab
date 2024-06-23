@@ -3172,6 +3172,8 @@ GameObject:
   - component: {fileID: 5269891687269057862}
   - component: {fileID: 5269891687269057885}
   - component: {fileID: 5269891687269057884}
+  - component: {fileID: 5269891688261802376}
+  - component: {fileID: 5269891688261802365}
   - component: {fileID: 5269891687269057857}
   - component: {fileID: 5269891687269057856}
   - component: {fileID: 5269891687269057859}
@@ -3338,22 +3340,23 @@ MonoBehaviour:
   currentHitCount: 0
   _totalHitCount: 0
   cutscenePlayerList: {fileID: 0}
+  _firstAttack: 3
   _currentAttack: 0
   _nextAttack: 0
   _missile: {fileID: 2084367959906499476, guid: d27b5963e92e3344ea010b22664e4efe, type: 3}
   _missileSpawnPoint: {fileID: 5269891687132457136}
-  _missileSpeed: 30
+  _missileSpeed: 50
   _totalMissileCount: 0
   _smokeEffect: {fileID: 1701526429040737852, guid: 6270e0788f1d7d2429476cbd48c4db26, type: 3}
   _sparkEffect: {fileID: 1656070945588396149, guid: 7e8d8cec8943ffc42ac20519cf532c05, type: 3}
   _pillar: {fileID: 5821592069741332024, guid: 5558bd6735786124a97da1a0978bd4f8, type: 3}
   _pillarCount: 5
   _floorHeight: 50
-  _pillarFarDistFromCaster: 30
-  _minDistEachPillar: 5
+  _pillarFarDist: 25
+  _minDistEachPillar: 15
   _createTimeRange:
     Start: 1.5
-    End: 3
+    End: 2
   _dustEffect: {fileID: 988566578893302018, guid: 661423e662be5f24d94efe9a121c8a3d, type: 3}
   _dustDistFromPillar: 1.5
 --- !u!114 &5269891687269057884
@@ -3368,6 +3371,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b35bbb0c95c1f4f8a3bf7ce4e769af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5269891688261802376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5269891687269057867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da53059d1e253c34e91697479469d3ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  checkCollider: {fileID: 5269891688374812366}
+  _isUsable: 1
+  _isWaitingEvent: 0
+  _isDuringCoolTime: 0
+  _targetEvaluatorCoolTime: 0
+  <ChaseDir>k__BackingField: 1
+  <MaxChaseDistance>k__BackingField: 3
+  <IsChasing>k__BackingField: 0
+  <IsTooClose>k__BackingField: 0
+--- !u!114 &5269891688261802365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5269891687269057867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5979935db533b7c40843aff2b489ab9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  checkCollider: {fileID: 5269891688670614341}
+  _isUsable: 1
+  _isWaitingEvent: 0
+  _isDuringCoolTime: 0
+  _targetEvaluatorCoolTime: 1.5
 --- !u!114 &5269891687269057857
 MonoBehaviour:
   m_ObjectHideFlags: 0
