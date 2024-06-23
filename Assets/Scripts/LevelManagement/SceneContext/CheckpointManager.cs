@@ -30,12 +30,24 @@ public class CheckpointManager : MonoBehaviour
         // 왼쪽으로 나가는 입구라면 입구 보다 왼쪽에서 나오도록 하고
         // 오른쪽으로 나가는 입구라면 입구 보다 오른쪽에서 나오도록 한다
 
+        // 입구가 있다면 입구의 위치를 체크포인트로 설정
         var entrancePassage = SceneContext.Current.EntrancePassage;
-        var exitInputSetter = entrancePassage.ExitInputSetter as MoveStraightInputSetter;
-        var exitDirection = exitInputSetter.direction == MoveStraightInputSetter.Direction.Right ? 1 : -1;
-        var offset = Vector3.right * 3f * exitDirection;
+        if (entrancePassage)
+        {
+            var exitInputSetter = entrancePassage.ExitInputSetter as MoveStraightInputSetter;
+            if (exitInputSetter)
+            {
+                var exitDirection = exitInputSetter.direction == MoveStraightInputSetter.Direction.Right ? 1 : -1;
+                var offset = Vector3.right * 3f * exitDirection;
 
-        LatestCheckpointPosition = entrancePassage.transform.position + offset;
+                LatestCheckpointPosition = entrancePassage.transform.position + offset;
+                return buildResult;
+            }
+        }
+
+        // 입구가 없다면 플레이어의 위치를 체크포인트로 설정
+        var player = SceneContext.Current.Player;
+        LatestCheckpointPosition = player ? player.transform.position : Vector3.zero;
 
         return buildResult;
     }

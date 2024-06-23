@@ -336,10 +336,14 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     // respawn
     public void TriggerInstantRespawn(float damage)
     {
+        if (IsDead) return;
+
         TakeDamage(damage);
 
-        if (CurHp > 0 && !IsDead)
+        if (CurHp > 0)
+        {
             ChangeState<InstantRespawnState>();
+        }
     }
 
     // etc
