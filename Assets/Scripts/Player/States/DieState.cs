@@ -18,6 +18,8 @@ public class DieState : PlayerState
 
     protected override bool OnEnter()
     {
+        Debug.Log("enter die state");
+
         StartCoroutine(EnterCoroutine());
 
         return true;
@@ -27,13 +29,10 @@ public class DieState : PlayerState
 
         return true;
     }
-    protected override bool OnFixedUpdate()
-    {
-
-        return true;
-    }
     protected override bool OnExit()
     {
+        Debug.Log("exit die state");
+
         StartCoroutine(ExitCoroutine());
 
         return true;
@@ -41,35 +40,34 @@ public class DieState : PlayerState
 
     private IEnumerator EnterCoroutine()
     {
-        InputManager.Instance.ChangeToStayStillSetter();
-
-        Player.SoundList.PlaySFX("SE_Die_02(Short)");
-
-        Player.Animator.SetTrigger("Die");
-
         Player.IsDead = true;
 
+        // stay still input setter
+        InputManager.Instance.ChangeToStayStillSetter();
+
+        // notice die sound
+        Player.SoundList.PlaySFX("SE_Die_02(Short)");
+
+        // move up effect
+        Player.Animator.SetTrigger("Die");
         yield return new WaitForSeconds(_dieEffectDelay);
-
         yield return StartCoroutine(MoveUpEffectCoroutine());
-
         yield return new WaitForSeconds(_stayInAirDuration);
 
+        // die effect
         Player.PlaySound_SE_Die_01();
-        Player.MaterialController.DisintegrateEffect.Play();
-
+        Player.MaterialController.DisintegrateEffect.Play(0f, false);
         yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
+        Player.MaterialController.DisintegrateEffect.ResetIsEffectDone();
 
+        // exit scene effect
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        // 현재 씬에 있는 입구로 이동한다
+        // restart scene
+        // move to scene entrance passage
         var sceneName = SceneManager.GetActiveScene().name;
         var passageName = SceneContext.Current.EntrancePassage.PassageName;
-
-        // Debug.Log($"scene name: {sceneName}");
-        // Debug.Log($"passage name: {passageName}");
-
-        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);      // load scene
     }
     private IEnumerator ExitCoroutine()
     {

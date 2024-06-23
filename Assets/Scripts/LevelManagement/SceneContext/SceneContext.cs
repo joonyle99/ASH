@@ -91,11 +91,6 @@ public class SceneContext : MonoBehaviour
         CheckBuildResult(Player);
         CheckBuildResult(EntrancePassage);
 
-        // ** build default **
-        Result defaultBuildResult = DefaultBuild();
-        if (defaultBuildResult == Result.Fail)
-            buildResult = Result.Fail;
-
         // build check point
         Result checkpointBuildResult = _checkpointManager.CheckPointBuild();
         if (checkpointBuildResult == Result.Fail)
@@ -104,6 +99,11 @@ public class SceneContext : MonoBehaviour
         // build specific
         Result sceneSpecificBuildResult = SceneSpecificBuild();
         if (sceneSpecificBuildResult == Result.Fail)
+            buildResult = Result.Fail;
+
+        // ** build default **
+        Result defaultBuildResult = DefaultBuild();
+        if (defaultBuildResult == Result.Fail)
             buildResult = Result.Fail;
 
         // Debug.Log($"SceneContext 정상적 빌드 성공 여부: {buildResult == Result.Success}");

@@ -4,7 +4,9 @@
 public class MoveStraightInputSetter : InputSetterScriptableObject
 {
     public enum Direction { Left, Right}
-    [SerializeField] Direction _direction = Direction.Right;
+
+    [SerializeField] private Direction _direction = Direction.Right;
+    public Direction direction { get => _direction; }
 
     public override InputState GetState()
     {

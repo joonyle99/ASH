@@ -21,8 +21,21 @@ public class CheckpointManager : MonoBehaviour
     {
         Result buildResult = Result.Success;
 
+        /*
         var player = SceneContext.Current.Player;
         LatestCheckpointPosition = player != null ? player.transform.position : Vector3.zero;
+        */
+
+        // 맵에있는 입구로 갈건데, 왼쪽으로 나가는지 오른쪽으로 나가는지 입구를 체크하고
+        // 왼쪽으로 나가는 입구라면 입구 보다 왼쪽에서 나오도록 하고
+        // 오른쪽으로 나가는 입구라면 입구 보다 오른쪽에서 나오도록 한다
+
+        var entrancePassage = SceneContext.Current.EntrancePassage;
+        var exitInputSetter = entrancePassage.ExitInputSetter as MoveStraightInputSetter;
+        var exitDirection = exitInputSetter.direction == MoveStraightInputSetter.Direction.Right ? 1 : -1;
+        var offset = Vector3.right * 3f * exitDirection;
+
+        LatestCheckpointPosition = entrancePassage.transform.position + offset;
 
         return buildResult;
     }
