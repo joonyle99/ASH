@@ -112,6 +112,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     // SceneContext가 DefaultBuild되었을 때 호출되는 함수
     public void OnSceneContextBuilt()
     {
+        // 플레이어가 씬의 입구에서 나오는 컷씬을 실행한다
         SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false));
 
         if (SceneContext.Current.SceneTransitionPlayer != _defaultSceneTransitionPlayer)

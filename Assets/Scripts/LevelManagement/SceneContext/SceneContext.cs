@@ -40,11 +40,14 @@ public class SceneContext : MonoBehaviour
     /// <summary>
     /// 씬 전환 시 필요한 오브젝트에 대한 레퍼런스를 업데이트한다.
     /// -> 플레이어, 씬 전환 플레이어, 시작 입구 ..
+    /// -> 체크 포인트, 랜턴 컨텍스트 ..
     /// </summary>
     /// <param name="entranceName"></param>
     /// <returns></returns>
     public Result BuildPlayable(string entranceName)
     {
+        // Debug.Log($"call build playable in {name}");
+
         Result buildResult = Result.Success;
 
         // check build result
@@ -112,6 +115,7 @@ public class SceneContext : MonoBehaviour
     /// 씬 컨텍스트 빌드 시 기본적으로 호출되는 함수.
     /// 특수한 씬 전환 플레이어가 없다면 기본 씬 전환 플레이어를 찾아서 설정해준다.
     /// 또한 씬이 전환되어 씬 컨텍스트가 새로 빌드되면, 모든 리스너를 찾아 이벤트를 전달한다
+    /// i.e) 씬 전환 시, 씬의 입구에서 나오는 컷씬, 플레이어 상태 초기화, 보스 던전 UI 표시 등
     /// </summary>
     /// <returns></returns>
     public Result DefaultBuild()

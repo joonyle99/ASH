@@ -7,12 +7,14 @@ using UnityEditor;
 public abstract class StateMachineBase : MonoBehaviour
 {
     // default components
+
     private Rigidbody2D _rigidbody;
     public Rigidbody2D Rigidbody
     {
         get => _rigidbody;
         private set => _rigidbody = value;
     }
+
     private Animator _animator;
     public Animator Animator
     {
@@ -21,6 +23,7 @@ public abstract class StateMachineBase : MonoBehaviour
     }
 
     // states
+
     [SerializeField] private StateBase _initialState;
     public StateBase CurrentState { get; private set; }
     public StateBase PreviousState { get; private set; }
@@ -37,7 +40,7 @@ public abstract class StateMachineBase : MonoBehaviour
             Debug.LogError($"Initial state of {this.gameObject.name} is missing!");
 #endif
         CurrentState = _initialState;
-        if (CurrentState != null) CurrentState.TriggerEnter(this);
+        if (CurrentState != null) CurrentState.TriggerEnter();
     }
     protected virtual void Update()
     {
@@ -61,7 +64,7 @@ public abstract class StateMachineBase : MonoBehaviour
         CurrentState = nextState;
 
         // second enter the next state
-        CurrentState.TriggerEnter(this);
+        CurrentState.TriggerEnter();
 
         return nextState;
     }

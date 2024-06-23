@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class InstantRespawnState : PlayerState
 {
-    private PlayerBehaviour _player;
-
     protected override bool OnEnter()
     {
         StartCoroutine(EnterCoroutine());
@@ -43,22 +41,14 @@ public class InstantRespawnState : PlayerState
 
         // move to check point & change to idle state
         SceneContext.Current.InstantRespawn();
-
-        _player = Player;
-
-        Debug.Log(Player);
     }
 
     private IEnumerator ExitCoroutine()
     {
-        Debug.Log(Player);
-
         Player.MaterialController.DisintegrateEffect.Play(0f, true);
 
         yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
         Player.MaterialController.DisintegrateEffect.ResetIsEffectDone();
-
-        Debug.Log(Player);
 
         Player.Rigidbody.velocity = Vector2.zero;
         Player.Rigidbody.simulated = true;
@@ -67,7 +57,5 @@ public class InstantRespawnState : PlayerState
 
         // defualt input setter
         InputManager.Instance.ChangeToDefaultSetter();
-
-        // Player = null;
     }
 }

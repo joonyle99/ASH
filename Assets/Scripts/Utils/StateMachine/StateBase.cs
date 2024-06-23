@@ -5,14 +5,17 @@ public abstract class StateBase : MonoBehaviour
 {
     // [SerializeField] StateAnimatorParamData _animatorParameters;
 
-    protected StateMachineBase StateMachine { get; set; }
+    protected StateMachineBase StateMachine { get; private set; }
     protected Animator Animator => StateMachine.Animator;
 
-    public void TriggerEnter(StateMachineBase stateMachine)
+    private void Awake()
     {
-        StateMachine = stateMachine;
-        SetAnimsOnEnter();
+        // 여러 State를 가진 GameObject는 하나의 StateMachine을 가지고 있다.
+        StateMachine = GetComponent<StateMachineBase>();
+    }
 
+    public void TriggerEnter()
+    {
         // _animatorParameters.InvokeEnter(StateMachine.Animator);
 
         OnEnter();
@@ -30,14 +33,12 @@ public abstract class StateBase : MonoBehaviour
         // _animatorParameters.InvokeExit(StateMachine.Animator);
 
         OnExit();
-        StateMachine = null;
     }
 
-    protected virtual void SetAnimsOnEnter() { }
     protected abstract bool OnEnter();
     protected abstract bool OnUpdate();
-    protected virtual bool OnFixedUpdate() { return true; }
     protected abstract bool OnExit();
+    protected virtual bool OnFixedUpdate() { return true; }
 
     public TNextState ChangeState<TNextState>(bool ignoreSameState = false) where TNextState : StateBase
     {
