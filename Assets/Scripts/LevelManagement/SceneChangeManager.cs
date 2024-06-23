@@ -65,18 +65,11 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         return toPassageData;
     }
 
+    // 플레이 불가능한 씬으로 전환
     public void ChangeToNonPlayableScene(string sceneName, System.Action changeDoneCallback = null)
     {
         StartCoroutine(ChangeToNonPlayableSceneCoroutine(sceneName, changeDoneCallback));
     }
-    public void ChangeToPlayableScene(string sceneName, string passageName)
-    {
-        if (IsChanging)
-            return;
-
-        StartCoroutine(ChangeToPlayableSceneCoroutine(sceneName, passageName));
-    }
-
     private IEnumerator ChangeToNonPlayableSceneCoroutine(string sceneName, System.Action changeDoneCallback)
     {
         IsChanging = true;
@@ -92,20 +85,31 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
     }
-    private IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string passageName)
+
+    // 플레이 가능한 씬으로 전환
+    public void ChangeToPlayableScene(string sceneName, string passageName)
+    {
+        if (IsChanging)
+            return;
+
+        StartCoroutine(ChangeToPlayableSceneCoroutine(sceneName, passageName));
+    }
+    private IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string entranceName)
     {
         IsChanging = true;
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         yield return new WaitUntil(() => load.isDone);
 
         SceneContext sceneContext = FindOrCreateSceneContext();
-        Result buildResult = sceneContext.BuildPlayable(passageName);
+        Result buildResult = sceneContext.BuildPlayable(entranceName);
         IsChanging = false;
 
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
     }
 
+    // ISceneContextBuildListener 인터페이스 구현 함수
+    // SceneContext가 DefaultBuild되었을 때 호출되는 함수
     public void OnSceneContextBuilt()
     {
         SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false));

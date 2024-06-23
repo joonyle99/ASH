@@ -68,7 +68,7 @@ public class DisintegrateEffect : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Respawn Effect in {name}");
+            // Debug.Log($"Respawn Effect in {name}");
 
             // Disintegrate Material Initialize
             InitMaterialAndProgressForRespawn();
