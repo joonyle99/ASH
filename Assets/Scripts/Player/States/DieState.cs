@@ -16,8 +16,6 @@ public class DieState : PlayerState
     [SerializeField] private float _moveUpDistance = 4f;
     [SerializeField] private float _stayInAirDuration = 0.3f;
 
-    private PlayerBehaviour _player;
-
     protected override bool OnEnter()
     {
         StartCoroutine(EnterCoroutine());
@@ -43,15 +41,13 @@ public class DieState : PlayerState
 
     private IEnumerator EnterCoroutine()
     {
-        _player = Player;
-
         InputManager.Instance.ChangeToStayStillSetter();
 
-        _player.SoundList.PlaySFX("SE_Die_02(Short)");
+        Player.SoundList.PlaySFX("SE_Die_02(Short)");
 
-        _player.Animator.SetTrigger("Die");
+        Player.Animator.SetTrigger("Die");
 
-        _player.IsDead = true;
+        Player.IsDead = true;
 
         yield return new WaitForSeconds(_dieEffectDelay);
 
@@ -59,10 +55,10 @@ public class DieState : PlayerState
 
         yield return new WaitForSeconds(_stayInAirDuration);
 
-        _player.PlaySound_SE_Die_01();
-        _player.MaterialController.DisintegrateEffect.Play();
+        Player.PlaySound_SE_Die_01();
+        Player.MaterialController.DisintegrateEffect.Play();
 
-        yield return new WaitUntil(() => _player.MaterialController.DisintegrateEffect.IsEffectDone);
+        yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
 
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
@@ -79,13 +75,11 @@ public class DieState : PlayerState
     {
         yield return null;
 
-        _player.Animator.SetTrigger("EndDie");
+        Player.Animator.SetTrigger("EndDie");
 
-        _player.IsDead = false;
+        Player.IsDead = false;
 
         InputManager.Instance.ChangeToDefaultSetter();
-
-        _player = null;
     }
 
     private IEnumerator MoveUpEffectCoroutine()
