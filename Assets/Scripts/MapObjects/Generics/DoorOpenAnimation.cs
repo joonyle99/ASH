@@ -17,10 +17,12 @@ public class DoorOpenAnimation : MonoBehaviour
     [SerializeField] ParticleHelper _dustParticle;
 
     private Animator _animator;
+
     private void Awake()
     {
         _animator = GetComponent<Animator>();   
     }
+
     public IEnumerator OpenCoroutine()
     {
         SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);

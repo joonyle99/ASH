@@ -3,28 +3,36 @@ using UnityEngine;
 
 public class BossDoor : InteractableObject
 {
-    [SerializeField] GameObject _passage;
-    [SerializeField] float _goInDelay = 1f;
-    [SerializeField] InputSetterScriptableObject _enterInputSetter;
+    [Header("Boss Door")]
+    [Space]
 
-    [SerializeField] SoundList _soundList;
+    [SerializeField] private GameObject _passage;
+    [SerializeField] private float _goInDelay = 1f;
 
-    [SerializeField] DialogueData _failDialogue;
+    [Space]
 
-    DoorOpenAnimation _doorOpenAnimation;
+    [SerializeField] private DialogueData _failDialogue;
+    [SerializeField] private InputSetterScriptableObject _enterInputSetter;
+    [SerializeField] private SoundList _soundList;
 
-    Animator _animator;
-    Collider2D _collider;
+    private DoorOpenAnimation _doorOpenAnimation;
+
+    private Animator _animator;
+    private Collider2D _collider;
 
     private void Awake()
     {
+        _doorOpenAnimation = GetComponent<DoorOpenAnimation>();
+
         _animator = GetComponent<Animator>();
         _collider = GetComponent<Collider2D>();
-        _doorOpenAnimation = GetComponent<DoorOpenAnimation>();
+    }
+    private void Start()
+    {
         _passage.SetActive(false);
     }
-    // Start is called before the first frame update
 
+    // interaction
     protected override void OnObjectInteractionEnter()
     {
         if (BossDungeonManager.Instance.IsAllKeysCollected)
@@ -49,20 +57,27 @@ public class BossDoor : InteractableObject
                 ExitInteraction();
         }
     }
-    IEnumerator OpenCoroutine()
+
+    // open door
+    private IEnumerator OpenCoroutine()
     {
         InputManager.Instance.ChangeToStayStillSetter();
+
         SceneEffectManager.Instance.Camera.RemoveFollowTarget(SceneContext.Current.Player.transform);
         SceneEffectManager.Instance.Camera.AddFollowTarget(transform);
+
         yield return _doorOpenAnimation.OpenCoroutine();
         yield return new WaitUntil(() => _passage.activeSelf);
         yield return new WaitForSeconds(_goInDelay);
+
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
     }
-    void OpenDoor()
+    public void OpenDoor()
     {
         StartCoroutine(OpenCoroutine()); 
     }
+
+    // anim event
     public void AnimEvent_OnOpenDone()
     {
         SceneEffectManager.Instance.Camera.StopConstantShake();
