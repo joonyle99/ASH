@@ -69,10 +69,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         _proCamera.AddCameraTarget(target);
     }
-    public void AddFollowTargets(Transform [] targets)
+    public void AddFollowTargets(Transform[] targets)
     {
         _proCamera.AddCameraTargets(targets);
     }
+
     public void RemoveFollowTarget(Transform target)
     {
         _proCamera.RemoveCameraTarget(target);
@@ -86,11 +87,12 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
             _proCamera.RemoveCameraTarget(target);
         }
     }
+
     public void StartFollow(Transform target, bool removeExisting = true)
     {
         if (removeExisting)
             _proCamera.RemoveAllCameraTargets();
-        
+
         _proCamera.AddCameraTarget(target);
     }
     public void FollowOnly(Transform target)
@@ -98,16 +100,14 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.RemoveAllCameraTargets();
         _proCamera.AddCameraTarget(target);
     }
+
     public void DisableCameraFollow()
     {
         // 0에 가까울 수록 빠르게 따라감
         _proCamera.HorizontalFollowSmoothness = 100f;
         _proCamera.VerticalFollowSmoothness = 100f;
     }
-    public void SnapFollow()
-    {
-        // StartCoroutine(SnapFollowCoroutine());
-    }
+
     private IEnumerator SnapFollowCoroutine()
     {
         Debug.Log("call snap follow coroutine");
@@ -126,6 +126,10 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.VerticalFollowSmoothness = originalSmoothnessY;
 
         // Debug.Log($"_proCamera.HorizontalFollowSmoothness: {_proCamera.HorizontalFollowSmoothness} \n _proCamera.VerticalFollowSmoothness: {_proCamera.VerticalFollowSmoothness}");
+    }
+    public void SnapFollow()
+    {
+        // StartCoroutine(SnapFollowCoroutine());
     }
 
     // effect: shake

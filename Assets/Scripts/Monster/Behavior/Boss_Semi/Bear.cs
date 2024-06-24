@@ -62,6 +62,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [SerializeField] private Range _distanceRange;
 
     private List<float> _usedPosX;
+    private int allocationCountLimit = 30;
 
     [Space]
 
@@ -311,24 +312,36 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
     public IEnumerator CreateStalactite(int dir)
     {
+        var player = SceneContext.Current.Player;
+
+        var leftX = player.BodyCollider.bounds.min.x - _distanceRange.End;
+        var rightX = player.BodyCollider.bounds.max.x + _distanceRange.End;
+
+        Debug.DrawLine(new Vector3(leftX, _ceilingHeight, player.transform.position.z), new Vector3(leftX, _ceilingHeight - 3f, player.transform.position.z), Color.cyan, 3f);
+        Debug.DrawLine(new Vector3(rightX, _ceilingHeight, player.transform.position.z), new Vector3(rightX, _ceilingHeight - 3f, player.transform.position.z), Color.cyan, 3f);
+
         yield return new WaitForSeconds(_createTimeRange.Random());
 
-        // reallocation count limit
-        int posReallocationCount = 0;
+        // allocation count limit
+        int allocationCount = 0;
 
         float newPosXInRange;
         do
         {
+            /*
             // random pos range
             newPosXInRange = (dir > 0)
-                ? Random.Range(MainBodyCollider2D.bounds.max.x + _distanceRange.Start,
-                    MainBodyCollider2D.bounds.max.x + _distanceRange.End)
-                : Random.Range(MainBodyCollider2D.bounds.min.x - _distanceRange.End,
-                    MainBodyCollider2D.bounds.min.x - _distanceRange.Start);
+                ? Random.Range(player.BodyCollider.bounds.max.x + _distanceRange.Start,
+                    player.BodyCollider.bounds.max.x + _distanceRange.End)
+                : Random.Range(player.BodyCollider.bounds.min.x - _distanceRange.End,
+                    player.BodyCollider.bounds.min.x - _distanceRange.Start);
+            */
 
-            posReallocationCount++;
+            newPosXInRange = Random.Range(leftX, rightX);
 
-        } while (_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistanceEach) && posReallocationCount <= 10);
+            allocationCount++;
+
+        } while (_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistanceEach) && allocationCount <= allocationCountLimit);
         // List<>: C#에서 제공하는 '제네릭 컬렉션 (<Type> 덕분에, 박싱 / 언박싱을 하지 않음)' 유형 중 하나로, 동적 배열을 구현
         // Any(): LINQ(Language Integrated Query) 확장 메서드
         // 컬렉션 내의 요소 중 하나라도 주어진 조건을 만족하는지 확인하는 메서드
@@ -337,11 +350,11 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         // store posX
         _usedPosX.Add(newPosXInRange);
 
-        // confirm position
-        Vector2 position = new Vector2(newPosXInRange, _ceilingHeight);
+        // confirm spawn position
+        Vector2 spawnPosition = new Vector2(newPosXInRange, _ceilingHeight);
 
         // create stalactite
-        var stalactite = Instantiate(_stalactitePrefab, position, Quaternion.identity);
+        var stalactite = Instantiate(_stalactitePrefab, spawnPosition, Quaternion.identity);
         stalactite.transform.localScale *= _createSizeRange.Random();
         stalactite.SetActor(this);
     }
@@ -471,20 +484,47 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
     private void OnDrawGizmosSelected()
     {
-        // 종유석 생성 범위
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(new Vector3(transform.position.x - 25f, _ceilingHeight, transform.position.z), new Vector3(transform.position.x + 25f, _ceilingHeight, transform.position.z));
+        var current = SceneContext.Current;
 
-        if (!MainBodyCollider2D) return;
+        if (current == null)
+            return;
+
+        var player = current.Player;
+
+        if (player == null)
+            return;
+
+        // 종유석 생성 높이
+        Gizmos.color = Color.red;
+        Vector3 pointA = new Vector3(player.transform.position.x - 25f, _ceilingHeight, player.transform.position.z);
+        Vector3 pointB = new Vector3(player.transform.position.x + 25f, _ceilingHeight, player.transform.position.z);
+        joonyle99.Line3D heightLine = new joonyle99.Line3D(pointA, pointB);
+        Gizmos.DrawLine(heightLine.pointA, heightLine.pointB);
+
+        Gizmos.color = Color.yellow;
 
         // 오른쪽 종유석 범위
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.Start, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.Start, _ceilingHeight - 3f, transform.position.z));
-        Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.End, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.max.x + _distanceRange.End, _ceilingHeight - 3f, transform.position.z));
+        /*
+        Vector3 pointC = new Vector3(player.BodyCollider.bounds.max.x + _distanceRange.Start, _ceilingHeight, player.transform.position.z);
+        Vector3 pointD = new Vector3(player.BodyCollider.bounds.max.x + _distanceRange.Start, _ceilingHeight - 3f, player.transform.position.z);
+        joonyle99.Line3D rightLine_left = new joonyle99.Line3D(pointC, pointD);
+        Gizmos.DrawLine(rightLine_left.pointA, rightLine_left.pointB);
+        */
+        // Vector3 pointE = new Vector3(player.BodyCollider.bounds.max.x + _distanceRange.End, _ceilingHeight, player.transform.position.z);
+        // Vector3 pointF = new Vector3(player.BodyCollider.bounds.max.x + _distanceRange.End, _ceilingHeight - 3f, player.transform.position.z);
+        // joonyle99.Line3D rightLine_right = new joonyle99.Line3D(pointE, pointF);
+        // Gizmos.DrawLine(rightLine_right.pointA, rightLine_right.pointB);
 
         // 왼쪽 종유석 범위
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.Start, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.Start, _ceilingHeight - 3f, transform.position.z));
-        Gizmos.DrawLine(new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.End, _ceilingHeight, transform.position.z), new Vector3(MainBodyCollider2D.bounds.min.x - _distanceRange.End, _ceilingHeight - 3f, transform.position.z));
+        /*
+        Vector3 pointG = new Vector3(player.BodyCollider.bounds.min.x - _distanceRange.Start, _ceilingHeight, player.transform.position.z);
+        Vector3 pointH = new Vector3(player.BodyCollider.bounds.min.x - _distanceRange.Start, _ceilingHeight - 3f, player.transform.position.z);
+        joonyle99.Line3D leftLine_left = new joonyle99.Line3D(pointG, pointH);
+        Gizmos.DrawLine(leftLine_left.pointA, leftLine_left.pointB);
+        */
+        // Vector3 pointI = new Vector3(player.BodyCollider.bounds.min.x - _distanceRange.End, _ceilingHeight, player.transform.position.z);
+        // Vector3 pointJ = new Vector3(player.BodyCollider.bounds.min.x - _distanceRange.End, _ceilingHeight - 3f, player.transform.position.z);
+        // joonyle99.Line3D leftLine_right = new joonyle99.Line3D(pointI, pointJ);
+        // Gizmos.DrawLine(leftLine_right.pointA, leftLine_right.pointB);
     }
 }
