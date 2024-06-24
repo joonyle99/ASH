@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class PlayerBehaviour : StateMachineBase, IAttackListener
+public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextBuildListener
 {
     private const int LIMIT_HP = 20;
 
@@ -244,6 +244,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Animator.SetBool("IsOppositeDirSync", IsOppositeDirSync);
 
         #endregion
+    }
+
+    // build listener
+    public void OnSceneContextBuilt()
+    {
+        // TODO: 현재 체력을 글로벌로 저장된 플레이어의 체력으로 설정한다
+
     }
 
     // basic

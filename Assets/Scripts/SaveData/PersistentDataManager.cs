@@ -19,27 +19,27 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
     private void Update()
     {
+        // ´õºí Á¡ÇÁ, ´ë½¬ È¹µæ
         if (Input.GetKeyDown(KeyCode.F8))
         {
-            // 
             SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
 
-            // 
             UpdateValueByGlobal<int>("SkillPiece", x => x + 3);
 
             _cheatSkillId++;
         }
 
+        // ºû ½ºÅ³ È¹µæ
         if (Input.GetKeyDown(KeyCode.F7) || Input.GetKeyDown(KeyCode.F4))
         {
             SetByGlobal<bool>("LightSkill", true);
         }
 
+        // µð¹ö±× ÄÚµå
         if (Input.GetKeyDown(KeyCode.Q))
         {
             PrintDataGroup();
         }
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             PrintGlobalDataGroup();

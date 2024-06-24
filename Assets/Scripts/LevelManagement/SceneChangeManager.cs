@@ -77,7 +77,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         yield return new WaitUntil(() => load.isDone);
 
         SceneContext sceneContext = FindOrCreateSceneContext();
-        Result buildResult = sceneContext.BuildPlayable("");
+        Result buildResult = sceneContext.BuildPlayable("");                // scene context build
         IsChanging = false;
 
         changeDoneCallback?.Invoke();
@@ -101,7 +101,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         yield return new WaitUntil(() => load.isDone);
 
         SceneContext sceneContext = FindOrCreateSceneContext();
-        Result buildResult = sceneContext.BuildPlayable(entranceName);
+        Result buildResult = sceneContext.BuildPlayable(entranceName);      // scene context build
         IsChanging = false;
 
         // 씬에 대한 BGM 재생

@@ -38,9 +38,8 @@ public class SceneContext : MonoBehaviour
     }
 
     /// <summary>
-    /// 씬 전환 시 필요한 오브젝트에 대한 레퍼런스를 업데이트한다.
-    /// -> 플레이어, 씬 전환 플레이어, 시작 입구 ..
-    /// -> 체크 포인트, 랜턴 컨텍스트 ..
+    /// 해당 씬에 대한 컨텍스트를 빌드한다
+    /// i.e) 플레이어, 씬 전환 플레이어, 시작 입구, 체크 포인트, 컨텍스트 리스너 ...
     /// </summary>
     /// <param name="entranceName"></param>
     /// <returns></returns>
