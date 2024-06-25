@@ -207,17 +207,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         if (IsDead)
             return;
 
-        /*
-        if (IsMoveXKey)
-        {
-            CapeControl();
-        }
-        else
-        {
-            CapeZero();
-        }
-        */
-
         #region Input
 
         // Attack
@@ -241,6 +230,16 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
         // Change In Air State
         ChangeInAirState();
+
+        // Control Cape
+        if (IsMoveXKey)
+        {
+            CapeControlX();
+        }
+        else
+        {
+            CapeZeroX();
+        }
 
         #endregion
 
@@ -373,13 +372,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         ChangeState<IdleState>();
     }
 
-    public void CapeControl()
+    public void CapeControlX()
     {
         var vec = _capeCloth.externalAcceleration;
-        vec.x = (-1) * RecentDir * Rigidbody.velocity.x;
+        vec.x = (-1) * RecentDir * 60f;
         _capeCloth.externalAcceleration = vec;
     }
-    public void CapeZero()
+    public void CapeZeroX()
     {
         var vec = _capeCloth.externalAcceleration;
         vec.x = 0f;
