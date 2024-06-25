@@ -61,9 +61,13 @@ public static class MonsterDefine
 
         // Normal
         Bat = 1001,
+        Bat2,
         Turtle,
+        Turtle2,
         Frog,
+        Frog2,
         Mushroom,
+        Mushroom2,
 
         天天SemiBoss天天,
 
