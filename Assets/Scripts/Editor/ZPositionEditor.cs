@@ -22,7 +22,7 @@ public class ZPositionEditor : Editor
         }
 
         // zPosition 세팅을 스킵하는 조건
-        if (Mathf.Abs(transform.localPosition.z) < 0.01f) return;
+        if (Mathf.Abs(transform.localPosition.z) < 0.0001f) return;
         var renderer = transform.GetComponent<Renderer>();
         if (renderer)
         {
