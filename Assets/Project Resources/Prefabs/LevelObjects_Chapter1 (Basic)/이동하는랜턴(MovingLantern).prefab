@@ -230,7 +230,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9192b4ea5acf7241b68c579c1caae69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactableObject: {fileID: 7270614516943820696}
+  triggerActivators: []
+  _interactionObject: {fileID: 7270614516943820696}
 --- !u!1 &7270614516258992102
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,10 +803,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f549cf16f875ea540848649732df9cd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactionMarkerPoint: {fileID: 7270614516793846558}
   _isInteractable: 1
-  _animationType: 0
+  _isInteracting: 0
+  _interactionMarkerPoint: {fileID: 7270614516793846558}
   _stateChange: 0
+  _animationType: 0
   _rail: {fileID: 5907516830296577576}
   _pieceCount: 2
   _pieceOffset: 0.45
