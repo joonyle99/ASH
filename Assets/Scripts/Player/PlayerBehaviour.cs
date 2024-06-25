@@ -42,6 +42,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     [SerializeField] private CapsuleCollider2D _bodyCollider;
     [SerializeField] private Rigidbody2D _handRigidbody;
     [SerializeField] private Collider2D _heartCollider;
+    [SerializeField] private Cloth _capeCloth;
     [SerializeField] private Material _capeMaterial;
 
     [Header("ETC")]
@@ -206,6 +207,17 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         if (IsDead)
             return;
 
+        /*
+        if (IsMoveXKey)
+        {
+            CapeControl();
+        }
+        else
+        {
+            CapeZero();
+        }
+        */
+
         #region Input
 
         // Attack
@@ -359,6 +371,19 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         // from hurt state
 
         ChangeState<IdleState>();
+    }
+
+    public void CapeControl()
+    {
+        var vec = _capeCloth.externalAcceleration;
+        vec.x = (-1) * RecentDir * Rigidbody.velocity.x;
+        _capeCloth.externalAcceleration = vec;
+    }
+    public void CapeZero()
+    {
+        var vec = _capeCloth.externalAcceleration;
+        vec.x = 0f;
+        _capeCloth.externalAcceleration = vec;
     }
 
     #endregion
