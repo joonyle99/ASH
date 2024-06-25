@@ -37,10 +37,8 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
         _proCamera.enabled = true;
 
-        if (SceneContext.Current.Player)
-            _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
-        else
-            Debug.LogWarning("Player not found in the scene");
+        if (SceneContext.Current.Player) _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
+        else Debug.LogWarning("Player not found in the scene");
 
         SnapFollow();
     }
@@ -108,6 +106,10 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.VerticalFollowSmoothness = 100f;
     }
 
+    /// <summary>
+    /// 한 프레임 동안 smoothness를 0으로 설정함으로써, 플레이어를 즉시 따라가도록 한다.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator SnapFollowCoroutine()
     {
         Debug.Log("call snap follow coroutine");
@@ -129,7 +131,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void SnapFollow()
     {
-        // StartCoroutine(SnapFollowCoroutine());
+        StartCoroutine(SnapFollowCoroutine());
     }
 
     // effect: shake
