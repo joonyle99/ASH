@@ -375,7 +375,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public void CapeControlX()
     {
         var vec = _capeCloth.externalAcceleration;
-        vec.x = (-1) * RecentDir * 60f;
+        vec.x = (-1) * RecentDir * 20f;
         _capeCloth.externalAcceleration = vec;
     }
     public void CapeZeroX()
