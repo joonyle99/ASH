@@ -112,11 +112,11 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     {
         if (!replayIfSameClip && clip == _bgmPlayer.clip)
         {
-            Debug.LogWarning($"already playing this audio clip" +
+            Debug.Log($"Already Playing this Audio Clip" +
                              $"\n" +
-                             $"new audio source: {clip.name}" +
+                             $"New Audio Source: {clip.name}" +
                              $"\n" +
-                             $"old audio source: {_bgmPlayer.clip}");
+                             $"Old Audio Source: {_bgmPlayer.clip}");
             return;
         }
 
