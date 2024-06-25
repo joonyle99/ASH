@@ -8,9 +8,6 @@ public class ZPositionEditor : Editor
 {
     static void RecursiveCall(Transform transform, int depth)
     {
-        // 자식이 더이상 없는 경우 리턴
-        if (transform.childCount == 0) return;
-
         // (자식이 있더라도) 더이상 들어가지 않는 조건
         if (transform.GetComponent<CameraController>()) return;
         if (transform.GetComponent<ParallaxTool>()) return;
@@ -22,7 +19,7 @@ public class ZPositionEditor : Editor
         }
 
         // zPosition 세팅을 스킵하는 조건
-        if (Mathf.Abs(transform.localPosition.z) < 0.0001f) return;
+        if (Mathf.Abs(transform.localPosition.z) < 0.000001f) return;
         var renderer = transform.GetComponent<Renderer>();
         if (renderer)
         {
@@ -39,7 +36,7 @@ public class ZPositionEditor : Editor
             }
         }
 
-        Debug.Log(transform.gameObject.name, transform.gameObject);
+        Debug.Log($"<b><color=yellow>Name</color></b>: {transform.gameObject.name} => <color=orange>Depth</color>: {depth}", transform.gameObject);
     }
 
     static void RecursiveTest(Transform transform, int depth)
@@ -55,18 +52,24 @@ public class ZPositionEditor : Editor
     }
 
     [MenuItem("Tools/Z Position Setter")]
-    static void PrintZPosition()
+    static void ZPositionChecking()
     {
 #if UNITY_EDITOR
+
+        Debug.Log("Start ZPositionChecking()");
+
         // 씬에 있는 모든 게임 루트 오브젝트를 가져온다.
         var currentScene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
         GameObject[] gameObjects = currentScene.GetRootGameObjects();
 
-        // 게임 오브젝트의 zPosition이 0이 아닌 객체들의 목록을 표시한다
+        /*
         foreach (var gameObject in gameObjects)
         {
             RecursiveCall(gameObject.transform, 0);
         }
+        */
+
+        RecursiveCall(gameObjects[0].transform, 0);
 #endif
     }
 }
