@@ -5,7 +5,6 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     [SerializeField] private int _maxKeyCount = 3;
     [SerializeField] private string _dataGroupName = "BossDungeon1";
     [SerializeField] private DialogueData _firstKeyDialogue;
-    [SerializeField] private SoundClipData _bossDungeonBGM;
 
     public int CurrentKeyCount => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount");
     public bool IsAllKeysCollected => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount") == _maxKeyCount;

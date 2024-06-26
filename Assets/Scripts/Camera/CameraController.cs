@@ -112,7 +112,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     /// <returns></returns>
     private IEnumerator SnapFollowCoroutine()
     {
-        Debug.Log("call snap follow coroutine");
+        // Debug.Log("call snap follow coroutine");
 
         float originalSmoothnessX = _proCamera.HorizontalFollowSmoothness;
         float originalSmoothnessY = _proCamera.VerticalFollowSmoothness;
