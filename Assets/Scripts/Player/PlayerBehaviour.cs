@@ -286,7 +286,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     }
     private void ChangeInAirState()
     {
-        if (!IsGroundedSupported)
+        if (!IsGrounded)
         {
             if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();
