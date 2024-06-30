@@ -1,39 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ShiningRock : InteractableObject, IAttackListener
 {
     [SerializeField] DialogueData _dialogueOnFirstInteract;
-    [SerializeField] DialogueData _dialogueOnConsecutiveInteract;
     [SerializeField] DialogueData _dialogueOnFirstAttack;
     [SerializeField] DialogueData _dialogueAfterSecondAttack;
+    [SerializeField] DialogueData _dialogueOnConsecutiveInteract;
+
     [SerializeField] CutscenePlayer _cutscenePlayer;
     [SerializeField] int _hp = 3;
     [SerializeField] GameObject _lightNPC;
     [SerializeField] SoundList _soundList;
-    bool _hasPlayedDialogue = false;
 
-    bool _hittable = false;
+    bool _hasPlayedDialogue = false;
+    bool _isHittable = false;
+
     void Awake()
     {
         _lightNPC.SetActive(false);
     }
+
     protected override void OnObjectInteractionEnter()
     {
         if (!_hasPlayedDialogue)
         {
-            DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract);
+            DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract);                // 거기 누구 있어?
             _hasPlayedDialogue = true;
+            _isHittable = true;
         }
         else
         {
             if (_hp == 3)
-                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);
+                DialogueController.Instance.StartDialogue(_dialogueAfterSecondAttack);          // 물리적인 공격으로 부서질 거 같아
             else if (_hp == 2)
-                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);
+                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);      // 곧 부서질 거 같아
             else if (_hp == 1)
-                DialogueController.Instance.StartDialogue(_dialogueAfterSecondAttack);
+                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);      // 곧 부서질 거 같아
         }
     }
 
@@ -45,13 +47,17 @@ public class ShiningRock : InteractableObject, IAttackListener
             _hasPlayedDialogue = true;
         }
     }
+
     public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
+        if (!_isHittable) return IAttackListener.AttackResult.Fail;
+
         _hp--;
         _soundList.PlaySFX("Hit");
+
         if (_hp == 2)
         {
-            DialogueController.Instance.StartDialogue(_dialogueOnFirstAttack);
+            DialogueController.Instance.StartDialogue(_dialogueOnFirstAttack);                  // 어 부서지는 소리가 들려
         }
         else if (_hp == 0)
         {
