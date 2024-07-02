@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -18,10 +19,20 @@ public class DialogueData : ScriptableObject
     [Space]
 
     [SerializeField] private DialogueAction[] _actions;                     // 대화 액션
+
+    [SerializeField, TextArea(3, 30)] private string _scriptText;
     
     public QuestData QuestData { get; private set; }                        // 대화에 연결된 퀘스트 데이터
 
     public InputSetterScriptableObject InputSetter => _inputSetter;
+
+    private void OnValidate()
+    {
+        if (_script)
+        {
+            _scriptText = _script.text;
+        }
+    }
 
     /// <summary>
     /// NPC가 가지고 있는 QuestData를 DialogueData에 연결한다
