@@ -1,13 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Utils;
 
+/// <summary>
+/// 플레이어와 충돌하는 오브젝트를 감지하는 컴포넌트
+/// 해당 오브젝트가 'ExceptPlayer' Layer인 경우, OnPlayerEnter()를 직접 호출한다
+/// </summary>
 public class CollisionWithPlayerDetector : MonoBehaviour
 {
-    bool _isPlayerInCollider = false;
+    [Tooltip("플레이어의 충돌체를 감지하는지에 대한 여부")]
+    [SerializeField] private bool _isCollisionalbeWithPlayer = true;        // detector on / off
 
-    ICollisionWithPlayerListener [] _listeners;
+    private ICollisionWithPlayerListener[] _listeners;                      // collision listener list
+    private bool _isPlayerInCollider = false;
 
     private void Awake()
     {
@@ -15,21 +19,26 @@ public class CollisionWithPlayerDetector : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (IsCollidingWithPlayer())
+        if (_isCollisionalbeWithPlayer)
         {
-            if (_isPlayerInCollider)
-                OnPlayerStay();
+            // Check if the object is colliding with the player
+            if (IsCollidingWithPlayer())
+            {
+                if (_isPlayerInCollider)
+                    OnPlayerStay();
+                else
+                    OnPlayerEnter();
+                _isPlayerInCollider = true;
+            }
             else
-                OnPlayerEnter();
-            _isPlayerInCollider = true;
-        }
-        else
-        {
-            if (_isPlayerInCollider)
-                OnPlayerExit();
-            _isPlayerInCollider = false;
+            {
+                if (_isPlayerInCollider)
+                    OnPlayerExit();
+                _isPlayerInCollider = false;
+            }
         }
     }
+
     bool IsCollidingWithPlayer()
     {
         ContactFilter2D filter = new ContactFilter2D();
@@ -43,6 +52,7 @@ public class CollisionWithPlayerDetector : MonoBehaviour
         }
         return false;
     }
+
     void OnPlayerEnter()
     {
         foreach(var listener in _listeners)

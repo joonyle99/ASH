@@ -118,7 +118,7 @@ public class PlayerJumpController : MonoBehaviour
         // cast jump
         if (CanJump)
         {
-            Debug.Log("cast jump");
+            // Debug.Log("cast jump");
 
             CastJump();
         }
