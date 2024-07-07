@@ -36,7 +36,9 @@ public class ZPositionEditor : Editor
             }
         }
 
-        Debug.Log($"<b><color=yellow>Name</color></b>: {transform.gameObject.name} => <color=orange>Depth</color>: {depth}", transform.gameObject);
+        Debug.Log($"<b><color=yellow>Name</color></b>: {transform.gameObject.name}" +
+            $"=>" +
+            $"<color=orange>Depth</color>: {depth}", transform.gameObject);
     }
 
     static void RecursiveTest(Transform transform, int depth)
@@ -55,19 +57,9 @@ public class ZPositionEditor : Editor
     static void ZPositionChecking()
     {
 #if UNITY_EDITOR
-
-        Debug.Log("Start ZPositionChecking()");
-
         // 씬에 있는 모든 게임 루트 오브젝트를 가져온다.
         var currentScene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
         GameObject[] gameObjects = currentScene.GetRootGameObjects();
-
-        /*
-        foreach (var gameObject in gameObjects)
-        {
-            RecursiveCall(gameObject.transform, 0);
-        }
-        */
 
         RecursiveCall(gameObjects[0].transform, 0);
 #endif
