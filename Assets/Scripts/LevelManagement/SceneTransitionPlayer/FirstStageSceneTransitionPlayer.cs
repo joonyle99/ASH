@@ -1,11 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/*
- * 이 클래스가 담당하는 것: 씬 전환/재시작 시 fade 등의 화면 전환 효과 
- *  - Exit 또는 재시작은 누군가 호출해줘야하고, Enter은 씬 로드 시 자동호출 됨
- *  - 전환 시 플레이어 위치 변경 정도는 할 수 있으나, 기능적인 동작은 하지 않음 
- */
 public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
 {
     [Header("First enter cutscene")]
@@ -19,6 +14,8 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
 
     public override IEnumerator EnterSceneEffectCoroutine()
     {
+        // Debug.Log("call EnterSceneEffectCoroutine in FirstStageSceneTransitionPlayer");
+
         if (PersistentDataManager.GetByGlobal<bool>("seenPlayerFirstSpawn"))
         {
             yield return base.EnterSceneEffectCoroutine();
@@ -27,7 +24,7 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
         {
             SceneContext.Current.Player.transform.position = _spawnPoint.position;
             SceneContext.Current.Player.gameObject.SetActive(false);
-            SceneEffectManager.Instance.Camera.SnapFollow();
+            // SceneEffectManager.Instance.Camera.SnapFollow();
             GameUIManager.OpenLetterbox(true);
             StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
 

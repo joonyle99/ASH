@@ -1,7 +1,6 @@
 using NavMeshPlus.Components;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.SceneManagement;
 
 public class FloatingActionAreaDataSender : ActionAreaDataSender
 {
@@ -39,9 +38,10 @@ public class FloatingActionAreaDataSender : ActionAreaDataSender
     /// </summary>
     public override void UpdateActionAreaData()
     {
+        // 리스폰 구역 설정
         _respawnBounds = _patrolArea.bounds;
 
-        // receiver에게 
+        // receiver에게 데이터 전달
         receiver.SetFloatingActionAreaData(_patrolArea.transform.position, _chaseArea.transform.position,
             _patrolArea.transform.localScale, _chaseArea.transform.localScale, _respawnBounds);
 

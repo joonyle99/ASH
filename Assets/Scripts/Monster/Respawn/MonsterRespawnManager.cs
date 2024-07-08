@@ -26,6 +26,12 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         var monsterArray = FindObjectsOfType<MonsterBehaviour>();
         MonsterList = new List<MonsterBehaviour>(monsterArray);
     }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
 
     public void NotifyDeath(MonsterBehaviour monsterBehavior)
     {
@@ -133,12 +139,6 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
             // 위치 조정
             patrolPointA.transform.position = respawnData.groundActionAreaData.PatrolPointAPosition;
             patrolPointB.transform.position = respawnData.groundActionAreaData.PatrolPointBPosition;
-
-            // transform의 변경사항이 즉시 물리 엔진에 반영되어, bounds가 transform과 동기화된다
-            UnityEngine.Physics2D.SyncTransforms();
-
-            // 변경된 리스폰 정보를 새롭게 생성된 객체에 할당해준다
-            actionAreaDataSender.UpdateActionAreaData();
         }
         // 공중 몬스터의 행동 반경 정보 설정
         else if (moveType == MonsterDefine.MoveType.Fly)
@@ -155,13 +155,18 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
             // 크기 조정
             patrolArea.transform.localScale = respawnData.floatingActionAreaData.PatrolAreaScale;
             chaseArea.transform.localScale = respawnData.floatingActionAreaData.ChaseAreaScale;
-
-            // transform의 변경사항이 즉시 물리 엔진에 반영되어, bounds가 transform과 동기화된다
-            UnityEngine.Physics2D.SyncTransforms();
-
-            // 변경된 리스폰 정보를 새롭게 생성된 객체에 할당해준다
-            actionAreaDataSender.UpdateActionAreaData();
         }
+        else
+        {
+            Debug.LogWarning($"UpdateActionAreaInfo가 필요없는 이동 타입입니다. => {moveType}");
+            return;
+        }
+
+        // transform의 변경사항이 즉시 물리 엔진에 반영되어, bounds가 transform과 동기화된다
+        UnityEngine.Physics2D.SyncTransforms();
+
+        // 변경된 리스폰 정보를 새롭게 생성된 객체에 할당해준다
+        actionAreaDataSender.UpdateActionAreaData();
     }
     /// <summary>
     /// Prefab_MonsterName에 자식으로 있는 Monster_MonsterName의 리스폰 위치를 설정

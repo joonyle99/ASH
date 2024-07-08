@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class PlayerBehaviour : StateMachineBase, IAttackListener
+public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextBuildListener
 {
     private const int LIMIT_HP = 20;
 
@@ -42,6 +42,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     [SerializeField] private CapsuleCollider2D _bodyCollider;
     [SerializeField] private Rigidbody2D _handRigidbody;
     [SerializeField] private Collider2D _heartCollider;
+    [SerializeField] private Cloth _capeCloth;
     [SerializeField] private Material _capeMaterial;
 
     [Header("ETC")]
@@ -230,6 +231,16 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // Change In Air State
         ChangeInAirState();
 
+        // Control Cape
+        if (IsMoveXKey)
+        {
+            CapeControlX();
+        }
+        else
+        {
+            CapeZeroX();
+        }
+
         #endregion
 
         #region Animaotr Parameter
@@ -244,6 +255,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         Animator.SetBool("IsOppositeDirSync", IsOppositeDirSync);
 
         #endregion
+    }
+
+    // build listener
+    public void OnSceneContextBuilt()
+    {
+        // TODO: 현재 체력을 글로벌로 저장된 플레이어의 체력으로 설정한다
+
     }
 
     // basic
@@ -279,7 +297,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     }
     private void ChangeInAirState()
     {
-        if (!IsGroundedSupported)
+        if (!IsGrounded)
         {
             if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();
@@ -297,6 +315,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // fail return condition
         if (IsHurt || IsGodMode || IsDead)
             return IAttackListener.AttackResult.Fail;
+
+        Debug.Log(System.Environment.StackTrace);
 
         PlaySound_SE_Hurt_02();
         StartCoroutine(SlowMotionCoroutine(0.3f));
@@ -347,10 +367,14 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     // respawn
     public void TriggerInstantRespawn(float damage)
     {
+        if (IsDead) return;
+
         TakeDamage(damage);
 
-        if (CurHp > 0 && !IsDead)
+        if (CurHp > 0)
+        {
             ChangeState<InstantRespawnState>();
+        }
     }
 
     // etc
@@ -359,6 +383,19 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
         // from hurt state
 
         ChangeState<IdleState>();
+    }
+
+    public void CapeControlX()
+    {
+        var vec = _capeCloth.externalAcceleration;
+        vec.x = (-1) * RecentDir * 20f;
+        _capeCloth.externalAcceleration = vec;
+    }
+    public void CapeZeroX()
+    {
+        var vec = _capeCloth.externalAcceleration;
+        vec.x = 0f;
+        _capeCloth.externalAcceleration = vec;
     }
 
     #endregion

@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
+/// <summary>
+/// 컷씬 플레이어는 다양한 연출을 시퀀스를 통해 재생한다
+/// </summary>
 public class CutscenePlayer : MonoBehaviour, ITriggerListener
 {
     [SerializeField] bool _playOnce = true;
@@ -36,6 +38,11 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
         }
     }
 
+    /// <summary>
+    /// 시퀀스에 맞는 연출을 재생한다
+    /// </summary>
+    /// <param name="sequence"></param>
+    /// <returns></returns>
     private IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
     {
         IsPlaying = true;
@@ -60,11 +67,13 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
                 DialogueController.Instance.StartDialogue(effect.DialogueData, true);
                 yield return new WaitWhile(() => DialogueController.Instance.IsDialogueActive);
             }
+            /*
             else if (effect.Type == SceneEffect.EffectType.LifePurchase)
             {
                 GameUIManager.OpenLifePurchasePanel();
                 yield return new WaitWhile(() => GameUIManager.IsLifePurchasePanelOpen);
             }
+            */
             else if (effect.Type == SceneEffect.EffectType.WaitForSeconds)
             {
                 yield return new WaitForSeconds(effect.Time);
@@ -88,11 +97,10 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
         // 플레이어 무적 상태 해제
         SceneContext.Current.Player.IsGodMode = false;
     }
-    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
-    {
-        if (activator.Type == ActivatorType.Player)
-            Play();
-    }
+
+    /// <summary>
+    /// 시퀀스를 재생한다
+    /// </summary>
     public void Play()
     {
         if (!_played && _playOnce)
@@ -103,5 +111,21 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
             // 플레이어를 무적 상태로 만든다
             SceneContext.Current.Player.IsGodMode = true;
         }
+    }
+    
+    /// <summary>
+    /// 트리거로 인한 시퀀스 재생
+    /// </summary>
+    /// <param name="activator"></param>
+    /// <param name="reporter"></param>
+    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
+    {
+        if (activator.Type == ActivatorType.Player)
+            Play();
+    }
+
+    private IEnumerator CoroutineFunction()
+    {
+        yield return null;
     }
 }

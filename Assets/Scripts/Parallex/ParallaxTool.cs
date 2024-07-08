@@ -62,15 +62,14 @@ public class ParallaxTool : MonoBehaviour
     {
         SetVolumetricLights();
         SetGlobalLight();
+
         var allSprites = _backgroundParent.transform.GetComponentsInChildren<SpriteRenderer>();
+
         // TODO : Parallax 영향 안받을 오브젝트들에 대한 처리 방법
-        //
         for (int i = 0; i < allSprites.Length; i++)
         {
-            if (allSprites[i].transform.parent == transform)
-            {
-                continue;
-            }
+            if (allSprites[i].transform.parent == transform) continue;
+
             allSprites[i].sortingLayerName = _parallaxBoundaries.GetLayerName(allSprites[i].transform.position.z);
             allSprites[i].sortingOrder = GetSortingOrder(allSprites[i].transform.position.z);
         }

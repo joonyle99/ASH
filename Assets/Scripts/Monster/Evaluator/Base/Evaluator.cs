@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditor.Rendering;
 using UnityEngine;
 
 /// <summary>
@@ -7,26 +6,31 @@ using UnityEngine;
 /// </summary>
 public abstract class Evaluator : MonoBehaviour
 {
-    [Header("Evaluator")]
+    [Header("─────── Evaluator ───────")]
     [Space]
 
     [SerializeField] protected LayerMask targetLayer;           // 판독 대상 레이어
     [SerializeField] protected BoxCollider2D checkCollider;     // 판독 콜라이더
 
+    [Header("____ Togle Options ____")]
     [Space]
 
-    private bool _startUsableFlag;
+    [Tooltip("판독기를 사용할지 결정합니다")]
     [SerializeField] private bool _isUsable = true;
     public bool IsUsable
     {
         get => _isUsable;
         set => _isUsable = value;
     }
-    [SerializeField] private float _targetEvaluatorCoolTime;    // 판독 쿨타임 시간
-    public float TargetCheckCoolTime
+
+    [Header("____ CoolTime ____")]
+    [Space]
+
+    [SerializeField] private bool _isWaitingEvent;              // 이벤트 대기 여부
+    public bool IsWaitingEvent
     {
-        get => _targetEvaluatorCoolTime;
-        set => _targetEvaluatorCoolTime = value;
+        get => _isWaitingEvent;
+        set => _isWaitingEvent = value;
     }
     [SerializeField] private bool _isDuringCoolTime;            // 판독기 쿨타임 여부
     public bool IsDuringCoolTime
@@ -34,15 +38,14 @@ public abstract class Evaluator : MonoBehaviour
         get => _isDuringCoolTime;
         set => _isDuringCoolTime = value;
     }
-
-    [Space]
-
-    [SerializeField] private bool _useWaitingEvent;
-    public bool UseWaitingEvent
+    [SerializeField] private float _targetEvaluatorCoolTime;    // 판독 쿨타임 시간
+    public float TargetCheckCoolTime
     {
-        get => _useWaitingEvent;
-        set => _useWaitingEvent = value;
+        get => _targetEvaluatorCoolTime;
+        set => _targetEvaluatorCoolTime = value;
     }
+
+    private bool _startUsableFlag;
 
     protected MonsterBehaviour monster;
     private Coroutine _coolTimeCoroutine;
@@ -53,6 +56,9 @@ public abstract class Evaluator : MonoBehaviour
     protected event EvaluationDelegate EvaluationEvent;                     // EvaluationDelegate 델리게이트를 이벤트로 선언(델리게이트를 외부에서 멋대로 호출하는 문제를 방지
                                                                             // event 키워드는 외부에서 EvaluationEvent(Vector3.back); 와 같이 호출할 수 없도록 막는다
 
+    public delegate IEnumerator WaitEventDelegate();
+    public event WaitEventDelegate WaitEvent;
+
     public virtual void Awake()
     {
         monster = GetComponent<MonsterBehaviour>();
@@ -62,6 +68,7 @@ public abstract class Evaluator : MonoBehaviour
     {
         IsUsable = _startUsableFlag;
         IsDuringCoolTime = false;
+        IsWaitingEvent = false;
     }
 
     /// <summary>
@@ -71,7 +78,7 @@ public abstract class Evaluator : MonoBehaviour
     public virtual Collider2D IsTargetWithinRange()
     {
         // check coolTime and usable
-        if (IsDuringCoolTime || !IsUsable)
+        if (!IsUsable || IsDuringCoolTime || IsWaitingEvent)
             return null;
 
         // check if monster attached evaluator is dead
@@ -113,25 +120,46 @@ public abstract class Evaluator : MonoBehaviour
         return targetCollider;
     }
 
-    private IEnumerator CoolTimeCoroutine()
+    protected virtual IEnumerator CoolTimeCoroutine()
     {
-        // Debug.Log($"{GetType().Name}의 타이머 시작");
-        IsDuringCoolTime = true;
+        bool isNeverBoth = true;
 
-        // 쿨타임 시간만큼 대기
-        yield return new WaitForSeconds(_targetEvaluatorCoolTime);
-
-        IsDuringCoolTime = false;
-        // Debug.Log($"{GetType().Name}의 타이머 종료");
-    }
-    public virtual MonsterBehaviour.ActionDelegate StartCoolTime()
-    {
-        if (_targetEvaluatorCoolTime < 0.01f)
+        // 특정 이벤트가 등록되어 있다면 실행
+        if (WaitEvent != null)
         {
-            Debug.LogWarning("Evaluator CoolTime을 사용하기 위해 _targetCheckCoolTime을 설정해주세요");
-            return null;
+            isNeverBoth = false;
+
+            Debug.Log("이벤트 대기 시작");
+            IsWaitingEvent = true;
+
+            yield return StartCoroutine(WaitEvent());
+
+            IsWaitingEvent = false;
+            Debug.Log("이벤트 대기 끝");
         }
 
+        // 쿨타임이 0.01초 이상이면 쿨타임 실행
+        if (_targetEvaluatorCoolTime > 0.01f)
+        {
+            isNeverBoth = false;
+
+            Debug.Log("쿨타임 대기 시작");
+            IsDuringCoolTime = true;
+
+            yield return new WaitForSeconds(_targetEvaluatorCoolTime);
+
+            IsDuringCoolTime = false;
+            Debug.Log("쿨타임 대기 끝");
+        }
+
+        if (isNeverBoth)
+        {
+            Debug.LogWarning($"쿨타임이 실행되었지만, 어떠한 이벤트나 대기 시간을 기다리지 않습니다");
+            yield return null;
+        }
+    }
+    public MonsterBehaviour.ActionDelegate StartCoolTime()
+    {
         if (_coolTimeCoroutine != null)
             StopCoroutine(_coolTimeCoroutine);
 
@@ -140,17 +168,7 @@ public abstract class Evaluator : MonoBehaviour
         // 필요하다면 추가 메서드를 반환
         return null;
     }
-    protected virtual IEnumerator WaitEventCoroutine()
-    {
-        yield return null;
-    }
-    public void StartWaitingEvent()
-    {
-        if (_waitCoroutine != null)
-            StopCoroutine(_waitCoroutine);
 
-        _waitCoroutine = StartCoroutine(WaitEventCoroutine());
-    }
     public IEnumerator WaitForRespawn()
     {
         if (!_startUsableFlag) yield break;

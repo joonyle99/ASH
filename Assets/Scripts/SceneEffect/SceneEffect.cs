@@ -10,6 +10,10 @@ using UnityEditor;
 using UnityEditorInternal;
 #endif
 
+/// <summary>
+/// ƒ∆æ¿¿ª ¿ß«— æ¿ ¿Ã∆Â∆Æ ≈¨∑°Ω∫
+/// ¥ŸæÁ«— Effect Type¿Ã ¡∏¿Á«—¥Ÿ
+/// </summary>
 [System.Serializable]
 public class SceneEffect
 {
@@ -23,12 +27,17 @@ public class SceneEffect
         ChangeInputSetter,
         ChangeToDefaultInputSetter,
         FunctionCall,
-        LifePurchase,
     }
-    public EffectType Type => _type;
-    public bool IsCameraEffect => _type == EffectType.CameraShake || _type == EffectType.ConstantCameraShake || _type == EffectType.StopConstantCameraShake;
 
+    // effect type
     [SerializeField][HideInInspector] private EffectType _type = EffectType.Dialogue;
+    public EffectType Type => _type;
+    public bool IsCameraEffect =>
+        _type == EffectType.CameraShake ||
+        _type == EffectType.ConstantCameraShake ||
+        _type == EffectType.StopConstantCameraShake;
+
+    // effect data
     [SerializeField][HideInInspector] public DialogueData DialogueData = null;
     [SerializeField][HideInInspector] public ShakePreset ShakeData = null;
     [SerializeField][HideInInspector] public ConstantShakePreset ConstantShakeData = null;
@@ -62,7 +71,7 @@ public class SceneEffectDrawer : PropertyDrawer
             EditorGUI.PropertyField(fieldRect, typeProperty, GUIContent.none);
             position.y += HEIGHT + 2;
 
-            switch((SceneEffect.EffectType)typeProperty.enumValueIndex)
+            switch ((SceneEffect.EffectType)typeProperty.enumValueIndex)
             {
                 case SceneEffect.EffectType.Dialogue:
                     DrawField("DialogueData", position, property);
@@ -126,8 +135,8 @@ public class SceneEffectDrawer : PropertyDrawer
         if (property.isExpanded)
         {
             var effectType = (SceneEffect.EffectType)property.FindPropertyRelative("_type").enumValueIndex;
-            if (effectType == SceneEffect.EffectType.ChangeToDefaultInputSetter ||
-                effectType == SceneEffect.EffectType.LifePurchase)
+
+            if (effectType == SceneEffect.EffectType.ChangeToDefaultInputSetter)
                 return (HEIGHT + 2) * 2;
             else if (effectType == SceneEffect.EffectType.FunctionCall)
                 return (HEIGHT + 2) * 2 + GetEventHeight(property.FindPropertyRelative("Function"));

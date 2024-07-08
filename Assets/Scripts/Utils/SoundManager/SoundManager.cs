@@ -112,11 +112,11 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     {
         if (!replayIfSameClip && clip == _bgmPlayer.clip)
         {
-            Debug.LogWarning($"already playing this audio clip" +
+            Debug.Log($"Already Playing this Audio Clip" +
                              $"\n" +
-                             $"new audio source: {clip.name}" +
+                             $"New Audio Source: {clip.name}" +
                              $"\n" +
-                             $"old audio source: {_bgmPlayer.clip}");
+                             $"Old Audio Source: {_bgmPlayer.clip}");
             return;
         }
 
@@ -165,7 +165,16 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
             case "Boss_1-3":
             case "Boss_1-4":
             case "Boss_Bear":
+            case "Boss_2-1":
+            case "Boss_2-2":
+            case "Boss_2-3":
+            case "Boss_Fire":
                 PlayCommonBGM("BossDungeon1");
+                break;
+            case "2-1":
+            case "2-2":
+            case "2-3":
+                PlayCommonBGM("Exploration2");
                 break;
             default:
                 break;

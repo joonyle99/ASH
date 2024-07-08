@@ -309,18 +309,18 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
                 break;
         }
 
-        // range based attack by evaluator
-        if (AttackEvaluator && AttackEvaluator.isActiveAndEnabled)
+        // attack by evaluator
+        if (CurrentState is IAttackableState)
         {
+            if (AttackEvaluator == null) return;
             if (!AttackEvaluator.IsUsable) return;
-            if (AttackEvaluator.IsDuringCoolTime) return;
+            if (AttackEvaluator.IsDuringCoolTime || AttackEvaluator.IsWaitingEvent) return;
 
-            if (CurrentState is IAttackableState)
+            // 공격 가능한 대상이 있는지 확인
+            if (AttackEvaluator.IsTargetWithinRange())
             {
-                if (AttackEvaluator.IsTargetWithinRange())
-                {
-                    StartChangeStateCoroutine("Attack", CurrentState, AttackEvaluator.StartCoolTime(), 0f);
-                }
+                var action = AttackEvaluator.StartCoolTime();
+                StartChangeStateCoroutine("Attack", CurrentState, action, 0f);
             }
         }
     }

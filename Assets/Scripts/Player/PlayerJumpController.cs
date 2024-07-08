@@ -64,10 +64,12 @@ public class PlayerJumpController : MonoBehaviour
     {
         // Enqueue jump input
         if (InputManager.Instance.State.JumpKey.KeyDown)
+        {
             StartJumpQueueCoroutine();
+        }
 
         // Reset jump count
-        if(_remainingJumpCount < MaxJumpCount)
+        if (_remainingJumpCount < MaxJumpCount)
         {
             if (((_player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<RunState>()) && _player.IsGrounded) || _player.CurrentStateIs<WallState>())
             {
@@ -102,16 +104,24 @@ public class PlayerJumpController : MonoBehaviour
             return;
         }
 
-        // 벽타기 상태에서 바라보는 방향과 반대 방향으로 방향키를 누르지 않으면 점프 x
-        if (_player.CurrentStateIs<WallState>() && !_player.IsOppositeDirSync)
+        // 벽타기 상태인 경우
+        if (_player.CurrentStateIs<WallState>())
         {
-            _isJumpKeyQueued = false;
-            return;
+            // 바라보는 방향과 반대 방향으로 방향키를 누르지 않으면 점프 x
+            if (!_player.IsOppositeDirSync)
+            {
+                _isJumpKeyQueued = false;
+                return;
+            }
         }
 
         // cast jump
         if (CanJump)
+        {
+            // Debug.Log("cast jump");
+
             CastJump();
+        }
     }
 
     public void ResetJumpCount()
@@ -146,6 +156,8 @@ public class PlayerJumpController : MonoBehaviour
     }
     private IEnumerator JumpQueueCoroutine()
     {
+        // Debug.Log("Jump Queued");
+
         // push jump input to 'jump queue'
         _isJumpKeyQueued = true;
 

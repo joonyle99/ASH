@@ -67,11 +67,16 @@ public abstract class Monster_StateBase : StateMachineBehaviour
     {
         // Debug.Log($"{this.GetType().Name} exit");
 
-        if (Monster.FloatingMovementModule)
+        // monster behavior가 enable false인 채로 시작하고
+        // monster의 state가 exit가 되는 경우 enter가 없었기 때문에 monster가 null일 수 있다.
+        if (Monster)
         {
-            if (Monster.CurrentState is not IMovingState)
+            if (Monster.FloatingMovementModule)
             {
-                Monster.FloatingMovementModule.SetStopAgent(false);
+                if (Monster.CurrentState is not IMovingState)
+                {
+                    Monster.FloatingMovementModule.SetStopAgent(false);
+                }
             }
         }
     }

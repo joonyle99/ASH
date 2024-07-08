@@ -58,9 +58,11 @@ public class GroundMovementModule : MonoBehaviour
         _monster.RigidBody2D.AddForce(moveForce);
     }
 
-    // 애니메이션 이벤트로 사용
     public void GroundJumpping()
     {
+        if (_monster.IsInAir)
+            return;
+
         Vector2 forceVector = new Vector2(_monster.monsterData.JumpForce.x * _monster.RecentDir, _monster.monsterData.JumpForce.y);
         _monster.RigidBody2D.AddForce(forceVector, ForceMode2D.Impulse);
     }

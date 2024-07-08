@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BezierCurvePath : MonoBehaviour
@@ -15,6 +13,7 @@ public class BezierCurvePath : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
             _controlPoints[i] = transform.GetChild(i);
     }
+
     public Vector3 CalculateBezierPoint(float t)
     {
         t = Mathf.Clamp01(t);
@@ -30,7 +29,6 @@ public class BezierCurvePath : MonoBehaviour
 
         return position;
     }
-
 
     float BinomialCoefficient(int n, int k)
     {
@@ -48,12 +46,15 @@ public class BezierCurvePath : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
-        for (float f = 0; f < 1; f += 0.01f)
+
+        for (float f = 0f; f < 1f; f += 0.01f)
+        {
             Gizmos.DrawLine(CalculateBezierPoint(f), CalculateBezierPoint(f + 0.01f));
+        }
 
         for(int i=0; i<_controlPoints.Length; i++)
         {
-            Gizmos.DrawSphere(_controlPoints[i].position, 0.1f);
+            Gizmos.DrawSphere(_controlPoints[i].position, 0.3f);
         }
     }
 }

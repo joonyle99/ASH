@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class JumpState : PlayerState
 {
     PlayerJumpController _jumpController;
@@ -7,7 +5,6 @@ public class JumpState : PlayerState
     protected override bool OnEnter()
     {
         _jumpController = Player.GetComponent<PlayerJumpController>();
-
 
         Player.Animator.SetTrigger("Jump");
 

@@ -38,6 +38,7 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 
         ChangeInputSetter(_defaultInputSetter);
     }
+
     public void ChangeToMoveRightSetter()
     {
         if (_moveRightInputSetter == null)
@@ -74,10 +75,12 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 
         _currentSetter = setter;
     }
+
     void Update()
     {
         if (_currentSetter is InputSetterScriptableObject currentSetter)
             currentSetter.Update();
+
         _cachedState = _currentSetter.GetState();
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: 01754ea45a8636849b5d8a3e82c1709a
-  graphPosition: {x: 133.99977, y: 594}
+  graphPosition: {x: 1536.2908, y: 1061.0278}
   SceneName: Boss_2-1
   Scene:
     sceneAsset: {fileID: 102900000, guid: 3ab4ccefe21bfd14b94616e27eec5b40, type: 3}
@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: 7706dd7d7aa635f4da4b6bef0f6947cd
-  graphPosition: {x: -176.00015, y: 392}
+  graphPosition: {x: 1226.2908, y: 859.02783}
   SceneName: 2-2
   Scene:
     sceneAsset: {fileID: 102900000, guid: b323f55d883919f49ac31be0c383af6d, type: 3}
@@ -208,6 +208,10 @@ MonoBehaviour:
     ExitScene: {fileID: 7502026196269074928}
     EntrancePassage: Exit Boss_1-4
     ExitPassgage: Enter Boss_Bear
+  - EntranceScene: {fileID: 7502026196269074928}
+    ExitScene: {fileID: 1548732423987265482}
+    EntrancePassage: Exit Boss_Bear
+    ExitPassgage: Enter 2-1
   - EntranceScene: {fileID: 1548732423987265482}
     ExitScene: {fileID: -7527865572305963327}
     EntrancePassage: Exit 2-1
@@ -269,12 +273,13 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: 9f5551a7cd75a934492549340839b607
-  graphPosition: {x: -323.00018, y: 291}
+  graphPosition: {x: 1079.2908, y: 758.02783}
   SceneName: 2-1
   Scene:
     sceneAsset: {fileID: 102900000, guid: 3d61a5a287d9b2c4a9375e6b3d09b8c4, type: 3}
     scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1302/2-1.unity"
   PassageNames:
+  - Enter 2-1
   - Exit 2-1
 --- !u!114 &1655520567709727503
 MonoBehaviour:
@@ -289,7 +294,7 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: d2ac59f7f5b63b742acf286d2e997b96
-  graphPosition: {x: -19.00018, y: 492.99997}
+  graphPosition: {x: 1383.2908, y: 960.02783}
   SceneName: 2-3
   Scene:
     sceneAsset: {fileID: 102900000, guid: 58f9288c13f48a24384664b6d8d26ad6, type: 3}
@@ -420,6 +425,7 @@ MonoBehaviour:
     scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1301/Boss_Bear.unity"
   PassageNames:
   - Enter Boss_Bear
+  - Exit Boss_Bear
 --- !u!114 &7866461471819680855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -433,7 +439,7 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: c6d0ce4750b7061448cde9b5c2c33f90
-  graphPosition: {x: 310.99988, y: 695}
+  graphPosition: {x: 1713.2908, y: 1162.0277}
   SceneName: Boss_2-2
   Scene:
     sceneAsset: {fileID: 102900000, guid: 4436373a34258aa4ba608b1a8939c048, type: 3}
@@ -454,7 +460,7 @@ MonoBehaviour:
   m_Name: ExploreSceneData
   m_EditorClassIdentifier: 
   Guid: edeca792acf4c8c41843e57f897478c3
-  graphPosition: {x: 512.9998, y: 796}
+  graphPosition: {x: 1915.2908, y: 1263.0277}
   SceneName: Boss_2-3
   Scene:
     sceneAsset: {fileID: 102900000, guid: 6e28cccfd871427479013076c4fd03a6, type: 3}

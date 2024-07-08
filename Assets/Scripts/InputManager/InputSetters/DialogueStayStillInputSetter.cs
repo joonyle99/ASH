@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Dialogue Stay Still InputSetter", menuName = "InputSetters/Dialogue")]
 public class DialogueStayStillInputSetter : InputSetterScriptableObject

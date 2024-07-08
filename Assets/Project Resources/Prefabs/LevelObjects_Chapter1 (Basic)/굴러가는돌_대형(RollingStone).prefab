@@ -19974,6 +19974,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isInteractable: 1
+  _isInteracting: 0
   _interactionMarkerPoint: {fileID: 0}
   _stateChange: 1
   _animationType: 1
@@ -20000,11 +20001,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beb392678304f1349a6fa182b3a5c68a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _threatVelocityThreshold: 3
+  _threatVelocityThreshold: 2
+  _isDamagableToPlayer: 1
   _damageToPlayer: 1
-  _knockbackPowerToPlayer: 1
+  _knockbackPowerXToPlayer: 7
+  _knockbackPowerYToPlayer: 10
+  _isDamagableToMonster: 1
   _damageToMonster: 1
-  _knockbackPowerToMonster: 1
+  _knockbackPowerXToMonster: 7
+  _knockbackPowerYToMonster: 10
   _interactableComponent: {fileID: 1284470426582742949}
 --- !u!114 &1857939149
 MonoBehaviour:
@@ -20018,6 +20023,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d72ae00259a81742bfa6140a873e76e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isCollisionalbeWithPlayer: 1
 --- !u!114 &3969225227170957643
 MonoBehaviour:
   m_ObjectHideFlags: 0

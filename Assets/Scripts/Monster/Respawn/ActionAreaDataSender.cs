@@ -10,6 +10,8 @@ public abstract class ActionAreaDataSender : MonoBehaviour
 
     protected void Start()
     {
+        // 몬스터 프리팹 생성 시, 영역 데이터를 업데이트한다
+        // floating area의 경우 이 과정에서 navMeshSurface를 bake한다
         UpdateActionAreaData();
     }
 

@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class InstantRespawnState : PlayerState
 {
-    private PlayerBehaviour _player;
-
     protected override bool OnEnter()
     {
         StartCoroutine(EnterCoroutine());
@@ -25,38 +23,38 @@ public class InstantRespawnState : PlayerState
 
     private IEnumerator EnterCoroutine()
     {
+        // stay still input setter
         InputManager.Instance.ChangeToStayStillSetter();
 
+        // pause player
         Player.Animator.speed = 0;
         Player.enabled = false;
         Player.Rigidbody.simulated = false;
         Player.Rigidbody.velocity = Vector2.zero;
 
+        // die effect
         Player.SoundList.PlaySFX("SE_Die_02(Short)");
         Player.MaterialController.DisintegrateEffect.Play(0f, false);
-
         yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
         Player.MaterialController.DisintegrateEffect.ResetIsEffectDone();
 
-        SceneContext.Current.InstantRespawn();  // move to check point & change to idle state
-
-        _player = Player;
+        // move to check point & change to idle state
+        SceneContext.Current.InstantRespawn();
     }
-
     private IEnumerator ExitCoroutine()
     {
-        _player.MaterialController.DisintegrateEffect.Play(0f, true);
+        // respawn effect
+        Player.MaterialController.DisintegrateEffect.Play(0f, true);
+        yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
+        Player.MaterialController.DisintegrateEffect.ResetIsEffectDone();
 
-        yield return new WaitUntil(() => _player.MaterialController.DisintegrateEffect.IsEffectDone);
-        _player.MaterialController.DisintegrateEffect.ResetIsEffectDone();
+        // resume player
+        Player.Rigidbody.velocity = Vector2.zero;
+        Player.Rigidbody.simulated = true;
+        Player.enabled = true;
+        Player.Animator.speed = 1;
 
-        _player.Rigidbody.velocity = Vector2.zero;
-        _player.Rigidbody.simulated = true;
-        _player.enabled = true;
-        _player.Animator.speed = 1;
-
+        // defualt input setter
         InputManager.Instance.ChangeToDefaultSetter();
-
-        _player = null;
     }
 }
