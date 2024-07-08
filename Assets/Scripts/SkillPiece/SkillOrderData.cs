@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 [System.Serializable]
 public class SkillData
@@ -10,6 +13,15 @@ public class SkillData
     public string Name;
     public string DetailText;
     //public int RequiredPieceCount;
+
+    public SkillData(SkillData skillData)
+    {
+        Key = skillData.Key;
+        PieceIcon = skillData.PieceIcon;
+        UnlockImage = skillData.UnlockImage;
+        Name = skillData.Name;
+        DetailText = skillData.DetailText;
+    }
 }
 
 [CreateAssetMenu(fileName ="New Skill Data", menuName ="Skill Order Data")]

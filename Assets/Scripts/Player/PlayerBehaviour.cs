@@ -250,7 +250,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener
     private void InitPlayer()
     {
         // 체력 초기화
-        CurHp = _startHp;
+        if(JsonDataManager.Has("PlayerData"))
+        {
+            JsonDataManager.JsonLoad();
+            JsonPlayerData playerData = JsonDataManager.GetObjectInGlobalSaveData<JsonPlayerData>("PlayerData");
+
+            MaxHp = playerData._maxHp;
+            CurHp = playerData._currentHp;
+        }
+        else
+        {
+            CurHp = _startHp;
+        }
 
         // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);

@@ -100,6 +100,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
         SceneContext sceneContext = FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable(passageName);
+
         IsChanging = false;
 
         // 씬에 대한 BGM 재생

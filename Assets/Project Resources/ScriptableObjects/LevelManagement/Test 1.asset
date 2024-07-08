@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5331790820577414742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 1595c86b44b32ab4080769b50c2ecd90
+  graphPosition: {x: -208.68605, y: 8.999994}
+  SceneName: SJY_Scene1
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 7962ba9e93780454b9506d8ed6edf71a, type: 3}
+    scenePath: Assets/Scenes/Test/SJY/SJY_Scene1.unity
+  PassageNames:
+  - Enter SJY_Scene1
+--- !u!114 &-4114560781853691686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: ef274d5081315f6418ec4f4918b50d6f
+  graphPosition: {x: -183.14313, y: -208.66313}
+  SceneName: SJY_Scene2
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: 217f1245b097c13489540c749b44aaa9, type: 3}
+    scenePath: Assets/Scenes/Test/SJY/SJY_Scene2.unity
+  PassageNames:
+  - Enter SJY_Scene2
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a2f9c1985d44841918c927d51311d3, type: 3}
+  m_Name: Test 1
+  m_EditorClassIdentifier: 
+  _nodes:
+  - {fileID: -5331790820577414742}
+  - {fileID: -4114560781853691686}
+  _edges:
+  - EntranceScene: {fileID: -5331790820577414742}
+    ExitScene: {fileID: -4114560781853691686}
+    EntrancePassage: Enter SJY_Scene1
+    ExitPassgage: Enter SJY_Scene2
+  - EntranceScene: {fileID: -4114560781853691686}
+    ExitScene: {fileID: -5331790820577414742}
+    EntrancePassage: Enter SJY_Scene2
+    ExitPassgage: Enter SJY_Scene1
+--- !u!114 &730251218714092004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 3ffbde59ca673cd4d9ef9b1674426f22
+  graphPosition: {x: 265.4, y: -165}
+  SceneName: 
+  Scene:
+    sceneAsset: {fileID: 0}
+    scenePath: 
+  PassageNames: []
+--- !u!114 &7783753324342266041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: 4657eef626cd89449b75e50e74390d54
+  graphPosition: {x: 73.32246, y: -132}
+  SceneName: 
+  Scene:
+    sceneAsset: {fileID: 0}
+    scenePath: 
+  PassageNames: []

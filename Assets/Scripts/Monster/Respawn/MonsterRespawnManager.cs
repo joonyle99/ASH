@@ -12,6 +12,10 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     // 몬스터가 사망 후에 리스폰 되기까지의 시간
     public Range RespawnTimeRange;
 
+
+    //현재 리스폰이 수행되는 코루틴
+    private List<Coroutine> runningRespawnCoroutines = new();
+
     protected override void Awake()
     {
         base.Awake();
@@ -32,7 +36,10 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         }
 
         var respawnTime = RespawnTimeRange.Random();
-        StartCoroutine(RespawnCoroutine(monsterBehavior, respawnTime));
+
+        Coroutine runningRespawnCoroutine = 
+            StartCoroutine(RespawnCoroutine(monsterBehavior, respawnTime));
+        runningRespawnCoroutines.Add(runningRespawnCoroutine);
     }
     private IEnumerator RespawnCoroutine(MonsterBehaviour monsterBehavior, float respawnTime)
     {
@@ -238,5 +245,16 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         // 모든 몬스터를 찾고, 리스트에 추가한다
         var monsterArray = FindObjectsOfType<MonsterBehaviour>();
         MonsterList = new List<MonsterBehaviour>(monsterArray);
+    }
+
+    public void StopRespawnCoroutine()
+    {
+        if (runningRespawnCoroutines.Count == 0)
+            return;
+
+        foreach(Coroutine runningRespawnCoroutine in runningRespawnCoroutines)
+        {
+            StopCoroutine(runningRespawnCoroutine);
+        }
     }
 }

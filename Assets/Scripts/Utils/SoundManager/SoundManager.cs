@@ -51,10 +51,10 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
 
         // JsonLoad ¿¹Á¦
         if (JsonDataManager.Has("BGMVolume"))
-            bgmVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["BGMVolume"]);
+            bgmVolume = float.Parse(JsonDataManager.Instance.GlobalSaveData.saveDataGroup["BGMVolume"]);
 
         if (JsonDataManager.Has("SFXVolume"))
-            sfxVolume = float.Parse(JsonDataManager._globalSaveData.saveDataGroup["SFXVolume"]);
+            sfxVolume = float.Parse(JsonDataManager.Instance.GlobalSaveData.saveDataGroup["SFXVolume"]);
 
         SetBgmVolume(bgmVolume);
         SetSfxVolume(sfxVolume);

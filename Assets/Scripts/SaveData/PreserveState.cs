@@ -17,6 +17,15 @@ struct TransformState
         Rotation = transform.localRotation;
         Scale = transform.localScale;
     }
+    
+    public override string ToString()
+    {
+        string str = "TransformState : { Position (" + Position.x + ", " + Position.y + ", " + Position.z + ")" +
+            "Rotation(" + Rotation.x + ", " + Rotation.y + ", " + Rotation.z + ", " + Rotation.w + ")" +
+            "Rotation(" + Scale.x + ", " + Scale.y + ", " + Scale.z + ") }";
+
+        return str;
+    }
 }
 
 /// <summary>
@@ -24,7 +33,7 @@ struct TransformState
 /// 트랜스폼과 파괴 상태에 대한 저장과 불러오기를 자체적으로 지원하고
 /// 추가적인 상태를 저장하고 불러오는 기능는 각 오브젝트의 Awake()와 OnDestroy()에서 직접 구현해야한다
 /// </summary>
-public class PreserveState : MonoBehaviour, IDestructionListener
+public partial class PreserveState : MonoBehaviour, IDestructionListener
 {
     [SerializeField] private string _groupName;                     // 데이터 그룹의 이름
     [SerializeField] private string _ID;                            // 데이터의 ID
@@ -51,6 +60,9 @@ public class PreserveState : MonoBehaviour, IDestructionListener
     // 트랜스폼과 파괴 상태를 불러와 초기화 하는 작업 (고유한 데이터는 따로 초기화 해야한다)
     private void Awake()
     {
+        //OnSave함수 바인딩
+        SaveAndLoader.OnSave += OnSaveData;
+
         // 데이터 그룹이 존재하지 않는다면 생성
         PersistentDataManager.TryAddDataGroup(_groupName);
 
@@ -65,7 +77,7 @@ public class PreserveState : MonoBehaviour, IDestructionListener
                 transform.localScale = transformState.Scale;
             });
         }
-
+        
         // 파괴 상태 불러오기
         if (_preserveDestruction)
         {
@@ -79,28 +91,20 @@ public class PreserveState : MonoBehaviour, IDestructionListener
             });
         }
     }
+
     // 오브젝트 파괴 시 (씬 전환 시) 데이터를 저장하는 작업
     private void OnDestroy()
     {
         // 플레이 모드에서만 저장
         if (Application.isPlaying)
         {
-            // 트랜스폼 데이터 저장 (씬 전환 시)
-            if (_preserveTransform)
+            //불러오기에 의한 씬전환이 아닌 경우에만 저장
+            if(!SaveAndLoader.IsChangeSceneByLoading)
             {
-                try
-                {
-                    // 해당 데이터 그룹이 존재한다면
-                    if (PersistentDataManager.HasDataGroup(_groupName))
-                    {
-                        PersistentDataManager.Set(_groupName, TransformKey, new TransformState(transform));
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError(e.ToString());
-                }
+                // 트랜스폼 데이터 저장 (씬 전환 시)
+                SaveTransformState();
             }
+            SaveAndLoader.OnSave -= OnSaveData;
         }
     }
     // 오브젝트가 파괴되었을 때 파괴 상태의 데이터를 저장하는 작업
@@ -110,6 +114,27 @@ public class PreserveState : MonoBehaviour, IDestructionListener
         if (_preserveDestruction)
         {
             PersistentDataManager.Set(_groupName, DestructionKey, true);
+            SaveAndLoader.OnSave -= OnSaveData;
+        }
+    }
+
+    //트랜스폼 데이터를 저장하는 작업
+    public void SaveTransformState()
+    {
+        if (_preserveTransform)
+        {
+            try
+            {
+                // 해당 데이터 그룹이 존재한다면
+                if (PersistentDataManager.HasDataGroup(_groupName))
+                {
+                    PersistentDataManager.Set(_groupName, TransformKey, new TransformState(transform));
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.ToString());
+            }
         }
     }
 
@@ -119,6 +144,7 @@ public class PreserveState : MonoBehaviour, IDestructionListener
         if (PersistentDataManager.Has<T>(groupName, key))
         {
             // 데이터를 가져온다
+            Debug.Log("Loading Saved Data : { key : " + key + " value : " + PersistentDataManager.Get<T>(groupName, key).ToString() + " }");
             var state = PersistentDataManager.Get<T>(groupName, key);
 
             // 데이터를 적용한다
@@ -137,5 +163,10 @@ public class PreserveState : MonoBehaviour, IDestructionListener
     public void SaveState<T>(string additionalKey, T value) where T : new()
     {
         PersistentDataManager.Set(_groupName, _ID + additionalKey, value);
+    }
+
+    public void OnSaveData()
+    {
+        SaveTransformState();
     }
 }
