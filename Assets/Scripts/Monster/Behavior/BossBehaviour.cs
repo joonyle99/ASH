@@ -53,6 +53,7 @@ public abstract class BossBehaviour : MonsterBehaviour
     [Space]
 
     [SerializeField] protected CutscenePlayerList cutscenePlayerList;
+    [SerializeField] private float _distanceFromBoss = 6f;                                           // 보스 사망 후 떨어져야할 거리
 
     public int TotalHitCount
     {
@@ -183,6 +184,67 @@ public abstract class BossBehaviour : MonsterBehaviour
         yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
 
         cutscenePlayerList.PlayCutscene(cutscenePlayer);
+    }
+
+    public virtual void StartAfterDeath()
+    {
+        StartCoroutine(PlayerMoveCoroutine());      // 플레이어 이동
+    }
+    public IEnumerator PlayerMoveCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+
+        // 플레이어 위치
+        var player = SceneContext.Current.Player;
+        var playerPosX = player.transform.position.x;
+        Debug.DrawRay(player.transform.position, Vector3.down * 5f, Color.cyan, 10f);
+
+        // 보스에서 플레이어까지의 방향
+        var BossToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
+        Debug.DrawRay(transform.position + Vector3.up, Vector3.right * BossToPlayerDir * _distanceFromBoss, Color.cyan, 10f);
+
+        // 플레이어가 이동할 목표 위치
+        var playerMoveTargetPosX = transform.position.x + (BossToPlayerDir) * _distanceFromBoss;
+        Debug.DrawRay(new Vector3(playerMoveTargetPosX, transform.position.y, transform.position.z), Vector3.down * 5f, Color.cyan, 10f);
+
+        // 플레이어 이동 방향
+        var playerMoveDir = System.Math.Sign(playerMoveTargetPosX - playerPosX);
+        Debug.DrawRay(player.transform.position, Vector3.right * playerMoveDir * 5f, Color.cyan, 10f);
+
+        // 플레이어 이동을 대기
+        yield return StartCoroutine(MoveCoroutine(playerMoveDir, playerMoveTargetPosX));
+
+        // 만약 플레이어가 뒤돌고 있다면 방향을 돌려준다
+        if (BossToPlayerDir == player.RecentDir)
+        {
+            var dirForLookToBear = (-1) * playerMoveDir;
+            yield return StartCoroutine(MoveCoroutine(dirForLookToBear, playerMoveTargetPosX + dirForLookToBear * 0.1f));
+        }
+
+        InputManager.Instance.ChangeToStayStillSetter();
+    }
+    public IEnumerator MoveCoroutine(int moveDir, float targetPosX)
+    {
+        var isRight = moveDir > 0;
+
+        if (isRight)
+            InputManager.Instance.ChangeToMoveRightSetter();
+        else
+            InputManager.Instance.ChangeToMoveLeftSetter();
+
+        yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.1f);
+    }
+
+    public void DisintegrateEffect()
+    {
+        StartCoroutine(DisintegrateEffectCoroutine());
+    }
+    public IEnumerator DisintegrateEffectCoroutine()
+    {
+        var effect = GetComponent<DisintegrateEffect>();
+        effect.Play();
+        yield return new WaitUntil(() => effect.IsEffectDone);
+        Destroy(transform.parent ? transform.parent.gameObject : gameObject);       // 프리팹을 삭제해야 한다
     }
 
     #endregion

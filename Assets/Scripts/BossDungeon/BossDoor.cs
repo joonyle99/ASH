@@ -91,16 +91,20 @@ public class BossDoor : InteractableObject
     {
         // InputManager.Instance.ChangeToStayStillSetter();
 
+        SceneEffectManager.Instance.Camera.FollowOnly(transform);
+
         yield return _doorOpenAnimation.CloseCoroutine();
 
         // InputManager.Instance.ChangeToDefaultSetter();
     }
     public void OpenDoor()
     {
+        _isOpened = true;
         StartCoroutine(OpenDoorCoroutine()); 
     }
     public void CloseDoor()
     {
+        _isOpened = false;
         StartCoroutine(CloseDoorCoroutine());
     }
 

@@ -112,6 +112,7 @@ public class Passage : TriggerZone
     public IEnumerator PlayEnterCutscene()
     {
         if(_entranceCutscenePlayer == null) yield break;
+        if (!_entranceCutscenePlayer.isActiveAndEnabled) yield break;
 
         InputManager.Instance.ChangeToStayStillSetter();
 

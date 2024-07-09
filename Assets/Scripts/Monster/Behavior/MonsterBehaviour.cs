@@ -624,6 +624,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     {
         return CurrentState is TState;
     }
+    /// <summary>
+    /// 쿨타임 Action과 같은 'myFunction'은 해당 State의 Animation이 Trigger되면서 시작된다
+    /// </summary>
     public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState, ActionDelegate myFunction = null, float duration = 0f)
     {
         StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState, myFunction, duration));

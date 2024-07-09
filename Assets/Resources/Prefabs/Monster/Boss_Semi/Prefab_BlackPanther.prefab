@@ -3340,7 +3340,8 @@ MonoBehaviour:
   targetHitCount: 0
   currentHitCount: 0
   _totalHitCount: 0
-  cutscenePlayerList: {fileID: 5269891687269057861}
+  cutscenePlayerList: {fileID: 0}
+  _distanceFromBoss: 6
   _firstAttack: 3
   _currentAttack: 0
   _nextAttack: 0
@@ -3354,7 +3355,7 @@ MonoBehaviour:
   _sparkEffect: {fileID: 1656070945588396149, guid: 7e8d8cec8943ffc42ac20519cf532c05, type: 3}
   _pillar: {fileID: 5821592069741332024, guid: 5558bd6735786124a97da1a0978bd4f8, type: 3}
   _pillarCount: 5
-  _floorHeight: 50
+  _floorHeight: 1
   _pillarFarDist: 25
   _minDistEachPillar: 15
   _createTimeRange:
@@ -3579,6 +3580,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cutsceneDictionary:
   - name: Change RageState
+    cutscenePlayer: {fileID: 0}
+  - name: Final CutScene
     cutscenePlayer: {fileID: 0}
 --- !u!210 &5269891687269057860
 SortingGroup:

@@ -94,10 +94,6 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [SerializeField] private ParticleSystem[] _disintegrateEffects;                             // 잿가루 효과 파티클
     [SerializeField] private GameObject _bossKnockDownGameObject;                               // 넉다음 이미지 오브젝트
 
-    [Space]
-
-    [SerializeField] private float _distanceFromBear;                                           // 흑곰으로부터 떨어져야하는 거리
-
     #endregion
 
     #region Function
@@ -382,50 +378,11 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
 
     // effects
-    public void StartAfterDeath()
+    public override void StartAfterDeath()
     {
-        // 병렬적으로 코루틴을 실행
-        StartCoroutine(PlayerMoveCoroutine());
+        base.StartAfterDeath();
+
         StartCoroutine(AfterDeathCoroutine());
-    }
-    public IEnumerator PlayerMoveCoroutine()
-    {
-        yield return new WaitForSeconds(1f);
-
-        var player = SceneContext.Current.Player;
-        var playerPosX = player.transform.position.x;
-        Debug.DrawRay(player.transform.position, Vector3.down * 5f, Color.cyan, 10f);
-
-        var bearToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
-        Debug.DrawRay(transform.position + Vector3.up, Vector3.right * bearToPlayerDir * _distanceFromBear, Color.cyan, 10f);
-
-        var playerMoveTargetPosX = transform.position.x + (bearToPlayerDir) * _distanceFromBear;
-        Debug.DrawRay(new Vector3(playerMoveTargetPosX, transform.position.y, transform.position.z), Vector3.down * 5f, Color.cyan, 10f);
-
-        var playerMoveDir = System.Math.Sign(playerMoveTargetPosX - playerPosX);
-        Debug.DrawRay(player.transform.position, Vector3.right * playerMoveDir * 5f, Color.cyan, 10f);
-
-        yield return StartCoroutine(MoveCoroutine(playerMoveDir, playerMoveTargetPosX));
-
-        // 만약 플레이어가 뒤돌고 있다면 방향을 돌려준다
-        if (bearToPlayerDir == player.RecentDir)
-        {
-            var dirForLookToBear = (-1) * playerMoveDir;
-            yield return StartCoroutine(MoveCoroutine(dirForLookToBear, playerMoveTargetPosX + dirForLookToBear * 0.1f));
-        }
-
-        InputManager.Instance.ChangeToStayStillSetter();
-    }
-    public IEnumerator MoveCoroutine(int moveDir, float targetPosX)
-    {
-        var isRight = moveDir > 0;
-
-        if (isRight)
-            InputManager.Instance.ChangeToMoveRightSetter();
-        else
-            InputManager.Instance.ChangeToMoveLeftSetter();
-
-        yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.1f);
     }
     public IEnumerator AfterDeathCoroutine()
     {
@@ -467,17 +424,6 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
             color.a = 0f;
             sprite.color = color;
         }
-    }
-    public void DisintegrateEffect()
-    {
-        StartCoroutine(DisintegrateEffectCoroutine());
-    }
-    public IEnumerator DisintegrateEffectCoroutine()
-    {
-        var effect = GetComponent<DisintegrateEffect>();
-        effect.Play();
-        yield return new WaitUntil(() => effect.IsEffectDone);
-        Destroy(transform.parent ? transform.parent.gameObject : gameObject);
     }
 
     #endregion

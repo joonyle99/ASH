@@ -128,6 +128,9 @@ public class DialogueView : MonoBehaviour
     /// <returns></returns>
     private IEnumerator SegmentCoroutine()
     {
+        // 한 프레임 쉬고 시작
+        yield return null;
+
         // 세그먼트의 대사만큼 StringBuilder 생성
         StringBuilder stringBuilder = new StringBuilder(_currentSegment.Text.Length);
 
@@ -136,9 +139,7 @@ public class DialogueView : MonoBehaviour
         // 세그먼트의 대사를 한 글자씩 출력
         while (true)
         {
-            // TODO: 사실 잘 모르겠다. 왜 stringBuilder에 추가하는지
-            // '<'와 '>' 사이의 문자열을 추출해 stringBuilder에 추가
-            // 이는 텍스트 태그를 파싱하기 위함
+            // 이는 태그를 파싱하기 위함
             if (_currentSegment.Text[textIndex] == '<')
             {
                 int to = _currentSegment.Text.IndexOf('>', textIndex);
