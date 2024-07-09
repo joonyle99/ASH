@@ -45,7 +45,10 @@ public abstract class TriggerZone : MonoBehaviour
                 triggerActivators.Remove(activator);
 
             if (activator.Type == ActivatorType.Player)
+            {
+                // Debug.Log("플레이어 나옴");
                 OnPlayerExit(SceneContext.Current.Player);
+            }
         }
     }
 

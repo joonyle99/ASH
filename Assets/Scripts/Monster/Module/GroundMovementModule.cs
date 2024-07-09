@@ -23,7 +23,7 @@ public class GroundMovementModule : MonoBehaviour
             _monster.RigidBody2D.AddForce(-groundNormal * gravityPower);
     }
 
-    public void WalkGround()
+    public void WalkGround(float speedCoefficient = 1f)
     {
         // 공중에 있는 경우 이동하지 않는다
         if (_monster.IsInAir)
@@ -48,7 +48,7 @@ public class GroundMovementModule : MonoBehaviour
 
         Debug.DrawRay(_monster.groundRayHit.point, groundNormal, Color.yellow);
 
-        Vector2 targetVelocity = moveDirection * _monster.monsterData.MoveSpeed;
+        Vector2 targetVelocity = moveDirection * _monster.monsterData.MoveSpeed * speedCoefficient;
         Vector2 projectedVelocity = Vector2.Dot(_monster.RigidBody2D.velocity, moveDirection) * moveDirection;
         Vector2 velocityNeeded = targetVelocity - projectedVelocity;
         Vector2 moveForce = velocityNeeded * _monster.monsterData.Acceleration;

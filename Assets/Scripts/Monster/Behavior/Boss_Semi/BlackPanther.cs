@@ -24,6 +24,12 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
+    [Header("____ Rush ____")]
+    [Space]
+
+    [SerializeField] private Transform _targetLeft;
+    [SerializeField] private Transform _targetRight;
+
     [Header("____ VineMissile ____")]
     [Space]
 
@@ -72,6 +78,11 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
     private float _vinePillarAnimDuration;
 
+    [Header("Parts")]
+    [Space]
+
+    [SerializeField] private ParticleSystem _shiningEyes;
+
     #endregion
 
     #region Function
@@ -102,7 +113,13 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         if (IsDead)
             return;
 
-        if (CurrentStateIs<BossAttackState>() &&
+        if (CurrentStateIs<Monster_WalkState>())
+        {
+            // 걸어가는 연출 동안에는
+            if (GroundMovementModule)
+                GroundMovementModule.WalkGround(0.7f);
+        }
+        else if (CurrentStateIs<BossAttackState>() &&
             (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2))
         {
             if (GroundMovementModule)
@@ -146,8 +163,10 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         }
         else
         {
+            /*
             if (!IsGodMode)
                 IsGodMode = true;
+            */
         }
     }
     public override void AttackPostProcess()
@@ -167,8 +186,10 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         }
         else
         {
+            /*
             if (IsGodMode)
                 IsGodMode = false;
+            */
         }
     }
     public override void GroggyPreProcess()
@@ -339,10 +360,13 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         // 3. 플레이어 뒷편으로 이동할 때까지 사용을 제한한다 (쿨타임을 건다)
         // 4. 다시 1로 돌아간다
 
+        // left or right 중 더 먼 쪽으로 이동한다
+
+
         // 추격 위치 설정
         var player = SceneContext.Current.Player;
         var dir = Mathf.Sign(player.transform.position.x - transform.position.x);
-        var targetPosX = player.transform.position.x + dir * 30f;
+        var targetPosX = player.transform.position.x + dir * 0.5f;
 
         // 디버그 코드
         Vector3 startPoint = new Vector3(targetPosX, transform.position.y, transform.position.z);
@@ -367,6 +391,16 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         // 애니메이션이 끝날때까지 기다려야 한다
         yield return new WaitForSeconds(_vinePillarAnimDuration);
+    }
+
+    public void ShineEyes()
+    {
+        _shiningEyes.Play();
+    }
+    public void StartAttack()
+    {
+        if (AttackEvaluator)
+            AttackEvaluator.IsUsable = true;
     }
 
     #endregion

@@ -4,7 +4,7 @@ public class BGMPlayer : MonoBehaviour
 {
     [SerializeField] string key;
 
-    public void PlayerBattleBGM()
+    public void PlayBGM()
     {
         SoundManager.Instance.PlayCommonBGM(key);
     }

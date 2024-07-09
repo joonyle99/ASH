@@ -89,6 +89,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
             else if (effect.Type == SceneEffect.EffectType.FunctionCall)
             {
                 effect.Function?.Invoke();
+                // yield return new WaitWhile(() => effect.Function);
             }
         }
 
