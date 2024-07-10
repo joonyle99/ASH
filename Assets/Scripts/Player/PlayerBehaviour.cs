@@ -90,8 +90,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public bool CanInteract => CurrentState is IInteractableState;
 
     // Condition Property
-    public bool IsGrounded => GroundHit;
-    public bool IsGroundedSupported => GroundHit || GroundHit2;
+    public bool IsGrounded => GroundHit;                                    // 플레이어의 아래 방향으로 Circle Cast
+    public bool IsGroundedSupported => GroundHit || GroundHit2;             // + 플레이어의 아래 방향으로 Ray Cast
     public bool IsUpWardGrounded => UpwardGroundHit;
     public bool IsTouchedWall => ClimbHit;
     public bool IsClimbable { get; set; }

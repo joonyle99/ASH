@@ -3292,7 +3292,7 @@ MonoBehaviour:
   <IsInAir>k__BackingField: 0
   <IsAttacking>k__BackingField: 0
   <IsHiding>k__BackingField: 0
-  <IsGodMode>k__BackingField: 0
+  <IsGodMode>k__BackingField: 1
   <IsHitting>k__BackingField: 0
   <IsHurt>k__BackingField: 0
   <IsDead>k__BackingField: 0
@@ -3345,17 +3345,16 @@ MonoBehaviour:
   _firstAttack: 3
   _currentAttack: 0
   _nextAttack: 0
-  _targetLeft: {fileID: 0}
-  _targetRight: {fileID: 0}
   _missile: {fileID: 2084367959906499476, guid: d27b5963e92e3344ea010b22664e4efe, type: 3}
   _missileSpawnPoint: {fileID: 5269891687132457136}
   _missileSpeed: 50
   _totalMissileCount: 0
   _smokeEffect: {fileID: 1701526429040737852, guid: 6270e0788f1d7d2429476cbd48c4db26, type: 3}
   _sparkEffect: {fileID: 1656070945588396149, guid: 7e8d8cec8943ffc42ac20519cf532c05, type: 3}
+  _vineMissileAnimDuration: 0
   _pillar: {fileID: 5821592069741332024, guid: 5558bd6735786124a97da1a0978bd4f8, type: 3}
   _pillarCount: 5
-  _floorHeight: 1
+  _floorHeight: 0.7
   _pillarFarDist: 25
   _minDistEachPillar: 15
   _createTimeRange:
@@ -3363,6 +3362,7 @@ MonoBehaviour:
     End: 2
   _dustEffect: {fileID: 988566578893302018, guid: 661423e662be5f24d94efe9a121c8a3d, type: 3}
   _dustDistFromPillar: 1.5
+  _vinePillarAnimDuration: 0
   _shiningEyes: {fileID: 1074197913996590659}
 --- !u!114 &5269891687269057884
 MonoBehaviour:
@@ -3416,7 +3416,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   checkCollider: {fileID: 5269891688670614341}
-  _isUsable: 0
+  _isUsable: 1
   _isWaitingEvent: 0
   _isDuringCoolTime: 0
   _targetEvaluatorCoolTime: 1.5

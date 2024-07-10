@@ -319,7 +319,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         var pos = new Vector2(createPosX, _floorHeight);
         var pillar = Instantiate(_pillar, pos, Quaternion.identity);
-        pillar.Opacity();
+        // pillar.Opacity();
     }
 
     // wait event (해당 Evaluator에 대한 쿨타임 이벤트)
