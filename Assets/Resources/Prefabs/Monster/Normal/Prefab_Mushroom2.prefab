@@ -257,7 +257,7 @@ MonoBehaviour:
   forceX: 7
   forceY: 10
   hitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
-  _cutscenePlayerList: {fileID: 7752445065491392893}
+  _cutscenePlayerList: {fileID: 0}
 --- !u!1 &5009713471164970109
 GameObject:
   m_ObjectHideFlags: 0
@@ -5457,7 +5457,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8422762439315948875, guid: faea8b747c6f65a408976bca45a9ab9a, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: 0.5790021
+      value: 0.57900304
       objectReference: {fileID: 0}
     - target: {fileID: -8422762439315948875, guid: faea8b747c6f65a408976bca45a9ab9a, type: 3}
       propertyPath: m_Bounds.m_Extent.x
@@ -5605,7 +5605,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224945008297624260, guid: faea8b747c6f65a408976bca45a9ab9a, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: 0.5788086
+      value: 0.5788081
       objectReference: {fileID: 0}
     - target: {fileID: 224945008297624260, guid: faea8b747c6f65a408976bca45a9ab9a, type: 3}
       propertyPath: m_Bounds.m_Extent.x
@@ -5613,7 +5613,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 224945008297624260, guid: faea8b747c6f65a408976bca45a9ab9a, type: 3}
       propertyPath: m_Bounds.m_Extent.y
-      value: 0.44979447
+      value: 0.44979495
       objectReference: {fileID: 0}
     - target: {fileID: 1053269210662886011, guid: faea8b747c6f65a408976bca45a9ab9a, type: 3}
       propertyPath: m_IsActive
@@ -5949,21 +5949,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Library: []
   m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: 3d955ca25c988f54396b470ddc583fdb, type: 3}
---- !u!114 &7752445065491392893
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4737543143693424804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b2e3d95dc54be64c939388064af2c83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cutsceneDictionary:
-  - name: Lighting Guide
-    cutscenePlayer: {fileID: 0}
 --- !u!114 &8136915915916851580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6016,6 +6001,7 @@ MonoBehaviour:
     m_Bits: 8
   <GroundCheckCollider>k__BackingField: {fileID: 5318935828377661085}
   <CenterOfMass>k__BackingField: {fileID: 0}
+  cutscenePlayerList: {fileID: 0}
   _targetDieTime: 2.5
   _elapsedDieTime: 0
 --- !u!1 &5243627547431494498 stripped

@@ -46,7 +46,7 @@ class BossCameraEvent : SceneEffectEvent
         Debug.Log($"SceneEffectManager.Instance.Camera.OffsetY: {SceneEffectManager.Instance.Camera.OffsetY}\n" +
                   $"_offsetY: {_offsetY}");
 
-        SceneEffectManager.Instance.Camera.FollowOnly(_transform);
+        SceneEffectManager.Instance.Camera.StartFollow(_transform);
         SceneEffectManager.Instance.Camera.OffsetY = _offsetY;
     }
     public override void OnExit()

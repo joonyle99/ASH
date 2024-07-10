@@ -64,11 +64,34 @@ namespace joonyle99
         private static readonly Vector2 vec3 = new(-LINE_LENGTH, -LINE_LENGTH);
         private static readonly Vector2 vec4 = new(LINE_LENGTH, LINE_LENGTH);
 
-        public static void DrawX(Vector2 center, float duration = 2f)
+        public static void DebugDrawX(Vector2 center, float duration = 2f)
         {
             // 디버그를 위한 타겟 위치에 'X' 표시
             Debug.DrawLine(center + vec1, center + vec2, Color.red, duration);
             Debug.DrawLine(center + vec3, center + vec4, Color.red, duration);
+        }
+
+        public static void GizmosDrawVerticalLine(Vector3 origin)
+        {
+            Gizmos.DrawLine(new Vector3(origin.x, origin.y + LINE_LENGTH, origin.z), new Vector3(origin.x, origin.y - LINE_LENGTH, origin.z));
+        }
+
+        // Extension Methods
+        public static Vector2 ToVector2(this Vector3 vec)
+        {
+            return new Vector2(vec.x, vec.y);
+        }
+        public static Vector2 ToVector2XZ(this Vector3 vec)
+        {
+            return new Vector2(vec.x, vec.z);
+        }
+        public static Vector3 ToVector3(this Vector2 vec, float z = 0)
+        {
+            return new Vector3(vec.x, vec.y, z);
+        }
+        public static Vector3 ToVector3XZ(this Vector2 vec, float y = 0)
+        {
+            return new Vector3(vec.x, y, vec.y);
         }
     }
 }

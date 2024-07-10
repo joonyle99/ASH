@@ -97,7 +97,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
 
         // 플레이어 무적 상태 해제
         SceneContext.Current.Player.IsGodMode = false;
-        Debug.Log($"{SceneContext.Current.Player}의 GodMode가 해제됩니다. => IsGodMode : {SceneContext.Current.Player.IsGodMode}");
+        // Debug.Log($"{SceneContext.Current.Player}의 GodMode가 해제됩니다. => IsGodMode : {SceneContext.Current.Player.IsGodMode}");
     }
 
     /// <summary>
@@ -112,7 +112,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
 
             // 플레이어를 무적 상태로 만든다
             SceneContext.Current.Player.IsGodMode = true;
-            Debug.Log($"{SceneContext.Current.Player}의 GodMode가 설정됩니다. => IsGodMode : {SceneContext.Current.Player.IsGodMode}");
+            // Debug.Log($"{SceneContext.Current.Player}의 GodMode가 설정됩니다. => IsGodMode : {SceneContext.Current.Player.IsGodMode}");
         }
     }
     

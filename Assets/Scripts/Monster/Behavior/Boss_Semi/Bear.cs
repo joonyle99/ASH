@@ -62,7 +62,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [SerializeField] private Range _distanceRange;
 
     private List<float> _usedPosX;
-    private int allocationCountLimit = 30;
+    private int _allocationLimit = 30;
 
     [Space]
 
@@ -79,7 +79,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [Header("Cutscene")]
     [Space]
 
-    [SerializeField] private bool _isAbleLightGuide = true;
+    [SerializeField] private bool _isAbleLightGuideCutscene = true;
     [SerializeField] private int _totalEarthquakeCount;
     public int TotalEarthquakeCount
     {
@@ -87,7 +87,6 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         private set => _totalEarthquakeCount = value;
     }
 
-    [Header("After Dead")]
     [Space]
 
     [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;             // 색이 서서히 돌아오는 효과
@@ -103,10 +102,6 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         base.Start();
 
         SetToRandomAttack();
-
-        // 흑곰은 기본적으로 무적 상태이다
-        // 빛 스킬을 맞았을 경우에만 무적 상태가 해제된다
-        IsGodMode = true;
     }
     public void FixedUpdate()
     {
@@ -133,8 +128,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         // 그로기 상태로 진입
         SetAnimatorTrigger("Groggy");
 
-        if (_isAbleLightGuide)
-            _isAbleLightGuide = false;
+        if (_isAbleLightGuideCutscene)
+            _isAbleLightGuideCutscene = false;
     }
 
     // boss base
@@ -161,11 +156,11 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         {
             // Debug.Log("Earth Quake의 Attack Post Process");
 
-            if (_totalEarthquakeCount == 3 && _isAbleLightGuide)
+            if (_totalEarthquakeCount == 3 && _isAbleLightGuideCutscene)
             {
                 Debug.Log("Lighting Guide 컷씬 호출");
 
-                _isAbleLightGuide = false;
+                _isAbleLightGuideCutscene = false;
                 StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
             }
 
@@ -337,7 +332,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
             allocationCount++;
 
-        } while (_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistanceEach) && allocationCount <= allocationCountLimit);
+        } while (_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistanceEach) && allocationCount <= _allocationLimit);
         // List<>: C#에서 제공하는 '제네릭 컬렉션 (<Type> 덕분에, 박싱 / 언박싱을 하지 않음)' 유형 중 하나로, 동적 배열을 구현
         // Any(): LINQ(Language Integrated Query) 확장 메서드
         // 컬렉션 내의 요소 중 하나라도 주어진 조건을 만족하는지 확인하는 메서드
@@ -378,13 +373,14 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
 
     // effects
-    public override void StartAfterDeath()
+    public override void ExecutePostDeathActions()
     {
-        base.StartAfterDeath();
+        base.ExecutePostDeathActions();
 
-        StartCoroutine(AfterDeathCoroutine());
+        // 흑곰 사망 후 연출
+        StartCoroutine(AfterBearDeathCoroutine());
     }
-    public IEnumerator AfterDeathCoroutine()
+    public IEnumerator AfterBearDeathCoroutine()
     {
         yield return StartCoroutine(ChangeImageCoroutine());
         yield return StartCoroutine(ChangeBackgroundCoroutine());

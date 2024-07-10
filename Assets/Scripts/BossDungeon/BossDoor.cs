@@ -71,36 +71,42 @@ public class BossDoor : InteractableObject
     // conrol door (open / close)
     private IEnumerator OpenDoorCoroutine()
     {
+        // TODO: 이쪽 카메라 및 인풋 로직이 자꾸만 Cutscene과 겹친다. 다시 손보자
+
         InputManager.Instance.ChangeToStayStillSetter();
 
-        SceneEffectManager.Instance.Camera.RemoveFollowTarget(SceneContext.Current.Player.transform);
-        SceneEffectManager.Instance.Camera.AddFollowTarget(transform);
+        SceneEffectManager.Instance.Camera.StartFollow(transform);
 
-        /*
-        // yield return _doorOpenAnimation.OpenCoroutine();                                            // 단순히 코루틴을 시작한다 (영화관에서 영화가 끝날 때까지 기다린다)
-        // yield return _doorOpenAnimation.StartCoroutine(_doorOpenAnimation.OpenCoroutine());      // 명시적으로 코루틴을 시작한다  (영화관 직원에게 부탁해 영화를 상영하고 영화가 끝날 때까지 기다린다)
-        */
-
-        // 코루틴 대기
         yield return _doorOpenAnimation.OpenCoroutine();
+        SceneEffectManager.Instance.Camera.StartFollow(SceneContext.Current.Player.transform);
         yield return new WaitForSeconds(_goInDelay);
 
-        InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+        if (_enterInputSetter) InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+        else InputManager.Instance.ChangeToDefaultSetter();
+
+        /*
+        // yield return _doorOpenAnimation.OpenCoroutine();                                             // 단순히 코루틴을 시작한다 (영화관에서 영화가 끝날 때까지 기다린다)
+        // yield return _doorOpenAnimation.StartCoroutine(_doorOpenAnimation.OpenCoroutine());          // 명시적으로 코루틴을 시작한다  (영화관 직원에게 부탁해 영화를 상영하고 영화가 끝날 때까지 기다린다)
+        */
     }
     private IEnumerator CloseDoorCoroutine()
     {
+        // TODO: 이쪽 카메라 및 인풋 로직이 자꾸만 Cutscene과 겹친다. 다시 손보자
+
         // InputManager.Instance.ChangeToStayStillSetter();
 
-        SceneEffectManager.Instance.Camera.FollowOnly(transform);
+        SceneEffectManager.Instance.Camera.StartFollow(transform);
 
         yield return _doorOpenAnimation.CloseCoroutine();
+        SceneEffectManager.Instance.Camera.StartFollow(SceneContext.Current.Player.transform);
+        yield return new WaitForSeconds(_goInDelay);
 
         // InputManager.Instance.ChangeToDefaultSetter();
     }
     public void OpenDoor()
     {
         _isOpened = true;
-        StartCoroutine(OpenDoorCoroutine()); 
+        StartCoroutine(OpenDoorCoroutine());
     }
     public void CloseDoor()
     {

@@ -52,8 +52,8 @@ public abstract class BossBehaviour : MonsterBehaviour
     [Header("Cutscene")]
     [Space]
 
-    [SerializeField] protected CutscenePlayerList cutscenePlayerList;
-    [SerializeField] private float _distanceFromBoss = 6f;                                           // 보스 사망 후 떨어져야할 거리
+    [SerializeField] protected bool isEndMoveProcess = false;
+    [SerializeField] private float _distanceFromBoss = 6f;      // 보스 사망 후 떨어져야할 거리
 
     public int TotalHitCount
     {
@@ -78,8 +78,6 @@ public abstract class BossBehaviour : MonsterBehaviour
     protected override void Awake()
     {
         base.Awake();
-
-        cutscenePlayerList = GetComponent<CutscenePlayerList>();
     }
     protected override void Start()
     {
@@ -125,7 +123,10 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     public void SetActiveLuminescence(bool isBool)
     {
-        luminescence.SetActive(isBool);
+        if (luminescence)
+        {
+            luminescence.SetActive(isBool);
+        }
     }
 
     private void CheckHurtState()
@@ -171,27 +172,20 @@ public abstract class BossBehaviour : MonsterBehaviour
     {
         monsterData.MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
         CurHp = monsterData.MaxHp;
+
+        // 보스 몬스터는 기본적으로 무적 상태이다.
+        IsGodMode = true;
     }
 
-    public IEnumerator PlayCutSceneInRunning(string cutsceneName)
+    public virtual void ExecutePostDeathActions()
     {
-        yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
-
-        cutscenePlayerList.PlayCutscene(cutsceneName);
-    }
-    public IEnumerator PlayCutSceneInRunning(CutscenePlayer cutscenePlayer)
-    {
-        yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
-
-        cutscenePlayerList.PlayCutscene(cutscenePlayer);
-    }
-
-    public virtual void StartAfterDeath()
-    {
-        StartCoroutine(PlayerMoveCoroutine());      // 플레이어 이동
+        // 플레이어 이동 연출
+        StartCoroutine(PlayerMoveCoroutine());
     }
     public IEnumerator PlayerMoveCoroutine()
     {
+        isEndMoveProcess = false;
+
         yield return new WaitForSeconds(1f);
 
         // 플레이어 위치
@@ -233,6 +227,8 @@ public abstract class BossBehaviour : MonsterBehaviour
             InputManager.Instance.ChangeToMoveLeftSetter();
 
         yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.1f);
+
+        isEndMoveProcess = true;
     }
 
     public void DisintegrateEffect()
@@ -245,6 +241,13 @@ public abstract class BossBehaviour : MonsterBehaviour
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
         Destroy(transform.parent ? transform.parent.gameObject : gameObject);       // 프리팹을 삭제해야 한다
+    }
+
+    public IEnumerator PlayCutSceneInRunning(string cutsceneName)
+    {
+        yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
+
+        cutscenePlayerList.PlayCutscene(cutsceneName);
     }
 
     #endregion

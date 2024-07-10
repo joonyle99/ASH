@@ -206,6 +206,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         private set;
     }
 
+    [SerializeField]
+    protected CutscenePlayerList cutscenePlayerList;
+
     /// <summary>
     /// animation transition event
     /// </summary>
@@ -245,6 +248,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         GroundChaseEvaluator = GetComponent<GroundChaseEvaluator>();
         FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
+
+        // Cutscene Player
+        cutscenePlayerList = GetComponent<CutscenePlayerList>();
     }
     protected virtual void Start()
     {
@@ -315,6 +321,13 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             if (AttackEvaluator == null) return;
             if (!AttackEvaluator.IsUsable) return;
             if (AttackEvaluator.IsDuringCoolTime || AttackEvaluator.IsWaitingEvent) return;
+
+            // 컷씬 실행 중이면 안되게 하기
+            if (cutscenePlayerList)
+            {
+                if (cutscenePlayerList.CheckAnyPlaying())
+                    return;
+            }
 
             // 공격 가능한 대상이 있는지 확인
             if (AttackEvaluator.IsTargetWithinRange())

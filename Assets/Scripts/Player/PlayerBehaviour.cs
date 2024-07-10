@@ -339,7 +339,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         if (IsHurt || IsGodMode || IsDead)
             return IAttackListener.AttackResult.Fail;
 
-        Debug.Log(System.Environment.StackTrace);
+        // Debug.Log(System.Environment.StackTrace);
 
         PlaySound_SE_Hurt_02();
         StartCoroutine(SlowMotionCoroutine(0.3f));

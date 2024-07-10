@@ -2,10 +2,10 @@ using System.Collections;
 using UnityEngine;
 
 using Com.LuisPedroFonseca.ProCamera2D;
-using UnityEngine.Rendering.Universal;
+using System.Collections.Generic;
 
 /// <summary>
-/// 각각의 Main 카메라에 붙어있는 컴포넌트
+/// Main 카메라에 붙어있는 컴포넌트이며
 /// 씬 컨텍스트 빌드 시 OnSceneContextBuilt() 함수가 호출된다.
 /// </summary>
 public class CameraController : MonoBehaviour, ISceneContextBuildListener
@@ -37,15 +37,26 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
         _proCamera.enabled = true;
 
-        if (SceneContext.Current.Player) _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
-        else Debug.LogWarning("Player not found in the scene");
+        if (SceneContext.Current.Player)
+        {
+            _proCamera.RemoveCameraTarget(SceneContext.Current.Player.transform);
+            _proCamera.AddCameraTarget(SceneContext.Current.Player.transform);
+        }
+        else
+        {
+            Debug.LogWarning("Player not found in the scene");
+        }
 
         SnapFollow();
     }
     public void ResetCameraSettings()
     {
+        // Debug.Log($"카메라 리셋\n{System.Environment.StackTrace}");
+
         if (SceneContext.Current.Player)
+        {
             StartFollow(SceneContext.Current.Player.transform);
+        }
 
         // OffsetX = _initialSettings.Offset.x;
         // OffsetY = _initialSettings.Offset.y;
@@ -78,16 +89,25 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void RemoveFollowTargets(Transform[] targets)
     {
-        // _proCamera.RemoveAllCameraTargets();
-
         foreach (var target in targets)
         {
             _proCamera.RemoveCameraTarget(target);
         }
     }
+    public void RemoveAllFollowTargets()
+    {
+        _proCamera.RemoveAllCameraTargets();
+    }
+
+    public List<CameraTarget> GetAllFollowTargets()
+    {
+        return _proCamera.CameraTargets;
+    }
 
     public void StartFollow(Transform target, bool removeExisting = true)
     {
+        // 코드로 작동 시 사용
+
         if (removeExisting)
             _proCamera.RemoveAllCameraTargets();
 
@@ -95,6 +115,8 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void FollowOnly(Transform target)
     {
+        // CutscenePlayer로 작동 시 사용
+
         _proCamera.RemoveAllCameraTargets();
         _proCamera.AddCameraTarget(target);
     }
@@ -106,10 +128,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.VerticalFollowSmoothness = 100f;
     }
 
-    /// <summary>
-    /// 한 프레임 동안 smoothness를 0으로 설정함으로써, 플레이어를 즉시 따라가도록 한다.
-    /// </summary>
-    /// <returns></returns>
+    // effect: snap (한 프레임 동안 smoothness를 0으로 설정함으로써, 플레이어를 즉시 따라가도록 한다.)
+    public void SnapFollow()
+    {
+        StartCoroutine(SnapFollowCoroutine());
+    }
     private IEnumerator SnapFollowCoroutine()
     {
         // Debug.Log("call snap follow coroutine");
@@ -128,10 +151,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.VerticalFollowSmoothness = originalSmoothnessY;
 
         // Debug.Log($"_proCamera.HorizontalFollowSmoothness: {_proCamera.HorizontalFollowSmoothness} \n _proCamera.VerticalFollowSmoothness: {_proCamera.VerticalFollowSmoothness}");
-    }
-    public void SnapFollow()
-    {
-        StartCoroutine(SnapFollowCoroutine());
     }
 
     // effect: shake
