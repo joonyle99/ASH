@@ -17,7 +17,8 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     }
 
 
-    public static Action OnSave;
+    public static Action OnSaveStarted;
+    public static Action OnSaveEnded;
 
     private void Awake()
     {
@@ -38,7 +39,8 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     {
         if (_passageName == null) return;
 
-        OnSave.Invoke();
+        if(OnSaveStarted != null)
+            OnSaveStarted.Invoke();
 
         JsonDataManager.SavePersistentData(_passageName);
 
@@ -50,5 +52,8 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
         }
 
         JsonDataManager.JsonSave();
+
+        if(OnSaveEnded != null)
+            OnSaveEnded.Invoke();
     }
 }

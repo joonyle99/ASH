@@ -69,19 +69,23 @@ public class DieState : PlayerState
 
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        // 현재 씬에 있는 입구로 이동한다
-        /*
-        var sceneName = SceneManager.GetActiveScene().name;
-        var passageName = SceneContext.Current.EntrancePassage.PassageName;
-
-        // Debug.Log($"scene name: {sceneName}");
-        // Debug.Log($"passage name: {passageName}");
-
-        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
-        */
-
         //마지막으로 저장된 시점으로 이동
-        PersistentDataManager.LoadToSavedData();
+        if (PersistentDataManager.Instance.PersistentData.SceneName != "" && 
+            PersistentDataManager.Instance.PersistentData.PassageName != "")
+        {
+            PersistentDataManager.LoadToSavedData();
+        }
+        // 현재 씬에 있는 입구로 이동한다
+        else
+        {
+            var sceneName = SceneManager.GetActiveScene().name;
+            var passageName = SceneContext.Current.EntrancePassage.PassageName;
+
+            // Debug.Log($"scene name: {sceneName}");
+            // Debug.Log($"passage name: {passageName}");
+
+            SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+        }
     }
     private IEnumerator ExitCoroutine()
     {

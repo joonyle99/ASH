@@ -61,7 +61,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
     private void Awake()
     {
         //OnSave함수 바인딩
-        SaveAndLoader.OnSave += OnSaveData;
+        SaveAndLoader.OnSaveStarted += OnSaveData;
 
         // 데이터 그룹이 존재하지 않는다면 생성
         PersistentDataManager.TryAddDataGroup(_groupName);
@@ -104,7 +104,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
                 // 트랜스폼 데이터 저장 (씬 전환 시)
                 SaveTransformState();
             }
-            SaveAndLoader.OnSave -= OnSaveData;
+            SaveAndLoader.OnSaveStarted -= OnSaveData;
         }
     }
     // 오브젝트가 파괴되었을 때 파괴 상태의 데이터를 저장하는 작업
@@ -114,7 +114,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
         if (_preserveDestruction)
         {
             PersistentDataManager.Set(_groupName, DestructionKey, true);
-            SaveAndLoader.OnSave -= OnSaveData;
+            SaveAndLoader.OnSaveStarted -= OnSaveData;
         }
     }
 
