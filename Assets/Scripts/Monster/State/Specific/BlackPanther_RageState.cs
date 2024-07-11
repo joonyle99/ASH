@@ -7,7 +7,7 @@ public class BlackPanther_RageState : Boss_StateBase
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
         Boss.IsRage = true;
-        Boss.IsGodMode = Boss.IsRage;
+        // Boss.IsGodMode = Boss.IsRage;
 
         if (!Boss.isActiveLuminescence)
             Boss.SetActiveLuminescence(true);

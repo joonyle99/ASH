@@ -17,6 +17,10 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     [SerializeField] float _respawnDelay = 0.5f;
     [SerializeField] float _capeFlyDuration = 1f;
 
+    /// <summary>
+    /// 씬 입장 시 화면을 밝게 만드는 효과
+    /// </summary>
+    /// <returns></returns>
     public override IEnumerator EnterSceneEffectCoroutine()
     {
         // Debug.Log("call EnterSceneEffectCoroutine in PlayableSceneTransitionPlayer");
@@ -30,7 +34,14 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         // SceneEffectManager.Instance.Camera.SnapFollow();
 
         yield return StartCoroutine(entrance.PlayerExitCoroutine());
+
+        // 여기서 만약 씬 입장 시 플레이 해야하는 컷씬이 있다면 실행
+        yield return StartCoroutine(entrance.PlayEnterCutscene());
     }
+    /// <summary>
+    /// 씬 퇴장 시 화면을 어둡게 만드는 효과
+    /// </summary>
+    /// <returns></returns>
     public override IEnumerator ExitSceneEffectCoroutine()
     {
         SceneEffectManager.Instance.Camera.DisableCameraFollow();

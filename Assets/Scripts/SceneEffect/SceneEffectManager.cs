@@ -130,9 +130,14 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
             PlayCutscene(nextCutScene);
         }
         else if (_sceneEvents.Count > 0)
+        {
             RefreshSceneEventStates();
+        }
         else
-            EnterIdleState();
+        {
+            // 컷씬이 끝나고 다른 이벤트가 없는 경우 진입
+            // EnterIdleState();
+        }
     }
     void DisableAllSceneEvents()
     {

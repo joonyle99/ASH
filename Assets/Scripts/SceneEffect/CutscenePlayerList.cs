@@ -14,20 +14,27 @@ public class CutscenePlayerList : MonoBehaviour
 
     public void PlayCutscene(string cutsceneName)
     {
-        var cutscenePlayer = FindCutscene(cutsceneName);
+        var cutscenePlayer = CheckPlayed(cutsceneName);
 
         if (cutscenePlayer == null)
         {
-            Debug.LogWarning("Cutscene not found: " + cutsceneName);
+            Debug.LogWarning("Cutscene is invalid: " + cutsceneName);
             return;
         }
 
         cutscenePlayer.Play();
     }
-    public void PlayCutscene(CutscenePlayer cutscenePlayer)
+    public CutscenePlayer CheckPlayed(string cutsceneName)
     {
-        if (cutscenePlayer == null) return;
-        cutscenePlayer.Play();
+        var cutscenePlayer = FindCutscene(cutsceneName);
+
+        if (cutscenePlayer == null)
+        {
+            Debug.LogWarning("Cutscene not found: " + cutsceneName);
+            return null;
+        }
+
+        return cutscenePlayer.IsPlayed ? null : cutscenePlayer;
     }
     public CutscenePlayer FindCutscene(string cutsceneName)
     {
@@ -40,16 +47,32 @@ public class CutscenePlayerList : MonoBehaviour
 
         return null;
     }
-    public CutscenePlayer CheckPlayed(string cutsceneName)
-    {
-        var cutscenePlayer = FindCutscene(cutsceneName);
 
-        if(cutscenePlayer == null)
+    public bool CheckAnyPlaying()
+    {
+        foreach (CutsceneDictionary cutscene in _cutsceneDictionary)
         {
-            Debug.LogWarning("Cutscene not found: " + cutsceneName);
-            return null;
+            if (cutscene.cutscenePlayer.IsPlaying)
+            {
+                return true;
+            }
         }
 
-        return cutscenePlayer.IsPlayed ? null : cutscenePlayer;
+        return false;
+    }
+    public static bool CheckAnyPlayingInScene()
+    {
+        // 씬에서 모든 cutsceneplayer를 찾는다
+
+        var allCutscenePlayer = FindObjectsByType<CutscenePlayer>(FindObjectsSortMode.None);
+        foreach (var cutscene in allCutscenePlayer)
+        {
+            if (cutscene.IsPlaying)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

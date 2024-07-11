@@ -23,6 +23,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     [Space]
 
+    [SerializeField] private int _godModeReferenceCount;
+
+    [Space]
+
     [SerializeField] private bool _isCanAttack = true;
     [SerializeField] private bool _isCanDash = true;
 
@@ -86,8 +90,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public bool CanInteract => CurrentState is IInteractableState;
 
     // Condition Property
-    public bool IsGrounded => GroundHit;
-    public bool IsGroundedSupported => GroundHit || GroundHit2;
+    public bool IsGrounded => GroundHit;                                    // 플레이어의 아래 방향으로 Circle Cast
+    public bool IsGroundedSupported => GroundHit || GroundHit2;             // + 플레이어의 아래 방향으로 Ray Cast
     public bool IsUpWardGrounded => UpwardGroundHit;
     public bool IsTouchedWall => ClimbHit;
     public bool IsClimbable { get; set; }
@@ -100,7 +104,26 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public bool IsGodMode
     {
         get => _isGodMode;
-        set => _isGodMode = value;
+        set
+        {
+            // 레퍼런스 카운팅 기법 적용
+
+            // Blink Effect에서 True로 설정되고, CutscenePlayer에서 True로 설정되면
+            // 레퍼런스 카운터가 2가 된다.
+            // 이후 Blink Effect가 종료된 후, GodMode를 False로 설정하려 하면
+            // 레퍼런스 카운터가 1이 되면서, GodMode가 True로 유지된다.
+
+            if (value)
+            {
+                _godModeReferenceCount++;
+                _isGodMode = _godModeReferenceCount > 0;
+            }
+            else
+            {
+                _godModeReferenceCount = Math.Max(0, _godModeReferenceCount - 1);
+                _isGodMode = _godModeReferenceCount > 0;
+            }
+        }
     }
     public bool IsDead
     {
@@ -316,7 +339,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         if (IsHurt || IsGodMode || IsDead)
             return IAttackListener.AttackResult.Fail;
 
-        Debug.Log(System.Environment.StackTrace);
+        // Debug.Log(System.Environment.StackTrace);
 
         PlaySound_SE_Hurt_02();
         StartCoroutine(SlowMotionCoroutine(0.3f));

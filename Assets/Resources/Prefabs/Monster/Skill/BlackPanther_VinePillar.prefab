@@ -98,7 +98,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &700385678698548340
 Transform:
   m_ObjectHideFlags: 0
@@ -141,11 +141,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5821592069741332027}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -257.15326, y: 53.243317, z: 0}
-  m_LocalScale: {x: 0.60224, y: 21.794012, z: 0.60224}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 700385678698548340}
+  - {fileID: 1748292452133286361}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -156,7 +157,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5821592069741332027}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -203,3 +204,65 @@ MonoBehaviour:
   isDestroyWhenPlayer: 0
   effectRenderer: {fileID: 4074180291362195815}
   hitCollider: {fileID: 1444908717824489918}
+--- !u!1001 &2540135784834177367
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 5821592069741332025}
+    m_Modifications:
+    - target: {fileID: 4252328996033407112, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_Name
+      value: BlackPanther_VinePillar_Content
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+--- !u!4 &1748292452133286361 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4252328996033407118, guid: ab83656e34f242241971b93f1a8a73c0, type: 3}
+  m_PrefabInstance: {fileID: 2540135784834177367}
+  m_PrefabAsset: {fileID: 0}

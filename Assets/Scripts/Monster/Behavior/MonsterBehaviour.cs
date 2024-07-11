@@ -206,6 +206,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         private set;
     }
 
+    [SerializeField]
+    protected CutscenePlayerList cutscenePlayerList;
+
     /// <summary>
     /// animation transition event
     /// </summary>
@@ -245,6 +248,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         GroundChaseEvaluator = GetComponent<GroundChaseEvaluator>();
         FloatingChaseEvaluator = GetComponent<FloatingChaseEvaluator>();
         AttackEvaluator = GetComponent<AttackEvaluator>();
+
+        // Cutscene Player
+        cutscenePlayerList = GetComponent<CutscenePlayerList>();
     }
     protected virtual void Start()
     {
@@ -315,6 +321,13 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             if (AttackEvaluator == null) return;
             if (!AttackEvaluator.IsUsable) return;
             if (AttackEvaluator.IsDuringCoolTime || AttackEvaluator.IsWaitingEvent) return;
+
+            // 컷씬 실행 중이면 안되게 하기
+            if (cutscenePlayerList)
+            {
+                if (cutscenePlayerList.CheckAnyPlaying())
+                    return;
+            }
 
             // 공격 가능한 대상이 있는지 확인
             if (AttackEvaluator.IsTargetWithinRange())
@@ -624,6 +637,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     {
         return CurrentState is TState;
     }
+    /// <summary>
+    /// 쿨타임 Action과 같은 'myFunction'은 해당 State의 Animation이 Trigger되면서 시작된다
+    /// </summary>
     public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState, ActionDelegate myFunction = null, float duration = 0f)
     {
         StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState, myFunction, duration));

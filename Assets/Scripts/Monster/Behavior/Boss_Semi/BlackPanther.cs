@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
@@ -23,6 +25,12 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private AttackType _firstAttack;
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
+
+    [Header("____ Rush ____")]
+    [Space]
+
+    [SerializeField] private float _rushBackDist = 10f;
+    [SerializeField] private Range _rushableRange;
 
     [Header("____ VineMissile ____")]
     [Space]
@@ -49,7 +57,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     private Vector2 _targetPos;
     private BlackPanther_VineMissile _currentMissile;
 
-    private float _vineMissileAnimDuration;
+    [SerializeField] private float _vineMissileAnimDuration;
 
     [Header("____ VinePillar ____")]
     [Space]
@@ -62,7 +70,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private Range _createTimeRange;
 
     private List<float> _usedPosX;
-    private int _allocationLimit = 40;
+    private int _allocationLimit = 30;
 
     [Header("VinePillar - VFX")]
     [Space]
@@ -70,7 +78,14 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private ParticleSystem _dustEffect;
     [SerializeField] private float _dustDistFromPillar;
 
-    private float _vinePillarAnimDuration;
+    [SerializeField] private float _vinePillarAnimDuration;
+
+    [Header("Cutscene")]
+    [Space]
+
+    [SerializeField] private ParticleSystem _shiningEyes;
+
+    public bool IsLightingHintInRage => IsRage && TotalMissileCount % 3 == 0;
 
     #endregion
 
@@ -80,6 +95,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         base.Awake();
 
+        // 덩쿨 스킬 애니메이션 클립의 길이 추출
         foreach (var clip in Animator.runtimeAnimatorController.animationClips)
         {
             if (clip.name == "ani_panther_vineMissile")
@@ -88,25 +104,36 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
                 _vinePillarAnimDuration = clip.length;
         }
 
-        AttackEvaluator.WaitEvent -= HandleFunc;
-        AttackEvaluator.WaitEvent += HandleFunc;
+        // 공격 판독기의 대기 이벤트 등록
+        AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
+        AttackEvaluator.WaitEvent += OnAttackWaitEvent;
     }
     protected override void Start()
     {
         base.Start();
 
         SetToFirstAttack();
+
+        if (AttackEvaluator)
+            AttackEvaluator.IsUsable = false;
     }
     public void FixedUpdate()
     {
         if (IsDead)
             return;
 
-        if (CurrentStateIs<BossAttackState>() &&
-            (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2))
+        if (CurrentStateIs<Monster_WalkState>())
         {
             if (GroundMovementModule)
-                GroundMovementModule.WalkGround();
+                GroundMovementModule.WalkGround(0.7f);
+        }
+        else if (CurrentStateIs<BossAttackState>())
+        {
+            if (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2)
+            {
+                if (GroundMovementModule)
+                    GroundMovementModule.WalkGround();
+            }
         }
         else
         {
@@ -133,42 +160,33 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         currentAttackCount++;
 
         if (_currentAttack == AttackType.VineMissile)
-            _totalMissileCount++;
-
-        if (IsRage)
         {
-            // TODO: 3번째 미사일 때만 IsCapturable = true로 변경
-            if (_totalMissileCount % 3 == 0)
-            {
-                if (!IsCapturable)
-                    IsCapturable = true;
-            }
+            TotalMissileCount++;
         }
-        else
+
+        if (!IsRage)
         {
-            if (!IsGodMode)
-                IsGodMode = true;
+            // Rush인 경우에는 GodMode를 해제한다
+            if (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2)
+            {
+                if (IsGodMode)
+                    IsGodMode = false;
+            }
         }
     }
     public override void AttackPostProcess()
     {
         SetToNextAttack();
 
-        if (IsRage)
+        if (!IsRage)
         {
-            // TODO: 3번째 미사일 때만 IsCapturable = false로 변경
-            if (_totalMissileCount % 3 == 0)
+            if (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2)
             {
-                if (IsCapturable)
-                {
-                    IsCapturable = false;
-                }
+                if (!IsGodMode)
+                    IsGodMode = true;
+
+                currentHitCount = 0;
             }
-        }
-        else
-        {
-            if (IsGodMode)
-                IsGodMode = false;
         }
     }
     public override void GroggyPreProcess()
@@ -290,7 +308,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
             var rightPos = new Vector2(posX + _dustDistFromPillar, _floorHeight);
 
             // for debug
-            joonyle99.Util.DrawX(new Vector2(posX, _floorHeight));
+            joonyle99.Util.DebugDrawX(new Vector2(posX, _floorHeight));
 
             var leftDust = Instantiate(_dustEffect, leftPos, Quaternion.Euler(0f, 0f, 180f));
             var rightDust = Instantiate(_dustEffect, rightPos, Quaternion.identity);
@@ -311,12 +329,14 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         var pos = new Vector2(createPosX, _floorHeight);
         var pillar = Instantiate(_pillar, pos, Quaternion.identity);
-        pillar.Opacity();
+        // pillar.Opacity();
     }
 
-    // wait event
-    private IEnumerator HandleFunc()
+    // wait event (Attack Evaluator에 대한 대기 이벤트)
+    private IEnumerator OnAttackWaitEvent()
     {
+        // 해당 WaitEvent() Handler는 아직 State가 바뀌기 전에 호출되는 이벤트이므로,
+        // nextAttack을 기준으로 처리해야 한다. (사실상 nextAttack이 currentAttack)
         switch (_nextAttack)
         {
             case AttackType.Rush1:
@@ -333,23 +353,17 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
     private IEnumerator WaitEventCoroutine_Rush()
     {
-        // TODO: 플레이어에게 돌진할 때만 방향을 전환할 수 있도록
-        // 1. 사용 가능한 상태가 된다
-        // 2. 플레이어 방향으로 추격 방향을 설정한다
-        // 3. 플레이어 뒷편으로 이동할 때까지 사용을 제한한다 (쿨타임을 건다)
-        // 4. 다시 1로 돌아간다
-
         // 추격 위치 설정
         var player = SceneContext.Current.Player;
         var dir = Mathf.Sign(player.transform.position.x - transform.position.x);
-        var targetPosX = player.transform.position.x + dir * 30f;
+        float targetPosX = Mathf.Clamp(player.transform.position.x + dir * _rushBackDist, _rushableRange.Start, _rushableRange.End);
 
         // 디버그 코드
         Vector3 startPoint = new Vector3(targetPosX, transform.position.y, transform.position.z);
         Vector3 endPoint = new Vector3(targetPosX, transform.position.y + 5f, transform.position.z);
         Debug.DrawLine(startPoint, endPoint, Color.cyan, 1f);
 
-        // 대상 뒷편으로 지나갈 때까지 기다려야 한다
+        // 대상 뒷편으로 지나갈 때까지 기다린다
         yield return new WaitUntil(() => Mathf.Abs(transform.position.x - targetPosX) < 0.5f);
 
         Animator.SetTrigger("Stop");
@@ -358,21 +372,77 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         var targetCollider2 = GroundChaseEvaluator.IsTargetWithinRange();
         if (targetCollider2) StartSetRecentDirAfterGrounded(GroundChaseEvaluator.ChaseDir);
     }
+    private IEnumerator LightingHintCoroutine()
+    {
+        // N초간 Capturable 상태로 만들며 대기하는 코루틴
+
+        Debug.Log("LightHintCoroutine 실행");
+
+        IsCapturable = true;
+
+        yield return new WaitForSeconds(3f);
+
+        IsCapturable = false;
+
+        Debug.Log("LightHintCoroutine 종료");
+    }
     private IEnumerator WaitEventCoroutine_VineMissile()
     {
         // 애니메이션이 끝날때까지 기다려야 한다
         yield return new WaitForSeconds(_vineMissileAnimDuration);
+
+        // Debug.Log("Vine Missile Animation이 종료되었습니다. 이제 Attack Evaluator의 쿨타임이 끝났습니다");
+
+        // Light Hint를 제공하는 경우
+        if (IsLightingHintInRage)
+        {
+            yield return LightingHintCoroutine();
+        }
     }
     private IEnumerator WaitEventCoroutine_VinePillar()
     {
         // 애니메이션이 끝날때까지 기다려야 한다
         yield return new WaitForSeconds(_vinePillarAnimDuration);
+
+        // Debug.Log("Vine Pillar Animation이 종료되었습니다. 이제 Attack Evaluator의 쿨타임이 끝났습니다");
+    }
+
+    // effects
+    public override void ExecutePostDeathActions()
+    {
+        base.ExecutePostDeathActions();
+
+        // 흑표범 사망 후 연출
+        StartCoroutine(AfterBlackPantherCoroutine());
+    }
+    public IEnumerator AfterBlackPantherCoroutine()
+    {
+        yield return new WaitUntil(() => isEndMoveProcess);
+
+        // 최종 컷씬 재생
+        cutscenePlayerList.PlayCutscene("Final CutScene");
+    }
+
+    // etc
+    public void ShineEyes()
+    {
+        _shiningEyes.Play();
+    }
+    public void ActivateAttackEvaluator()
+    {
+        if (AttackEvaluator)
+            AttackEvaluator.IsUsable = true;
     }
 
     #endregion
 
     private void OnDrawGizmosSelected()
     {
+        // Rushable Range
+        Gizmos.color = Color.green;
+        joonyle99.Util.GizmosDrawVerticalLine(new Vector3(_rushableRange.Start, transform.position.y, transform.position.z));
+        joonyle99.Util.GizmosDrawVerticalLine(new Vector3(_rushableRange.End, transform.position.y, transform.position.z));
+
         var current = SceneContext.Current;
 
         if (current == null)

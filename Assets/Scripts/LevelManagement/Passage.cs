@@ -11,7 +11,15 @@ public class Passage : TriggerZone
     [Tooltip("플레이어가 여기로 들어가서 다음 스테이지로 갈 때")][SerializeField] InputSetterScriptableObject _enterInputSetter;
     [Tooltip("플레이어가 이전 스테이지에서 여기로 나올 때")][SerializeField] InputSetterScriptableObject _exitInputSetter;
 
+    [Tooltip("해당 입구를 통해 씬에 입성했을 때 실행하는 컷씬")]
+    [SerializeField] private CutscenePlayer _entranceCutscenePlayer;
+
+    [Space]
+
+    [Tooltip("해당 입구를 통해 씬에 입성했을 때 플레이어가 스폰되는 위치")]
     [SerializeField] private Transform _playerSpawnPoint;
+
+    [Space]
 
     [SerializeField] private bool _canEnter = true;
     [SerializeField] private float _exitTimeOut = 1f;
@@ -19,10 +27,6 @@ public class Passage : TriggerZone
     public string PassageName => name;
     public InputSetterScriptableObject EnterInputSetter => _enterInputSetter;
     public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
-
-    // TEMP
-    [SerializeField] private bool _isStartingPassage;
-    public bool IsStartingPassage => _isStartingPassage;
 
     private bool _isPlayerExiting;
 
@@ -75,26 +79,45 @@ public class Passage : TriggerZone
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
     }
     
-    //Passage를 통해 밖으로 나옴
+    // Passage를 통해 밖으로 나옴
     public IEnumerator PlayerExitCoroutine()
     {
-        //Spawn player
         _isPlayerExiting = true;
-        SceneContext.Current.Player.transform.position = _playerSpawnPoint.position;
-        if (_exitInputSetter != null)
-            InputManager.Instance.ChangeInputSetter(_exitInputSetter);
-        else
-            InputManager.Instance.ChangeToDefaultSetter();
 
-        //Wait until player exits zone
+        // spawn point로 이동
+        SceneContext.Current.Player.transform.position = _playerSpawnPoint.position;
+
+        // exiting input setter
+        if (_exitInputSetter != null) InputManager.Instance.ChangeInputSetter(_exitInputSetter);
+        else InputManager.Instance.ChangeToDefaultSetter();
+
+        // 아직 passage를 나가지 않았거나 시간이 지나지 않았다면 계속 대기
         float eTime = 0f;
-        while(_isPlayerExiting && eTime < _exitTimeOut)
+        while(_isPlayerExiting || eTime < _exitTimeOut)
         {
             yield return null;
             eTime += Time.deltaTime;
+            // Debug.Log("돌고있나");
         }
         yield return new WaitUntil(() => !_isPlayerExiting);
         yield return new WaitForSeconds(0.3f);
+
+        // Debug.Log("들어오나");
+
+        // default input setter
         InputManager.Instance.ChangeToDefaultSetter();
+    }
+
+    // Passage에서 나온 후, 해당 씬에 컷씬을 실행
+    public IEnumerator PlayEnterCutscene()
+    {
+        if(_entranceCutscenePlayer == null) yield break;
+        if (!_entranceCutscenePlayer.isActiveAndEnabled) yield break;
+
+        InputManager.Instance.ChangeToStayStillSetter();
+
+        yield return new WaitForSeconds(1f);
+
+        _entranceCutscenePlayer.Play();
     }
 }
