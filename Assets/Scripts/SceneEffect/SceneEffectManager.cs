@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffectManager>, ISceneContextBuildListener
@@ -33,8 +34,8 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
 
     private State _currentState = State.Idle;
     private CameraController _currentCamera;
-    private List<SceneEffectEvent> _sceneEvents;
-    private List<Cutscene> _cutSceneQueue;
+    private List<Cutscene> _cutSceneQueue;              // 컷씬 큐
+    private List<SceneEffectEvent> _sceneEvents;        // 씬 이벤트 리스트
     private SceneEventComparator _eventComparator;
     public CameraController Camera
     {
@@ -54,7 +55,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
         _cutSceneQueue = new List<Cutscene>();
         _eventComparator = new SceneEventComparator();
     }
-    void Update()
+    private void Update()
     {
         if ( _currentState == State.SceneEvent)
         {
@@ -77,21 +78,45 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
         Camera.ResetCameraSettings();
     }
 
+    // cutscene
     public void PushCutscene(Cutscene cutscene)
     {
-        if (_cutSceneQueue.Count == 0)
-            PlayCutscene(cutscene);
-        else
-            _cutSceneQueue.Add(cutscene);
+        // 컷씬이 없는 경우 바로 재생
+        if (_cutSceneQueue.Count == 0) PlayCutscene(cutscene);
+        // 컷씬이 있는 경우 큐에 추가
+        else _cutSceneQueue.Add(cutscene);
 
+        // 컷씬이 재생되는 동안 다른 이벤트들은 비활성화
         DisableAllSceneEvents();
     }
+    private void PlayCutscene(Cutscene cutscene)
+    {
+        _currentState = State.Cutscene;
+        cutscene.Play(CutsceneEndCallback);
+    }
+    private void CutsceneEndCallback()
+    {
+        if (_cutSceneQueue.Count > 0)
+        {
+            var nextCutScene = _cutSceneQueue[0];
+            _cutSceneQueue.RemoveAt(0);
+            PlayCutscene(nextCutScene);
+        }
+        else if (_sceneEvents.Count > 0)
+        {
+            RefreshSceneEventStates();
+        }
+        else
+        {
+            // 컷씬이 끝나고 다른 이벤트가 없는 경우 진입
+            EnterIdleState();
+        }
+    }
+
+    // scene event
     public SceneEffectEvent PushSceneEvent(SceneEffectEvent sceneEvent)
     {
-        int index = _sceneEvents.BinarySearch(sceneEvent, _eventComparator);
-        if (index < 0)
-            index = 0;
-
+        int index = Math.Min(0, _sceneEvents.BinarySearch(sceneEvent, _eventComparator));
         _sceneEvents.Insert(index, sceneEvent);
 
         if (_currentState != State.Cutscene)
@@ -115,36 +140,12 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
                 EnterIdleState();
         }
     }
-
-    void PlayCutscene(Cutscene cutscene)
-    {
-        _currentState = State.Cutscene;
-        cutscene.Play(CutsceneEndCallback);
-    }
-    void CutsceneEndCallback()
-    {
-        if (_cutSceneQueue.Count > 0)
-        {
-            var nextCutScene = _cutSceneQueue[0];
-            _cutSceneQueue.RemoveAt(0);
-            PlayCutscene(nextCutScene);
-        }
-        else if (_sceneEvents.Count > 0)
-        {
-            RefreshSceneEventStates();
-        }
-        else
-        {
-            // 컷씬이 끝나고 다른 이벤트가 없는 경우 진입
-            // EnterIdleState();
-        }
-    }
-    void DisableAllSceneEvents()
+    private void DisableAllSceneEvents()
     {
         foreach (var sceneEvent in _sceneEvents)
             sceneEvent.Enabled = false;
     }
-    void RefreshSceneEventStates()
+    private void RefreshSceneEventStates()
     {
         if (_sceneEvents.Count == 0)
             return;

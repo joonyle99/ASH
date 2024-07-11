@@ -11,6 +11,7 @@ public class SceneEventComparator : IComparer<SceneEffectEvent>
         return 1;
     }
 }
+
 [System.Serializable]
 public class SceneEffectEvent
 {

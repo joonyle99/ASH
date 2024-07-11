@@ -74,10 +74,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             {
                 yield return null;
 
-                /*
-                if (InputManager.Instance.State.InteractionKey.KeyDown)
+                if (Input.GetKeyDown(KeyCode.F3))
                     View.FastForward();
-                */
             }
 
             // 다음 Update 프레임까지 대기하며 상호작용 키의 중복 입력을 방지

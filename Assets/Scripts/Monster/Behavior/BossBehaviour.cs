@@ -62,7 +62,8 @@ public abstract class BossBehaviour : MonsterBehaviour
         {
             _totalHitCount = value;
 
-            if (_totalHitCount == finalTargetHurtCount / 2 && !IsRage)
+            int halfHitCount = (finalTargetHurtCount + 1) / 2;
+            if (_totalHitCount == halfHitCount && !IsRage)
             {
                 Debug.Log("Change RageState 컷씬 호출");
 
@@ -240,7 +241,10 @@ public abstract class BossBehaviour : MonsterBehaviour
         var effect = GetComponent<DisintegrateEffect>();
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
-        Destroy(transform.parent ? transform.parent.gameObject : gameObject);       // 프리팹을 삭제해야 한다
+
+        var prefab_monster = transform.parent.gameObject; // 프리팹을 삭제한다
+        if (prefab_monster.GetComponent<DestructEventCaller>()) Destruction.Destruct(prefab_monster);
+        else Destroy(prefab_monster);
     }
 
     public IEnumerator PlayCutSceneInRunning(string cutsceneName)

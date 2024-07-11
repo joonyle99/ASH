@@ -212,6 +212,7 @@ GameObject:
   - component: {fileID: 869879899}
   - component: {fileID: 109193434}
   - component: {fileID: 109193435}
+  - component: {fileID: 6103124190883986147}
   m_Layer: 0
   m_Name: BossDoor
   m_TagString: Untagged
@@ -256,11 +257,13 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 1095145399}
   _stateChange: 0
   _animationType: 0
+  _isOpened: 0
   _passage: {fileID: 5904064001357719047}
   _goInDelay: 3
   _enterInputSetter: {fileID: 11400000, guid: bda65bfa556fab147895b7d4385ad239, type: 2}
-  _soundList: {fileID: 109193434}
   _failDialogue: {fileID: 11400000, guid: 74a66fb99d254f94ea3126e87addfde1, type: 2}
+  _soundList: {fileID: 109193434}
+  _isControlableInputSetter: 1
 --- !u!95 &869879896
 Animator:
   serializedVersion: 5
@@ -366,6 +369,22 @@ MonoBehaviour:
   _preheatSoundInterval: 0.15
   _preheadSoundRepeat: 7
   _dustParticle: {fileID: 1044997699766655398}
+--- !u!114 &6103124190883986147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627304409991861526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: 
+  _ID: 
+  _preserveTransform: 0
+  _preserveDestruction: 0
 --- !u!1 &627304411078616327
 GameObject:
   m_ObjectHideFlags: 0

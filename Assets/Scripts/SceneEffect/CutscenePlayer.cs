@@ -45,6 +45,8 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     /// <returns></returns>
     private IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
     {
+        Debug.Log("Sequence 코루틴 시작");
+
         IsPlaying = true;
         for (int i = 0; i < sequence.Count; i++)
         {
@@ -98,6 +100,8 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
         // 플레이어 무적 상태 해제
         SceneContext.Current.Player.IsGodMode = false;
         // Debug.Log($"{SceneContext.Current.Player}의 GodMode가 해제됩니다. => IsGodMode : {SceneContext.Current.Player.IsGodMode}");
+
+        Debug.Log("Sequence 코루틴 종료");
     }
 
     /// <summary>
