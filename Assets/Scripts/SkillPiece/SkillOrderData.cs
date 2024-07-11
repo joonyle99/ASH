@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 [System.Serializable]
 public class SkillData
