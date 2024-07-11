@@ -22,7 +22,7 @@ public class Cutscene
     }
     public IEnumerator CutsceneCoroutine()
     {
-        Debug.Log($"{_owner.name}으로부터 시작된 컷씬입니다");
+        // Debug.Log($"{_owner.name}으로부터 시작된 컷씬입니다");
 
         IsStartted = true;
         IsDone = false;
@@ -40,6 +40,6 @@ public class Cutscene
 
         IsStartted = false;
 
-        Debug.Log($"{_owner.name}으로부터 시작된 컷씬이 종료되었습니다");
+        // Debug.Log($"{_owner.name}으로부터 시작된 컷씬이 종료되었습니다");
     }
 }

@@ -329,7 +329,6 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         var pos = new Vector2(createPosX, _floorHeight);
         var pillar = Instantiate(_pillar, pos, Quaternion.identity);
-        // pillar.Opacity();
     }
 
     // wait event (Attack Evaluator에 대한 대기 이벤트)
