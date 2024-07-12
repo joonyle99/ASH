@@ -118,7 +118,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
         }
     }
 
-    //트랜스폼 데이터를 저장하는 작업
+    // 트랜스폼 데이터를 저장하는 작업
     public void SaveTransformState()
     {
         if (_preserveTransform)

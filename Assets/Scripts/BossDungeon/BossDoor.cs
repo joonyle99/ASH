@@ -18,19 +18,26 @@ public class BossDoor : InteractableObject
     [SerializeField] private DialogueData _failDialogue;                        // 키가 모두 모이지 않았을 때의 대사
     [SerializeField] private SoundList _soundList;
 
+    [Space]
+
+    [SerializeField] private bool _isControlableInputSetter = true;
+
+    private PreserveState _statePreserver;
     private DoorOpenAnimation _doorOpenAnimation;
     private Animator _animator;
     private Collider2D _collider;
 
     private void Awake()
     {
+        _statePreserver = GetComponent<PreserveState>();
         _doorOpenAnimation = GetComponent<DoorOpenAnimation>();
         _animator = GetComponent<Animator>();
         _collider = GetComponent<Collider2D>();
     }
     private void Start()
     {
-        if (_isOpened)
+        bool isOpened = _statePreserver.LoadState("_isOpened", _isOpened);
+        if (isOpened)
         {
             _animator.SetTrigger("InstantOpen");
 
@@ -71,18 +78,25 @@ public class BossDoor : InteractableObject
     // conrol door (open / close)
     private IEnumerator OpenDoorCoroutine()
     {
-        // TODO: 이쪽 카메라 및 인풋 로직이 자꾸만 Cutscene과 겹친다. 다시 손보자
-
-        InputManager.Instance.ChangeToStayStillSetter();
+        if (_isControlableInputSetter) InputManager.Instance.ChangeToStayStillSetter();
 
         SceneEffectManager.Instance.Camera.StartFollow(transform);
-
         yield return _doorOpenAnimation.OpenCoroutine();
         SceneEffectManager.Instance.Camera.StartFollow(SceneContext.Current.Player.transform);
         yield return new WaitForSeconds(_goInDelay);
 
-        if (_enterInputSetter) InputManager.Instance.ChangeInputSetter(_enterInputSetter);
-        else InputManager.Instance.ChangeToDefaultSetter();
+        if (_isControlableInputSetter)
+        {
+            if (_enterInputSetter) InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+            else InputManager.Instance.ChangeToDefaultSetter();
+        }
+
+        _isOpened = true;
+
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_isOpened", _isOpened);
+        }
 
         /*
         // yield return _doorOpenAnimation.OpenCoroutine();                                             // 단순히 코루틴을 시작한다 (영화관에서 영화가 끝날 때까지 기다린다)
@@ -91,26 +105,32 @@ public class BossDoor : InteractableObject
     }
     private IEnumerator CloseDoorCoroutine()
     {
-        // TODO: 이쪽 카메라 및 인풋 로직이 자꾸만 Cutscene과 겹친다. 다시 손보자
-
-        // InputManager.Instance.ChangeToStayStillSetter();
+        if (_isControlableInputSetter) InputManager.Instance.ChangeToStayStillSetter();
 
         SceneEffectManager.Instance.Camera.StartFollow(transform);
-
         yield return _doorOpenAnimation.CloseCoroutine();
         SceneEffectManager.Instance.Camera.StartFollow(SceneContext.Current.Player.transform);
         yield return new WaitForSeconds(_goInDelay);
 
-        // InputManager.Instance.ChangeToDefaultSetter();
+        if (_isControlableInputSetter)
+        {
+            if (_enterInputSetter) InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+            else InputManager.Instance.ChangeToDefaultSetter();
+        }
+
+        _isOpened = false;
+
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_isOpened", _isOpened);
+        }
     }
     public void OpenDoor()
     {
-        _isOpened = true;
         StartCoroutine(OpenDoorCoroutine());
     }
     public void CloseDoor()
     {
-        _isOpened = false;
         StartCoroutine(CloseDoorCoroutine());
     }
 

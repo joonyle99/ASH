@@ -23,6 +23,8 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     /// <returns></returns>
     public override IEnumerator EnterSceneEffectCoroutine()
     {
+        // Debug.Log($"Enter Scene Effect 시작");
+
         // Debug.Log("call EnterSceneEffectCoroutine in PlayableSceneTransitionPlayer");
 
         StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
@@ -35,8 +37,11 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
 
         yield return StartCoroutine(entrance.PlayerExitCoroutine());
 
-        // 여기서 만약 씬 입장 시 플레이 해야하는 컷씬이 있다면 실행
-        yield return StartCoroutine(entrance.PlayEnterCutscene());
+        // Debug.Log($"Enter Scene Effect 종료");
+
+        // ** 여기서 만약 씬 입장 시 플레이 해야하는 컷씬이 있다면 실행 **
+        // yield return 하지 않고 즉시 실행한다
+        StartCoroutine(entrance.PlayEnterCutscene());
     }
     /// <summary>
     /// 씬 퇴장 시 화면을 어둡게 만드는 효과

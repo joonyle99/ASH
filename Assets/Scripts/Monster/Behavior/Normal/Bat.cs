@@ -40,7 +40,7 @@ public sealed class Bat : MonsterBehaviour
         for (int i = 0; i < _particleCount; i++)
         {
             // create particle
-            Bat_Sprinkle particle = Instantiate(_batSkillPrefab, _shootPosition.position, Quaternion.identity);
+            var particle = Instantiate(_batSkillPrefab, _shootPosition.position, Quaternion.identity);
             particle.SetSprite(_skillSprites[i % (_skillSprites.Length)]);
 
             // settings
