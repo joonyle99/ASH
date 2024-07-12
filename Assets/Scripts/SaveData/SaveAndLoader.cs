@@ -13,7 +13,6 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
         set => _isChangeSceneByLoading = value;
     }
 
-
     public static Action OnSaveStarted;
     public static Action OnSaveEnded;
 
@@ -53,6 +52,4 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
         if(OnSaveEnded != null)
             OnSaveEnded.Invoke();
     }
-
-    
 }

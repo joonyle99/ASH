@@ -69,8 +69,8 @@ public class DieState : PlayerState
 
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        if(!PersistentDataManager.LoadToSavedData())
-        { 
+        if (!PersistentDataManager.LoadToSavedData())
+        {
             var sceneName = SceneManager.GetActiveScene().name;
             var passageName = SceneContext.Current.EntrancePassage.PassageName;
 
