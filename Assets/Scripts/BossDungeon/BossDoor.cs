@@ -53,6 +53,9 @@ public class BossDoor : InteractableObject
     {
         if (BossDungeonManager.Instance.IsAllKeysCollected)
         {
+            // TODO: 현재 가지고 있는 Key를 전부 소모한다.
+            // PersistentDataManager.Set<int>("BossDungeon1", "bossKeyCount", 0);
+
             _soundList.PlaySFX("Open");
             SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine()));
         }

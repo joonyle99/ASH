@@ -155,6 +155,7 @@ MonoBehaviour:
   - {fileID: 9204795922427404133}
   - {fileID: 6541317259009004356}
   - {fileID: 4950347600049706145}
+  - {fileID: 8555330313970560970}
   _edges:
   - EntranceScene: {fileID: -2014745427570758710}
     ExitScene: {fileID: -2869098507112400628}
@@ -260,6 +261,10 @@ MonoBehaviour:
     ExitScene: {fileID: 6541317259009004356}
     EntrancePassage: Enter MyScene 2
     ExitPassgage: Enter MyScene 1
+  - EntranceScene: {fileID: 9204795922427404133}
+    ExitScene: {fileID: 8555330313970560970}
+    EntrancePassage: Exit Boss_2-3
+    ExitPassgage: Enter Boss_Fire
 --- !u!114 &1548732423987265482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -357,10 +362,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Guid: 7e03284bcbb19d940814808a03572e2a
   graphPosition: {x: -562, y: 151.5}
-  SceneName: MyScene 2
+  SceneName: 
   Scene:
-    sceneAsset: {fileID: 102900000, guid: 5f86d4819251eca48a5da2e6120019ef, type: 3}
-    scenePath: Assets/Scenes/Test/JY/MyScene 2.unity
+    sceneAsset: {fileID: 0}
+    scenePath: 
   PassageNames:
   - Enter MyScene 2
 --- !u!114 &6541317259009004356
@@ -447,6 +452,27 @@ MonoBehaviour:
   PassageNames:
   - Enter Boss_2-2
   - Exit Boss_2-2
+--- !u!114 &8555330313970560970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c76f40497e07ca84684e384ccd8ba449, type: 3}
+  m_Name: ExploreSceneData
+  m_EditorClassIdentifier: 
+  Guid: fafc8518c5effcc46827569e3e280e27
+  graphPosition: {x: 2121, y: 1364}
+  SceneName: Boss_Fire
+  Scene:
+    sceneAsset: {fileID: 102900000, guid: a2c5e62e9dcd5b64a95f12987d964c16, type: 3}
+    scenePath: "Assets/Scenes/ActualBuild/\uCC55\uD1302/Boss_Fire.unity"
+  PassageNames:
+  - Enter Boss_Fire
+  - Exit Boss_Fire
 --- !u!114 &9204795922427404133
 MonoBehaviour:
   m_ObjectHideFlags: 0
