@@ -11,6 +11,6 @@ public class SFXPlayer : MonoBehaviour
     }
     public void PlaySoundClip()
     {
-        SoundManager.Instance.PlaySFX(_sfxSoundData);
+        SoundManager.Instance.PlaySFX(_sfxSoundData, _sfxSoundData.Volume);
     }
 }

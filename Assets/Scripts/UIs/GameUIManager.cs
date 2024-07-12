@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TMPro;
 
 public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
 {
@@ -29,6 +30,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     [SerializeField] private Letterbox _letterBox;
     [SerializeField] private OptionView _optionView;
     [SerializeField] private LifePurchasePanel _lifePurchasePanel;
+    [SerializeField] private TextMeshProUGUI _sceneNameText;
 
     public static bool IsLifePurchasePanelOpen => _instance._lifePurchasePanel.gameObject.activeInHierarchy;
 
@@ -127,5 +129,11 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     public static void OpenLifePurchasePanel()
     {
         _instance._lifePurchasePanel.Open();
+    }
+
+    // scene name text
+    public static void SetSceneNameText(string sceneName)
+    {
+        _instance._sceneNameText.text = "Scene Name: " + sceneName;
     }
 }

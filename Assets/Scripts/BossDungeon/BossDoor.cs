@@ -36,8 +36,7 @@ public class BossDoor : InteractableObject
     }
     private void Start()
     {
-        bool isOpened = _statePreserver.LoadState("_isOpened", _isOpened);
-        if (isOpened)
+        if (_statePreserver?.LoadState("_isOpened", _isOpened) ?? _isOpened)
         {
             _animator.SetTrigger("InstantOpen");
 

@@ -116,7 +116,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     // scene event
     public SceneEffectEvent PushSceneEvent(SceneEffectEvent sceneEvent)
     {
-        int index = Math.Min(0, _sceneEvents.BinarySearch(sceneEvent, _eventComparator));
+        int index = Math.Max(0, _sceneEvents.BinarySearch(sceneEvent, _eventComparator));
         _sceneEvents.Insert(index, sceneEvent);
 
         if (_currentState != State.Cutscene)

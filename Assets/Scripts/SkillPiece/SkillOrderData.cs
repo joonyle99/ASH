@@ -43,7 +43,7 @@ public class SkillOrderData : ScriptableObject
                 return _skillDatas[i];
             }
 
-            Debug.LogWarning("½ºÅ³È¹µæ °¡´É È½¼ö ÃÊ°ú !!");
+            Debug.Log("½ºÅ³ È¹µæ °¡´É È½¼ö ÃÊ°ú");
             return _skillDatas[^1];
         }
     }

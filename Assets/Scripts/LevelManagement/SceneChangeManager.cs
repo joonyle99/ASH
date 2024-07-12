@@ -34,6 +34,8 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
+
+        GameUIManager.SetSceneNameText(sceneName);
     }
 
     public SceneContext FindOrCreateSceneContext()
@@ -65,28 +67,35 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         return toPassageData;
     }
 
-    // 플레이 불가능한 씬으로 전환
+    // 플레이 불가능한 씬으로 전환 (타이틀 씬, 프롤로그 씬, 엔딩 씬 등)
     public void ChangeToNonPlayableScene(string sceneName, System.Action changeDoneCallback = null)
     {
+        if (IsChanging)
+            return;
+
         StartCoroutine(ChangeToNonPlayableSceneCoroutine(sceneName, changeDoneCallback));
     }
     private IEnumerator ChangeToNonPlayableSceneCoroutine(string sceneName, System.Action changeDoneCallback)
     {
         IsChanging = true;
+
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         yield return new WaitUntil(() => load.isDone);
 
         SceneContext sceneContext = FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable("");                // scene context build
+
         IsChanging = false;
 
         changeDoneCallback?.Invoke();
 
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
+
+        GameUIManager.SetSceneNameText(sceneName);
     }
 
-    // 플레이 가능한 씬으로 전환
+    // 플레이 가능한 씬으로 전환 (탐험구간, 보스던전, 보스전 등)
     public void ChangeToPlayableScene(string sceneName, string passageName)
     {
         if (IsChanging)
@@ -97,15 +106,19 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     private IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string entranceName)
     {
         IsChanging = true;
+
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         yield return new WaitUntil(() => load.isDone);
 
         SceneContext sceneContext = FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable(entranceName);      // scene context build
+
         IsChanging = false;
 
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
+
+        GameUIManager.SetSceneNameText(sceneName);
     }
 
     // ISceneContextBuildListener 인터페이스 구현 함수

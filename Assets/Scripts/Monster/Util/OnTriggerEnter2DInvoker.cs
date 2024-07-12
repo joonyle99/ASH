@@ -12,7 +12,7 @@ using UnityEngine;
 /// <summary>
 /// 대상의 OnTriggerEnter2D 메서드를 리플렉션을 통해 호출하는 컴포넌트
 /// </summary>
-public class TriggerEnter2DInvoker : MonoBehaviour
+public class OnTriggerEnter2DInvoker : MonoBehaviour
 {
     [SerializeField] private MonoBehaviour _targetBehaviour;
 

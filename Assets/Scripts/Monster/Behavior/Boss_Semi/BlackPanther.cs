@@ -125,7 +125,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         if (CurrentStateIs<Monster_WalkState>())
         {
             if (GroundMovementModule)
-                GroundMovementModule.WalkGround(0.7f);
+                GroundMovementModule.WalkGround();
         }
         else if (CurrentStateIs<BossAttackState>())
         {

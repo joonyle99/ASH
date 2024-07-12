@@ -13,7 +13,7 @@ public class CheckpointManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 씬 컨텍스트 빌드 시 호출되는 함수.
+    /// 씬 컨텍스트 빌드 시 (씬 전환 시) 호출되는 함수.
     /// 체크 포인트를 갱신한다
     /// </summary>
     /// <returns></returns>

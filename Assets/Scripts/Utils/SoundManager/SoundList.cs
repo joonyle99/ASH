@@ -19,6 +19,21 @@ public class SoundList : MonoBehaviour
         }
     }
 
+    public void PlayDefaultSFX(string key)
+    {
+        if (_soundMap.ContainsKey(key))
+        {
+            var sound = _soundDatas[_soundMap[key]];
+            if (sound.Clip == null)
+                Debug.LogWarning("No clip for: " + key);
+            else
+                SoundManager.Instance.PlaySFXPitched(sound.Clip, sound.Pitch, sound.Volume);
+        }
+        else
+        {
+            SoundManager.Instance.PlayCommonSFXPitched(key);
+        }
+    }
     public void PlaySFX(string key, float volumeMultiplier = 1f)
     {
         if(_soundMap.ContainsKey(key))
