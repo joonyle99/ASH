@@ -69,15 +69,8 @@ public class DieState : PlayerState
 
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        //마지막으로 저장된 시점으로 이동
-        if (PersistentDataManager.Instance.PersistentData.SceneName != "" && 
-            PersistentDataManager.Instance.PersistentData.PassageName != "")
-        {
-            PersistentDataManager.LoadToSavedData();
-        }
-        // 현재 씬에 있는 입구로 이동한다
-        else
-        {
+        if(!PersistentDataManager.LoadToSavedData())
+        { 
             var sceneName = SceneManager.GetActiveScene().name;
             var passageName = SceneContext.Current.EntrancePassage.PassageName;
 

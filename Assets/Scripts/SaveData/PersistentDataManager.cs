@@ -393,9 +393,10 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
      * <summary>
      * 저장된 데이터를 불러오는 기능
      * 저장된 게임 데이터를 불러오고 싶으면 해당 함수 사용
+     * 중간에 로직이 실패한다면 false 리턴
      * </summary>
      */
-    public static void LoadToSavedData()
+    public static bool LoadToSavedData()
     {
         SaveAndLoader.IsChangeSceneByLoading = true;
         JsonDataManager.JsonLoad();
@@ -405,6 +406,13 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         MonsterRespawnManager.Instance.StopRespawnCoroutine();
         string sceneName = Instance.PersistentData.SceneName;
         string passageName = Instance.PersistentData.PassageName;
+        if (sceneName == "" || passageName == "")
+        {
+            Debug.LogWarning("Not Saved Scene or PassageData Load");
+            return false;
+        }
+
         SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+        return true;
     }
 }
