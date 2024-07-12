@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 using static JsonPersistentData;
-using static UnityEngine.Rendering.DebugUI;
 using DataGroup = System.Collections.Generic.Dictionary<string, object>;
 
 /// <summary>

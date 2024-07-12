@@ -378,13 +378,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         MaxHp += amount;
         CurHp = MaxHp;      // 체력을 최대 체력만큼 회복한다
 
-        Debug.Log("최대 체력 증가 성공");
+        // Debug.Log("최대 체력 증가 성공");
     }
     public void RecoverCurHp(int amount)
     {
         CurHp += amount;
 
-        Debug.Log("체력 회복 성공");
+        // Debug.Log("체력 회복 성공");
     }
 
     // respawn
