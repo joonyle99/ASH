@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using joonyle99;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using joonyle99;
 
 public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterRespawnManager>
 {
@@ -106,7 +106,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         // * 행동 반경 데이터를 이용해 몬스터의 행동 반경 정보를 변경 *
         UpdateActionAreaInfo(respawnDataSender, monsterData.MoveType, respawnData);
         // * 리스폰 위치 데이터를 이용해 몬스터의 위치를 변경 *
-        UpdateMonsterRespawnPosition(monsterBehavior.transform, monsterData.MoveType, respawnData);
+        UpdateMonsterPosition(monsterBehavior.transform, monsterData.MoveType, respawnData);
 
         // 몬스터 리스폰 프로세스 실행
         monsterBehavior.RespawnProcess();
@@ -120,40 +120,20 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     /// <summary>
     /// Prefab_MonsterName의 행동 반경을 설정
     /// </summary>
-    /// <param name="actionAreaDataSender"></param>
-    /// <param name="moveType"></param>
-    /// <param name="respawnData"></param>
     private void UpdateActionAreaInfo(ActionAreaDataSender actionAreaDataSender, MonsterDefine.MoveType moveType, MonsterBehaviour.RespawnData respawnData)
     {
-        Debug.Log("리스폰된 몬스터의 활동 영역 정보를 업데이트");
+        // Debug.Log("리스폰된 몬스터의 활동 영역 정보를 업데이트");
 
         // 지상 몬스터의 행동 반경 정보 설정
         if (moveType == MonsterDefine.MoveType.GroundNormal)
         {
-            // 행동 반경 정보를 가져온다
-            actionAreaDataSender.ExtractActionAreaInfo(out var patrolPointA, out var patrolPointB);
-
-            // * 새로운 행동 반경 정보에 기존의 것을 덮어 씌운다 *
-
-            // 위치 조정
-            patrolPointA.transform.position = respawnData.groundActionAreaData.PatrolPointAPosition;
-            patrolPointB.transform.position = respawnData.groundActionAreaData.PatrolPointBPosition;
+            actionAreaDataSender.SetActionAreaPosition(respawnData.groundActionAreaData.PatrolPointAPosition, respawnData.groundActionAreaData.PatrolPointBPosition);
         }
         // 공중 몬스터의 행동 반경 정보 설정
         else if (moveType == MonsterDefine.MoveType.Fly)
         {
-            // 행동 반경 정보를 가져온다
-            actionAreaDataSender.ExtractActionAreaInfo(out var patrolArea, out var chaseArea);
-
-            // * 새로운 행동 반경 정보에 기존의 것을 덮어 씌운다 *
-
-            // 위치 조정
-            patrolArea.transform.position = respawnData.floatingActionAreaData.PatrolAreaPosition;
-            chaseArea.transform.position = respawnData.floatingActionAreaData.ChaseAreaPosition;
-
-            // 크기 조정
-            patrolArea.transform.localScale = respawnData.floatingActionAreaData.PatrolAreaScale;
-            chaseArea.transform.localScale = respawnData.floatingActionAreaData.ChaseAreaScale;
+            actionAreaDataSender.SetActionAreaPosition(respawnData.floatingActionAreaData.PatrolAreaPosition, respawnData.floatingActionAreaData.ChaseAreaPosition);
+            actionAreaDataSender.SetActionAreaScale(respawnData.floatingActionAreaData.PatrolAreaScale, respawnData.floatingActionAreaData.ChaseAreaScale);
         }
         else
         {
@@ -173,9 +153,9 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     /// <param name="monsterTransform"></param>
     /// <param name="moveType"></param>
     /// <param name="respawnData"></param>
-    private void UpdateMonsterRespawnPosition(Transform monsterTransform, MonsterDefine.MoveType moveType, MonsterBehaviour.RespawnData respawnData)
+    private void UpdateMonsterPosition(Transform monsterTransform, MonsterDefine.MoveType moveType, MonsterBehaviour.RespawnData respawnData)
     {
-        Debug.Log("리스폰된 몬스터의 리스폰 위치 업데이트");
+        // Debug.Log("리스폰된 몬스터의 리스폰 위치 업데이트");
 
         var respawnPos = Vector3.zero;
 
