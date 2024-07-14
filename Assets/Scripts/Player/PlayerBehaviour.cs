@@ -91,7 +91,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     // Condition Property
     public bool IsGrounded => GroundHit;                                    // 플레이어의 아래 방향으로 Circle Cast
-    public bool IsGroundedSupported => GroundHit || GroundHit2;             // + 플레이어의 아래 방향으로 Ray Cast
     public bool IsUpWardGrounded => UpwardGroundHit;
     public bool IsTouchedWall => ClimbHit;
     public bool IsClimbable { get; set; }
@@ -179,9 +178,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     // RayCastHit
     public RaycastHit2D GroundHit { get; set; }
-    public RaycastHit2D GroundHit2 { get; set; }
-    public RaycastHit2D ClimbHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
+    public RaycastHit2D ClimbHit { get; set; }
 
     // Component
     public PlayerAttackController PlayerAttackController => _playerAttackController;
@@ -269,7 +267,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         #region Animaotr Parameter
 
         Animator.SetBool("IsGround", IsGrounded);
-        Animator.SetBool("IsGroundSupported", IsGroundedSupported);
         Animator.SetBool("IsUpwardGround", IsUpWardGrounded);
 
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
