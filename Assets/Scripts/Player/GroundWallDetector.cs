@@ -9,10 +9,9 @@ public class GroundWallDetector : MonoBehaviour
 
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private Transform _groundCheckTrans;
-    [SerializeField] private Transform _groundAboveCheckTrans;
+    [SerializeField] private Transform _groundUpwardCheckTrans;
     [SerializeField] private float _groundCheckRadius;
-    [SerializeField] private float _groundCheckDistance;
-    [SerializeField] private float _groundAboveCheckLength;
+    [SerializeField] private float _groundUpwardCheckRadius;
 
     [Header("Climb Check")]
     [Space]
@@ -31,24 +30,19 @@ public class GroundWallDetector : MonoBehaviour
     void Update()
     {
         // Check Ground
-        var circleCastTarget = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f,
-            _groundLayer);
-        _player.GroundHit = circleCastTarget;
+        _player.GroundHit = Physics2D.CircleCast(_groundCheckTrans.position, _groundCheckRadius, Vector2.down, 0f, _groundLayer);
 
-        var rayCastTarget = Physics2D.Raycast(_groundCheckTrans.position, Vector2.down, _groundCheckDistance,
-            _groundLayer);
-        _player.GroundHit2 = rayCastTarget;
+        // Check Upward Ground
+        _player.UpwardGroundHit = Physics2D.CircleCast(_groundUpwardCheckTrans.position, _groundUpwardCheckRadius, Vector2.up, 0f, _groundLayer);
 
-        // Check Upward
-        _player.UpwardGroundHit = Physics2D.Raycast(_groundAboveCheckTrans.position, Vector2.up, _groundAboveCheckLength, _groundLayer);
-
-        // Check Climb
+        // Check Wall
         _player.ClimbHit = Physics2D.Raycast(_climbCheckTrans.position, _player.PlayerLookDir2D, _climbCheckLength, _climbLayer);
+
         if (_player.ClimbHit)
         {
             // TODO : 벽의 방향을 localScale로 하면 위험하다
-            int wallLookDir = Math.Sign(_player.ClimbHit.transform.localScale.x);
-            bool isDirSync = (wallLookDir * _player.RecentDir) > 0;
+            var wallLookDir = Math.Sign(_player.ClimbHit.transform.localScale.x);
+            var isDirSync = (wallLookDir * _player.RecentDir) > 0;
             _player.IsClimbable = !isDirSync;
         }
     }
@@ -58,15 +52,13 @@ public class GroundWallDetector : MonoBehaviour
         if (_player == null)
             return;
 
-        // set color
         Gizmos.color = Color.red;
 
         // Draw Ground Check
         Gizmos.DrawWireSphere(_groundCheckTrans.position, _groundCheckRadius);
-        Gizmos.DrawRay(_groundCheckTrans.position, Vector3.down * _groundCheckDistance);
 
-        // Draw Ground Above Check
-        Gizmos.DrawRay(_groundAboveCheckTrans.position, Vector3.up * _groundAboveCheckLength);
+        // Draw Upward Ground Check
+        Gizmos.DrawWireSphere(_groundUpwardCheckTrans.position, _groundUpwardCheckRadius);
 
         // Draw Wall Check
         Gizmos.DrawRay(_climbCheckTrans.position, _player.PlayerLookDir3D * _climbCheckLength);
