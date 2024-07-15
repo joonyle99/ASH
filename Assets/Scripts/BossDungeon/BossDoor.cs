@@ -65,6 +65,7 @@ public class BossDoor : InteractableObject
             // PersistentDataManager.Set<int>("BossDungeon1", "bossKeyCount", 0);
 
             _soundList.PlaySFX("Open");
+            BossDungeonManager.Instance.OnOpenBossDoor();
             SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine()));
         }
         else

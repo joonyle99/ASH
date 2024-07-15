@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 모든 Playable Scene에는 GameCanvas와 GameUIManager가 있다
@@ -69,7 +70,10 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
 
     public void OnSceneContextBuilt()
     {
-        if (BossDungeonManager.Instance)
+        var sceneName = SceneManager.GetActiveScene().name;
+
+        if (GameSceneManager.IsBossDungeon1(sceneName)
+            || GameSceneManager.IsBossDungeon2(sceneName))
         {
             // Debug.Log("Open BossKeyPanel");
 
