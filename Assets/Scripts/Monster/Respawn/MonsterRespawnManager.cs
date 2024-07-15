@@ -19,7 +19,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     {
         base.Awake();
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
 
         // 모든 몬스터를 찾고, 리스트에 추가한다
         var monsterArray = FindObjectsOfType<MonsterBehaviour>();
@@ -29,7 +29,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     {
         base.OnDestroy();
 
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     public void NotifyDeath(MonsterBehaviour monsterBehavior)

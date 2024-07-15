@@ -98,7 +98,7 @@ public class OptionView : MonoBehaviour
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
+        SceneChangeManager.Instance.ChangeToPlayableScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
     }
 
     public void ApplyTestButton()

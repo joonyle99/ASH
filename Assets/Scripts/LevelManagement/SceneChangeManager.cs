@@ -1,5 +1,6 @@
 ﻿using LevelGraph;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,7 +25,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         SceneContext sceneContext = FindOrCreateSceneContext();
 
         var passagesInCurrentScene = FindObjectsByType<Passage>(FindObjectsSortMode.None);
-        var sceneName = SceneManager.GetActiveScene().name;
+        var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         var firstEntranceName = "Enter " + sceneName;
         var hasEntrance = passagesInCurrentScene.ToList().Find(passage => passage.PassageName == firstEntranceName);
         var entranceName = hasEntrance ? firstEntranceName : "";
@@ -53,7 +54,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     }
     public PassageData GetNextPassageData(string fromPassageName)
     {
-        var fromSceneName = SceneManager.GetActiveScene().name;
+        var fromSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
         var fromPassageData = new PassageData(fromSceneName, fromPassageName);
         var toPassageData = _levelGraphData.GetExitPassageData(fromPassageData);
@@ -120,9 +121,8 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
         GameUIManager.SetSceneNameText(sceneName);
     }
-
-    // ISceneContextBuildListener 인터페이스 구현 함수
-    // SceneContext가 DefaultBuild되었을 때 호출되는 함수
+    
+    // SceneContext가 DefaultBuild되었을 때 호출되는 함수 (ISceneContextBuildListener 인터페이스 구현)
     public void OnSceneContextBuilt()
     {
         // 플레이어가 씬의 입구에서 나오는 컷씬을 실행한다

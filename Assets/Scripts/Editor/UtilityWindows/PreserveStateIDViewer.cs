@@ -17,7 +17,7 @@ public class PreserveStateIDViewer : EditorWindow
     public void OnGUI()
     {
         // 현재 씬의 모든 오브젝트를 가져온다
-        Scene currentScene = SceneManager.GetActiveScene();
+        Scene currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
         var allRootObjects = currentScene.GetRootGameObjects();
         
         // 모든 오브젝트에서 PreserveState 컴포넌트를 가져온다

@@ -150,34 +150,23 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     }
     public void PlayCommonBGMForScene(string sceneName)
     {
-        switch (sceneName)
+        if (GameSceneManager.IsTitle(sceneName))
         {
-            case "TitleScene":
-                PlayCommonBGM("MainTheme");
-                break;
-            case "1-1":
-            case "1-2":
-            case "1-3":
-                PlayCommonBGM("Exploration1");
-                break;
-            case "Boss_1-1":
-            case "Boss_1-2":
-            case "Boss_1-3":
-            case "Boss_1-4":
-            case "Boss_Bear":
-            case "Boss_2-1":
-            case "Boss_2-2":
-            case "Boss_2-3":
-            case "Boss_Fire":
-                PlayCommonBGM("BossDungeon1");
-                break;
-            case "2-1":
-            case "2-2":
-            case "2-3":
-                PlayCommonBGM("Exploration2");
-                break;
-            default:
-                break;
+            PlayCommonBGM("MainTheme");
+        }
+        else if (GameSceneManager.IsExploration1(sceneName))
+        {
+            PlayCommonBGM("Exploration1");
+        }
+        else if (GameSceneManager.IsExploration2(sceneName))
+        {
+            PlayCommonBGM("Exploration2");
+        }
+        else if (GameSceneManager.IsBossDungeon1(sceneName)
+            || GameSceneManager.IsBossDungeon2(sceneName)
+            || GameSceneManager.IsBossScene(sceneName))
+        {
+            PlayCommonBGM("BossDungeon1");
         }
     }
 
