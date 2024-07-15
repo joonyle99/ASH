@@ -417,8 +417,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     {
         yield return new WaitUntil(() => isEndMoveProcess);
 
-        // TODO: 보스던전 BGM 틀기
-        SoundManager.Instance.PlayCommonBGM("Exploration1");
+        yield return new WaitForSeconds(2f);
 
         yield return StartCoroutine(ChangeImageCoroutine());
         yield return StartCoroutine(ChangeBackgroundCoroutine());
@@ -446,8 +445,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         // 색이 서서히 돌아오는 효과 시작
         bossClearColorChangeEffect.PlayEffect();
 
-        // 배경음악 정지
-        SoundManager.Instance.StopBGM();
+        // 보스던전 BGM 틀기
+        SoundManager.Instance.PlayCommonBGM("Exploration1");
 
         yield return new WaitUntil(() => bossClearColorChangeEffect.isEndEffect);
 

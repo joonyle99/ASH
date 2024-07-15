@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextBuildListener
@@ -236,10 +237,31 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             _playerAttackController.CastAttack();
         }
 
-        // TEMP: Recover Cheat HP
+        // CHEAT: Recover Cheat HP
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
             RecoverCurHp(2);
+        }
+
+        // CHEAT: Open Boss Door
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            // 가장 가까운 BossDoor를 찾는다 (LINQ 사용)
+            var closestBossDoor = FindObjectsByType<BossDoor>(FindObjectsSortMode.None)
+                .OrderBy(door => Vector3.Distance(transform.position, door.transform.position))
+                .FirstOrDefault();
+
+            if (closestBossDoor == null)
+                Debug.Log("No Boss Door found in the scene.");
+
+            // 상호작용 불가능한 상태로 만든다
+            closestBossDoor.IsInteractable = false;
+
+            // 가장 가까운 BossDoor가 열려있으면 닫기, 닫혀있으면 열기
+            if (closestBossDoor.IsOpened)
+                closestBossDoor.CloseDoor();
+            else
+                closestBossDoor.OpenDoor();
         }
 
         #endregion

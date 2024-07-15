@@ -422,6 +422,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         yield return new WaitUntil(() => isEndMoveProcess);
 
+        yield return new WaitForSeconds(2f);
+
         // ÃÖÁ¾ ÄÆ¾À Àç»ý
         cutscenePlayerList.PlayCutscene("Final CutScene");
     }
