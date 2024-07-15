@@ -55,6 +55,10 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     {
         _instance = this;
     }
+    private void Start()
+    {
+        _sceneNameText.gameObject.SetActive(true);
+    }
     private void Update()
     {
         /*
