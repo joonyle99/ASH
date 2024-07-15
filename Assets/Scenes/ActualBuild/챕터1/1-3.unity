@@ -207,106 +207,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &18099506
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 18099508}
-  - component: {fileID: 18099507}
-  - component: {fileID: 18099509}
-  m_Layer: 0
-  m_Name: CutScenePlayer_Mushroom
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &18099507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 18099506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 049445fe6a84fa647930cc15ef68b2d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playOnce: 1
-  _played: 0
-  _sequence:
-  - _type: 5
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-  - _type: 4
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 3
-    InputSetter: {fileID: 0}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-  - _type: 0
-    DialogueData: {fileID: 11400000, guid: 22583a18c3ff2484c93f1bb897bd7770, type: 2}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 0}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-  - _type: 6
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 0}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
---- !u!4 &18099508
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 18099506}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -115.21695, y: 8.037412, z: 0.46637455}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1334326770}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &18099509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 18099506}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _groupName: Exploration1
-  _ID: 3_10
-  _preserveTransform: 1
-  _preserveDestruction: 1
 --- !u!1 &32954287
 GameObject:
   m_ObjectHideFlags: 0
@@ -1274,6 +1174,89 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &140207917
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 140207918}
+  - component: {fileID: 140207919}
+  m_Layer: 0
+  m_Name: CutScenePlayer_Mushroom_LightGuide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &140207918
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140207917}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -115.21695, y: 8.037412, z: 0.46637452}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1334326770}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &140207919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140207917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 049445fe6a84fa647930cc15ef68b2d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playOnce: 1
+  _played: 0
+  _sequence:
+  - _type: 5
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+  - _type: 4
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 3
+    InputSetter: {fileID: 0}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+  - _type: 0
+    DialogueData: {fileID: 11400000, guid: 22583a18c3ff2484c93f1bb897bd7770, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 0}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+  - _type: 6
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 0}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!1001 &142875031
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8151,7 +8134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: 1712.2517
+      value: 1695.1893
       objectReference: {fileID: 0}
     - target: {fileID: 5171320284482388752, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8433,26 +8416,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 971531812889041089, guid: 010480794dcb0794c91c3c436188fe24, type: 3}
   m_PrefabInstance: {fileID: 870940217}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &887744484 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8900444469631365334, guid: fb73fc644e1694e4f95fac0855a1d8c1, type: 3}
-  m_PrefabInstance: {fileID: 1251087309}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &887744497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887744484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b2e3d95dc54be64c939388064af2c83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cutsceneDictionary:
-  - name: CutScenePlayer_Mushroom
-    cutscenePlayer: {fileID: 18099507}
 --- !u!1001 &896237968
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10727,7 +10690,7 @@ PrefabInstance:
     - target: {fileID: 5885552443500036367, guid: fb73fc644e1694e4f95fac0855a1d8c1, type: 3}
       propertyPath: _cutsceneDictionary.Array.data[0].cutscenePlayer
       value: 
-      objectReference: {fileID: 18099507}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb73fc644e1694e4f95fac0855a1d8c1, type: 3}
 --- !u!4 &1251087310 stripped
@@ -11401,7 +11364,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 18099508}
+  - {fileID: 140207918}
   - {fileID: 102679665}
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -15323,6 +15286,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2004269741}
     m_Modifications:
+    - target: {fileID: 456224757, guid: a21e5c36e776a8e42a6c0b1023ff75c4, type: 3}
+      propertyPath: m_NavMeshData
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 536029391485816284, guid: a21e5c36e776a8e42a6c0b1023ff75c4, type: 3}
       propertyPath: m_LocalScale.x
       value: 19.47281
@@ -15612,26 +15579,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
   m_PrefabInstance: {fileID: 1651402935}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1676139724 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8900444469631365334, guid: fb73fc644e1694e4f95fac0855a1d8c1, type: 3}
-  m_PrefabInstance: {fileID: 1861259496}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1676139737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1676139724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b2e3d95dc54be64c939388064af2c83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _cutsceneDictionary:
-  - name: CutScenePlayer_Mushroom
-    cutscenePlayer: {fileID: 18099507}
 --- !u!1 &1678481653
 GameObject:
   m_ObjectHideFlags: 0
@@ -17536,11 +17483,11 @@ PrefabInstance:
     - target: {fileID: 1621067903612610058, guid: fb73fc644e1694e4f95fac0855a1d8c1, type: 3}
       propertyPath: cutSceneMushroom
       value: 
-      objectReference: {fileID: 18099507}
+      objectReference: {fileID: 0}
     - target: {fileID: 5885552443500036367, guid: fb73fc644e1694e4f95fac0855a1d8c1, type: 3}
       propertyPath: _cutsceneDictionary.Array.data[0].cutscenePlayer
       value: 
-      objectReference: {fileID: 18099507}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb73fc644e1694e4f95fac0855a1d8c1, type: 3}
 --- !u!4 &1861259497 stripped

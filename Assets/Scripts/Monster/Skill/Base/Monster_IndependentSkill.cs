@@ -17,9 +17,7 @@ public class Monster_IndependentSkill : Monster_Skill
     [Header("_____ Destroy Condition: Collision _____")]
     [Space]
 
-    [SerializeField] protected bool isDestroyWhenPlayer;        // 플레이어와 충돌 시 파괴할지의 여부
     [SerializeField] protected LayerMask destroyLayer;
-
 
     [Header("_____ Destroy Condition: LifeTime _____")]
     [Space]
@@ -33,12 +31,6 @@ public class Monster_IndependentSkill : Monster_Skill
         base.Awake();
 
         rigid = GetComponent<Rigidbody2D>();
-
-        if (isDestroyWhenPlayer)
-        {
-            monsterSkillEvent -= DestroyIndependentSkill;
-            monsterSkillEvent += DestroyIndependentSkill;
-        }
     }
     private void Start()
     {
@@ -51,19 +43,21 @@ public class Monster_IndependentSkill : Monster_Skill
         base.OnTriggerEnter2D(collision);
 
         // 스킬 파괴 레이어와 충돌
-        if ((1 << collision.gameObject.layer & destroyLayer.value) > 0)
+        var collisionLayerValue = 1 << collision.gameObject.layer;
+        if ((collisionLayerValue & destroyLayer.value) > 0)
         {
             /*
             if (colliderSound != null)
                 SoundManager.Instance.PlaySFX(colliderSound);
             */
 
-            if (materialController && materialController.DisintegrateEffect)
-                StartCoroutine(DisintegrateCoroutine(materialController.DisintegrateEffect));
+            if (!materialController || !materialController.DisintegrateEffect || collision.GetComponent<PlayerBehaviour>())
+            {
+                DestroyIndependentSkill();
+            }
             else
             {
-                // DisintegrateEffect가 없는 경우, 즉시 삭제한다.
-                DestroyIndependentSkill();
+                StartCoroutine(DisintegrateCoroutine(materialController.DisintegrateEffect));
             }
         }
     }
@@ -99,10 +93,5 @@ public class Monster_IndependentSkill : Monster_Skill
     {
         // AutoDestroy 코루틴 중단
         StopAllCoroutines();
-
-        if (monsterSkillEvent != null)
-        {
-            monsterSkillEvent -= DestroyIndependentSkill;
-        }
     }
 }
