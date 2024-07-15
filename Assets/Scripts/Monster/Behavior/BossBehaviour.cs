@@ -255,6 +255,8 @@ public abstract class BossBehaviour : MonsterBehaviour
             return stateInfo.normalizedTime >= 0.95f;
         });
 
+        yield return new WaitForSeconds(1.5f);
+
         // yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
 
         cutscenePlayerList.PlayCutscene(cutsceneName);
