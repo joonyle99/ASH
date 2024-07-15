@@ -13,9 +13,4 @@ public class BGMPlayer : MonoBehaviour
     {
         SoundManager.Instance.PlayCommonBGM(key2);
     }
-
-    public void StopBGM()
-    {
-        SoundManager.Instance.StopBGM();
-    }
 }

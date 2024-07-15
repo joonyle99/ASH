@@ -415,6 +415,11 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
     public IEnumerator AfterBearDeathCoroutine()
     {
+        yield return new WaitUntil(() => isEndMoveProcess);
+
+        // TODO: 보스던전 BGM 틀기
+        SoundManager.Instance.PlayCommonBGM("Exploration1");
+
         yield return StartCoroutine(ChangeImageCoroutine());
         yield return StartCoroutine(ChangeBackgroundCoroutine());
 
