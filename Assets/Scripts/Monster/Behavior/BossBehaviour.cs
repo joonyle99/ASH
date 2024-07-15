@@ -97,7 +97,7 @@ public abstract class BossBehaviour : MonsterBehaviour
 
         // Hit Process
         HitProcess(attackInfo, false, false, true);
-        
+
         // 피격 횟수 증가
         TotalHitCount++;
         currentHitCount++;
@@ -249,7 +249,13 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     public IEnumerator PlayCutSceneInRunning(string cutsceneName)
     {
-        yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
+        // 현재 애니메이션이 90% 완료될 때까지 기다립니다.
+        yield return new WaitUntil(() => {
+            AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+            return stateInfo.normalizedTime >= 0.95f;
+        });
+
+        // yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
 
         cutscenePlayerList.PlayCutscene(cutsceneName);
     }

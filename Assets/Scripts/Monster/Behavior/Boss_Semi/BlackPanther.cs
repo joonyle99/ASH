@@ -117,7 +117,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         if (AttackEvaluator)
             AttackEvaluator.IsUsable = false;
     }
-    public void FixedUpdate()
+    private void FixedUpdate()
     {
         if (IsDead)
             return;
@@ -140,6 +140,10 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
             if (GroundMovementModule)
                 GroundMovementModule.AffectGravity();
         }
+    }
+    private void OnDestroy()
+    {
+        AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
     }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)

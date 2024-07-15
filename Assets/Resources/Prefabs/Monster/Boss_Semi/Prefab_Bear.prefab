@@ -465,6 +465,7 @@ MonoBehaviour:
     m_Bits: 8
   <GroundCheckCollider>k__BackingField: {fileID: 68886008988939920}
   <CenterOfMass>k__BackingField: {fileID: 68886007898307180}
+  cutscenePlayerList: {fileID: 0}
   <IsGroggy>k__BackingField: 0
   <IsRage>k__BackingField: 0
   luminescence: {fileID: 68886008862167435}
@@ -480,19 +481,23 @@ MonoBehaviour:
   targetHitCount: 0
   currentHitCount: 0
   _totalHitCount: 0
-  cutscenePlayerList: {fileID: 0}
+  isEndMoveProcess: 0
+  _distanceFromBoss: 6
   _attackTypeRange:
     Start: 1
     End: 5
   _currentAttack: 0
   _nextAttack: 0
+  _slashAnimDuration: 0
   _slash01: {fileID: 7501307551420893577, guid: 0e4912bd354e0a745b23c90eeca2032d, type: 3}
   _slash02: {fileID: 7501307551420893577, guid: 8d76e949b7f36ac4198f8bb85cbfb2ae, type: 3}
-  _bodySlamPower: 60
+  _bodySlamAnimDuration: 0
+  _bodySlamPower: 70
+  _stompAnimDuration: 0
   _stomp: {fileID: 9197840957116043268}
   _stompEffectPrefab: {fileID: 4196376847951404993, guid: 8c9746120f8843545ba62bd1c65a294a, type: 3}
   _stalactitePrefab: {fileID: 6190995042310891283, guid: e11f98982e6347c47be5d6f4d5fbc091, type: 3}
-  _stalactiteCount: 4
+  _stalactiteCount: 7
   _ceilingHeight: 5
   _minDistanceEach: 0.5
   _createTimeRange:
@@ -503,17 +508,18 @@ MonoBehaviour:
     End: 1
   _distanceRange:
     Start: 0
-    End: 20
+    End: 15
   _normalStalactiteRange:
     Start: 7
     End: 7
   _rageStalactiteRange:
     Start: 10
     End: 10
+  _earthquakeAnimDuration: 0
   _waveSpawnPoint: {fileID: 1528936702}
   _waveSkillPrefab: {fileID: 1687034788766365448, guid: 839e0876f9e523a42bb75e4004df8274, type: 3}
   _earthquakeCameraShake: {fileID: 11400000, guid: f0baf86e91dbdea4baab2071a43edb5a, type: 2}
-  _isAbleLightGuide: 1
+  _isAbleLightGuideCutscene: 1
   _totalEarthquakeCount: 0
   bossClearColorChangeEffect: {fileID: 0}
   _disintegrateEffects:
@@ -522,7 +528,6 @@ MonoBehaviour:
   - {fileID: 5403583928566379217}
   - {fileID: 5403583929368315107}
   _bossKnockDownGameObject: {fileID: 509879458300447807}
-  _distanceFromBear: 6
 --- !u!114 &57872128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -552,9 +557,9 @@ MonoBehaviour:
     m_Bits: 256
   checkCollider: {fileID: 68886007936826013}
   _isUsable: 1
-  _targetEvaluatorCoolTime: 0.7
+  _isWaitingEvent: 0
   _isDuringCoolTime: 0
-  _useWaitingEvent: 0
+  _targetEvaluatorCoolTime: 0.7
   <ChaseDir>k__BackingField: 1
   <MaxChaseDistance>k__BackingField: 3
   <IsChasing>k__BackingField: 0
@@ -576,9 +581,9 @@ MonoBehaviour:
     m_Bits: 256
   checkCollider: {fileID: 68886008437408030}
   _isUsable: 1
-  _targetEvaluatorCoolTime: 5
+  _isWaitingEvent: 0
   _isDuringCoolTime: 0
-  _useWaitingEvent: 0
+  _targetEvaluatorCoolTime: 1.5
 --- !u!114 &2840822553654775952
 MonoBehaviour:
   m_ObjectHideFlags: 0
