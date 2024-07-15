@@ -14,7 +14,7 @@ public sealed class Mushroom : MonsterBehaviour, ILightCaptureListener
 
         if (CurrentStateIs<Monster_IdleState>())
         {
-            Debug.Log("Hide State로 전이한다");
+            // Debug.Log("Hide State로 전이한다");
 
             // 빛에 닿으면 숨는다
             SetAnimatorTrigger("Hide");
