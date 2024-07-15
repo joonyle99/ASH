@@ -10,6 +10,10 @@ public abstract class ActionAreaDataSender : MonoBehaviour
 
     protected virtual void Awake()
     {
+
+    }
+    private void Start()
+    {
         // Monster Respawn Manager보다 먼저 행동 반경 데이터를 업데이트한다
         UpdateActionAreaData();
     }

@@ -46,6 +46,7 @@ public sealed class FloatingActionAreaDataSender : ActionAreaDataSender
         receiver.SetFloatingActionAreaData(_patrolArea.transform.position, _chaseArea.transform.position,
             _patrolArea.transform.localScale, _chaseArea.transform.localScale, _respawnBounds);
 
+        // Debug.Log("Bake RunTime");
         _navMeshBuilder.BakeNewNavMesh();
     }
 }

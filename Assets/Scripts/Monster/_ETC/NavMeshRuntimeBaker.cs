@@ -13,9 +13,11 @@ public class NavMeshRuntimeBaker : MonoBehaviour
     /// </summary>
     public void BakeNewNavMesh()
     {
-        // _navMeshSurface.RemoveData();
-        // _navMeshSurface.BuildNavMesh();
+        _navMeshSurface.RemoveData();
+        _navMeshSurface.BuildNavMesh();
+
         if (!_agent.enabled) _agent.enabled = true;
+
         // StartCoroutine(BakeNavMeshCoroutine());
     }
 
@@ -33,7 +35,6 @@ public class NavMeshRuntimeBaker : MonoBehaviour
         AsyncOperation asyncOperation = _navMeshSurface.BuildNavMeshAsync();
         while (!asyncOperation.isDone)
         {
-            Debug.Log("gogogogogo");
             yield return null;
         }
         Debug.Log("NavMesh building completed");
