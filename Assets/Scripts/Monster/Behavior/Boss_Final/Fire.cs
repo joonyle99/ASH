@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public sealed class Fire : BossBehaviour
@@ -76,8 +77,10 @@ public sealed class Fire : BossBehaviour
 
         SetToRandomAttack();
 
+        /*
         if (AttackEvaluator)
             AttackEvaluator.IsUsable = false;
+        */
 
         IsGodMode = true;
     }
