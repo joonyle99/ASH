@@ -217,14 +217,20 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
 
     // vine missile
-    public void VineMissilePre_AnimEvent()
-    {
-        var smoke = Instantiate(_smokeEffect, _missileSpawnPoint.position, Quaternion.identity);
-        smoke.Play();
-    }
     public void VineMissile01_AnimEvent()
     {
         _targetPos = SceneContext.Current.Player.HeartCollider.bounds.center;
+
+        // 오른쪽을 보고 있으면 플레이어가 오른쪽에 있을 때만 미사일을 발사한다
+        // 왼쪽을 보고 있으면 플레이어가 왼쪽에 있을 때만 미사일을 발사한다
+        if ((RecentDir > 0 && _missileSpawnPoint.position.x > _targetPos.x)
+            || (RecentDir < 0 && _missileSpawnPoint.position.x < _targetPos.x))
+        {
+            return;
+        }
+
+        var smoke = Instantiate(_smokeEffect, _missileSpawnPoint.position, Quaternion.identity);
+        smoke.Play();
 
         var dir = (_targetPos - (Vector2)_missileSpawnPoint.position).normalized;
 
@@ -256,35 +262,17 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         // 넝쿨 기둥 생성 위치 설정 로직
         for (int i = 0; i < _pillarCount; ++i)
         {
-            /*
-            // check allocation count each pillar spawn
-            var allocationCount = 0;
+            // 홀수일때랑 짝수일때를 고려해야 한다.
 
-            float newPosXInRange;
-            // calculate random pillar spawn position
-            do
-            {
-                // set random range
-                var min = player.transform.position.x - _pillarFarDist;
-                var max = player.transform.position.x + _pillarFarDist;
-                newPosXInRange = UnityEngine.Random.Range(min, max);
-
-                // increase allocation count while under the limit
-                allocationCount++;
-
-            } while ((_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistEachPillar) ||
-                      (newPosXInRange >= player.BodyCollider.bounds.min.x && newPosXInRange <= player.BodyCollider.bounds.max.x))
-                     && allocationCount <= _allocationLimit);
-            */
+            // Pillar Count가 홀수인 경우
+            // 
 
             var min = player.transform.position.x - _pillarFarDist;
             var max = player.transform.position.x + _pillarFarDist;
             var dist = max - min;
-            var unitDist = dist / _pillarCount;
+            var unitDist = dist / (_pillarCount - 1);
             var spawnPos = min + unitDist * i;
 
-            // store posX
-            // _usedPosX.Add(newPosXInRange);
             _usedPosX.Add(spawnPos);
         }
 
@@ -366,7 +354,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         IsCapturable = true;
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
 
         IsCapturable = false;
 

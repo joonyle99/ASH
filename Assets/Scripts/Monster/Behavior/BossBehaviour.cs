@@ -69,6 +69,8 @@ public abstract class BossBehaviour : MonsterBehaviour
             {
                 Debug.Log("Change RageState ÄÆ¾À È£Ãâ");
 
+                IsGodMode = true;
+
                 StartCoroutine(PlayCutSceneInRunning("Change RageState"));
             }
         }

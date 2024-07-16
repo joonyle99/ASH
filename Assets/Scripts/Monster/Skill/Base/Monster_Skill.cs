@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -12,6 +13,7 @@ public abstract class Monster_Skill : MonoBehaviour
 
     [SerializeField] protected MonsterBehaviour actor;
     [SerializeField] protected LayerMask targetLayer;
+    [SerializeField] protected LayerMask destroyLayer;
 
     [Space]
 
@@ -20,7 +22,7 @@ public abstract class Monster_Skill : MonoBehaviour
     [SerializeField] protected float forceY;
 
     [Space]
-    
+
     [SerializeField] protected GameObject hitEffect;
 
     protected MaterialController materialController;
@@ -65,6 +67,12 @@ public abstract class Monster_Skill : MonoBehaviour
 
                         // 스킬이 플레이어를 타격한 경우 발생하는 이벤트
                         monsterSkillEvent?.Invoke();
+
+                        // 타겟 레이어를 히트와 동시에 파괴
+                        if ((collisionLayerValue & destroyLayer.value) > 0)
+                        {
+                            DestroyIndependentSkill();
+                        }
                     }
                 }
             }
@@ -74,5 +82,10 @@ public abstract class Monster_Skill : MonoBehaviour
     public void SetActor(MonsterBehaviour act)
     {
         this.actor = act;
+    }
+
+    protected void DestroyIndependentSkill()
+    {
+        Destroy(this.gameObject);
     }
 }
