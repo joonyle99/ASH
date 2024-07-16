@@ -125,6 +125,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         // 공격 판독기의 대기 이벤트 등록
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
+
+        rageTargetHurtCount = (finalTargetHurtCount + 1) / 2;
     }
     protected override void Start()
     {

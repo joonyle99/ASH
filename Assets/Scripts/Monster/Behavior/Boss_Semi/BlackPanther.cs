@@ -107,6 +107,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         // 공격 판독기의 대기 이벤트 등록
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
+
+        rageTargetHurtCount = finalTargetHurtCount - 6;
     }
     protected override void Start()
     {
@@ -116,6 +118,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         if (AttackEvaluator)
             AttackEvaluator.IsUsable = false;
+
+        IsGodMode = false;
     }
     private void FixedUpdate()
     {
@@ -167,31 +171,10 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         {
             TotalMissileCount++;
         }
-
-        if (!IsRage)
-        {
-            // Rush인 경우에는 GodMode를 해제한다
-            if (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2)
-            {
-                if (IsGodMode)
-                    IsGodMode = false;
-            }
-        }
     }
     public override void AttackPostProcess()
     {
         SetToNextAttack();
-
-        if (!IsRage)
-        {
-            if (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2)
-            {
-                if (!IsGodMode)
-                    IsGodMode = true;
-
-                currentHitCount = 0;
-            }
-        }
     }
     public override void GroggyPreProcess()
     {

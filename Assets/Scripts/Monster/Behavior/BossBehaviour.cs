@@ -31,6 +31,7 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     [Tooltip("final target hurt count x boss health unit = MaxHp")]
     [SerializeField] protected int finalTargetHurtCount;        // 보스 몬스터의 최대 피격 횟수
+    [SerializeField] protected int rageTargetHurtCount;         // 분노 상태의가 되기 위한 피격 횟수
 
     [Space]
 
@@ -62,8 +63,9 @@ public abstract class BossBehaviour : MonsterBehaviour
         {
             _totalHitCount = value;
 
-            int halfHitCount = (finalTargetHurtCount + 1) / 2;
-            if (_totalHitCount == halfHitCount && !IsRage)
+            if (IsRage) return;
+
+            if (_totalHitCount == rageTargetHurtCount)
             {
                 Debug.Log("Change RageState 컷씬 호출");
 
@@ -134,8 +136,10 @@ public abstract class BossBehaviour : MonsterBehaviour
     {
         if (IsDead) return;
 
+        if (!IsGroggy) return;
+
         // 그로기 상태 해제되며 피격
-        if (currentHitCount >= targetHitCount)
+        if (currentHitCount % targetHitCount == 0)
         {
             SetAnimatorTrigger("Hurt");
         }
