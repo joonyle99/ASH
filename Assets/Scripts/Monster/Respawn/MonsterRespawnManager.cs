@@ -130,7 +130,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
             actionAreaDataSender.SetActionAreaPosition(respawnData.groundActionAreaData.PatrolPointAPosition, respawnData.groundActionAreaData.PatrolPointBPosition);
         }
         // 공중 몬스터의 행동 반경 정보 설정
-        else if (moveType == MonsterDefine.MoveType.Fly)
+        else if (moveType == MonsterDefine.MoveType.FloatingNormal)
         {
             actionAreaDataSender.SetActionAreaPosition(respawnData.floatingActionAreaData.PatrolAreaPosition, respawnData.floatingActionAreaData.ChaseAreaPosition);
             actionAreaDataSender.SetActionAreaScale(respawnData.floatingActionAreaData.PatrolAreaScale, respawnData.floatingActionAreaData.ChaseAreaScale);
@@ -190,7 +190,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
             respawnPos = respawnData.DefaultPrefabPosition;
         }
         // 공중 몬스터의 리스폰 위치 설정
-        else if (moveType == MonsterDefine.MoveType.Fly)
+        else if (moveType == MonsterDefine.MoveType.FloatingNormal)
         {
             var respawnBounds = respawnData.floatingActionAreaData.RespawnBounds;
 

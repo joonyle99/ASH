@@ -326,7 +326,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
                 break;
 
-            case MonsterDefine.MoveType.Fly:
+            case MonsterDefine.MoveType.FloatingNormal:
 
                 IsGround = false;
                 IsInAir = true;

@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
@@ -21,7 +19,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [Header("！！！！！！！ BlackPanther Behaviour ！！！！！！！")]
     [Space]
 
-    [Tooltip("1: Rush1\n2 : VineMissile\n3 : Rush2\n2 : VinePillar")]
+    [Tooltip("1: Rush1\n2 : VineMissile\n3 : Rush2\n4 : VinePillar")]
     [SerializeField] private AttackType _firstAttack;
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
