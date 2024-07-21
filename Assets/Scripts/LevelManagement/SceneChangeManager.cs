@@ -1,9 +1,7 @@
 ﻿using LevelGraph;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 씬 전환을 담당하는 매니저
