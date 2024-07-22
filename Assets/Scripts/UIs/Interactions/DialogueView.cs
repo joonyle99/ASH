@@ -3,6 +3,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 /// <summary>
 /// 다이얼로그를 출력하기 위한 뷰 UI
@@ -17,6 +18,8 @@ public class DialogueView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _speaker;
     [SerializeField] private Image _skipUI;
     [SerializeField] private Image _responsePanel;
+    [Tooltip("스테이지 리셋(수락, 거절) 응답 패널")]
+    [SerializeField] private ResponsePanel _responsePanel02;
 
     private TextShaker _textShaker;
 
@@ -35,6 +38,7 @@ public class DialogueView : MonoBehaviour
         _speaker.text = "";
         _skipUI.gameObject.SetActive(false);
         _responsePanel.gameObject.SetActive(false);
+        _responsePanel02.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _textShaker = _dialogue.GetComponent<TextShaker>();
     } 
@@ -46,6 +50,24 @@ public class DialogueView : MonoBehaviour
         _skipUI.gameObject.SetActive(false);
         _responsePanel.gameObject.SetActive(true);
     }
+    /// <summary>
+    /// 퀘스트 응답 패널 열기
+    /// </summary>
+    public void OpenResponsePanel02(List<ResponseFunctionContainer> responseFunctions)
+    {
+        _skipUI.gameObject.SetActive(false);
+
+        _responsePanel02.gameObject.SetActive(true);
+        if(responseFunctions != null)
+        {
+            for (int i = 0; i < responseFunctions.Count; i++)
+            {
+                ResponseFunctionContainer responseFunctionContainer = responseFunctions[i];
+                _responsePanel02.BindActionOnClicked(responseFunctionContainer.buttonType, responseFunctionContainer.action);
+            }
+        }
+    }
+
     /// <summary>
     /// 퀘스트 응답 패널에 퀘스트 전달
     /// </summary>
@@ -160,8 +182,8 @@ public class DialogueView : MonoBehaviour
             // 다음 글자로 이동
             textIndex++;
 
-            // 세그먼트의 대사를 모두 출력했을 경우 종료
-            if (textIndex == _currentSegment.Text.Length)
+            // 세그먼트의 대사를 모두 출력했을 경우 종료, 또는 강제종료
+            if (textIndex == _currentSegment.Text.Length || DialogueController.Instance.IsShutdowned)
                 break;
 
             yield return new WaitForSeconds(_currentSegment.CharShowInterval);

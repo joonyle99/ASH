@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StatueVisualEffect : MonoBehaviour
 {
@@ -18,8 +19,8 @@ public class StatueVisualEffect : MonoBehaviour
     private ParticleSystem[] _particles;
 
     [Header("Sound")]
-    [SerializeField]
-    private AudioSource _saveSound;
+    private AudioSource _audioSource;
+    private SoundList _soundList;
 
     [Header("Timer")]
     [SerializeField]
@@ -32,28 +33,35 @@ public class StatueVisualEffect : MonoBehaviour
     [Header("Preserve State")]
     [SerializeField]
     private bool Played = false;
-    [SerializeField]
     PreserveState _statePreserver;
 
     private void Awake()
     {
+    }
+    private void Start()
+    {
         Init();
     }
-
-    private void OnDestroy()
-    {
-        if(_statePreserver)
-        {
-            _statePreserver.SaveState("_played", Played);
-        }
-    }
-
     private void Init()
     {
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            Played = _statePreserver.LoadState("_played", false);
+            JsonDataManager.JsonLoad();
+            JsonPersistentData spd = JsonDataManager.GetObjectInGlobalSaveData<JsonPersistentData>("PersistentData");
+            if(spd != null)
+            {
+                PersistentData pd = JsonPersistentData.ToNormalFormatClassObject(spd);
+                string currentScene = SceneManager.GetActiveScene().name;
+                if (pd._dataGroups != null &&
+                    pd._dataGroups.TryGetValue(currentScene, out var value))
+                {
+                    if (value.TryGetValue(_statePreserver.EditorID + "_played", out var alreadyPlayed))
+                    {
+                        Played = (bool)alreadyPlayed;
+                    }
+                }
+            }
 
             //씬 로드시 이미 플레이 된 적이 있는 경우 켜진 플레이 상태가
             //유지되어야 하는 이펙트
@@ -63,7 +71,8 @@ public class StatueVisualEffect : MonoBehaviour
             }
         }
 
-        _saveSound = GetComponent<AudioSource>();
+        _audioSource = GetComponent<AudioSource>();
+        _soundList = GetComponent<SoundList>();
 
         SaveAndLoader.OnSaveStarted += PlayEffectsOnSaveStarted;
         SaveAndLoader.OnSaveEnded += DeactiveSaveTextLogic;
@@ -72,8 +81,13 @@ public class StatueVisualEffect : MonoBehaviour
     private void PlayEffectsOnSaveStarted()
     {
         //최초 1회만 실시되는 로직들
-        if(!Played)
+        if (!Played)
         {
+            if (_statePreserver)
+            {
+                _statePreserver.SaveState("_played", true);
+            }
+
             PlayDustParticle();
             ActiveEyes();
         }
@@ -139,9 +153,28 @@ public class StatueVisualEffect : MonoBehaviour
 
     private void PlaySaveSound()
     {
-        if( _saveSound == null) return;
-
-        _saveSound.Play();
+        if(_soundList == null) return;
+        
+        if(Played)
+        {
+            string key = "SE_Point_Save";
+            if (_soundList.Exists(key))
+            {
+                _soundList.PlaySFX(key, 5);
+            }
+            else
+                Debug.Log("SE_Point_Save Audio Clip not found");
+        }
+        else
+        {
+            string key = "SE_Point_Statue";
+            if (_soundList.Exists(key))
+            {
+                _soundList.PlaySFX(key);
+            }
+            else
+                Debug.Log("SE_Point_Statue Audio Clip not found");
+        }
     }
     #endregion
 

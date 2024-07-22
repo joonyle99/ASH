@@ -58,6 +58,7 @@ public class DialogueData : ScriptableObject
         List<DialogueSegment> dialogueSequence = new List<DialogueSegment>();
         string [] scriptLines = HappyTools.TSVRead.SplitLines(_script.text);
         string speakerName = _defaultSpeaker;
+
         for (int i=0; i<scriptLines.Length; i++)
         {
             float charactersPerSecond = _defaultCharactersPerSecond;
@@ -70,6 +71,7 @@ public class DialogueData : ScriptableObject
                 for (int c = 0; c < commands.Length; c++) 
                 {
                     var words = commands[c].Split(":");
+                    Debug.Log("index : " + c + " word : " + words);
                     var firstWord = words[0].Trim().ToLower();
                     if (firstWord == "speed")
                     {

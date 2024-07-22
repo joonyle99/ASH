@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Guid: 1595c86b44b32ab4080769b50c2ecd90
   graphPosition: {x: -208.68605, y: 8.999994}
-  SceneName: 
+  SceneName: SJY_Scene1
   Scene:
     sceneAsset: {fileID: 102900000, guid: b6bf95e82d09f9c48a0004e787ea4153, type: 3}
     scenePath: Assets/Scenes/Test/SJY/SJY_Scene1.unity
@@ -64,6 +64,14 @@ MonoBehaviour:
     ExitScene: {fileID: -5331790820577414742}
     EntrancePassage: Enter SJY_Scene2
     ExitPassgage: Enter SJY_Scene1
+  - EntranceScene: {fileID: 730251218714092004}
+    ExitScene: {fileID: 7783753324342266041}
+    EntrancePassage: Exit SJY_Scene1
+    ExitPassgage: Enter SJY_Boss
+  - EntranceScene: {fileID: 7783753324342266041}
+    ExitScene: {fileID: 730251218714092004}
+    EntrancePassage: Enter SJY_Boss
+    ExitPassgage: Exit SJY_Scene1
 --- !u!114 &730251218714092004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,11 +86,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Guid: 3ffbde59ca673cd4d9ef9b1674426f22
   graphPosition: {x: 265.4, y: -165}
-  SceneName: 
+  SceneName: SJY_Scene1
   Scene:
-    sceneAsset: {fileID: 0}
-    scenePath: 
-  PassageNames: []
+    sceneAsset: {fileID: 102900000, guid: b6bf95e82d09f9c48a0004e787ea4153, type: 3}
+    scenePath: Assets/Scenes/Test/SJY/SJY_Scene1.unity
+  PassageNames:
+  - Exit SJY_Scene1
 --- !u!114 &7783753324342266041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,8 +106,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Guid: 4657eef626cd89449b75e50e74390d54
   graphPosition: {x: 73.32246, y: -132}
-  SceneName: 
+  SceneName: SJY_Boss
   Scene:
-    sceneAsset: {fileID: 0}
-    scenePath: 
-  PassageNames: []
+    sceneAsset: {fileID: 102900000, guid: 1b8ab38412f2a574a99298234d9561ab, type: 3}
+    scenePath: Assets/Scenes/Test/SJY/SJY_Boss.unity
+  PassageNames:
+  - SJY_Boss

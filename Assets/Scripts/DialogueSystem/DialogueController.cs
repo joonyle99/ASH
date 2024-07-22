@@ -15,7 +15,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     public bool IsDialogueActive { get; set; } = false;                 // 대화가 진행 중인지 여부
 
     private DialogueView _view;                                         // 다이얼로그 뷰 UI
-    private DialogueView View
+    public DialogueView View
     {
         get
         {
@@ -24,6 +24,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             return _view;
         }
     }
+
+    private bool _isShutdowned = false;
+    public bool IsShutdowned => _isShutdowned;
 
     public void StartDialogue(DialogueData data, bool isFromCutscene = false)
     {
@@ -49,6 +52,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     }
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
     {
+        //0. 기본값 초기화
+        _isShutdowned = false;
+
         // 1. 다이얼로그 시퀀스를 생성한다
         DialogueSequence dialogueSequence = new DialogueSequence(data);
 
@@ -62,7 +68,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         IsDialogueActive = true;
 
         // 4. 다이얼로그 시퀀스 시작
-        while (!dialogueSequence.IsOver)
+        while (!dialogueSequence.IsOver && !_isShutdowned)
         {
             #region Dialogue
 
@@ -70,7 +76,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             View.StartNextSegment(dialogueSequence.CurrentSegment);
 
             // 진행중인 다이얼로그 세그먼트가 끝날 때까지 루프를 돌며 대기
-            while (!View.IsCurrentSegmentOver)
+            while (!View.IsCurrentSegmentOver && !_isShutdowned)
             {
                 yield return null;
 
@@ -81,7 +87,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             // 다음 Update 프레임까지 대기하며 상호작용 키의 중복 입력을 방지
             yield return null;
 
-            yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
+            yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown || _isShutdowned);
 
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
 
@@ -147,5 +153,10 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         // 6. 다이얼로그 시퀀스가 끝났기 때문에 입력 설정을 기본값으로 변경
         if (data.InputSetter != null)
             InputManager.Instance.ChangeToDefaultSetter();
+    }
+
+    public void ShutdownDialogue()
+    {
+        _isShutdowned = true;
     }
 }

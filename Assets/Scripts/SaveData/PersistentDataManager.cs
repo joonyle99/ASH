@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static JsonPersistentData;
+using static UnityEngine.Rendering.DebugUI;
 using DataGroup = System.Collections.Generic.Dictionary<string, object>;
 
 /// <summary>
@@ -52,7 +53,7 @@ public class PersistentData
         return copyData;
     }
 
-    public static JsonPersistentData ToJsonFormatClassObject (PersistentData persistentData)
+    public static JsonPersistentData ToJsonFormatClassObject(PersistentData persistentData)
     {
         if (persistentData == null) return null;
 
@@ -78,11 +79,11 @@ public class PersistentData
         jsonPersistentData._jsonDataGroups = jsonDataGroups;
 
         JsonDataArray<string, SerializableObjectType> jsonGlobalDataGroup = new();
-            foreach (var dataGroup in persistentData._globalDataGroup)
-            {
-                jsonGlobalDataGroup.Add(dataGroup.Key,
-                    new SerializableObjectType() { Object = dataGroup.Value });
-            }
+        foreach (var dataGroup in persistentData._globalDataGroup)
+        {
+            jsonGlobalDataGroup.Add(dataGroup.Key,
+                new SerializableObjectType() { Object = dataGroup.Value });
+        }
         jsonPersistentData._jsonGlobalDataGroup = jsonGlobalDataGroup;
 
         return jsonPersistentData;
@@ -395,21 +396,29 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
      */
     public static bool LoadToSavedData()
     {
-        SaveAndLoader.IsChangeSceneByLoading = true;
         JsonDataManager.JsonLoad();
         Instance._savedPersistentData = JsonDataManager.GetObjectInGlobalSaveData<JsonPersistentData>("PersistentData");
-        ReplacePDataToSavedPData();
 
-        MonsterRespawnManager.Instance.StopRespawnCoroutine();
-        string sceneName = Instance.PersistentData.SceneName;
-        string passageName = Instance.PersistentData.PassageName;
-        if (sceneName == "" || passageName == "")
+        if(Instance._savedPersistentData != null)
         {
-            Debug.LogWarning("Not Saved Scene or PassageData Load");
-            return false;
+            ReplacePDataToSavedPData();
+
+            MonsterRespawnManager.Instance.StopRespawnCoroutine();
+            string sceneName = Instance.PersistentData.SceneName;
+            string passageName = Instance.PersistentData.PassageName;
+            if (sceneName == "" || passageName == "")
+            {
+                Debug.LogWarning("Not Saved Scene or PassageData Load");
+                return false;
+            }
+
+            SaveAndLoader.IsChangeSceneByLoading = true;
+            SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+            return true;
         }
 
-        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
-        return true;
+        //저장된 데이터가 없는 경우
+        Debug.Log("Have not saved data");
+        return false;
     }
 }

@@ -251,7 +251,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     private SaveData _globalSaveData = new SaveData();
     public SaveData GlobalSaveData => Instance._globalSaveData;
 
-    private void Start()
+    protected override void Awake()
     {
         path = Path.Combine(Application.dataPath, "database.json");
         JsonLoad();
