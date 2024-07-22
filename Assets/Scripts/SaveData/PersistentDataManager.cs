@@ -367,7 +367,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
         if (Instance._savedPersistentData.SceneName == "")
         {
-            Instance._savedPersistentData.SceneName = SceneManager.GetActiveScene().name;
+            Instance._savedPersistentData.SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         }
 
         if (Instance._savedPersistentData.PassageName == "")

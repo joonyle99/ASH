@@ -2,9 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// 보스 방 입장의 위한 문
-/// 애니메이션이 존재하며 상호작용을 통해 문을 열 수 있다
-/// Passage를 제어한다
+/// 애니메이션이 연출이 들어간 특별한 문으로 Passage를 제어한다
 /// </summary>
 public class BossDoor : InteractableObject
 {
@@ -13,19 +11,28 @@ public class BossDoor : InteractableObject
 
     [SerializeField] private bool _isOpened = false;
     [SerializeField] private GameObject _passage;
-    [SerializeField] private float _goInDelay = 1f;
-    [SerializeField] private InputSetterScriptableObject _enterInputSetter;
     [SerializeField] private DialogueData _failDialogue;                        // 키가 모두 모이지 않았을 때의 대사
-    [SerializeField] private SoundList _soundList;
-
-    [Space]
-
-    [SerializeField] private bool _isControlableInputSetter = true;
+    [SerializeField] private InputSetterScriptableObject _enterInputSetter;     // 문으로 들어갈 때의 InputSetter
 
     private PreserveState _statePreserver;
     private DoorOpenAnimation _doorOpenAnimation;
     private Animator _animator;
     private Collider2D _collider;
+    private SoundList _soundList;
+
+    public bool IsOpened
+    {
+        get => _isOpened;
+        set
+        {
+            _isOpened = value;
+
+            if (_statePreserver)
+            {
+                _statePreserver.SaveState("_isOpened", _isOpened);
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -33,10 +40,11 @@ public class BossDoor : InteractableObject
         _doorOpenAnimation = GetComponent<DoorOpenAnimation>();
         _animator = GetComponent<Animator>();
         _collider = GetComponent<Collider2D>();
+        _soundList = GetComponent<SoundList>();
     }
     private void Start()
     {
-        if (_statePreserver?.LoadState("_isOpened", _isOpened) ?? _isOpened)
+        if (_statePreserver?.LoadState("_isOpened", IsOpened) ?? IsOpened)
         {
             _animator.SetTrigger("InstantOpen");
 
@@ -57,6 +65,7 @@ public class BossDoor : InteractableObject
             // PersistentDataManager.Set<int>("BossDungeon1", "bossKeyCount", 0);
 
             _soundList.PlaySFX("Open");
+            BossDungeonManager.Instance.OnOpenBossDoor();
             SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine()));
         }
         else
@@ -80,24 +89,22 @@ public class BossDoor : InteractableObject
     // conrol door (open / close)
     private IEnumerator OpenDoorCoroutine()
     {
-        if (_isControlableInputSetter) InputManager.Instance.ChangeToStayStillSetter();
+        // 상호작용으로 여는 경우에만 InputSetter를 변경한다
+        if (IsInteractable)
+            InputManager.Instance.ChangeToStayStillSetter();
 
         SceneEffectManager.Instance.Camera.StartFollow(transform);
         yield return _doorOpenAnimation.OpenCoroutine();
         SceneEffectManager.Instance.Camera.StartFollow(SceneContext.Current.Player.transform);
-        yield return new WaitForSeconds(_goInDelay);
 
-        if (_isControlableInputSetter)
+        IsOpened = true;
+
+        if (IsInteractable)
         {
-            if (_enterInputSetter) InputManager.Instance.ChangeInputSetter(_enterInputSetter);
-            else InputManager.Instance.ChangeToDefaultSetter();
-        }
-
-        _isOpened = true;
-
-        if (_statePreserver)
-        {
-            _statePreserver.SaveState("_isOpened", _isOpened);
+            if (_enterInputSetter)
+                InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+            else
+                InputManager.Instance.ChangeToDefaultSetter();
         }
 
         /*
@@ -107,24 +114,21 @@ public class BossDoor : InteractableObject
     }
     private IEnumerator CloseDoorCoroutine()
     {
-        if (_isControlableInputSetter) InputManager.Instance.ChangeToStayStillSetter();
+        if (IsInteractable)
+            InputManager.Instance.ChangeToStayStillSetter();
 
         SceneEffectManager.Instance.Camera.StartFollow(transform);
         yield return _doorOpenAnimation.CloseCoroutine();
         SceneEffectManager.Instance.Camera.StartFollow(SceneContext.Current.Player.transform);
-        yield return new WaitForSeconds(_goInDelay);
 
-        if (_isControlableInputSetter)
+        IsOpened = false;
+
+        if (IsInteractable)
         {
-            if (_enterInputSetter) InputManager.Instance.ChangeInputSetter(_enterInputSetter);
-            else InputManager.Instance.ChangeToDefaultSetter();
-        }
-
-        _isOpened = false;
-
-        if (_statePreserver)
-        {
-            _statePreserver.SaveState("_isOpened", _isOpened);
+            if (_enterInputSetter)
+                InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+            else
+                InputManager.Instance.ChangeToDefaultSetter();
         }
     }
     public void OpenDoor()

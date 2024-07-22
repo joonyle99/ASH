@@ -31,6 +31,7 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     [Tooltip("final target hurt count x boss health unit = MaxHp")]
     [SerializeField] protected int finalTargetHurtCount;        // 보스 몬스터의 최대 피격 횟수
+    [SerializeField] protected int rageTargetHurtCount;         // 분노 상태의가 되기 위한 피격 횟수
 
     [Space]
 
@@ -62,10 +63,13 @@ public abstract class BossBehaviour : MonsterBehaviour
         {
             _totalHitCount = value;
 
-            int halfHitCount = (finalTargetHurtCount + 1) / 2;
-            if (_totalHitCount == halfHitCount && !IsRage)
+            if (IsRage) return;
+
+            if (_totalHitCount == rageTargetHurtCount)
             {
                 Debug.Log("Change RageState 컷씬 호출");
+
+                IsGodMode = true;
 
                 StartCoroutine(PlayCutSceneInRunning("Change RageState"));
             }
@@ -97,7 +101,7 @@ public abstract class BossBehaviour : MonsterBehaviour
 
         // Hit Process
         HitProcess(attackInfo, false, false, true);
-        
+
         // 피격 횟수 증가
         TotalHitCount++;
         currentHitCount++;
@@ -134,8 +138,10 @@ public abstract class BossBehaviour : MonsterBehaviour
     {
         if (IsDead) return;
 
+        if (!IsGroggy) return;
+
         // 그로기 상태 해제되며 피격
-        if (currentHitCount >= targetHitCount)
+        if (currentHitCount % targetHitCount == 0)
         {
             SetAnimatorTrigger("Hurt");
         }
@@ -249,7 +255,15 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     public IEnumerator PlayCutSceneInRunning(string cutsceneName)
     {
-        yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
+        // 현재 애니메이션이 90% 완료될 때까지 기다립니다.
+        yield return new WaitUntil(() => {
+            AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+            return stateInfo.normalizedTime >= 0.95f;
+        });
+
+        yield return new WaitForSeconds(1.5f);
+
+        // yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
 
         cutscenePlayerList.PlayCutscene(cutsceneName);
     }

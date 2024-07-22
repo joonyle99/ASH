@@ -25,6 +25,8 @@ public class MaterialController : MonoBehaviour
         private set;
     }
 
+    public Material MainMaterial => SpriteRenderers[0].material;
+
     private void Awake()
     {
         // effects
@@ -60,9 +62,22 @@ public class MaterialController : MonoBehaviour
             spriteRenderer.material.SetFloat(key, progress);
         }
     }
-
     public void InitMaterialForRespawn()
     {
         DisintegrateEffect.InitMaterialAndProgressForRespawn();
+    }
+    public void EnableGodModeOutline()
+    {
+        foreach(var material in OriginalMaterials)
+        {
+            material.EnableKeyword("OUTBASE_ON");
+        }
+    }
+    public void DisableGodModeOutline()
+    {
+        foreach (var material in OriginalMaterials)
+        {
+            material.DisableKeyword("OUTBASE_ON");
+        }
     }
 }

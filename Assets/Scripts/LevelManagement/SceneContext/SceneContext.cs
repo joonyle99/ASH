@@ -56,7 +56,7 @@ public class SceneContext : MonoBehaviour
 
             if (target == null)
             {
-                Debug.LogWarning($"[SceneContext Build] There is No {typeof(T).Name} in scene !");
+                Debug.LogWarning($"<color=orange>[SceneContext Build]</color> There is No {typeof(T).Name} in scene !");
 
                 if (buildResult == Result.Success)
                     buildResult = Result.Fail;

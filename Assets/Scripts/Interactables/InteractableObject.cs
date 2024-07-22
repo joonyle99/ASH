@@ -56,7 +56,7 @@ public abstract class InteractableObject : MonoBehaviour
     public bool IsInteractable
     {
         get => _isInteractable;
-        protected set => _isInteractable = value;
+        set => _isInteractable = value;
     }
     public bool IsInteracting
     {

@@ -95,7 +95,8 @@ public static class MonsterDefine
         Null = 0,
         GroundNormal,
         GroundTurret,
-        Fly
+        FloatingNormal,
+        FloatingTurret,
     }
 
     public static int BossHealthUnit = 10000;

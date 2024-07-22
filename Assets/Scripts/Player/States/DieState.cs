@@ -71,7 +71,7 @@ public class DieState : PlayerState
 
         if (!PersistentDataManager.LoadToSavedData())
         {
-            var sceneName = SceneManager.GetActiveScene().name;
+            var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             var passageName = SceneContext.Current.EntrancePassage.PassageName;
 
             // Debug.Log($"scene name: {sceneName}");

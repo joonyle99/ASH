@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 /// <summary>
 /// 몬스터의 기본 행동을 정의하는 추상클래스
@@ -132,11 +131,26 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         get;
         set;
     }
-    [field: SerializeField]
+    [SerializeField] private bool _isGodMode;
     public bool IsGodMode
     {
-        get;
-        set;
+        get => _isGodMode;
+        set
+        {
+            _isGodMode = value;
+
+            if (MaterialController)
+            {
+                if (_isGodMode)
+                {
+                    MaterialController.EnableGodModeOutline();
+                }
+                else
+                {
+                    MaterialController.DisableGodModeOutline();
+                }
+            }
+        }
     }
     [field: SerializeField]
     public bool IsHitting
@@ -228,6 +242,10 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
     #region Function
 
+    private void OnValidate()
+    {
+        IsGodMode = _isGodMode;
+    }
     protected virtual void Awake()
     {
         // Basic Component
@@ -307,7 +325,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
                 break;
 
-            case MonsterDefine.MoveType.Fly:
+            case MonsterDefine.MoveType.FloatingNormal:
 
                 IsGround = false;
                 IsInAir = true;
@@ -674,4 +692,18 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     }
 
     #endregion
+
+    private void OnDrawGizmos()
+    {
+        /*
+        if (IsGodMode)
+        {
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 25;
+            style.normal.textColor = Color.red;
+            style.alignment = TextAnchor.MiddleCenter;
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 1.5f, "GOD MODE", style);
+        }
+        */
+    }
 }

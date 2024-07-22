@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextBuildListener
@@ -91,7 +92,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     // Condition Property
     public bool IsGrounded => GroundHit;                                    // 플레이어의 아래 방향으로 Circle Cast
-    public bool IsGroundedSupported => GroundHit || GroundHit2;             // + 플레이어의 아래 방향으로 Ray Cast
     public bool IsUpWardGrounded => UpwardGroundHit;
     public bool IsTouchedWall => ClimbHit;
     public bool IsClimbable { get; set; }
@@ -179,9 +179,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     // RayCastHit
     public RaycastHit2D GroundHit { get; set; }
-    public RaycastHit2D GroundHit2 { get; set; }
-    public RaycastHit2D ClimbHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
+    public RaycastHit2D ClimbHit { get; set; }
 
     // Component
     public PlayerAttackController PlayerAttackController => _playerAttackController;
@@ -238,10 +237,31 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             _playerAttackController.CastAttack();
         }
 
-        // TEMP: Recover Cheat HP
+        // CHEAT: Recover Cheat HP
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
             RecoverCurHp(2);
+        }
+
+        // CHEAT: Open Boss Door
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
+            // 가장 가까운 BossDoor를 찾는다 (LINQ 사용)
+            var closestBossDoor = FindObjectsByType<BossDoor>(FindObjectsSortMode.None)
+                .OrderBy(door => Vector3.Distance(transform.position, door.transform.position))
+                .FirstOrDefault();
+
+            if (closestBossDoor == null)
+                Debug.Log("No Boss Door found in the scene.");
+
+            // 상호작용 불가능한 상태로 만든다
+            closestBossDoor.IsInteractable = false;
+
+            // 가장 가까운 BossDoor가 열려있으면 닫기, 닫혀있으면 열기
+            if (closestBossDoor.IsOpened)
+                closestBossDoor.CloseDoor();
+            else
+                closestBossDoor.OpenDoor();
         }
 
         #endregion
@@ -269,7 +289,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         #region Animaotr Parameter
 
         Animator.SetBool("IsGround", IsGrounded);
-        Animator.SetBool("IsGroundSupported", IsGroundedSupported);
         Animator.SetBool("IsUpwardGround", IsUpWardGrounded);
 
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);

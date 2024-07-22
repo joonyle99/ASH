@@ -21,11 +21,6 @@ public class OptionView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _bgmValue;
     [SerializeField] private TextMeshProUGUI _sfxValue;
 
-    [Space]
-
-    [SerializeField] private Toggle _fullScreenToggle;
-    [SerializeField] private Toggle _windowedToggle;
-
     private bool _isPause = false;
     public bool IsPause => _isPause;
 
@@ -69,25 +64,6 @@ public class OptionView : MonoBehaviour
         _sfxValue.text = sfxVolume.ToString();
     }
 
-    public void SwitchToWindowedMode(bool isToggleOn)
-    {
-        // if (UnityEngine.Screen.fullScreenMode == FullScreenMode.Windowed) return;
-
-        Debug.Log("창 모드");
-
-        UnityEngine.Screen.fullScreenMode = FullScreenMode.Windowed;
-
-        UnityEngine.Screen.SetResolution(1280, 720, false);
-    }
-    public void SwitchToFullScreenMode(bool isToggleOn)
-    {
-        // if (UnityEngine.Screen.fullScreenMode == FullScreenMode.FullScreenWindow) return;
-
-        Debug.Log("전체 모드");
-
-        UnityEngine.Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
-    }
-
     public void Pause()
     {
         _isPause = true;
@@ -122,7 +98,7 @@ public class OptionView : MonoBehaviour
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
+        SceneChangeManager.Instance.ChangeToPlayableScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
     }
 
     public void ApplyTestButton()
