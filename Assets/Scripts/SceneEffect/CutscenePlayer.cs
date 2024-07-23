@@ -8,6 +8,7 @@ using UnityEngine;
 public class CutscenePlayer : MonoBehaviour, ITriggerListener
 {
     [SerializeField] bool _playOnce = true;
+    [SerializeField] bool _canReplay = false;
     [SerializeField] bool _played = false;
 
     [SerializeField] List<SceneEffect> _sequence;
@@ -109,7 +110,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     /// </summary>
     public void Play()
     {
-        if (!_played && _playOnce)
+        if ((!_played && _playOnce) || _canReplay)
         {
             SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
             _played = true;

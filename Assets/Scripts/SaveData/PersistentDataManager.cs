@@ -167,11 +167,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             Debug.Log("=============save Data============");
             SavedPersistentData.PrintData();
         }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Debug.Log("Load");
-            LoadToSavedData();
-        }
     }
 
     #region group data
@@ -365,15 +360,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     {
         Instance._savedPersistentData = PersistentData.ToJsonFormatClassObject(Instance._persistentData);
 
-        if (Instance._savedPersistentData.SceneName == "")
-        {
-            Instance._savedPersistentData.SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-        }
-
-        if (Instance._savedPersistentData.PassageName == "")
-        {
-            Instance._savedPersistentData.PassageName = passageName;
-        }
+        Instance._savedPersistentData.SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        Instance._savedPersistentData.PassageName = passageName;
     }
 
     /**

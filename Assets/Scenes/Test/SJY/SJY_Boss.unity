@@ -2190,7 +2190,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: 1764.1213
+      value: 1752.5189
       objectReference: {fileID: 0}
     - target: {fileID: 5171320284482388752, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6379,6 +6379,117 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8664240521131181900, guid: e86d5371183b98840a82989833bdd758, type: 3}
   m_PrefabInstance: {fileID: 1651624711}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1654680717
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1654680718}
+  - component: {fileID: 1654680719}
+  m_Layer: 0
+  m_Name: Flash
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1654680718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654680717}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5562433879188959413}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1654680719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654680717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ComponentVersion: 1
+  m_LightType: 3
+  m_BlendStyleIndex: 1
+  m_FalloffIntensity: 0.715
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1.5
+  m_LightVolumeIntensity: 2
+  m_LightVolumeIntensityEnabled: 1
+  m_ApplyToSortingLayers: 3fc2fb5f553a8929d7a4b29d554da9d4ff527bb8000000001945bf0c51500e09491e41e6f7c27aea19b62f4a4def3bf5
+  m_LightCookieSprite: {fileID: 0}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 1
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowIntensityEnabled: 0
+  m_ShadowIntensity: 0.75
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_Vertices:
+  - position: {x: 0.9985302, y: 0.9985302, z: 0}
+    color: {r: 0.70710677, g: 0.70710677, b: 0, a: 0}
+    uv: {x: 0, y: 0}
+  - position: {x: 0.9985302, y: 0.9985302, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  - position: {x: -0.9985302, y: 0.9985302, z: 0}
+    color: {r: -0.70710677, g: 0.70710677, b: 0, a: 0}
+    uv: {x: 0, y: 0}
+  - position: {x: -0.9985302, y: 0.9985302, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  - position: {x: -0.99853003, y: -0.9985304, z: 0}
+    color: {r: -0.70710665, g: -0.7071069, b: 0, a: 0}
+    uv: {x: 0, y: 0}
+  - position: {x: -0.99853003, y: -0.9985304, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  - position: {x: 0.99853003, y: -0.9985304, z: 0}
+    color: {r: 0.70710665, g: -0.7071069, b: 0, a: 0}
+    uv: {x: 0, y: 0}
+  - position: {x: 0.99853003, y: -0.9985304, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  - position: {x: 0, y: 0, z: 0}
+    color: {r: 0, g: 0, b: 0, a: 1}
+    uv: {x: 0, y: 0}
+  m_Triangles: 030001000800020000000100030002000100050003000800040002000300050004000300070005000800060004000500070006000500010007000800000006000700010000000700
+  m_LocalBounds:
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 0
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
 --- !u!1001 &1671466287
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9029,6 +9140,7 @@ Transform:
   m_Children:
   - {fileID: 5562433879533864600}
   - {fileID: 5562433878716002776}
+  - {fileID: 1654680718}
   m_Father: {fileID: 397181194}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9044,7 +9156,6 @@ GameObject:
   - component: {fileID: 5562433879188959412}
   - component: {fileID: 5562433879188959416}
   - component: {fileID: 5562433879188959419}
-  - component: {fileID: 5562433879188959418}
   - component: {fileID: 5562433879188959417}
   - component: {fileID: 5562433879188959420}
   m_Layer: 0
@@ -9072,6 +9183,7 @@ MonoBehaviour:
   _stateChange: 0
   _animationType: 0
   _dialogueData: {fileID: 11400000, guid: 27c7540c61dc632438a86ec49ed9aa1e, type: 2}
+  _cutscenePlayer: {fileID: 5562433879188959420}
 --- !u!114 &5562433879188959417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9084,28 +9196,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e26fa79ec70e70e47a0f37cb9981d28a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isDestroyAfterFlash: 0
   _curvePath: {fileID: 0}
   _moveToStartingPointDuration: 1
   _curveMovementDuration: 2
   _flashMaxRadius: 60
-  _flashStartDuration: 0.1
-  _flashDuration: 0.4
+  _flashStartDuration: 0.5
+  _flashDuration: 0.5
   _flashEndDuration: 0.5
-  _flashLight: {fileID: 0}
---- !u!114 &5562433879188959418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5562433879188959415}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 723c8b2cddeb40a479f2d991ee649468, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _frequency: 1
-  _scaleDiffAmount: 0.1
+  _flashLight: {fileID: 1654680719}
 --- !u!114 &5562433879188959419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9120,16 +9219,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ComponentVersion: 1
   m_LightType: 3
-  m_BlendStyleIndex: 0
-  m_FalloffIntensity: 0.5
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_BlendStyleIndex: 1
+  m_FalloffIntensity: 1
+  m_Color: {r: 0, g: 0.7004044, b: 0.9245283, a: 1}
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
-  m_LightOrder: 0
+  m_LightOrder: 2
   m_AlphaBlendOnOverlap: 0
   m_OverlapOperation: 0
   m_NormalMapDistance: 3
@@ -9174,7 +9273,7 @@ MonoBehaviour:
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
-  m_PointLightOuterRadius: 1
+  m_PointLightOuterRadius: 1.5
   m_ShapeLightParametricSides: 5
   m_ShapeLightParametricAngleOffset: 0
   m_ShapeLightParametricRadius: 1
@@ -9198,17 +9297,81 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
+  _canReplay: 1
   _played: 0
   _sequence:
-  - _type: 0
+  - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
-    Time: 0
+    Time: 1
     InputSetter: {fileID: 0}
     Function:
       m_PersistentCalls:
         m_Calls: []
+  - _type: 7
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 1
+    InputSetter: {fileID: 0}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5562433879188959417}
+          m_TargetAssemblyTypeName: LightNPC, Assembly-CSharp
+          m_MethodName: StartFlash
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _type: 4
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2
+    InputSetter: {fileID: 0}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5562433879188959417}
+          m_TargetAssemblyTypeName: LightNPC, Assembly-CSharp
+          m_MethodName: StartFlash
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _type: 7
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2
+    InputSetter: {fileID: 0}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 5562433879188959416}
+          m_TargetAssemblyTypeName: StageResetBehaviour, Assembly-CSharp
+          m_MethodName: ResetStage
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!4 &5562433879533864600
 Transform:
   m_ObjectHideFlags: 0

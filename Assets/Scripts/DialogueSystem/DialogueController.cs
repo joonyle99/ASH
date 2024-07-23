@@ -137,8 +137,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
             #endregion
 
+            if(!_isShutdowned)
             // 다이얼로그 세그먼트가 끝난 후 대기 시간만큼 대기
-            yield return StartCoroutine(View.ClearTextCoroutine(_dialogueSegmentFadeTime));
+                yield return StartCoroutine(View.ClearTextCoroutine(_dialogueSegmentFadeTime));
 
             // 다음 다이얼로그 세그먼트로 이동
             dialogueSequence.MoveNext();

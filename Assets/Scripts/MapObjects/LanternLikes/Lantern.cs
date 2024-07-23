@@ -93,6 +93,8 @@ public class Lantern : LanternLike, ILightCaptureListener
                 IsLightOn = true;
             }
         }
+
+        SaveAndLoader.OnSaveStarted += SaveLanternOnState;
     }
     void TurnCurrentSpotLightOn()
     {
@@ -102,10 +104,7 @@ public class Lantern : LanternLike, ILightCaptureListener
     }
     void OnDestroy()
     {
-        if (_statePreserver)
-        {
-            _statePreserver.SaveState("_isOn", IsLightOn);
-        }
+        
     }
     void Update()
     {
@@ -197,5 +196,13 @@ public class Lantern : LanternLike, ILightCaptureListener
             return;
         _currentLightFill = 0f;
         _currentSpotLight.gameObject.SetActive(false);
+    }
+
+    private void SaveLanternOnState()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_isOn", IsLightOn);
+        }
     }
 }

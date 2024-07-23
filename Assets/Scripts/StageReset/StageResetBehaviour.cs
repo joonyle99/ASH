@@ -3,15 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(LightNPC), typeof(CutscenePlayer))]
 public class StageResetBehaviour : InteractableObject
 {
-    [Header("NPC")]
-    [Space]
+    [Header("Dialogue")]
     [SerializeField] private DialogueData _dialogueData;
+
+    [Header("CutScene")]
+    [SerializeField] private CutscenePlayer _cutscenePlayer;
+
+    private LightNPC _lightNPC;
 
     private string _sceneName = "";
     private string _entrancePassage = "";
 
+    private void Awake()
+    {
+        _lightNPC = GetComponent<LightNPC>();
+    }
     private void Start()
     {
         _sceneName = SceneManager.GetActiveScene().name;
@@ -20,10 +29,7 @@ public class StageResetBehaviour : InteractableObject
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            ResetStage();
-        }
+
     }
 
     protected override void OnObjectInteractionEnter()
@@ -46,7 +52,8 @@ public class StageResetBehaviour : InteractableObject
 
     private void AcceptStageReset()
     {
-
+        DialogueController.Instance.ShutdownDialogue();
+        _cutscenePlayer.Play();
     }
 
     private void RejectStageReset()
