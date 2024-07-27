@@ -7696,6 +7696,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
+  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -15969,6 +15970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
+  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -21311,6 +21313,22 @@ PrefabInstance:
       propertyPath: _cutsceneDictionary.Array.data[1].cutscenePlayer
       value: 
       objectReference: {fileID: 1001211554}
+    - target: {fileID: 5269891687269057885, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _pillarCount
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057885, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _dustDistFromPillar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057885, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _createTimeRange.End
+      value: 1.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057885, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _createTimeRange.Start
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 5269891689077851826, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -24465,6 +24483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
+  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5

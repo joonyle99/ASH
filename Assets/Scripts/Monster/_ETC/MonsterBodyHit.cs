@@ -22,8 +22,8 @@ public class MonsterBodyHit : MonoBehaviour
     [SerializeField] private bool _isAttackable = true;
     public bool IsAttackable
     {
-        get { return _isAttackable; }
-        set { _isAttackable = value; }
+        get => _isAttackable;
+        set => _isAttackable = value;
     }
 
     // 대상이 콜라이더에 계속 들어와있을 경우를 고려해 TriggerStay 사용
