@@ -241,6 +241,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return new T();
 
+        Debug.Log(Instance._persistentData._dataGroups[groupName]);
         if (Instance._persistentData._dataGroups[groupName].TryGetValue(key, out object value))
         {
             Debug.Log(key + "'s type : " + value.GetType());

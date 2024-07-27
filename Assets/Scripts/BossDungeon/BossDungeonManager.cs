@@ -28,7 +28,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     {
         base.Awake();
 
-        PersistentDataManager.TryAddDataGroup(_dataGroupName);
+        MakeDataGroup();
     }
 
     public void OnKeyObtained(BossKey key)
@@ -46,5 +46,10 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     public void OnOpenBossDoor()
     {
         PersistentDataManager.UpdateValue<int>(_dataGroupName, "bossKeyCount", x => 0);
+    }
+
+    public void MakeDataGroup()
+    {
+        PersistentDataManager.TryAddDataGroup(_dataGroupName);
     }
 }
