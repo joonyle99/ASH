@@ -222,14 +222,14 @@ public class JsonDataArray<TKey, TValue>
 
     public void Add(TKey key, TValue value)
     {
-        data.Add(new DataDictionary<TKey, TValue>() { Key = key, Value = value } );
+        data.Add(new DataDictionary<TKey, TValue>() { Key = key, Value = value });
     }
 
     public Dictionary<TKey, TValue> ToDictionary()
     {
         Dictionary<TKey, TValue> dictionaryData = new Dictionary<TKey, TValue>();
 
-        for(int i = 0; i < data.Count; i++)
+        for (int i = 0; i < data.Count; i++)
         {
             dictionaryData.Add(data[i].Key, data[i].Value);
         }
@@ -242,6 +242,18 @@ public class JsonDataArray<TKey, TValue>
 public class SaveData
 {
     public Dictionary<string, string> saveDataGroup = new Dictionary<string, string>();
+
+    public void DebugSaveData()
+    {
+        string message = "Debug - SaveData\n";
+        message += "================================\n";
+        foreach (var saveData in saveDataGroup)
+        {
+            message += saveData.Key + " : " + saveData.Value + "\n";
+        }
+        message += "================================\n";
+        Debug.Log(message);
+    }
 }
 
 public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManager>
@@ -266,15 +278,16 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     // 새로운 데이터 추가시 사용
     public static void Add(string key, string value)
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             return;
         }
 
-        if(Has(key))
+        if (Has(key))
         {
             Set(key, value);
-        } else
+        }
+        else
         {
             Instance._globalSaveData.saveDataGroup.Add(key, value);
         }
@@ -283,7 +296,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     // 들어가있는 데이터 수정시 사용
     public static void Set(string key, string value)
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             return;
         }
@@ -294,7 +307,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     // 데이터가 있는지 비교
     public static bool Has(string key)
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             return false;
         }
@@ -388,7 +401,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
         Dictionary<TKey, TValue> returnDictionary = new Dictionary<TKey, TValue>();
 
-        for(int i = 0; i < dataList.data.Count; i++)
+        for (int i = 0; i < dataList.data.Count; i++)
         {
             DataDictionary<TKey, TValue> dataDictionary = dataList.data[i];
             returnDictionary[dataDictionary.Key] = dataDictionary.Value;
@@ -420,4 +433,9 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         Add("PlayerData", jsonData);
     }
     #endregion
+
+    public void DebugGlobalSaveData()
+    {
+        _globalSaveData.DebugSaveData();
+    }
 }

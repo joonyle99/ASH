@@ -108,6 +108,8 @@ public class OptionView : MonoBehaviour
 
     private void InitialSetting()
     {
+        SoundManager.Instance.InitialVolumeSetting();
+
         float bgmVolume = 1f;
         float sfxVolume = 1f;
 

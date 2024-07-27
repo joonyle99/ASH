@@ -93,6 +93,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     // Condition Property
     public bool IsGrounded => GroundHit;                                    // 플레이어의 아래 방향으로 Circle Cast
     public bool IsUpWardGrounded => UpwardGroundHit;
+    public bool IsUpWardGroundedForClimb => UpwardGroundHitForClimb;
     public bool IsTouchedWall => ClimbHit;
     public bool IsClimbable { get; set; }
     public bool IsClimbJump { get; set; }
@@ -180,6 +181,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     // RayCastHit
     public RaycastHit2D GroundHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
+    public RaycastHit2D UpwardGroundHitForClimb { get; set; }
     public RaycastHit2D ClimbHit { get; set; }
 
     // Component

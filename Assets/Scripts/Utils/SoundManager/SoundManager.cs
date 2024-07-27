@@ -40,7 +40,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     }
     protected void Start()
     {
-        InitialVolumeSetting();
+
     }
 
     // volume setting
