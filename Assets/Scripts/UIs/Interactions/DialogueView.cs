@@ -18,6 +18,7 @@ public class DialogueView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _speaker;
     [SerializeField] private Image _skipUI;
     [SerializeField] private Image _responsePanel;
+
     [Tooltip("스테이지 리셋(수락, 거절) 응답 패널")]
     [SerializeField] private ResponsePanel _responsePanel02;
 
