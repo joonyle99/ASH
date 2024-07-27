@@ -35,15 +35,17 @@ public sealed class Frog : MonsterBehaviour
     }
     private bool GroundMoveToOtherCondition(string targetTransitionParam, Monster_StateBase currentState)
     {
-        if (currentState is GroundMoveState)
+        // Idle, Attack 상태로 전이할 때는 땅에 착지한 후 전이
+        if (targetTransitionParam is "Idle" or "Attack")
         {
-            // Idle, Attack 상태로 전이할 때는 땅에 착지한 후 전이
-            if (targetTransitionParam is "Idle" or "Attack")
-            {
-                return IsGround;
-            }
+            return IsGround;
         }
 
         return true;
+    }
+
+    private void OnDestroy()
+    {
+        AnimTransitionEvent -= GroundMoveToOtherCondition;
     }
 }

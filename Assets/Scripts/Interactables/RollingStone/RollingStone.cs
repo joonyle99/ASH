@@ -140,7 +140,9 @@ public class RollingStone : InteractableObject
 
             // Rolling Stone의 x축 방향의 속도와 플레이어가 미는 방향이 다르면 속도를 0으로 만들어준다.
             if (isMoveDirNoneSync)
+            {
                 _rigidbody.velocity = Vector2.zero;
+            }
 
             _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower);
 
@@ -155,7 +157,9 @@ public class RollingStone : InteractableObject
 
                 // Rolling Stone의 x축 방향의 속도와 플레이어가 미는 방향이 다르면 속도를 0으로 만들어준다.
                 if (isMoveDirNoneSync)
+                {
                     _rigidbody.velocity = Vector2.zero;
+                }
 
                 _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower * 0.7f);
             }

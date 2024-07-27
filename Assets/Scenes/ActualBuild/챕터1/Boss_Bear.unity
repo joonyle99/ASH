@@ -382,7 +382,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
-  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -1330,6 +1329,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 220301248}
     m_Modifications:
+    - target: {fileID: 68886007787193792, guid: 1d1a67366c4e4da49bd76dd5ff3b3bd8, type: 3}
+      propertyPath: _createSizeRange.End
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 68886007787193792, guid: 1d1a67366c4e4da49bd76dd5ff3b3bd8, type: 3}
+      propertyPath: finalTargetHurtCount
+      value: 18
+      objectReference: {fileID: 0}
     - target: {fileID: 68886007787193792, guid: 1d1a67366c4e4da49bd76dd5ff3b3bd8, type: 3}
       propertyPath: _earthquakeCameraShake
       value: 
@@ -2427,7 +2434,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: 1749.789
+      value: 1744.329
       objectReference: {fileID: 0}
     - target: {fileID: 5171320284482388752, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2578,7 +2585,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
-  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -2602,6 +2608,27 @@ MonoBehaviour:
         - m_Target: {fileID: 1442626540}
           m_TargetAssemblyTypeName: MonsterBlocking, Assembly-CSharp
           m_MethodName: StartBlocking
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _type: 4
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 1.5
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1442626540}
+          m_TargetAssemblyTypeName: MonsterBlocking, Assembly-CSharp
+          m_MethodName: EndBlocking
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2763,7 +2790,7 @@ MonoBehaviour:
           m_MethodName: FollowOnly
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgument: {fileID: 657296341}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
@@ -2774,7 +2801,7 @@ MonoBehaviour:
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
-    Time: 2
+    Time: 1.5
     InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
     Function:
       m_PersistentCalls:
@@ -4970,7 +4997,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
-  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -14985,7 +15011,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
-  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -15188,7 +15213,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
-  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -15448,7 +15472,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
-  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -15674,7 +15697,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
-  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -15895,7 +15917,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
-  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5
@@ -15998,7 +16019,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playOnce: 1
-  _canReplay: 0
   _played: 0
   _sequence:
   - _type: 5

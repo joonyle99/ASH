@@ -668,7 +668,8 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         if (AnimTransitionEvent != null)
             yield return new WaitUntil(() => AnimTransitionEvent(targetTransitionParam, currentState));
 
-        yield return new WaitForSeconds(duration);
+        if (duration < 0.01f)
+            yield return new WaitForSeconds(duration);
 
         Animator.SetTrigger(targetTransitionParam);
 

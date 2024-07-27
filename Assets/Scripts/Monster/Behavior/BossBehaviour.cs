@@ -63,15 +63,16 @@ public abstract class BossBehaviour : MonsterBehaviour
         {
             _totalHitCount = value;
 
-            if (IsRage) return;
-
-            if (_totalHitCount == rageTargetHurtCount)
+            if (!IsRage)
             {
-                Debug.Log("Change RageState 컷씬 호출");
+                if (_totalHitCount == rageTargetHurtCount)
+                {
+                    Debug.Log("Change RageState 컷씬 호출");
 
-                IsGodMode = true;
+                    IsGodMode = true;
 
-                StartCoroutine(PlayCutSceneInRunning("Change RageState"));
+                    StartCoroutine(PlayCutSceneInRunning("Change RageState"));
+                }
             }
         }
     }
@@ -248,22 +249,18 @@ public abstract class BossBehaviour : MonsterBehaviour
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
 
-        var prefab_monster = transform.parent.gameObject; // 프리팹을 삭제한다
-        if (prefab_monster.GetComponent<DestructEventCaller>()) Destruction.Destruct(prefab_monster);
-        else Destroy(prefab_monster);
+        var prefabMonster = transform.parent.gameObject; // 프리팹을 삭제한다
+        if (prefabMonster.GetComponent<DestructEventCaller>()) Destruction.Destruct(prefabMonster);
+        else Destroy(prefabMonster);
     }
 
     public IEnumerator PlayCutSceneInRunning(string cutsceneName)
     {
-        // 현재 애니메이션이 90% 완료될 때까지 기다립니다.
+        // 현재 애니메이션이 95% 완료될 때까지 기다립니다.
         yield return new WaitUntil(() => {
             AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
             return stateInfo.normalizedTime >= 0.95f;
         });
-
-        yield return new WaitForSeconds(1.5f);
-
-        // yield return new WaitUntil(CurrentStateIs<Monster_IdleState>);
 
         cutscenePlayerList.PlayCutscene(cutsceneName);
     }
