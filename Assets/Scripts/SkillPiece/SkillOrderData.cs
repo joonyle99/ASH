@@ -21,16 +21,16 @@ public class SkillData
     }
 }
 
+[System.Serializable]
+public struct SkillElement
+{
+    public string Key;
+    public SkillData Data;
+}
+
 [CreateAssetMenu(fileName ="New Skill Data", menuName ="Skill Order Data")]
 public class SkillOrderData : ScriptableObject
 {
-    [System.Serializable]
-    public struct SkillElement
-    {
-        public string Key;
-        public SkillData Data;
-    }
-
     [SerializeField] private List<SkillData> _skillDatas=  new List<SkillData>();
     [SerializeField] private List<SkillElement> _skillDictionary = new List<SkillElement>();
 
@@ -44,6 +44,7 @@ public class SkillOrderData : ScriptableObject
             }
 
             Debug.Log("½ºÅ³ È¹µæ °¡´É È½¼ö ÃÊ°ú");
+
             return _skillDatas[^1];
         }
     }
