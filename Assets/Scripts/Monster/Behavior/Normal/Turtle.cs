@@ -7,6 +7,8 @@ public sealed class Turtle : MonsterBehaviour
         base.Awake();
 
         _statePreserver = GetComponent<PreserveState>();
+
+        SaveAndLoader.OnSaveStarted += SaveDeadState;
     }
     protected override void Start()
     {
@@ -41,10 +43,7 @@ public sealed class Turtle : MonsterBehaviour
     // destroy function
     private void OnDestroy()
     {
-        if (_statePreserver)
-        {
-            _statePreserver.SaveState("_isDead", IsDead);
-        }
+        
     }
 
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
@@ -70,5 +69,13 @@ public sealed class Turtle : MonsterBehaviour
 
         // Trigger -> Collision
         SetHitBoxStepable(true);
+    }
+
+    private void SaveDeadState()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_isDead", IsDead);
+        }
     }
 }

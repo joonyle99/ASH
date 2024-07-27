@@ -31,14 +31,13 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
                 _mask.InstantReveal();
             }
         }
+
+        SaveAndLoader.OnSaveStarted += SaveOpenState;
     }
     
     void OnDestroy()
     {
-        if (_statePreserver)
-        {
-            _statePreserver.SaveState("_opened", _lightCapturer == null);
-        }
+        
     }
     IEnumerator OpenPathCoroutine()
     {
@@ -63,6 +62,14 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     public void OnLightExit(LightCapturer capturer, LightSource lightSource)
     {
         _eTime = 0f;
+    }
+
+    private void SaveOpenState()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_opened", _lightCapturer == null);
+        }
     }
 
 }

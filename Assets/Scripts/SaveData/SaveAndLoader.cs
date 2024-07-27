@@ -19,7 +19,6 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     private void Awake()
     {
         _passageName = gameObject.name;
-        Debug.Log(_passageName);
         _isChangeSceneByLoading = false;
     }
 

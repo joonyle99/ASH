@@ -8,7 +8,6 @@ using UnityEngine;
 public class CutscenePlayer : MonoBehaviour, ITriggerListener
 {
     [SerializeField] bool _playOnce = true;
-    [SerializeField] bool _canReplay = false;
     [SerializeField] bool _played = false;
 
     [SerializeField] List<SceneEffect> _sequence;
@@ -30,13 +29,12 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
                 _played = true;
             }
         }
+
+        SaveAndLoader.OnSaveStarted += SavePlayedState;
     }
     private void OnDestroy()
     {
-        if (_statePreserver)
-        {
-            _statePreserver.SaveState("_played", _played);
-        }
+        
     }
 
     /// <summary>
@@ -110,7 +108,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     /// </summary>
     public void Play()
     {
-        if ((!_played && _playOnce) || _canReplay)
+        if (!_played && _playOnce)
         {
             SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
             _played = true;
@@ -135,5 +133,13 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     private IEnumerator CoroutineFunction()
     {
         yield return null;
+    }
+
+    private void SavePlayedState()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_played", _played);
+        }
     }
 }

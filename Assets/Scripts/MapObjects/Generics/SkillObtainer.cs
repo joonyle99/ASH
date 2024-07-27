@@ -6,6 +6,30 @@ public class SkillObtainer : MonoBehaviour
     [SerializeField] string _skillKey;
     [SerializeField] SoundClipData _skillUISound;
 
+    private string SaveSkillKey => _skillKey + "_isSaved";
+
+    private void Awake()
+    {
+        SaveAndLoader.OnSaveStarted += SaveSkill;
+
+        if(PersistentDataManager.GetByGlobal<bool>(SaveSkillKey))
+        {
+            PersistentDataManager.SetByGlobal(_skillKey, true);
+        }
+        else
+        {
+            PersistentDataManager.SetByGlobal(_skillKey, false);
+        }
+    }
+
+    private void SaveSkill()
+    {
+        if(PersistentDataManager.GetByGlobal<bool>(_skillKey))
+            PersistentDataManager.SetByGlobal(SaveSkillKey, true);
+
+        Debug.Log("saveSkillKey: " + PersistentDataManager.GetByGlobal<bool>(SaveSkillKey));
+    }
+
     public void ObtainSkill()
     {
         var skillToGet = PersistentDataManager.SkillOrderData.GetFromDict(_skillKey);

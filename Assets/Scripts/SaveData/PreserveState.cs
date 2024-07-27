@@ -37,6 +37,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
 {
     [SerializeField] private string _groupName;                     // 데이터 그룹의 이름
     [SerializeField] private string _ID;                            // 데이터의 ID
+    [SerializeField] public string ID => _ID;
 
     [SerializeField] private bool _preserveTransform = true;        // 트랜스폼 데이터를 저장할지 여부
     [SerializeField] private bool _preserveDestruction = true;      // 파괴 상태를 저장할지 여부

@@ -27,7 +27,6 @@ public class StatueVisualEffect : MonoBehaviour
     private float _minTextDisplayTime = 1f;
     private float _textDisplayTime = 0f;
     [SerializeField]
-    private float _minParticlePlayTime = 2f;
     private float _particleStartTime = 0f;
 
     [Header("Preserve State")]
@@ -56,7 +55,7 @@ public class StatueVisualEffect : MonoBehaviour
                 if (pd._dataGroups != null &&
                     pd._dataGroups.TryGetValue(currentScene, out var value))
                 {
-                    if (value.TryGetValue(_statePreserver.EditorID + "_played", out var alreadyPlayed))
+                    if (value.TryGetValue(_statePreserver.ID + "_played", out var alreadyPlayed))
                     {
                         Played = (bool)alreadyPlayed;
                     }
