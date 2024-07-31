@@ -4,6 +4,8 @@ using UnityEngine;
 public class TitleSceneManager : MonoBehaviour
 {
     //[SerializeField] PassageData _initialPassageData;
+    [SerializeField]
+    private OptionView _optionView;
 
     public void OpenPrologueScene()
     {
@@ -12,6 +14,17 @@ public class TitleSceneManager : MonoBehaviour
     public void ChangeScene(string sceneName)
     {
         StartCoroutine(SceneChangeCoroutine(sceneName));
+    }
+    public void LoadSavedScene()
+    {
+        PersistentDataManager.LoadToSavedData();
+    }
+    public void ToggleSettingPanel()
+    {
+        if(_optionView != null)
+        {
+            _optionView.TogglePanel();
+        }
     }
     public void QuitGame()
     {
@@ -41,4 +54,6 @@ public class TitleSceneManager : MonoBehaviour
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
         SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, "Enter " + sceneName.ToString());
     }
+
+
 }

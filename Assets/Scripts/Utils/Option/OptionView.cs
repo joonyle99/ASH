@@ -72,7 +72,8 @@ public class OptionView : MonoBehaviour
 
         _optionPanel.gameObject.SetActive(true);
 
-        SceneContext.Current.Player.enabled = false;
+        if(SceneContext.Current.Player)
+            SceneContext.Current.Player.enabled = false;
     }
     public void Resume()
     {
@@ -82,7 +83,8 @@ public class OptionView : MonoBehaviour
 
         _optionPanel.gameObject.SetActive(false);
 
-        SceneContext.Current.Player.enabled = true;
+        if(SceneContext.Current.Player)
+            SceneContext.Current.Player.enabled = true;
     }
 
     public void ReStartGame()

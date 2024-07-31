@@ -85,13 +85,24 @@ public class Lantern : LanternLike, ILightCaptureListener
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            bool isOn = _statePreserver.LoadState("_isOn", IsLightOn);
-            if (isOn)
+            //저장이 한번도 안된 경우
+            if(_statePreserver.HasState<bool>("_isOnSaved"))
             {
-                _isExplodeDone = true;
-                TurnCurrentSpotLightOn();
-                IsLightOn = true;
+                bool isOn = _statePreserver.LoadState("_isOn", IsLightOn);
+                if (isOn)
+                {
+                    _isExplodeDone = true;
+                    TurnCurrentSpotLightOn();
+                    IsLightOn = true;
+                }
             }
+            else
+            {
+
+            }
+            bool isOnSaved = _statePreserver.LoadState("_isOnSaved", false);
+
+            
         }
 
         SaveAndLoader.OnSaveStarted += SaveLanternOnState;
@@ -104,7 +115,10 @@ public class Lantern : LanternLike, ILightCaptureListener
     }
     void OnDestroy()
     {
-        
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_isOn", IsLightOn);
+        }
     }
     void Update()
     {
@@ -200,9 +214,6 @@ public class Lantern : LanternLike, ILightCaptureListener
 
     private void SaveLanternOnState()
     {
-        if (_statePreserver)
-        {
-            _statePreserver.SaveState("_isOn", IsLightOn);
-        }
+        _statePreserver.SaveState("_isOnSaved", IsLightOn);
     }
 }

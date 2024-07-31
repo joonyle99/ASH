@@ -166,6 +166,10 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
         PersistentDataManager.Set(_groupName, _ID + additionalKey, value);
     }
 
+    public bool HasState<T>(string additionalKey) where T : new()
+    {
+        return PersistentDataManager.Has<T>(_groupName, _ID + additionalKey);
+    }
     public void OnSaveData()
     {
         SaveTransformState();
