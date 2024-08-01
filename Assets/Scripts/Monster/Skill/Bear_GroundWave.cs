@@ -53,6 +53,6 @@ public class Bear_GroundWave : Monster_IndependentSkill
 
         yield return new WaitForSeconds(2f);        // Trail을 마저 출력한 후 파괴한다
 
-        DestroyIndependentSkill();
+        DestroyImmediately();
     }
 }

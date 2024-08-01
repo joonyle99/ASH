@@ -402,11 +402,6 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         _shiningEyes.Play();
     }
-    public void ActivateAttackEvaluator()
-    {
-        if (AttackEvaluator)
-            AttackEvaluator.IsUsable = true;
-    }
 
     #endregion
 

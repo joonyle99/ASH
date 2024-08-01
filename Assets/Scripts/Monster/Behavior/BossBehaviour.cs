@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BossBehaviour : MonsterBehaviour
@@ -9,27 +8,15 @@ public abstract class BossBehaviour : MonsterBehaviour
     [field: Header("――――――― Boss Behaviour ―――――――")]
     [field: Space]
 
+    [field: Header("Condition")]
     [field: SerializeField]
-    public bool IsGroggy        // 보스 몬스터의 그로기 상태 여부
-    {
-        get;
-        set;
-    }
+    public bool IsGroggy { get; set; }
     [field: SerializeField]
-    public bool IsRage          // 보스 몬스터의 분노 상태 여부
-    {
-        get;
-        set;
-    }
+    public bool IsRage { get; set; }
 
     [Space]
 
-    [SerializeField] protected GameObject luminescence;
-    public bool isActiveLuminescence => luminescence.activeInHierarchy;
-
-    [Space]
-
-    [Tooltip("final target hurt count x boss health unit = MaxHp")]
+    [Tooltip("[Final Target Hurt Count] x [Boss Health Unit] = MaxHp")]
     [SerializeField] protected int finalTargetHurtCount;        // 보스 몬스터의 최대 피격 횟수
     [SerializeField] protected int rageTargetHurtCount;         // 분노 상태의가 되기 위한 피격 횟수
 
@@ -50,12 +37,6 @@ public abstract class BossBehaviour : MonsterBehaviour
     [SerializeField] protected int currentHitCount;             // 현재 피격 횟수
     [SerializeField] private int _totalHitCount;                // 총 피격 횟수
 
-    [Header("Cutscene")]
-    [Space]
-
-    [SerializeField] protected bool isEndMoveProcess = false;
-    [SerializeField] private float _distanceFromBoss = 6f;      // 보스 사망 후 떨어져야할 거리
-
     public int TotalHitCount
     {
         get => _totalHitCount;
@@ -63,19 +44,23 @@ public abstract class BossBehaviour : MonsterBehaviour
         {
             _totalHitCount = value;
 
-            if (!IsRage)
+            if (IsRage == false)
             {
                 if (_totalHitCount == rageTargetHurtCount)
                 {
                     Debug.Log("Change RageState 컷씬 호출");
-
-                    IsGodMode = true;
 
                     StartCoroutine(PlayCutSceneInRunning("Change RageState"));
                 }
             }
         }
     }
+
+    [Space]
+
+    [Header("Cutscene")]
+    [SerializeField] protected bool isEndMoveProcess = false;
+    [SerializeField] private float _distanceFromBoss = 6f;      // 보스 사망 후 떨어져야할 거리
 
     #endregion
 
@@ -127,14 +112,6 @@ public abstract class BossBehaviour : MonsterBehaviour
     public abstract void GroggyPreProcess();        // 그로기 상태 시 전처리 함수
     public abstract void GroggyPostProcess();       // 그로기 상태 시 후처리 함수
 
-    public void SetActiveLuminescence(bool isBool)
-    {
-        if (luminescence)
-        {
-            luminescence.SetActive(isBool);
-        }
-    }
-
     private void CheckHurtState()
     {
         if (IsDead) return;
@@ -185,12 +162,13 @@ public abstract class BossBehaviour : MonsterBehaviour
         IsGodMode = true;
     }
 
+    // cutscene
     public virtual void ExecutePostDeathActions()
     {
         // 플레이어 이동 연출
         StartCoroutine(PlayerMoveCoroutine());
     }
-    public IEnumerator PlayerMoveCoroutine()
+    private IEnumerator PlayerMoveCoroutine()
     {
         isEndMoveProcess = false;
 
@@ -225,7 +203,7 @@ public abstract class BossBehaviour : MonsterBehaviour
 
         InputManager.Instance.ChangeToStayStillSetter();
     }
-    public IEnumerator MoveCoroutine(int moveDir, float targetPosX)
+    private IEnumerator MoveCoroutine(int moveDir, float targetPosX)
     {
         var isRight = moveDir > 0;
 
@@ -238,12 +216,11 @@ public abstract class BossBehaviour : MonsterBehaviour
 
         isEndMoveProcess = true;
     }
-
     public void DisintegrateEffect()
     {
         StartCoroutine(DisintegrateEffectCoroutine());
     }
-    public IEnumerator DisintegrateEffectCoroutine()
+    private IEnumerator DisintegrateEffectCoroutine()
     {
         var effect = GetComponent<DisintegrateEffect>();
         effect.Play();
@@ -252,17 +229,6 @@ public abstract class BossBehaviour : MonsterBehaviour
         var prefabMonster = transform.parent.gameObject; // 프리팹을 삭제한다
         if (prefabMonster.GetComponent<DestructEventCaller>()) Destruction.Destruct(prefabMonster);
         else Destroy(prefabMonster);
-    }
-
-    public IEnumerator PlayCutSceneInRunning(string cutsceneName)
-    {
-        // 현재 애니메이션이 95% 완료될 때까지 기다립니다.
-        yield return new WaitUntil(() => {
-            AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
-            return stateInfo.normalizedTime >= 0.95f;
-        });
-
-        cutscenePlayerList.PlayCutscene(cutsceneName);
     }
 
     #endregion

@@ -33,23 +33,21 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [Header("____ Slash ____")]
     [Space]
 
-    [SerializeField] private float _slashAnimDuration;
-
     [SerializeField] private Bear_Slash _slash01;
     [SerializeField] private Bear_Slash _slash02;
+
+    private float _slashAnimDuration;
     private Vector2 _playerPos;
 
     [Header("____ BodySlam ____")]
     [Space]
 
-    [SerializeField] private float _bodySlamAnimDuration;
-
     [SerializeField] private float _bodySlamPower;
+
+    private float _bodySlamAnimDuration;
 
     [Header("____ Stomp ____")]
     [Space]
-
-    [SerializeField] private float _stompAnimDuration;
 
     [SerializeField] private Bear_Stomp _stomp;
     [SerializeField] private GameObject _stompEffectPrefab;
@@ -63,10 +61,14 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [Space]
 
     [SerializeField] private float _minDistanceEach;
+
+    [Space]
+
     [SerializeField] private Range _createTimeRange;
     [SerializeField] private Range _createSizeRange;
     [SerializeField] private Range _distanceRange;
 
+    private float _stompAnimDuration;
     private List<float> _usedPosX;
     private int _allocationLimit = 30;
 
@@ -78,22 +80,25 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [Header("____ Earthquake ____")]
     [Space]
 
-    [SerializeField] private float _earthquakeAnimDuration;
-
     [SerializeField] private Transform _waveSpawnPoint;
     [SerializeField] private Bear_GroundWave _waveSkillPrefab;
     [SerializeField] private ShakePreset _earthquakeCameraShake;
 
-    [Header("Cutscene")]
     [Space]
 
-    [SerializeField] private bool _isAbleLightGuideCutscene = true;
     [SerializeField] private int _totalEarthquakeCount;
     public int TotalEarthquakeCount
     {
         get => _totalEarthquakeCount;
         private set => _totalEarthquakeCount = value;
     }
+
+    private float _earthquakeAnimDuration;
+
+    [Header("Cutscene")]
+    [Space]
+
+    [SerializeField] private bool _isAbleLightGuideCutscene = true;
 
     [Space]
 
@@ -175,10 +180,16 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
         if (_currentAttack is AttackType.EarthQuake)
         {
-            // Debug.Log("Earth QuakeÀÇ Attack Pre Process");
-
             currentAttackCount = 0;
             TotalEarthquakeCount++;
+
+            if (_totalEarthquakeCount == 3 && _isAbleLightGuideCutscene == true)
+            {
+                Debug.Log("Lighting Guide ÄÆ¾À È£Ãâ");
+
+                _isAbleLightGuideCutscene = false;
+                StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
+            }
 
             IsCapturable = true;
         }
@@ -189,16 +200,6 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     {
         if (_currentAttack is AttackType.EarthQuake)
         {
-            // Debug.Log("Earth QuakeÀÇ Attack Post Process");
-
-            if (_totalEarthquakeCount == 3 && _isAbleLightGuideCutscene)
-            {
-                Debug.Log("Lighting Guide ÄÆ¾À È£Ãâ");
-
-                _isAbleLightGuideCutscene = false;
-                StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
-            }
-
             IsCapturable = false;
         }
 

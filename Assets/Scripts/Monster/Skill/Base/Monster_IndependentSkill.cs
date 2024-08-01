@@ -14,15 +14,12 @@ public class Monster_IndependentSkill : Monster_Skill
     [SerializeField] protected float lifeTime;                  // 투사체가 살아있는 시간
     [SerializeField] protected float effectDelay;
 
+    private Coroutine _autoDestroyCoroutine;
+
     private void Start()
     {
         // 스킬이 생성되고 일정 시간이 지나면 자동으로 파괴
-        StartCoroutine(AutoDestroy(lifeTime));
-    }
-    private void OnDestroy()
-    {
-        // AutoDestroy 코루틴 중단
-        StopAllCoroutines();
+        _autoDestroyCoroutine = StartCoroutine(AutoDestroy(lifeTime));
     }
 
     protected override void OnTriggerEnter2D(Collider2D collision)
@@ -30,16 +27,16 @@ public class Monster_IndependentSkill : Monster_Skill
         base.OnTriggerEnter2D(collision);
 
         var collisionLayerValue = 1 << collision.gameObject.layer;
-        if ((collisionLayerValue & targetLayer) > 0) return;            // 타겟 레이어와 충돌 시 무시
+        if ((collisionLayerValue & targetLayer.value) > 0) return;            // 타겟 레이어와 충돌 시 무시
         if ((collisionLayerValue & destroyLayer.value) > 0)
         {
-            if (!materialController
-                || !materialController.DisintegrateEffect)
+            if (materialController == null || materialController.DisintegrateEffect == null)
             {
-                DestroyIndependentSkill();
+                DestroyImmediately();
             }
             else
             {
+                StopAutoDestroy();
                 StartCoroutine(DisintegrateCoroutine(materialController.DisintegrateEffect));
             }
         }
@@ -51,7 +48,15 @@ public class Monster_IndependentSkill : Monster_Skill
 
         yield return new WaitForSeconds(time);
 
-        DestroyIndependentSkill();
+        DestroyImmediately();
+    }
+    private void StopAutoDestroy()
+    {
+        if(_autoDestroyCoroutine != null)
+        {
+            StopCoroutine(_autoDestroyCoroutine);
+            _autoDestroyCoroutine = null;
+        }
     }
 
     private IEnumerator DisintegrateCoroutine(DisintegrateEffect effect)
@@ -59,9 +64,9 @@ public class Monster_IndependentSkill : Monster_Skill
         var rigid = GetComponent<Rigidbody2D>();
         if (rigid) rigid.simulated = false;
 
-        yield return StartCoroutine(DestroyEffectCoroutine(effect));
+        yield return DestroyEffectCoroutine(effect);
 
-        DestroyIndependentSkill();
+        DestroyImmediately();
     }
     private IEnumerator DestroyEffectCoroutine(DisintegrateEffect effect)
     {

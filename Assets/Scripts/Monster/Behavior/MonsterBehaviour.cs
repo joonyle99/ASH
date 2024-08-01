@@ -220,6 +220,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         private set;
     }
 
+    [SerializeField] protected GameObject luminescence;
+    public bool isActiveLuminescence => luminescence.activeInHierarchy;
+
     [SerializeField]
     protected CutscenePlayerList cutscenePlayerList;
 
@@ -566,7 +569,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             hitBox.IsAttackable = isAttackable;
     }
 
-    // Death & Respawn
+    // death & respawn
     private IEnumerator DeathProcessCoroutine()
     {
         yield return new WaitForSeconds(0.2f);
@@ -677,7 +680,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         myFunction?.Invoke();
     }
 
-    // Wrapper
+    // wrapper
     public void SetAnimatorTrigger(string key)
     {
         Animator.SetTrigger(key);
@@ -690,6 +693,42 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     {
         // parent: prefab_monsterName
         Destroy(transform.parent.gameObject);
+    }
+
+    // control evaluator
+    public void ActivateAttackEvaluator()
+    {
+        if (AttackEvaluator)
+            AttackEvaluator.IsUsable = true;
+    }
+    public void DeactivateAttackEvalutator()
+    {
+        if (AttackEvaluator)
+            AttackEvaluator.IsUsable = false;
+    }
+
+    // luminescence
+    public void SetActiveLuminescence(bool isBool)
+    {
+        if (luminescence)
+        {
+            luminescence.SetActive(isBool);
+        }
+    }
+
+    // cutscene
+    public IEnumerator PlayCutSceneInRunning(string cutsceneName)
+    {
+        // 호출되는 순간 GodMode로 전환
+        // IsGodMode = true;
+
+        // 현재 애니메이션이 95% 완료될 때까지 기다립니다.
+        yield return new WaitUntil(() => {
+            AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+            return stateInfo.normalizedTime >= 0.95f;
+        });
+
+        cutscenePlayerList.PlayCutscene(cutsceneName);
     }
 
     #endregion

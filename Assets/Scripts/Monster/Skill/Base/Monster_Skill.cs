@@ -71,7 +71,7 @@ public abstract class Monster_Skill : MonoBehaviour
                         // 타겟 레이어를 히트와 동시에 파괴
                         if ((collisionLayerValue & destroyLayer.value) > 0)
                         {
-                            DestroyIndependentSkill();
+                            DestroyImmediately();
                         }
                     }
                 }
@@ -84,7 +84,7 @@ public abstract class Monster_Skill : MonoBehaviour
         this.actor = act;
     }
 
-    protected void DestroyIndependentSkill()
+    protected void DestroyImmediately()
     {
         Destroy(this.gameObject);
     }
