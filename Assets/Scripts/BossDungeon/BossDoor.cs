@@ -61,11 +61,7 @@ public class BossDoor : InteractableObject
     {
         if (BossDungeonManager.Instance.IsAllKeysCollected)
         {
-            // TODO: 현재 가지고 있는 Key를 전부 소모한다.
-            // PersistentDataManager.Set<int>("BossDungeon1", "bossKeyCount", 0);
-
             _soundList.PlaySFX("Open");
-            BossDungeonManager.Instance.OnOpenBossDoor();
             SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine()));
         }
         else
@@ -81,8 +77,10 @@ public class BossDoor : InteractableObject
         }
         else
         {
-            if (!DialogueController.Instance.IsDialogueActive)
+            if (DialogueController.Instance.IsDialogueActive == false)
+            {
                 ExitInteraction();
+            }
         }
     }
 
@@ -105,6 +103,11 @@ public class BossDoor : InteractableObject
                 InputManager.Instance.ChangeInputSetter(_enterInputSetter);
             else
                 InputManager.Instance.ChangeToDefaultSetter();
+        }
+
+        if (BossDungeonManager.Instance.IsAllKeysCollected)
+        {
+            BossDungeonManager.Instance.OnOpenBossDoor();
         }
 
         /*

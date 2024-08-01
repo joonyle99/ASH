@@ -1,39 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 public class WaypointPath : MonoBehaviour
 {
-    Transform[] _wayPoints;
-    [SerializeField] bool _loop = false;
-    [SerializeField] LineRenderer _lineRenderer;
-    float[] _distances;
+    [Header("式式式式式式式式式 Waypoint Path 式式式式式式式式式")]
+    [Space]
 
-    float _totalDistance = 0;
+    [SerializeField] private bool _loop = false;
+    [SerializeField] private LineRenderer _lineRenderer;
+
+    private Transform[] _wayPoints;
+    private float[] _distances;
+
+    private float _totalDistance = 0;
     public float TotalDistance => _totalDistance;
+
     public Transform this[int i]
     {
         get => _wayPoints[i];
     }
     public int Count => _wayPoints.Length;
+
     private void Awake()
     {
         var transforms = GetComponentsInChildren<Transform>();
-        _wayPoints = new Transform[transforms.Length-1];
+        _wayPoints = new Transform[transforms.Length - 1];
+
         for (int i = 0; i < transforms.Length - 1; i++)
             _wayPoints[i] = transforms[i + 1];
 
         _distances = new float[_wayPoints.Length - 1];
-        for(int i=0; i<_wayPoints.Length-1; i++)
+
+        for (int i = 0; i < _wayPoints.Length - 1; i++)
         {
             _distances[i] = Vector3.Distance(_wayPoints[i].position, _wayPoints[i + 1].position);
             _totalDistance += _distances[i];
         }
+
         UpdateLineRenderer();
     }
+
     public void UpdateLineRenderer()
     {
         if (_lineRenderer)
@@ -55,7 +64,7 @@ public class WaypointPath : MonoBehaviour
         int dir = 1;
         if (_loop)
             travelDistance = Mathf.Clamp(travelDistance, 0f, _totalDistance);
-        while(travelDistance > 0)
+        while (travelDistance > 0)
         {
             if (travelDistance > _distances[idx])
             {
@@ -70,21 +79,21 @@ public class WaypointPath : MonoBehaviour
                 if (dir > 0)
                     return Vector3.Lerp(_wayPoints[idx].position, _wayPoints[idx + 1].position, travelDistance / _distances[idx]);
                 else
-                    return Vector3.Lerp(_wayPoints[idx].position, _wayPoints[idx + 1].position, 1- travelDistance / _distances[idx]);
+                    return Vector3.Lerp(_wayPoints[idx].position, _wayPoints[idx + 1].position, 1 - travelDistance / _distances[idx]);
             }
         }
         return _wayPoints[idx].position;
     }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
         var transforms = GetComponentsInChildren<Transform>();
-        for(int i=1; i< transforms.Length-1; i++)
+        for (int i = 1; i < transforms.Length - 1; i++)
         {
-            Gizmos.DrawLine(transforms[i].position, transforms[i+1].position);
+            Gizmos.DrawLine(transforms[i].position, transforms[i + 1].position);
         }
     }
-    
 }
 
 #if UNITY_EDITOR
@@ -96,6 +105,7 @@ public class WaypointPathEditor : Editor
         base.OnInspectorGUI();
 
         WaypointPath t = (WaypointPath)target;
+
         if (GUILayout.Button("Update LineRenderer"))
             t.UpdateLineRenderer();
     }

@@ -51,10 +51,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void ResetCameraSettings()
     {
-        // Debug.Log($"카메라 리셋\n{System.Environment.StackTrace}");
+        Debug.Log($"카메라 리셋");
 
         if (SceneContext.Current.Player)
         {
+            // 카메라 타겟에 플레이머만 포함시킨다 (나머지 타겟 삭제)
             StartFollow(SceneContext.Current.Player.transform);
         }
 
@@ -104,19 +105,17 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         return _proCamera.CameraTargets;
     }
 
+    /// <summary> 코드로 작동 시 사용 </summary>
     public void StartFollow(Transform target, bool removeExisting = true)
     {
-        // 코드로 작동 시 사용
-
         if (removeExisting)
             _proCamera.RemoveAllCameraTargets();
 
         _proCamera.AddCameraTarget(target);
     }
+    /// <summary> CutscenePlayer로 작동 시 사용 </summary>
     public void FollowOnly(Transform target)
     {
-        // CutscenePlayer로 작동 시 사용
-
         _proCamera.RemoveAllCameraTargets();
         _proCamera.AddCameraTarget(target);
     }
@@ -166,15 +165,5 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void StopConstantShake(float smooth = 0.1f)
     {
         _shakeComponent.StopConstantShaking(smooth);
-    }
-
-    // TEST FUNCTION
-    public void TestShake()
-    {
-        var defaultShakePreset = _shakeComponent.ShakePresets[0];
-        var defaultConstantShakePreset = _shakeComponent.ConstantShakePresets[0];
-
-        // StartShake(defaultShakePreset);
-        StartConstantShake(defaultConstantShakePreset);
     }
 }
