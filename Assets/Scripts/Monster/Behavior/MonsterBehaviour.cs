@@ -221,7 +221,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     }
 
     [SerializeField] protected GameObject luminescence;
-    public bool isActiveLuminescence => luminescence.activeInHierarchy;
+    public bool IsActiveLuminescence => luminescence.activeInHierarchy;
 
     [SerializeField]
     protected CutscenePlayerList cutscenePlayerList;

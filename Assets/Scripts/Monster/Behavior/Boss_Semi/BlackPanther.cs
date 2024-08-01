@@ -402,6 +402,14 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         _shiningEyes.Play();
     }
+    public void RoarProcess()
+    {
+        if(IsActiveLuminescence == false)
+        {
+            SetActiveLuminescence(true);
+            IsGodMode = true;
+        }
+    }
 
     #endregion
 

@@ -75,13 +75,6 @@ public sealed class Fire : BossBehaviour
         base.Start();
 
         SetToRandomAttack();
-
-        /*
-        if (AttackEvaluator)
-            AttackEvaluator.IsUsable = false;
-        */
-
-        IsGodMode = true;
     }
     private void OnDestroy()
     {
