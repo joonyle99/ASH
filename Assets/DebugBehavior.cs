@@ -11,10 +11,10 @@ public class DebugBehavior : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     [MenuItem("Tools/Find Layer Object")]
     public static void FindLayerObject()
     {
-#if UNITY_EDITOR
         string layerName = "TriggerZoneExceptMonster";
         int layerNumber = LayerMask.NameToLayer(layerName);
 
@@ -27,6 +27,6 @@ public class DebugBehavior : MonoBehaviour
                 Debug.Log("Layer: " + layerName + " ------> " + "Object: " + obj.name, obj);
             }
         }
-#endif
     }
+#endif
 }
