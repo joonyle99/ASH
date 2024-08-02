@@ -50,6 +50,9 @@ public abstract class BossBehaviour : MonsterBehaviour
                 {
                     Debug.Log("Change RageState 컷씬 호출");
 
+                    // 호출되는 순간 GodMode로 전환
+                    IsGodMode = true;
+
                     StartCoroutine(PlayCutSceneInRunning("Change RageState"));
                 }
             }

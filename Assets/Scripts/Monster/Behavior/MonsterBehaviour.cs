@@ -418,6 +418,8 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     }
     private void InitMonsterCondition()
     {
+        // TODO: 몬스터의 방향을 저장한다
+
         RecentDir = DefaultDir;
 
         if (!CenterOfMass) CenterOfMass = this.transform;
@@ -719,9 +721,6 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     // cutscene
     public IEnumerator PlayCutSceneInRunning(string cutsceneName)
     {
-        // 호출되는 순간 GodMode로 전환
-        // IsGodMode = true;
-
         // 현재 애니메이션이 95% 완료될 때까지 기다립니다.
         yield return new WaitUntil(() => {
             AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);

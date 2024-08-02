@@ -1,18 +1,13 @@
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class MaterialController : MonoBehaviour
 {
-    [field: SerializeField]
-    public SpriteRenderer[] SpriteRenderers
-    {
-        get;
-        private set;
-    }
-    public Material[] OriginalMaterials
-    {
-        get;
-        private set;
-    }
+    [SerializeField] private SpriteRenderer[] _spriteRenderers;
+    private Material[] _originalMaterials;
 
     public BlinkEffect BlinkEffect
     {
@@ -25,59 +20,85 @@ public class MaterialController : MonoBehaviour
         private set;
     }
 
-    public Material MainMaterial => SpriteRenderers[0].material;
+    // public Material MainMaterial => SpriteRenderers[0].material;
 
     private void Awake()
     {
+        // save original Materials
+        _originalMaterials = new Material[_spriteRenderers.Length];
+        for (int i = 0; i < _originalMaterials.Length; i++)
+            _originalMaterials[i] = _spriteRenderers[i].material;
+
         // effects
         BlinkEffect = GetComponent<BlinkEffect>();
         DisintegrateEffect = GetComponent<DisintegrateEffect>();
+    }
 
-        // save original Materials
-        OriginalMaterials = new Material[SpriteRenderers.Length];
-        for (int i = 0; i < OriginalMaterials.Length; i++)
-            OriginalMaterials[i] = SpriteRenderers[i].material;
+    public void CollectAllSpriteRenderers()
+    {
+        _spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
     }
 
     public void InitMaterial()
     {
-        for (int i = 0; i < SpriteRenderers.Length; i++)
-            SpriteRenderers[i].material = OriginalMaterials[i];
-    }
-    public void SetMaterial(Material material)
-    {
-        foreach (var spriteRenderer in SpriteRenderers)
-            spriteRenderer.material = material;
-    }
-    public void SetProgress(string key, float progress)
-    {
-        foreach (var spriteRenderer in SpriteRenderers)
-            spriteRenderer.material.SetFloat(key, progress);
-    }
-    public void SetMaterialAndProgress(Material material, string key, float progress)
-    {
-        foreach (var spriteRenderer in SpriteRenderers)
-        {
-            spriteRenderer.material = material;
-            spriteRenderer.material.SetFloat(key, progress);
-        }
+        for (int i = 0; i < _spriteRenderers.Length; i++)
+            _spriteRenderers[i].material = _originalMaterials[i];
     }
     public void InitMaterialForRespawn()
     {
         DisintegrateEffect.InitMaterialAndProgressForRespawn();
     }
+
+    public void SetMaterial(Material material)
+    {
+        foreach (var spriteRenderer in _spriteRenderers)
+            spriteRenderer.material = material;
+    }
+    public void SetProgress(string key, float progress)
+    {
+        foreach (var spriteRenderer in _spriteRenderers)
+            spriteRenderer.material.SetFloat(key, progress);
+    }
+    public void SetMaterialAndProgress(Material material, string key, float progress)
+    {
+        foreach (var spriteRenderer in _spriteRenderers)
+        {
+            spriteRenderer.material = material;
+            spriteRenderer.material.SetFloat(key, progress);
+        }
+    }
+
     public void EnableGodModeOutline()
     {
-        foreach(var material in OriginalMaterials)
+        foreach (var material in _originalMaterials)
         {
             material.EnableKeyword("OUTBASE_ON");
         }
     }
     public void DisableGodModeOutline()
     {
-        foreach (var material in OriginalMaterials)
+        foreach (var material in _originalMaterials)
         {
             material.DisableKeyword("OUTBASE_ON");
         }
     }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(MaterialController))]
+public class MaterialControllerEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        MaterialController materialController = (MaterialController)target;
+
+        if (GUILayout.Button("Get All SpriteRenderer in Children"))
+        {
+            materialController.CollectAllSpriteRenderers();
+            EditorUtility.SetDirty(materialController);
+        }
+    }
+}
+#endif

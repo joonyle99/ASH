@@ -59,26 +59,45 @@ public class DashState : PlayerState
 
     private void PreProcess()
     {
-        SceneContext.Current.Player.CanDash = false;
-        Player.IsGodMode = true;
-        _originGravity = Player.Rigidbody.gravityScale;
-        Player.Rigidbody.gravityScale = 0f;
+        {
+            SceneContext.Current.Player.CanDash = false;
+        }
+
+        {
+            Player.IsGodMode = true;
+            _originGravity = Player.Rigidbody.gravityScale;
+            Player.Rigidbody.gravityScale = 0f;
+        }
+
+        {
+            _dashDir = new Vector2(Player.RawInputs.Movement.x, 0f).normalized;
+        }
+
+        {
+            _elapsedDashTime = 0f;
+        }
     }
 
     private void PostProcess()
     {
-        Player.IsGodMode = false;
-        Player.Rigidbody.gravityScale = _originGravity;
+        {
+            Player.IsGodMode = false;
+            Player.Rigidbody.gravityScale = _originGravity;
+        }
+
+        {
+            _dashDir = Vector2.zero;
+            _originGravity = 0f;
+        }
+
+        {
+            _elapsedDashTime = 0f;
+        }
     }
 
     private IEnumerator DashCoolDown()
     {
         yield return new WaitForSeconds(_targetDashCoolTime);
         SceneContext.Current.Player.CanDash = true;
-    }
-
-    public void SetDashDir(float xDirection)
-    {
-        _dashDir = new Vector2(xDirection, 0f).normalized;
     }
 }

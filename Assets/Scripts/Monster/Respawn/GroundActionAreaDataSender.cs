@@ -25,12 +25,12 @@ public sealed class GroundActionAreaDataSender : ActionAreaDataSender
     public override void SetActionAreaPosition(Vector3 position1, Vector3 position2)
     {
         _patrolPointA.transform.position = position1;
-        _patrolPointA.transform.position = position2;
+        _patrolPointB.transform.position = position2;
     }
     public override void SetActionAreaScale(Vector3 scale1, Vector3 scale2)
     {
         _patrolPointA.transform.localScale = scale1;
-        _patrolPointA.transform.localScale = scale2;
+        _patrolPointB.transform.localScale = scale2;
     }
 
     public override void UpdateActionAreaData()

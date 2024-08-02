@@ -1,4 +1,3 @@
-using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(Monster_StateBase), true)]      // 상속받는 모든 클래스에 대해 커스텀 에디터가 사용된다.

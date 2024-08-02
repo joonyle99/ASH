@@ -19,6 +19,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     {
         base.Awake();
 
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
 
         // 모든 몬스터를 찾고, 리스트에 추가한다
@@ -150,9 +151,6 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     /// <summary>
     /// Prefab_MonsterName에 자식으로 있는 Monster_MonsterName의 리스폰 위치를 설정
     /// </summary>
-    /// <param name="monsterTransform"></param>
-    /// <param name="moveType"></param>
-    /// <param name="respawnData"></param>
     private void UpdateMonsterPosition(Transform monsterTransform, MonsterDefine.MoveType moveType, MonsterBehaviour.RespawnData respawnData)
     {
         // Debug.Log("리스폰된 몬스터의 리스폰 위치 업데이트");

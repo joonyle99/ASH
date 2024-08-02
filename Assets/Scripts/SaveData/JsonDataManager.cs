@@ -129,9 +129,9 @@ public class JsonPersistentData
 
         PersistentData persistentData = new PersistentData();
 
-        persistentData._sceneName = jsonPersistentData._sceneName;
+        persistentData.SceneName = jsonPersistentData._sceneName;
 
-        persistentData._passageName = jsonPersistentData._passageName;
+        persistentData.PassageName = jsonPersistentData._passageName;
 
         Dictionary<string, DataGroup> dataGroups = new();
         for (int i = 0; i < jsonPersistentData._jsonDataGroups.data.Count; i++)
@@ -147,7 +147,7 @@ public class JsonPersistentData
 
             dataGroups.Add(key, dataGroup);
         }
-        persistentData._dataGroups = dataGroups;
+        persistentData.DataGroups = dataGroups;
 
         DataGroup globalDataGroup = new();
         for (int i = 0; i < jsonPersistentData._jsonGlobalDataGroup.data.Count; i++)
@@ -157,7 +157,7 @@ public class JsonPersistentData
 
             globalDataGroup.Add(key, value);
         }
-        persistentData._globalDataGroup = globalDataGroup;
+        persistentData.GlobalDataGroup = globalDataGroup;
 
         return persistentData;
     }

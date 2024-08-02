@@ -48,7 +48,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     [SerializeField] private Rigidbody2D _handRigidbody;
     [SerializeField] private Collider2D _heartCollider;
     [SerializeField] private Cloth _capeCloth;
-    [SerializeField] private Material _capeMaterial;
+
+    [Space]
+
+    [SerializeField] private Renderer[] _capeRenderers;
 
     [Header("ETC")]
     [Space]
@@ -145,6 +148,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
                 ChangeState<DieState>();
             }
 
+            // TODO: Json과 연동? 준엽님과 상의 필요
+            // CurHP를 Global Data Group에 업데이트한다
+            PersistentDataManager.SetByGlobal("PlayerHP", _curHp);
+
+            // Health UI 이벤트를 발생시킨다
             OnHealthChanged?.Invoke(_curHp, _maxHp);
         }
     }
@@ -216,6 +224,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         _bodyCollider = GetComponent<CapsuleCollider2D>();
         materialController = GetComponent<MaterialController>();
         _soundList = GetComponent<SoundList>();
+
+        // TODO: Json과 연동? 준엽님과 상의 필요
+        PersistentDataManager.SetByGlobal("PlayerHP", CurHp);
     }
     protected override void Start()
     {
@@ -254,7 +265,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
                 .FirstOrDefault();
 
             if (closestBossDoor == null)
+            {
                 Debug.Log("No Boss Door found in the scene.");
+                return;
+            }
 
             // 상호작용 불가능한 상태로 만든다
             closestBossDoor.IsInteractable = false;
@@ -306,6 +320,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     {
         // TODO: 현재 체력을 글로벌로 저장된 플레이어의 체력으로 설정한다
 
+        // TODO: 현재 망토의 빛을 글로벌로 저장된 플레이어의 Intensity로 설정한다
     }
 
     // basic
@@ -334,6 +349,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         {
             if (IsOppositeDirSync && IsMoveXKey)
             {
+                // Debug.Log("방향 전환");
+
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
             }
@@ -346,11 +363,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
                 ChangeState<InAirState>();
         }
-    }
-    public void SetCapeEmission(float intensity)
-    {
-        // material 자체의 밝기를 조절한다
-        _capeMaterial.SetFloat("_Intensity", intensity);
     }
 
     // about hit
@@ -421,7 +433,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         }
     }
 
-    // etc
+    // animation event
     public void FinishState_AnimEvent()
     {
         // from hurt state
@@ -429,6 +441,16 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         ChangeState<IdleState>();
     }
 
+    // cape
+    public void SetCapeIntensity(float intensity)
+    {
+        PersistentDataManager.SetByGlobal("CapeIntensity", intensity);
+
+        foreach (var capeRenderer in _capeRenderers)
+        {
+            capeRenderer.material.SetFloat("_Intensity", intensity);
+        }
+    }
     public void CapeControlX()
     {
         var vec = _capeCloth.externalAcceleration;

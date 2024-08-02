@@ -52,8 +52,8 @@ public class StatueVisualEffect : MonoBehaviour
             {
                 PersistentData pd = JsonPersistentData.ToNormalFormatClassObject(spd);
                 string currentScene = SceneManager.GetActiveScene().name;
-                if (pd._dataGroups != null &&
-                    pd._dataGroups.TryGetValue(currentScene, out var value))
+                if (pd.DataGroups != null &&
+                    pd.DataGroups.TryGetValue(currentScene, out var value))
                 {
                     if (value.TryGetValue(_statePreserver.ID + "_played", out var alreadyPlayed))
                     {
