@@ -60,7 +60,7 @@ public class DisintegrateEffect : MonoBehaviour
                 particleHelper.transform.position = transform.position;
 
                 // Destroy Particle System
-                Destroy(particleHelper.gameObject, particleHelper.GetLifeTime());
+                Destroy(particleHelper.gameObject, particleHelper.GetEmissionLifeTime());
             }
 
             // Disintegrate Material Initialize

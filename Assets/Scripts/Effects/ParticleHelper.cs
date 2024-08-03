@@ -53,10 +53,11 @@ public class ParticleHelper : MonoBehaviour
         _particleSystem.Stop();
     }
 
-    public float GetLifeTime()
+    public float GetEmissionLifeTime()
     {
         var main = _particleSystem.main;
-        var totalDuration = main.duration + main.startLifetime.constantMax;
+        // var totalDuration = main.duration + main.startLifetime.constantMax;  // 지속적으로 생기는 파티클의 경우
+        var totalDuration = main.startLifetime.constantMax;
 
         return totalDuration;
     }

@@ -689,6 +689,18 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     {
         SoundList.PlaySFX(key);
     }
+    public void PlayMultipleSound(string key, int count, float interval)
+    {
+        StartCoroutine(PlayMultipleSoundCoroutine(key, count, interval));
+    }
+    private IEnumerator PlayMultipleSoundCoroutine(string key, int count, float interval)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            SoundList.PlaySFX(key);
+            yield return new WaitForSeconds(interval);
+        }
+    }
     public void DestroyMonsterPrefab()
     {
         // parent: prefab_monsterName

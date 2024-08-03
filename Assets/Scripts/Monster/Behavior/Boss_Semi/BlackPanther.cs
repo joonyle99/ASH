@@ -220,6 +220,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     // vine missile
     public void VineMissile01_AnimEvent()
     {
+        if (_isInterruptVineMissile) return;
+
         _targetPos = SceneContext.Current.Player.HeartCollider.bounds.center;
 
         // 오른쪽을 보고 있으면 플레이어가 오른쪽에 있을 때만 미사일을 발사한다
@@ -398,11 +400,17 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
          * 효과음을 추가’하기로 하였습니다.
          */
 
-        _twinkleEffect.Play();
+        var count = 4;
+        var interval = 1.2f;
 
-        PlaySound("Twinkle");
+        PlayMultipleSound("Twinkle", count, interval);
 
-        yield return new WaitForSeconds(5f);
+        for (int i = 0; i < count; i++)
+        {
+            _twinkleEffect.Play();
+            yield return new WaitForSeconds(_twinkleEffect.GetEmissionLifeTime());
+            _twinkleEffect.Stop();
+        }
 
         IsCapturable = false;
 
