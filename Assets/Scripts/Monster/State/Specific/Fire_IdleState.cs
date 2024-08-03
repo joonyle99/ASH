@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Fire_IdleState : Monster_StateBase, IHurtableState
+public class Fire_IdleState : Boss_StateBase, IAttackableState, IHurtableState, IMovingState
 {
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

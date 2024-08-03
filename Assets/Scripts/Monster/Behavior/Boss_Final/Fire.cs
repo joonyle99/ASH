@@ -1,6 +1,50 @@
 using System.Collections;
 using UnityEngine;
 
+public static class RandomExtension
+{
+    public static int RangeExcept(this System.Random random, int minInclusive, int maxExclusive, int except, int limitCount = 10)
+    {
+        if (minInclusive < 0 || maxExclusive < 0 || minInclusive >= maxExclusive)
+        {
+            Debug.LogError($"Invalid minInclusive or maxExclusive");
+            return except;
+        }
+
+        if (except < minInclusive || except >= maxExclusive)
+        {
+            Debug.LogError($"Invalid except");
+            return except;
+        }
+
+        var currentCount = 0;
+        var result = except;
+
+        while (result == except)
+        {
+            if (currentCount >= limitCount)
+            {
+                /*
+                result = (random.Next(0, 2) == 0)
+                    ? random.Next(minInclusive, except)
+                    : random.Next(except, maxExclusive);
+                */
+
+                // 겹쳐도 어쩔 수 없다
+                result = random.Next(minInclusive, maxExclusive);
+
+                break;
+            }
+
+            currentCount++;
+
+            result = random.Next(minInclusive, maxExclusive);
+        }
+
+        return result;
+    }
+}
+
 public sealed class Fire : BossBehaviour
 {
     public enum AttackType
@@ -19,9 +63,21 @@ public sealed class Fire : BossBehaviour
     [Space]
 
     [Tooltip("1: FlameBeam\n2 : Fireball\n3 : AshPillar\n4 : FirePillar")]
-    [SerializeField] private Range _attackTypeRange;
+    [SerializeField] private AttackType _firstAttack;
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
+
+    [Header("____ Teleport ____")]
+    [Space]
+
+    [SerializeField] private bool _isTeleportTurn;
+    public bool IsTeleportTurn
+    {
+        get => _isTeleportTurn;
+        set => _isTeleportTurn = value;
+    }
+
+    [SerializeField] private float _teleportAnimDuration;
 
     [Header("____ FlameBeam ____")]
     [Space]
@@ -53,7 +109,9 @@ public sealed class Fire : BossBehaviour
 
         foreach (var clip in Animator.runtimeAnimatorController.animationClips)
         {
-            if (clip.name == "ani_fireBoss_fireBeam")
+            if (clip.name == "ani_fireBoss_teleport")
+                _teleportAnimDuration = clip.length;
+            else if (clip.name == "ani_fireBoss_fireBeam")
                 _flameBeamAnimDuration = clip.length;
             else if (clip.name == "ani_fireBoss_fireBall")
                 _fireballAnimDuration = clip.length;
@@ -67,14 +125,21 @@ public sealed class Fire : BossBehaviour
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
 
-        // TODO: 임시
+        // TEMP
         rageTargetHurtCount = finalTargetHurtCount / 2;
+
+        // TEMP
+        var particles = GetComponentsInChildren<ParticleSystem>();
+        foreach (var particle in particles)
+        {
+            particle.gameObject.SetActive(false);
+        }
     }
     protected override void Start()
     {
         base.Start();
 
-        SetToRandomAttack();
+        SetToFirstAttack();
     }
     private void OnDestroy()
     {
@@ -83,11 +148,20 @@ public sealed class Fire : BossBehaviour
 
     public override void AttackPreProcess()
     {
+        // 현재 공격 상태 변경
+        _currentAttack = _nextAttack;
 
+        currentAttackCount++;
+
+        // 2번째 공격 다음은 텔레포트 턴이다
+        if (currentAttackCount % 2 == 0)
+        {
+            _isTeleportTurn = true;
+        }
     }
     public override void AttackPostProcess()
     {
-
+        SetToNextAttack();
     }
     public override void GroggyPreProcess()
     {
@@ -98,20 +172,23 @@ public sealed class Fire : BossBehaviour
 
     }
 
-    private void SetToRandomAttack()
+    // basic
+    private void SetToFirstAttack()
     {
-        int nextAttackNumber = (int)_attackTypeRange.Random();
+        int firstAttackNumber = (int)_firstAttack;
+        _nextAttack = (AttackType)firstAttackNumber;
+        Animator.SetInteger("NextAttackNumber", firstAttackNumber);
+    }
+    private void SetToNextAttack()
+    {
+        System.Random random = new System.Random();
 
-        if (System.Enum.IsDefined(typeof(AttackType), nextAttackNumber))
-        {
-            _nextAttack = (AttackType)nextAttackNumber;
-            Animator.SetInteger("NextAttackNumber", nextAttackNumber);
-        }
-        else
-        {
-            Debug.LogError("<color=red>Invalid AttackType generated</color>");
-            _nextAttack = AttackType.None;
-        }
+        var nextAttackNumber =
+            random.RangeExcept((int)AttackType.FlameBeam, (int)AttackType.FirePillar + 1, (int)_currentAttack);
+
+        // 다음 공격 타입을 설정합니다.
+        _nextAttack = (AttackType)nextAttackNumber;
+        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
 
     public void FlameBeam_AnimEvent()
@@ -131,22 +208,38 @@ public sealed class Fire : BossBehaviour
 
     }
 
+    /// <summary>
+    /// 모든 공격 애니메이션의 Duration 만큼 대기
+    /// + 텔레포트 턴이라면, 텔레포트 끝날 때까지 대기
+    ///
+    /// Attack Trigger 직후 호출되는 WaitEvent (그 다음은 Duration 대기)
+    /// </summary>
     private IEnumerator OnAttackWaitEvent()
     {
         switch (_nextAttack)
         {
             case AttackType.FlameBeam:
-                yield return StartCoroutine(WaitEventCoroutine_FlameBeam());
+                yield return WaitEventCoroutine_FlameBeam();
                 break;
             case AttackType.Fireball:
-                yield return StartCoroutine(WaitEventCoroutine_Fireball());
+                yield return WaitEventCoroutine_Fireball();
                 break;
             case AttackType.AshPillar:
-                yield return StartCoroutine(WaitEventCoroutine_AshPillar());
+                yield return WaitEventCoroutine_AshPillar();
                 break;
             case AttackType.FirePillar:
-                yield return StartCoroutine(WaitEventCoroutine_FirePillar());
+                yield return WaitEventCoroutine_FirePillar();
                 break;
+        }
+
+        Debug.Log("Attack Wait Event Point 1 - Complete Animation");
+
+        if (_isTeleportTurn)
+        {
+            // 텔레포트 턴이 아닐 때까지 기다린다
+            yield return new WaitUntil(() => !_isTeleportTurn);
+
+            Debug.Log("Attack Wait Event Point 2 - Complete Teleport");
         }
     }
     private IEnumerator WaitEventCoroutine_FlameBeam()

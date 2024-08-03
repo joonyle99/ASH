@@ -7,7 +7,7 @@ using UnityEditor;
 public class MaterialController : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer[] _spriteRenderers;
-    private Material[] _originalMaterials;
+    private Material[] _instanceMaterials;
 
     public BlinkEffect BlinkEffect
     {
@@ -25,9 +25,9 @@ public class MaterialController : MonoBehaviour
     private void Awake()
     {
         // save original Materials
-        _originalMaterials = new Material[_spriteRenderers.Length];
-        for (int i = 0; i < _originalMaterials.Length; i++)
-            _originalMaterials[i] = _spriteRenderers[i].material;
+        _instanceMaterials = new Material[_spriteRenderers.Length];
+        for (int i = 0; i < _instanceMaterials.Length; i++)
+            _instanceMaterials[i] = _spriteRenderers[i].material;
 
         // effects
         BlinkEffect = GetComponent<BlinkEffect>();
@@ -42,7 +42,7 @@ public class MaterialController : MonoBehaviour
     public void InitMaterial()
     {
         for (int i = 0; i < _spriteRenderers.Length; i++)
-            _spriteRenderers[i].material = _originalMaterials[i];
+            _spriteRenderers[i].material = _instanceMaterials[i];
     }
     public void InitMaterialForRespawn()
     {
@@ -70,14 +70,16 @@ public class MaterialController : MonoBehaviour
 
     public void EnableGodModeOutline()
     {
-        foreach (var material in _originalMaterials)
+        Debug.Log("Enable GodMode Outline");
+        foreach (var material in _instanceMaterials)
         {
             material.EnableKeyword("OUTBASE_ON");
         }
     }
     public void DisableGodModeOutline()
     {
-        foreach (var material in _originalMaterials)
+        Debug.Log("Disable GodMode Outline");
+        foreach (var material in _instanceMaterials)
         {
             material.DisableKeyword("OUTBASE_ON");
         }

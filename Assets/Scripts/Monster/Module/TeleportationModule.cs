@@ -2,15 +2,29 @@ using UnityEngine;
 
 public class TeleportationModule : MonoBehaviour
 {
-    public BoxCollider2D teleporyArea;
+    [SerializeField] private BoxCollider2D _teleportableArea;
 
-    public void Teleportation()
+    private Fire _fire;
+
+    private void Awake()
     {
-        var xPos = Random.Range(teleporyArea.bounds.min.x, teleporyArea.bounds.max.x);
-        var yPos = Random.Range(teleporyArea.bounds.min.y, teleporyArea.bounds.max.y);
+        _fire = GetComponent<Fire>();
+    }
+
+    public void ExecuteTeleportation_AnimEvent()
+    {
+        /*
+        var xPos = Random.Range(_teleportableArea.bounds.min.x, _teleportableArea.bounds.max.x);
+        var yPos = Random.Range(_teleportableArea.bounds.min.y, _teleportableArea.bounds.max.y);
 
         var randomPosition = new Vector2(xPos, yPos);
 
         transform.position = randomPosition;
+        */
+    }
+
+    public void FinishTeleportation_AnimEvent()
+    {
+        _fire.IsTeleportTurn = false;
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TeleportationState : Monster_StateBase, IAttackableState, IHurtableState, IMovingState
+public class Fire_TeleportationState : Boss_StateBase
 {
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
