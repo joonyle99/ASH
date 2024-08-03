@@ -47,9 +47,9 @@ public class PersistentData
 
         JsonPersistentData jsonPersistentData = new JsonPersistentData();
 
-        jsonPersistentData._sceneName = persistentData.SceneName;
+        jsonPersistentData.SceneName = persistentData.SceneName;
 
-        jsonPersistentData._passageName = persistentData.PassageName;
+        jsonPersistentData.PassageName = persistentData.PassageName;
 
         JsonDataArray<string, JsonDataArray<string, SerializableObjectType>> jsonDataGroups = new();
         foreach (var dataGroups in persistentData.DataGroups)

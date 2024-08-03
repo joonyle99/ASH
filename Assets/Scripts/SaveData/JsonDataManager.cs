@@ -108,13 +108,13 @@ public class SerializableObjectType
 [Serializable]
 public class JsonPersistentData
 {
-    public string _sceneName = "";
+    private string _sceneName = "";
     public string SceneName
     {
         get => _sceneName; set => _sceneName = value;
     }
 
-    public string _passageName = "";
+    private string _passageName = "";
     public string PassageName
     {
         get => _passageName; set => _passageName = value;
@@ -425,6 +425,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
     /// <summary>
     /// 이 함수 단독으로 사용할 경우 JsonDataManager.JsonSave를 호출해 주어야 함
+    /// ※사용안함
     /// </summary>
     /// <param name="jsonPlayerData"></param>
     public static void SavePlayerData(JsonPlayerData jsonPlayerData)

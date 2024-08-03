@@ -27,12 +27,27 @@ public class PushableTree : InteractableObject
             }
 
             var treeTransform = new TransformState(_treeTrunk.transform);
-            var newTreeTransform = _statePreserver.LoadState("_isFallingTreeTransform", treeTransform);
-            _treeTrunk.transform.localPosition = newTreeTransform.Position;
-            _treeTrunk.transform.localRotation = newTreeTransform.Rotation;
-            _treeTrunk.transform.localScale = newTreeTransform.Scale;
+            //저장 시점의 데이터를 불러오는 경우
+            if(_statePreserver.HasState<bool>("_FallingTreeTransformSaved") &&
+                !Equals(treeTransform, _statePreserver.LoadState("_FallingTreeTransformSaved", treeTransform)))
+            {
+                var newTreeTransform = _statePreserver.LoadState("_FallingTreeTransformSaved", treeTransform);
+                _treeTrunk.transform.localPosition = newTreeTransform.Position;
+                _treeTrunk.transform.localRotation = newTreeTransform.Rotation;
+                _treeTrunk.transform.localScale = newTreeTransform.Scale;
+            }
+            else
+            {
+                var newTreeTransform = _statePreserver.LoadState("_isFallingTreeTransform", treeTransform);
+                _treeTrunk.transform.localPosition = newTreeTransform.Position;
+                _treeTrunk.transform.localRotation = newTreeTransform.Rotation;
+                _treeTrunk.transform.localScale = newTreeTransform.Scale;
+            }
+
+            SaveAndLoader.OnSaveStarted += SaveFallingTreeState;
         }
     }
+
     private void Update()
     {
         if (IsInteractable)
@@ -43,16 +58,21 @@ public class PushableTree : InteractableObject
             }
         }
     }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
 
         if (_statePreserver)
         {
-            _statePreserver.SaveState("_isInteractable", IsInteractable);
+            if(!SaveAndLoader.IsChangeSceneByLoading)
+            {
+                _statePreserver.SaveState("_isInteractable", IsInteractable);
 
-            // falling tree의 데이터를 저장한다.
-            _statePreserver.SaveState("_isFallingTreeTransform", new TransformState(_treeTrunk.transform));
+                _statePreserver.SaveState("_isFallingTreeTransform", new TransformState(_treeTrunk.transform));
+            }
+
+            SaveAndLoader.OnSaveStarted -= SaveFallingTreeState;
         }
     }
 
@@ -71,5 +91,14 @@ public class PushableTree : InteractableObject
     {
         if (IsPlayerIsDirSync)
             _treeTrunk.Rigidbody.AddForceAtPosition(new Vector2(_moveDirection, 0) * _pushPower, _forcePoint.position, ForceMode2D.Force);
+    }
+
+    private void SaveFallingTreeState()
+    {
+        if (_statePreserver)
+        {
+            // falling tree의 데이터를 저장한다.
+            _statePreserver.SaveState("_FallingTreeTransformSaved", new TransformState(_treeTrunk.transform));
+        }
     }
 }

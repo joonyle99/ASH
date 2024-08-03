@@ -72,12 +72,9 @@ public class StatueVisualEffect : MonoBehaviour
 
         _audioSource = GetComponent<AudioSource>();
         _soundList = GetComponent<SoundList>();
-
-        SaveAndLoader.OnSaveStarted += PlayEffectsOnSaveStarted;
-        SaveAndLoader.OnSaveEnded += DeactiveSaveTextLogic;
     }
 
-    private void PlayEffectsOnSaveStarted()
+     public void PlayEffectsOnSaveStarted()
     {
         //최초 1회만 실시되는 로직들
         if (!Played)
@@ -130,7 +127,7 @@ public class StatueVisualEffect : MonoBehaviour
         _textDisplayTime = Time.time;
     }
 
-    private void DeactiveSaveTextLogic()
+    public void DeactiveSaveTextLogic()
     {
         if (_saveText == null) return;
 

@@ -45,8 +45,8 @@ public class DieState : PlayerState
     {
         _player = Player;
 
-        JsonDataManager.SavePlayerData(new JsonPlayerData(_player.MaxHp, _player.MaxHp));
-        JsonDataManager.JsonSave();
+        //JsonDataManager.SavePlayerData(new JsonPlayerData(_player.MaxHp, _player.MaxHp));
+        //JsonDataManager.JsonSave();
 
         InputManager.Instance.ChangeToStayStillSetter();
 

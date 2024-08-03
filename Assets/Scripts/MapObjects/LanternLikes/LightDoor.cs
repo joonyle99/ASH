@@ -33,11 +33,27 @@ public class LightDoor : LanternLike
 
         _statePreserver = GetComponent<PreserveState>();
 
-        if (_statePreserver && _statePreserver.LoadState("_opened", false))
+        if (_statePreserver)
         {
-            _collider.enabled = false;
-            CurrentState = State.Opened;
-            _animator.SetTrigger("InstantOpen");
+            SaveAndLoader.OnSaveStarted += SaveDoorOpenState;
+
+            //저장 안된경우 or 저장시점에 문 닫힌 경우
+            if(!_statePreserver.HasState<bool>("_isPlaySaved") ||
+                !_statePreserver.LoadState("_isPlaySaved", false))
+            {
+                if (_statePreserver.LoadState("_opened", false))
+                {
+                    _collider.enabled = false;
+                    CurrentState = State.Opened;
+                    _animator.SetTrigger("InstantOpen");
+                }
+            }
+            else
+            {
+                _collider.enabled = false;
+                CurrentState = State.Opened;
+                _animator.SetTrigger("InstantOpen");
+            }
         }
 
     }
@@ -56,7 +72,14 @@ public class LightDoor : LanternLike
     private void OnDestroy()
     {
         if (_statePreserver)
-            _statePreserver.SaveState("_opened", CurrentState == State.Opened);
+        {
+            if(!SaveAndLoader.IsChangeSceneByLoading)
+            {
+                _statePreserver.SaveState("_opened", CurrentState == State.Opened);
+            }
+
+            SaveAndLoader.OnSaveStarted -= SaveDoorOpenState;
+        }
     }
 
     public override void OnBeamConnected(LightBeam beam)
@@ -88,5 +111,10 @@ public class LightDoor : LanternLike
     {
         _collider.enabled = false;
         CurrentState = State.Opened;
+    }
+
+    private void SaveDoorOpenState()
+    {
+        _statePreserver.SaveState("_isPlaySaved", IsOpened);
     }
 }

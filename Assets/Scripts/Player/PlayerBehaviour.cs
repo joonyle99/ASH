@@ -150,7 +150,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
             // TODO: Json과 연동? 준엽님과 상의 필요
             // CurHP를 Global Data Group에 업데이트한다
-            PersistentDataManager.SetByGlobal("PlayerHP", _curHp);
+            PersistentDataManager.SetByGlobal("PlayerCurHp", _curHp);
 
             // Health UI 이벤트를 발생시킨다
             OnHealthChanged?.Invoke(_curHp, _maxHp);
@@ -225,8 +225,30 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         materialController = GetComponent<MaterialController>();
         _soundList = GetComponent<SoundList>();
 
-        // TODO: Json과 연동? 준엽님과 상의 필요
-        PersistentDataManager.SetByGlobal("PlayerHP", CurHp);
+        //Load Data
+        //저장된 체력정보가 없거나 단순 맵이동에 대한 awake호출인 경우
+        if (!PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved") ||
+            !SaveAndLoader.IsChangeSceneByLoading)
+        {
+            Debug.Log("1111");
+            //PlayerHp정보가 없는 경우
+            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
+            {
+                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
+                Debug.Log("3333");
+            }
+            else
+            {
+                Debug.Log("4444");
+                CurHp = _startHp;
+            }
+        }
+        else
+        {
+            Debug.Log("2222");
+            CurHp = _startHp;
+        }
+        SaveAndLoader.OnSaveStarted += SavePlayerStatus;
     }
     protected override void Start()
     {
@@ -326,20 +348,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     // basic
     private void InitPlayer()
     {
-        // 체력 초기화
-        if(JsonDataManager.Has("PlayerData"))
-        {
-            JsonDataManager.JsonLoad();
-            JsonPlayerData playerData = JsonDataManager.GetObjectInGlobalSaveData<JsonPlayerData>("PlayerData");
-
-            MaxHp = playerData._maxHp;
-            CurHp = playerData._currentHp;
-        }
-        else
-        {
-            CurHp = _startHp;
-        }
-
         // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);
     }
@@ -519,5 +527,14 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         _soundList.PlaySFX(key);
     }
 
+    #endregion
+
+    #region Save
+
+    private void SavePlayerStatus()
+    {
+        PersistentDataManager.SetByGlobal<int>("PlayerMaxHpSaved", MaxHp);
+        PersistentDataManager.SetByGlobal<int>("PlayerCurHpSaved", CurHp);
+    }
     #endregion
 }

@@ -13,6 +13,8 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
         set => _isChangeSceneByLoading = value;
     }
 
+    private StatueVisualEffect _statueVisualEffect;
+
     public static Action OnSaveStarted;
     public static Action OnSaveEnded;
 
@@ -20,6 +22,7 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     {
         _passageName = gameObject.name;
         _isChangeSceneByLoading = false;
+        _statueVisualEffect = GetComponent<StatueVisualEffect>();
     }
 
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
@@ -28,6 +31,12 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
         {
             Debug.Log("Save");
             Save();
+
+            if(_statueVisualEffect)
+            {
+                _statueVisualEffect.PlayEffectsOnSaveStarted();
+                _statueVisualEffect.DeactiveSaveTextLogic();
+            }
         }
     }
 
@@ -41,11 +50,6 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
         JsonDataManager.SavePersistentData(_passageName);
 
         GameObject Player = GameObject.FindGameObjectWithTag("Player");
-        if(Player != null)
-        {
-            PlayerBehaviour PB = Player.GetComponent<PlayerBehaviour>();
-            JsonDataManager.SavePlayerData(new JsonPlayerData(PB.MaxHp, PB.CurHp));
-        }
 
         JsonDataManager.JsonSave();
 
