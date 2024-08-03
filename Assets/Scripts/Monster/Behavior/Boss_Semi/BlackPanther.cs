@@ -46,11 +46,13 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         private set => _totalMissileCount = value;
     }
 
+    private bool _isInterruptVineMissile = false;
+
     [Header("VineMissile - VFX")]
     [Space]
 
-    [SerializeField] private ParticleSystem _smokeEffect;
-    [SerializeField] private ParticleSystem _sparkEffect;
+    [SerializeField] private ParticleHelper _smokeEffect;
+    [SerializeField] private ParticleHelper _sparkEffect;
 
     private Vector2 _targetPos;
     private BlackPanther_VineMissile _currentMissile;
@@ -73,7 +75,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [Header("VinePillar - VFX")]
     [Space]
 
-    [SerializeField] private ParticleSystem _dustEffect;
+    [SerializeField] private ParticleHelper _dustEffect;
     [SerializeField] private float _dustDistFromPillar;
 
     [SerializeField] private float _vinePillarAnimDuration;
@@ -81,7 +83,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [Header("Cutscene")]
     [Space]
 
-    [SerializeField] private ParticleSystem _shiningEyes;
+    [SerializeField] private ParticleHelper _shinningEffect;
+    [SerializeField] private ParticleHelper _twinkleEffect;
 
     public bool IsLightingHintInRage => IsRage && TotalMissileCount % 3 == 0;
 
@@ -221,9 +224,12 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         // 오른쪽을 보고 있으면 플레이어가 오른쪽에 있을 때만 미사일을 발사한다
         // 왼쪽을 보고 있으면 플레이어가 왼쪽에 있을 때만 미사일을 발사한다
-        if ((RecentDir > 0 && _missileSpawnPoint.position.x > _targetPos.x)
-            || (RecentDir < 0 && _missileSpawnPoint.position.x < _targetPos.x))
+        bool isDifferentDir = (RecentDir > 0 && _missileSpawnPoint.position.x > _targetPos.x) ||
+                            (RecentDir < 0 && _missileSpawnPoint.position.x < _targetPos.x);
+        if (isDifferentDir)
         {
+            _isInterruptVineMissile = true;
+            SetAnimatorTrigger("StopVineMissile");
             return;
         }
 
@@ -313,13 +319,20 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         {
             case AttackType.Rush1:
             case AttackType.Rush2:
-                yield return StartCoroutine(WaitEventCoroutine_Rush());
+                yield return WaitEventCoroutine_Rush();
                 break;
             case AttackType.VineMissile:
-                yield return StartCoroutine(WaitEventCoroutine_VineMissile());
+                yield return WaitEventCoroutine_VineMissile();
+
+                // Light Hint
+                if (IsLightingHintInRage)
+                {
+                    yield return LightingHintCoroutine();
+                }
+
                 break;
             case AttackType.VinePillar:
-                yield return StartCoroutine(WaitEventCoroutine_VinePillar());
+                yield return WaitEventCoroutine_VinePillar();
                 break;
         }
     }
@@ -344,31 +357,23 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         var targetCollider2 = GroundChaseEvaluator.IsTargetWithinRange();
         if (targetCollider2) StartSetRecentDirAfterGrounded(GroundChaseEvaluator.ChaseDir);
     }
-    private IEnumerator LightingHintCoroutine()
-    {
-        // N초간 Capturable 상태로 만들며 대기하는 코루틴
-
-        Debug.Log("LightHintCoroutine 실행");
-
-        IsCapturable = true;
-
-        yield return new WaitForSeconds(5f);
-
-        IsCapturable = false;
-
-        Debug.Log("LightHintCoroutine 종료");
-    }
     private IEnumerator WaitEventCoroutine_VineMissile()
     {
         // 애니메이션이 끝날때까지 기다려야 한다
-        yield return new WaitForSeconds(_vineMissileAnimDuration);
 
-        // Debug.Log("Vine Missile Animation이 종료되었습니다. 이제 Attack Evaluator의 쿨타임이 끝났습니다");
+        // 다른 WaitEvent와는 조금 다른 형태로, 언제든지 종료하기 위해 WaitForSeconds를 사용하지 않는다
 
-        // Light Hint를 제공하는 경우
-        if (IsLightingHintInRage)
+        float eTime = 0f;
+        while (eTime < _vineMissileAnimDuration)
         {
-            yield return LightingHintCoroutine();
+            if (_isInterruptVineMissile)
+            {
+                _isInterruptVineMissile = false;
+                yield break;
+            }
+
+            eTime += Time.deltaTime;
+            yield return null;
         }
     }
     private IEnumerator WaitEventCoroutine_VinePillar()
@@ -377,6 +382,31 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         yield return new WaitForSeconds(_vinePillarAnimDuration);
 
         // Debug.Log("Vine Pillar Animation이 종료되었습니다. 이제 Attack Evaluator의 쿨타임이 끝났습니다");
+    }
+    private IEnumerator LightingHintCoroutine()
+    {
+        // N초간 Capturable 상태로 만들며 대기하는 코루틴
+
+        Debug.Log("LightHintCoroutine 실행");
+
+        IsCapturable = true;
+
+        /*
+         * TODO: 빛의 힌트 연출
+         * 꼬리 내리는 애니메이션
+         * 이마 다이아 문양이 흰색으로 반짝 빛나는 이펙트
+         * 효과음을 추가’하기로 하였습니다.
+         */
+
+        _twinkleEffect.Play();
+
+        PlaySound("Twinkle");
+
+        yield return new WaitForSeconds(5f);
+
+        IsCapturable = false;
+
+        Debug.Log("LightHintCoroutine 종료");
     }
 
     // effects
@@ -400,11 +430,11 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     // etc
     public void ShineEyes()
     {
-        _shiningEyes.Play();
+        _shinningEffect.Play();
     }
     public void RoarProcess()
     {
-        if(IsActiveLuminescence == false)
+        if (IsActiveLuminescence == false)
         {
             SetActiveLuminescence(true);
             IsGodMode = true;

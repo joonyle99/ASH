@@ -51,7 +51,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void ResetCameraSettings()
     {
-        Debug.Log($"카메라 리셋");
+        // Debug.Log($"카메라 리셋");
 
         if (SceneContext.Current.Player)
         {

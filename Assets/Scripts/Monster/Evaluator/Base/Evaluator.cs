@@ -142,13 +142,13 @@ public abstract class Evaluator : MonoBehaviour
         {
             isNeverBoth = false;
 
-            //Debug.Log("이벤트 대기 시작");
+            // Debug.Log("이벤트 대기 시작");
             IsWaitingEvent = true;
 
-            yield return StartCoroutine(WaitEvent());
+            yield return WaitEvent();
 
             IsWaitingEvent = false;
-            //Debug.Log("이벤트 대기 끝");
+            // Debug.Log("이벤트 대기 끝");
         }
 
         // 쿨타임이 0.01초 이상이면 쿨타임 실행
