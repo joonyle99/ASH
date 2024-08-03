@@ -108,7 +108,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     private JsonPersistentData _savedPersistentData = new();
     public JsonPersistentData SavedPersistentData => Instance._savedPersistentData;
 
-
     [SerializeField] private SkillOrderData _skillOrderData;
     public static SkillOrderData SkillOrderData => Instance._skillOrderData;
 
