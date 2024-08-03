@@ -71,6 +71,10 @@ namespace SingularityGroup.HotReload {
                 if (!string.IsNullOrEmpty(customIp)) {
                     buildInfo.buildMachineHostName = customIp;
                 }
+                var customPort = PlayerPrefs.GetString("HotReloadRuntime.CustomPort", "");
+                if (!string.IsNullOrEmpty(customPort)) {
+                    buildInfo.buildMachinePort = int.Parse(customPort);
+                }
 
                 if (buildInfo.BuildMachineServer == null) {
                     Prompts.ShowRetryDialog(null);
@@ -83,13 +87,15 @@ namespace SingularityGroup.HotReload {
             }
         }
 
-        public static Task TryConnectToIp(string ip) {
+        public static Task TryConnectToIpAndPort(string ip, int port) {
             ip = ip.Trim();
             if (buildInfo == null) {
                 throw new ArgumentException("Build info not found");
             }
             buildInfo.buildMachineHostName = ip;
+            buildInfo.buildMachinePort = port;
             PlayerPrefs.SetString("HotReloadRuntime.CustomIP", ip);
+            PlayerPrefs.SetString("HotReloadRuntime.CustomPort", port.ToString());
             return TryConnect(buildInfo.BuildMachineServer, auto: false);
         }
 

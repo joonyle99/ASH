@@ -1,7 +1,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using UnityEditor;
@@ -39,10 +41,10 @@ namespace SingularityGroup.HotReload.Editor.Cli {
         }
         
         internal static async Task StartAsync(bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, LoginData loginData = null) {
-            await Prepare().ConfigureAwait(false);
+            var port = await Prepare().ConfigureAwait(false);
             await ThreadUtility.SwitchToThreadPool();
             StartArgs args;
-            if (TryGetStartArgs(UnityHelper.DataPath, exposeServerToNetwork, allAssetChanges, createNoWindow, loginData, out args)) {
+            if (TryGetStartArgs(UnityHelper.DataPath, exposeServerToNetwork, allAssetChanges, createNoWindow, loginData, port, out args)) {
                 await controller.Start(args);
             }
         }
@@ -63,7 +65,7 @@ namespace SingularityGroup.HotReload.Editor.Cli {
 #pragma warning restore CS0649
         }
         
-        static bool TryGetStartArgs(string dataPath, bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, LoginData loginData, out StartArgs args) {
+        static bool TryGetStartArgs(string dataPath, bool exposeServerToNetwork, bool allAssetChanges, bool createNoWindow, LoginData loginData, int port, out StartArgs args) {
             string serverDir;
             if(!CliUtils.TryFindServerDir(out serverDir)) {
                 Log.Warning($"Failed to start the Hot Reload Server. " +
@@ -112,7 +114,7 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             }
             
             var searchAssemblies = string.Join(";", CodePatcher.I.GetAssemblySearchPaths());
-            var cliArguments = $@"-u ""{unityProjDir}"" -s ""{slnPath}"" -t ""{cliTempDir}"" -a ""{searchAssemblies}"" -ver ""{PackageConst.Version}"" -proc ""{Process.GetCurrentProcess().Id}"" -assets ""{allAssetChanges}""";
+            var cliArguments = $@"-u ""{unityProjDir}"" -s ""{slnPath}"" -t ""{cliTempDir}"" -a ""{searchAssemblies}"" -ver ""{PackageConst.Version}"" -proc ""{Process.GetCurrentProcess().Id}"" -assets ""{allAssetChanges}"" -p ""{port}""";
             if (loginData != null) {
                 cliArguments += $@" -email ""{loginData.email}"" -pass ""{loginData.password}""";
             }
@@ -132,15 +134,65 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             return true;
         }
         
-        static async Task Prepare() {
+        private static int DiscoverFreePort() {
+            var maxAttempts = 10;
+            for (int attempt = 0; attempt < maxAttempts; attempt++) {
+                var port = RequestHelper.defaultPort + attempt;
+                if (IsPortInUse(port)) {
+                    continue;
+                }
+                return port;
+            }
+            // we give up at this point
+            return RequestHelper.defaultPort + maxAttempts;
+        }
+        
+        public static bool IsPortInUse(int port) {
+        // Note that there is a racecondition that a port gets occupied after checking.
+        // However, it will very rare someone will run into this.
+#if UNITY_EDITOR_WIN
+            IPGlobalProperties ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            IPEndPoint[] activeTcpListeners = ipGlobalProperties.GetActiveTcpListeners();
+
+            foreach (IPEndPoint endPoint in activeTcpListeners) {
+                if (endPoint.Port == port) {
+                    return true;
+                }
+            }
+
+            return false;
+#else
+            try {
+                using (TcpClient tcpClient = new TcpClient()) {
+                    tcpClient.Connect(IPAddress.Loopback, port); // Try to connect to the specified port
+                    return true;
+                }
+            } catch (SocketException) {
+                return false;
+            } catch (Exception e) {
+                Log.Exception(e);
+                // act as if the port is allocated
+                return true;
+            }
+#endif
+        }
+        
+        
+        static async Task<int> Prepare() {
             await ThreadUtility.SwitchToMainThread();
             
             var dataPath = UnityHelper.DataPath;
             await ProjectGeneration.ProjectGeneration.EnsureSlnAndCsprojFiles(dataPath);
             await PrepareBuildInfoAsync();
             PrepareSystemPathsFile();
+            
+            var port = DiscoverFreePort();
+            HotReloadState.ServerPort = port;
+            RequestHelper.SetServerPort(port);
+            return port;
         }
-        
+
+        static bool didLogWarning;
         internal static async Task PrepareBuildInfoAsync() {
             await ThreadUtility.SwitchToMainThread();
             var buildInfoInput = await BuildInfoHelper.GetGenerateBuildInfoInput();
@@ -148,8 +200,13 @@ namespace SingularityGroup.HotReload.Editor.Cli {
                 try {
                     var buildInfo = BuildInfoHelper.GenerateBuildInfoThreaded(buildInfoInput);
                     PrepareBuildInfo(buildInfo);
-                } catch {
-                    // ignore, we will warn when making a build
+                } catch (Exception e) {
+                    if (!didLogWarning) {
+                        Log.Warning($"Preparing build info failed! On-device functionality might not work. Exception: {e}");
+                        didLogWarning = true;
+                    } else { 
+                        Log.Debug($"Preparing build info failed! On-device functionality might not work. Exception: {e}");
+                    }
                 }
             });
         }

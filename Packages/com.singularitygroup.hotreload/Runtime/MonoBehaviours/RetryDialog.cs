@@ -42,7 +42,13 @@ namespace SingularityGroup.HotReload {
             
             buttonRetryAutoPair.onClick.AddListener(() => {
                 Hide();
-                PlayerEntrypoint.TryConnectToIp(ipInput.textComponent.text);
+                int port;
+                var ipAndPort = ipInput.textComponent.text.Split(':');
+                if (ipAndPort.Length != 2 || !int.TryParse(ipAndPort[1], out port)) {
+                    port = PlayerEntrypoint.PlayerBuildInfo?.buildMachinePort ?? RequestHelper.defaultPort;
+                }
+                var ip = ipAndPort.Length > 0 ? ipAndPort[0] : string.Empty;
+                PlayerEntrypoint.TryConnectToIpAndPort(ip, port);
             });
             
             buttonTroubleshoot.onClick.AddListener(() => {
@@ -55,7 +61,7 @@ namespace SingularityGroup.HotReload {
         public static ServerHandshake.Result HandshakeResults { private get; set; } = ServerHandshake.Result.None;
 
         private void OnEnable() {
-            ipInput.text = PlayerEntrypoint.PlayerBuildInfo?.buildMachineHostName;
+            ipInput.text = $"{PlayerEntrypoint.PlayerBuildInfo?.buildMachineHostName}:{PlayerEntrypoint.PlayerBuildInfo?.buildMachinePort}";
             UpdateUI();
         }
 

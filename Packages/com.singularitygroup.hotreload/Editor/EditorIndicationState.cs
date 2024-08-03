@@ -76,8 +76,21 @@ namespace SingularityGroup.HotReload.Editor {
         private static bool SpinnerCompletedMinDuration => DateTime.UtcNow - spinnerStartedAt > TimeSpan.FromMilliseconds(MinSpinnerDuration);
         private static IndicationStatus GetIndicationStatus() {
             var status = GetIndicationStatusCore();
-            var newStatusIsSpinner = SpinnerIndications.Contains(status);
-            var latestStatusIsSpinner = SpinnerIndications.Contains(latestStatus);
+            
+            // Note: performance sensitive code, don't use Link
+            bool newStatusIsSpinner = false;
+            for (var i = 0; i < SpinnerIndications.Length; i++) {
+                if (SpinnerIndications[i] == status) {
+                    newStatusIsSpinner = true;
+                }
+            }
+            bool latestStatusIsSpinner = false;
+            for (var i = 0; i < SpinnerIndications.Length; i++) {
+                if (SpinnerIndications[i] == latestStatus) {
+                    newStatusIsSpinner = true;
+                }
+            }
+            
             if (status == latestStatus) {
                 return status;
             } else if (latestStatusIsSpinner) {

@@ -1,8 +1,13 @@
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class DebugBehavior : MonoBehaviour
 {
+#if UNITY_EDITOR
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.CapsLock))
@@ -11,12 +16,11 @@ public class DebugBehavior : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR
-    [MenuItem("Tools/Find Layer Object")]
-    public static void FindLayerObject()
+    [MenuItem("Tools/Find Objects In Layer")]
+    public static void FindObjectsInLayer()
     {
-        string layerName = "TriggerZoneExceptMonster";
-        int layerNumber = LayerMask.NameToLayer(layerName);
+        const string targetLayerName = "Player";
+        int layerNumber = LayerMask.NameToLayer(targetLayerName);
 
         GameObject[] allObjects = FindObjectsOfType<GameObject>(true);
 
@@ -24,7 +28,7 @@ public class DebugBehavior : MonoBehaviour
         {
             if (obj.layer == layerNumber)
             {
-                Debug.Log("Layer: " + layerName + " ------> " + "Object: " + obj.name, obj);
+                Debug.Log($"<color=orange><b>Layer</b></color>: {targetLayerName} ========> <color=yellow><b>Object</b></color>: {obj.name}", obj);
             }
         }
     }

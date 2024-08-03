@@ -71,6 +71,7 @@ namespace SingularityGroup.HotReload.Editor {
                 buildMachineHostName = hostname,
                 buildMachinePort = RequestHelper.port,
                 activeBuildTarget = input.activeBuildTarget.ToString(),
+                buildMachineRequestOrigin = RequestHelper.origin,
             };
         }
 

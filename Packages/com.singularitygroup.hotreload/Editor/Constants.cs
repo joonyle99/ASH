@@ -17,6 +17,7 @@ namespace SingularityGroup.HotReload.Editor {
         public const string TroubleshootingURL = "https://hotreload.net/documentation/troubleshooting";
         public const string RecompileTroubleshootingURL = TroubleshootingURL + "#unity-recompiles-every-time-i-enterexit-playmode";
         public const string FeaturesDocumentationURL = DocumentationURL + "/features";
+        public const string MultipleEditorsURL = DocumentationURL + "/multiple-editors";
         public const string VoteForAwardURL = "https://awards.unity.com/#best-development-tool";
         public const string UnityStoreRateAppURL = "https://assetstore.unity.com/packages/slug/254358#reviews";
         public const string ChangelogURL = WebsiteURL + "/changelog";

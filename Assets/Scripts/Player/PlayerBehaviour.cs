@@ -259,7 +259,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         // CHEAT: Open Boss Door
         if (Input.GetKeyDown(KeyCode.F10))
         {
-            // 가장 가까운 BossDoor를 찾는다 (LINQ 사용)
+            // 가장 가까운 BossDoor를 찾는다
             var closestBossDoor = FindObjectsByType<BossDoor>(FindObjectsSortMode.None)
                 .OrderBy(door => Vector3.Distance(transform.position, door.transform.position))
                 .FirstOrDefault();

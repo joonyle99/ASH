@@ -28,6 +28,7 @@ namespace SingularityGroup.HotReload.Editor {
         public string[] assetBlacklist;
         public bool changePlaymodeTint;
         public bool disableCompilingFromEditorScripts;
+        public bool enableInspectorFreezeFix;
     }
     
     [InitializeOnLoad]
@@ -50,7 +51,7 @@ namespace SingularityGroup.HotReload.Editor {
         internal static PatchStatus patchStatus = PatchStatus.None;
         
         internal static event Action OnPatchHandled;
-
+        
         
         internal static Config config;
 
@@ -167,7 +168,7 @@ namespace SingularityGroup.HotReload.Editor {
         }
 
         public static bool TryRecompileUnsupportedChanges() {
-            if (!HotReloadPrefs.AutoRecompileUnsupportedChanges 
+            if (!HotReloadPrefs.AutoRecompileUnsupportedChanges
                 || HotReloadTimelineHelper.UnsupportedChangesCount == 0
                     && (!HotReloadPrefs.AutoRecompilePartiallyUnsupportedChanges || HotReloadTimelineHelper.PartiallySupportedChangesCount == 0)
                 || _compileError 
@@ -280,9 +281,7 @@ namespace SingularityGroup.HotReload.Editor {
         }
 
         private static void UpdateHost() {
-            string host = "127.0.0.1";
-            var rootPath = Path.GetFullPath(".");
-            RequestHelper.SetServerInfo(new PatchServerInfo(host, null, rootPath));
+            RequestHelper.SetServerInfo(new PatchServerInfo(RequestHelper.defaultServerHost, HotReloadState.ServerPort, null, Path.GetFullPath(".")));
         }
 
         static void OnIntervalThreaded(object o) {
@@ -322,8 +321,8 @@ namespace SingularityGroup.HotReload.Editor {
                 if (responseWarning.Contains("Scripts have compile errors")) {
                     Log.Error(responseWarning);
                 } else {
-                Log.Warning(responseWarning);
-            }
+                    Log.Warning(responseWarning);
+                }
 
                 if (responseWarning.Contains("Multidimensional arrays are not supported")) {
                     await ThreadUtility.SwitchToMainThread();
@@ -337,9 +336,28 @@ namespace SingularityGroup.HotReload.Editor {
         
         internal static bool firstPatchAttempted;
         static void OnIntervalMainThread() {
-            RequestServerInfo();
             HotReloadSuggestionsHelper.Check();
+            
+            // Moved from RequestServerInfo to avoid GC allocations when HR is not active
+            
+            // Repaint if the running Status has changed since the layout changes quite a bit
+            if (running != ServerHealthCheck.I.IsServerHealthy) {
+                if (HotReloadWindow.Current) {
+                    HotReloadRunTab.RepaintInstant();
+                }
+                running = ServerHealthCheck.I.IsServerHealthy;
+            }
+            if (!running) {
+                startupCompletedAt = null;
+            }
+            if (!running && !StartedServerRecently()) {
+                // Reset startup progress
+                startupProgress = null;
+            }
+            
             if(ServerHealthCheck.I.IsServerHealthy) {
+                // NOTE: avoid calling this method when HR is not running to avoid allocations
+                RequestServerInfo();
                 TryPrepareBuildInfo();
                 if (!requestingCompile && (!config.patchEditModeOnlyOnEditorFocus || Application.isPlaying || UnityEditorInternal.InternalEditorUtility.isApplicationActive)) {
                     RequestHelper.PollMethodPatches(HotReloadState.LastPatchId, resp => HandleResponseReceived(resp));
@@ -723,6 +741,7 @@ namespace SingularityGroup.HotReload.Editor {
                 return;
             }
             CodePatcher.I.ClearPatchedMethods();
+            HotReloadSuggestionsHelper.SetSuggestionInactive(HotReloadSuggestionKind.EditorsWithoutHRRunning);
             try {
                 requestingStop = true;
                 await HotReloadCli.StopAsync().ConfigureAwait(false);
@@ -879,27 +898,13 @@ namespace SingularityGroup.HotReload.Editor {
             var waitMs = (int)Mathf.Clamp(pollFrequency - ((DateTime.Now.Ticks / (float)TimeSpan.TicksPerMillisecond) - lastServerPoll), 0, pollFrequency);
             await Task.Delay(waitMs);
 
-            var oldRunning = running;
-
-            var newRunning = ServerHealthCheck.I.IsServerHealthy;
-            running = newRunning;
-
-            if (running) {
-                var resp = await RequestHelper.GetLoginStatus(30);
-                HandleStatus(resp);
-            } else {
-                startupCompletedAt = null;
+            if (!ServerHealthCheck.I.IsServerHealthy) {
+                return;
             }
 
-            if (!running && !StartedServerRecently()) {
-                // Reset startup progress
-                startupProgress = null;
-            }
-
-            // Repaint if the running Status has changed since the layout changes quite a bit
-            if (oldRunning != newRunning && HotReloadWindow.Current) {
-                HotReloadRunTab.RepaintInstant();
-            }
+            
+            var resp = await RequestHelper.GetLoginStatus(30);
+            HandleStatus(resp);
 
             lastServerPoll = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         }

@@ -539,8 +539,8 @@ namespace SingularityGroup.HotReload.Editor {
                                 if (HotReloadTimelineHelper.EventsTimeline.Count > 0 && GUILayout.Button("Clear")) {
                                     HotReloadTimelineHelper.ClearEntries();
                                     if (HotReloadWindow.Current) {
-                                    HotReloadWindow.Current.Repaint();
-                                }
+                                        HotReloadWindow.Current.Repaint();
+                                    }
                                 }
                                 GUILayout.Space(3);
                             }
@@ -672,7 +672,12 @@ namespace SingularityGroup.HotReload.Editor {
 
             CompileMethodDetourer.Reset();
             AssetDatabase.Refresh();
-            CompilationPipeline.RequestScriptCompilation();
+            // This forces the recompilation if no changes were made.
+            // This is better UX because otherwise the recompile button is unresponsive
+            // which can be extra annoying if there are compile error entries in the list
+            if (!EditorApplication.isCompiling) {
+                CompilationPipeline.RequestScriptCompilation();
+            }
         }
         
         private void RenderIndicationButtons() {

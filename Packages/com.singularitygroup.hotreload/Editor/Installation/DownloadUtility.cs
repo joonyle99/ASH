@@ -13,7 +13,7 @@ namespace SingularityGroup.HotReload.Editor {
         public static async Task<DownloadResult> DownloadFile(string url, string targetFilePath, IProgress<float> progress, CancellationToken cancellationToken) {
             var tmpDir = Path.GetDirectoryName(targetFilePath);
             Directory.CreateDirectory(tmpDir);
-            using(var client = RequestHelper.CreateHttpClient()) {
+            using(var client = HttpClientUtils.CreateHttpClient()) {
                 client.Timeout = TimeSpan.FromMinutes(10);
                 return await client.DownloadAsync(url, targetFilePath, progress, cancellationToken).ConfigureAwait(false);
             }
@@ -73,7 +73,7 @@ namespace SingularityGroup.HotReload.Editor {
                 throw new ArgumentException("Has to be writable", nameof(destination));
             if (bufferSize < 0)
                 throw new ArgumentOutOfRangeException(nameof(bufferSize));
-    
+
             var buffer = new byte[bufferSize];
             long totalBytesRead = 0;
             int bytesRead;

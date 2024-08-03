@@ -182,6 +182,7 @@ namespace SingularityGroup.HotReload.Editor {
             {PartiallySupportedChange.AddEnumMember, "An enum member was added. ToString and other reflection methods work only after the next full recompilation. Additionally, changes to the enum order may not apply until you patch usages in other places of the code."},
             {PartiallySupportedChange.EditFieldInitializer, "A field initializer was edited. Changes will only apply to new instances of that type, since the initializer for an object only runs when it is created."},
             {PartiallySupportedChange.AddMethodWithAttributes, "A method with attributes was added. Method attributes will not have any effect until the next full recompilation."},
+            {PartiallySupportedChange.GenericMethodInGenericClass, "A generic method was edited. Usages in non-generic classes applied, but usages in the generic classes are not supported."},
         };
         
         internal static List<AlertEntry> Suggestions = new List<AlertEntry>();
@@ -443,6 +444,8 @@ namespace SingularityGroup.HotReload.Editor {
                    return nameof(PartiallySupportedChange.EditFieldInitializer);
                 case PartiallySupportedChange.AddMethodWithAttributes:
                    return nameof(PartiallySupportedChange.AddMethodWithAttributes);
+                case PartiallySupportedChange.GenericMethodInGenericClass:
+                   return nameof(PartiallySupportedChange.GenericMethodInGenericClass);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(change), change, null);
             }

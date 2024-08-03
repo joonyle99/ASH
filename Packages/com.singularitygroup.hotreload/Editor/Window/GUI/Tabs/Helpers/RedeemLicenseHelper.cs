@@ -214,7 +214,7 @@ namespace SingularityGroup.HotReload.Editor {
             requestingRedeem = true;
             await ThreadUtility.SwitchToThreadPool();
             try {
-                redeemClient = redeemClient ?? (redeemClient = RequestHelper.CreateHttpClient());
+                redeemClient = redeemClient ?? (redeemClient = HttpClientUtils.CreateHttpClient());
                 var input = new Dictionary<string, string> {
                     { "email", email },
                     { "invoice", invoiceNumber }
