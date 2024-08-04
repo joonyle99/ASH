@@ -108,17 +108,9 @@ public class SerializableObjectType
 [Serializable]
 public class JsonPersistentData
 {
-    private string _sceneName = "";
-    public string SceneName
-    {
-        get => _sceneName; set => _sceneName = value;
-    }
+    public string SceneName = "";
 
-    private string _passageName = "";
-    public string PassageName
-    {
-        get => _passageName; set => _passageName = value;
-    }
+    public string PassageName = "";
 
     public JsonDataArray<string, JsonDataArray<string, SerializableObjectType>> _jsonDataGroups;
     public JsonDataArray<string, SerializableObjectType> _jsonGlobalDataGroup;
@@ -129,9 +121,9 @@ public class JsonPersistentData
 
         PersistentData persistentData = new PersistentData();
 
-        persistentData.SceneName = jsonPersistentData._sceneName;
+        persistentData.SceneName = jsonPersistentData.SceneName;
 
-        persistentData.PassageName = jsonPersistentData._passageName;
+        persistentData.PassageName = jsonPersistentData.PassageName;
 
         Dictionary<string, DataGroup> dataGroups = new();
         for (int i = 0; i < jsonPersistentData._jsonDataGroups.data.Count; i++)
@@ -164,8 +156,8 @@ public class JsonPersistentData
 
     public void PrintData()
     {
-        Debug.Log("Scene Name : " + _sceneName);
-        Debug.Log("Passage Name : " + _passageName);
+        Debug.Log("Scene Name : " + SceneName);
+        Debug.Log("Passage Name : " + PassageName);
         Debug.Log("=============dataGroups============");
         for (int i = 0; i < _jsonDataGroups.data.Count; i++)
         {

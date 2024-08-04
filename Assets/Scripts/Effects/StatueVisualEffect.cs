@@ -32,39 +32,35 @@ public class StatueVisualEffect : MonoBehaviour
     [Header("Preserve State")]
     [SerializeField]
     private bool Played = false;
-    PreserveState _statePreserver;
+    private Identifier _identifier;
 
     private void Awake()
     {
+        Init();
     }
     private void Start()
     {
-        Init();
     }
     private void Init()
     {
-        _statePreserver = GetComponent<PreserveState>();
-        if (_statePreserver)
+        _identifier = GetComponent<Identifier>();
+        if (_identifier)
         {
-            JsonDataManager.JsonLoad();
-            JsonPersistentData spd = JsonDataManager.GetObjectInGlobalSaveData<JsonPersistentData>("PersistentData");
-            if(spd != null)
+            PersistentData pd = PersistentDataManager.Instance.PersistentData;
+
+            if (pd.DataGroups != null &&
+                pd.DataGroups.TryGetValue(_identifier.GroupName, out var value))
             {
-                PersistentData pd = JsonPersistentData.ToNormalFormatClassObject(spd);
-                string currentScene = SceneManager.GetActiveScene().name;
-                if (pd.DataGroups != null &&
-                    pd.DataGroups.TryGetValue(currentScene, out var value))
+                if (value.TryGetValue(_identifier.ID + "_played", out var alreadyPlayed))
                 {
-                    if (value.TryGetValue(_statePreserver.ID + "_played", out var alreadyPlayed))
-                    {
-                        Played = (bool)alreadyPlayed;
-                    }
+                    Played = (bool)alreadyPlayed;
                 }
+
             }
 
             //씬 로드시 이미 플레이 된 적이 있는 경우 켜진 플레이 상태가
             //유지되어야 하는 이펙트
-            if(Played)
+            if (Played)
             {
                 ActiveEyes();
             }
@@ -74,16 +70,11 @@ public class StatueVisualEffect : MonoBehaviour
         _soundList = GetComponent<SoundList>();
     }
 
-     public void PlayEffectsOnSaveStarted()
+    public void PlayEffectsOnSaveStarted()
     {
         //최초 1회만 실시되는 로직들
         if (!Played)
         {
-            if (_statePreserver)
-            {
-                _statePreserver.SaveState("_played", true);
-            }
-
             PlayDustParticle();
             ActiveEyes();
         }
@@ -91,6 +82,7 @@ public class StatueVisualEffect : MonoBehaviour
         ActiveSaveText();
         PlaySaveSound();
         Played = true;
+        _identifier.SaveState("_played", true);
     }
 
     private void ActiveEyes()
@@ -108,9 +100,9 @@ public class StatueVisualEffect : MonoBehaviour
     #region Particle
     private void PlayDustParticle()
     {
-        for(int i = 0; i <  _particles.Length; i++)
+        for (int i = 0; i < _particles.Length; i++)
         {
-            if(_particles[i] == null) continue;
+            if (_particles[i] == null) continue;
 
             _particles[i].Play();
         }
@@ -135,7 +127,7 @@ public class StatueVisualEffect : MonoBehaviour
         remain = remain < _minTextDisplayTime ? _minTextDisplayTime - remain : 0;
 
         StopAllCoroutines();
-        StartCoroutine(DeactiveSaveTextTimer(remain));  
+        StartCoroutine(DeactiveSaveTextTimer(remain));
     }
 
     private IEnumerator DeactiveSaveTextTimer(float duration)
@@ -149,9 +141,9 @@ public class StatueVisualEffect : MonoBehaviour
 
     private void PlaySaveSound()
     {
-        if(_soundList == null) return;
-        
-        if(Played)
+        if (_soundList == null) return;
+
+        if (Played)
         {
             string key = "SE_Point_Save";
             if (_soundList.Exists(key))

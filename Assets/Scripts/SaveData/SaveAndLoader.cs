@@ -29,14 +29,14 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     {
         if (activator.Type == ActivatorType.Player)
         {
-            Debug.Log("Save");
-            Save();
-
             if(_statueVisualEffect)
             {
                 _statueVisualEffect.PlayEffectsOnSaveStarted();
                 _statueVisualEffect.DeactiveSaveTextLogic();
             }
+
+            Debug.Log("Save");
+            Save();
         }
     }
 
@@ -48,8 +48,6 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
             OnSaveStarted.Invoke();
 
         JsonDataManager.SavePersistentData(_passageName);
-
-        GameObject Player = GameObject.FindGameObjectWithTag("Player");
 
         JsonDataManager.JsonSave();
 

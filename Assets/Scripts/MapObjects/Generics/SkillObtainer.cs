@@ -6,28 +6,30 @@ public class SkillObtainer : MonoBehaviour
     [SerializeField] string _skillKey;
     [SerializeField] SoundClipData _skillUISound;
 
+    private string ObtainSkillKey => _skillKey;
     private string SaveSkillKey => _skillKey + "_isSaved";
 
     private void Awake()
     {
-        SaveAndLoader.OnSaveStarted += SaveSkill;
-
-        if(PersistentDataManager.GetByGlobal<bool>(SaveSkillKey))
+        //단순 씬전환에 의한 awake함수 호출인 경우
+        if(!SaveAndLoader.IsChangeSceneByLoading)
         {
-            PersistentDataManager.SetByGlobal(_skillKey, true);
+            PersistentDataManager.SetByGlobal(ObtainSkillKey, PersistentDataManager.GetByGlobal<bool>(ObtainSkillKey));
         }
         else
         {
-            PersistentDataManager.SetByGlobal(_skillKey, false);
+            PersistentDataManager.SetByGlobal(ObtainSkillKey, PersistentDataManager.GetByGlobal<bool>(SaveSkillKey));
         }
+
+        SaveAndLoader.OnSaveStarted += SaveSkill;
     }
 
     private void SaveSkill()
     {
-        if(PersistentDataManager.GetByGlobal<bool>(_skillKey))
+        if(PersistentDataManager.GetByGlobal<bool>(ObtainSkillKey))
+        {
             PersistentDataManager.SetByGlobal(SaveSkillKey, true);
-
-        Debug.Log("saveSkillKey: " + PersistentDataManager.GetByGlobal<bool>(SaveSkillKey));
+        }
     }
 
     public void ObtainSkill()
@@ -38,7 +40,7 @@ public class SkillObtainer : MonoBehaviour
         info.MainText = skillToGet.Name;
         info.DetailText = skillToGet.DetailText;
         GameUIManager.OpenSkillObtainPanel(info);
-        PersistentDataManager.SetByGlobal(_skillKey, true);
+        PersistentDataManager.SetByGlobal(ObtainSkillKey, true);
         StartCoroutine(PlaySoundCoroutine(0.25f));
     }
     IEnumerator PlaySoundCoroutine(float delay)

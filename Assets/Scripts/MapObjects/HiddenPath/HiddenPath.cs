@@ -23,7 +23,18 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            if (_statePreserver.LoadState<bool>("_opened", false))
+            if (!_statePreserver.LoadState<bool>("_isOpenSaved", false))
+            {
+                //단순 씬전환이 일어난 경우
+                if(_statePreserver.LoadState("_isOpen", false))
+                {
+                    Destroy(_lightCapturer);
+                    Destroy(_destroyingCollidersParent);
+                    _lightEffect.SetActive(false);
+                    _mask.InstantReveal();
+                }
+            }//저장된 데이터 불러와지는 경우
+            else
             {
                 Destroy(_lightCapturer);
                 Destroy(_destroyingCollidersParent);
@@ -37,8 +48,12 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     
     void OnDestroy()
     {
-        
+        if(_statePreserver && !SaveAndLoader.IsChangeSceneByLoading)
+        {
+            _statePreserver.SaveState("_isOpen", _lightCapturer == null);
+        }
     }
+
     IEnumerator OpenPathCoroutine()
     {
         InputManager.Instance.ChangeInputSetter(_openInputSetter);
@@ -68,7 +83,7 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     {
         if (_statePreserver)
         {
-            _statePreserver.SaveState("_opened", _lightCapturer == null);
+            _statePreserver.SaveState("_isOpenSaved", _lightCapturer == null);
         }
     }
 

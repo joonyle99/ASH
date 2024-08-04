@@ -382,6 +382,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             string passageName = Instance.PersistentData.PassageName;
             if (sceneName == "" || passageName == "")
             {
+                Debug.Log(sceneName);
+                Debug.Log(passageName);
                 Debug.LogWarning("Not Saved Scene or PassageData Load");
                 return false;
             }

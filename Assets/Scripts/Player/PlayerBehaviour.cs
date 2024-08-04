@@ -230,24 +230,21 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         if (!PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved") ||
             !SaveAndLoader.IsChangeSceneByLoading)
         {
-            Debug.Log("1111");
-            //PlayerHp정보가 없는 경우
+            //PlayerHp정보가 있는 경우
             if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
             {
                 CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
-                Debug.Log("3333");
             }
             else
             {
-                Debug.Log("4444");
                 CurHp = _startHp;
             }
-        }
+        }//불러오기 기능에 이후에 적용되야 하는 로직
         else
         {
-            Debug.Log("2222");
-            CurHp = _startHp;
+            CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHpSaved");
         }
+
         SaveAndLoader.OnSaveStarted += SavePlayerStatus;
     }
     protected override void Start()
