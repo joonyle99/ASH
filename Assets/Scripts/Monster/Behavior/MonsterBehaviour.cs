@@ -674,7 +674,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         if (duration < 0.01f)
             yield return new WaitForSeconds(duration);
 
-        Debug.Log("Attack Trigger !");
+        //Debug.Log("Attack Trigger !");
 
         Animator.SetTrigger(targetTransitionParam);
 

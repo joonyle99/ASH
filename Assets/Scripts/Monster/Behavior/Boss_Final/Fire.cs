@@ -1,49 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
+using joonyle99;
 using UnityEngine;
-
-public static class RandomExtension
-{
-    public static int RangeExcept(this System.Random random, int minInclusive, int maxExclusive, int except, int limitCount = 10)
-    {
-        if (minInclusive < 0 || maxExclusive < 0 || minInclusive >= maxExclusive)
-        {
-            Debug.LogError($"Invalid minInclusive or maxExclusive");
-            return except;
-        }
-
-        if (except < minInclusive || except >= maxExclusive)
-        {
-            Debug.LogError($"Invalid except");
-            return except;
-        }
-
-        var currentCount = 0;
-        var result = except;
-
-        while (result == except)
-        {
-            if (currentCount >= limitCount)
-            {
-                /*
-                result = (random.Next(0, 2) == 0)
-                    ? random.Next(minInclusive, except)
-                    : random.Next(except, maxExclusive);
-                */
-
-                // 겹쳐도 어쩔 수 없다
-                result = random.Next(minInclusive, maxExclusive);
-
-                break;
-            }
-
-            currentCount++;
-
-            result = random.Next(minInclusive, maxExclusive);
-        }
-
-        return result;
-    }
-}
 
 public sealed class Fire : BossBehaviour
 {
@@ -82,9 +40,30 @@ public sealed class Fire : BossBehaviour
     [Header("____ FlameBeam ____")]
     [Space]
 
+    [SerializeField] private Fire_FlameBeam _flameBeam;
+    [SerializeField] private Transform _flameBeamSpawnPoint;
+    [SerializeField] private int _flameBeamCount = 8;                               // each flame beam count
+    [SerializeField] private float _flameBeamIntervalAngle;                         // each flame beam interval angle
+
+    [Space]
+
+    [SerializeField] private int _totalFlameBeamBundleNumber = 3;                   // total flame beam bundle count (anim event call count)
+    [SerializeField] private int _currentFlameBeamBundleNumber;                     // current flame beam bundle count (N th anim event call)
+    [SerializeField] private float _flameBeamIntervalAngleEachBundle;               // each flame beam bundle interval angle
+
+    [Space]
+
     [SerializeField] private float _flameBeamAnimDuration;
 
     [Header("____ Fireball ____")]
+    [Space]
+
+    public Fire_FireBall fireBall;
+    public Transform fireBallSpawnPoint;
+    public int fireBallCount;
+    public int fireBallCastCount;
+    public float fireBallCastInterval;
+
     [Space]
 
     [SerializeField] private float _fireballAnimDuration;
@@ -92,9 +71,26 @@ public sealed class Fire : BossBehaviour
     [Header("____ AshPillar ____")]
     [Space]
 
+    public Fire_AshPillar ashPillar;
+    public float ashPillarSpawnDistance;
+    public int ashPillarCastCount;
+    public float ashPillarCastInterval;
+
+    [Space]
+
     [SerializeField] private float _ashPillarAnimDuration;
 
     [Header("____ FirePillar ____")]
+    [Space]
+
+    public Fire_FirePillar firePillar;
+    public Range firePillarSpawnRange;
+    public float firePillarSpawnHeight;
+    public int firePillarCount;
+    public float firePillarEachDistance;
+
+    private List<float> _usedPosX;
+
     [Space]
 
     [SerializeField] private float _firePillarAnimDuration;
@@ -125,8 +121,10 @@ public sealed class Fire : BossBehaviour
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
 
+        InitSkillVariable();
+
         // TEMP
-        rageTargetHurtCount = finalTargetHurtCount / 2;
+        rageTargetHurtCount = finalTargetHurtCount - 5;
 
         // TEMP
         var particles = GetComponentsInChildren<ParticleSystem>();
@@ -140,6 +138,8 @@ public sealed class Fire : BossBehaviour
         base.Start();
 
         SetToFirstAttack();
+
+        IsGodMode = false;
     }
     private void OnDestroy()
     {
@@ -162,6 +162,11 @@ public sealed class Fire : BossBehaviour
     public override void AttackPostProcess()
     {
         SetToNextAttack();
+
+        if (_currentAttack == AttackType.FlameBeam)
+        {
+            _currentFlameBeamBundleNumber = 0;
+        }
     }
     public override void GroggyPreProcess()
     {
@@ -191,9 +196,32 @@ public sealed class Fire : BossBehaviour
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
 
+    private void InitSkillVariable()
+    {
+        // flame beam
+        _flameBeamIntervalAngle = 360f / _flameBeamCount; // 360 / 8 = 45
+        _flameBeamIntervalAngleEachBundle = _flameBeamIntervalAngle / _totalFlameBeamBundleNumber;  // 45 / 3 = 15
+    }
+
     public void FlameBeam_AnimEvent()
     {
+        var defaultAngle = _flameBeamIntervalAngleEachBundle * _currentFlameBeamBundleNumber;
+        //Debug.Log($"defaultAngle: {defaultAngle}");
 
+        //string output = "eachAngle\n";
+
+        for (int flameBeamNumber = 0; flameBeamNumber < _flameBeamCount; flameBeamNumber++)
+        {
+            var eachFlameBeamAngle = (flameBeamNumber * _flameBeamIntervalAngle + defaultAngle) % 360f; // 0 ~ 360
+            //output += $"{eachFlameBeamAngle}\n";
+            var flameBeam = Instantiate(_flameBeam, _flameBeamSpawnPoint.position, Quaternion.Euler(0f, 0f, eachFlameBeamAngle));
+            flameBeam.SetActor(this);
+            flameBeam.ExecuteDissolveEffect();
+        }
+
+        _currentFlameBeamBundleNumber++;
+
+        //Debug.Log(output);
     }
     public void Fireball_AnimEvent()
     {
@@ -210,7 +238,7 @@ public sealed class Fire : BossBehaviour
 
     /// <summary>
     /// 모든 공격 애니메이션의 Duration 만큼 대기
-    /// + 텔레포트 턴이라면, 텔레포트 끝날 때까지 대기
+    /// + 텔레포트 턴이라면, 텔레포트 끝날 때까지 대기 (+ 1초 추가 대기)
     ///
     /// Attack Trigger 직후 호출되는 WaitEvent (그 다음은 Duration 대기)
     /// </summary>
@@ -240,6 +268,11 @@ public sealed class Fire : BossBehaviour
             yield return new WaitUntil(() => !_isTeleportTurn);
 
             Debug.Log("Attack Wait Event Point 2 - Complete Teleport");
+
+            // 텔레포트 후 추가 대기 시간
+            yield return new WaitForSeconds(1f);
+
+            Debug.Log("Attack Wait Event Point 3 - Additional Wait Time");
         }
     }
     private IEnumerator WaitEventCoroutine_FlameBeam()

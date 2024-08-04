@@ -70,7 +70,7 @@ public class MaterialController : MonoBehaviour
 
     public void EnableGodModeOutline()
     {
-        Debug.Log("Enable GodMode Outline");
+        //Debug.Log("Enable GodMode Outline");
         foreach (var material in _instanceMaterials)
         {
             material.EnableKeyword("OUTBASE_ON");
@@ -78,7 +78,7 @@ public class MaterialController : MonoBehaviour
     }
     public void DisableGodModeOutline()
     {
-        Debug.Log("Disable GodMode Outline");
+        //Debug.Log("Disable GodMode Outline");
         foreach (var material in _instanceMaterials)
         {
             material.DisableKeyword("OUTBASE_ON");

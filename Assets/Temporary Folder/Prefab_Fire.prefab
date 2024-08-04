@@ -29,7 +29,39 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1868708148}
+  - {fileID: 756238834}
   m_Father: {fileID: 5550379080094522760}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &756238833
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 756238834}
+  m_Layer: 0
+  m_Name: FlameBeamSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &756238834
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756238833}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.13, y: 4.72, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 705367574}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1489655372
@@ -38803,8 +38835,8 @@ MonoBehaviour:
   cutscenePlayerList: {fileID: 0}
   <IsGroggy>k__BackingField: 0
   <IsRage>k__BackingField: 0
-  finalTargetHurtCount: 20
-  rageTargetHurtCount: 10
+  finalTargetHurtCount: 25
+  rageTargetHurtCount: 20
   attackCountRange:
     Start: 1
     End: 1
@@ -38818,14 +38850,33 @@ MonoBehaviour:
   _totalHitCount: 0
   isEndMoveProcess: 0
   _distanceFromBoss: 6
-  _attackTypeRange:
-    Start: 1
-    End: 5
+  _firstAttack: 1
   _currentAttack: 0
   _nextAttack: 0
+  _isTeleportTurn: 0
+  _teleportAnimDuration: 0
+  _flameBeam: {fileID: 591067126088536679, guid: bdb05f5f3766ab741b1761b9aee6d64e, type: 3}
+  _flameBeamSpawnPoint: {fileID: 756238834}
+  _flameBeamCount: 8
   _flameBeamAnimDuration: 0
+  fireBall: {fileID: 0}
+  fireBallSpawnPoint: {fileID: 0}
+  fireBallCount: 0
+  fireBallCastCount: 0
+  fireBallCastInterval: 0
   _fireballAnimDuration: 0
+  ashPillar: {fileID: 0}
+  ashPillarSpawnDistance: 0
+  ashPillarCastCount: 0
+  ashPillarCastInterval: 0
   _ashPillarAnimDuration: 0
+  firePillar: {fileID: 0}
+  firePillarSpawnRange:
+    Start: 0
+    End: 0
+  firePillarSpawnHeight: 0
+  firePillarCount: 0
+  firePillarEachDistance: 0
   _firePillarAnimDuration: 0
 --- !u!114 &939166307086520023
 MonoBehaviour:
@@ -38839,7 +38890,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57f5c642e36f8344a96f24b005d5f966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleporyArea: {fileID: 1489655374}
+  _teleportableArea: {fileID: 1489655374}
 --- !u!114 &8834843163532303268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38859,7 +38910,7 @@ MonoBehaviour:
   _isUsable: 1
   _isWaitingEvent: 0
   _isDuringCoolTime: 0
-  _targetEvaluatorCoolTime: 0
+  _targetEvaluatorCoolTime: 2.5
 --- !u!114 &1817518469132352657
 MonoBehaviour:
   m_ObjectHideFlags: 0

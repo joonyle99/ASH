@@ -93,5 +93,46 @@ namespace joonyle99
         {
             return new Vector3(vec.x, y, vec.y);
         }
+
+        public static int RangeExcept(this System.Random random, int minInclusive, int maxExclusive, int except, int limitCount = 10)
+        {
+            if (minInclusive < 0 || maxExclusive < 0 || minInclusive >= maxExclusive)
+            {
+                Debug.LogError($"Invalid minInclusive or maxExclusive");
+                return except;
+            }
+
+            if (except < minInclusive || except >= maxExclusive)
+            {
+                Debug.LogError($"Invalid except");
+                return except;
+            }
+
+            var currentCount = 0;
+            var result = except;
+
+            while (result == except)
+            {
+                if (currentCount >= limitCount)
+                {
+                    /*
+                    result = (random.Next(0, 2) == 0)
+                        ? random.Next(minInclusive, except)
+                        : random.Next(except, maxExclusive);
+                    */
+
+                    // °ãÃÄµµ ¾îÂ¿ ¼ö ¾ø´Ù
+                    result = random.Next(minInclusive, maxExclusive);
+
+                    break;
+                }
+
+                currentCount++;
+
+                result = random.Next(minInclusive, maxExclusive);
+            }
+
+            return result;
+        }
     }
 }
