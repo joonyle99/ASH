@@ -388,7 +388,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
                 return false;
             }
 
-            SaveAndLoader.IsChangeSceneByLoading = true;
+            SceneChangeManager.Instance.SceneChangeType = SceneChangeType.Loading;
             SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
             return true;
         }

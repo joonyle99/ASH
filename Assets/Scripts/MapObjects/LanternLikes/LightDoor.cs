@@ -37,22 +37,19 @@ public class LightDoor : LanternLike
         {
             SaveAndLoader.OnSaveStarted += SaveDoorOpenState;
 
-            //저장 안된경우 or 저장시점에 문 닫힌 경우
-            if(!_statePreserver.HasState<bool>("_isPlaySaved") ||
-                !_statePreserver.LoadState("_isPlaySaved", false))
+            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                if (_statePreserver.LoadState("_opened", false))
+                if (_statePreserver.LoadState("_isOpenSaved", false))
                 {
-                    _collider.enabled = false;
-                    CurrentState = State.Opened;
-                    _animator.SetTrigger("InstantOpen");
+                    OpenDoorImmediately();
                 }
             }
             else
             {
-                _collider.enabled = false;
-                CurrentState = State.Opened;
-                _animator.SetTrigger("InstantOpen");
+                if (_statePreserver.LoadState("_opened", false))
+                {
+                    OpenDoorImmediately();
+                }
             }
         }
 
@@ -73,7 +70,7 @@ public class LightDoor : LanternLike
     {
         if (_statePreserver)
         {
-            if(!SaveAndLoader.IsChangeSceneByLoading)
+            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
             {
                 _statePreserver.SaveState("_opened", CurrentState == State.Opened);
             }
@@ -113,8 +110,15 @@ public class LightDoor : LanternLike
         CurrentState = State.Opened;
     }
 
+    private void OpenDoorImmediately()
+    {
+        _collider.enabled = false;
+        CurrentState = State.Opened;
+        _animator.SetTrigger("InstantOpen");
+    }
+
     private void SaveDoorOpenState()
     {
-        _statePreserver.SaveState("_isPlaySaved", IsOpened);
+        _statePreserver.SaveState("_isOpenSaved", IsOpened);
     }
 }

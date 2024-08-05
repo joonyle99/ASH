@@ -28,8 +28,7 @@ public class PushableTree : InteractableObject
 
             var treeTransform = new TransformState(_treeTrunk.transform);
             //저장 시점의 데이터를 불러오는 경우
-            if(_statePreserver.HasState<bool>("_FallingTreeTransformSaved") &&
-                !Equals(treeTransform, _statePreserver.LoadState("_FallingTreeTransformSaved", treeTransform)))
+            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
                 var newTreeTransform = _statePreserver.LoadState("_FallingTreeTransformSaved", treeTransform);
                 _treeTrunk.transform.localPosition = newTreeTransform.Position;
@@ -65,7 +64,7 @@ public class PushableTree : InteractableObject
 
         if (_statePreserver)
         {
-            if(!SaveAndLoader.IsChangeSceneByLoading)
+            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
             {
                 _statePreserver.SaveState("_isInteractable", IsInteractable);
 

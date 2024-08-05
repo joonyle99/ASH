@@ -68,6 +68,7 @@ public class Passage : TriggerZone
         yield return new WaitUntil(() => exitSceneCutscene.IsDone);
 
         // # change to next scene
+        SceneChangeManager.Instance.SceneChangeType = SceneChangeType.ChangeMap;
         SceneChangeManager.Instance.ChangeToPlayableScene(toSceneName, toPassageData.PassageName);
     }
     private IEnumerator ExitSceneCutsceneCoroutine()

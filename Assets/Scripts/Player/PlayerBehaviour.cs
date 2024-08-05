@@ -226,29 +226,26 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         _soundList = GetComponent<SoundList>();
 
         //Load Data
-        //저장된 체력정보가 없거나 단순 맵이동에 대한 awake호출인 경우
-        if (!PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved") ||
-            !SaveAndLoader.IsChangeSceneByLoading)
+        if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
         {
-            //PlayerHp정보가 있는 경우
-            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
-            {
-                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
-            }
+            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved"))
+                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHpSaved");
             else
-            {
                 CurHp = _startHp;
-            }
-        }//불러오기 기능에 이후에 적용되야 하는 로직
+        }
         else
         {
-            CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHpSaved");
+            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
+                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
+            else
+                CurHp = _startHp;
         }
 
         SaveAndLoader.OnSaveStarted += SavePlayerStatus;
     }
     protected override void Start()
     {
+        Debug.Log("SceneChangeType : " + SceneChangeManager.Instance.SceneChangeType);
         base.Start();
 
         // init player

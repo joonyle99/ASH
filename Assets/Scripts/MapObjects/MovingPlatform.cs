@@ -29,6 +29,7 @@ public class MovingPlatform : ToggleableObject
     [SerializeField] private SoundClipData _workSound;
 
     private Rigidbody2D _rigidbody;
+    [SerializeField]
     private float _travelDistance = 0f;
     private bool _isMoving = false;
 
@@ -43,7 +44,14 @@ public class MovingPlatform : ToggleableObject
     private void OnDestroy()
     {
         if (_statePreserver)
-            _statePreserver.SaveState("_travelDistance", _travelDistance);
+        {
+            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            {
+                _statePreserver.SaveState("_travelDistance", _travelDistance);
+            }
+
+            SaveAndLoader.OnSaveStarted -= SaveTravelDistanceState;
+        }
     }
 
     private void Awake()
@@ -52,7 +60,18 @@ public class MovingPlatform : ToggleableObject
         _statePreserver = GetComponent<PreserveState>();
 
         if (_statePreserver)
-            _travelDistance = _statePreserver.LoadState("_travelDistance", 0f);
+        {
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                _travelDistance = _statePreserver.LoadState<float>("_travelDistanceSaved", 0f);
+            }
+            else
+            {
+                _travelDistance = _statePreserver.LoadState("_travelDistance", 0f);
+            }
+
+            SaveAndLoader.OnSaveStarted += SaveTravelDistanceState;
+        }
     }
     private void Update()
     {
@@ -118,4 +137,11 @@ public class MovingPlatform : ToggleableObject
         _moveAudio.Stop();
     }
 
+    private void SaveTravelDistanceState()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState<float>("_travelDistanceSaved", _travelDistance);
+        }
+    }
 }

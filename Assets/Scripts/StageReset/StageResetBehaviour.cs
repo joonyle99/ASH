@@ -17,6 +17,10 @@ public class StageResetBehaviour : InteractableObject
     private string _sceneName = "";
     private string _entrancePassage = "";
 
+    [Header("PreserveState")]
+    [SerializeField, Tooltip("현재 씬의 일반적인 게임오브젝트의 PreserveState GroupName")]
+    private string _currentSceneBasicGroupName;
+
     private void Awake()
     {
         _lightNPC = GetComponent<LightNPC>();
@@ -62,7 +66,8 @@ public class StageResetBehaviour : InteractableObject
     }
     public void ResetStage()
     {
-        PersistentDataManager.Instance.PersistentData.DataGroups.Clear();
+        PersistentDataManager.Instance.PersistentData.DataGroups[_currentSceneBasicGroupName].Clear();
+        SceneChangeManager.Instance.SceneChangeType = SceneChangeType.StageReset;
         SceneChangeManager.Instance.ChangeToPlayableScene(_sceneName, _entrancePassage);
         BossDungeonManager.Instance.MakeDataGroup();
     }

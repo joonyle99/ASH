@@ -6,13 +6,6 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     private string _passageName;
     public string PassageName => _passageName;
 
-    private static bool _isChangeSceneByLoading = false;
-    public static bool IsChangeSceneByLoading
-    {
-        get => _isChangeSceneByLoading;
-        set => _isChangeSceneByLoading = value;
-    }
-
     private StatueVisualEffect _statueVisualEffect;
 
     public static Action OnSaveStarted;
@@ -21,7 +14,6 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     private void Awake()
     {
         _passageName = gameObject.name;
-        _isChangeSceneByLoading = false;
         _statueVisualEffect = GetComponent<StatueVisualEffect>();
     }
 

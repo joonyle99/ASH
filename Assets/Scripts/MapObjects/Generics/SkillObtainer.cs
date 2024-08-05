@@ -11,8 +11,7 @@ public class SkillObtainer : MonoBehaviour
 
     private void Awake()
     {
-        //단순 씬전환에 의한 awake함수 호출인 경우
-        if(!SaveAndLoader.IsChangeSceneByLoading)
+        if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
         {
             PersistentDataManager.SetByGlobal(ObtainSkillKey, PersistentDataManager.GetByGlobal<bool>(ObtainSkillKey));
         }

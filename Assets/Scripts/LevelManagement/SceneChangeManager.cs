@@ -3,19 +3,35 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
+public enum SceneChangeType
+{
+    None = 0,
+    ChangeMap = 1,
+    Loading = 2,
+    StageReset = 3,
+}
+
 /// <summary>
 /// 씬 전환을 담당하는 매니저
 /// SceneChangeManager GameObject
 ///     -> SceneChangeManager
 ///     -> SceneTransitionPlayer
 ///     -> PlayerableSceneTransitionPlayer
-/// </summary>
+/// </summary> 
+
 public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChangeManager>, ISceneContextBuildListener
 {
     public bool IsChanging { get; private set; }
 
     [SerializeField] private LevelGraphData _levelGraphData;                        // 레벨 그래프
     [SerializeField] private SceneTransitionPlayer _defaultSceneTransitionPlayer;   // 기본적으로 사용할 씬 전환 플레이어 (Either Playable or None Playable)
+
+    private SceneChangeType _sceneChangeType = SceneChangeType.None;
+    public SceneChangeType SceneChangeType
+    {
+        get => _sceneChangeType;
+        set => _sceneChangeType = value;
+    }
 
     private void Start()
     {

@@ -17,7 +17,7 @@ struct TransformState
         Rotation = transform.localRotation;
         Scale = transform.localScale;
     }
-    
+
     public override string ToString()
     {
         string str = "TransformState : { Position (" + Position.x + ", " + Position.y + ", " + Position.z + ")" +
@@ -78,7 +78,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
                 transform.localScale = transformState.Scale;
             });
         }
-        
+
         // 파괴 상태 불러오기
         if (_preserveDestruction)
         {
@@ -99,8 +99,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
         // 플레이 모드에서만 저장
         if (Application.isPlaying)
         {
-            //불러오기에 의한 씬전환이 아닌 경우에만 저장
-            if(!SaveAndLoader.IsChangeSceneByLoading)
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
             {
                 // 트랜스폼 데이터 저장 (씬 전환 시)
                 SaveTransformState();
@@ -111,11 +110,12 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
     // 오브젝트가 파괴되었을 때 파괴 상태의 데이터를 저장하는 작업
     public void OnDestruction()
     {
-        // 파괴 상태 데이터 저장
+        // 파괴 상태 데이터 저장(단, 스테이지 초기화 아닐 경우)
         if (_preserveDestruction)
         {
             PersistentDataManager.Set(_groupName, DestructionKey, true);
             SaveAndLoader.OnSaveStarted -= OnSaveData;
+
         }
     }
 

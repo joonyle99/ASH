@@ -23,34 +23,34 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            if (!_statePreserver.LoadState<bool>("_isOpenSaved", false))
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                //단순 씬전환이 일어난 경우
-                if(_statePreserver.LoadState("_isOpen", false))
+                if (_statePreserver.LoadState<bool>("_isOpenSaved", false))
                 {
-                    Destroy(_lightCapturer);
-                    Destroy(_destroyingCollidersParent);
-                    _lightEffect.SetActive(false);
-                    _mask.InstantReveal();
+                    OpenPathImmediately();
                 }
-            }//저장된 데이터 불러와지는 경우
+
+            }
             else
             {
-                Destroy(_lightCapturer);
-                Destroy(_destroyingCollidersParent);
-                _lightEffect.SetActive(false);
-                _mask.InstantReveal();
+                if (_statePreserver.LoadState("_isOpen", false))
+                {
+                    OpenPathImmediately();
+                }
             }
         }
 
         SaveAndLoader.OnSaveStarted += SaveOpenState;
     }
-    
+
     void OnDestroy()
     {
-        if(_statePreserver && !SaveAndLoader.IsChangeSceneByLoading)
+        if (_statePreserver)
         {
-            _statePreserver.SaveState("_isOpen", _lightCapturer == null);
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            {
+                _statePreserver.SaveState("_isOpen", _lightCapturer == null);
+            }
         }
     }
 
@@ -79,6 +79,13 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
         _eTime = 0f;
     }
 
+    private void OpenPathImmediately()
+    {
+        Destroy(_lightCapturer);
+        Destroy(_destroyingCollidersParent);
+        _lightEffect.SetActive(false);
+        _mask.InstantReveal();
+    }
     private void SaveOpenState()
     {
         if (_statePreserver)

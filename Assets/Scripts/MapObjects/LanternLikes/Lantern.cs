@@ -85,22 +85,19 @@ public class Lantern : LanternLike, ILightCaptureListener
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            //저장이 한번도 안된 경우 or 저장시점에 랜턴 안켜진 경우
-            if(!_statePreserver.HasState<bool>("_isOnSaved") ||
-                !_statePreserver.LoadState("_isOnSaved", false))
+            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                if(_statePreserver.LoadState("_isOn", false))
+                if(_statePreserver.LoadState("_isOnSaved", false))
                 {
-                    _isExplodeDone = true;
-                    TurnCurrentSpotLightOn();
-                    IsLightOn = true;
+                    TurnOnImmediately();
                 }
             }
             else
             {
-                _isExplodeDone = true;
-                TurnCurrentSpotLightOn();
-                IsLightOn = true;
+                if (_statePreserver.LoadState("_isOn", false))
+                {
+                    TurnOnImmediately();
+                }
             }
         }
 
@@ -116,12 +113,12 @@ public class Lantern : LanternLike, ILightCaptureListener
     {
         if (_statePreserver)
         {
-            if (!SaveAndLoader.IsChangeSceneByLoading)
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
             {
                 _statePreserver.SaveState("_isOn", IsLightOn);
-
-                SaveAndLoader.OnSaveStarted -= SaveLanternOnState;
             }
+
+            SaveAndLoader.OnSaveStarted -= SaveLanternOnState;
         }
     }
     void Update()
@@ -216,6 +213,12 @@ public class Lantern : LanternLike, ILightCaptureListener
         _currentSpotLight.gameObject.SetActive(false);
     }
 
+    private void TurnOnImmediately()
+    {
+        _isExplodeDone = true;
+        TurnCurrentSpotLightOn();
+        IsLightOn = true;
+    }
     private void SaveLanternOnState()
     {
         if(_statePreserver)
