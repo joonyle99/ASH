@@ -15,6 +15,63 @@ public sealed class Fire : BossBehaviour
         FirePillar,
     }
 
+    public enum FireBallType
+    {
+        Down,           // 아래 (북 -> 남)
+        DiagonalLeft,   // 왼쪽 아래 대각선 (북동 -> 남서)
+        DiagonalRight,  // 오른쪽 아래 대각선 (북서 -> 남동)
+    }
+
+    public struct FireBallInfo
+    {
+        public FireBallType FireballType;
+
+        public Vector3 SpawnPoint;
+        public Vector3 Direction;
+        public float Rotation;
+        
+        public FireBallInfo(FireBallType fireballType)
+        {
+            FireballType = fireballType;
+
+            var cameraController = SceneContext.Current.CameraController;
+            if (cameraController == null)
+            {
+                Debug.LogError($"cameraController is invalid");
+
+                SpawnPoint = default;
+                Direction = default;
+                Rotation = default;
+
+                return;
+            }
+
+            switch (FireballType)
+            {
+                case FireBallType.Down:
+                    SpawnPoint = SceneContext.Current.CameraController.TopMiddle;
+                    Direction = new Vector3(0f, -1f, 0f).normalized;
+                    Rotation = 90f;
+                    break;
+                case FireBallType.DiagonalLeft:
+                    SpawnPoint = SceneContext.Current.CameraController.RightTop;
+                    Direction = new Vector3(-1f, -1f, 0f).normalized;
+                    Rotation = -45f;
+                    break;
+                case FireBallType.DiagonalRight:
+                    SpawnPoint = SceneContext.Current.CameraController.LeftTop;
+                    Direction = new Vector3(1f, -1f, 0f).normalized;
+                    Rotation = 45f;
+                    break;
+                default:
+                    SpawnPoint = default;
+                    Direction = default;
+                    Rotation = default;
+                    break;
+            }
+        }
+    }
+
     #region Variable
 
     [Header("――――――― Fire Behaviour ―――――――")]
@@ -42,31 +99,36 @@ public sealed class Fire : BossBehaviour
 
     [SerializeField] private Fire_FlameBeam _flameBeam;
     [SerializeField] private Transform _flameBeamSpawnPoint;
+
+    [Space]
+
     [SerializeField] private int _flameBeamCount = 8;                               // each flame beam count
     [SerializeField] private float _flameBeamIntervalAngle;                         // each flame beam interval angle
 
     [Space]
 
-    [SerializeField] private int _totalFlameBeamBundleNumber = 3;                   // total flame beam bundle count (anim event call count)
-    [SerializeField] private int _currentFlameBeamBundleNumber;                     // current flame beam bundle count (N th anim event call)
-    [SerializeField] private float _flameBeamIntervalAngleEachBundle;               // each flame beam bundle interval angle
+    [SerializeField] private int _totalFlameBeamCastNumber = 3;                     // total flame beam cast count (anim event call count)
+    [SerializeField] private int _currentFlameBeamCastNumber;                       // current flame beam cast count (N th anim event call)
+    [SerializeField] private float _flameBeamIntervalAngleEachCast;                 // each flame beam cast interval angle
 
-    [Space]
-
-    [SerializeField] private float _flameBeamAnimDuration;
+    private float _flameBeamAnimDuration;
 
     [Header("____ Fireball ____")]
     [Space]
 
-    public Fire_FireBall fireBall;
-    public Transform fireBallSpawnPoint;
-    public int fireBallCount;
-    public int fireBallCastCount;
-    public float fireBallCastInterval;
+    [SerializeField] private Fire_FireBall _fireBall;
 
     [Space]
 
-    [SerializeField] private float _fireballAnimDuration;
+    [SerializeField] private int _fireBallCount = 8;
+
+    [Space]
+
+    [SerializeField] private int _fireBallCastCount = 5;            // fixed
+    [SerializeField] private float _fireBallCastInterval = 1.5f;
+    
+    private float _fireballAnimDuration;
+    private Coroutine _fireballCoroutine;
 
     [Header("____ AshPillar ____")]
     [Space]
@@ -75,10 +137,8 @@ public sealed class Fire : BossBehaviour
     public float ashPillarSpawnDistance;
     public int ashPillarCastCount;
     public float ashPillarCastInterval;
-
-    [Space]
-
-    [SerializeField] private float _ashPillarAnimDuration;
+    
+    private float _ashPillarAnimDuration;
 
     [Header("____ FirePillar ____")]
     [Space]
@@ -91,9 +151,7 @@ public sealed class Fire : BossBehaviour
 
     private List<float> _usedPosX;
 
-    [Space]
-
-    [SerializeField] private float _firePillarAnimDuration;
+    private float _firePillarAnimDuration;
 
     #endregion
 
@@ -121,6 +179,10 @@ public sealed class Fire : BossBehaviour
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
 
+        // 텔레포트 전이 이벤트 등록
+        AnimTransitionEvent -= HandleTeleportTransition;
+        AnimTransitionEvent += HandleTeleportTransition;
+
         InitSkillVariable();
 
         // TEMP
@@ -144,6 +206,7 @@ public sealed class Fire : BossBehaviour
     private void OnDestroy()
     {
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
+        AnimTransitionEvent -= HandleTeleportTransition;
     }
 
     public override void AttackPreProcess()
@@ -165,7 +228,7 @@ public sealed class Fire : BossBehaviour
 
         if (_currentAttack == AttackType.FlameBeam)
         {
-            _currentFlameBeamBundleNumber = 0;
+            _currentFlameBeamCastNumber = 0;
         }
     }
     public override void GroggyPreProcess()
@@ -196,16 +259,63 @@ public sealed class Fire : BossBehaviour
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
 
+    // skill
     private void InitSkillVariable()
     {
         // flame beam
         _flameBeamIntervalAngle = 360f / _flameBeamCount; // 360 / 8 = 45
-        _flameBeamIntervalAngleEachBundle = _flameBeamIntervalAngle / _totalFlameBeamBundleNumber;  // 45 / 3 = 15
+        _flameBeamIntervalAngleEachCast = _flameBeamIntervalAngle / _totalFlameBeamCastNumber;  // 45 / 3 = 15
+    }
+    private IEnumerator FireBallCoroutine()
+    {
+        for (int i = 0; i < _fireBallCastCount; i++)
+        {
+            // FireBallDir
+            // 
+            // 1. DiagonalRight
+            // 2. DiagonalLeft
+            // 3. Down
+            
+            FireBallType type = Util.RangeMinMaxInclusive(FireBallType.Down, FireBallType.DiagonalRight);
+            FireBallInfo info = new FireBallInfo(type);
+
+            var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
+            fireBall.SetActor(this);
+
+            var fireBallParticle = fireBall.GetComponent<ParticleSystem>();
+
+            // module
+            var mainModule = fireBallParticle.main;
+            var velocityModule = fireBallParticle.velocityOverLifetime;
+            var emissionModule = fireBallParticle.emission;
+
+            // main module
+            mainModule.startRotation = new ParticleSystem.MinMaxCurve(info.Rotation * Mathf.Deg2Rad);
+
+            // velocity module
+            velocityModule.x = new ParticleSystem.MinMaxCurve(info.Direction.x);
+            velocityModule.y = new ParticleSystem.MinMaxCurve(info.Direction.y);
+
+            // emission module
+            var burst = emissionModule.GetBurst(0);
+            burst.count = new ParticleSystem.MinMaxCurve(_fireBallCount);
+
+            emissionModule.SetBurst(0, burst);
+
+            // play particle
+            fireBallParticle.Play();
+
+            // cast interval
+            yield return new WaitForSeconds(_fireBallCastInterval);
+        }
+
+        StopTargetCoroutine(ref _fireballCoroutine);
     }
 
+    // skill anim event
     public void FlameBeam_AnimEvent()
     {
-        var defaultAngle = _flameBeamIntervalAngleEachBundle * _currentFlameBeamBundleNumber;
+        var defaultAngle = _flameBeamIntervalAngleEachCast * _currentFlameBeamCastNumber;
         //Debug.Log($"defaultAngle: {defaultAngle}");
 
         //string output = "eachAngle\n";
@@ -219,13 +329,19 @@ public sealed class Fire : BossBehaviour
             flameBeam.ExecuteDissolveEffect();
         }
 
-        _currentFlameBeamBundleNumber++;
+        _currentFlameBeamCastNumber++;
 
         //Debug.Log(output);
     }
     public void Fireball_AnimEvent()
     {
+        if (_fireballCoroutine != null)
+        {
+            Debug.LogError($"_fireballCoroutine is not null");
+            return;
+        }
 
+        _fireballCoroutine = StartCoroutine(FireBallCoroutine());
     }
     public void AshPillar_AnimEvent()
     {
@@ -234,6 +350,21 @@ public sealed class Fire : BossBehaviour
     public void FirePillar_AnimEvent()
     {
 
+    }
+
+    // etc
+    private void StopTargetCoroutine(ref Coroutine targetCoroutine)
+    {
+        if (targetCoroutine != null)
+        {
+            StopCoroutine(targetCoroutine);
+            targetCoroutine = null;
+        }
+        else
+        {
+            Debug.LogError($"targetCoroutine is already null");
+            return;
+        }
     }
 
     /// <summary>
@@ -282,6 +413,9 @@ public sealed class Fire : BossBehaviour
     private IEnumerator WaitEventCoroutine_Fireball()
     {
         yield return new WaitForSeconds(_fireballAnimDuration);
+
+        // _fireballCoroutine가 null일 때까지 대기
+        yield return new WaitUntil(() => _fireballCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_AshPillar()
     {
@@ -290,6 +424,15 @@ public sealed class Fire : BossBehaviour
     private IEnumerator WaitEventCoroutine_FirePillar()
     {
         yield return new WaitForSeconds(_firePillarAnimDuration);
+    }
+
+    private bool HandleTeleportTransition(string targetTransitionParam, Monster_StateBase currentState)
+    {
+        // 전이할 애니메이션이 Teleport가 아니라면 즉시 전환
+        if (targetTransitionParam is not "Teleport") return true;
+
+        // 공격 중이 아닐 때까지 애니메이션 전환을 미룸
+        return !IsAttacking && _fireballCoroutine == null;
     }
 
     #endregion

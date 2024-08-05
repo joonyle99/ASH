@@ -13,6 +13,7 @@ public class SceneContext : MonoBehaviour
     // basic
     public PlayerBehaviour Player { get; private set; }                     // 플레이어
     public ProCamera2D ProCamera { get; private set; }                      // 프로 카메라
+    public CameraController CameraController { get; private set; }          // 카메라 컨트롤러
 
     // extra
     public Passage EntrancePassage { get; private set; }                                                                                // 씬의 입구
@@ -26,6 +27,7 @@ public class SceneContext : MonoBehaviour
     {
         Current = this;
         ProCamera = FindObjectOfType<ProCamera2D>();
+        CameraController = ProCamera.GetComponent<CameraController>();
 
         // SceneContext에 체크포인트 매니저를 추가한다
         if (_checkpointManager == null)

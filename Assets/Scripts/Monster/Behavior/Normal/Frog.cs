@@ -4,8 +4,8 @@ public sealed class Frog : MonsterBehaviour
     {
         base.Awake();
 
-        AnimTransitionEvent -= HandleTransitionCondition;  // Prevent multiple subscriptions (Handler)
-        AnimTransitionEvent += HandleTransitionCondition;
+        AnimTransitionEvent -= HandleGroundedTransition;  // Prevent multiple subscriptions (Handler)
+        AnimTransitionEvent += HandleGroundedTransition;
     }
     public void FixedUpdate()
     {
@@ -33,7 +33,7 @@ public sealed class Frog : MonsterBehaviour
 
         return IAttackListener.AttackResult.Success;
     }
-    private bool HandleTransitionCondition(string targetTransitionParam, Monster_StateBase currentState)
+    private bool HandleGroundedTransition(string targetTransitionParam, Monster_StateBase currentState)
     {
         // Hurt 애니메이션은 어떠한 상황에서도 즉시 전환
         if (targetTransitionParam is "Hurt") return true;
@@ -44,6 +44,6 @@ public sealed class Frog : MonsterBehaviour
 
     private void OnDestroy()
     {
-        AnimTransitionEvent -= HandleTransitionCondition;
+        AnimTransitionEvent -= HandleGroundedTransition;
     }
 }

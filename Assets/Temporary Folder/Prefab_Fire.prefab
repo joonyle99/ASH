@@ -30,6 +30,7 @@ Transform:
   m_Children:
   - {fileID: 1868708148}
   - {fileID: 756238834}
+  - {fileID: 1611010516}
   m_Father: {fileID: 5550379080094522760}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -57,7 +58,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 756238833}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.13, y: 4.72, z: 0}
+  m_LocalPosition: {x: 0.13, y: 7.72, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -122,6 +123,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 110, y: 4.09}
   m_EdgeRadius: 0
+--- !u!1 &1611010515
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1611010516}
+  m_Layer: 0
+  m_Name: TempSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1611010516
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611010515}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.13, y: 13.87, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 705367574}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1868708147
 GameObject:
   m_ObjectHideFlags: 0
@@ -38850,7 +38882,7 @@ MonoBehaviour:
   _totalHitCount: 0
   isEndMoveProcess: 0
   _distanceFromBoss: 6
-  _firstAttack: 1
+  _firstAttack: 2
   _currentAttack: 0
   _nextAttack: 0
   _isTeleportTurn: 0
@@ -38858,18 +38890,19 @@ MonoBehaviour:
   _flameBeam: {fileID: 591067126088536679, guid: bdb05f5f3766ab741b1761b9aee6d64e, type: 3}
   _flameBeamSpawnPoint: {fileID: 756238834}
   _flameBeamCount: 8
-  _flameBeamAnimDuration: 0
-  fireBall: {fileID: 0}
-  fireBallSpawnPoint: {fileID: 0}
-  fireBallCount: 0
-  fireBallCastCount: 0
-  fireBallCastInterval: 0
-  _fireballAnimDuration: 0
+  _flameBeamIntervalAngle: 0
+  _totalFlameBeamCastNumber: 3
+  _currentFlameBeamCastNumber: 0
+  _flameBeamIntervalAngleEachCast: 0
+  _fireBall: {fileID: 1466669076, guid: 8dc602b1b8dabbb4fabe388cada9973e, type: 3}
+  _fireBallSpawnPoint: {fileID: 1611010516}
+  _fireBallCount: 8
+  _fireBallCastCount: 5
+  _fireBallCastInterval: 1
   ashPillar: {fileID: 0}
   ashPillarSpawnDistance: 0
   ashPillarCastCount: 0
   ashPillarCastInterval: 0
-  _ashPillarAnimDuration: 0
   firePillar: {fileID: 0}
   firePillarSpawnRange:
     Start: 0
@@ -38877,7 +38910,6 @@ MonoBehaviour:
   firePillarSpawnHeight: 0
   firePillarCount: 0
   firePillarEachDistance: 0
-  _firePillarAnimDuration: 0
 --- !u!114 &939166307086520023
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,6 +10,25 @@ using System.Collections.Generic;
 /// </summary>
 public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
+    private Camera _mainCamera;
+
+    private Vector3[] _viewportCorners = new Vector3[4];        // 뷰포트(카메라가 보는 화면의 '정규화'된 2D 좌표 시스템)의 4개 코너 좌표
+    private Vector3[] _worldCorners = new Vector3[4];           // 월드 공간에서의 뷰포트 프러스텀 코너 좌표
+    private Vector3[] _intersectionPoints = new Vector3[4];     // Z == 0인 XY 평면과의 교차점
+
+    public Vector3 LeftBottom => _intersectionPoints[0];
+    public Vector3 RightBottom => _intersectionPoints[1];
+    public Vector3 RightTop => _intersectionPoints[2];
+    public Vector3 LeftTop => _intersectionPoints[3];
+
+    // C = A + t * (B - A)
+    // A가 기준이고, t * (B - A)는 A에서 얼마나 떨어져있는지를 나타낸다.
+    // t = 0이면 A, t = 1이면 B, 0 < t < 1이면 A와 B 사이의 어딘가
+    public Vector3 LeftMiddle => (LeftBottom + RightBottom) / 2f;       // = LeftBottom + 0.5f * (RightBottom - LeftBottom) = (LeftBottom + RightBottom) / 2f
+    public Vector3 RightMiddle => (RightBottom + RightTop) / 2f;
+    public Vector3 TopMiddle => (RightTop + LeftTop) / 2f;
+    public Vector3 BottomMiddle => (LeftBottom + RightBottom) / 2f;
+
     private ProCamera2D _proCamera;
     private ProCamera2DShake _shakeComponent;
 
@@ -26,10 +45,45 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
     private void Awake()
     {
+        _mainCamera = GetComponent<Camera>();
         _proCamera = GetComponent<ProCamera2D>();
         _shakeComponent = GetComponent<ProCamera2DShake>();
-    }
 
+        _viewportCorners = new Vector3[]
+        {
+            new Vector3(0, 0, _mainCamera.nearClipPlane), // 좌하단
+            new Vector3(1, 0, _mainCamera.nearClipPlane), // 우하단
+            new Vector3(1, 1, _mainCamera.nearClipPlane), // 우상단
+            new Vector3(0, 1, _mainCamera.nearClipPlane)  // 좌상단
+
+            // (0,1)-------------(1,1)
+            //   |                 |
+            //   |                 |
+            //   |                 |
+            //   |                 |
+            //   |                 |
+            // (0,0)-------------(1,0)
+        };
+    }
+    private void LateUpdate()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            // 뷰포트 좌표(좌하단, 우하단, 우상단, 좌상단)를 월드 좌표로 변환
+            _worldCorners[i] = _mainCamera.ViewportToWorldPoint(_viewportCorners[i]);
+
+            // 카메라 위치에서 월드 코너 지점으로의 방향 벡터
+            Vector3 direction = _worldCorners[i] - _mainCamera.transform.position;
+            // direction이 Z == 0인 XY 평면과 이루는 비율
+            float ratio = (-1) * _mainCamera.transform.position.z / direction.z;
+            // direction을 Z == 0인 XY 평면까지의 쏘는 벡터
+            Vector3 newDirection = new Vector3(direction.x * ratio, direction.y * ratio, (-1) * _mainCamera.transform.position.z);
+            // newDirection과 Z == 0인 XY 평면의 교차점
+            _intersectionPoints[i] = _mainCamera.transform.position + newDirection;
+
+            //Debug.DrawLine(_mainCamera.transform.position, _intersectionPoints[i], Color.cyan, 0.2f);
+        }
+    }
     // settings
     public void OnSceneContextBuilt()
     {

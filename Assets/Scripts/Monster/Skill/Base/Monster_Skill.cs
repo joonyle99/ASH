@@ -26,7 +26,7 @@ public abstract class Monster_Skill : MonoBehaviour
 
     protected MaterialController materialController;
 
-    protected event System.Action monsterSkillEvent;
+    protected System.Action monsterSkillEvent;
 
     protected virtual void Awake()
     {
