@@ -124,7 +124,7 @@ public sealed class Fire : BossBehaviour
 
     [Space]
 
-    [SerializeField] private int _fireBallCastCount = 5;            // fixed
+    [SerializeField] private int _fireBallCastCount = 5;
     [SerializeField] private float _fireBallCastInterval = 1.5f;
     
     private float _fireballAnimDuration;
@@ -133,12 +133,15 @@ public sealed class Fire : BossBehaviour
     [Header("____ AshPillar ____")]
     [Space]
 
-    public Fire_AshPillar ashPillar;
-    public float ashPillarSpawnDistance;
-    public int ashPillarCastCount;
-    public float ashPillarCastInterval;
+    [SerializeField] private Fire_AshPillar _ashPillar;
+
+    [Space]
+
+    [SerializeField] private int _ashPillarCastCount = 3;
+    [SerializeField] private float _ashPillarCastInterval = 3f;
     
     private float _ashPillarAnimDuration;
+    private Coroutine _ashPillarCoroutine;
 
     [Header("____ FirePillar ____")]
     [Space]
@@ -311,6 +314,23 @@ public sealed class Fire : BossBehaviour
 
         StopTargetCoroutine(ref _fireballCoroutine);
     }
+    private IEnumerator AshPillarCoroutine()
+    {
+        for (int i = 0; i < _ashPillarCastCount; i++)
+        {
+            var moveDir = Random.Range(0, 2) == 0 ? 1 : -1;
+            var spawnPos = moveDir > 0
+                ? SceneContext.Current.CameraController.LeftMiddle
+                : SceneContext.Current.CameraController.RightMiddle;
+            var ashPillarInstance = Instantiate(_ashPillar, spawnPos, Quaternion.identity);
+            ashPillarInstance.SetDirection(moveDir);
+
+            // cast interval
+            yield return new WaitForSeconds(_ashPillarCastInterval);
+        }
+
+        StopTargetCoroutine(ref _ashPillarCoroutine);
+    }
 
     // skill anim event
     public void FlameBeam_AnimEvent()
@@ -345,7 +365,13 @@ public sealed class Fire : BossBehaviour
     }
     public void AshPillar_AnimEvent()
     {
+        if (_ashPillarCoroutine != null)
+        {
+            Debug.LogError($"_ashPillarCoroutine is not null");
+            return;
+        }
 
+        _ashPillarCoroutine = StartCoroutine(AshPillarCoroutine());
     }
     public void FirePillar_AnimEvent()
     {
@@ -420,6 +446,9 @@ public sealed class Fire : BossBehaviour
     private IEnumerator WaitEventCoroutine_AshPillar()
     {
         yield return new WaitForSeconds(_ashPillarAnimDuration);
+
+        // _ashPillarCoroutine null일 때까지 대기
+        yield return new WaitUntil(() => _ashPillarCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_FirePillar()
     {
