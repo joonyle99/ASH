@@ -52,6 +52,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     [Space]
 
     [SerializeField] private Renderer[] _capeRenderers;
+    private float _capeIntensity;
+    public float CapeIntensity => _capeIntensity;
 
     [Header("ETC")]
     [Space]
@@ -136,7 +138,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     }
     public int CurHp
     {
-        get => _curHp;
+        get
+        {
+            // Health UI 이벤트를 발생시킨다
+            OnHealthChanged?.Invoke(_curHp, _maxHp);
+
+            return _curHp;
+        }
         set
         {
             _curHp = value;
@@ -148,7 +156,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
                 ChangeState<DieState>();
             }
 
-            // TODO: Json과 연동? 준엽님과 상의 필요
             // CurHP를 Global Data Group에 업데이트한다
             PersistentDataManager.SetByGlobal("PlayerCurHp", _curHp);
 
@@ -225,31 +232,16 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         materialController = GetComponent<MaterialController>();
         _soundList = GetComponent<SoundList>();
 
-        //Load Data
-        if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
-        {
-            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved"))
-                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHpSaved");
-            else
-                CurHp = _startHp;
-        }
-        else
-        {
-            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
-                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
-            else
-                CurHp = _startHp;
-        }
-
         SaveAndLoader.OnSaveStarted += SavePlayerStatus;
+
+        // Init Player
+        InitPlayer();
     }
     protected override void Start()
     {
         Debug.Log("SceneChangeType : " + SceneChangeManager.Instance.SceneChangeType);
-        base.Start();
 
-        // init player
-        InitPlayer();
+        base.Start();
     }
     protected override void Update()
     {
@@ -344,6 +336,41 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     {
         // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);
+
+        if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+        {
+            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved"))
+            {
+                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHpSaved");
+            }
+            else
+            {
+                CurHp = _startHp;
+            }
+
+            if (PersistentDataManager.HasByGlobal<float>("PlayerCapeIntensitySaved"))
+            {
+                SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("PlayerCapeIntensitySaved"));
+            }
+        }
+        else
+        {
+            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
+            {
+                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
+            }
+            else
+            {
+                CurHp = _startHp;
+            }
+
+            if (PersistentDataManager.HasByGlobal<float>("CapeIntensity"))
+            {
+                SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("CapeIntensity"));
+            }
+        }
+
+        _capeIntensity = _capeRenderers[0].material.GetFloat("_Intensity");
     }
     private void UpdateImageFlip()
     {
@@ -446,12 +473,14 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     // cape
     public void SetCapeIntensity(float intensity)
     {
-        PersistentDataManager.SetByGlobal("CapeIntensity", intensity);
+        _capeIntensity = intensity;
 
         foreach (var capeRenderer in _capeRenderers)
         {
-            capeRenderer.material.SetFloat("_Intensity", intensity);
+            capeRenderer.material.SetFloat("_Intensity", _capeIntensity);
         }
+
+        PersistentDataManager.SetByGlobal("CapeIntensity", _capeIntensity);
     }
     public void CapeControlX()
     {
@@ -529,6 +558,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     {
         PersistentDataManager.SetByGlobal<int>("PlayerMaxHpSaved", MaxHp);
         PersistentDataManager.SetByGlobal<int>("PlayerCurHpSaved", CurHp);
+        PersistentDataManager.SetByGlobal<float>("PlayerCapeIntensitySaved", CapeIntensity);
     }
     #endregion
 }
