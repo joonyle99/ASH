@@ -85,7 +85,7 @@ public class Lantern : LanternLike, ILightCaptureListener
         _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            if(SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
                 if(_statePreserver.LoadState("_isOnSaved", false))
                 {
@@ -113,7 +113,7 @@ public class Lantern : LanternLike, ILightCaptureListener
     {
         if (_statePreserver)
         {
-            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
             {
                 _statePreserver.SaveState("_isOn", IsLightOn);
             }

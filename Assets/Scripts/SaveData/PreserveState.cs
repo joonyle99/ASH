@@ -99,7 +99,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
         // 플레이 모드에서만 저장
         if (Application.isPlaying)
         {
-            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
             {
                 // 트랜스폼 데이터 저장 (씬 전환 시)
                 SaveTransformState();

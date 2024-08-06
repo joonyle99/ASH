@@ -70,7 +70,7 @@ public class LightDoor : LanternLike
     {
         if (_statePreserver)
         {
-            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            if(SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
             {
                 _statePreserver.SaveState("_opened", CurrentState == State.Opened);
             }
