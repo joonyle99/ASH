@@ -138,13 +138,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     }
     public int CurHp
     {
-        get
-        {
-            // Health UI 이벤트를 발생시킨다
-            OnHealthChanged?.Invoke(_curHp, _maxHp);
-
-            return _curHp;
-        }
+        get => _curHp;
         set
         {
             _curHp = value;
@@ -172,6 +166,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
             if (_maxHp > LIMIT_HP) _maxHp = LIMIT_HP; // 최대 체력은 제한된다
             else if (_maxHp < 0) _maxHp = 0;          // 최대 체력은 0 미만이 될 수는 없다
+
+            // MaxHp를 Global Data Group에 업데이트한다
+            PersistentDataManager.SetByGlobal("PlayerMaxHp", _maxHp);
 
             OnHealthChanged?.Invoke(_curHp, _maxHp);
         }
@@ -233,15 +230,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         _soundList = GetComponent<SoundList>();
 
         SaveAndLoader.OnSaveStarted += SavePlayerStatus;
-
-        // Init Player
-        InitPlayer();
     }
     protected override void Start()
     {
         Debug.Log("SceneChangeType : " + SceneChangeManager.Instance.SceneChangeType);
 
         base.Start();
+
+        // Init Player
+        InitPlayer();
     }
     protected override void Update()
     {
@@ -339,15 +336,19 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
         if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
         {
+            // Health
             if (PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved"))
             {
+                //Debug.LogError("CurHp 1");
                 CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHpSaved");
             }
             else
             {
+                //Debug.LogError("CurHp 2");
                 CurHp = _startHp;
             }
 
+            // Cape Intensity
             if (PersistentDataManager.HasByGlobal<float>("PlayerCapeIntensitySaved"))
             {
                 SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("PlayerCapeIntensitySaved"));
@@ -355,22 +356,24 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         }
         else
         {
+            // Health
             if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
             {
+                //Debug.LogError("CurHp 3");
                 CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
             }
             else
             {
+                //Debug.LogError("CurHp 4");
                 CurHp = _startHp;
             }
 
+            // Cape Intensity
             if (PersistentDataManager.HasByGlobal<float>("CapeIntensity"))
             {
                 SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("CapeIntensity"));
             }
         }
-
-        _capeIntensity = _capeRenderers[0].material.GetFloat("_Intensity");
     }
     private void UpdateImageFlip()
     {
@@ -477,10 +480,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
         foreach (var capeRenderer in _capeRenderers)
         {
-            capeRenderer.material.SetFloat("_Intensity", _capeIntensity);
+            capeRenderer.material.SetFloat("_Intensity", intensity);
         }
 
-        PersistentDataManager.SetByGlobal("CapeIntensity", _capeIntensity);
+        PersistentDataManager.SetByGlobal("CapeIntensity", intensity);
     }
     public void CapeControlX()
     {
@@ -560,5 +563,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         PersistentDataManager.SetByGlobal<int>("PlayerCurHpSaved", CurHp);
         PersistentDataManager.SetByGlobal<float>("PlayerCapeIntensitySaved", CapeIntensity);
     }
+
     #endregion
 }
