@@ -8,7 +8,7 @@ public sealed class Turtle : MonsterBehaviour
 
         _statePreserver = GetComponent<PreserveState>();
 
-        SaveAndLoader.OnSaveStarted += SaveDeadState;
+        SaveAndLoader.OnSaveStarted += SaveAnyState;
     }
     protected override void Start()
     {
@@ -16,10 +16,19 @@ public sealed class Turtle : MonsterBehaviour
 
         if (_statePreserver)
         {
-            bool isDead = _statePreserver.LoadState("_isDead", IsDead);
+            bool isDead = _statePreserver.LoadState("_isDeadSaved", IsDead);
             if (isDead)
             {
                 Die(false, false);
+            }
+
+            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                RecentDir = _statePreserver.LoadState<int>("_recentDirSaved", DefaultDir);
+            }
+            else
+            {
+                RecentDir = _statePreserver.LoadState<int>("_recentDir", DefaultDir);
             }
         }
     }
@@ -43,7 +52,10 @@ public sealed class Turtle : MonsterBehaviour
     // destroy function
     private void OnDestroy()
     {
-        
+        if(_statePreserver)
+        {
+            _statePreserver.SaveState<int>("_recentDir", RecentDir);
+        }
     }
 
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
@@ -71,11 +83,12 @@ public sealed class Turtle : MonsterBehaviour
         SetHitBoxStepable(true);
     }
 
-    private void SaveDeadState()
+    private void SaveAnyState()
     {
         if (_statePreserver)
         {
-            _statePreserver.SaveState("_isDead", IsDead);
+            _statePreserver.SaveState("_isDeadSaved", IsDead);
+            _statePreserver.SaveState("_recentDirSaved", RecentDir);
         }
     }
 }
