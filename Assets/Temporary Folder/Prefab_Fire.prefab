@@ -38886,28 +38886,25 @@ MonoBehaviour:
   _currentAttack: 0
   _nextAttack: 0
   _isTeleportTurn: 0
-  _teleportAnimDuration: 3.25
   _flameBeam: {fileID: 591067126088536679, guid: bdb05f5f3766ab741b1761b9aee6d64e, type: 3}
   _flameBeamSpawnPoint: {fileID: 756238834}
   _flameBeamCount: 8
-  _flameBeamIntervalAngle: 45
-  _totalFlameBeamCastNumber: 3
-  _currentFlameBeamCastNumber: 0
-  _flameBeamIntervalAngleEachCast: 15
+  _flameBeamCastCount: 3
+  _flameBeamInterval: 1.2
   _fireBall: {fileID: 1466669076, guid: 8dc602b1b8dabbb4fabe388cada9973e, type: 3}
-  _fireBallCount: 8
-  _fireBallSpeed: 0
+  _fireBallCount: 10
   _fireBallCastCount: 5
+  _fireBallSpeed: 20
   _fireBallCastInterval: 1.5
   _ashPillar: {fileID: 6244357396661387527, guid: d4aa6ed3d6ebb034e938d2c892244da8, type: 3}
-  _ashPillarSpeed: 10
   _ashPillarCastCount: 3
+  _ashPillarSpeed: 15
   _firePillar: {fileID: 4492315055819697763, guid: bc1f5e2bac1d4fb44ae6ab6d3eb704e5, type: 3}
+  _firePillarShake: {fileID: 11400000, guid: 137dc22b9fdef2c42b664891a72693ad, type: 2}
   _firePillarCount: 6
   _firePillarSpawnHeight: -57.5
   _firePillarFarDist: 25
   _firePillarEachDist: 3
-  _firePillarShake: {fileID: 11400000, guid: 137dc22b9fdef2c42b664891a72693ad, type: 2}
 --- !u!114 &939166307086520023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38940,7 +38937,7 @@ MonoBehaviour:
   _isUsable: 1
   _isWaitingEvent: 0
   _isDuringCoolTime: 0
-  _targetEvaluatorCoolTime: 2.5
+  _targetEvaluatorCoolTime: 1.5
 --- !u!114 &1817518469132352657
 MonoBehaviour:
   m_ObjectHideFlags: 0

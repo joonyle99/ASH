@@ -55,12 +55,12 @@ public sealed class Fire : BossBehaviour
                     Rotation = 90f;
                     break;
                 case FireBallDirType.DiagonalLeft:
-                    SpawnPoint = SceneContext.Current.CameraController.RightTop;
+                    SpawnPoint = (SceneContext.Current.CameraController.RightTop + SceneContext.Current.CameraController.TopMiddle) / 2f;
                     Direction = new Vector3(-1f, -1f, 0f).normalized;
                     Rotation = -45f;
                     break;
                 case FireBallDirType.DiagonalRight:
-                    SpawnPoint = SceneContext.Current.CameraController.LeftTop;
+                    SpawnPoint = (SceneContext.Current.CameraController.LeftTop + SceneContext.Current.CameraController.TopMiddle) / 2f;
                     Direction = new Vector3(1f, -1f, 0f).normalized;
                     Rotation = 45f;
                     break;
@@ -157,8 +157,6 @@ public sealed class Fire : BossBehaviour
         set => _isTeleportTurn = value;
     }
 
-    [SerializeField] private float _teleportAnimDuration;
-
     [Header("____ FlameBeam ____")]
     [Space]
 
@@ -168,15 +166,17 @@ public sealed class Fire : BossBehaviour
     [Space]
 
     [SerializeField] private int _flameBeamCount = 8;                               // each flame beam count
-    [SerializeField] private float _flameBeamIntervalAngle;                         // each flame beam interval angle
+    [SerializeField] private int _flameBeamCastCount = 3;                           // flame beam cast count
 
     [Space]
 
-    [SerializeField] private int _totalFlameBeamCastNumber = 3;                     // total flame beam cast count (anim event call count)
-    [SerializeField] private int _currentFlameBeamCastNumber;                       // current flame beam cast count (N th anim event call)
-    [SerializeField] private float _flameBeamIntervalAngleEachCast;                 // each flame beam cast interval angle
+    [SerializeField] private float _flameBeamInterval = 1.5f;
+
+    private float _flameBeamAngle;                                                  // each flame beam angle
+    private float _flameBeamAngleEachCast;                                          // flame beam cast angle
 
     private float _flameBeamAnimDuration;
+    private Coroutine _flameBeamCoroutine;
 
     [Header("____ Fireball ____")]
     [Space]
@@ -186,15 +186,15 @@ public sealed class Fire : BossBehaviour
     [Space]
 
     [SerializeField] private int _fireBallCount = 8;
-    [SerializeField] private float _fireBallSpeed;
+    [SerializeField] private int _fireBallCastCount = 5;
 
     [Space]
 
-    [SerializeField] private int _fireBallCastCount = 5;
+    [SerializeField] private float _fireBallSpeed = 20f;
     [SerializeField] private float _fireBallCastInterval = 1.5f;
 
-    private float _fireballAnimDuration;
-    private Coroutine _fireballCoroutine;
+    private float _fireBallAnimDuration;
+    private Coroutine _fireBallCoroutine;
 
     [Header("____ AshPillar ____")]
     [Space]
@@ -203,12 +203,8 @@ public sealed class Fire : BossBehaviour
 
     [Space]
 
-    [SerializeField] private float _ashPillarSpeed;
-
-    [Space]
-
     [SerializeField] private int _ashPillarCastCount = 3;
-    // [SerializeField] private float _ashPillarCastInterval = 3f;
+    [SerializeField] private float _ashPillarSpeed = 10f;
 
     private float _ashPillarAnimDuration;
     private Coroutine _ashPillarCoroutine;
@@ -217,20 +213,20 @@ public sealed class Fire : BossBehaviour
     [Space]
 
     [SerializeField] private Fire_FirePillar _firePillar;
+    [SerializeField] private ShakePreset _firePillarShake;
 
     [Space]
 
     [SerializeField] private int _firePillarCount = 8;
+
+    [Space]
+
     [SerializeField] private float _firePillarSpawnHeight;
     [SerializeField] private float _firePillarFarDist;
     [SerializeField] private float _firePillarEachDist = 1f;
 
-    [Space]
-
-    [SerializeField] private ShakePreset _firePillarShake;
-
     private float _firePillarAnimDuration;
-    private List<float> _usedPosX;
+    private Coroutine _firePillarCoroutine;
 
     #endregion
 
@@ -242,12 +238,10 @@ public sealed class Fire : BossBehaviour
 
         foreach (var clip in Animator.runtimeAnimatorController.animationClips)
         {
-            if (clip.name == "ani_fireBoss_teleport")
-                _teleportAnimDuration = clip.length;
-            else if (clip.name == "ani_fireBoss_fireBeam")
+            if (clip.name == "ani_fireBoss_fireBeam")
                 _flameBeamAnimDuration = clip.length;
             else if (clip.name == "ani_fireBoss_fireBall")
-                _fireballAnimDuration = clip.length;
+                _fireBallAnimDuration = clip.length;
             else if (clip.name == "ani_fireBoss_ashPillar")
                 _ashPillarAnimDuration = clip.length;
             else if (clip.name == "ani_fireBoss_firePillar")
@@ -305,11 +299,6 @@ public sealed class Fire : BossBehaviour
     {
         SetToNextAttack();
 
-        if (_currentAttack == AttackType.FlameBeam)
-        {
-            _currentFlameBeamCastNumber = 0;
-        }
-
         if (IsTeleportTurn)
         {
             IsTeleportTurn = false;
@@ -347,19 +336,37 @@ public sealed class Fire : BossBehaviour
     private void InitSkillVariable()
     {
         // flame beam
-        _flameBeamIntervalAngle = 360f / _flameBeamCount; // 360 / 8 = 45
-        _flameBeamIntervalAngleEachCast = _flameBeamIntervalAngle / _totalFlameBeamCastNumber;  // 45 / 3 = 15
+        _flameBeamAngle = 360f / _flameBeamCount; // 360 / 8 = 45
+        _flameBeamAngleEachCast = _flameBeamAngle / _flameBeamCastCount;  // 45 / 3 = 15
+    }
+    private IEnumerator FlameBeamCoroutine()
+    {
+        var currentNumber = 0;
+
+        for (int castCount = 0; castCount < _flameBeamCastCount; castCount++)
+        {
+            var defaultAngle = _flameBeamAngleEachCast * currentNumber;
+
+            for (int number = 0; number < _flameBeamCount; number++)
+            {
+                var eachAngle = (number * _flameBeamAngle + defaultAngle) % 360f; // 0 ~ 360
+
+                var flameBeam = Instantiate(_flameBeam, _flameBeamSpawnPoint.position, Quaternion.Euler(0f, 0f, eachAngle));
+                flameBeam.SetActor(this);
+                flameBeam.ExecuteDissolveEffect();
+            }
+
+            currentNumber++;
+
+            yield return new WaitForSeconds(_flameBeamInterval);
+        }
+
+        StopTargetCoroutine(ref _flameBeamCoroutine);
     }
     private IEnumerator FireBallCoroutine()
     {
         for (int i = 0; i < _fireBallCastCount; i++)
         {
-            // FireBallDir
-            // 
-            // 1. DiagonalRight
-            // 2. DiagonalLeft
-            // 3. Down
-
             FireBallDirType dirType = Util.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight);
             FireBallInfo info = new FireBallInfo(dirType);
 
@@ -379,12 +386,13 @@ public sealed class Fire : BossBehaviour
             // velocity module
             velocityModule.x = new ParticleSystem.MinMaxCurve(info.Direction.x);
             velocityModule.y = new ParticleSystem.MinMaxCurve(info.Direction.y);
+            velocityModule.speedModifier = new ParticleSystem.MinMaxCurve(_fireBallSpeed);
 
             // emission module
-            var burst = emissionModule.GetBurst(0);
-            burst.count = new ParticleSystem.MinMaxCurve(_fireBallCount);
-
-            emissionModule.SetBurst(0, burst);
+            ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[_fireBallCount];
+            for (int j = 0; j < _fireBallCount; j++)
+                bursts[j] = new ParticleSystem.Burst(_time: 0.1f * j, _count: new ParticleSystem.MinMaxCurve(1));
+            emissionModule.SetBursts(bursts);
 
             // play particle
             fireBallParticle.Play();
@@ -393,21 +401,15 @@ public sealed class Fire : BossBehaviour
             yield return new WaitForSeconds(_fireBallCastInterval);
         }
 
-        Debug.Log("End FireBall Coroutine");
-
-        StopTargetCoroutine(ref _fireballCoroutine);
+        StopTargetCoroutine(ref _fireBallCoroutine);
     }
     private IEnumerator AshPillarCoroutine()
     {
         for (int i = 0; i < _ashPillarCastCount; i++)
         {
-            // 처음에는 무조건 오른쪽에서 왼쪽으로
-            AshPillarDirType dirType = AshPillarDirType.RightToLeft;
-
-            if (i != 0)
-            {
-                dirType = Util.RangeMinMaxInclusive(AshPillarDirType.LeftToRight, AshPillarDirType.RightToLeft);
-            }
+            AshPillarDirType dirType = (i == 0)
+                ? AshPillarDirType.RightToLeft
+                : Util.RangeMinMaxInclusive(AshPillarDirType.LeftToRight, AshPillarDirType.RightToLeft);
 
             AshPillarInfo info = new AshPillarInfo(dirType);
 
@@ -415,58 +417,79 @@ public sealed class Fire : BossBehaviour
             ashPillar.SetSpeed(_ashPillarSpeed);
             ashPillar.SetDirection(info.Direction);
 
-            // cast interval
-            // yield return new WaitForSeconds(_ashPillarCastInterval);
-
             yield return new WaitUntil(() =>
                 {
                     Debug.DrawLine(ashPillar.transform.position, info.DestroyPoint, Color.gray, 0.1f);
-                    return Mathf.Abs(ashPillar.transform.position.x - info.DestroyPoint.x) <= 0.3f;
+
+                    return (dirType == AshPillarDirType.LeftToRight)
+                        ? ashPillar.transform.position.x >= info.DestroyPoint.x
+                        : ashPillar.transform.position.x <= info.DestroyPoint.x;
                 });
 
             ashPillar.DestroyImmediately();
         }
 
-        Debug.Log("End AshPillar Coroutine");
-
         StopTargetCoroutine(ref _ashPillarCoroutine);
     }
-    private IEnumerator FirePillarCoroutine(Vector3 spawnPos)
+    private IEnumerator FirePillarCoroutine()
     {
+        var player = SceneContext.Current.Player;
+        var random = new System.Random();
+        var usedPosX = new List<float>();
+
+        const int maxAttempts = 20;
+
+        for (int i = 0; i < _firePillarCount; i++)
+        {
+            var attempt = 0;
+            float newPosX;
+            do
+            {
+                newPosX = player.transform.position.x + (float)(random.NextDouble() * 2 - 1) * _firePillarFarDist;
+                attempt++;
+
+            } while ((usedPosX.Any(oldPosX => Mathf.Abs(oldPosX - newPosX) <= _firePillarEachDist)
+                      || (newPosX >= player.BodyCollider.bounds.min.x && newPosX <= player.BodyCollider.bounds.max.x))
+                     && attempt <= maxAttempts);
+
+            usedPosX.Add(newPosX);
+        }
+
+        SceneContext.Current.CameraController.StartShake(_firePillarShake);
+
         yield return new WaitForSeconds(1f);
-        var firePillar = Instantiate(_firePillar, spawnPos, Quaternion.identity);
+
+        foreach (var posX in usedPosX)
+        {
+            var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
+            var firePillar = Instantiate(_firePillar, spawnPosition, Quaternion.identity);
+
+            // firePillar.Effect
+        }
+
+        StopTargetCoroutine(ref _firePillarCoroutine);
     }
 
     // skill anim event
     public void FlameBeam_AnimEvent()
     {
-        var defaultAngle = _flameBeamIntervalAngleEachCast * _currentFlameBeamCastNumber;
-        //Debug.Log($"defaultAngle: {defaultAngle}");
-
-        //string output = "eachAngle\n";
-
-        for (int flameBeamNumber = 0; flameBeamNumber < _flameBeamCount; flameBeamNumber++)
+        if (_flameBeamCoroutine != null)
         {
-            var eachFlameBeamAngle = (flameBeamNumber * _flameBeamIntervalAngle + defaultAngle) % 360f; // 0 ~ 360
-                                                                                                        //output += $"{eachFlameBeamAngle}\n";
-            var flameBeam = Instantiate(_flameBeam, _flameBeamSpawnPoint.position, Quaternion.Euler(0f, 0f, eachFlameBeamAngle));
-            flameBeam.SetActor(this);
-            flameBeam.ExecuteDissolveEffect();
+            Debug.LogError($"_flameBeamCoroutine is not null");
+            return;
         }
 
-        _currentFlameBeamCastNumber++;
-
-        //Debug.Log(output);
+        _flameBeamCoroutine = StartCoroutine(FlameBeamCoroutine());
     }
     public void Fireball_AnimEvent()
     {
-        if (_fireballCoroutine != null)
+        if (_fireBallCoroutine != null)
         {
             Debug.LogError($"_fireballCoroutine is not null");
             return;
         }
 
-        _fireballCoroutine = StartCoroutine(FireBallCoroutine());
+        _fireBallCoroutine = StartCoroutine(FireBallCoroutine());
     }
     public void AshPillar_AnimEvent()
     {
@@ -480,45 +503,13 @@ public sealed class Fire : BossBehaviour
     }
     public void FirePillar_AnimEvent()
     {
-        var player = SceneContext.Current.Player;
-
-        if (player == null)
+        if (_firePillarCoroutine != null)
         {
-            Debug.LogError("Player is null");
+            Debug.LogError($"_firePillarCoroutine is not null");
             return;
         }
 
-        _usedPosX = new List<float>();
-
-        for (int i = 0; i < _firePillarCount; i++)
-        {
-            // reallocation count limit
-            var cnt = 0;
-
-            // calculate pillar spawn position
-            float newPosX;
-
-            do
-            {
-                newPosX = player.transform.position.x + Random.Range(-_firePillarFarDist, _firePillarFarDist);
-                cnt++;
-
-            } while ((_usedPosX.Any(oldPosX => Mathf.Abs(oldPosX - newPosX) <= _firePillarEachDist)
-                      || (newPosX >= player.BodyCollider.bounds.min.x && newPosX <= player.BodyCollider.bounds.max.x))
-                     && cnt <= 20);
-
-            // store posX
-            _usedPosX.Add(newPosX);
-        }
-
-        // 카메라 쉐이킹
-        SceneContext.Current.CameraController.StartShake(_firePillarShake);
-
-        foreach (var posX in _usedPosX)
-        {
-            var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
-            StartCoroutine(FirePillarCoroutine(spawnPosition));
-        }
+        _firePillarCoroutine = StartCoroutine(FirePillarCoroutine());
     }
 
     // etc
@@ -578,24 +569,22 @@ public sealed class Fire : BossBehaviour
     private IEnumerator WaitEventCoroutine_FlameBeam()
     {
         yield return new WaitForSeconds(_flameBeamAnimDuration);
+        yield return new WaitUntil(() => _flameBeamCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_Fireball()
     {
-        yield return new WaitForSeconds(_fireballAnimDuration);
-
-        // _fireballCoroutine가 null일 때까지 대기
-        yield return new WaitUntil(() => _fireballCoroutine == null);
+        yield return new WaitForSeconds(_fireBallAnimDuration);
+        yield return new WaitUntil(() => _fireBallCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_AshPillar()
     {
         yield return new WaitForSeconds(_ashPillarAnimDuration);
-
-        // _ashPillarCoroutine null일 때까지 대기
         yield return new WaitUntil(() => _ashPillarCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_FirePillar()
     {
         yield return new WaitForSeconds(_firePillarAnimDuration);
+        yield return new WaitUntil(() => _firePillarCoroutine == null);
     }
 
     private bool HandleTeleportTransition(string targetTransitionParam, Monster_StateBase currentState)
@@ -604,7 +593,7 @@ public sealed class Fire : BossBehaviour
         if (targetTransitionParam is not "Teleport") return true;
 
         // 공격 중이 아닐 때까지 애니메이션 전환을 미룸
-        return !IsAttacking && _fireballCoroutine == null;
+        return !IsAttacking && _fireBallCoroutine == null;
     }
 
     #endregion
