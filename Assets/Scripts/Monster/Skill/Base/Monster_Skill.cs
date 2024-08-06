@@ -24,14 +24,9 @@ public abstract class Monster_Skill : MonoBehaviour
 
     [SerializeField] protected GameObject hitEffect;
 
-    protected MaterialController materialController;
-
     protected System.Action monsterSkillEvent;
 
-    protected virtual void Awake()
-    {
-        materialController = GetComponent<MaterialController>();
-    }
+    protected virtual void Awake(){ }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
@@ -83,7 +78,7 @@ public abstract class Monster_Skill : MonoBehaviour
         this.actor = act;
     }
 
-    protected void DestroyImmediately()
+    public void DestroyImmediately()
     {
         Destroy(this.gameObject);
     }

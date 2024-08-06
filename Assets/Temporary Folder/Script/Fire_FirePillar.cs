@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Fire_FirePillar : MonoBehaviour
+public class Fire_FirePillar : Monster_IndependentSkill
 {
 
 }

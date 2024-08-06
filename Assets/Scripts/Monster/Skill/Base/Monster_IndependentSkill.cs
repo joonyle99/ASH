@@ -14,8 +14,16 @@ public class Monster_IndependentSkill : Monster_Skill
     [SerializeField] protected float lifeTime;                  // 투사체가 살아있는 시간
     [SerializeField] protected float effectDelay;
 
+    protected MaterialController materialController;
+
     private Coroutine _autoDestroyCoroutine;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        materialController = GetComponent<MaterialController>();
+    }
     private void Start()
     {
         // 스킬이 생성되고 일정 시간이 지나면 자동으로 파괴
@@ -42,6 +50,15 @@ public class Monster_IndependentSkill : Monster_Skill
         }
     }
 
+    public void SetLifeTime(float time)
+    {
+        lifeTime = time;
+    }
+    public void SetEffectDelay(float delay)
+    {
+        effectDelay = delay;
+    }
+
     private IEnumerator AutoDestroy(float time)
     {
         if (time < 0.1f) yield break;
@@ -52,7 +69,7 @@ public class Monster_IndependentSkill : Monster_Skill
     }
     private void StopAutoDestroy()
     {
-        if(_autoDestroyCoroutine != null)
+        if (_autoDestroyCoroutine != null)
         {
             StopCoroutine(_autoDestroyCoroutine);
             _autoDestroyCoroutine = null;

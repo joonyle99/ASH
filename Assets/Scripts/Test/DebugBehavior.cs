@@ -11,19 +11,11 @@ public class DebugBehavior : MonoBehaviour
 
     public LayerMask TargetLayer;
 
-    void Start()
-    {
-        Debug.Log(TargetLayer);
-        Debug.Log(TargetLayer.value);
-    }
-
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.CapsLock))
-        {
-            JsonDataManager.Instance.DebugGlobalSaveData();
-        }
+
     }
+
 #endif
 }
 
