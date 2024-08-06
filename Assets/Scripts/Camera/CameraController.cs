@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     // C = A + t * (B - A)
     // A가 기준이고, t * (B - A)는 A에서 얼마나 떨어져있는지를 나타낸다.
     // t = 0이면 A, t = 1이면 B, 0 < t < 1이면 A와 B 사이의 어딘가
-    public Vector3 LeftMiddle => (LeftBottom + RightBottom) / 2f;       // = LeftBottom + 0.5f * (RightBottom - LeftBottom) = (LeftBottom + RightBottom) / 2f
+    public Vector3 LeftMiddle => (LeftBottom + LeftTop) / 2f;       // = LeftBottom + 0.5f * (LeftTop - LeftBottom) = (LeftBottom + LeftTop) / 2f
     public Vector3 RightMiddle => (RightBottom + RightTop) / 2f;
     public Vector3 TopMiddle => (RightTop + LeftTop) / 2f;
     public Vector3 BottomMiddle => (LeftBottom + RightBottom) / 2f;
@@ -81,7 +81,13 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
             // newDirection과 Z == 0인 XY 평면의 교차점
             _intersectionPoints[i] = _mainCamera.transform.position + newDirection;
 
-            //Debug.DrawLine(_mainCamera.transform.position, _intersectionPoints[i], Color.cyan, 0.2f);
+            // Debug.DrawLine(_mainCamera.transform.position, _intersectionPoints[i], Color.cyan, 0.2f);
+
+            // LeftMiddle, RightMiddle, TopMiddle, BottomMiddle 에서 Draw Line length 1
+            Debug.DrawLine(LeftMiddle, LeftMiddle + Vector3.forward, Color.red);
+            Debug.DrawLine(RightMiddle, RightMiddle + Vector3.forward, Color.green);
+            Debug.DrawLine(TopMiddle, TopMiddle + Vector3.forward, Color.blue);
+            Debug.DrawLine(BottomMiddle, BottomMiddle + Vector3.forward, Color.yellow);
         }
     }
     // settings

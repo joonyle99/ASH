@@ -121,7 +121,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 110, y: 4.09}
+  m_Size: {x: 30, y: 4.09}
   m_EdgeRadius: 0
 --- !u!1 &1611010515
 GameObject:
@@ -38818,7 +38818,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5550379080094522758}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9fa4da4a810aee64d888381a5c05d7a7, type: 3}
   m_Name: 
@@ -38882,34 +38882,32 @@ MonoBehaviour:
   _totalHitCount: 0
   isEndMoveProcess: 0
   _distanceFromBoss: 6
-  _firstAttack: 2
+  _firstAttack: 4
   _currentAttack: 0
   _nextAttack: 0
   _isTeleportTurn: 0
-  _teleportAnimDuration: 0
+  _teleportAnimDuration: 3.25
   _flameBeam: {fileID: 591067126088536679, guid: bdb05f5f3766ab741b1761b9aee6d64e, type: 3}
   _flameBeamSpawnPoint: {fileID: 756238834}
   _flameBeamCount: 8
-  _flameBeamIntervalAngle: 0
+  _flameBeamIntervalAngle: 45
   _totalFlameBeamCastNumber: 3
   _currentFlameBeamCastNumber: 0
-  _flameBeamIntervalAngleEachCast: 0
+  _flameBeamIntervalAngleEachCast: 15
   _fireBall: {fileID: 1466669076, guid: 8dc602b1b8dabbb4fabe388cada9973e, type: 3}
-  _fireBallSpawnPoint: {fileID: 1611010516}
   _fireBallCount: 8
+  _fireBallSpeed: 0
   _fireBallCastCount: 5
-  _fireBallCastInterval: 1
-  ashPillar: {fileID: 0}
-  ashPillarSpawnDistance: 0
-  ashPillarCastCount: 0
-  ashPillarCastInterval: 0
-  firePillar: {fileID: 0}
-  firePillarSpawnRange:
-    Start: 0
-    End: 0
-  firePillarSpawnHeight: 0
-  firePillarCount: 0
-  firePillarEachDistance: 0
+  _fireBallCastInterval: 1.5
+  _ashPillar: {fileID: 6244357396661387527, guid: d4aa6ed3d6ebb034e938d2c892244da8, type: 3}
+  _ashPillarSpeed: 10
+  _ashPillarCastCount: 3
+  _firePillar: {fileID: 4492315055819697763, guid: bc1f5e2bac1d4fb44ae6ab6d3eb704e5, type: 3}
+  _firePillarCount: 6
+  _firePillarSpawnHeight: -57.5
+  _firePillarFarDist: 25
+  _firePillarEachDist: 3
+  _firePillarShake: {fileID: 11400000, guid: 137dc22b9fdef2c42b664891a72693ad, type: 2}
 --- !u!114 &939166307086520023
 MonoBehaviour:
   m_ObjectHideFlags: 0

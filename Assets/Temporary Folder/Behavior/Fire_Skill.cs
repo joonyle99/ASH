@@ -104,7 +104,7 @@ public class Fire_Skill : MonoBehaviour
             var moveDir = Random.Range(0, 2) == 0 ? 1 : -1;
             var spawnPos = transform.position + Vector3.right * (-1) * moveDir * ashPillarSpawnDistance;
             var ashPillarInstance = Instantiate(ashPillar, spawnPos, Quaternion.identity);
-            ashPillarInstance.SetDirection(moveDir);
+            // ashPillarInstance.SetDirection(moveDir);
 
             // cast interval
             yield return new WaitForSeconds(ashPillarCastInterval);

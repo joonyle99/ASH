@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Com.LuisPedroFonseca.ProCamera2D;
 using joonyle99;
 using UnityEngine;
 
@@ -15,24 +17,23 @@ public sealed class Fire : BossBehaviour
         FirePillar,
     }
 
-    public enum FireBallType
+    public enum FireBallDirType
     {
         Down,           // 아래 (북 -> 남)
         DiagonalLeft,   // 왼쪽 아래 대각선 (북동 -> 남서)
         DiagonalRight,  // 오른쪽 아래 대각선 (북서 -> 남동)
     }
-
     public struct FireBallInfo
     {
-        public FireBallType FireballType;
+        public FireBallDirType FireballDirType;
 
         public Vector3 SpawnPoint;
         public Vector3 Direction;
         public float Rotation;
-        
-        public FireBallInfo(FireBallType fireballType)
+
+        public FireBallInfo(FireBallDirType fireballDirType)
         {
-            FireballType = fireballType;
+            FireballDirType = fireballDirType;
 
             var cameraController = SceneContext.Current.CameraController;
             if (cameraController == null)
@@ -46,19 +47,19 @@ public sealed class Fire : BossBehaviour
                 return;
             }
 
-            switch (FireballType)
+            switch (FireballDirType)
             {
-                case FireBallType.Down:
+                case FireBallDirType.Down:
                     SpawnPoint = SceneContext.Current.CameraController.TopMiddle;
                     Direction = new Vector3(0f, -1f, 0f).normalized;
                     Rotation = 90f;
                     break;
-                case FireBallType.DiagonalLeft:
+                case FireBallDirType.DiagonalLeft:
                     SpawnPoint = SceneContext.Current.CameraController.RightTop;
                     Direction = new Vector3(-1f, -1f, 0f).normalized;
                     Rotation = -45f;
                     break;
-                case FireBallType.DiagonalRight:
+                case FireBallDirType.DiagonalRight:
                     SpawnPoint = SceneContext.Current.CameraController.LeftTop;
                     Direction = new Vector3(1f, -1f, 0f).normalized;
                     Rotation = 45f;
@@ -67,6 +68,70 @@ public sealed class Fire : BossBehaviour
                     SpawnPoint = default;
                     Direction = default;
                     Rotation = default;
+                    break;
+            }
+        }
+    }
+
+    public enum AshPillarDirType
+    {
+        LeftToRight,        // 왼쪽에서 오른쪽
+        RightToLeft,        // 오른쪽에서 왼쪽
+    }
+    public struct AshPillarInfo
+    {
+        public AshPillarDirType AshPillarDirType;
+
+        public Vector3 SpawnPoint;
+        public Vector3 Direction;
+        public Vector3 DestroyPoint
+        {
+            get
+            {
+                if (AshPillarDirType == AshPillarDirType.LeftToRight)
+                {
+                    return SceneContext.Current.CameraController.RightMiddle;
+                }
+                else if (AshPillarDirType == AshPillarDirType.RightToLeft)
+                {
+                    return SceneContext.Current.CameraController.LeftMiddle;
+                }
+                else
+                {
+                    Debug.LogError($"AshPillarType is invalid");
+                    return Vector3.zero;
+                }
+            }
+        }
+
+        public AshPillarInfo(AshPillarDirType ashPillarDirType)
+        {
+            AshPillarDirType = ashPillarDirType;
+
+            var cameraController = SceneContext.Current.CameraController;
+            if (cameraController == null)
+            {
+                Debug.LogError($"cameraController is invalid");
+
+                SpawnPoint = default;
+                Direction = default;
+
+                return;
+            }
+
+            switch (AshPillarDirType)
+            {
+                case AshPillarDirType.LeftToRight:
+                    SpawnPoint = SceneContext.Current.CameraController.LeftMiddle;
+                    Direction = Vector3.right;
+                    break;
+                case AshPillarDirType.RightToLeft:
+                    SpawnPoint = SceneContext.Current.CameraController.RightMiddle;
+                    Direction = Vector3.left;
+                    break;
+                default:
+                    SpawnPoint = default;
+                    Direction = default;
                     break;
             }
         }
@@ -121,12 +186,13 @@ public sealed class Fire : BossBehaviour
     [Space]
 
     [SerializeField] private int _fireBallCount = 8;
+    [SerializeField] private float _fireBallSpeed;
 
     [Space]
 
     [SerializeField] private int _fireBallCastCount = 5;
     [SerializeField] private float _fireBallCastInterval = 1.5f;
-    
+
     private float _fireballAnimDuration;
     private Coroutine _fireballCoroutine;
 
@@ -137,24 +203,34 @@ public sealed class Fire : BossBehaviour
 
     [Space]
 
+    [SerializeField] private float _ashPillarSpeed;
+
+    [Space]
+
     [SerializeField] private int _ashPillarCastCount = 3;
-    [SerializeField] private float _ashPillarCastInterval = 3f;
-    
+    // [SerializeField] private float _ashPillarCastInterval = 3f;
+
     private float _ashPillarAnimDuration;
     private Coroutine _ashPillarCoroutine;
 
     [Header("____ FirePillar ____")]
     [Space]
 
-    public Fire_FirePillar firePillar;
-    public Range firePillarSpawnRange;
-    public float firePillarSpawnHeight;
-    public int firePillarCount;
-    public float firePillarEachDistance;
+    [SerializeField] private Fire_FirePillar _firePillar;
 
-    private List<float> _usedPosX;
+    [Space]
+
+    [SerializeField] private int _firePillarCount = 8;
+    [SerializeField] private float _firePillarSpawnHeight;
+    [SerializeField] private float _firePillarFarDist;
+    [SerializeField] private float _firePillarEachDist = 1f;
+
+    [Space]
+
+    [SerializeField] private ShakePreset _firePillarShake;
 
     private float _firePillarAnimDuration;
+    private List<float> _usedPosX;
 
     #endregion
 
@@ -222,7 +298,7 @@ public sealed class Fire : BossBehaviour
         // 2번째 공격 다음은 텔레포트 턴이다
         if (currentAttackCount % 2 == 0)
         {
-            _isTeleportTurn = true;
+            IsTeleportTurn = true;
         }
     }
     public override void AttackPostProcess()
@@ -232,6 +308,11 @@ public sealed class Fire : BossBehaviour
         if (_currentAttack == AttackType.FlameBeam)
         {
             _currentFlameBeamCastNumber = 0;
+        }
+
+        if (IsTeleportTurn)
+        {
+            IsTeleportTurn = false;
         }
     }
     public override void GroggyPreProcess()
@@ -278,9 +359,9 @@ public sealed class Fire : BossBehaviour
             // 1. DiagonalRight
             // 2. DiagonalLeft
             // 3. Down
-            
-            FireBallType type = Util.RangeMinMaxInclusive(FireBallType.Down, FireBallType.DiagonalRight);
-            FireBallInfo info = new FireBallInfo(type);
+
+            FireBallDirType dirType = Util.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight);
+            FireBallInfo info = new FireBallInfo(dirType);
 
             var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
             fireBall.SetActor(this);
@@ -312,24 +393,48 @@ public sealed class Fire : BossBehaviour
             yield return new WaitForSeconds(_fireBallCastInterval);
         }
 
+        Debug.Log("End FireBall Coroutine");
+
         StopTargetCoroutine(ref _fireballCoroutine);
     }
     private IEnumerator AshPillarCoroutine()
     {
         for (int i = 0; i < _ashPillarCastCount; i++)
         {
-            var moveDir = Random.Range(0, 2) == 0 ? 1 : -1;
-            var spawnPos = moveDir > 0
-                ? SceneContext.Current.CameraController.LeftMiddle
-                : SceneContext.Current.CameraController.RightMiddle;
-            var ashPillarInstance = Instantiate(_ashPillar, spawnPos, Quaternion.identity);
-            ashPillarInstance.SetDirection(moveDir);
+            // 처음에는 무조건 오른쪽에서 왼쪽으로
+            AshPillarDirType dirType = AshPillarDirType.RightToLeft;
+
+            if (i != 0)
+            {
+                dirType = Util.RangeMinMaxInclusive(AshPillarDirType.LeftToRight, AshPillarDirType.RightToLeft);
+            }
+
+            AshPillarInfo info = new AshPillarInfo(dirType);
+
+            var ashPillar = Instantiate(_ashPillar, info.SpawnPoint, Quaternion.identity);
+            ashPillar.SetSpeed(_ashPillarSpeed);
+            ashPillar.SetDirection(info.Direction);
 
             // cast interval
-            yield return new WaitForSeconds(_ashPillarCastInterval);
+            // yield return new WaitForSeconds(_ashPillarCastInterval);
+
+            yield return new WaitUntil(() =>
+                {
+                    Debug.DrawLine(ashPillar.transform.position, info.DestroyPoint, Color.gray, 0.1f);
+                    return Mathf.Abs(ashPillar.transform.position.x - info.DestroyPoint.x) <= 0.3f;
+                });
+
+            ashPillar.DestroyImmediately();
         }
 
+        Debug.Log("End AshPillar Coroutine");
+
         StopTargetCoroutine(ref _ashPillarCoroutine);
+    }
+    private IEnumerator FirePillarCoroutine(Vector3 spawnPos)
+    {
+        yield return new WaitForSeconds(1f);
+        var firePillar = Instantiate(_firePillar, spawnPos, Quaternion.identity);
     }
 
     // skill anim event
@@ -343,7 +448,7 @@ public sealed class Fire : BossBehaviour
         for (int flameBeamNumber = 0; flameBeamNumber < _flameBeamCount; flameBeamNumber++)
         {
             var eachFlameBeamAngle = (flameBeamNumber * _flameBeamIntervalAngle + defaultAngle) % 360f; // 0 ~ 360
-            //output += $"{eachFlameBeamAngle}\n";
+                                                                                                        //output += $"{eachFlameBeamAngle}\n";
             var flameBeam = Instantiate(_flameBeam, _flameBeamSpawnPoint.position, Quaternion.Euler(0f, 0f, eachFlameBeamAngle));
             flameBeam.SetActor(this);
             flameBeam.ExecuteDissolveEffect();
@@ -375,7 +480,45 @@ public sealed class Fire : BossBehaviour
     }
     public void FirePillar_AnimEvent()
     {
+        var player = SceneContext.Current.Player;
 
+        if (player == null)
+        {
+            Debug.LogError("Player is null");
+            return;
+        }
+
+        _usedPosX = new List<float>();
+
+        for (int i = 0; i < _firePillarCount; i++)
+        {
+            // reallocation count limit
+            var cnt = 0;
+
+            // calculate pillar spawn position
+            float newPosX;
+
+            do
+            {
+                newPosX = player.transform.position.x + Random.Range(-_firePillarFarDist, _firePillarFarDist);
+                cnt++;
+
+            } while ((_usedPosX.Any(oldPosX => Mathf.Abs(oldPosX - newPosX) <= _firePillarEachDist)
+                      || (newPosX >= player.BodyCollider.bounds.min.x && newPosX <= player.BodyCollider.bounds.max.x))
+                     && cnt <= 20);
+
+            // store posX
+            _usedPosX.Add(newPosX);
+        }
+
+        // 카메라 쉐이킹
+        SceneContext.Current.CameraController.StartShake(_firePillarShake);
+
+        foreach (var posX in _usedPosX)
+        {
+            var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
+            StartCoroutine(FirePillarCoroutine(spawnPosition));
+        }
     }
 
     // etc
@@ -417,19 +560,19 @@ public sealed class Fire : BossBehaviour
                 break;
         }
 
-        Debug.Log("Attack Wait Event Point 1 - Complete Animation");
+        //Debug.Log("Attack Wait Event Point 1 - Complete Animation");
 
-        if (_isTeleportTurn)
+        if (IsTeleportTurn)
         {
             // 텔레포트 턴이 아닐 때까지 기다린다
-            yield return new WaitUntil(() => !_isTeleportTurn);
+            yield return new WaitUntil(() => !IsTeleportTurn);
 
-            Debug.Log("Attack Wait Event Point 2 - Complete Teleport");
+            //Debug.Log("Attack Wait Event Point 2 - Complete Teleport");
 
             // 텔레포트 후 추가 대기 시간
             yield return new WaitForSeconds(1f);
 
-            Debug.Log("Attack Wait Event Point 3 - Additional Wait Time");
+            //Debug.Log("Attack Wait Event Point 3 - Additional Wait Time");
         }
     }
     private IEnumerator WaitEventCoroutine_FlameBeam()
@@ -465,4 +608,37 @@ public sealed class Fire : BossBehaviour
     }
 
     #endregion
+
+    private void OnDrawGizmosSelected()
+    {
+        var current = SceneContext.Current;
+
+        if (current == null)
+            return;
+
+        var player = current.Player;
+
+        if (player == null)
+            return;
+
+        // 불기둥이 생성되는 땅의 높이
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(new Vector3(player.transform.position.x - 50f, _firePillarSpawnHeight, player.transform.position.z),
+            new Vector3(player.transform.position.x + 50f, _firePillarSpawnHeight, player.transform.position.z));
+
+        // 불기둥이 생성되는 범위
+        Gizmos.color = Color.yellow;
+        var left = player.transform.position + Vector3.left * _firePillarFarDist;
+        var right = player.transform.position + Vector3.right * _firePillarFarDist;
+        Gizmos.DrawLine(left + Vector3.down * 10f, left + Vector3.up * 10f);
+        Gizmos.DrawLine(right + Vector3.down * 10f, right + Vector3.up * 10f);
+
+        // 불기둥 사이의 최소 거리
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(new Vector3(player.transform.position.x - _firePillarEachDist / 2f, _firePillarSpawnHeight, player.transform.position.z),
+            new Vector3(player.transform.position.x - _firePillarEachDist / 2f, _firePillarSpawnHeight + 1f, player.transform.position.z));
+        Gizmos.DrawLine(new Vector3(player.transform.position.x + _firePillarEachDist / 2f, _firePillarSpawnHeight, player.transform.position.z),
+            new Vector3(player.transform.position.x + _firePillarEachDist / 2f, _firePillarSpawnHeight + 1f, player.transform.position.z));
+    }
+
 }

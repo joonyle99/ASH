@@ -57,7 +57,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     private Vector2 _targetPos;
     private BlackPanther_VineMissile _currentMissile;
 
-    [SerializeField] private float _vineMissileAnimDuration;
+    private float _vineMissileAnimDuration;
 
     [Header("____ VinePillar ____")]
     [Space]
@@ -66,7 +66,6 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private int _pillarCount;
     [SerializeField] private float _floorHeight;
     [SerializeField] private float _pillarFarDist;
-    [SerializeField] private float _minDistEachPillar;
     [SerializeField] private Range _createTimeRange;
 
     private List<float> _usedPosX;
@@ -78,7 +77,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private ParticleHelper _dustEffect;
     [SerializeField] private float _dustDistFromPillar;
 
-    [SerializeField] private float _vinePillarAnimDuration;
+    private float _vinePillarAnimDuration;
 
     [Header("Cutscene")]
     [Space]
@@ -268,11 +267,6 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         // ³ÕÄð ±âµÕ »ý¼º À§Ä¡ ¼³Á¤ ·ÎÁ÷
         for (int i = 0; i < _pillarCount; ++i)
         {
-            // È¦¼öÀÏ¶§¶û Â¦¼öÀÏ¶§¸¦ °í·ÁÇØ¾ß ÇÑ´Ù.
-
-            // Pillar Count°¡ È¦¼öÀÎ °æ¿ì
-            // 
-
             var min = player.transform.position.x - _pillarFarDist;
             var max = player.transform.position.x + _pillarFarDist;
             var dist = max - min;
@@ -479,13 +473,6 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
             new Vector3(player.transform.position.x - _pillarFarDist, _floorHeight + 5f, player.transform.position.z));
         Gizmos.DrawLine(new Vector3(player.transform.position.x + _pillarFarDist, _floorHeight, player.transform.position.z),
             new Vector3(player.transform.position.x + _pillarFarDist, _floorHeight + 5f, player.transform.position.z));
-
-        // ³ÕÄð ±âµÕ »çÀÌ ÃÖ¼Ò °Å¸®
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(new Vector3(player.transform.position.x - _minDistEachPillar / 2f, _floorHeight, player.transform.position.z),
-            new Vector3(player.transform.position.x - _minDistEachPillar / 2f, _floorHeight + 3f, player.transform.position.z));
-        Gizmos.DrawLine(new Vector3(player.transform.position.x + _minDistEachPillar / 2f, _floorHeight, player.transform.position.z),
-            new Vector3(player.transform.position.x + _minDistEachPillar / 2f, _floorHeight + 3f, player.transform.position.z));
 
         // Èë¸ÕÁöÀÇ ³ÕÄð ±âµÕÀ¸·ÎºÎÅÍÀÇ ÃÖ¼Ò °Å¸®
         Gizmos.color = Color.cyan;
