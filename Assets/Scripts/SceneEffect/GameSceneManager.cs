@@ -2,6 +2,11 @@ using System.Collections.Generic;
 
 public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneManager>
 {
+    // HashSet은 해시테이블을 사용하고, 주로 고유성 검사에 사용합니다 (요소의 존재 여부를 빠르게 확인할 수 있습니다)
+    // -> 중복 요소를 허용하지 않는다
+    // Dictionary는 해시테이블을 사용하고, 키를 이용해 '값'을 검색하는 데 사용합니다
+    // -> 중복 값은 허용하나, 중복 키는 허용하지 않는다
+
     private static HashSet<string> Title = new HashSet<string>
     {
         "TitleScene"
@@ -50,5 +55,10 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     public static bool IsBossScene(string sceneName)
     {
         return bossScenes.Contains(sceneName);
+    }
+    public static bool IsDefinedScene(string sceneName)
+    {
+        return IsTitle(sceneName) || IsExploration1(sceneName) || IsExploration2(sceneName) ||
+               IsBossDungeon1(sceneName) || IsBossDungeon2(sceneName) || IsBossScene(sceneName);
     }
 }
