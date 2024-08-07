@@ -10,11 +10,8 @@ public class Fire_FirePillar : Monster_IndependentSkill
     {
         _pillar.Play();
 
+        yield return new WaitForSeconds(0.2f);
         _collider.enabled = true;
-
-        var emissionTime = _pillar.GetEmissionLifeTime();
-        yield return new WaitForSeconds(emissionTime / 4f * 3f);
-        _collider.enabled = false;
     }
 
     public override void OnDestroy()
