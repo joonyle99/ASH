@@ -147,16 +147,6 @@ public sealed class Fire : BossBehaviour
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
-    [Header("____ Teleport ____")]
-    [Space]
-
-    [SerializeField] private bool _isTeleportTurn;
-    public bool IsTeleportTurn
-    {
-        get => _isTeleportTurn;
-        set => _isTeleportTurn = value;
-    }
-
     [Header("____ FlameBeam ____")]
     [Space]
 
@@ -289,21 +279,10 @@ public sealed class Fire : BossBehaviour
         _currentAttack = _nextAttack;
 
         currentAttackCount++;
-
-        // 2번째 공격 다음은 텔레포트 턴이다
-        if (currentAttackCount % 2 == 0)
-        {
-            IsTeleportTurn = true;
-        }
     }
     public override void AttackPostProcess()
     {
         SetToNextAttack();
-
-        if (IsTeleportTurn)
-        {
-            IsTeleportTurn = false;
-        }
     }
     public override void GroggyPreProcess()
     {
@@ -372,7 +351,6 @@ public sealed class Fire : BossBehaviour
             FireBallInfo info = new FireBallInfo(dirType);
 
             var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
-            fireBall.SetActor(this);
 
             var fireBallParticle = fireBall.GetComponent<ParticleSystem>();
 
@@ -380,6 +358,7 @@ public sealed class Fire : BossBehaviour
             var mainModule = fireBallParticle.main;
             var velocityModule = fireBallParticle.velocityOverLifetime;
             var emissionModule = fireBallParticle.emission;
+            var triggerModule = fireBallParticle.trigger;
 
             // main module
             mainModule.startRotation = new ParticleSystem.MinMaxCurve(info.Rotation * Mathf.Deg2Rad);
@@ -394,6 +373,9 @@ public sealed class Fire : BossBehaviour
             for (int j = 0; j < _fireBallCount; j++)
                 bursts[j] = new ParticleSystem.Burst(_time: 0.1f * j, _count: new ParticleSystem.MinMaxCurve(1));
             emissionModule.SetBursts(bursts);
+
+            // trigger module
+            triggerModule.AddCollider(SceneContext.Current.Player.BodyCollider);
 
             // play particle
             fireBallParticle.Play();
@@ -428,6 +410,8 @@ public sealed class Fire : BossBehaviour
                 });
 
             ashPillar.DestroyImmediately();
+
+            yield return new WaitForSeconds(0.5f);
         }
 
         StopTargetCoroutine(ref _ashPillarCoroutine);
@@ -560,21 +544,6 @@ public sealed class Fire : BossBehaviour
             case AttackType.FirePillar:
                 yield return WaitEventCoroutine_FirePillar();
                 break;
-        }
-
-        //Debug.Log("Attack Wait Event Point 1 - Complete Animation");
-
-        if (IsTeleportTurn)
-        {
-            // 텔레포트 턴이 아닐 때까지 기다린다
-            yield return new WaitUntil(() => !IsTeleportTurn);
-
-            //Debug.Log("Attack Wait Event Point 2 - Complete Teleport");
-
-            // 텔레포트 후 추가 대기 시간
-            yield return new WaitForSeconds(1f);
-
-            //Debug.Log("Attack Wait Event Point 3 - Additional Wait Time");
         }
     }
     private IEnumerator WaitEventCoroutine_FlameBeam()

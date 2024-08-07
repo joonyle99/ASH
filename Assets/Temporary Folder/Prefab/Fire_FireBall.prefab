@@ -19317,7 +19317,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 5
   simulationSpeed: 1
-  stopAction: 2
+  stopAction: 0
   cullingMode: 3
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -22724,7 +22724,7 @@ ParticleSystem:
         m_NumAlphaKeys: 2
     range: {x: 0, y: 1}
   CollisionModule:
-    enabled: 1
+    enabled: 0
     serializedVersion: 4
     type: 1
     collisionMode: 1
@@ -22848,7 +22848,7 @@ ParticleSystem:
     m_EnergyLossOnCollision:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -22903,7 +22903,7 @@ ParticleSystem:
     radiusScale: 0.8
     collidesWith:
       serializedVersion: 2
-      m_Bits: 264
+      m_Bits: 256
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -22911,16 +22911,15 @@ ParticleSystem:
     collidesWithDynamic: 1
     interiorCollisions: 1
   TriggerModule:
-    enabled: 0
+    enabled: 1
     serializedVersion: 2
     inside: 0
     outside: 0
-    enter: 0
+    enter: 2
     exit: 0
     colliderQueryMode: 0
-    radiusScale: 0.7
-    primitives:
-    - {fileID: 0}
+    radiusScale: 0.8
+    primitives: []
   SubModule:
     serializedVersion: 2
     enabled: 1
@@ -22932,12 +22931,12 @@ ParticleSystem:
       emitProbability: 1
     - serializedVersion: 3
       emitter: {fileID: 4755412341928910593}
-      type: 1
+      type: 2
       properties: 0
       emitProbability: 0.5
     - serializedVersion: 3
       emitter: {fileID: 4755412341928932865}
-      type: 1
+      type: 2
       properties: 0
       emitProbability: 1
     - serializedVersion: 3
@@ -23974,7 +23973,7 @@ MonoBehaviour:
   forceX: 7
   forceY: 10
   hitEffect: {fileID: 7234238504683433086, guid: c3475b489d259c84eb4bee353c1cfc32, type: 3}
-  lifeTime: 0
+  lifeTime: 6
   effectDelay: 0
 --- !u!1 &7196657771365470625
 GameObject:
