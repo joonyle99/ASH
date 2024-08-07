@@ -82,4 +82,9 @@ public abstract class Monster_Skill : MonoBehaviour
     {
         Destroy(this.gameObject);
     }
+
+    public virtual void OnDestroy()
+    {
+
+    }
 }

@@ -44,6 +44,14 @@ public class ParticleHelper : MonoBehaviour
     {
         _particleSystem.Emit(count);
     }
+    public void PlayAll()
+    {
+        ParticleSystem[] particles = GetComponentsInChildren<ParticleSystem>();
+        foreach (ParticleSystem particle in particles)
+        {
+            particle.Play();
+        }
+    }
     public void Play()
     {
         _particleSystem.Play();
@@ -60,5 +68,9 @@ public class ParticleHelper : MonoBehaviour
         var totalDuration = main.startLifetime.constantMax;
 
         return totalDuration;
+    }
+    public int GetParticleCount()
+    {
+        return _particleSystem.particleCount;
     }
 }

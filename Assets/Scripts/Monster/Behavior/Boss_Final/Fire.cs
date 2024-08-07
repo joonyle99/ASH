@@ -213,6 +213,7 @@ public sealed class Fire : BossBehaviour
     [Space]
 
     [SerializeField] private Fire_FirePillar _firePillar;
+    [SerializeField] private ParticleHelper _firePillarSymptom;
     [SerializeField] private ShakePreset _firePillarShake;
 
     [Space]
@@ -437,7 +438,7 @@ public sealed class Fire : BossBehaviour
         var random = new System.Random();
         var usedPosX = new List<float>();
 
-        const int maxAttempts = 20;
+        const int maxAttempts = 15;
 
         for (int i = 0; i < _firePillarCount; i++)
         {
@@ -455,16 +456,26 @@ public sealed class Fire : BossBehaviour
             usedPosX.Add(newPosX);
         }
 
+        // 전조 증상
+        foreach (var posX in usedPosX)
+        {
+            var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
+            var symptom = Instantiate(_firePillarSymptom, spawnPosition, Quaternion.identity);
+            symptom.PlayAll();
+        }
+
+        yield return new WaitForSeconds(0.2f);
+
         SceneContext.Current.CameraController.StartShake(_firePillarShake);
 
         yield return new WaitForSeconds(1f);
 
+        // 불기둥 생성
         foreach (var posX in usedPosX)
         {
             var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
             var firePillar = Instantiate(_firePillar, spawnPosition, Quaternion.identity);
-
-            // firePillar.Effect
+            firePillar.StartCoroutine(firePillar.ExecutePillar());
         }
 
         StopTargetCoroutine(ref _firePillarCoroutine);
