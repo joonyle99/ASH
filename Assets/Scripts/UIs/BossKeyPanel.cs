@@ -11,10 +11,10 @@ public class BossKeyPanel : MonoBehaviour
         get => _currentKeyCount;
         set
         {
-            if (value > _keySlots.Length)
-                Debug.Log("Key Count is over the limit");
+            _currentKeyCount = Math.Clamp(value, 0, BossDungeonManager.Instance.MaxKeyCount);   // CurrentKeyCount는 MaxKeyCount보다 작아야 한다
+            _currentKeyCount = Math.Clamp(value, 0, _keySlots.Length - 1);                      // CurrentKeyCount는 KeySlots의 길이보다 작아야 한다
 
-            _currentKeyCount = Math.Clamp(value, 0, _keySlots.Length);
+            // TODO: _currentKeyCount와 global data의 bossKeyCount의 개수가 다를 수 있다
         }
     }
 

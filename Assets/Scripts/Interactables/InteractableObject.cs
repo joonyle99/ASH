@@ -83,7 +83,7 @@ public abstract class InteractableObject : MonoBehaviour
     /// </summary>
     public void EnterInteraction()
     {
-        //Debug.Log("Enter Interaction");
+        Debug.Log("Enter Interaction");
 
         IsInteracting = true;
 
