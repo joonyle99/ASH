@@ -84,6 +84,20 @@ public class MaterialController : MonoBehaviour
             material.DisableKeyword("OUTBASE_ON");
         }
     }
+    public void EnableHitEffect()
+    {
+        foreach (var material in _instanceMaterials)
+        {
+            material.EnableKeyword("HITEFFECT_ON");
+        }
+    }
+    public void DisableHitEffect()
+    {
+        foreach (var material in _instanceMaterials)
+        {
+            material.DisableKeyword("HITEFFECT_ON");
+        }
+    }
 }
 
 #if UNITY_EDITOR

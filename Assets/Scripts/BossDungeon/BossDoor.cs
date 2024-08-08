@@ -84,7 +84,7 @@ public class BossDoor : InteractableObject
         }
     }
 
-    // conrol door (open / close)
+    // control door (open / close)
     private IEnumerator OpenDoorCoroutine()
     {
         // 상호작용으로 여는 경우에만 InputSetter를 변경한다

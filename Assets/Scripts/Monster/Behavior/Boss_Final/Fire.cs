@@ -11,10 +11,12 @@ public sealed class Fire : BossBehaviour
     {
         None = 0,
 
-        FlameBeam,
+        FlameBeam = 1,
         Fireball,
         AshPillar,
         FirePillar,
+
+        Teleport = 10,
     }
 
     public enum FireBallDirType
@@ -147,6 +149,12 @@ public sealed class Fire : BossBehaviour
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
 
+    [Header("____ Teleport ____")]
+    [Space]
+
+    [SerializeField] private bool _isTeleporting;
+    public bool IsTeleporting => _isTeleporting;
+
     [Header("____ FlameBeam ____")]
     [Space]
 
@@ -275,14 +283,25 @@ public sealed class Fire : BossBehaviour
 
     public override void AttackPreProcess()
     {
-        // 현재 공격 상태 변경
-        _currentAttack = _nextAttack;
+        if (!_isTeleporting)
+        {
+            currentAttackCount++;
+        }
 
-        currentAttackCount++;
+        _currentAttack = _nextAttack;
     }
     public override void AttackPostProcess()
     {
-        SetToNextAttack();
+        _isTeleporting = !_isTeleporting && (currentAttackCount % 2) == 0;
+
+        if (_isTeleporting)
+        {
+            SetToTeleport();
+        }
+        else
+        {
+            SetToNextAttack();
+        }
     }
     public override void GroggyPreProcess()
     {
@@ -311,7 +330,13 @@ public sealed class Fire : BossBehaviour
         _nextAttack = (AttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
+    private void SetToTeleport()
+    {
+        var nextAttackNumber = (int)AttackType.Teleport;
 
+        _nextAttack = (AttackType)nextAttackNumber;
+        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
+    }
     // skill
     private void InitSkillVariable()
     {

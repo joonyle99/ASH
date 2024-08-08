@@ -38885,6 +38885,7 @@ MonoBehaviour:
   _firstAttack: 2
   _currentAttack: 0
   _nextAttack: 0
+  _isTeleporting: 0
   _flameBeam: {fileID: 591067126088536679, guid: bdb05f5f3766ab741b1761b9aee6d64e, type: 3}
   _flameBeamSpawnPoint: {fileID: 756238834}
   _flameBeamCount: 8
@@ -38937,7 +38938,7 @@ MonoBehaviour:
   _isUsable: 1
   _isWaitingEvent: 0
   _isDuringCoolTime: 0
-  _targetEvaluatorCoolTime: 1.5
+  _targetEvaluatorCoolTime: 0.5
 --- !u!114 &1817518469132352657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38977,6 +38978,7 @@ MonoBehaviour:
   _interval: 0.08
   _duration: 0.9
   _isBlinking: 0
+  _useAllin1Effect: 1
 --- !u!114 &885954698460873662
 MonoBehaviour:
   m_ObjectHideFlags: 0

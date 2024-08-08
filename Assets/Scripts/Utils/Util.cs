@@ -100,13 +100,7 @@ namespace joonyle99
         {
             if (minInclusive < 0 || maxExclusive < 0 || minInclusive >= maxExclusive)
             {
-                Debug.LogError($"Invalid minInclusive or maxExclusive");
-                return except;
-            }
-
-            if (except < minInclusive || except >= maxExclusive)
-            {
-                Debug.LogError($"Invalid except");
+                Debug.LogError($"Invalid minInclusive or maxExclusive\n{StackTraceUtility.ExtractStackTrace()}");
                 return except;
             }
 

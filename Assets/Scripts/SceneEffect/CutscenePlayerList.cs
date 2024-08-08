@@ -49,7 +49,7 @@ public class CutscenePlayerList : MonoBehaviour
 
         if (cutscenePlayer == null)
         {
-            // Debug.LogWarning($"Cutscene not found or already played: {cutsceneName}");
+            Debug.LogWarning($"Cutscene not found: {cutsceneName}");
             return null;
         }
 

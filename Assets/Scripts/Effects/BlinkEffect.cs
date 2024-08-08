@@ -10,6 +10,10 @@ public class BlinkEffect : MonoBehaviour
     [SerializeField] private bool _isBlinking;
     public bool IsBlinking => _isBlinking;
 
+    [Space]
+
+    [SerializeField] private bool _useAllin1Effect = false;
+
     private PlayerBehaviour _player;
     private MonsterBehaviour _monster;
 
@@ -34,7 +38,14 @@ public class BlinkEffect : MonoBehaviour
             blinkCoroutine = null;
         }
 
-        blinkCoroutine = StartCoroutine(BlinkCoroutine());
+        if (_useAllin1Effect)
+        {
+            blinkCoroutine = StartCoroutine(Allin1BlinkCoroutine());
+        }
+        else
+        {
+            blinkCoroutine = StartCoroutine(BlinkCoroutine());
+        }
     }
     private IEnumerator BlinkCoroutine()
     {
@@ -66,6 +77,26 @@ public class BlinkEffect : MonoBehaviour
         _materialController.InitMaterial();
 
         // when effect ended, coroutine is also ended
+        blinkCoroutine = null;
+    }
+    private IEnumerator Allin1BlinkCoroutine()
+    {
+        _isBlinking = true;
+        if (_player) _player.IsGodMode = _isBlinking;
+
+        var startTime = Time.time;
+        while (startTime + _duration > Time.time)
+        {
+            _materialController.EnableHitEffect();
+            yield return new WaitForSeconds(_interval);
+
+            _materialController.DisableHitEffect();
+            yield return new WaitForSeconds(_interval);
+        }
+
+        _isBlinking = false;
+        if (_player) _player.IsGodMode = _isBlinking;
+
         blinkCoroutine = null;
     }
 }
