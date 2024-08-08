@@ -259,13 +259,6 @@ public sealed class Fire : BossBehaviour
 
         // TEMP
         rageTargetHurtCount = finalTargetHurtCount - 5;
-
-        // TEMP
-        var particles = GetComponentsInChildren<ParticleSystem>();
-        foreach (var particle in particles)
-        {
-            particle.gameObject.SetActive(false);
-        }
     }
     protected override void Start()
     {
