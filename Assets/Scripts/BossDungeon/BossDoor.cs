@@ -14,6 +14,11 @@ public class BossDoor : InteractableObject
     [SerializeField] private DialogueData _failDialogue;                        // 키가 모두 모이지 않았을 때의 대사
     [SerializeField] private InputSetterScriptableObject _enterInputSetter;     // 문으로 들어갈 때의 InputSetter
 
+    [Space]
+
+    [Tooltip("해당 보스 문을 열었을 때 실행하는 컷씬")]
+    [SerializeField] private CutscenePlayer _openCutscenePlayer;
+
     private PreserveState _statePreserver;
     private DoorOpenAnimation _doorOpenAnimation;
     private Animator _animator;
@@ -62,6 +67,7 @@ public class BossDoor : InteractableObject
         if (BossDungeonManager.Instance.IsAllKeysCollected)
         {
             _soundList.PlaySFX("Open");
+
             SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine()));
         }
         else
@@ -97,6 +103,7 @@ public class BossDoor : InteractableObject
 
         IsOpened = true;
 
+        // 상호작용으로 여는 경우에만 InputSetter를 변경한다
         if (IsInteractable)
         {
             if (_enterInputSetter)
@@ -105,9 +112,16 @@ public class BossDoor : InteractableObject
                 InputManager.Instance.ChangeToDefaultSetter();
         }
 
+        // 열쇠를 소모한다
         if (BossDungeonManager.Instance.IsAllKeysCollected)
         {
             BossDungeonManager.Instance.OnOpenBossDoor();
+        }
+
+        // 문을 열고난 후 컷씬을 실행한다
+        if (_openCutscenePlayer != null)
+        {
+            _openCutscenePlayer.Play();
         }
 
         /*

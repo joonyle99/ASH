@@ -31,7 +31,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
         MakeDataGroup();
     }
 
-    public void OnKeyObtained(BossKey key)
+    public void OnKeyObtained(BossKey key = null)
     {
         PersistentDataManager.UpdateValue<int>(_dataGroupName, "bossKeyCount", x => x + 1);
 

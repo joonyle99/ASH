@@ -131,11 +131,12 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             SetByGlobal<bool>("LightSkill", true);
         }
 
-        // 디버그 코드
+        // 데이터 그룹 출력
         if (Input.GetKeyDown(KeyCode.Q))
         {
             PrintDataGroup();
         }
+        // 글로벌 데이터 그룹 출력
         if (Input.GetKeyDown(KeyCode.E))
         {
             PrintGlobalDataGroup();

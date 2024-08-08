@@ -13,7 +13,11 @@ public class DebugBehavior : MonoBehaviour
 
     void Update()
     {
-
+        // º¸½ºÅ° È¹µæ
+        if (Input.GetKeyDown(KeyCode.F11))
+        {
+            BossDungeonManager.Instance.OnKeyObtained();
+        }
     }
 
 #endif

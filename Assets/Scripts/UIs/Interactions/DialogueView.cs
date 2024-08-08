@@ -26,6 +26,8 @@ public class DialogueView : MonoBehaviour
     private TextShaker _textShaker;
 
     private DialogueSegment _currentSegment;
+    private string _exceptTimeSegmentText;          // '[3]'과 같은 대기 시간을 제외한 세그먼트 텍스트
+
     private Coroutine _currentSegmentCoroutine;
 
     public bool IsCurrentSegmentOver { get; private set; }
@@ -99,7 +101,7 @@ public class DialogueView : MonoBehaviour
     private void CleanUpOnSegmentOver()
     {
         IsCurrentSegmentOver = true;
-        // _dialogue.text = _currentSegment.Text;
+        _dialogue.text = _exceptTimeSegmentText;
         _skipUI.gameObject.SetActive(true);     // 스킵 UI 활성화
     }
     /// <summary>
@@ -117,6 +119,7 @@ public class DialogueView : MonoBehaviour
 
         // 세그먼트 설정
         _currentSegment = segment;
+        _exceptTimeSegmentText = RemoveTime(segment.Text);
         _speaker.text = segment.Speaker;
 
         // Set shake
@@ -212,13 +215,37 @@ public class DialogueView : MonoBehaviour
             yield return new WaitForSeconds(_currentSegment.CharShowInterval);
         }
 
-        for (int i = 0; i < stringBuilder.Length; i++)
-        {
-            var tempChar = stringBuilder[i];
-            Debug.Log(tempChar);
-        }
-
         // 세그먼트 마무리 단계
         CleanUpOnSegmentOver();
+    }
+
+    private string RemoveTime(string originText)
+    {
+        StringBuilder result = new StringBuilder(originText.Length);
+
+        for (int i = 0; i < originText.Length; i++)
+        {
+            if (originText[i] == '[')
+            {
+                var from = i;
+                var to = originText.IndexOf(']', from);
+
+                // 못찾은 경우 에러를 발생하도록 하고, 대괄호를 문자로 추가한다
+                if (to == -1)
+                {
+                    Debug.LogError($"The pair in '[' does not exist");
+                    result.Append(originText, i, originText.Length - i);
+                    break;
+                }
+
+                i = to;
+            }
+            else
+            {
+                result.Append(originText[i]);
+            }
+        }
+
+        return result.ToString();
     }
 }
