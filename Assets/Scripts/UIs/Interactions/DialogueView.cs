@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using System;
 
 /// <summary>
 /// 다이얼로그를 출력하기 위한 뷰 UI
@@ -42,7 +43,7 @@ public class DialogueView : MonoBehaviour
         _responsePanel02.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _textShaker = _dialogue.GetComponent<TextShaker>();
-    } 
+    }
     /// <summary>
     /// 퀘스트 응답 패널 열기
     /// </summary>
@@ -59,7 +60,7 @@ public class DialogueView : MonoBehaviour
         _skipUI.gameObject.SetActive(false);
 
         _responsePanel02.gameObject.SetActive(true);
-        if(responseFunctions != null)
+        if (responseFunctions != null)
         {
             for (int i = 0; i < responseFunctions.Count; i++)
             {
@@ -98,7 +99,7 @@ public class DialogueView : MonoBehaviour
     private void CleanUpOnSegmentOver()
     {
         IsCurrentSegmentOver = true;
-        _dialogue.text = _currentSegment.Text;
+        // _dialogue.text = _currentSegment.Text;
         _skipUI.gameObject.SetActive(true);     // 스킵 UI 활성화
     }
     /// <summary>
@@ -154,30 +155,51 @@ public class DialogueView : MonoBehaviour
         // 한 프레임 쉬고 시작
         yield return null;
 
-        // 세그먼트의 대사만큼 StringBuilder 생성
+        // 세그먼트의 대사 크기만큼 StringBuilder 생성
         StringBuilder stringBuilder = new StringBuilder(_currentSegment.Text.Length);
 
         int textIndex = 0;
 
-        // 세그먼트의 대사를 한 글자씩 출력
+        // 세그먼트의 대사를 한 글자씩 순회
         while (true)
         {
             // 이는 태그를 파싱하기 위함
             if (_currentSegment.Text[textIndex] == '<')
             {
-                int to = _currentSegment.Text.IndexOf('>', textIndex);
-                string textTag = _currentSegment.Text.Substring(textIndex, to + 1 - textIndex);
+                int from = textIndex;
+                int to = _currentSegment.Text.IndexOf('>', from);
+                string textTag = _currentSegment.Text.Substring(from, to - from + 1);       // from을 포함한 length만큼 substring
+
                 stringBuilder.Append(textTag);
+
+                textIndex = to;
+            }
+            // 텍스트 천천히 출력
+            else if (_currentSegment.Text[textIndex] == '[')
+            {
+                int from = textIndex;
+                int to = _currentSegment.Text.IndexOf(']', from);
+                string textTime = _currentSegment.Text.Substring(from + 1, to - from - 1);
+
+                if (float.TryParse(textTime, out var waitTime))
+                {
+                    yield return new WaitForSeconds(waitTime);
+                }
+                else
+                {
+                    Debug.LogError($"textTime format is invalid\n{Environment.StackTrace}");
+                }
+
                 textIndex = to;
             }
             // 일반 텍스트를 stringBuilder에 추가
             else
             {
                 stringBuilder.Append(_currentSegment.Text[textIndex]);
-                _dialogue.text = stringBuilder.ToString();
+                _dialogue.text = stringBuilder.ToString();      // 현재까지의 stringBuilder를 텍스트로 출력
 
                 // 글자 출력 사운드 재생
-                SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Script" + Random.Range(1, 6).ToString());
+                SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Script" + UnityEngine.Random.Range(1, 6).ToString());
             }
 
             // 다음 글자로 이동
@@ -188,6 +210,12 @@ public class DialogueView : MonoBehaviour
                 break;
 
             yield return new WaitForSeconds(_currentSegment.CharShowInterval);
+        }
+
+        for (int i = 0; i < stringBuilder.Length; i++)
+        {
+            var tempChar = stringBuilder[i];
+            Debug.Log(tempChar);
         }
 
         // 세그먼트 마무리 단계
