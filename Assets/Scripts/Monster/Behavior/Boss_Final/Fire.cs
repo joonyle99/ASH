@@ -365,7 +365,7 @@ public sealed class Fire : BossBehaviour
     {
         for (int i = 0; i < _fireBallCastCount; i++)
         {
-            FireBallDirType dirType = Util.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight);
+            FireBallDirType dirType = Math.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight);
             FireBallInfo info = new FireBallInfo(dirType);
 
             var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
@@ -410,7 +410,7 @@ public sealed class Fire : BossBehaviour
         {
             AshPillarDirType dirType = (i == 0)
                 ? AshPillarDirType.RightToLeft
-                : Util.RangeMinMaxInclusive(AshPillarDirType.LeftToRight, AshPillarDirType.RightToLeft);
+                : Math.RangeMinMaxInclusive(AshPillarDirType.LeftToRight, AshPillarDirType.RightToLeft);
 
             AshPillarInfo info = new AshPillarInfo(dirType);
 

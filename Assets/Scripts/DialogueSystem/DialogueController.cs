@@ -26,6 +26,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     }
 
     private Coroutine _currentDialogueCoroutine;
+    private DialogueData _currentDialogueData;
 
     public void StartDialogue(DialogueData data, bool isFromCutscene = false)
     {
@@ -42,6 +43,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             return;
         }
 
+        _currentDialogueData = data;
         _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data));
     }
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
@@ -143,6 +145,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             InputManager.Instance.ChangeToDefaultSetter();
 
         _currentDialogueCoroutine = null;
+        _currentDialogueData = null;
     }
 
     // TEMP
@@ -166,17 +169,25 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             return;
         }
 
+        if (_currentDialogueData == null)
+        {
+            Debug.LogError("대화가 진행 중이지만 대화 데이터가 존재하지 않습니다");
+            return;
+        }
+
         SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+
+        if (_currentDialogueData.InputSetter != null)
+            InputManager.Instance.ChangeToDefaultSetter();
 
         StopCoroutine(_currentDialogueCoroutine);
         _currentDialogueCoroutine = null;
+        _currentDialogueData = null;
 
         View.StopAllCoroutines();
-
         View.CleanUpOnSegmentOver();
         View.ClosePanel();
-        IsDialogueActive = false;
 
-        InputManager.Instance.ChangeToDefaultSetter();
+        IsDialogueActive = false;
     }
 }

@@ -10,6 +10,14 @@ using System.Collections.Generic;
 /// </summary>
 public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
+    public enum BoundaryType
+    {
+        Top,
+        Bottom,
+        Left,
+        Right
+    }
+
     private Camera _mainCamera;
 
     private Vector3[] _viewportCorners = new Vector3[4];        // 뷰포트(카메라가 보는 화면의 '정규화'된 2D 좌표 시스템)의 4개 코너 좌표
@@ -30,7 +38,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public Vector3 BottomMiddle => (LeftBottom + RightBottom) / 2f;
 
     private ProCamera2D _proCamera;
+
     private ProCamera2DShake _shakeComponent;
+    private ProCamera2DTriggerZoom _triggerZoomComponent;
+    private ProCamera2DNumericBoundaries _boundariesComponent;
+    private ProCamera2DRooms _roomsComponent;
 
     public float OffsetX
     {
@@ -47,7 +59,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         _mainCamera = GetComponent<Camera>();
         _proCamera = GetComponent<ProCamera2D>();
+
         _shakeComponent = GetComponent<ProCamera2DShake>();
+        _triggerZoomComponent = GetComponent<ProCamera2DTriggerZoom>();
+        _boundariesComponent = GetComponent<ProCamera2DNumericBoundaries>();
+        _roomsComponent = GetComponent<ProCamera2DRooms>();
 
         _viewportCorners = new Vector3[]
         {
@@ -90,6 +106,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
             Debug.DrawLine(BottomMiddle, BottomMiddle + Vector3.forward, Color.yellow);
         }
     }
+
     // settings
     public void OnSceneContextBuilt()
     {
@@ -225,5 +242,82 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void StopConstantShake(float smooth = 0.1f)
     {
         _shakeComponent.StopConstantShaking(smooth);
+    }
+
+    // effect: boundaries
+    public void SetBoundaries(BoundaryType type, bool isOn, float value)
+    {
+        if (!_boundariesComponent.UseNumericBoundaries)
+            _boundariesComponent.UseNumericBoundaries = isOn;
+
+        switch (type)
+        {
+            case BoundaryType.Top:
+                _boundariesComponent.UseTopBoundary = isOn;
+                _boundariesComponent.TopBoundary = value;
+                break;
+            case BoundaryType.Bottom:
+                _boundariesComponent.UseBottomBoundary = isOn;
+                _boundariesComponent.BottomBoundary = value;
+                break;
+            case BoundaryType.Left:
+                _boundariesComponent.UseLeftBoundary = isOn;
+                _boundariesComponent.LeftBoundary = value;
+                break;
+            case BoundaryType.Right:
+                _boundariesComponent.UseRightBoundary = isOn;
+                _boundariesComponent.RightBoundary = value;
+                break;
+        }
+    }
+
+    // effect: rooms
+
+    // custom effect: zoom (control position z)
+    public void ZoomOut(float target)
+    {
+        StartCoroutine(ZoomOutCoroutine(target));
+    }
+    public IEnumerator ZoomOutCoroutine(float target)
+    {
+        var start = _mainCamera.transform.position.z;
+
+        var eTime = 0f;
+        while (eTime < 1.5f)
+        {
+            var t = joonyle99.Math.EaseOutQuad(eTime / 1.5f);
+            var next = Mathf.Lerp(start, target, t);
+
+            _mainCamera.transform.position =
+                new Vector3(_mainCamera.transform.position.x, _mainCamera.transform.position.y, next);
+
+            eTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _mainCamera.transform.position = new Vector3(_mainCamera.transform.position.x, _mainCamera.transform.position.y, target);
+    }
+    public void ZoomIn(float target)
+    {
+        StartCoroutine(ZoomInCoroutine(target));
+    }
+    public IEnumerator ZoomInCoroutine(float target)
+    {
+        var start = _mainCamera.transform.position.z;
+
+        var eTime = 0f;
+        while (eTime < 1f)
+        {
+            var t = eTime / 1f;
+            var next = Mathf.Lerp(start, target, t);
+
+            _mainCamera.transform.position =
+                new Vector3(_mainCamera.transform.position.x, _mainCamera.transform.position.y, next);
+
+            eTime += Time.deltaTime;
+            yield return null;
+        }
+
+        _mainCamera.transform.position = new Vector3(_mainCamera.transform.position.x, _mainCamera.transform.position.y, target);
     }
 }

@@ -54,29 +54,93 @@ namespace joonyle99
         }
     }
 
+    public static class Math
+    {
+        // easeIn
+        public static float EaseInQuad(float t) => t * t;
+        public static float EaseInCubic(float t) => t * t * t;
+        public static float EaseInQuart(float t) => t * t * t * t;
+        public static float EaseInExpo(float t) => t == 0 ? 0 : Mathf.Pow(2, 10 * t - 10);
+        public static float EaseInCirc(float t) => 1 - Mathf.Sqrt(1 - Mathf.Pow(t, 2));
+
+        // easeOut
+        public static float EaseOutQuad(float t) => 1 - (1 - t) * (1 - t);
+        public static float EaseOutCubic(float t) => 1 - Mathf.Pow(1 - t, 3);
+        public static float EaseOutQuart(float t) => 1 - Mathf.Pow(1 - t, 4);
+        public static float EaseOutExpo(float t) => t == 1 ? 1 : 1 - Mathf.Pow(2, -10 * t);
+        public static float EaseOutCirc(float t) => Mathf.Sqrt(1 - Mathf.Pow(t - 1, 2));
+
+        public static T RangeMinMaxInclusive<T>(T minInclusive, T maxInclusive)
+        {
+            if (typeof(T) == typeof(float))
+            {
+                float min = Convert.ToSingle(minInclusive);
+                float max = Convert.ToSingle(maxInclusive);
+                return (T)(object)UnityEngine.Random.Range(min, max + float.Epsilon);
+            }
+            else if (typeof(T) == typeof(int))
+            {
+                int min = Convert.ToInt32(minInclusive);
+                int max = Convert.ToInt32(maxInclusive);
+                return (T)(object)UnityEngine.Random.Range(min, max + 1);
+            }
+            else if (typeof(T).IsEnum)
+            {
+                Array values = Enum.GetValues(typeof(T));
+                int min = Array.IndexOf(values, minInclusive);
+                int max = Array.IndexOf(values, maxInclusive);
+                if (min == -1 || max == -1)
+                {
+                    throw new ArgumentException("Invalid enum value");
+                }
+                int randomIndex = UnityEngine.Random.Range(min, max + 1);
+                return (T)values.GetValue(randomIndex);
+            }
+            else
+            {
+                throw new ArgumentException("Type not supported. Use float, int, or enum.");
+            }
+        }
+    }
+
     public static class Util
     {
         // 선 길이를 나타내는 상수
         private const float LINE_LENGTH = 1f;
 
-        // 선의 방향을 나타내는 상수
-        private static readonly Vector2 vec1 = new(-LINE_LENGTH, LINE_LENGTH);
-        private static readonly Vector2 vec2 = new(LINE_LENGTH, -LINE_LENGTH);
-        private static readonly Vector2 vec3 = new(-LINE_LENGTH, -LINE_LENGTH);
-        private static readonly Vector2 vec4 = new(LINE_LENGTH, LINE_LENGTH);
-
         public static void DebugDrawX(Vector2 center, float duration = 2f)
         {
             // 디버그를 위한 타겟 위치에 'X' 표시
-            Debug.DrawLine(center + vec1, center + vec2, Color.red, duration);
-            Debug.DrawLine(center + vec3, center + vec4, Color.red, duration);
+            Debug.DrawLine(center + new Vector2(-LINE_LENGTH, LINE_LENGTH), center + new Vector2(LINE_LENGTH, -LINE_LENGTH), Color.red, duration);
+            Debug.DrawLine(center + new Vector2(-LINE_LENGTH, -LINE_LENGTH), center + new Vector2(LINE_LENGTH, LINE_LENGTH), Color.red, duration);
+        }
+        public static void DebugDrawPlus(Vector2 center, float duration = 2f)
+        {
+            // 디버그를 위한 타겟 위치에 '+' 표시
+            Debug.DrawLine(center + new Vector2(-LINE_LENGTH, 0), center + new Vector2(LINE_LENGTH, 0), Color.red, duration);
+            Debug.DrawLine(center + new Vector2(0, -LINE_LENGTH), center + new Vector2(0, LINE_LENGTH), Color.red, duration);
+        }
+        public static void DebugDrawCircle(Vector2 center, float radius, float duration = 2f)
+        {
+            // 디버그를 위한 타겟 위치에 'O' 표시
+            Debug.DrawLine(center + new Vector2(-radius, -radius), center + new Vector2(-radius, radius), Color.red, duration);
+            Debug.DrawLine(center + new Vector2(-radius, radius), center + new Vector2(radius, radius), Color.red, duration);
+            Debug.DrawLine(center + new Vector2(radius, radius), center + new Vector2(radius, -radius), Color.red, duration);
+            Debug.DrawLine(center + new Vector2(radius, -radius), center + new Vector2(-radius, -radius), Color.red, duration);
         }
 
         public static void GizmosDrawVerticalLine(Vector3 origin)
         {
             Gizmos.DrawLine(new Vector3(origin.x, origin.y + LINE_LENGTH, origin.z), new Vector3(origin.x, origin.y - LINE_LENGTH, origin.z));
         }
+        public static void GizmosDrawHorizontalLine(Vector3 origin)
+        {
+            Gizmos.DrawLine(new Vector3(origin.x + LINE_LENGTH, origin.y, origin.z), new Vector3(origin.x - LINE_LENGTH, origin.y, origin.z));
+        }
+    }
 
+    public static class ExtensionMethod
+    {
         // Vector Extension Methods
         public static Vector2 ToVector2(this Vector3 vec)
         {
@@ -131,66 +195,28 @@ namespace joonyle99
             return result;
         }
 
-        // Random Methods
-        public static Vector2 GetRandomDirection(params Vector2[] directions)
+        // LayerMask Extension Methods
+        public static int GetLayerNumber(this int layerMaskValue)
         {
-            var randomIndex = UnityEngine.Random.Range(0, directions.Length);
-            return directions[randomIndex];
+            if (layerMaskValue == 0)
+                return -1;
+
+            int layerNumber = 0;
+
+            while (layerMaskValue > 1)      // 1이 되면 종료
+            {
+                layerMaskValue = layerMaskValue >> 1;
+                layerNumber++;
+            }
+
+            return layerNumber;
         }
-        public static T RangeMinMaxInclusive<T>(T minInclusive, T maxInclusive)
+        public static int GetLayerValue(this int layerMaskNumber)
         {
-            if (typeof(T) == typeof(float))
-            {
-                float min = Convert.ToSingle(minInclusive);
-                float max = Convert.ToSingle(maxInclusive);
-                return (T)(object)UnityEngine.Random.Range(min, max + float.Epsilon);
-            }
-            else if (typeof(T) == typeof(int))
-            {
-                int min = Convert.ToInt32(minInclusive);
-                int max = Convert.ToInt32(maxInclusive);
-                return (T)(object)UnityEngine.Random.Range(min, max + 1);
-            }
-            else if (typeof(T).IsEnum)
-            {
-                Array values = Enum.GetValues(typeof(T));
-                int min = Array.IndexOf(values, minInclusive);
-                int max = Array.IndexOf(values, maxInclusive);
-                if (min == -1 || max == -1)
-                {
-                    throw new ArgumentException("Invalid enum value");
-                }
-                int randomIndex = UnityEngine.Random.Range(min, max + 1);
-                return (T)values.GetValue(randomIndex);
-            }
-            else
-            {
-                throw new ArgumentException("Type not supported. Use float, int, or enum.");
-            }
+            if (layerMaskNumber is < 0 or > 31)
+                return -1;
+
+            return 1 << layerMaskNumber;
         }
-
-    // LayerMask Extension Methods
-    public static int GetLayerNumber(this int layerMaskValue)
-    {
-        if (layerMaskValue == 0)
-            return -1;
-
-        int layerNumber = 0;
-
-        while (layerMaskValue > 1)      // 1이 되면 종료
-        {
-            layerMaskValue = layerMaskValue >> 1;
-            layerNumber++;
-        }
-
-        return layerNumber;
     }
-    public static int GetLayerValue(this int layerMaskNumber)
-    {
-        if (layerMaskNumber is < 0 or > 31)
-            return -1;
-
-        return 1 << layerMaskNumber;
-    }
-}
 }

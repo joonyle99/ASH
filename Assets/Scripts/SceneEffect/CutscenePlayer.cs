@@ -32,10 +32,6 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
 
         SaveAndLoader.OnSaveStarted += SavePlayedState;
     }
-    private void OnDestroy()
-    {
-        
-    }
 
     /// <summary>
     /// 시퀀스에 맞는 연출을 재생한다
