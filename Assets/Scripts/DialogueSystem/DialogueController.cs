@@ -25,36 +25,27 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         }
     }
 
-    private bool _isShutdowned = false;
-    public bool IsShutdowned => _isShutdowned;
+    private Coroutine _currentDialogueCoroutine;
 
     public void StartDialogue(DialogueData data, bool isFromCutscene = false)
     {
-        // 대화가 이미 진행 중이라면 종료
+        // 대화창이 켜진 것으로 판단
         if (IsDialoguePanel)
         {
             Debug.Log("대화가 이미 진행중입니다");
             return;
         }
 
-        StartCoroutine(DialogueCoroutine(data));
-    }
-    public IEnumerator StartDialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
-    {
-        // 대화가 이미 진행 중이라면 종료
-        if (IsDialoguePanel && IsDialogueActive)
+        if (_currentDialogueCoroutine != null)
         {
-            Debug.Log("대화가 이미 진행중입니다");
-            yield break;
+            Debug.LogError($"_currentDialogueCoroutine is not 'null'");
+            return;
         }
 
-        yield return StartCoroutine(DialogueCoroutine(data, isContinueDialogue));
+        _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data));
     }
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
     {
-        //0. 기본값 초기화
-        _isShutdowned = false;
-
         // 1. 다이얼로그 시퀀스를 생성한다
         DialogueSequence dialogueSequence = new DialogueSequence(data);
 
@@ -68,7 +59,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         IsDialogueActive = true;
 
         // 4. 다이얼로그 시퀀스 시작
-        while (!dialogueSequence.IsOver && !_isShutdowned)
+        while (!dialogueSequence.IsOver)
         {
             #region Dialogue
 
@@ -76,7 +67,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             View.StartNextSegment(dialogueSequence.CurrentSegment);
 
             // 진행중인 다이얼로그 세그먼트가 끝날 때까지 루프를 돌며 대기
-            while (!View.IsCurrentSegmentOver && !_isShutdowned)
+            while (!View.IsCurrentSegmentOver)
             {
                 yield return null;
 
@@ -84,10 +75,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                     View.FastForward();
             }
 
-            // 다음 Update 프레임까지 대기하며 상호작용 키의 중복 입력을 방지
-            yield return null;
-
-            yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown || _isShutdowned);
+            yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
 
             SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
 
@@ -137,11 +125,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
             #endregion
 
-            if (!_isShutdowned)
-            {
-                // 다이얼로그 세그먼트가 끝난 후 대기 시간만큼 대기
-                yield return StartCoroutine(View.ClearTextCoroutine(_dialogueSegmentFadeTime));
-            }
+            // 다이얼로그 세그먼트가 끝난 후 대기 시간만큼 대기
+            yield return StartCoroutine(View.ClearTextCoroutine(_dialogueSegmentFadeTime));
 
             // 다음 다이얼로그 세그먼트로 이동
             dialogueSequence.MoveNext();
@@ -156,10 +141,42 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         // 6. 다이얼로그 시퀀스가 끝났기 때문에 입력 설정을 기본값으로 변경
         if (data.InputSetter != null)
             InputManager.Instance.ChangeToDefaultSetter();
+
+        _currentDialogueCoroutine = null;
+    }
+
+    // TEMP
+    public IEnumerator StartDialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
+    {
+        // 대화가 이미 진행 중이라면 종료
+        if (IsDialoguePanel && IsDialogueActive)
+        {
+            Debug.Log("대화가 이미 진행중입니다");
+            yield break;
+        }
+
+        yield return StartCoroutine(DialogueCoroutine(data, isContinueDialogue));
     }
 
     public void ShutdownDialogue()
     {
-        _isShutdowned = true;
+        if (_currentDialogueCoroutine == null)
+        {
+            Debug.Log("대화가 진행 중이 아닙니다");
+            return;
+        }
+
+        SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+
+        StopCoroutine(_currentDialogueCoroutine);
+        _currentDialogueCoroutine = null;
+
+        View.StopAllCoroutines();
+
+        View.CleanUpOnSegmentOver();
+        View.ClosePanel();
+        IsDialogueActive = false;
+
+        InputManager.Instance.ChangeToDefaultSetter();
     }
 }

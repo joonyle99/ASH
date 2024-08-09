@@ -6,11 +6,15 @@ public class TeleportationModule : MonoBehaviour
 
     public void ExecuteTeleportation_AnimEvent()
     {
+        /*
         var xPos = Random.Range(_teleportableArea.bounds.min.x, _teleportableArea.bounds.max.x);
         var yPos = Random.Range(_teleportableArea.bounds.min.y, _teleportableArea.bounds.max.y);
 
         var randomPosition = new Vector2(xPos, yPos);
 
         transform.position = randomPosition;
+        */
+
+        // N개의 노드를 생성한다.
     }
 }

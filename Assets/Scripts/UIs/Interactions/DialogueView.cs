@@ -98,7 +98,7 @@ public class DialogueView : MonoBehaviour
     /// <summary>
     /// 다이얼로그 세그먼트 종료 처리
     /// </summary>
-    private void CleanUpOnSegmentOver()
+    public void CleanUpOnSegmentOver()
     {
         IsCurrentSegmentOver = true;
         _dialogue.text = _exceptTimeSegmentText;
@@ -209,7 +209,7 @@ public class DialogueView : MonoBehaviour
             textIndex++;
 
             // 세그먼트의 대사를 모두 출력했을 경우 종료, 또는 강제종료
-            if (textIndex == _currentSegment.Text.Length || DialogueController.Instance.IsShutdowned)
+            if (textIndex == _currentSegment.Text.Length)
                 break;
 
             yield return new WaitForSeconds(_currentSegment.CharShowInterval);

@@ -18,6 +18,12 @@ public class DebugBehavior : MonoBehaviour
         {
             BossDungeonManager.Instance.OnKeyObtained();
         }
+
+        // 다이얼로그 셧다운
+        if (Input.GetKeyDown(KeyCode.F4))
+        {
+            DialogueController.Instance.ShutdownDialogue();
+        }
     }
 
 #endif
