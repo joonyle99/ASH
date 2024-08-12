@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class OptionView : MonoBehaviour
 {
@@ -11,13 +10,12 @@ public class OptionView : MonoBehaviour
     [Space]
 
     [SerializeField] private Image _optionPanel;
-    [SerializeField] private AudioMixer _audioMixer;
 
     [Space]
 
+    [SerializeField] private AudioMixer _audioMixer;
     [SerializeField] private Slider _bgmSlider;
     [SerializeField] private Slider _sfxSlider;
-
     [SerializeField] private TextMeshProUGUI _bgmValue;
     [SerializeField] private TextMeshProUGUI _sfxValue;
 
@@ -35,10 +33,10 @@ public class OptionView : MonoBehaviour
     }
     private void Start()
     {
-        // set slider value
-        InitialSetting();
+        InitialVolumeSetting();
     }
 
+    // option button
     public void TogglePanel()
     {
         if (_isPause)
@@ -50,20 +48,6 @@ public class OptionView : MonoBehaviour
             Pause();
         }
     }
-
-    public void SetBgmValue(float volume)
-    {
-        int bgmVolume = Mathf.FloorToInt(volume * 100f);
-
-        _bgmValue.text = bgmVolume.ToString();
-    }
-    public void SetSfxValue(float volume)
-    {
-        int sfxVolume = Mathf.FloorToInt(volume * 100f);
-
-        _sfxValue.text = sfxVolume.ToString();
-    }
-
     public void Pause()
     {
         _isPause = true;
@@ -72,8 +56,7 @@ public class OptionView : MonoBehaviour
 
         _optionPanel.gameObject.SetActive(true);
 
-        if(SceneContext.Current.Player)
-            SceneContext.Current.Player.enabled = false;
+        InputManager.Instance.ChangeToStayStillSetter();
     }
     public void Resume()
     {
@@ -83,32 +66,11 @@ public class OptionView : MonoBehaviour
 
         _optionPanel.gameObject.SetActive(false);
 
-        if(SceneContext.Current.Player)
-            SceneContext.Current.Player.enabled = true;
+        InputManager.Instance.ChangeToDefaultSetter();
     }
 
-    public void ReStartGame()
-    {
-        Resume();
-
-        // 씬 재시작이 아닌 체크 포인트에서 재시작 하도록 수정
-        SceneContext.Current.Player.TriggerInstantRespawn(0f);
-
-        //StartCoroutine(ReStartCoroutine());
-    }
-    private IEnumerator ReStartCoroutine()
-    {
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-
-        SceneChangeManager.Instance.ChangeToPlayableScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
-    }
-
-    public void ApplyTestButton()
-    {
-        JsonDataManager.JsonSave();
-    }
-
-    private void InitialSetting()
+    // volume setting
+    private void InitialVolumeSetting()
     {
         SoundManager.Instance.InitialVolumeSetting();
 
@@ -127,7 +89,29 @@ public class OptionView : MonoBehaviour
         _bgmSlider.value = bgmVolume;
         _sfxSlider.value = sfxVolume;
     }
+    public void SetBgmValue(float volume)
+    {
+        int bgmVolume = Mathf.FloorToInt(volume * 100f);
 
+        _bgmValue.text = bgmVolume.ToString();
+    }
+    public void SetSfxValue(float volume)
+    {
+        int sfxVolume = Mathf.FloorToInt(volume * 100f);
+
+        _sfxValue.text = sfxVolume.ToString();
+    }
+
+    // checkPoint
+    public void MoveToCheckPoint()
+    {
+        Resume();
+
+        // 새로운 씬이 아닌 '마지막 체크 포인트'에서 재시작 하도록 수정
+        SceneContext.Current.Player.TriggerInstantRespawn(0f);
+    }
+
+    // load
     public void Load()
     {
         Resume();

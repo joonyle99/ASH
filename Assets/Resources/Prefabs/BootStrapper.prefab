@@ -625,6 +625,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 97371351280991491}
     m_Modifications:
+    - target: {fileID: 4567092054327901184, guid: 948402e6852c6174cb9d28888da513aa, type: 3}
+      propertyPath: RespawnTimeRange.End
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567092054327901184, guid: 948402e6852c6174cb9d28888da513aa, type: 3}
+      propertyPath: RespawnTimeRange.Start
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4567092054327901185, guid: 948402e6852c6174cb9d28888da513aa, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -671,7 +679,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4567092054327901191, guid: 948402e6852c6174cb9d28888da513aa, type: 3}
       propertyPath: m_Name
-      value: MonsterManager
+      value: MonsterRespawnManager
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 948402e6852c6174cb9d28888da513aa, type: 3}
