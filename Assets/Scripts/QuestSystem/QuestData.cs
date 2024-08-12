@@ -100,5 +100,11 @@ public class QuestData : MonoBehaviour
         _monsterQuest = new MonsterHuntQuestData(_initMonsterQuest);
     }
 
+    // TEMP
+    public void IncreaseMaxHp(int amount)
+    {
+        SceneContext.Current.Player.IncreaseMaxHp(amount);
+    }
+
     #endregion
 }
