@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -28,10 +29,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     private Coroutine _currentDialogueCoroutine;
     private DialogueData _currentDialogueData;
 
-    public void StartDialogue(DialogueData data, bool isFromCutscene = false)
+    public void StartDialogue(DialogueData data)
     {
-        // 대화창이 켜진 것으로 판단
-        if (IsDialoguePanel)
+        if (IsDialoguePanel || IsDialogueActive)
         {
             Debug.Log("대화가 이미 진행중입니다");
             return;
@@ -45,6 +45,26 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
         _currentDialogueData = data;
         _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data));
+    }
+    public IEnumerator StartDialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
+    {
+        if (IsDialoguePanel || IsDialogueActive)
+        {
+            Debug.Log("대화가 이미 진행중입니다");
+            yield break;
+        }
+
+        if (_currentDialogueCoroutine != null)
+        {
+            Debug.LogError($"_currentDialogueCoroutine is not 'null'");
+            yield break;
+        }
+
+        _currentDialogueData = data;
+        _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue));
+
+        // TODO: 이걸 중간에 Stop하면 문제가 생길 수도 있다
+        yield return _currentDialogueCoroutine;
     }
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
     {
@@ -86,11 +106,11 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
             #region Quest
 
-            // 마지막 다이얼로그 세그먼트인 경우 퀘스트 다이얼로그임을 확인한다
+            // 마지막 다이얼로그 세그먼트인 경우 퀘스트가 등록되어 있는지 확인
             if (dialogueSequence.IsLastSegment)
             {
                 // 다이얼로그에 퀘스트가 등록되어 있는 경우
-                if (data.QuestData)
+                if (data.QuestData != null)
                 {
                     // 퀘스트를 처음 받은 경우, 자동 수락
                     if (data.QuestData.IsFirst)
@@ -101,21 +121,22 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                     }
                     else
                     {
-                        // 퀘스트 응답 패널을 연다
-                        View.OpenResponsePanel();
+                        List<ResponseContainer> contaienr = new List<ResponseContainer>();
+                        contaienr.Add(new ResponseContainer(ResponseButtonType.Accept, () => QuestController.Instance.AcceptQuest(data.QuestData)));
+                        contaienr.Add(new ResponseContainer(ResponseButtonType.Reject, () => QuestController.Instance.RejectQuest(data.QuestData)));
 
-                        // 퀘스트 응답 패널에 퀘스트 데이터를 전달
-                        View.SendQuestDataToResponsePanel(data.QuestData, out var response);
+                        // 퀘스트 응답 패널을 연다
+                        View.OpenResponsePanel(contaienr);
 
                         // Handler: 이벤트가 발생했을 때 호출되는 함수를 지칭한다 (옵저버 패턴)
                         var isClicked = false;
                         void ResponseHandler()
                         {
                             isClicked = true;
-                            response.OnClicked -= ResponseHandler;
+                            View.ResponsePanel.Accept.onClick.RemoveListener(ResponseHandler);
                         }
-                        response.OnClicked -= ResponseHandler;
-                        response.OnClicked += ResponseHandler;
+                        View.ResponsePanel.Accept.onClick.RemoveListener(ResponseHandler);
+                        View.ResponsePanel.Accept.onClick.AddListener(ResponseHandler);
 
                         // 해당 퀘스트가 수락 / 거절되기 전까지 대기
                         yield return new WaitUntil(() => isClicked);
@@ -147,19 +168,6 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
         _currentDialogueCoroutine = null;
         _currentDialogueData = null;
-    }
-
-    // TEMP
-    public IEnumerator StartDialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
-    {
-        // 대화가 이미 진행 중이라면 종료
-        if (IsDialoguePanel && IsDialogueActive)
-        {
-            Debug.Log("대화가 이미 진행중입니다");
-            yield break;
-        }
-
-        yield return StartCoroutine(DialogueCoroutine(data, isContinueDialogue));
     }
 
     public void ShutdownDialogue()

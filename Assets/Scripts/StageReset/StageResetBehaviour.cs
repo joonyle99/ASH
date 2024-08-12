@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -40,10 +39,10 @@ public class StageResetBehaviour : InteractableObject
     {
         DialogueController.Instance.StartDialogue(_dialogueData);
 
-        List<ResponseFunctionContainer> responseFunctions = new List<ResponseFunctionContainer>();
-        responseFunctions.Add(new ResponseFunctionContainer(ResponseButtonType.Reject, RejectStageReset));
-        responseFunctions.Add(new ResponseFunctionContainer(ResponseButtonType.Accept, AcceptStageReset));
-        DialogueController.Instance.View.OpenResponsePanel02(responseFunctions);
+        List<ResponseContainer> responseFunctions = new List<ResponseContainer>();
+        responseFunctions.Add(new ResponseContainer(ResponseButtonType.Reject, RejectStageReset));
+        responseFunctions.Add(new ResponseContainer(ResponseButtonType.Accept, AcceptStageReset));
+        DialogueController.Instance.View.OpenResponsePanel(responseFunctions);
     }
 
     public override void UpdateInteracting()

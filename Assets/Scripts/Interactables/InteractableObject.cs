@@ -27,6 +27,9 @@ public abstract class InteractableObject : MonoBehaviour
 
     [SerializeField] private bool _isInteractable = true;                   // 상호작용 가능 여부
     [SerializeField] private bool _isInteracting = false;                   // 상호작용 중인지 여부
+
+    [Space]
+
     [SerializeField] private Transform _interactionMarkerPoint;             // 상호작용 마커 포인트 (가이드 텍스트가 출력되는 위치)
 
     [Space]
@@ -83,7 +86,7 @@ public abstract class InteractableObject : MonoBehaviour
     /// </summary>
     public void EnterInteraction()
     {
-        Debug.Log("Enter Interaction");
+        //Debug.Log("Enter Interaction");
 
         IsInteracting = true;
 

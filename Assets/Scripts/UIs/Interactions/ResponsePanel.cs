@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -12,12 +9,12 @@ public enum ResponseButtonType
     Reject,
 }
 
-public class ResponseFunctionContainer
+public class ResponseContainer
 {
     public ResponseButtonType buttonType = ResponseButtonType.None;
     public UnityAction action;
 
-    public ResponseFunctionContainer(ResponseButtonType buttonType, UnityAction action)
+    public ResponseContainer(ResponseButtonType buttonType, UnityAction action)
     {
         this.buttonType = buttonType;
         this.action = action;
@@ -26,9 +23,11 @@ public class ResponseFunctionContainer
 
 public class ResponsePanel : MonoBehaviour
 {
-
     private Button _accept;
     private Button _reject;
+
+    public Button Accept => _accept;
+    public Button Reject => _reject;
 
     private void Awake()
     {
@@ -61,7 +60,6 @@ public class ResponsePanel : MonoBehaviour
                 }
         }
     }
-
     public void UnbindActionOnClicked(ResponseButtonType responseButtonType, UnityAction action, bool isRemoveAll)
     {
         switch (responseButtonType)

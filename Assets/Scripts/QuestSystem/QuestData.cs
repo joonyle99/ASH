@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class QuestData : MonoBehaviour
 {
     [System.Serializable]
-    public class MonsterQuestData
+    public class MonsterHuntQuestData
     {
         [SerializeField] private int _monsterKilled;
         [SerializeField] private int _killGoal;
@@ -15,13 +15,13 @@ public class QuestData : MonoBehaviour
         public int KillGoal => _killGoal;
         public UnityEvent Reward => _reward;
 
-        public MonsterQuestData()
+        public MonsterHuntQuestData()
         {
             this._monsterKilled = 0;
             this._killGoal = 5;
             this._reward = new UnityEvent();
         }
-        public MonsterQuestData(MonsterQuestData monsterQuestData)
+        public MonsterHuntQuestData(MonsterHuntQuestData monsterQuestData)
         {
             this._monsterKilled = monsterQuestData._monsterKilled;
             this._killGoal = monsterQuestData._killGoal;
@@ -51,10 +51,10 @@ public class QuestData : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private MonsterQuestData _monsterQuest;                    // 몬스터 사냥 퀘스트
-    public MonsterQuestData MonsterQuest => _monsterQuest;
+    [SerializeField] private MonsterHuntQuestData _monsterQuest;                    // 몬스터 사냥 퀘스트
+    public MonsterHuntQuestData MonsterQuest => _monsterQuest;
 
-    private MonsterQuestData _initMonsterQuest;                                 // 초기 몬스터 사냥 퀘스트
+    private MonsterHuntQuestData _initMonsterQuest;                                 // 초기 몬스터 사냥 퀘스트
 
     public bool IsFirst { get; set; } = true;                                   // 퀘스트를 처음 받았는지 여부
     public bool IsActive { get; set; } = false;                                 // 퀘스트 활성화 여부
@@ -67,7 +67,7 @@ public class QuestData : MonoBehaviour
     private void Awake()
     {
         // 데이터 복사를 통해 초기 데이터를 세팅한다
-        _initMonsterQuest = new MonsterQuestData(_monsterQuest);
+        _initMonsterQuest = new MonsterHuntQuestData(_monsterQuest);
     }
 
     public void IncreaseCount()
@@ -97,7 +97,7 @@ public class QuestData : MonoBehaviour
     public void ResetProgress()
     {
         // _monsterQuest = _initMonsterQuest; // 이렇게 하면 참조 값 자체가 같이지기 때문에 복사 생성자를 이용한다
-        _monsterQuest = new MonsterQuestData(_initMonsterQuest);
+        _monsterQuest = new MonsterHuntQuestData(_initMonsterQuest);
     }
 
     #endregion

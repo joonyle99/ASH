@@ -12,16 +12,23 @@ public class QuestView : MonoBehaviour
     public Image QuestPanel;
     public TextMeshProUGUI Counter;
 
-    public void OpenQuestPanel()
+    [Space]
+
+    public float FadeTime = 1.5f;
+
+    public void OpenPanel()
     {
         StartCoroutine(ControlPanelCoroutine(true));
     }
-
     public void ClosePanel()
     {
         StartCoroutine(ControlPanelCoroutine(false));
     }
-
+    public void UpdatePanel(QuestData questData)
+    {
+        Counter.text = questData.MonsterQuest.MonsterKilled.ToString()
+            + " / " + questData.MonsterQuest.KillGoal.ToString();
+    }
     private IEnumerator ControlPanelCoroutine(bool isOpen, float delay = 2f)
     {
         yield return new WaitForSeconds(delay);
@@ -29,7 +36,6 @@ public class QuestView : MonoBehaviour
         var canvasGroup = QuestPanel.GetComponent<CanvasGroup>();
 
         var eTime = 0f;
-        var duration = 1.5f;
 
         if (isOpen)
         {
@@ -37,11 +43,11 @@ public class QuestView : MonoBehaviour
 
             canvasGroup.gameObject.SetActive(true);
 
-            while (eTime < duration)
+            while (eTime < FadeTime)
             {
+                canvasGroup.alpha = Mathf.Lerp(0f, 1f, eTime / FadeTime);
                 yield return null;
                 eTime += Time.deltaTime;
-                canvasGroup.alpha = Mathf.Lerp(0f, 1f, eTime / duration);
             }
 
             canvasGroup.alpha = 1f;
@@ -50,21 +56,16 @@ public class QuestView : MonoBehaviour
         {
             canvasGroup.alpha = 1f;
 
-            while (eTime < duration)
+            while (eTime < FadeTime)
             {
+                canvasGroup.alpha = Mathf.Lerp(1f, 0f, eTime / FadeTime);
                 yield return null;
                 eTime += Time.deltaTime;
-                canvasGroup.alpha = Mathf.Lerp(1f, 0f, eTime / duration);
             }
 
             canvasGroup.alpha = 0f;
 
             canvasGroup.gameObject.SetActive(false);
         }
-    }
-
-    public void DrawUpdateDataOnPanel(QuestData questData)
-    {
-        Counter.text = questData.MonsterQuest.MonsterKilled.ToString() + " / " + questData.MonsterQuest.KillGoal.ToString();
     }
 }

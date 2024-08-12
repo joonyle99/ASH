@@ -29,17 +29,15 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
         _currentQuest.IsAcceptedBefore = true;
 
         // 퀘스트 데이터를 뷰에 전달
-        View.DrawUpdateDataOnPanel(_currentQuest);
+        View.UpdatePanel(_currentQuest);
 
         // 퀘스트 패널 열기
-        View.OpenQuestPanel();
+        View.OpenPanel();
     }
-
     public void RejectQuest(QuestData questData)
     {
         questData.IsAcceptedBefore = false;
     }
-
     public void CompleteQuest()
     {
         // 퀘스트 패널 닫기
@@ -51,10 +49,9 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
         // 현재 실행 중인 퀘스트 해제
         _currentQuest = null;
     }
-
     public void UpdateQuest()
     {
         // 퀘스트 데이터를 뷰에 전달
-        View.DrawUpdateDataOnPanel(_currentQuest);
+        View.UpdatePanel(_currentQuest);
     }
 }

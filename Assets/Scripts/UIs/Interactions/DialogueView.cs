@@ -17,11 +17,11 @@ public class DialogueView : MonoBehaviour
     [SerializeField] private Image _dialoguePanel;
     [SerializeField] private TextMeshProUGUI _dialogue;
     [SerializeField] private TextMeshProUGUI _speaker;
-    [SerializeField] private Image _skipUI;
-    [SerializeField] private Image _responsePanel;
+    [SerializeField] private Image _indicator;
 
     [Tooltip("스테이지 리셋(수락, 거절) 응답 패널")]
-    [SerializeField] private ResponsePanel _responsePanel02;
+    [SerializeField] private ResponsePanel _responsePanel;
+    public ResponsePanel ResponsePanel => _responsePanel;
 
     private TextShaker _textShaker;
 
@@ -33,81 +33,39 @@ public class DialogueView : MonoBehaviour
     public bool IsCurrentSegmentOver { get; private set; }
     public bool IsDialoguePanelActive => _dialoguePanel.gameObject.activeInHierarchy;
 
-    /// <summary>
-    /// 다이얼로그 뷰 UI 초기화 및 패널 열기
-    /// </summary>
+    /// <summary> 다이얼로그 뷰 UI 초기화 및 패널 열기 </summary>
     public void OpenPanel()
     {
         _dialogue.text = "";
         _speaker.text = "";
-        _skipUI.gameObject.SetActive(false);
+        _indicator.gameObject.SetActive(false);
         _responsePanel.gameObject.SetActive(false);
-        _responsePanel02.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _textShaker = _dialogue.GetComponent<TextShaker>();
     }
-    /// <summary>
-    /// 퀘스트 응답 패널 열기
-    /// </summary>
-    public void OpenResponsePanel()
-    {
-        _skipUI.gameObject.SetActive(false);
-        _responsePanel.gameObject.SetActive(true);
-    }
-    /// <summary>
-    /// 퀘스트 응답 패널 열기
-    /// </summary>
-    public void OpenResponsePanel02(List<ResponseFunctionContainer> responseFunctions)
-    {
-        _skipUI.gameObject.SetActive(false);
-
-        _responsePanel02.gameObject.SetActive(true);
-        if (responseFunctions != null)
-        {
-            for (int i = 0; i < responseFunctions.Count; i++)
-            {
-                ResponseFunctionContainer responseFunctionContainer = responseFunctions[i];
-                _responsePanel02.BindActionOnClicked(responseFunctionContainer.buttonType, responseFunctionContainer.action);
-            }
-        }
-    }
-
-    /// <summary>
-    /// 퀘스트 응답 패널에 퀘스트 전달
-    /// </summary>
-    public void SendQuestDataToResponsePanel(QuestData questData, out QuestResponse response)
-    {
-        response = _responsePanel.GetComponent<QuestResponse>();
-        response.ReceiveQuestData(questData);
-    }
-    /// <summary>
-    /// 다이얼로그 뷰 UI 패널 닫기
-    /// </summary>
+    /// <summary> 다이얼로그 뷰 UI 패널 닫기 </summary>
     public void ClosePanel()
     {
         _dialoguePanel.gameObject.SetActive(false);
     }
-    /// <summary>
-    /// 다이얼로그 세그먼트 빠르게 넘어가기
-    /// </summary>
-    public void FastForward()
+
+    /// <summary> 응답 패널 열기 </summary>
+    public void OpenResponsePanel(List<ResponseContainer> responseFunctions)
     {
-        StopCoroutine(_currentSegmentCoroutine);
-        CleanUpOnSegmentOver();
+        _indicator.gameObject.SetActive(false);
+        _responsePanel.gameObject.SetActive(true);
+
+        if (responseFunctions != null)
+        {
+            for (int i = 0; i < responseFunctions.Count; i++)
+            {
+                var responseFunctionContainer = responseFunctions[i];
+                _responsePanel.BindActionOnClicked(responseFunctionContainer.buttonType, responseFunctionContainer.action);
+            }
+        }
     }
-    /// <summary>
-    /// 다이얼로그 세그먼트 종료 처리
-    /// </summary>
-    public void CleanUpOnSegmentOver()
-    {
-        IsCurrentSegmentOver = true;
-        _dialogue.text = _exceptTimeSegmentText;
-        _skipUI.gameObject.SetActive(true);     // 스킵 UI 활성화
-    }
-    /// <summary>
-    /// 다음 다이얼로그 세그먼트 시작
-    /// </summary>
-    /// <param name="segment"></param>
+
+    /// <summary> 다음 다이얼로그 세그먼트 시작 </summary>
     public void StartNextSegment(DialogueSegment segment)
     {
         IsCurrentSegmentOver = false;
@@ -115,11 +73,11 @@ public class DialogueView : MonoBehaviour
         // 세그먼트 초기화
         _dialogue.text = "";
         _dialogue.alpha = 1f;
-        _skipUI.gameObject.SetActive(false);
+        _indicator.gameObject.SetActive(false);
 
         // 세그먼트 설정
         _currentSegment = segment;
-        _exceptTimeSegmentText = RemoveTime(segment.Text);
+        _exceptTimeSegmentText = ExtractTextWithoutTime(segment.Text);
         _speaker.text = segment.Speaker;
 
         // Set shake
@@ -134,25 +92,7 @@ public class DialogueView : MonoBehaviour
         // 다이얼로그 세그먼트 프로세스 코루틴 시작 및 저장
         _currentSegmentCoroutine = StartCoroutine(SegmentCoroutine());
     }
-    /// <summary>
-    /// 다이얼로그 세그먼트 서서히 사라짐
-    /// </summary>
-    /// <param name="duration"></param>
-    /// <returns></returns>
-    public IEnumerator ClearTextCoroutine(float duration)
-    {
-        float eTime = 0;
-        while (eTime < duration)
-        {
-            _dialogue.alpha = 1f - (eTime / duration) * (eTime / duration);      // easing function: x^2
-            yield return null;
-            eTime += Time.deltaTime;
-        }
-    }
-    /// <summary>
-    /// 다이얼로그 세그먼트를 한 글자씩 출력하는 코루틴
-    /// </summary>
-    /// <returns></returns>
+    /// <summary> 다이얼로그 세그먼트를 한 글자씩 출력하는 코루틴 </summary>
     private IEnumerator SegmentCoroutine()
     {
         // 한 프레임 쉬고 시작
@@ -218,8 +158,19 @@ public class DialogueView : MonoBehaviour
         // 세그먼트 마무리 단계
         CleanUpOnSegmentOver();
     }
-
-    private string RemoveTime(string originText)
+    /// <summary> 다이얼로그 세그먼트 서서히 사라짐 </summary>
+    public IEnumerator ClearTextCoroutine(float duration)
+    {
+        float eTime = 0;
+        while (eTime < duration)
+        {
+            _dialogue.alpha = 1f - (eTime / duration) * (eTime / duration);      // easing function: x^2
+            yield return null;
+            eTime += Time.deltaTime;
+        }
+    }
+    /// <summary> 다이얼로그 세그먼트에서 [Time]을 제외 </summary>
+    private string ExtractTextWithoutTime(string originText)
     {
         StringBuilder result = new StringBuilder(originText.Length);
 
@@ -248,4 +199,18 @@ public class DialogueView : MonoBehaviour
 
         return result.ToString();
     }
+    /// <summary> 다이얼로그 세그먼트 빠르게 넘어가기 </summary>
+    public void FastForward()
+    {
+        StopCoroutine(_currentSegmentCoroutine);
+        CleanUpOnSegmentOver();
+    }
+    /// <summary> 다이얼로그 세그먼트 종료 처리 </summary>
+    public void CleanUpOnSegmentOver()
+    {
+        IsCurrentSegmentOver = true;
+        _dialogue.text = _exceptTimeSegmentText;
+        _indicator.gameObject.SetActive(true);
+    }
+
 }
