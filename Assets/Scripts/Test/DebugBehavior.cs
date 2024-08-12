@@ -24,6 +24,23 @@ public class DebugBehavior : MonoBehaviour
         {
             DialogueController.Instance.ShutdownDialogue();
         }
+
+        // DEBUG: 현재 마지막 CheckPoint를 표시한다 (없다면 입구를 표시한다)
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            var checkPoint = SceneContext.Current.CheckPointManager.LatestCheckpointPosition;
+
+            // 여려 개의 라인을 그려 checkPoint를 중점으로 * 모양을 그린다
+            const float LENGTH = 3f;
+            Debug.DrawLine(checkPoint + Vector3.up * LENGTH, checkPoint + Vector3.down * LENGTH, Color.red, 5f);
+            Debug.DrawLine(checkPoint + Vector3.left * LENGTH, checkPoint + Vector3.right * LENGTH, Color.red, 5f);
+            var diagonal1 = (Vector3.up + Vector3.right).normalized;
+            var diagonal2 = (Vector3.up + Vector3.left).normalized;
+            var diagonal3 = (Vector3.down + Vector3.left).normalized;
+            var diagonal4 = (Vector3.down + Vector3.right).normalized;
+            Debug.DrawLine(checkPoint + diagonal1 * LENGTH, checkPoint + diagonal3 * LENGTH, Color.red, 5f);
+            Debug.DrawLine(checkPoint + diagonal2 * LENGTH, checkPoint + diagonal4 * LENGTH, Color.red, 5f);
+        }
     }
 
 #endif

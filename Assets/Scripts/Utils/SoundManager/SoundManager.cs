@@ -168,6 +168,11 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
         {
             PlayCommonBGM("BossDungeon1");
         }
+        else
+        {
+            // 기본 BGM 재생
+            PlayCommonBGM("BasicBGM");
+        }
     }
 
     // stop sound

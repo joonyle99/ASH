@@ -40,11 +40,9 @@ public class SceneContext : MonoBehaviour
     }
 
     /// <summary>
-    /// 해당 씬에 대한 컨텍스트를 빌드한다
-    /// i.e) 플레이어, 씬 전환 플레이어, 시작 입구, 체크 포인트, 컨텍스트 리스너 ...
+    /// 기본적으로 새로운 씬의 Start에서 호출되고, 추가로 NonPlayableScene, PlayableScene으로의 전환 시
+    /// 해당 씬에 대한 컨텍스트를 가져온다. i.e) 플레이어, 씬 전환 플레이어, 시작 입구, 체크 포인트, 컨텍스트 리스너 ...
     /// </summary>
-    /// <param name="entranceName"></param>
-    /// <returns></returns>
     public Result BuildPlayable(string entranceName)
     {
         // Debug.Log($"call build playable in {name}");
@@ -118,7 +116,6 @@ public class SceneContext : MonoBehaviour
     /// 또한 씬이 전환되어 씬 컨텍스트가 새로 빌드되면, 모든 리스너를 찾아 이벤트를 전달한다
     /// i.e) 씬 전환 시, 씬의 입구에서 나오는 컷씬, 플레이어 상태 초기화, 보스 던전 UI 표시 등
     /// </summary>
-    /// <returns></returns>
     public Result DefaultBuild()
     {
         Result buildResult = Result.Success;
@@ -158,7 +155,7 @@ public class SceneContext : MonoBehaviour
     {
         return Result.Success;
     }
-    public void InstantRespawn()
+    public void PlayerInstantRespawn()
     {
         PlayableSceneTransitionPlayer.PlayInstantRespawnEffect(_checkpointManager.LatestCheckpointPosition);
     }

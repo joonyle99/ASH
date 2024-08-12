@@ -1,13 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Checkpoint : TriggerZone
 {
-    [SerializeField] Transform _spawnPoint;
+    [SerializeField] private Transform _spawnPoint;
+
 #if UNITY_EDITOR
-    PolygonCollider2D __polyconCollider;
+    private PolygonCollider2D __polyconCollider;
 #endif
+
     public Vector3 SpawnPosition { get { return _spawnPoint.position; } }
 
     public override void OnActivatorEnter(TriggerActivator activator) 
