@@ -106,7 +106,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         yield return new WaitUntil(() => load.isDone);
 
         SceneContext sceneContext = FindOrCreateSceneContext();
-        Result buildResult = sceneContext.BuildPlayable("");                // scene context build
+        Result buildResult = sceneContext.BuildPlayable("");
 
         IsChanging = false;
 

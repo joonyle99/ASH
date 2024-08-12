@@ -118,4 +118,12 @@ public class OptionView : MonoBehaviour
 
         PersistentDataManager.LoadToSavedData();
     }
+
+    // tile
+    public void GoToTitleScene()
+    {
+        Resume();
+
+        SceneChangeManager.Instance.ChangeToNonPlayableScene("TitleScene");
+    }
 }
