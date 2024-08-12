@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Utils;
 
 public class DieState : PlayerState
@@ -16,8 +15,6 @@ public class DieState : PlayerState
     [SerializeField] private float _moveUpDistance = 4f;
     [SerializeField] private float _stayInAirDuration = 0.3f;
 
-    private PlayerBehaviour _player;
-
     protected override bool OnEnter()
     {
         StartCoroutine(EnterCoroutine());
@@ -26,71 +23,47 @@ public class DieState : PlayerState
     }
     protected override bool OnUpdate()
     {
-
         return true;
     }
     protected override bool OnFixedUpdate()
     {
-
         return true;
     }
     protected override bool OnExit()
     {
-        StartCoroutine(ExitCoroutine());
-
         return true;
     }
 
     private IEnumerator EnterCoroutine()
     {
-        _player = Player;
-
-        //JsonDataManager.SavePlayerData(new JsonPlayerData(_player.MaxHp, _player.MaxHp));
-        //JsonDataManager.JsonSave();
-
         InputManager.Instance.ChangeToStayStillSetter();
 
-        _player.SoundList.PlaySFX("SE_Die_02(Short)");
+        Player.SoundList.PlaySFX("SE_Die_02(Short)");
 
-        _player.Animator.SetTrigger("Die");
+        Player.Animator.SetTrigger("Die");
 
-        _player.IsDead = true;
+        Player.IsDead = true;
 
         yield return new WaitForSeconds(_dieEffectDelay);
 
-        yield return StartCoroutine(MoveUpEffectCoroutine());
+        yield return MoveUpEffectCoroutine();
 
         yield return new WaitForSeconds(_stayInAirDuration);
 
-        _player.PlaySound_SE_Die_01();
-        _player.MaterialController.DisintegrateEffect.Play();
+        Player.PlaySound_SE_Die_01();
+        Player.MaterialController.DisintegrateEffect.Play();
 
-        yield return new WaitUntil(() => _player.MaterialController.DisintegrateEffect.IsEffectDone);
+        yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
 
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        if (!PersistentDataManager.LoadToSavedData())
-        {
-            var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-            var passageName = SceneContext.Current.EntrancePassage.PassageName;
+        // 체력 초기화
+        Player.CurHp = Player.MaxHp;
 
-            // Debug.Log($"scene name: {sceneName}");
-            // Debug.Log($"passage name: {passageName}");
+        var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        var passageName = SceneContext.Current.EntrancePassage.PassageName;
 
-            SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
-        }
-    }
-    private IEnumerator ExitCoroutine()
-    {
-        yield return null;
-
-        _player.Animator.SetTrigger("EndDie");
-
-        _player.IsDead = false;
-
-        InputManager.Instance.ChangeToDefaultSetter();
-
-        _player = null;
+        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
     }
 
     private IEnumerator MoveUpEffectCoroutine()
@@ -109,9 +82,10 @@ public class DieState : PlayerState
         var eTime = 0f;
         while (eTime < _moveUpDuration)
         {
-            var nextFramePosition =
-                Vector2.Lerp(currentPosition, targetPosition, Curves.EaseOut(eTime / _moveUpDuration));
+            var t = Curves.EaseOut(eTime / _moveUpDuration);
+            var nextFramePosition = Vector2.Lerp(currentPosition, targetPosition, t);
             playerRigidBody.MovePosition(nextFramePosition);
+
             yield return null;
             eTime += Time.deltaTime;
         }

@@ -316,7 +316,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
         File.WriteAllText(Instance.path, json);
 
-        Debug.Log("Save Gamedata To Json File");
+        // Debug.Log("Save Gamedata To Json File");
     }
 
     // JSON 파일 불러오기
@@ -338,7 +338,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
             Instance._globalSaveData.saveDataGroup = dataDic;
 
-            Debug.Log("Load Gamedata From Json File");
+            // Debug.Log("Load Gamedata From Json File");
         }
     }
 

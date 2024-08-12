@@ -156,7 +156,7 @@ namespace NavMeshPlus.Extensions
 
             if (!builder.hideEditorLogs)
             {
-                Debug.Log("NavMesh Sources: " + sources.Count);
+                // Debug.Log("NavMesh Sources: " + sources.Count);
             }
         }
 
