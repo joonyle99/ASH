@@ -273,13 +273,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             _playerAttackController.CastAttack();
         }
 
-        // CHEAT: Recover Cheat HP
+        // CHEAT: ~ 키를 누르면 체력 1 회복
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
             RecoverCurHp(2);
         }
 
-        // CHEAT: Open Boss Door
+        // CHEAT: F10 키를 누르면 가장 가까운 보스문 열기
         if (Input.GetKeyDown(KeyCode.F10))
         {
             // 가장 가까운 BossDoor를 찾는다
@@ -301,16 +301,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
                 closestBossDoor.CloseDoor();
             else
                 closestBossDoor.OpenDoor();
-        }
-
-        // TEST: Cape Intensity
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            SetCapeIntensity(0f);
-        }
-        else if (Input.GetKeyDown(KeyCode.K))
-        {
-            SetCapeIntensity(10f);
         }
 
         #endregion

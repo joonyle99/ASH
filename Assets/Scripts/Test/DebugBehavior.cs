@@ -13,13 +13,13 @@ public class DebugBehavior : MonoBehaviour
 
     void Update()
     {
-        // 보스키 획득
+        // CHEAT: F11 키를 누르면 보스키 획득
         if (Input.GetKeyDown(KeyCode.F11))
         {
             BossDungeonManager.Instance.OnKeyObtained();
         }
 
-        // 다이얼로그 셧다운
+        // CHEAT: F4 키를 누르면 다이얼로그 셧다운
         if (Input.GetKeyDown(KeyCode.F4))
         {
             DialogueController.Instance.ShutdownDialogue();

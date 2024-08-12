@@ -11,6 +11,7 @@ public class MonsterBlocking : MonoBehaviour
 
     private void Update()
     {
+        // CHEAT: F6 키를 누르면 몬스터 블로킹 종료
         if (Input.GetKeyDown(KeyCode.F6))
         {
             EndBlocking();

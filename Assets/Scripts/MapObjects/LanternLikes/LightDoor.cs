@@ -56,6 +56,7 @@ public class LightDoor : LanternLike
     }
     public void Update()
     {
+        // CHEAT: F9 키를 누르면 빛의 문 열기
         if (Input.GetKeyDown(KeyCode.F9))
         {
             StartCoroutine(OpenCoroutine());

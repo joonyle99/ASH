@@ -29,7 +29,8 @@ public class PrologueManager : MonoBehaviour
     }
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.F12))
+        // CHEAT: F12 키를 누르면 프롤로그 스킵
+        if (Input.GetKeyDown(KeyCode.F12))
         {
             StopAllCoroutines();
             StartCoroutine(StartGame());

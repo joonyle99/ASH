@@ -73,6 +73,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             {
                 yield return null;
 
+                // CHEAT: F3 키를 누르면 대화를 빠르게 진행
                 if (Input.GetKeyDown(KeyCode.F3))
                     View.FastForward();
             }

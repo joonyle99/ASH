@@ -115,7 +115,13 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
     private void Update()
     {
-        // ´õºí Á¡ÇÁ, ´ë½¬ È¹µæ
+        // CHEAT: F7 Å°¸¦ ´©¸£¸é ºû ½ºÅ³ È¹µæ
+        if (Input.GetKeyDown(KeyCode.F7))
+        {
+            SetByGlobal<bool>("LightSkill", true);
+        }
+
+        // CHEAT: F8 Å°¸¦ ´©¸£¸é ´õºí Á¡ÇÁ, ´ë½¬ È¹µæ
         if (Input.GetKeyDown(KeyCode.F8))
         {
             SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
@@ -125,12 +131,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             _cheatSkillId++;
         }
 
-        // ºû ½ºÅ³ È¹µæ
-        if (Input.GetKeyDown(KeyCode.F7) || Input.GetKeyDown(KeyCode.F4))
-        {
-            SetByGlobal<bool>("LightSkill", true);
-        }
-
+#if UNITY_EDITOR
         // µ¥ÀÌÅÍ ±×·ì Ãâ·Â
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -152,6 +153,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             Debug.Log("=============Save Data============");
             SavedPersistentData.PrintData();
         }
+#endif
     }
 
     #region group data

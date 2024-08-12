@@ -261,7 +261,7 @@
 
 			#pragma shader_feature_local GLOW_ON
 			#pragma shader_feature_local FADE_ON
-			#pragma shader_feature_local OUTBASE_ON
+			#pragma multi_compile _ OUTBASE_ON					// Runtime
 			#pragma shader_feature_local ONLYOUTLINE_ON
 			#pragma shader_feature_local GRADIENT_ON
 			#pragma shader_feature_local GRADIENT2COL_ON
