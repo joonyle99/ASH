@@ -43,7 +43,10 @@ public class StatueVisualEffect : MonoBehaviour
     }
     private void Init()
     {
+        _audioSource = GetComponent<AudioSource>();
+        _soundList = GetComponent<SoundList>();
         _identifier = GetComponent<Identifier>();
+
         if (_identifier)
         {
             PersistentData pd = PersistentDataManager.Instance.PersistentData;
@@ -66,8 +69,10 @@ public class StatueVisualEffect : MonoBehaviour
             }
         }
 
-        _audioSource = GetComponent<AudioSource>();
-        _soundList = GetComponent<SoundList>();
+        if (!PersistentDataManager.HasDataGroup(_identifier.GroupName))
+        {
+            PersistentDataManager.TryAddDataGroup(_identifier.GroupName);
+        }
     }
 
     public void PlayEffectsOnSaveStarted()

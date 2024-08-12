@@ -21,14 +21,35 @@ public class WindArea : MonoBehaviour
 
     private void Awake()
     {
-        _statePreserver = GetComponent<PreserveState>();
+        _statePreserver = GetComponentInParent<PreserveState>();
 
         if (_statePreserver != null)
-            _isStartActive = _statePreserver.LoadState("_isActive", gameObject.activeSelf);
+        {
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                _isStartActive = _statePreserver.LoadState("_isActiveSaved", _isStartActive);
+            }
+            else
+            {
+                _isStartActive = _statePreserver.LoadState("_isActive", _isStartActive);
+            }
+        }
+
 
         gameObject.SetActive(_isStartActive);
+
+        SaveAndLoader.OnSaveStarted += SaveWindState;
     }
 
+    private void OnDestroy()
+    {
+        if(_statePreserver)
+        {
+            _statePreserver.SaveState("_isActive", gameObject.activeSelf);
+        }
+
+        SaveAndLoader.OnSaveStarted -= SaveWindState;
+    }
     public void SetActive()
     {
         gameObject.SetActive(!gameObject.activeSelf);
@@ -86,4 +107,12 @@ public class WindArea : MonoBehaviour
                 _isWorking = false;
             }
         }*/
+
+    private void SaveWindState()
+    {
+        if(_statePreserver)
+        {
+            _statePreserver.SaveState("_isActiveSaved", gameObject.activeSelf);
+        }
+    }
 }
