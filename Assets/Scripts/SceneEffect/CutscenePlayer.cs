@@ -20,20 +20,41 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
     private void Awake()
     {
         _statePreserver = GetComponent<PreserveState>();
-
     }
     public void OnSceneContextBuilt()
     {
         if(_statePreserver)
         {
-            bool played = _statePreserver.LoadState("_played", _played);
-            if (played)
+            if(SceneChangeManager.Instance && 
+                SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                _played = true;
+                bool played = _statePreserver.LoadState("_playSaved", _played);
+                if (played)
+                {
+                    _played = true;
+                }
+            }
+            else
+            {
+                bool played = _statePreserver.LoadState("_played", _played);
+                if (played)
+                {
+                    _played = true;
+                }
             }
         }
 
         SaveAndLoader.OnSaveStarted += SavePlayedState;
+    }
+
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_played", _played);
+        }
+
+        SaveAndLoader.OnSaveStarted -= SavePlayedState;
     }
 
     /// <summary>
@@ -116,6 +137,10 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
             SceneContext.Current.Player.IsGodMode = true;
             // Debug.Log($"{SceneContext.Current.Player}의 GodMode가 설정됩니다. => IsGodMode : {SceneContext.Current.Player.IsGodMode}");
         }
+        else
+        {
+            InputManager.Instance.ChangeToDefaultSetter();
+        }
     }
     
     /// <summary>
@@ -138,7 +163,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
     {
         if (_statePreserver)
         {
-            _statePreserver.SaveState("_played", _played);
+            _statePreserver.SaveState("_playSaved", _played);
         }
     }
 }

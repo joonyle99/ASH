@@ -15,9 +15,6 @@ public class StageResetBehaviour : InteractableObject
 
     private string _sceneName = "";
     private string _entrancePassage = "";
-    [Header("Passage")]
-    [Tooltip("씬 입구의 Passage이름이 일반적인 경우(Enter + [SceneName]가 아닌 경우 초기화")]
-    [SerializeField] private string _exceptionalEnterancePassage = "";
 
 
     [Header("PreserveState")]
@@ -33,10 +30,6 @@ public class StageResetBehaviour : InteractableObject
         _sceneName = SceneManager.GetActiveScene().name;
 
         _entrancePassage = "Enter " + _sceneName;
-        if(_exceptionalEnterancePassage != "")
-        {
-            _entrancePassage = _exceptionalEnterancePassage;
-        }
     }
 
     private void Update()
