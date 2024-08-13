@@ -85,7 +85,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private ParticleHelper _shinningEffect;
     [SerializeField] private ParticleHelper _twinkleEffect;
 
-    public bool IsLightingHintInRage => IsRage && TotalMissileCount % 3 == 0;
+    public bool IsLightingHintInRage => IsRage && (TotalMissileCount % 3) == 0;
 
     #endregion
 
@@ -167,7 +167,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         currentAttackCount++;
 
-        if (_currentAttack == AttackType.VineMissile)
+        if (IsRage && _currentAttack is AttackType.VineMissile)
         {
             TotalMissileCount++;
         }
@@ -439,6 +439,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         if (IsActiveLuminescence == false)
         {
             SetActiveLuminescence(true);
+            currentHitCount = 0;
             IsGodMode = true;
         }
     }
