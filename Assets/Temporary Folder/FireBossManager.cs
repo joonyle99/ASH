@@ -19,19 +19,25 @@ public class FireBossManager : MonoBehaviour
 
     public void SetUpBattle()
     {
-        StartCoroutine(SetUpBattleCoroutine());
+        // StartCoroutine(SetUpBattleCoroutine());
+
+        // SceneContext.Current.CameraController.ZoomOut(0f);
     }
     private IEnumerator SetUpBattleCoroutine()
     {
-        yield return SceneContext.Current.CameraController.ZoomOutCoroutine(-25f);
+        TurnOnInvisibleWall();
 
-        Debug.Log("끝");
+        yield return null;
 
-        UseCameraBoundaries();
+        // yield return SceneContext.Current.CameraController.ZoomOutCoroutine(-25f);
+        
+        // SetCameraBoundaries();
     }
 
-    public void UseCameraBoundaries()
+    public void SetCameraBoundaries()
     {
+        Debug.Log($"카메라 바운더리 설정");
+
         // 처음에 게임 오브젝트가 비활성화되어 있으면 Bounds가 유효하지 않기 때문에 여기서 가져온다
         var leftWallCollider = _invisibleWall_Left.GetComponent<BoxCollider2D>();
         var rightWallCollider = _invisibleWall_Right.GetComponent<BoxCollider2D>();
@@ -49,7 +55,7 @@ public class FireBossManager : MonoBehaviour
         SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Right, true, rightValue);
     }
 
-    public void UseCameraRooms()
+    public void SetCameraRooms()
     {
 
     }

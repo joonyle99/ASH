@@ -41,6 +41,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
     private ProCamera2DShake _shakeComponent;
     private ProCamera2DTriggerZoom _triggerZoomComponent;
+    private ProCamera2DZoomToFitTargets _zoomToFitTargetsComponent;
     private ProCamera2DNumericBoundaries _boundariesComponent;
     private ProCamera2DRooms _roomsComponent;
 
@@ -62,6 +63,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
         _shakeComponent = GetComponent<ProCamera2DShake>();
         _triggerZoomComponent = GetComponent<ProCamera2DTriggerZoom>();
+        _zoomToFitTargetsComponent = GetComponent<ProCamera2DZoomToFitTargets>();
         _boundariesComponent = GetComponent<ProCamera2DNumericBoundaries>();
         _roomsComponent = GetComponent<ProCamera2DRooms>();
 
@@ -196,7 +198,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         _proCamera.RemoveAllCameraTargets();
         _proCamera.AddCameraTarget(target);
     }
-
     public void DisableCameraFollow()
     {
         // 0에 가까울 수록 빠르게 따라감
@@ -209,7 +210,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         StartCoroutine(SnapFollowCoroutine());
     }
-    private IEnumerator SnapFollowCoroutine()
+    public IEnumerator SnapFollowCoroutine()
     {
         // Debug.Log("call snap follow coroutine");
 
@@ -271,16 +272,14 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         }
     }
 
-    // effect: rooms
-
-    // custom effect: zoom (control position z)
+    // effect: zoom
     public void ZoomOut(float target)
     {
         StartCoroutine(ZoomOutCoroutine(target));
     }
     public IEnumerator ZoomOutCoroutine(float target)
     {
-        var start = _mainCamera.transform.position.z;
+        var start = _proCamera.transform.position.z;
 
         var eTime = 0f;
         while (eTime < 1.5f)
@@ -288,36 +287,23 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
             var t = joonyle99.Math.EaseOutQuad(eTime / 1.5f);
             var next = Mathf.Lerp(start, target, t);
 
-            _mainCamera.transform.position =
-                new Vector3(_mainCamera.transform.position.x, _mainCamera.transform.position.y, next);
+            _proCamera.transform.position =
+                new Vector3(_proCamera.transform.position.x, _proCamera.transform.position.y, next);
 
             eTime += Time.deltaTime;
             yield return null;
         }
 
-        _mainCamera.transform.position = new Vector3(_mainCamera.transform.position.x, _mainCamera.transform.position.y, target);
+        _proCamera.transform.position = new Vector3(_proCamera.transform.position.x, _proCamera.transform.position.y, target);
     }
-    public void ZoomIn(float target)
+
+    // effect: zoom to fit targets
+    public void TurnOnZoomToFitTargets()
     {
-        StartCoroutine(ZoomInCoroutine(target));
+        _zoomToFitTargetsComponent.enabled = true;
     }
-    public IEnumerator ZoomInCoroutine(float target)
+    public void TurnOffZoomToFitTargets()
     {
-        var start = _mainCamera.transform.position.z;
-
-        var eTime = 0f;
-        while (eTime < 1f)
-        {
-            var t = eTime / 1f;
-            var next = Mathf.Lerp(start, target, t);
-
-            _mainCamera.transform.position =
-                new Vector3(_mainCamera.transform.position.x, _mainCamera.transform.position.y, next);
-
-            eTime += Time.deltaTime;
-            yield return null;
-        }
-
-        _mainCamera.transform.position = new Vector3(_mainCamera.transform.position.x, _mainCamera.transform.position.y, target);
+        _zoomToFitTargetsComponent.enabled = false;
     }
 }

@@ -48,7 +48,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     }
     public IEnumerator StartDialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
     {
-        if (IsDialoguePanel || IsDialogueActive)
+        if (IsDialoguePanel && IsDialogueActive)
         {
             Debug.Log("대화가 이미 진행중입니다");
             yield break;
@@ -134,9 +134,12 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                         {
                             isClicked = true;
                             View.ResponsePanel.Accept.onClick.RemoveListener(ResponseHandler);
+                            View.ResponsePanel.Reject.onClick.RemoveListener(ResponseHandler);
                         }
                         View.ResponsePanel.Accept.onClick.RemoveListener(ResponseHandler);
                         View.ResponsePanel.Accept.onClick.AddListener(ResponseHandler);
+                        View.ResponsePanel.Reject.onClick.RemoveListener(ResponseHandler);
+                        View.ResponsePanel.Reject.onClick.AddListener(ResponseHandler);
 
                         // 해당 퀘스트가 수락 / 거절되기 전까지 대기
                         yield return new WaitUntil(() => isClicked);

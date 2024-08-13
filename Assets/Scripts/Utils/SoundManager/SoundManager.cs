@@ -150,7 +150,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     }
     public void PlayCommonBGMForScene(string sceneName)
     {
-        if (GameSceneManager.IsTitle(sceneName))
+        if (GameSceneManager.IsOpeningScene(sceneName))
         {
             PlayCommonBGM("MainTheme");
         }

@@ -7,9 +7,9 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     // Dictionary는 해시테이블을 사용하고, 키를 이용해 '값'을 검색하는 데 사용합니다
     // -> 중복 값은 허용하나, 중복 키는 허용하지 않는다
 
-    private static HashSet<string> title = new HashSet<string>
+    private static HashSet<string> openingScene = new HashSet<string>
     {
-        "TitleScene"
+        "TitleScene", "PrologueScene"
     };
     private static HashSet<string> exploration1 = new HashSet<string>
     {
@@ -40,9 +40,9 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
         "MyScene 1", "준엽 씬", "지희 씬"
     };
 
-    public static bool IsTitle(string sceneName)
+    public static bool IsOpeningScene(string sceneName)
     {
-        return title.Contains(sceneName);
+        return openingScene.Contains(sceneName);
     }
     public static bool IsExploration1(string sceneName)
     {
@@ -71,7 +71,7 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     }
     public static bool IsDefinedScene(string sceneName)
     {
-        return IsTitle(sceneName) || IsExploration1(sceneName) || IsExploration2(sceneName) ||
+        return IsOpeningScene(sceneName) || IsExploration1(sceneName) || IsExploration2(sceneName) ||
                IsBossDungeon1(sceneName) || IsBossDungeon2(sceneName) || IsBossScene(sceneName) ||
                IsTestScene(sceneName);
     }
