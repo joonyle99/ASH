@@ -38,9 +38,9 @@ public class OptionView : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyUp(KeyCode.Escape))
+        if(InputManager.Instance.State.EscapeKey.KeyUp)
         {
-            Resume();
+            Pause();
         }
     }
 
@@ -99,12 +99,14 @@ public class OptionView : MonoBehaviour
         _bgmSlider.value = bgmVolume;
         _sfxSlider.value = sfxVolume;
     }
+
     public void SetBgmValue(float volume)
     {
         int bgmVolume = Mathf.FloorToInt(volume * 100f);
 
         _bgmValue.text = bgmVolume.ToString();
     }
+
     public void SetSfxValue(float volume)
     {
         int sfxVolume = Mathf.FloorToInt(volume * 100f);
