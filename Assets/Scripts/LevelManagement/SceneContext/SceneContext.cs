@@ -85,7 +85,7 @@ public class SceneContext : MonoBehaviour
         // 3. entrance
         var passages = FindObjectsByType<Passage>(FindObjectsSortMode.None);
         EntrancePassage = passages.ToList().Find(element => element.PassageName == entranceName);
-
+        Debug.Log(EntrancePassage.name);
         // check build result for player and entrance
         CheckBuildResult(Player);
         CheckBuildResult(EntrancePassage);

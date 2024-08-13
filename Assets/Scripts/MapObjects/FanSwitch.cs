@@ -2,7 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class FanSwitch : InteractableObject
+public class FanSwitch : InteractableObject, ISceneContextBuildListener
 {
     [SerializeField] GameObject[] _windZoneArr;
     [SerializeField] GameObject _lever;
@@ -16,8 +16,11 @@ public class FanSwitch : InteractableObject
     private void Awake()
     {
         _statePreserver = GetComponent<PreserveState>();
+    }
 
-        if(_statePreserver)
+    public void OnSceneContextBuilt()
+    {
+        if (_statePreserver)
         {
             float newLeverAngleZ = _leverAngleZ;
 

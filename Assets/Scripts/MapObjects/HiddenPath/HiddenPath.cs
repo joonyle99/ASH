@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class HiddenPath : MonoBehaviour, ILightCaptureListener
+public class HiddenPath : MonoBehaviour, ILightCaptureListener, ISceneContextBuildListener
 {
     [SerializeField] HiddenPathMask _mask;
     [SerializeField] HiddenPathMask.Direction _swipeDirection;
@@ -21,6 +21,10 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     {
         _mask.InitMask(_swipeDirection);
         _statePreserver = GetComponent<PreserveState>();
+    }
+
+    public void OnSceneContextBuilt()
+    {
         if (_statePreserver)
         {
             if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)

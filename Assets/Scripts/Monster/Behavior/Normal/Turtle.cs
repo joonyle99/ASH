@@ -1,4 +1,4 @@
-public sealed class Turtle : MonsterBehaviour
+public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
 {
     private PreserveState _statePreserver;
 
@@ -7,13 +7,9 @@ public sealed class Turtle : MonsterBehaviour
         base.Awake();
 
         _statePreserver = GetComponent<PreserveState>();
-
-        SaveAndLoader.OnSaveStarted += SaveAnyState;
     }
-    protected override void Start()
+    public void OnSceneContextBuilt()
     {
-        base.Start();
-
         if (_statePreserver)
         {
             bool isDead = _statePreserver.LoadState("_isDeadSaved", IsDead);
@@ -22,16 +18,26 @@ public sealed class Turtle : MonsterBehaviour
                 Die(false, false);
             }
 
-            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
                 RecentDir = _statePreserver.LoadState<int>("_recentDirSaved", DefaultDir);
             }
-            else
-            {
-                RecentDir = _statePreserver.LoadState<int>("_recentDir", DefaultDir);
-            }
         }
+
+        SaveAndLoader.OnSaveStarted += SaveTurtleState;
     }
+    
+    // destroy function
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState<int>("_recentDir", RecentDir);
+        }
+
+        SaveAndLoader.OnSaveStarted -= SaveTurtleState;
+    }
+
     public void FixedUpdate()
     {
         if (IsDead)
@@ -46,15 +52,6 @@ public sealed class Turtle : MonsterBehaviour
         {
             if (GroundMovementModule)
                 GroundMovementModule.AffectGravity();
-        }
-    }
-
-    // destroy function
-    private void OnDestroy()
-    {
-        if(_statePreserver)
-        {
-            _statePreserver.SaveState<int>("_recentDir", RecentDir);
         }
     }
 
@@ -83,7 +80,7 @@ public sealed class Turtle : MonsterBehaviour
         SetHitBoxStepable(true);
     }
 
-    private void SaveAnyState()
+    private void SaveTurtleState()
     {
         if (_statePreserver)
         {

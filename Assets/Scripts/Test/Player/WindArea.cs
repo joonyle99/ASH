@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WindArea : MonoBehaviour
+public class WindArea : MonoBehaviour, ISceneContextBuildListener
 {
     [SerializeField] bool _isStartActive = true;
     PreserveState _statePreserver;
@@ -22,7 +22,9 @@ public class WindArea : MonoBehaviour
     private void Awake()
     {
         _statePreserver = GetComponentInParent<PreserveState>();
-
+    }
+    public void OnSceneContextBuilt()
+    {
         if (_statePreserver != null)
         {
             if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
@@ -45,7 +47,10 @@ public class WindArea : MonoBehaviour
     {
         if(_statePreserver)
         {
-            _statePreserver.SaveState("_isActive", gameObject.activeSelf);
+            if(SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            {
+                _statePreserver.SaveState("_isActive", gameObject.activeSelf);
+            }
         }
 
         SaveAndLoader.OnSaveStarted -= SaveWindState;

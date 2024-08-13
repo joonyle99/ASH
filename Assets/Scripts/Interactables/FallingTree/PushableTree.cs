@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PushableTree : InteractableObject
+public class PushableTree : InteractableObject, ISceneContextBuildListener
 {
     [SerializeField] private FallingTreeTrunk _treeTrunk;
     [SerializeField] private float _interactionOverAngle = 15;
@@ -17,7 +17,10 @@ public class PushableTree : InteractableObject
         // Debug.Log("pushable tree awake");
 
         _statePreserver = GetComponent<PreserveState>();
+    }
 
+    public void OnSceneContextBuilt()
+    {
         if (_statePreserver)
         {
             bool isInteractable = _statePreserver.LoadState("_isInteractable", IsInteractable);
@@ -28,7 +31,7 @@ public class PushableTree : InteractableObject
 
             var treeTransform = new TransformState(_treeTrunk.transform);
             //저장 시점의 데이터를 불러오는 경우
-            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
                 var newTreeTransform = _statePreserver.LoadState("_FallingTreeTransformSaved", treeTransform);
                 _treeTrunk.transform.localPosition = newTreeTransform.Position;
@@ -47,17 +50,6 @@ public class PushableTree : InteractableObject
         }
     }
 
-    private void Update()
-    {
-        if (IsInteractable)
-        {
-            if (IsFallen)
-            {
-                IsInteractable = false;
-            }
-        }
-    }
-
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -72,6 +64,17 @@ public class PushableTree : InteractableObject
             }
 
             SaveAndLoader.OnSaveStarted -= SaveFallingTreeState;
+        }
+    }
+
+    private void Update()
+    {
+        if (IsInteractable)
+        {
+            if (IsFallen)
+            {
+                IsInteractable = false;
+            }
         }
     }
 

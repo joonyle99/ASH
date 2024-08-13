@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class LightDoor : LanternLike
+public class LightDoor : LanternLike, ISceneContextBuildListener
 {
     public enum State
     {
@@ -32,12 +32,14 @@ public class LightDoor : LanternLike
         _cameraController = Camera.main.GetComponent<CameraController>();
 
         _statePreserver = GetComponent<PreserveState>();
-
+    }
+    public void OnSceneContextBuilt()
+    {
         if (_statePreserver)
         {
             SaveAndLoader.OnSaveStarted += SaveDoorOpenState;
 
-            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
                 if (_statePreserver.LoadState("_isOpenSaved", false))
                 {
@@ -52,7 +54,19 @@ public class LightDoor : LanternLike
                 }
             }
         }
+    }
+    
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+        {
+            if(SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            {
+                _statePreserver.SaveState("_opened", CurrentState == State.Opened);
+            }
 
+            SaveAndLoader.OnSaveStarted -= SaveDoorOpenState;
+        }
     }
     public void Update()
     {
@@ -65,18 +79,6 @@ public class LightDoor : LanternLike
         if (LanternSceneContext.Current.IsAllRelationsFullyConnected(this))
         {
             IsLightOn = true;
-        }
-    }
-    private void OnDestroy()
-    {
-        if (_statePreserver)
-        {
-            if(SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
-            {
-                _statePreserver.SaveState("_opened", CurrentState == State.Opened);
-            }
-
-            SaveAndLoader.OnSaveStarted -= SaveDoorOpenState;
         }
     }
 

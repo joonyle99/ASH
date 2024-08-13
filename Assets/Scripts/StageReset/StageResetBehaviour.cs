@@ -28,6 +28,7 @@ public class StageResetBehaviour : InteractableObject
     {
         _sceneName = SceneManager.GetActiveScene().name;
         _entrancePassage = "Enter " + _sceneName;
+        Debug.Log(_entrancePassage);
     }
 
     private void Update()

@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEditor;
 #endif
 
-public class Lantern : LanternLike, ILightCaptureListener
+public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildListener
 {
     [System.Serializable]
     public struct LightSettings
@@ -47,8 +47,20 @@ public class Lantern : LanternLike, ILightCaptureListener
 
     void Awake()
     {
+        _statePreserver = GetComponent<PreserveState>();
+    }
+
+    void TurnCurrentSpotLightOn()
+    {
+        _currentSpotLight.gameObject.SetActive(true);
+        _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
+        _currentSpotLight.intensity = _currentSettings.Intensity;
+    }
+
+    public void OnSceneContextBuilt()
+    {
         var collisions = Physics2D.OverlapPointAll(LightPoint.position);
-        foreach(var collision in collisions)
+        foreach (var collision in collisions)
         {
             if (collision.GetComponent<HiddenPathDarkness>() != null)
             {
@@ -82,12 +94,11 @@ public class Lantern : LanternLike, ILightCaptureListener
             IsLightOn = true;
         }
 
-        _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            if(SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                if(_statePreserver.LoadState("_isOnSaved", false))
+                if (_statePreserver.LoadState("_isOnSaved", false))
                 {
                     TurnOnImmediately();
                 }
@@ -103,12 +114,7 @@ public class Lantern : LanternLike, ILightCaptureListener
 
         SaveAndLoader.OnSaveStarted += SaveLanternOnState;
     }
-    void TurnCurrentSpotLightOn()
-    {
-        _currentSpotLight.gameObject.SetActive(true);
-        _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
-        _currentSpotLight.intensity = _currentSettings.Intensity;
-    }
+
     void OnDestroy()
     {
         if (_statePreserver)

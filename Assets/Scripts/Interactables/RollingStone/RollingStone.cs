@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RollingStone : InteractableObject
+public class RollingStone : InteractableObject, ISceneContextBuildListener
 {
     [SerializeField] private bool _isMaxClampSpeed = true;
     [SerializeField] private float _maxRollSpeed;
@@ -36,6 +36,9 @@ public class RollingStone : InteractableObject
         _statePreserver = GetComponent<PreserveState>();
         _attackableComponent = GetComponent<IAttackListener>();
 
+    }
+    public void OnSceneContextBuilt()
+    {
         if (_statePreserver)
         {
             bool isInteractable = _statePreserver.LoadState("_isInteractable", IsInteractable);
@@ -47,6 +50,7 @@ public class RollingStone : InteractableObject
 
         _rollAudioOriginalVolume = _rollAudio.volume;
     }
+
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -56,6 +60,7 @@ public class RollingStone : InteractableObject
             _statePreserver.SaveState("_isInteractable", IsInteractable);
         }
     }
+
     private void Update()
     {
         // contacts count

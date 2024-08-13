@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// ÆÛÁñ ±â¹Í¿¡ »ç¿ëµÇ´Â ¿òÁ÷ÀÌ´Â ÇÃ·§Æû
 /// </summary>
-public class MovingPlatform : ToggleableObject
+public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
 {
     private enum Type { Vertical, Horizontal }
 
@@ -41,11 +41,17 @@ public class MovingPlatform : ToggleableObject
         GetComponent<SpriteRenderer>().sprite = _stoneSprites[(int)_type];
         GetComponent<BoxCollider2D>().size = _colliderSizes[(int)_type];
     }
+
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _statePreserver = GetComponent<PreserveState>();
+    }
     private void OnDestroy()
     {
         if (_statePreserver)
         {
-            if(SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
             {
                 _statePreserver.SaveState("_travelDistance", _travelDistance);
             }
@@ -53,12 +59,8 @@ public class MovingPlatform : ToggleableObject
             SaveAndLoader.OnSaveStarted -= SaveTravelDistanceState;
         }
     }
-
-    private void Awake()
+    public void OnSceneContextBuilt()
     {
-        _rigidbody = GetComponent<Rigidbody2D>();
-        _statePreserver = GetComponent<PreserveState>();
-
         if (_statePreserver)
         {
             if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
@@ -73,6 +75,8 @@ public class MovingPlatform : ToggleableObject
             SaveAndLoader.OnSaveStarted += SaveTravelDistanceState;
         }
     }
+
+
     private void Update()
     {
         if (_isMoving)

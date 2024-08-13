@@ -33,7 +33,7 @@ struct TransformState
 /// 트랜스폼과 파괴 상태에 대한 저장과 불러오기를 자체적으로 지원하고
 /// 추가적인 상태를 저장하고 불러오는 기능는 각 오브젝트의 Awake()와 OnDestroy()에서 직접 구현해야한다
 /// </summary>
-public partial class PreserveState : MonoBehaviour, IDestructionListener
+public partial class PreserveState : MonoBehaviour, IDestructionListener, ISceneContextBuildListener
 {
     [SerializeField] private string _groupName;                     // 데이터 그룹의 이름
     [SerializeField] private string _ID;                            // 데이터의 ID
@@ -60,6 +60,10 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener
 
     // 트랜스폼과 파괴 상태를 불러와 초기화 하는 작업 (고유한 데이터는 따로 초기화 해야한다)
     private void Awake()
+    {
+        
+    }
+    public void OnSceneContextBuilt()
     {
         //OnSave함수 바인딩
         SaveAndLoader.OnSaveStarted += OnSaveData;

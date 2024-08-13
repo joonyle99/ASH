@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 컷씬 플레이어는 다양한 연출을 시퀀스를 통해 재생한다
 /// </summary>
-public class CutscenePlayer : MonoBehaviour, ITriggerListener
+public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuildListener
 {
     [SerializeField] bool _playOnce = true;
     [SerializeField] bool _played = false;
@@ -21,7 +21,10 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     {
         _statePreserver = GetComponent<PreserveState>();
 
-        if (_statePreserver)
+    }
+    public void OnSceneContextBuilt()
+    {
+        if(_statePreserver)
         {
             bool played = _statePreserver.LoadState("_played", _played);
             if (played)
