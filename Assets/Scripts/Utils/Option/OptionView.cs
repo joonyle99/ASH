@@ -36,6 +36,14 @@ public class OptionView : MonoBehaviour
         InitialVolumeSetting();
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyUp(KeyCode.Escape))
+        {
+            Resume();
+        }
+    }
+
     // option button
     public void TogglePanel()
     {
@@ -48,6 +56,7 @@ public class OptionView : MonoBehaviour
             Pause();
         }
     }
+
     public void Pause()
     {
         _isPause = true;
@@ -58,6 +67,7 @@ public class OptionView : MonoBehaviour
 
         InputManager.Instance.ChangeToStayStillSetter();
     }
+
     public void Resume()
     {
         _isPause = false;

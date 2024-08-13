@@ -8082,6 +8082,7 @@ GameObject:
   - component: {fileID: 667513064}
   - component: {fileID: 667513063}
   - component: {fileID: 667513068}
+  - component: {fileID: 667513069}
   m_Layer: 0
   m_Name: BossDoor_End
   m_TagString: Untagged
@@ -8247,10 +8248,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c0ca60a4650e0748a7cd207a15c2d35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _groupName: Dungeon2
+  _groupName: BossDungeon2
   _ID: 2_77
   _preserveTransform: 0
   _preserveDestruction: 0
+--- !u!114 &667513069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667513061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa41ddfd8eb81a1428b1e8b888cf327f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerActivators: []
+  _enterInputSetter: {fileID: 0}
+  _exitInputSetter: {fileID: 0}
+  _entranceCutscenePlayer: {fileID: 0}
+  _playerSpawnPoint: {fileID: 667513062}
+  _canEnter: 1
+  _exitTimeOut: 0
 --- !u!4 &678894746 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6270838590711557316, guid: 93ce0771239d243479adf7aa2bb748b1, type: 3}
@@ -9181,6 +9201,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1489727759}
     m_Modifications:
+    - target: {fileID: 329905272, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 329905272, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 329905272, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 439602204, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 439602204, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1358472264, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1358472264, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1358472264, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1935103964, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1935103964, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 403616961551119154, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -9315,6 +9375,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4950070036961960987, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7917883993258112195, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -16861,6 +16925,10 @@ PrefabInstance:
       propertyPath: _currentSceneBasicGroupName
       value: BossDungeon2-1
       objectReference: {fileID: 0}
+    - target: {fileID: 5712149877932530921, guid: c44a8f46c5d5ace45af8abe1eb92e9d2, type: 3}
+      propertyPath: _exceptionalEnterancePassage
+      value: BossDoor_End
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c44a8f46c5d5ace45af8abe1eb92e9d2, type: 3}
 --- !u!4 &1087658849 stripped
@@ -22858,7 +22926,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: -226.15503
+      value: -238.44022
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
@@ -23690,11 +23758,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -122.25263
+      value: -165.76776
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.916772
+      value: 8.950766
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -25438,6 +25506,7 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 5562433878688136396}
   _stateChange: 0
   _animationType: 0
+  _canSkip: 0
   _dialogueData: {fileID: 11400000, guid: d42ef9a664b0ae24ba1f716ae9655933, type: 2}
 --- !u!4 &5562433879573007244
 Transform:

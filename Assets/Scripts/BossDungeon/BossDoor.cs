@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 애니메이션이 연출이 들어간 특별한 문으로 Passage를 제어한다
 /// </summary>
-public class BossDoor : InteractableObject
+public class BossDoor : InteractableObject, ISceneContextBuildListener
 {
     [Header("Boss Door")]
     [Space]
@@ -30,7 +30,7 @@ public class BossDoor : InteractableObject
 
             if (_statePreserver)
             {
-                _statePreserver.SaveState("_isOpened", _isOpened);
+                _statePreserver.SaveState("_isOpened", IsOpened);
             }
         }
     }
@@ -45,16 +45,47 @@ public class BossDoor : InteractableObject
     }
     private void Start()
     {
-        if (_statePreserver?.LoadState("_isOpened", IsOpened) ?? IsOpened)
-        {
-            _animator.SetTrigger("InstantOpen");
+    }
 
-            InitOpening();
-        }
-        else
+    public void OnSceneContextBuilt()
+    {
+        if(_statePreserver)
         {
-            InitClosing();
+            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                if(IsOpened = _statePreserver.LoadState<bool>("_isOpenSaved", IsOpened))
+                {
+                    _animator.SetTrigger("InstantOpen");
+
+                    InitOpening();
+                }
+                else
+                {
+                    InitClosing();
+                }
+            }else
+            {
+                if (IsOpened = _statePreserver.LoadState<bool>("_isOpened", IsOpened))
+                {
+                    _animator.SetTrigger("InstantOpen");
+
+                    InitOpening();
+                }
+                else
+                {
+                    InitClosing();
+                }
+            }
         }
+
+        SaveAndLoader.OnSaveStarted += SaveBossDoorState;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        SaveAndLoader.OnSaveStarted -= SaveBossDoorState;
     }
 
     // interaction
@@ -180,5 +211,13 @@ public class BossDoor : InteractableObject
             _passage.SetActive(false);
         }
         _collider.enabled = true;
+    }
+
+    private void SaveBossDoorState()
+    {
+        if(_statePreserver)
+        {
+            _statePreserver.SaveState<bool>("_isOpenSaved", IsOpened);
+        }
     }
 }
