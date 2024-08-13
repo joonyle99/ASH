@@ -29,9 +29,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     private Coroutine _currentDialogueCoroutine;
     private DialogueData _currentDialogueData;
 
-    public void StartDialogue(DialogueData data)
+    public void StartDialogue(DialogueData data, bool isContinueDialogue = false)
     {
-        if (IsDialoguePanel || IsDialogueActive)
+        if (IsDialogueActive)
         {
             Debug.Log("대화가 이미 진행중입니다");
             return;
@@ -41,30 +41,10 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         {
             Debug.LogError($"_currentDialogueCoroutine is not 'null'");
             return;
-        }
-
-        _currentDialogueData = data;
-        _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data));
-    }
-    public IEnumerator StartDialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
-    {
-        if (IsDialoguePanel && IsDialogueActive)
-        {
-            Debug.Log("대화가 이미 진행중입니다");
-            yield break;
-        }
-
-        if (_currentDialogueCoroutine != null)
-        {
-            Debug.LogError($"_currentDialogueCoroutine is not 'null'");
-            yield break;
         }
 
         _currentDialogueData = data;
         _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue));
-
-        // TODO: 이걸 중간에 Stop하면 문제가 생길 수도 있다
-        yield return _currentDialogueCoroutine;
     }
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
     {

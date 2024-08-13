@@ -53,7 +53,8 @@ public class HealthPanelUI : MonoBehaviour
             var isFrontShow = maxHp >= _hpUnit[i] - 1;
 
             // maxHp show animation
-            _lifeIconsBacks[i].GetComponent<CanvasGroup>().DOFade(isFrontShow ? 1f : 0f, 2f).SetEase(Ease.OutCirc);
+            // _lifeIconsBacks[i].GetComponent<CanvasGroup>().DOFade(isFrontShow ? 1f : 0f, 2f).SetEase(Ease.OutCirc);
+            _lifeIconsBacks[i].gameObject.SetActive(isFrontShow);
 
             if (!isFrontShow) continue;
 

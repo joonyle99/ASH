@@ -48,7 +48,8 @@ public class Merchant : InteractableObject
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 Debug.Log("Start Completion");
-                yield return DialogueController.Instance.StartDialogueCoroutine(dialogueData);
+                DialogueController.Instance.StartDialogue(dialogueData);
+                yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End Completion");
 
                 QuestController.Instance.CompleteQuest();
@@ -58,7 +59,8 @@ public class Merchant : InteractableObject
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Not Yet Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 Debug.Log("Start Not Yet Completion");
-                yield return DialogueController.Instance.StartDialogueCoroutine(dialogueData);
+                DialogueController.Instance.StartDialogue(dialogueData);
+                yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End Not Yet Completion");
             }
         }
@@ -70,7 +72,8 @@ public class Merchant : InteractableObject
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Final Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 Debug.Log("Start Final Completion");
-                yield return DialogueController.Instance.StartDialogueCoroutine(dialogueData);
+                DialogueController.Instance.StartDialogue(dialogueData);
+                yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End Final Completion");
             }
             // 처음 만난 경우 First Meeting 대화 실행과 함께, 퀘스트를 해당 다이얼로그에 링크한다. (자동 수락)
@@ -80,7 +83,8 @@ public class Merchant : InteractableObject
                 if (CheckInvalid(dialogueData) == true) yield break;
                 dialogueData.LinkQuestData(_questData);
                 Debug.Log("Start First Meeting");
-                yield return DialogueController.Instance.StartDialogueCoroutine(dialogueData);
+                DialogueController.Instance.StartDialogue(dialogueData);
+                yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End First Meeting");
             }
             // 이미 완료한 적 있는 경우 Re-request 대화 실행과 함께, 퀘스트를 해당 다이얼로그에 링크한다. (응답 요청)
@@ -91,7 +95,8 @@ public class Merchant : InteractableObject
                     var dialogueData1 = _dialogueCollection.FirstOrDefault(d => d.Key == "Re-request After Rejection").Value;
                     if (CheckInvalid(dialogueData1) == true) yield break;
                     Debug.Log("Start Re-request After Rejection");
-                    yield return DialogueController.Instance.StartDialogueCoroutine(dialogueData1, true);
+                    DialogueController.Instance.StartDialogue(dialogueData1);
+                    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                     Debug.Log("End Re-request After Rejection");
                 }
 
@@ -99,7 +104,8 @@ public class Merchant : InteractableObject
                 if (CheckInvalid(dialogueData2) == true) yield break;
                 dialogueData2.LinkQuestData(_questData);
                 Debug.Log("Start Re-request");
-                yield return DialogueController.Instance.StartDialogueCoroutine(dialogueData2, true);
+                DialogueController.Instance.StartDialogue(dialogueData2);
+                yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End Re-request");
 
                 DialogueData dialogueData3;
@@ -110,7 +116,8 @@ public class Merchant : InteractableObject
                     dialogueData3 = _dialogueCollection.FirstOrDefault(d => d.Key == "Acception").Value;
                     if (CheckInvalid(dialogueData3) == true) yield break;
                     Debug.Log("Start Acception");
-                    yield return DialogueController.Instance.StartDialogueCoroutine(dialogueData3);
+                    DialogueController.Instance.StartDialogue(dialogueData3);
+                    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                     Debug.Log("End Acception");
                 }
                 // 거절 시
@@ -119,7 +126,8 @@ public class Merchant : InteractableObject
                     dialogueData3 = _dialogueCollection.FirstOrDefault(d => d.Key == "Rejection").Value;
                     if (CheckInvalid(dialogueData3) == true) yield break;
                     Debug.Log("Start Rejection");
-                    yield return DialogueController.Instance.StartDialogueCoroutine(dialogueData3);
+                    DialogueController.Instance.StartDialogue(dialogueData3);
+                    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                     Debug.Log("End Rejection");
                 }
             }
