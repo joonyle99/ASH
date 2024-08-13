@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -38,9 +37,9 @@ public class OptionView : MonoBehaviour
 
     private void Update()
     {
-        if(InputManager.Instance.State.EscapeKey.KeyUp)
+        if (InputManager.Instance.State.EscapeKey.KeyDown)
         {
-            Pause();
+            TogglePanel();
         }
     }
 
@@ -112,15 +111,6 @@ public class OptionView : MonoBehaviour
         int sfxVolume = Mathf.FloorToInt(volume * 100f);
 
         _sfxValue.text = sfxVolume.ToString();
-    }
-
-    // checkPoint
-    public void MoveToCheckPoint()
-    {
-        Resume();
-
-        // 새로운 씬이 아닌 '마지막 체크 포인트'에서 재시작 하도록 수정
-        SceneContext.Current.Player.TriggerInstantRespawn(0f);
     }
 
     // load

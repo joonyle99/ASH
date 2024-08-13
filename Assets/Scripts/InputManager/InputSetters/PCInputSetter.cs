@@ -9,12 +9,11 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
     [SerializeField] KeyCode _shootingAttackKeyCode = KeyCode.S;
     [SerializeField] KeyCode _interactionKeyCode = KeyCode.F;
     [SerializeField] KeyCode _lightingKeyCode = KeyCode.Q;
-    [SerializeField] KeyCode _escapeKeyCode = KeyCode.Escape;
 
     public override InputState GetState()
     {
         // "매 프레임" 새로운 Input Data를 생성
-        InputState state = new InputState();
+        InputState state = base.GetState();
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
@@ -41,7 +40,6 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
         state.AttackKey.Update(_basicAttackKeyCode);
         state.ShootingAttackKey.Update(_shootingAttackKeyCode);
         state.LightKey.Update(_lightingKeyCode);
-        state.EscapeKey.Update(_escapeKeyCode);
 
         return state;
     }

@@ -6,10 +6,12 @@ public class StayStillInputSetter : InputSetterScriptableObject
     [SerializeField] KeyCode _dialogueKey;
     public override InputState GetState()
     {
-        InputState state = new InputState();
+        InputState state = base.GetState();
+
         state.Movement = Vector2.zero;
         if (DialogueController.Instance.IsDialogueActive)
             state.InteractionKey.Update(_dialogueKey);
+
         return state;
     }
 

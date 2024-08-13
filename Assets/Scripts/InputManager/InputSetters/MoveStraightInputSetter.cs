@@ -14,7 +14,7 @@ public class MoveStraightInputSetter : InputSetterScriptableObject
         // ** state.[KEY].Update([KEYCODE]); 를 해주지 않음 **
         // i.e) 상호작용 키의 입력이 불가능하다.
 
-        InputState state = new InputState();
+        InputState state = base.GetState();
         state.Movement = new Vector2(_direction == Direction.Left ? -1 : 1, 0);
         return state;
     }

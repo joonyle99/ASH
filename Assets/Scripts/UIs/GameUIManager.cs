@@ -47,10 +47,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
 
     [SerializeField] private Letterbox _letterBox;
     [SerializeField] private OptionView _optionView;
-    [SerializeField] private LifePurchasePanel _lifePurchasePanel;
     [SerializeField] private TextMeshProUGUI _sceneNameText;
-
-    public static bool IsLifePurchasePanelOpen => Instance._lifePurchasePanel.gameObject.activeInHierarchy;
 
     private void Awake()
     {
@@ -166,14 +163,6 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
         if (Instance == null) return;
 
         Instance._optionView.TogglePanel();
-    }
-
-    // life purchase
-    public static void OpenLifePurchasePanel()
-    {
-        if (Instance == null) return;
-
-        Instance._lifePurchasePanel.Open();
     }
 
     // scene name text
