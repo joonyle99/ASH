@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Utils;
 
 public class DieState : PlayerState
@@ -60,8 +61,12 @@ public class DieState : PlayerState
         // 체력 초기화
         Player.CurHp = Player.MaxHp;
 
+        SceneChangeManager.Instance.SceneChangeType = SceneChangeType.PlayerRespawn;
+
         var sceneName = PersistentDataManager.Instance.SavedPersistentData.SceneName;
+        sceneName = sceneName == "" ? SceneManager.GetActiveScene().name : sceneName;
         var passageName = PersistentDataManager.Instance.SavedPersistentData.PassageName;
+        passageName = passageName == "" ? SceneContext.Current.EntrancePassage.PassageName : passageName;
 
         SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
     }

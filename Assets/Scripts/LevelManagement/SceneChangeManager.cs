@@ -9,6 +9,7 @@ public enum SceneChangeType
     ChangeMap = 1,
     Loading = 2,
     StageReset = 3,
+    PlayerRespawn = 4,
 }
 
 /// <summary>

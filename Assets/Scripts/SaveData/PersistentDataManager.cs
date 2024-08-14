@@ -385,8 +385,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             string passageName = Instance.PersistentData.PassageName;
             if (sceneName == "" || passageName == "")
             {
-                Debug.Log(sceneName);
-                Debug.Log(passageName);
                 Debug.LogWarning("Not Saved Scene or PassageData Load");
                 return false;
             }
@@ -399,5 +397,13 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         //저장된 데이터가 없는 경우
         Debug.Log("Have not saved data");
         return false;
+    }
+
+    public static void ClearPersistentData()
+    {
+        Instance.PersistentData.SceneName = "";
+        Instance.PersistentData.PassageName = "";
+        Instance.PersistentData.DataGroups.Clear();
+        Instance.PersistentData.GlobalDataGroup.Clear();
     }
 }

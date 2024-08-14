@@ -213,4 +213,9 @@ public class DialogueView : MonoBehaviour
         _indicator.gameObject.SetActive(true);
     }
 
+    public void SkipDialogue()
+    {
+        if(DialogueController.Instance)
+            DialogueController.Instance.ShutdownDialogue();
+    }
 }

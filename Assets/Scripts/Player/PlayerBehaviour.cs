@@ -251,7 +251,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         materialController = GetComponent<MaterialController>();
         _soundList = GetComponent<SoundList>();
 
-        SaveAndLoader.OnSaveStarted -= SavePlayerStatus;
         SaveAndLoader.OnSaveStarted += SavePlayerStatus;
     }
     protected override void Start()
@@ -354,41 +353,67 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);
 
-        // 불러오기
-        if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+
+        switch (SceneChangeManager.Instance.SceneChangeType)
         {
-            if (PersistentDataManager.HasByGlobal<int>("PlayerMaxHpSaved"))
-                MaxHp = PersistentDataManager.GetByGlobal<int>("PlayerMaxHpSaved");
-            else
-                MaxHp = DEFAULT_HP;
+            case SceneChangeType.Loading:
+                {
+                    if (PersistentDataManager.HasByGlobal<int>("PlayerMaxHpSaved"))
+                        MaxHp = PersistentDataManager.GetByGlobal<int>("PlayerMaxHpSaved");
+                    else
+                        MaxHp = DEFAULT_HP;
 
-            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved"))
-                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHpSaved");
-            else
-                CurHp = MaxHp;
+                    if (PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved"))
+                        CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHpSaved");
+                    else
+                        CurHp = MaxHp;
 
-            if (PersistentDataManager.HasByGlobal<float>("PlayerCapeIntensitySaved"))
-                SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("PlayerCapeIntensitySaved"));
-            else
-                UpdateCapeIntensity(_capeRenderers[0].material.GetFloat("_Intensity"));
-        }
-        // 씬 전환
-        else
-        {
-            if (PersistentDataManager.HasByGlobal<int>("PlayerMaxHp"))
-                MaxHp = PersistentDataManager.GetByGlobal<int>("PlayerMaxHp");
-            else
-                MaxHp = DEFAULT_HP;
+                    if (PersistentDataManager.HasByGlobal<float>("PlayerCapeIntensitySaved"))
+                        SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("PlayerCapeIntensitySaved"));
+                    else
+                        UpdateCapeIntensity(_capeRenderers[0].material.GetFloat("_Intensity"));
 
-            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
-                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
-            else
-                CurHp = MaxHp;
+                    break;
+                }
+            case SceneChangeType.PlayerRespawn:
+                {
+                    if (PersistentDataManager.HasByGlobal<int>("PlayerMaxHp"))
+                        MaxHp = PersistentDataManager.GetByGlobal<int>("PlayerMaxHp");
+                    else
+                        MaxHp = DEFAULT_HP;
 
-            if (PersistentDataManager.HasByGlobal<float>("PlayerCapeIntensity"))
-                SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("PlayerCapeIntensity"));
-            else
-                UpdateCapeIntensity(_capeRenderers[0].material.GetFloat("_Intensity"));
+                    CurHp = MaxHp;
+
+                    if (PersistentDataManager.HasByGlobal<float>("PlayerCapeIntensity"))
+                        SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("PlayerCapeIntensity"));
+                    else
+                        UpdateCapeIntensity(_capeRenderers[0].material.GetFloat("_Intensity"));
+
+                    break;
+                }
+            case SceneChangeType.None:
+            case SceneChangeType.ChangeMap:
+            case SceneChangeType.StageReset:
+                {
+                    if (PersistentDataManager.HasByGlobal<int>("PlayerMaxHp"))
+                        MaxHp = PersistentDataManager.GetByGlobal<int>("PlayerMaxHp");
+                    else
+                        MaxHp = DEFAULT_HP;
+
+                    if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
+                        CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
+                    else
+                        CurHp = MaxHp;
+
+                    if (PersistentDataManager.HasByGlobal<float>("PlayerCapeIntensity"))
+                        SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("PlayerCapeIntensity"));
+                    else
+                        UpdateCapeIntensity(_capeRenderers[0].material.GetFloat("_Intensity"));
+
+                    break;
+                }
+            default:
+                break;
         }
     }
     private void UpdateImageFlip()

@@ -24,6 +24,20 @@ public class Passage : TriggerZone
     [SerializeField] private bool _canEnter = true;
     [SerializeField] private float _exitTimeOut = 1f;
 
+    private float BeforeCutsceneDelayTime
+    {
+        get
+        {
+            if(_entranceCutscenePlayer)
+            {
+                float delayTime = _entranceCutscenePlayer.IsPlayed ? 0f : 1f;
+                return delayTime;
+            }
+
+            return 0f;
+        }
+    }
+
     public string PassageName => name;
     public InputSetterScriptableObject EnterInputSetter => _enterInputSetter;
     public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
@@ -114,7 +128,7 @@ public class Passage : TriggerZone
 
         InputManager.Instance.ChangeToStayStillSetter();
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(BeforeCutsceneDelayTime);
 
         _entranceCutscenePlayer.Play();
     }
