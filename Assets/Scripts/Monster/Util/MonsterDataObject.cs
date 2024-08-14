@@ -30,4 +30,8 @@ public class MonsterDataObject : ScriptableObject
     // 점프 파워
     [field: SerializeField]
     public Vector2 JumpForce { get; private set; }
+
+    // 리스폰 시간 범위
+    [field: SerializeField]
+    public Range RespawnTimeRange { get; private set; }
 }

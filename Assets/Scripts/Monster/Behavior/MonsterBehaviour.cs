@@ -188,6 +188,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
     [SerializeField]
     private MonsterDataObject _monsterDataObject;
+    public MonsterDataObject MonsterDataObject => _monsterDataObject;
     public MonsterData monsterData;
     public RespawnData respawnData;
 
