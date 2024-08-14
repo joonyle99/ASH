@@ -30,19 +30,29 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     /// Cutscene은 코루틴, MajorEvent는 State Machine 처럼 관리
     /// </para>
     /// </summary>
-    private enum State { Idle, SceneEvent, Cutscene }
+    private enum State { Idle, Cutscene, SceneEvent }
 
     private State _currentState = State.Idle;
-    private CameraController _currentCamera;
-    private List<Cutscene> _cutSceneQueue;              // 컷씬 큐
-    private List<SceneEffectEvent> _sceneEvents;        // 씬 이벤트 리스트
+
+    private List<Cutscene> _cutSceneQueue;              // Cutscene
+    private List<SceneEffectEvent> _sceneEvents;        // SceneEvent
     private SceneEventComparator _eventComparator;
+
+    private CameraController _currentCamera;
     public CameraController Camera
     {
         get
         {
             if (_currentCamera == null)
+            {
                 _currentCamera = UnityEngine.Camera.main.GetComponent<CameraController>();
+
+                if (_currentCamera == null)
+                {
+                    UnityEngine.Debug.LogError($"CameraController is invalid");
+                    return null;
+                }
+            }
             return _currentCamera;
         }
     }
@@ -51,14 +61,15 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     {
         base.Awake();
 
-        _sceneEvents = new List<SceneEffectEvent>();
         _cutSceneQueue = new List<Cutscene>();
+        _sceneEvents = new List<SceneEffectEvent>();
         _eventComparator = new SceneEventComparator();
     }
     private void Update()
     {
-        if ( _currentState == State.SceneEvent)
+        if (_currentState == State.SceneEvent)
         {
+            // 모든 SceneEvent를 실행한다 (업데이트)
             foreach (var sceneEvent in _sceneEvents)
             {
                 if (sceneEvent.Enabled)
@@ -69,10 +80,10 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
 
     public void OnSceneContextBuilt()
     {
-        if (_currentState == State.Idle )
+        if (_currentState == State.Idle)
             EnterIdleState();
     }
-    public void EnterIdleState()
+    private void EnterIdleState()
     {
         _currentState = State.Idle;
         Camera.ResetCameraSettings();
@@ -108,7 +119,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
         }
         else
         {
-            // 컷씬이 끝나고 다른 이벤트가 없는 경우 진입
+            // 컷씬 ot 씬 이벤트가 없는 경우 기본 상태로 설정
             EnterIdleState();
         }
     }
@@ -149,17 +160,25 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     {
         if (_sceneEvents.Count == 0)
             return;
+
         _currentState = State.SceneEvent;
 
         bool enable = true;
-        for(int i = 0; i< _sceneEvents.Count; i++)
+        for (int i = 0; i < _sceneEvents.Count; i++)
         {
             _sceneEvents[i].Enabled = enable;
 
-            if (enable && i+1 < _sceneEvents.Count &&
-                (_sceneEvents[i].Priority != _sceneEvents[i + 1].Priority ||
-                _sceneEvents[i].MergePolicyWithSamePriority == SceneEffectEvent.MergePolicy.OverrideWithRecent))
-                enable = false;
+            if (enable)
+            {
+                if (i + 1 < _sceneEvents.Count)
+                {
+                    if (_sceneEvents[i].Priority != _sceneEvents[i + 1].Priority 
+                       || _sceneEvents[i].MergePolicyWithSamePriority == SceneEffectEvent.MergePolicy.OverrideWithRecent)
+                    {
+                        enable = false;
+                    }
+                }
+            }
         }
     }
 }

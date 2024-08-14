@@ -296,7 +296,7 @@ MonoBehaviour:
   _stateChange: 1
   _animationType: 1
   _treeTrunk: {fileID: 1392495538139728876}
-  _interactionOverAngle: 5
+  _interactionOverAngle: 10
   _pushPower: 300
   _forcePoint: {fileID: 1392495537261313172}
 --- !u!210 &1392495536670262897
@@ -564,10 +564,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _threatVelocityThreshold: 3
+  _isDamagableToPlayer: 1
   _damageToPlayer: 1
-  _knockbackPowerToPlayer: 1
+  _knockbackPowerXToPlayer: 7
+  _knockbackPowerYToPlayer: 10
+  _isDamagableToMonster: 1
   _damageToMonster: 1
-  _knockbackPowerToMonster: 1
+  _knockbackPowerXToMonster: 7
+  _knockbackPowerYToMonster: 10
   _interactableComponent: {fileID: 1392495536670262896}
 --- !u!114 &1392495538139728864
 MonoBehaviour:

@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEditor;
 #endif
 
-public class Lantern : LanternLike, ILightCaptureListener
+public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildListener
 {
     [System.Serializable]
     public struct LightSettings
@@ -47,8 +47,20 @@ public class Lantern : LanternLike, ILightCaptureListener
 
     void Awake()
     {
+        _statePreserver = GetComponent<PreserveState>();
+    }
+
+    void TurnCurrentSpotLightOn()
+    {
+        _currentSpotLight.gameObject.SetActive(true);
+        _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
+        _currentSpotLight.intensity = _currentSettings.Intensity;
+    }
+
+    public void OnSceneContextBuilt()
+    {
         var collisions = Physics2D.OverlapPointAll(LightPoint.position);
-        foreach(var collision in collisions)
+        foreach (var collision in collisions)
         {
             if (collision.GetComponent<HiddenPathDarkness>() != null)
             {
@@ -82,29 +94,37 @@ public class Lantern : LanternLike, ILightCaptureListener
             IsLightOn = true;
         }
 
-        _statePreserver = GetComponent<PreserveState>();
         if (_statePreserver)
         {
-            bool isOn = _statePreserver.LoadState("_isOn", IsLightOn);
-            if (isOn)
+            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                _isExplodeDone = true;
-                TurnCurrentSpotLightOn();
-                IsLightOn = true;
+                if (_statePreserver.LoadState("_isOnSaved", false))
+                {
+                    TurnOnImmediately();
+                }
+            }
+            else
+            {
+                if (_statePreserver.LoadState("_isOn", false))
+                {
+                    TurnOnImmediately();
+                }
             }
         }
+
+        SaveAndLoader.OnSaveStarted += SaveLanternOnState;
     }
-    void TurnCurrentSpotLightOn()
-    {
-        _currentSpotLight.gameObject.SetActive(true);
-        _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
-        _currentSpotLight.intensity = _currentSettings.Intensity;
-    }
+
     void OnDestroy()
     {
         if (_statePreserver)
         {
-            _statePreserver.SaveState("_isOn", IsLightOn);
+            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            {
+                _statePreserver.SaveState("_isOn", IsLightOn);
+            }
+
+            SaveAndLoader.OnSaveStarted -= SaveLanternOnState;
         }
     }
     void Update()
@@ -197,5 +217,17 @@ public class Lantern : LanternLike, ILightCaptureListener
             return;
         _currentLightFill = 0f;
         _currentSpotLight.gameObject.SetActive(false);
+    }
+
+    private void TurnOnImmediately()
+    {
+        _isExplodeDone = true;
+        TurnCurrentSpotLightOn();
+        IsLightOn = true;
+    }
+    private void SaveLanternOnState()
+    {
+        if(_statePreserver)
+            _statePreserver.SaveState("_isOnSaved", IsLightOn);
     }
 }

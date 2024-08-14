@@ -35,12 +35,16 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
     [SerializeField] private Bear_Slash _slash01;
     [SerializeField] private Bear_Slash _slash02;
+
+    private float _slashAnimDuration;
     private Vector2 _playerPos;
 
     [Header("____ BodySlam ____")]
     [Space]
 
     [SerializeField] private float _bodySlamPower;
+
+    private float _bodySlamAnimDuration;
 
     [Header("____ Stomp ____")]
     [Space]
@@ -57,10 +61,14 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [Space]
 
     [SerializeField] private float _minDistanceEach;
+
+    [Space]
+
     [SerializeField] private Range _createTimeRange;
     [SerializeField] private Range _createSizeRange;
     [SerializeField] private Range _distanceRange;
 
+    private float _stompAnimDuration;
     private List<float> _usedPosX;
     private int _allocationLimit = 30;
 
@@ -76,16 +84,21 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [SerializeField] private Bear_GroundWave _waveSkillPrefab;
     [SerializeField] private ShakePreset _earthquakeCameraShake;
 
-    [Header("Cutscene")]
     [Space]
 
-    [SerializeField] private bool _isAbleLightGuideCutscene = true;
     [SerializeField] private int _totalEarthquakeCount;
     public int TotalEarthquakeCount
     {
         get => _totalEarthquakeCount;
         private set => _totalEarthquakeCount = value;
     }
+
+    private float _earthquakeAnimDuration;
+
+    [Header("Cutscene")]
+    [Space]
+
+    [SerializeField] private bool _isAbleLightGuideCutscene = true;
 
     [Space]
 
@@ -97,13 +110,36 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
     #region Function
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // 덩쿨 스킬 애니메이션 클립의 길이 추출
+        foreach (var clip in Animator.runtimeAnimatorController.animationClips)
+        {
+            if (clip.name == "ani_bear_slash")
+                _slashAnimDuration = clip.length;
+            else if (clip.name == "ani_bear_stomp")
+                _stompAnimDuration = clip.length;
+            else if (clip.name == "ani_bear_bodyslam")
+                _bodySlamAnimDuration = clip.length;
+            else if (clip.name == "ani_bear_earthquake")
+                _earthquakeAnimDuration = clip.length;
+        }
+
+        // 공격 판독기의 대기 이벤트 등록
+        AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
+        AttackEvaluator.WaitEvent += OnAttackWaitEvent;
+
+        rageTargetHurtCount = (finalTargetHurtCount + 1) / 2;
+    }
     protected override void Start()
     {
         base.Start();
 
         SetToRandomAttack();
     }
-    public void FixedUpdate()
+    private void FixedUpdate()
     {
         if (IsDead)
             return;
@@ -118,6 +154,10 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
             if (GroundMovementModule)
                 GroundMovementModule.AffectGravity();
         }
+    }
+    private void OnDestroy()
+    {
+        AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
     }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
@@ -140,10 +180,16 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
         if (_currentAttack is AttackType.EarthQuake)
         {
-            // Debug.Log("Earth Quake의 Attack Pre Process");
-
             currentAttackCount = 0;
             TotalEarthquakeCount++;
+
+            if (_totalEarthquakeCount == 3 && _isAbleLightGuideCutscene == true)
+            {
+                Debug.Log("Lighting Guide 컷씬 호출");
+
+                _isAbleLightGuideCutscene = false;
+                StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
+            }
 
             IsCapturable = true;
         }
@@ -154,16 +200,6 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     {
         if (_currentAttack is AttackType.EarthQuake)
         {
-            // Debug.Log("Earth Quake의 Attack Post Process");
-
-            if (_totalEarthquakeCount == 3 && _isAbleLightGuideCutscene)
-            {
-                Debug.Log("Lighting Guide 컷씬 호출");
-
-                _isAbleLightGuideCutscene = false;
-                StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
-            }
-
             IsCapturable = false;
         }
 
@@ -382,6 +418,10 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
     public IEnumerator AfterBearDeathCoroutine()
     {
+        yield return new WaitUntil(() => isEndMoveProcess);
+
+        yield return new WaitForSeconds(2f);
+
         yield return StartCoroutine(ChangeImageCoroutine());
         yield return StartCoroutine(ChangeBackgroundCoroutine());
 
@@ -408,8 +448,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         // 색이 서서히 돌아오는 효과 시작
         bossClearColorChangeEffect.PlayEffect();
 
-        // 배경음악 정지
-        SoundManager.Instance.StopBGM();
+        // 보스던전 BGM 틀기
+        SoundManager.Instance.PlayCommonBGM("Exploration1");
 
         yield return new WaitUntil(() => bossClearColorChangeEffect.isEndEffect);
 
@@ -420,6 +460,45 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
             color.a = 0f;
             sprite.color = color;
         }
+    }
+
+    // wait event (Attack Evaluator에 대한 대기 이벤트)
+    private IEnumerator OnAttackWaitEvent()
+    {
+        // 해당 WaitEvent() Handler는 아직 State가 바뀌기 전에 호출되는 이벤트이므로,
+        // nextAttack을 기준으로 처리해야 한다. (사실상 nextAttack이 currentAttack)
+        switch (_nextAttack)
+        {
+            case AttackType.SlashLeft:
+            case AttackType.SlashRight:
+                yield return StartCoroutine(WaitEventCoroutine_Slash());
+                break;
+            case AttackType.Stomp:
+                yield return StartCoroutine(WaitEventCoroutine_Stomp());
+                break;
+            case AttackType.BodySlam:
+                yield return StartCoroutine(WaitEventCoroutine_BodySlam());
+                break;
+            case AttackType.EarthQuake:
+                yield return StartCoroutine(WaitEventCoroutine_Earthquake());
+                break;
+        }
+    }
+    private IEnumerator WaitEventCoroutine_Slash()
+    {
+        yield return new WaitForSeconds(_slashAnimDuration);
+    }
+    private IEnumerator WaitEventCoroutine_Stomp()
+    {
+        yield return new WaitForSeconds(_stompAnimDuration);
+    }
+    private IEnumerator WaitEventCoroutine_BodySlam()
+    {
+        yield return new WaitForSeconds(_bodySlamAnimDuration);
+    }
+    private IEnumerator WaitEventCoroutine_Earthquake()
+    {
+        yield return new WaitForSeconds(_earthquakeAnimDuration);
     }
 
     #endregion

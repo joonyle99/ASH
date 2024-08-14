@@ -4,15 +4,11 @@ public class BossCameraSetter : MonoBehaviour
 {
     [SerializeField] bool _activateOnStart;
     [SerializeField] float _cameraOffsetY = 0.75f;
-    [SerializeField]
-    Transform[] _invisibleWalls; 
 
     BossCameraEvent _event;
 
     private void Start()
     {
-        foreach (var t in _invisibleWalls)
-            t.gameObject.SetActive(false);
         if (_activateOnStart)
             Activate();
     }
@@ -21,14 +17,10 @@ public class BossCameraSetter : MonoBehaviour
     {
         _event = new BossCameraEvent(transform, _cameraOffsetY);
         SceneEffectManager.Instance.PushSceneEvent(_event);
-        foreach (var t in _invisibleWalls)
-            t.gameObject.SetActive(true);
     }
     public void Deactivate()
     {
         SceneEffectManager.Instance.RemoveSceneEvent(_event);
-        foreach (var t in _invisibleWalls)
-            t.gameObject.SetActive(false);
     }
 }
 

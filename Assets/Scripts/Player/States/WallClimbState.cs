@@ -35,7 +35,7 @@ public class WallClimbState : WallState
                 return true;
             }
 
-            if (Player.UpwardGroundHit)
+            if (Player.UpwardGroundHitForClimb)
                 return false;
 
             transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Default PC InputSetter", menuName = "InputSetters/PCDefault")]
 public class PCInputSetter : InputSetterScriptableObject, IInputSetter
@@ -15,7 +13,7 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
     public override InputState GetState()
     {
         // "매 프레임" 새로운 Input Data를 생성
-        InputState state = new InputState();
+        InputState state = base.GetState();
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {

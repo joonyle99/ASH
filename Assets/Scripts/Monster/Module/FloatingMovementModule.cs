@@ -8,6 +8,7 @@ using UnityEngine.AI;
 public class FloatingMovementModule : MonoBehaviour
 {
     private NavMeshAgent _agent;
+    public bool IsOnNavMesh => _agent.isOnNavMesh;
 
     private void Awake()
     {
@@ -21,15 +22,6 @@ public class FloatingMovementModule : MonoBehaviour
         _agent.autoBraking = true;
     }
 
-    public void SetPosition(Vector3 position)
-    {
-        bool result = _agent.Warp(position);
-
-        if (!result)
-        {
-            Debug.LogWarning("NavMesh Agent - SetPosition() is failed");
-        }
-    }
     public void SetSpeed(float speed)
     {
         _agent.speed = speed;
@@ -44,16 +36,23 @@ public class FloatingMovementModule : MonoBehaviour
     }
     public void SetStopAgent(bool isStop)
     {
-        if (!_agent.isOnNavMesh)
-        {
-            Debug.LogWarning($"NavMesh Agent - isOnNavMesh is failed");
-            return;
-        }
-
         _agent.isStopped = isStop;
+    }
+    public void SetPosition(Vector3 position)
+    {
+        if (!IsOnNavMesh) return;
+
+        bool result = _agent.Warp(position);
+
+        if (!result)
+        {
+            Debug.LogWarning("NavMesh Agent - SetPosition() is failed");
+        }
     }
     public void MoveToDestination(Vector3 destPosition)
     {
+        if (!IsOnNavMesh) return;
+
         bool result = _agent.SetDestination(destPosition);
 
         if (!result)
@@ -63,6 +62,8 @@ public class FloatingMovementModule : MonoBehaviour
     }
     public bool CheckArrivedToTarget()
     {
+        if (!IsOnNavMesh) return false;
+
         return _agent.remainingDistance < 0.3f;
     }
 }

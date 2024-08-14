@@ -12,6 +12,7 @@ public class GroundWallDetector : MonoBehaviour
     [SerializeField] private Transform _groundUpwardCheckTrans;
     [SerializeField] private float _groundCheckRadius;
     [SerializeField] private float _groundUpwardCheckRadius;
+    [SerializeField] private float _groundUpwardCheckDistance;
 
     [Header("Climb Check")]
     [Space]
@@ -34,6 +35,9 @@ public class GroundWallDetector : MonoBehaviour
 
         // Check Upward Ground
         _player.UpwardGroundHit = Physics2D.CircleCast(_groundUpwardCheckTrans.position, _groundUpwardCheckRadius, Vector2.up, 0f, _groundLayer);
+
+        // Check Upward Ground (For Wall Climb)
+        _player.UpwardGroundHitForClimb = Physics2D.Raycast(_groundUpwardCheckTrans.position, Vector2.up, _groundUpwardCheckDistance, _groundLayer);
 
         // Check Wall
         _player.ClimbHit = Physics2D.Raycast(_climbCheckTrans.position, _player.PlayerLookDir2D, _climbCheckLength, _climbLayer);

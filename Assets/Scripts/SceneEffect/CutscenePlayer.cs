@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 컷씬 플레이어는 다양한 연출을 시퀀스를 통해 재생한다
 /// </summary>
-public class CutscenePlayer : MonoBehaviour, ITriggerListener
+public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuildListener
 {
     [SerializeField] bool _playOnce = true;
     [SerializeField] bool _played = false;
@@ -20,22 +20,41 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     private void Awake()
     {
         _statePreserver = GetComponent<PreserveState>();
-
-        if (_statePreserver)
+    }
+    public void OnSceneContextBuilt()
+    {
+        if(_statePreserver)
         {
-            bool played = _statePreserver.LoadState("_played", _played);
-            if (played)
+            if(SceneChangeManager.Instance && 
+                SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                _played = true;
+                bool played = _statePreserver.LoadState("_playSaved", _played);
+                if (played)
+                {
+                    _played = true;
+                }
+            }
+            else
+            {
+                bool played = _statePreserver.LoadState("_played", _played);
+                if (played)
+                {
+                    _played = true;
+                }
             }
         }
+
+        SaveAndLoader.OnSaveStarted += SavePlayedState;
     }
+
     private void OnDestroy()
     {
         if (_statePreserver)
         {
             _statePreserver.SaveState("_played", _played);
         }
+
+        SaveAndLoader.OnSaveStarted -= SavePlayedState;
     }
 
     /// <summary>
@@ -66,7 +85,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
             }
             else if (effect.Type == SceneEffect.EffectType.Dialogue)
             {
-                DialogueController.Instance.StartDialogue(effect.DialogueData, true);
+                DialogueController.Instance.StartDialogue(effect.DialogueData);
                 yield return new WaitWhile(() => DialogueController.Instance.IsDialogueActive);
             }
             /*
@@ -118,6 +137,10 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
             SceneContext.Current.Player.IsGodMode = true;
             // Debug.Log($"{SceneContext.Current.Player}의 GodMode가 설정됩니다. => IsGodMode : {SceneContext.Current.Player.IsGodMode}");
         }
+        else
+        {
+            InputManager.Instance.ChangeToDefaultSetter();
+        }
     }
     
     /// <summary>
@@ -134,5 +157,13 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener
     private IEnumerator CoroutineFunction()
     {
         yield return null;
+    }
+
+    private void SavePlayedState()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_playSaved", _played);
+        }
     }
 }

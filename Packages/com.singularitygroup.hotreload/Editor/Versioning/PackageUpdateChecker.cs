@@ -21,7 +21,7 @@ namespace SingularityGroup.HotReload.Editor {
         private static TimeSpan RetryInterval => TimeSpan.FromSeconds(30);
         private static TimeSpan CheckInterval => TimeSpan.FromHours(1);
         
-        private static readonly HttpClient client = RequestHelper.CreateHttpClient();
+        private static readonly HttpClient client = HttpClientUtils.CreateHttpClient();
 
         private static string _lastRemotePackageVersion;
 
@@ -45,7 +45,7 @@ namespace SingularityGroup.HotReload.Editor {
                 await Task.Delay(RetryInterval);
             }
         }
-        
+
         public bool TryGetNewVersion(out SemVersion version) {
             var currentVersion = SemVersion.Parse(PackageConst.Version, strict: true);
             return !ReferenceEquals(version = newVersionDetected, null) && newVersionDetected > currentVersion;

@@ -8,10 +8,17 @@ public class NPC : InteractableObject
     [Header("NPC")]
     [Space]
 
+    [SerializeField] private bool _canSkip = false;
+
+    [Space]
+
     [SerializeField] private DialogueData _dialogueData;
 
     protected override void OnObjectInteractionEnter()
     {
+        if(_canSkip == false)
+            _canSkip = true;
+
         DialogueController.Instance.StartDialogue(_dialogueData);
     }
     public override void UpdateInteracting()

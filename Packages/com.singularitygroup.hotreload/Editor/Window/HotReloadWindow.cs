@@ -128,7 +128,7 @@ namespace SingularityGroup.HotReload.Editor {
                 OnDisable();
 
                 RequestHelper.RequestLogin("test", "test", 1).Forget();
-                
+
                 HotReloadPrefs.LicenseEmail = null;
                 HotReloadPrefs.ExposeServerToLocalNetwork = true;
                 HotReloadPrefs.LicensePassword = null;

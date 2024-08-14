@@ -1,12 +1,36 @@
 using System.Diagnostics;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
+using SingularityGroup.HotReload.Newtonsoft.Json;
 using UnityEngine;
-#if !UNITY_EDITOR_OSX
 using System;
-#endif
 
 namespace SingularityGroup.HotReload.Editor.Cli {
     internal static class CliUtils {
+        static readonly string projectIdentifier = GetProjectIdentifier();
+
+        class Config {
+            public bool singleInstance;
+        }
+
+        public static string GetProjectIdentifier() {
+            if (File.Exists(PackageConst.ConfigFileName)) {
+                var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(PackageConst.ConfigFileName));
+                if (config.singleInstance) {
+                    return null;
+                }
+            }
+            var path = Path.GetDirectoryName(UnityHelper.DataPath);
+            var name = new DirectoryInfo(path).Name;
+            using (SHA256 sha256 = SHA256.Create()) {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(path);
+                byte[] hashBytes = sha256.ComputeHash(inputBytes);
+                var hash = BitConverter.ToString(hashBytes).Replace("-", "").Substring(0, 6).ToUpper();
+                return $"{name}-{hash}";
+            }
+        }
+        
         public static string GetTempDownloadFilePath(string osxFileName) {
             if (UnityHelper.Platform == RuntimePlatform.OSXEditor) {
                 // project specific temp directory that is writeable on MacOS (Path.GetTempPath() wasn't when run through HotReload.app)
@@ -21,7 +45,11 @@ namespace SingularityGroup.HotReload.Editor.Cli {
                 // project specific temp directory that is writeable on MacOS (Path.GetTempPath() wasn't when run through HotReload.app)
                 return Path.GetFullPath(PackageConst.LibraryCachePath + "/HotReloadServerTemp");
             } else {
-                return Path.Combine(Path.GetTempPath(), "HotReloadTemp");
+                if (projectIdentifier != null) {
+                    return Path.Combine(Path.GetTempPath(), "HotReloadTemp", projectIdentifier);
+                } else {
+                    return Path.Combine(Path.GetTempPath(), "HotReloadTemp");
+                }
             }
         }
         

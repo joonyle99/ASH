@@ -5,6 +5,9 @@ using UnityEngine.Rendering.Universal;
 
 public class LightNPC : MonoBehaviour
 {
+    [Header("Setting")]
+    [SerializeField] private bool _isDestroyAfterFlash = true;
+
     [SerializeField] private BezierCurvePath _curvePath;
     [SerializeField] private float _moveToStartingPointDuration = 1f;
     [SerializeField] private float _curveMovementDuration = 2f;
@@ -23,6 +26,12 @@ public class LightNPC : MonoBehaviour
         _curvePath.ControlPoints[_curvePath.Length - 1].position = SceneContext.Current.Player.HandRigidBody.transform.position;
         StartCoroutine(CurveMovementCoroutine());
     }
+
+    public void StartFlash()
+    {
+        StartCoroutine(FlashCoroutine());
+    }
+
     private IEnumerator MoveToStartingPointCoroutine()
     {
         Vector3 originalPosition = transform.position;
@@ -69,8 +78,9 @@ public class LightNPC : MonoBehaviour
         }
 
         // 플레이어의 Cape Material을 변경한다
-        SceneContext.Current.Player.SetCapeEmission(2.7f);
+        SceneContext.Current.Player.SetCapeIntensity(2.7f);
 
-        Destroy(gameObject);
+        if(_isDestroyAfterFlash)
+            Destroy(gameObject);
     }
 }

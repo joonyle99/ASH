@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 모든 Playable Scene에는 GameCanvas와 GameUIManager가 있다
@@ -46,14 +47,15 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
 
     [SerializeField] private Letterbox _letterBox;
     [SerializeField] private OptionView _optionView;
-    [SerializeField] private LifePurchasePanel _lifePurchasePanel;
     [SerializeField] private TextMeshProUGUI _sceneNameText;
-
-    public static bool IsLifePurchasePanelOpen => Instance._lifePurchasePanel.gameObject.activeInHierarchy;
 
     private void Awake()
     {
         _instance = this;
+    }
+    private void Start()
+    {
+        _sceneNameText.gameObject.SetActive(true);
     }
     private void Update()
     {
@@ -65,9 +67,10 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
 
     public void OnSceneContextBuilt()
     {
-        var bossDungeonManager = FindFirstObjectByType<BossDungeonManager>();
+        var sceneName = SceneManager.GetActiveScene().name;
 
-        if (bossDungeonManager)
+        if (GameSceneManager.IsBossDungeon1(sceneName)
+            || GameSceneManager.IsBossDungeon2(sceneName))
         {
             // Debug.Log("Open BossKeyPanel");
 
@@ -160,14 +163,6 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
         if (Instance == null) return;
 
         Instance._optionView.TogglePanel();
-    }
-
-    // life purchase
-    public static void OpenLifePurchasePanel()
-    {
-        if (Instance == null) return;
-
-        Instance._lifePurchasePanel.Open();
     }
 
     // scene name text

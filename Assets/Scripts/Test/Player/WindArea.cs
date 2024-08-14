@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WindArea : MonoBehaviour
+public class WindArea : MonoBehaviour, ISceneContextBuildListener
 {
     [SerializeField] bool _isStartActive = true;
     PreserveState _statePreserver;
@@ -21,14 +21,40 @@ public class WindArea : MonoBehaviour
 
     private void Awake()
     {
-        _statePreserver = GetComponent<PreserveState>();
-
+        _statePreserver = GetComponentInParent<PreserveState>();
+    }
+    public void OnSceneContextBuilt()
+    {
         if (_statePreserver != null)
-            _isStartActive = _statePreserver.LoadState("_isActive", gameObject.activeSelf);
+        {
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                _isStartActive = _statePreserver.LoadState("_isActiveSaved", _isStartActive);
+            }
+            else
+            {
+                _isStartActive = _statePreserver.LoadState("_isActive", _isStartActive);
+            }
+        }
+
 
         gameObject.SetActive(_isStartActive);
+
+        SaveAndLoader.OnSaveStarted += SaveWindState;
     }
 
+    private void OnDestroy()
+    {
+        if(_statePreserver)
+        {
+            if(SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            {
+                _statePreserver.SaveState("_isActive", gameObject.activeSelf);
+            }
+        }
+
+        SaveAndLoader.OnSaveStarted -= SaveWindState;
+    }
     public void SetActive()
     {
         gameObject.SetActive(!gameObject.activeSelf);
@@ -86,4 +112,12 @@ public class WindArea : MonoBehaviour
                 _isWorking = false;
             }
         }*/
+
+    private void SaveWindState()
+    {
+        if(_statePreserver)
+        {
+            _statePreserver.SaveState("_isActiveSaved", gameObject.activeSelf);
+        }
+    }
 }

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class LightDoor : LanternLike
+public class LightDoor : LanternLike, ISceneContextBuildListener
 {
     public enum State
     {
@@ -32,17 +32,45 @@ public class LightDoor : LanternLike
         _cameraController = Camera.main.GetComponent<CameraController>();
 
         _statePreserver = GetComponent<PreserveState>();
-
-        if (_statePreserver && _statePreserver.LoadState("_opened", false))
+    }
+    public void OnSceneContextBuilt()
+    {
+        if (_statePreserver)
         {
-            _collider.enabled = false;
-            CurrentState = State.Opened;
-            _animator.SetTrigger("InstantOpen");
-        }
+            SaveAndLoader.OnSaveStarted += SaveDoorOpenState;
 
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                if (_statePreserver.LoadState("_isOpenSaved", false))
+                {
+                    OpenDoorImmediately();
+                }
+            }
+            else
+            {
+                if (_statePreserver.LoadState("_opened", false))
+                {
+                    OpenDoorImmediately();
+                }
+            }
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+        {
+            if(SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            {
+                _statePreserver.SaveState("_opened", CurrentState == State.Opened);
+            }
+
+            SaveAndLoader.OnSaveStarted -= SaveDoorOpenState;
+        }
     }
     public void Update()
     {
+        // CHEAT: F9 키를 누르면 빛의 문 열기
         if (Input.GetKeyDown(KeyCode.F9))
         {
             StartCoroutine(OpenCoroutine());
@@ -52,11 +80,6 @@ public class LightDoor : LanternLike
         {
             IsLightOn = true;
         }
-    }
-    private void OnDestroy()
-    {
-        if (_statePreserver)
-            _statePreserver.SaveState("_opened", CurrentState == State.Opened);
     }
 
     public override void OnBeamConnected(LightBeam beam)
@@ -88,5 +111,17 @@ public class LightDoor : LanternLike
     {
         _collider.enabled = false;
         CurrentState = State.Opened;
+    }
+
+    private void OpenDoorImmediately()
+    {
+        _collider.enabled = false;
+        CurrentState = State.Opened;
+        _animator.SetTrigger("InstantOpen");
+    }
+
+    private void SaveDoorOpenState()
+    {
+        _statePreserver.SaveState("_isOpenSaved", IsOpened);
     }
 }

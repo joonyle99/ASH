@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 /// <summary>
@@ -13,7 +12,7 @@ public class DialogueData : ScriptableObject
 
     [SerializeField] private string _defaultSpeaker;                        // 대사 캐릭터 이름
     [SerializeField] private TextAsset _script;                             // 대사 스크립트
-    [SerializeField] private float _defaultCharactersPerSecond = 12;        // 기본 글자 속도
+    [SerializeField] private float _typingSpeed = 12.5f;                    // 글자 속도
     [SerializeField] private InputSetterScriptableObject _inputSetter;      // 플레이어 입력 설정
 
     [Space]
@@ -58,9 +57,10 @@ public class DialogueData : ScriptableObject
         List<DialogueSegment> dialogueSequence = new List<DialogueSegment>();
         string [] scriptLines = HappyTools.TSVRead.SplitLines(_script.text);
         string speakerName = _defaultSpeaker;
+
         for (int i=0; i<scriptLines.Length; i++)
         {
-            float charactersPerSecond = _defaultCharactersPerSecond;
+            float charactersPerSecond = _typingSpeed;
             TextShakeParams shakeParams = TextShakeParams.None;
             if (scriptLines[i].Trim().Length == 0)
                 continue;
@@ -70,6 +70,7 @@ public class DialogueData : ScriptableObject
                 for (int c = 0; c < commands.Length; c++) 
                 {
                     var words = commands[c].Split(":");
+                    Debug.Log("index : " + c + " word : " + words);
                     var firstWord = words[0].Trim().ToLower();
                     if (firstWord == "speed")
                     {

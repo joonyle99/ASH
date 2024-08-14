@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class HiddenPath : MonoBehaviour, ILightCaptureListener
+public class HiddenPath : MonoBehaviour, ILightCaptureListener, ISceneContextBuildListener
 {
     [SerializeField] HiddenPathMask _mask;
     [SerializeField] HiddenPathMask.Direction _swipeDirection;
@@ -21,25 +21,43 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     {
         _mask.InitMask(_swipeDirection);
         _statePreserver = GetComponent<PreserveState>();
+    }
+
+    public void OnSceneContextBuilt()
+    {
         if (_statePreserver)
         {
-            if (_statePreserver.LoadState<bool>("_opened", false))
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                Destroy(_lightCapturer);
-                Destroy(_destroyingCollidersParent);
-                _lightEffect.SetActive(false);
-                _mask.InstantReveal();
+                if (_statePreserver.LoadState<bool>("_isOpenSaved", false))
+                {
+                    OpenPathImmediately();
+                }
+
+            }
+            else
+            {
+                if (_statePreserver.LoadState("_isOpen", false))
+                {
+                    OpenPathImmediately();
+                }
             }
         }
+
+        SaveAndLoader.OnSaveStarted += SaveOpenState;
     }
-    
+
     void OnDestroy()
     {
         if (_statePreserver)
         {
-            _statePreserver.SaveState("_opened", _lightCapturer == null);
+            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            {
+                _statePreserver.SaveState("_isOpen", _lightCapturer == null);
+            }
         }
     }
+
     IEnumerator OpenPathCoroutine()
     {
         InputManager.Instance.ChangeInputSetter(_openInputSetter);
@@ -63,6 +81,21 @@ public class HiddenPath : MonoBehaviour, ILightCaptureListener
     public void OnLightExit(LightCapturer capturer, LightSource lightSource)
     {
         _eTime = 0f;
+    }
+
+    private void OpenPathImmediately()
+    {
+        Destroy(_lightCapturer);
+        Destroy(_destroyingCollidersParent);
+        _lightEffect.SetActive(false);
+        _mask.InstantReveal();
+    }
+    private void SaveOpenState()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_isOpenSaved", _lightCapturer == null);
+        }
     }
 
 }

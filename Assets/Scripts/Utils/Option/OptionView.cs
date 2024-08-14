@@ -1,9 +1,7 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class OptionView : MonoBehaviour
 {
@@ -11,20 +9,14 @@ public class OptionView : MonoBehaviour
     [Space]
 
     [SerializeField] private Image _optionPanel;
-    [SerializeField] private AudioMixer _audioMixer;
 
     [Space]
 
+    [SerializeField] private AudioMixer _audioMixer;
     [SerializeField] private Slider _bgmSlider;
     [SerializeField] private Slider _sfxSlider;
-
     [SerializeField] private TextMeshProUGUI _bgmValue;
     [SerializeField] private TextMeshProUGUI _sfxValue;
-
-    [Space]
-
-    [SerializeField] private Toggle _fullScreenToggle;
-    [SerializeField] private Toggle _windowedToggle;
 
     private bool _isPause = false;
     public bool IsPause => _isPause;
@@ -40,10 +32,18 @@ public class OptionView : MonoBehaviour
     }
     private void Start()
     {
-        // set slider value
-        InitialSetting();
+        InitialVolumeSetting();
     }
 
+    private void Update()
+    {
+        if (InputManager.Instance.State.EscapeKey.KeyDown)
+        {
+            TogglePanel();
+        }
+    }
+
+    // option button
     public void TogglePanel()
     {
         if (_isPause)
@@ -56,38 +56,6 @@ public class OptionView : MonoBehaviour
         }
     }
 
-    public void SetBgmValue(float volume)
-    {
-        int bgmVolume = Mathf.FloorToInt(volume * 100f);
-
-        _bgmValue.text = bgmVolume.ToString();
-    }
-    public void SetSfxValue(float volume)
-    {
-        int sfxVolume = Mathf.FloorToInt(volume * 100f);
-
-        _sfxValue.text = sfxVolume.ToString();
-    }
-
-    public void SwitchToWindowedMode(bool isToggleOn)
-    {
-        // if (UnityEngine.Screen.fullScreenMode == FullScreenMode.Windowed) return;
-
-        Debug.Log("창 모드");
-
-        UnityEngine.Screen.fullScreenMode = FullScreenMode.Windowed;
-
-        UnityEngine.Screen.SetResolution(1280, 720, false);
-    }
-    public void SwitchToFullScreenMode(bool isToggleOn)
-    {
-        // if (UnityEngine.Screen.fullScreenMode == FullScreenMode.FullScreenWindow) return;
-
-        Debug.Log("전체 모드");
-
-        UnityEngine.Screen.fullScreenMode = FullScreenMode.FullScreenWindow;
-    }
-
     public void Pause()
     {
         _isPause = true;
@@ -96,8 +64,9 @@ public class OptionView : MonoBehaviour
 
         _optionPanel.gameObject.SetActive(true);
 
-        SceneContext.Current.Player.enabled = false;
+        InputManager.Instance.ChangeToStayStillSetter();
     }
+
     public void Resume()
     {
         _isPause = false;
@@ -106,32 +75,14 @@ public class OptionView : MonoBehaviour
 
         _optionPanel.gameObject.SetActive(false);
 
-        SceneContext.Current.Player.enabled = true;
+        InputManager.Instance.ChangeToDefaultSetter();
     }
 
-    public void ReStartGame()
+    // volume setting
+    private void InitialVolumeSetting()
     {
-        Resume();
+        SoundManager.Instance.InitialVolumeSetting();
 
-        // 씬 재시작이 아닌 체크 포인트에서 재시작 하도록 수정
-        SceneContext.Current.Player.TriggerInstantRespawn(0f);
-
-        // StartCoroutine(ReStartCoroutine());
-    }
-    private IEnumerator ReStartCoroutine()
-    {
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-
-        SceneChangeManager.Instance.ChangeToPlayableScene(SceneManager.GetActiveScene().name, SceneContext.Current.EntrancePassage.PassageName);
-    }
-
-    public void ApplyTestButton()
-    {
-        JsonDataManager.JsonSave();
-    }
-
-    private void InitialSetting()
-    {
         float bgmVolume = 1f;
         float sfxVolume = 1f;
 
@@ -146,5 +97,35 @@ public class OptionView : MonoBehaviour
 
         _bgmSlider.value = bgmVolume;
         _sfxSlider.value = sfxVolume;
+    }
+
+    public void SetBgmValue(float volume)
+    {
+        int bgmVolume = Mathf.FloorToInt(volume * 100f);
+
+        _bgmValue.text = bgmVolume.ToString();
+    }
+
+    public void SetSfxValue(float volume)
+    {
+        int sfxVolume = Mathf.FloorToInt(volume * 100f);
+
+        _sfxValue.text = sfxVolume.ToString();
+    }
+
+    // load
+    public void Load()
+    {
+        Resume();
+
+        PersistentDataManager.LoadToSavedData();
+    }
+
+    // tile
+    public void GoToTitleScene()
+    {
+        Resume();
+
+        SceneChangeManager.Instance.ChangeToNonPlayableScene("TitleScene");
     }
 }

@@ -80,6 +80,11 @@ namespace SingularityGroup.HotReload {
         /// Selected build target in Unity Editor.
         /// </summary>
         public string activeBuildTarget;
+        
+        /// <summary>
+        /// Used to pass in the origin onto the phone which is used to identify the correct server.
+        /// </summary>
+        public string buildMachineRequestOrigin;
 
         [JsonIgnore]
         public HashSet<string> DefineSymbolsAsHashSet {
@@ -99,7 +104,7 @@ namespace SingularityGroup.HotReload {
                 if (buildMachineHostName == null || buildMachinePort == 0) {
                     return null;
                 }
-                return new PatchServerInfo(buildMachineHostName, buildMachinePort, commitHash, null);
+                return new PatchServerInfo(buildMachineHostName, buildMachinePort, commitHash, null, customRequestOrigin: buildMachineRequestOrigin);
             }
         }
 

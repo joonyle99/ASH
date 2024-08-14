@@ -10,7 +10,7 @@ public class SceneLoadTest : MonoBehaviour
     {
         foreach (var sceneName in sceneNames)
         {
-            SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
         }
     }
 }

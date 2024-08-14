@@ -7,6 +7,8 @@ public class BossAttackState : Boss_StateBase
         base.OnStateEnter(animator, stateInfo, layerIndex);
 
         Boss.AttackPreProcess();
+
+        Boss.IsAttacking = true;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -19,5 +21,7 @@ public class BossAttackState : Boss_StateBase
         base.OnStateExit(animator, stateInfo, layerIndex);
 
         Boss.AttackPostProcess();
+
+        Boss.IsAttacking = false;
     }
 }

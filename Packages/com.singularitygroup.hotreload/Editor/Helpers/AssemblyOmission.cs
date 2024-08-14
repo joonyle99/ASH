@@ -143,13 +143,14 @@ namespace SingularityGroup.HotReload.Editor {
                     return null;
                 }
             }
-            
+
             // Unity Define Constraints syntax is described in the docs https://docs.unity3d.com/Manual/class-AssemblyDefinitionImporter.html
             static readonly Dictionary<string, string> syntaxMap = new Dictionary<string, string> {
                     { "OR", "||" },
                     { "AND", "&&" },
                     { "NOT", "!" }
                 };
+            
             
             /// <summary>
             /// Evaluate a define constraint like 'UNITY_ANDROID || UNITY_IOS'

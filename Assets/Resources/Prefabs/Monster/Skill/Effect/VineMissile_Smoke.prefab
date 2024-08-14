@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1536450649468915190}
   - component: {fileID: 1701526429040737852}
   - component: {fileID: 1700509381316180538}
+  - component: {fileID: 9158530691880202126}
   m_Layer: 0
   m_Name: VineMissile_Smoke
   m_TagString: Untagged
@@ -42,7 +43,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1538052187242317918}
   serializedVersion: 8
   lengthInSec: 1
-  simulationSpeed: 1
+  simulationSpeed: 1.7
   stopAction: 2
   cullingMode: 3
   ringBufferMode: 0
@@ -116,7 +117,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.9
       minScalar: 0.0001
       maxCurve:
         serializedVersion: 2
@@ -500,7 +501,7 @@ ParticleSystem:
     gravityModifier:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -0.5
+      scalar: -1
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -2742,7 +2743,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     separateAxes: 0
-    frequency: 1
+    frequency: 1.3
     damping: 0
     octaves: 2
     octaveMultiplier: 0.7
@@ -4726,3 +4727,15 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &9158530691880202126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1538052187242317918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0fdb54b0e0b0dc468b4add7dd1db56c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

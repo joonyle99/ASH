@@ -68,6 +68,7 @@ public class Passage : TriggerZone
         yield return new WaitUntil(() => exitSceneCutscene.IsDone);
 
         // # change to next scene
+        SceneChangeManager.Instance.SceneChangeType = SceneChangeType.ChangeMap;
         SceneChangeManager.Instance.ChangeToPlayableScene(toSceneName, toPassageData.PassageName);
     }
     private IEnumerator ExitSceneCutsceneCoroutine()
@@ -97,12 +98,9 @@ public class Passage : TriggerZone
         {
             yield return null;
             eTime += Time.deltaTime;
-            // Debug.Log("돌고있나");
         }
         yield return new WaitUntil(() => !_isPlayerExiting);
         yield return new WaitForSeconds(0.3f);
-
-        // Debug.Log("들어오나");
 
         // default input setter
         InputManager.Instance.ChangeToDefaultSetter();

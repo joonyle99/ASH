@@ -1,17 +1,24 @@
 using UnityEngine;
 
-public class Fire_AshPillar : MonoBehaviour
+public class Fire_AshPillar : Monster_IndependentSkill
 {
-    public int direction;
-    public float speed;
+    // [Header("____ AshPillar ____")]
+    // [Space]
+
+    private float _speed = 10f;
+    private Vector3 _direction = Vector3.zero;
 
     public void Update()
     {
-        transform.position += direction * speed * Vector3.right * Time.deltaTime;
+        transform.position += _direction * _speed * Time.deltaTime;
     }
 
-    public void SetDirection(int dir)
+    public void SetSpeed(float speed)
     {
-        direction = dir;
+        _speed = speed;
+    }
+    public void SetDirection(Vector3 dir)
+    {
+        _direction = dir;
     }
 }

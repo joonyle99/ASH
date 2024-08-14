@@ -20,7 +20,6 @@ public class RunState : PlayerState, IAttackableState, IJumpableState, IInteract
         {
             if (Player.CanDash && Player.IsMoveXKey)
             {
-                GetComponent<DashState>().SetDashDir(Player.RawInputs.Movement.x);
                 ChangeState<DashState>();
                 return true;
             }

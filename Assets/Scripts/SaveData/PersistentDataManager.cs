@@ -1,38 +1,27 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static JsonPersistentData;
 using DataGroup = System.Collections.Generic.Dictionary<string, object>;
 
-/// <summary>
-/// 지속성 있는 데이터
-/// </summary>
+using static JsonPersistentData;
+
+/// <summary> 지속성 있는 데이터 </summary>
 public class PersistentData
 {
-    public string _sceneName = "";
-    public string SceneName
-    {
-        get => _sceneName; set => _sceneName = value;
-    }
+    public string SceneName = "";
+    public string PassageName = "";
 
-    public string _passageName = "";
-    public string PassageName
-    {
-        get => _passageName; set => _passageName = value;
-    }
-
-    public Dictionary<string, DataGroup> _dataGroups = new();      // 플레이 데이터를 저장하는데 사용
-    public DataGroup _globalDataGroup = new();                     // 영구적 데이터를 저장하는데 사용
+    public Dictionary<string, DataGroup> DataGroups = new();      // 플레이 데이터를 저장하는데 사용
+    public DataGroup GlobalDataGroup = new();                     // 영구적 데이터를 저장하는데 사용
 
     public PersistentData CopyPersistentData(PersistentData data)
     {
         PersistentData copyData = new PersistentData();
 
-        copyData._sceneName = data._sceneName;
-        copyData._passageName = data._passageName;
+        copyData.SceneName = data.SceneName;
+        copyData.PassageName = data.PassageName;
 
-        foreach (var pair in data._dataGroups)
+        foreach (var pair in data.DataGroups)
         {
             DataGroup copyDataGroup = new DataGroup();
 
@@ -41,29 +30,29 @@ public class PersistentData
                 copyDataGroup.Add(innerPair.Key, innerPair.Value);
             }
 
-            copyData._dataGroups.Add(pair.Key, copyDataGroup);
+            copyData.DataGroups.Add(pair.Key, copyDataGroup);
         }
 
-        foreach (var pair in data._globalDataGroup)
+        foreach (var pair in data.GlobalDataGroup)
         {
-            copyData._globalDataGroup.Add(pair.Key, pair.Value);
+            copyData.GlobalDataGroup.Add(pair.Key, pair.Value);
         }
 
         return copyData;
     }
 
-    public static JsonPersistentData ToJsonFormatClassObject (PersistentData persistentData)
+    public static JsonPersistentData ToJsonFormatClassObject(PersistentData persistentData)
     {
         if (persistentData == null) return null;
 
         JsonPersistentData jsonPersistentData = new JsonPersistentData();
 
-        jsonPersistentData._sceneName = persistentData._sceneName;
+        jsonPersistentData.SceneName = persistentData.SceneName;
 
-        jsonPersistentData._passageName = persistentData._passageName;
+        jsonPersistentData.PassageName = persistentData.PassageName;
 
         JsonDataArray<string, JsonDataArray<string, SerializableObjectType>> jsonDataGroups = new();
-        foreach (var dataGroups in persistentData._dataGroups)
+        foreach (var dataGroups in persistentData.DataGroups)
         {
             JsonDataArray<string, SerializableObjectType> jsonDataGroup = new();
 
@@ -78,11 +67,11 @@ public class PersistentData
         jsonPersistentData._jsonDataGroups = jsonDataGroups;
 
         JsonDataArray<string, SerializableObjectType> jsonGlobalDataGroup = new();
-            foreach (var dataGroup in persistentData._globalDataGroup)
-            {
-                jsonGlobalDataGroup.Add(dataGroup.Key,
-                    new SerializableObjectType() { Object = dataGroup.Value });
-            }
+        foreach (var dataGroup in persistentData.GlobalDataGroup)
+        {
+            jsonGlobalDataGroup.Add(dataGroup.Key,
+                new SerializableObjectType() { Object = dataGroup.Value });
+        }
         jsonPersistentData._jsonGlobalDataGroup = jsonGlobalDataGroup;
 
         return jsonPersistentData;
@@ -90,10 +79,10 @@ public class PersistentData
 
     public void PrintData()
     {
-        Debug.Log("Scene Name : " + _sceneName);
-        Debug.Log("Passage Name : " + _passageName);
+        Debug.Log("Scene Name : " + SceneName);
+        Debug.Log("Passage Name : " + PassageName);
         Debug.Log("=============dataGroups============");
-        foreach (var pair in _dataGroups)
+        foreach (var pair in DataGroups)
         {
             Debug.Log("Group : " + pair.Key);
             foreach (var innerPair in pair.Value)
@@ -103,17 +92,14 @@ public class PersistentData
         }
 
         Debug.Log("=============GlobalDataGroups============");
-        foreach (var pair in _globalDataGroup)
+        foreach (var pair in GlobalDataGroup)
         {
             Debug.Log("Key : " + pair.Key + " Value : " + pair.Value);
         }
     }
 }
 
-/// <summary>
-/// 지속성있는 데이터를 관리하는 클래스
-/// </summary>
-/// 
+/// <summary> 지속성있는 데이터를 관리하는 클래스 </summary>
 public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<PersistentDataManager>
 {
     private PersistentData _persistentData = new();
@@ -122,7 +108,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     private JsonPersistentData _savedPersistentData = new();
     public JsonPersistentData SavedPersistentData => Instance._savedPersistentData;
 
-
     [SerializeField] private SkillOrderData _skillOrderData;
     public static SkillOrderData SkillOrderData => Instance._skillOrderData;
 
@@ -130,7 +115,13 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
     private void Update()
     {
-        // 더블 점프, 대쉬 획득
+        // CHEAT: F7 키를 누르면 빛 스킬 획득
+        if (Input.GetKeyDown(KeyCode.F7))
+        {
+            SetByGlobal<bool>("LightSkill", true);
+        }
+
+        // CHEAT: F8 키를 누르면 더블 점프, 대쉬 획득
         if (Input.GetKeyDown(KeyCode.F8))
         {
             SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
@@ -140,17 +131,13 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             _cheatSkillId++;
         }
 
-        // 빛 스킬 획득
-        if (Input.GetKeyDown(KeyCode.F7) || Input.GetKeyDown(KeyCode.F4))
-        {
-            SetByGlobal<bool>("LightSkill", true);
-        }
-
-        // 디버그 코드
+#if UNITY_EDITOR
+        // 데이터 그룹 출력
         if (Input.GetKeyDown(KeyCode.Q))
         {
             PrintDataGroup();
         }
+        // 글로벌 데이터 그룹 출력
         if (Input.GetKeyDown(KeyCode.E))
         {
             PrintGlobalDataGroup();
@@ -163,14 +150,10 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            Debug.Log("=============save Data============");
+            Debug.Log("=============Save Data============");
             SavedPersistentData.PrintData();
         }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            Debug.Log("Load");
-            LoadToSavedData();
-        }
+#endif
     }
 
     #region group data
@@ -184,7 +167,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             return false;
 
         // 새로운 데이터 그룹을 생성한다
-        Instance._persistentData._dataGroups[groupName] = new DataGroup();
+        Instance._persistentData.DataGroups[groupName] = new DataGroup();
 
         return true;
     }
@@ -193,28 +176,28 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return;
 
-        Instance._persistentData._dataGroups.Remove(groupName);
+        Instance._persistentData.DataGroups.Remove(groupName);
     }
     public static bool HasDataGroup(string groupName)
     {
         if (Instance == null)
             return false;
 
-        return Instance._persistentData._dataGroups.ContainsKey(groupName);
+        return Instance._persistentData.DataGroups.ContainsKey(groupName);
     }
     public static void Reset(string groupName)
     {
         if (Instance == null)
             return;
 
-        Instance._persistentData._dataGroups[groupName].Clear();
+        Instance._persistentData.DataGroups[groupName].Clear();
     }
     public static void UpdateValue<T>(string groupName, string key, Func<T, T> updateFunction) where T : new()
     {
         if (Instance == null)
             return;
 
-        Instance._persistentData._dataGroups[groupName][key] = updateFunction(Get<T>(groupName, key));
+        Instance._persistentData.DataGroups[groupName][key] = updateFunction(Get<T>(groupName, key));
     }
     public static void UpdateRef<T>(string groupName, string key, Action<T> updateFunction) where T : new()
     {
@@ -228,9 +211,9 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return;
 
-        if (Instance._persistentData._dataGroups.ContainsKey(groupName))
+        if (Instance._persistentData.DataGroups.ContainsKey(groupName))
         {
-            Instance._persistentData._dataGroups[groupName][key] = value;
+            Instance._persistentData.DataGroups[groupName][key] = value;
         }
     }
     public static bool Has<T>(string groupName, string key) where T : new()
@@ -238,22 +221,23 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return false;
 
-        return Instance._persistentData._dataGroups.ContainsKey(groupName) && Instance._persistentData._dataGroups[groupName].ContainsKey(key);
+        return Instance._persistentData.DataGroups.ContainsKey(groupName) && Instance._persistentData.DataGroups[groupName].ContainsKey(key);
     }
     public static T Get<T>(string groupName, string key) where T : new()
     {
         if (Instance == null)
             return new T();
 
-        if (Instance._persistentData._dataGroups[groupName].TryGetValue(key, out object value))
+        Debug.Log(Instance._persistentData.DataGroups[groupName]);
+        if (Instance._persistentData.DataGroups[groupName].TryGetValue(key, out object value))
         {
             Debug.Log(key + "'s type : " + value.GetType());
             return (T)value;
         }
         else
         {
-            Instance._persistentData._dataGroups[groupName][key] = new T();
-            return (T)Instance._persistentData._dataGroups[groupName][key];
+            Instance._persistentData.DataGroups[groupName][key] = new T();
+            return (T)Instance._persistentData.DataGroups[groupName][key];
         }
     }
     #endregion
@@ -264,14 +248,14 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return;
 
-        Instance._persistentData._globalDataGroup.Clear();
+        Instance._persistentData.GlobalDataGroup.Clear();
     }
     public static void UpdateValueByGlobal<T>(string key, Func<T, T> updateFunction) where T : new()
     {
         if (Instance == null)
             return;
 
-        Instance._persistentData._globalDataGroup[key] = updateFunction(GetByGlobal<T>(key));
+        Instance._persistentData.GlobalDataGroup[key] = updateFunction(GetByGlobal<T>(key));
     }
     public static void UpdateRefByGlobal<T>(string key, Action<T> updateFunction) where T : new()
     {
@@ -285,28 +269,29 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return;
 
-        Instance._persistentData._globalDataGroup[key] = value;
+        // 중복된 key에 새로운 value가 들어오면 덮어쓴다
+        Instance._persistentData.GlobalDataGroup[key] = value;
     }
     public static bool HasByGlobal<T>(string key) where T : new()
     {
         if (Instance == null)
             return false;
 
-        return Instance._persistentData._globalDataGroup.ContainsKey(key);
+        return Instance._persistentData.GlobalDataGroup.ContainsKey(key);
     }
     public static T GetByGlobal<T>(string key) where T : new()
     {
         if (Instance == null)
             return new T();
 
-        if (Instance._persistentData._globalDataGroup.TryGetValue(key, out object value))
+        if (Instance._persistentData.GlobalDataGroup.TryGetValue(key, out object value))
         {
             return (T)value;
         }
         else
         {
-            Instance._persistentData._globalDataGroup[key] = new T();
-            return (T)Instance._persistentData._globalDataGroup[key];
+            Instance._persistentData.GlobalDataGroup[key] = new T();
+            return (T)Instance._persistentData.GlobalDataGroup[key];
         }
     }
     #endregion
@@ -317,14 +302,14 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
         string logMessage = "";
 
-        foreach (var dataGroup in Instance._persistentData._dataGroups)
+        foreach (var dataGroup in Instance._persistentData.DataGroups)
         {
-            logMessage += $"Data Group Name: [[ {dataGroup.Key} ]]\n";
+            logMessage += $"Data Group Name: <color=yellow><b>[[ {dataGroup.Key} ]]</b></color>\n";
             logMessage += "\n";
 
             foreach (var data in dataGroup.Value)
             {
-                logMessage += $"Key ====> {data.Key}";
+                logMessage += $"Key ====> <color=orange><b>{data.Key}</b></color>";
                 logMessage += "\n\n";
                 //logMessage += $"Value ====> {data.Value}";
                 //logMessage += "\n\n";
@@ -341,11 +326,11 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
         string logMessage = "";
 
-        foreach (var dataGroup in Instance._persistentData._globalDataGroup)
+        foreach (var dataGroup in Instance._persistentData.GlobalDataGroup)
         {
-            logMessage += $"Key ====> {dataGroup.Key}";
+            logMessage += $"Key ====> <color=orange><b>{dataGroup.Key}</b></color>";
             logMessage += "\n";
-            logMessage += $"Value ====> {dataGroup.Value}";
+            logMessage += $"Value ====> <b>{dataGroup.Value}</b>";
             logMessage += "\n\n";
         }
 
@@ -364,15 +349,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     {
         Instance._savedPersistentData = PersistentData.ToJsonFormatClassObject(Instance._persistentData);
 
-        if (Instance._savedPersistentData.SceneName == "")
-        {
-            Instance._savedPersistentData.SceneName = SceneManager.GetActiveScene().name;
-        }
-
-        if (Instance._savedPersistentData.PassageName == "")
-        {
-            Instance._savedPersistentData.PassageName = passageName;
-        }
+        Instance._savedPersistentData.SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        Instance._savedPersistentData.PassageName = passageName;
     }
 
     /**
@@ -395,21 +373,31 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
      */
     public static bool LoadToSavedData()
     {
-        SaveAndLoader.IsChangeSceneByLoading = true;
         JsonDataManager.JsonLoad();
         Instance._savedPersistentData = JsonDataManager.GetObjectInGlobalSaveData<JsonPersistentData>("PersistentData");
-        ReplacePDataToSavedPData();
 
-        MonsterRespawnManager.Instance.StopRespawnCoroutine();
-        string sceneName = Instance.PersistentData.SceneName;
-        string passageName = Instance.PersistentData.PassageName;
-        if (sceneName == "" || passageName == "")
+        if(Instance._savedPersistentData != null)
         {
-            Debug.LogWarning("Not Saved Scene or PassageData Load");
-            return false;
+            ReplacePDataToSavedPData();
+
+            MonsterRespawnManager.Instance.StopRespawnCoroutine();
+            string sceneName = Instance.PersistentData.SceneName;
+            string passageName = Instance.PersistentData.PassageName;
+            if (sceneName == "" || passageName == "")
+            {
+                Debug.Log(sceneName);
+                Debug.Log(passageName);
+                Debug.LogWarning("Not Saved Scene or PassageData Load");
+                return false;
+            }
+
+            SceneChangeManager.Instance.SceneChangeType = SceneChangeType.Loading;
+            SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+            return true;
         }
 
-        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
-        return true;
+        //저장된 데이터가 없는 경우
+        Debug.Log("Have not saved data");
+        return false;
     }
 }

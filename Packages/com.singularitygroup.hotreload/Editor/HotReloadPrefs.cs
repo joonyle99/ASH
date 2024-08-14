@@ -35,6 +35,7 @@ namespace SingularityGroup.HotReload.Editor {
         private const string LaunchOnEditorStartKey = "HotReloadWindow.LaunchOnEditorStart";
         private const string AutoRecompileUnsupportedChangesKey = "HotReloadWindow.AutoRecompileUnsupportedChanges";
         private const string AutoRecompilePartiallyUnsupportedChangesKey = "HotReloadWindow.AutoRecompilePartiallyUnsupportedChanges";
+        private const string ShowNotificationsKey = "HotReloadWindow.ShowNotifications";
         private const string ShowPatchingNotificationsKey = "HotReloadWindow.ShowPatchingNotifications";
         private const string ShowCompilingUnsupportedNotificationsKey = "HotReloadWindow.ShowCompilingUnsupportedNotifications";
         private const string AutoRecompileUnsupportedChangesImmediatelyKey = "HotReloadWindow.AutoRecompileUnsupportedChangesImmediately";
@@ -268,6 +269,11 @@ namespace SingularityGroup.HotReload.Editor {
         public static bool AutoRecompilePartiallyUnsupportedChanges {
             get { return EditorPrefs.GetBool(AutoRecompilePartiallyUnsupportedChangesKey, false); }
             set { EditorPrefs.SetBool(AutoRecompilePartiallyUnsupportedChangesKey, value); }
+        }
+
+        public static bool ShowNotifications {
+            get { return EditorPrefs.GetBool(ShowNotificationsKey, true); }
+            set { EditorPrefs.SetBool(ShowNotificationsKey, value); }
         }
 
         public static bool ShowPatchingNotifications {

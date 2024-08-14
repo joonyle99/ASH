@@ -51,6 +51,10 @@ public abstract class Evaluator : MonoBehaviour
     private Coroutine _coolTimeCoroutine;
     private Coroutine _waitCoroutine;
 
+    // 판독 필터 이벤트
+    public delegate bool FilterDelegate(Vector3 targetPoint);
+    public event FilterDelegate FilterEvent;
+
     // 판독 이벤트 정의
     protected delegate void EvaluationDelegate(Vector3 targetPoint);        // void EvaluationDelegate(Vector3 targetPoint)이라는 델리게이트(대리자) 선언
     protected event EvaluationDelegate EvaluationEvent;                     // EvaluationDelegate 델리게이트를 이벤트로 선언(델리게이트를 외부에서 멋대로 호출하는 문제를 방지
@@ -103,6 +107,15 @@ public abstract class Evaluator : MonoBehaviour
                     // 플레이어의 타겟 포인트 설정
                     Vector3 playerPos = player.transform.position + new Vector3(0f, player.BodyCollider.bounds.extents.y * 1.5f, 0f);
 
+                    // 필터링 조건을 만족하면 판독 이벤트를 발생시키지 않음
+                    bool isFiltered = false;
+                    if (FilterEvent != null)
+                    {
+                        // Debug.Log("판독기 필터링 검사 시작");
+                        isFiltered = FilterEvent(playerPos);
+                    }
+                    if (isFiltered) return null;
+
                     EvaluationEvent(playerPos);
 
                     // playerPos을 중심으로하는 십자가 표시
@@ -129,13 +142,13 @@ public abstract class Evaluator : MonoBehaviour
         {
             isNeverBoth = false;
 
-            //Debug.Log("이벤트 대기 시작");
+            // Debug.Log("이벤트 대기 시작");
             IsWaitingEvent = true;
 
-            yield return StartCoroutine(WaitEvent());
+            yield return WaitEvent();
 
             IsWaitingEvent = false;
-            //Debug.Log("이벤트 대기 끝");
+            // Debug.Log("이벤트 대기 끝");
         }
 
         // 쿨타임이 0.01초 이상이면 쿨타임 실행

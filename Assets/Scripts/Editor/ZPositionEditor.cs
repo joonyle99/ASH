@@ -11,6 +11,8 @@ public class ZPositionEditor : Editor
         // (자식이 있더라도) 더이상 들어가지 않는 조건
         if (transform.GetComponent<CameraController>()) return;
         if (transform.GetComponent<ParallaxTool>()) return;
+        if (Mathf.Abs(transform.rotation.eulerAngles.x) > 0.000001f) return;
+        if (transform.gameObject.CompareTag("Background")) return;
 
         // 자식이 있으면 재귀적으로 호출
         foreach (Transform child in transform)
@@ -20,37 +22,10 @@ public class ZPositionEditor : Editor
 
         // zPosition 세팅을 스킵하는 조건
         if (Mathf.Abs(transform.localPosition.z) < 0.000001f) return;
-        var renderer = transform.GetComponent<Renderer>();
-        if (renderer)
-        {
-            var sortinglayerName = renderer.sortingLayerName;
-            if (sortinglayerName.Equals("Background1") ||
-                sortinglayerName.Equals("Background2") ||
-                sortinglayerName.Equals("Background3") ||
-                sortinglayerName.Equals("Background4") ||
-                sortinglayerName.Equals("Background5") ||
-                sortinglayerName.Equals("Foreground1") ||
-                sortinglayerName.Equals("Foreground2"))
-            {
-                return;
-            }
-        }
 
         Debug.Log($"<b><color=yellow>Name</color></b>: {transform.gameObject.name}" +
-            $"=>" +
+            $" => " +
             $"<color=orange>Depth</color>: {depth}", transform.gameObject);
-    }
-
-    static void RecursiveTest(Transform transform, int depth)
-    {
-        if (transform.childCount == 0) return;
-
-        foreach (Transform child in transform)
-        {
-            RecursiveTest(child, depth + 1);
-        }
-
-        Debug.Log($"depth: {depth} // name: {transform.gameObject.name}", transform.gameObject);
     }
 
     [MenuItem("Tools/Z Position Setter")]
@@ -61,7 +36,11 @@ public class ZPositionEditor : Editor
         var currentScene = UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene();
         GameObject[] gameObjects = currentScene.GetRootGameObjects();
 
-        RecursiveCall(gameObjects[0].transform, 0);
+        foreach (var go in gameObjects)
+        {
+            // Debug.Log($"{go.name}");
+            RecursiveCall(go.transform, 0);
+        }
 #endif
     }
 }

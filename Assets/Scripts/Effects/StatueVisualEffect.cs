@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class StatueVisualEffect : MonoBehaviour
 {
@@ -18,61 +19,66 @@ public class StatueVisualEffect : MonoBehaviour
     private ParticleSystem[] _particles;
 
     [Header("Sound")]
-    [SerializeField]
-    private AudioSource _saveSound;
+    private AudioSource _audioSource;
+    private SoundList _soundList;
 
     [Header("Timer")]
     [SerializeField]
     private float _minTextDisplayTime = 1f;
     private float _textDisplayTime = 0f;
     [SerializeField]
-    private float _minParticlePlayTime = 2f;
     private float _particleStartTime = 0f;
 
     [Header("Preserve State")]
     [SerializeField]
     private bool Played = false;
-    [SerializeField]
-    PreserveState _statePreserver;
+    private Identifier _identifier;
 
     private void Awake()
     {
         Init();
     }
-
-    private void OnDestroy()
+    private void Start()
     {
-        if(_statePreserver)
-        {
-            _statePreserver.SaveState("_played", Played);
-        }
     }
-
     private void Init()
     {
-        _statePreserver = GetComponent<PreserveState>();
-        if (_statePreserver)
+        _audioSource = GetComponent<AudioSource>();
+        _soundList = GetComponent<SoundList>();
+        _identifier = GetComponent<Identifier>();
+
+        if (_identifier)
         {
-            Played = _statePreserver.LoadState("_played", false);
+            PersistentData pd = PersistentDataManager.Instance.PersistentData;
+
+            if (pd.DataGroups != null &&
+                pd.DataGroups.TryGetValue(_identifier.GroupName, out var value))
+            {
+                if (value.TryGetValue(_identifier.ID + "_played", out var alreadyPlayed))
+                {
+                    Played = (bool)alreadyPlayed;
+                }
+
+            }
 
             //씬 로드시 이미 플레이 된 적이 있는 경우 켜진 플레이 상태가
             //유지되어야 하는 이펙트
-            if(Played)
+            if (Played)
             {
                 ActiveEyes();
             }
         }
 
-        _saveSound = GetComponent<AudioSource>();
-
-        SaveAndLoader.OnSaveStarted += PlayEffectsOnSaveStarted;
-        SaveAndLoader.OnSaveEnded += DeactiveSaveTextLogic;
+        if (!PersistentDataManager.HasDataGroup(_identifier.GroupName))
+        {
+            PersistentDataManager.TryAddDataGroup(_identifier.GroupName);
+        }
     }
 
-    private void PlayEffectsOnSaveStarted()
+    public void PlayEffectsOnSaveStarted()
     {
         //최초 1회만 실시되는 로직들
-        if(!Played)
+        if (!Played)
         {
             PlayDustParticle();
             ActiveEyes();
@@ -81,6 +87,7 @@ public class StatueVisualEffect : MonoBehaviour
         ActiveSaveText();
         PlaySaveSound();
         Played = true;
+        _identifier.SaveState("_played", true);
     }
 
     private void ActiveEyes()
@@ -98,9 +105,9 @@ public class StatueVisualEffect : MonoBehaviour
     #region Particle
     private void PlayDustParticle()
     {
-        for(int i = 0; i <  _particles.Length; i++)
+        for (int i = 0; i < _particles.Length; i++)
         {
-            if(_particles[i] == null) continue;
+            if (_particles[i] == null) continue;
 
             _particles[i].Play();
         }
@@ -117,7 +124,7 @@ public class StatueVisualEffect : MonoBehaviour
         _textDisplayTime = Time.time;
     }
 
-    private void DeactiveSaveTextLogic()
+    public void DeactiveSaveTextLogic()
     {
         if (_saveText == null) return;
 
@@ -125,7 +132,7 @@ public class StatueVisualEffect : MonoBehaviour
         remain = remain < _minTextDisplayTime ? _minTextDisplayTime - remain : 0;
 
         StopAllCoroutines();
-        StartCoroutine(DeactiveSaveTextTimer(remain));  
+        StartCoroutine(DeactiveSaveTextTimer(remain));
     }
 
     private IEnumerator DeactiveSaveTextTimer(float duration)
@@ -139,9 +146,28 @@ public class StatueVisualEffect : MonoBehaviour
 
     private void PlaySaveSound()
     {
-        if( _saveSound == null) return;
+        if (_soundList == null) return;
 
-        _saveSound.Play();
+        if (Played)
+        {
+            string key = "SE_Point_Save";
+            if (_soundList.Exists(key))
+            {
+                _soundList.PlaySFX(key, 5);
+            }
+            else
+                Debug.Log("SE_Point_Save Audio Clip not found");
+        }
+        else
+        {
+            string key = "SE_Point_Statue";
+            if (_soundList.Exists(key))
+            {
+                _soundList.PlaySFX(key);
+            }
+            else
+                Debug.Log("SE_Point_Statue Audio Clip not found");
+        }
     }
     #endregion
 

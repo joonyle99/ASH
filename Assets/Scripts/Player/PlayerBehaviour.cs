@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextBuildListener
 {
+    private const int DEFAULT_HP = 10;
     private const int LIMIT_HP = 20;
 
     #region Attribute
@@ -12,7 +14,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     [Space]
 
     [SerializeField, Range(0, LIMIT_HP)] private int _maxHp = 10;
-    [SerializeField, Range(0, LIMIT_HP)] private int _startHp = 5;
     [SerializeField] private int _curHp;
 
     [Space]
@@ -47,7 +48,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     [SerializeField] private Rigidbody2D _handRigidbody;
     [SerializeField] private Collider2D _heartCollider;
     [SerializeField] private Cloth _capeCloth;
-    [SerializeField] private Material _capeMaterial;
+
+    [Space]
+
+    [SerializeField] private Renderer[] _capeRenderers;
+    private float _capeIntensity;
 
     [Header("ETC")]
     [Space]
@@ -92,6 +97,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     // Condition Property
     public bool IsGrounded => GroundHit;                                    // 플레이어의 아래 방향으로 Circle Cast
     public bool IsUpWardGrounded => UpwardGroundHit;
+    public bool IsUpWardGroundedForClimb => UpwardGroundHitForClimb;
     public bool IsTouchedWall => ClimbHit;
     public bool IsClimbable { get; set; }
     public bool IsClimbJump { get; set; }
@@ -137,12 +143,17 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             _curHp = value;
 
             if (_curHp > _maxHp) _curHp = _maxHp;   // 최대 체력을 넘어갈 수는 없다
-            else if (_curHp <= 0)
+
+            if (_curHp <= 0)
             {
                 _curHp = 0;                         // 체력이 0 미만이 될 수는 없다
                 ChangeState<DieState>();
             }
 
+            // CurHP를 Global Data Group에 업데이트한다
+            PersistentDataManager.SetByGlobal("PlayerCurHp", _curHp);
+
+            // Health UI 이벤트를 발생시킨다
             OnHealthChanged?.Invoke(_curHp, _maxHp);
         }
     }
@@ -155,6 +166,9 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
             if (_maxHp > LIMIT_HP) _maxHp = LIMIT_HP; // 최대 체력은 제한된다
             else if (_maxHp < 0) _maxHp = 0;          // 최대 체력은 0 미만이 될 수는 없다
+
+            // MaxHp를 Global Data Group에 업데이트한다
+            PersistentDataManager.SetByGlobal("PlayerMaxHp", _maxHp);
 
             OnHealthChanged?.Invoke(_curHp, _maxHp);
         }
@@ -179,6 +193,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     // RayCastHit
     public RaycastHit2D GroundHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
+    public RaycastHit2D UpwardGroundHitForClimb { get; set; }
     public RaycastHit2D ClimbHit { get; set; }
 
     // Component
@@ -198,9 +213,31 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     #region Function
 
+#if UNITY_EDITOR
+    private bool _isValidatable = false;
+    private IEnumerator ValidateCoroutine()
+    {
+        yield return null;          // 모든 객체의 Awake()가 호출된 이후에 실행되도록 한다
+        _isValidatable = true;
+    }
+    private void OnValidate()
+    {
+        // 어플리케이션이 실행 중이라면
+        if (Application.isPlaying && _isValidatable)
+        {
+            MaxHp = _maxHp;
+            CurHp = _curHp;
+        }
+    }
+#endif
+
     protected override void Awake()
     {
         base.Awake();
+
+#if UNITY_EDITOR
+        StartCoroutine(ValidateCoroutine());
+#endif
 
         // Controller
         _playerAttackController = GetComponent<PlayerAttackController>();
@@ -213,13 +250,13 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         _bodyCollider = GetComponent<CapsuleCollider2D>();
         materialController = GetComponent<MaterialController>();
         _soundList = GetComponent<SoundList>();
+
+        SaveAndLoader.OnSaveStarted -= SavePlayerStatus;
+        SaveAndLoader.OnSaveStarted += SavePlayerStatus;
     }
     protected override void Start()
     {
         base.Start();
-
-        // init player
-        InitPlayer();
     }
     protected override void Update()
     {
@@ -236,10 +273,34 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             _playerAttackController.CastAttack();
         }
 
-        // TEMP: Recover Cheat HP
+        // CHEAT: ~ 키를 누르면 체력 1 회복
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
             RecoverCurHp(2);
+        }
+
+        // CHEAT: F10 키를 누르면 가장 가까운 보스문 열기
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
+            // 가장 가까운 BossDoor를 찾는다
+            var closestBossDoor = FindObjectsByType<BossDoor>(FindObjectsSortMode.None)
+                .OrderBy(door => Vector3.Distance(transform.position, door.transform.position))
+                .FirstOrDefault();
+
+            if (closestBossDoor == null)
+            {
+                Debug.Log("No Boss Door found in the scene.");
+                return;
+            }
+
+            // 상호작용 불가능한 상태로 만든다
+            closestBossDoor.IsInteractable = false;
+
+            // 가장 가까운 BossDoor가 열려있으면 닫기, 닫혀있으면 열기
+            if (closestBossDoor.IsOpened)
+                closestBossDoor.CloseDoor();
+            else
+                closestBossDoor.OpenDoor();
         }
 
         #endregion
@@ -276,33 +337,59 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
         #endregion
     }
+    private void OnDestroy()
+    {
+        SaveAndLoader.OnSaveStarted -= SavePlayerStatus;
+    }
 
     // build listener
     public void OnSceneContextBuilt()
     {
-        // TODO: 현재 체력을 글로벌로 저장된 플레이어의 체력으로 설정한다
-
+        InitPlayer();
     }
 
     // basic
     private void InitPlayer()
     {
-        // 체력 초기화
-        if(JsonDataManager.Has("PlayerData"))
-        {
-            JsonDataManager.JsonLoad();
-            JsonPlayerData playerData = JsonDataManager.GetObjectInGlobalSaveData<JsonPlayerData>("PlayerData");
-
-            MaxHp = playerData._maxHp;
-            CurHp = playerData._currentHp;
-        }
-        else
-        {
-            CurHp = _startHp;
-        }
-
         // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);
+
+        // 불러오기
+        if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+        {
+            if (PersistentDataManager.HasByGlobal<int>("PlayerMaxHpSaved"))
+                MaxHp = PersistentDataManager.GetByGlobal<int>("PlayerMaxHpSaved");
+            else
+                MaxHp = DEFAULT_HP;
+
+            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHpSaved"))
+                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHpSaved");
+            else
+                CurHp = MaxHp;
+
+            if (PersistentDataManager.HasByGlobal<float>("PlayerCapeIntensitySaved"))
+                SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("PlayerCapeIntensitySaved"));
+            else
+                UpdateCapeIntensity(_capeRenderers[0].material.GetFloat("_Intensity"));
+        }
+        // 씬 전환
+        else
+        {
+            if (PersistentDataManager.HasByGlobal<int>("PlayerMaxHp"))
+                MaxHp = PersistentDataManager.GetByGlobal<int>("PlayerMaxHp");
+            else
+                MaxHp = DEFAULT_HP;
+
+            if (PersistentDataManager.HasByGlobal<int>("PlayerCurHp"))
+                CurHp = PersistentDataManager.GetByGlobal<int>("PlayerCurHp");
+            else
+                CurHp = MaxHp;
+
+            if (PersistentDataManager.HasByGlobal<float>("PlayerCapeIntensity"))
+                SetCapeIntensity(PersistentDataManager.GetByGlobal<float>("PlayerCapeIntensity"));
+            else
+                UpdateCapeIntensity(_capeRenderers[0].material.GetFloat("_Intensity"));
+        }
     }
     private void UpdateImageFlip()
     {
@@ -310,6 +397,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         {
             if (IsOppositeDirSync && IsMoveXKey)
             {
+                // Debug.Log("방향 전환");
+
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
             }
@@ -323,13 +412,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
                 ChangeState<InAirState>();
         }
     }
-    public void SetCapeEmission(float intensity)
-    {
-        // material 자체의 밝기를 조절한다
-        _capeMaterial.SetFloat("_Intensity", intensity);
-    }
 
-    // about hit
+    // hit
     public IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         // fail return condition
@@ -353,6 +437,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
         return IAttackListener.AttackResult.Success;
     }
+    private IEnumerator SlowMotionCoroutine(float duration)
+    {
+        Time.timeScale = 0.3f;
+        yield return new WaitForSecondsRealtime(duration);
+        Time.timeScale = 1f;
+    }
     private void TakeDamage(float damage)
     {
         CurHp -= (int)damage;
@@ -362,14 +452,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         Rigidbody.velocity = Vector2.zero;
         Rigidbody.AddForce(forceVector, ForceMode2D.Impulse);
     }
-    private IEnumerator SlowMotionCoroutine(float duration)
-    {
-        Time.timeScale = 0.3f;
-        yield return new WaitForSecondsRealtime(duration);
-        Time.timeScale = 1f;
-    }
 
-    // about health
+    // health
     public void IncreaseMaxHp(int amount)
     {
         MaxHp += amount;
@@ -397,7 +481,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         }
     }
 
-    // etc
+    // animation event
     public void FinishState_AnimEvent()
     {
         // from hurt state
@@ -405,6 +489,21 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         ChangeState<IdleState>();
     }
 
+    // cape
+    public void UpdateCapeIntensity(float intensity)
+    {
+        _capeIntensity = intensity;
+        PersistentDataManager.SetByGlobal("PlayerCapeIntensity", intensity);
+    }
+    public void SetCapeIntensity(float intensity)
+    {
+        foreach (var capeRenderer in _capeRenderers)
+        {
+            capeRenderer.material.SetFloat("_Intensity", intensity);
+        }
+
+        UpdateCapeIntensity(intensity);
+    }
     public void CapeControlX()
     {
         var vec = _capeCloth.externalAcceleration;
@@ -471,6 +570,17 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public void PlaySound(string key)
     {
         _soundList.PlaySFX(key);
+    }
+
+    #endregion
+
+    #region Save
+
+    private void SavePlayerStatus()
+    {
+        PersistentDataManager.SetByGlobal("PlayerMaxHpSaved", MaxHp);
+        PersistentDataManager.SetByGlobal("PlayerCurHpSaved", CurHp);
+        PersistentDataManager.SetByGlobal("PlayerCapeIntensitySaved", _capeIntensity);
     }
 
     #endregion

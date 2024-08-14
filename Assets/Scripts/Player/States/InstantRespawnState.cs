@@ -39,7 +39,7 @@ public class InstantRespawnState : PlayerState
         Player.MaterialController.DisintegrateEffect.ResetIsEffectDone();
 
         // move to check point & change to idle state
-        SceneContext.Current.InstantRespawn();
+        SceneContext.Current.PlayerInstantRespawn();
     }
     private IEnumerator ExitCoroutine()
     {

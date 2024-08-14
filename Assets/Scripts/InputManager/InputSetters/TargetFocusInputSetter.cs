@@ -8,7 +8,7 @@ public class TargetFocusInputSetter : InputSetterScriptableObject
 
     public override InputState GetState()
     {
-        InputState state = new InputState();
+        InputState state = base.GetState();
 
         // 1. 타겟을 기준으로 어느 방향에 있는지를 계산
 

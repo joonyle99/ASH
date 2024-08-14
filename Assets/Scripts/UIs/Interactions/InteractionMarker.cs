@@ -1,7 +1,4 @@
-using System.Runtime.CompilerServices;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// 상호작용 텍스트 가이드를 출력하기 위한 UI

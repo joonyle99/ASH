@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4206174766304073882}
   - component: {fileID: 4206174766304073884}
-  - component: {fileID: 4206174766304073952}
-  - component: {fileID: 4206174766304073883}
   - component: {fileID: 4206174766304073885}
   - component: {fileID: 4206174766304073887}
-  - component: {fileID: 4206174766304073886}
   - component: {fileID: 4606679390300816785}
+  - component: {fileID: 4206174766304073952}
+  - component: {fileID: 4206174766304073883}
+  - component: {fileID: 4206174766304073886}
   m_Layer: 22
   m_Name: DarkBeam
   m_TagString: Untagged
@@ -46,44 +46,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4206174766304073881}
   m_Mesh: {fileID: 0}
---- !u!114 &4206174766304073952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4206174766304073881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a91d3ba1c73f1949afba72eab618247, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _triggerBox: {fileID: 4206174766304073887}
-  _effect: {fileID: 4206174766304073883}
-  _damage: 2
-  _maxLength: 100
-  _obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 8884699
-  _lanternLayer:
-    serializedVersion: 2
-    m_Bits: 24576
---- !u!114 &4206174766304073883
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4206174766304073881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93917c1f82607044d9a24f5c9869ffca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _segmentLength: 10
-  _thickness: 1
-  _sortingLayer: 
-  _orderInLayer: 0
 --- !u!23 &4206174766304073885
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -152,20 +114,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.5}
   m_EdgeRadius: 0
---- !u!114 &4206174766304073886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4206174766304073881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1679b9c7359c0a344a00d708d6af01f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggerActivators: []
-  _reportTargetObject: {fileID: 4206174766304073881}
 --- !u!82 &4606679390300816785
 AudioSource:
   m_ObjectHideFlags: 0
@@ -179,7 +127,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: f1e1f7938faa8094ea83b472d2497aeb, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.2
-  m_Pitch: -0.47
+  m_Pitch: -0.4
   Loop: 1
   Mute: 0
   Spatialize: 0
@@ -262,3 +210,55 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4206174766304073952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4206174766304073881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a91d3ba1c73f1949afba72eab618247, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _triggerBox: {fileID: 4206174766304073887}
+  _effect: {fileID: 4206174766304073883}
+  _damage: 2
+  _maxLength: 100
+  _obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8819163
+  _lanternLayer:
+    serializedVersion: 2
+    m_Bits: 24576
+--- !u!114 &4206174766304073883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4206174766304073881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93917c1f82607044d9a24f5c9869ffca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _segmentLength: 10
+  _thickness: 1
+  _sortingLayer: Default
+  _orderInLayer: 1
+--- !u!114 &4206174766304073886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4206174766304073881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1679b9c7359c0a344a00d708d6af01f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerActivators: []
+  _reportTargetObject: {fileID: 4206174766304073881}

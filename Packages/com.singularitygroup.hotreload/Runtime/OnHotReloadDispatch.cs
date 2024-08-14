@@ -16,16 +16,15 @@ namespace SingularityGroup.HotReload {
 
     static class Dispatch {
         // DispatchOnHotReload is called every time a patch is applied (1x per batch of filechanges)
-        // Currently, we don't support [InvokeOnHotReload] on patched methods
-        public static async Task OnHotReload() {
+        public static async Task OnHotReload(List<MethodPatch> patchedMethods) {
             var methods = await Task.Run(() => GetOrFillMethodsCacheThreaded());
 
             foreach (var m in methods) {
                 if (m.IsStatic) {
-                    InvokeStaticMethod(m, nameof(InvokeOnHotReload));
+                    InvokeStaticMethod(m, nameof(InvokeOnHotReload), patchedMethods);
                 } else {
                     foreach (var go in GameObject.FindObjectsOfType(m.DeclaringType)) {
-                        InvokeInstanceMethod(m, go);
+                        InvokeInstanceMethod(m, go, patchedMethods);
                     }
                 }
             }
@@ -43,7 +42,7 @@ namespace SingularityGroup.HotReload {
             }
             var patchMethodParams = patchMethod.GetParameters();
             if (patchMethodParams.Length == 0) {
-                InvokeStaticMethod(patchMethod, nameof(InvokeOnHotReloadLocal));
+                InvokeStaticMethod(patchMethod, nameof(InvokeOnHotReloadLocal), null);
             } else if (typeof(MonoBehaviour).IsAssignableFrom(patchMethodParams[0].ParameterType)) {
                 foreach (var go in GameObject.FindObjectsOfType(patchMethodParams[0].ParameterType)) {
                     InvokeInstanceMethodStatic(patchMethod, go);
@@ -62,10 +61,10 @@ namespace SingularityGroup.HotReload {
                 return;
             }
             if (reloadMethod.IsStatic) {
-                InvokeStaticMethod(reloadMethod, nameof(InvokeOnHotReloadLocal));
+                InvokeStaticMethod(reloadMethod, nameof(InvokeOnHotReloadLocal), null);
             } else if (typeof(MonoBehaviour).IsAssignableFrom(reloadForType)) {
                 foreach (var go in GameObject.FindObjectsOfType(reloadForType)) {
-                    InvokeInstanceMethod(reloadMethod, go);
+                    InvokeInstanceMethod(reloadMethod, go, null);
                 }
             } else {
                 Log.Warning($"[{nameof(InvokeOnHotReloadLocal)}] {reloadMethod.DeclaringType?.Name} {reloadMethod.Name} failed. Make sure it's a method with 0 parameters either static or defined on MonoBehaviour.");
@@ -146,24 +145,32 @@ namespace SingularityGroup.HotReload {
             return methods;
         }
 
-        private static void InvokeStaticMethod(MethodBase m, string attrName) {
+        private static void InvokeStaticMethod(MethodBase m, string attrName, List<MethodPatch> patchedMethods) {
             try {
-                m.Invoke(null, new object[] { });
+                if (patchedMethods != null && m.GetParameters().Length == 1) {
+                    m.Invoke(null, new object[] { patchedMethods });
+                } else {
+                    m.Invoke(null, new object[] { });
+                }
             } catch (Exception e) {
                 if (m.GetParameters().Length != 0) {
-                    Log.Warning($"[{attrName}] {m.DeclaringType?.Name} {m.Name} failed. Make sure it has 0 parameters. Exception:\n{e}");
+                    Log.Warning($"[{attrName}] {m.DeclaringType?.Name} {m.Name} failed. Make sure it has 0 parameters, or 1 parameter with type List<MethodPatch>. Exception:\n{e}");
                 } else {
                     Log.Warning($"[{attrName}] {m.DeclaringType?.Name} {m.Name} failed. Exception\n{e}");
                 }
             }
         }
 
-        private static void InvokeInstanceMethod(MethodBase m, Object go) {
+        private static void InvokeInstanceMethod(MethodBase m, Object go, List<MethodPatch> patchedMethods) {
             try {
-                m.Invoke(go, new object[] { });
+                if (patchedMethods != null && m.GetParameters().Length == 1) {
+                    m.Invoke(go, new object[] { patchedMethods });
+                } else {
+                    m.Invoke(go, new object[] { });
+                }
             } catch (Exception e) {
                 if (m.GetParameters().Length != 0) {
-                    Log.Warning($"[InvokeOnHotReload] {m.DeclaringType?.Name} {m.Name} failed. Make sure it has 0 parameters. Exception:\n{e}");
+                    Log.Warning($"[InvokeOnHotReload] {m.DeclaringType?.Name} {m.Name} failed. Make sure it has 0 parameters, or 1 parameter with type List<MethodPatch>. Exception:\n{e}");
                 } else {
                     Log.Warning($"[InvokeOnHotReload] {m.DeclaringType?.Name} {m.Name} failed. Exception:\n{e}");
                 }

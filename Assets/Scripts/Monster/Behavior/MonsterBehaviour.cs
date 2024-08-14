@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 
 /// <summary>
 /// 몬스터의 기본 행동을 정의하는 추상클래스
@@ -132,11 +131,26 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         get;
         set;
     }
-    [field: SerializeField]
+    [SerializeField] private bool _isGodMode;
     public bool IsGodMode
     {
-        get;
-        set;
+        get => _isGodMode;
+        set
+        {
+            _isGodMode = value;
+
+            if (MaterialController)
+            {
+                if (_isGodMode)
+                {
+                    MaterialController.EnableGodModeOutline();
+                }
+                else
+                {
+                    MaterialController.DisableGodModeOutline();
+                }
+            }
+        }
     }
     [field: SerializeField]
     public bool IsHitting
@@ -206,6 +220,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         private set;
     }
 
+    [SerializeField] protected GameObject luminescence;
+    public bool IsActiveLuminescence => luminescence.activeInHierarchy;
+
     [SerializeField]
     protected CutscenePlayerList cutscenePlayerList;
 
@@ -228,6 +245,12 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
     #region Function
 
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        IsGodMode = _isGodMode;
+    }
+#endif
     protected virtual void Awake()
     {
         // Basic Component
@@ -262,6 +285,12 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     }
     protected virtual void Update()
     {
+        // CHEAT: F5 키를 누르면 몬스터의 무적 상태를 조작한다
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            IsGodMode = !IsGodMode;
+        }
+
         if (IsDead)
             return;
 
@@ -307,7 +336,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
                 break;
 
-            case MonsterDefine.MoveType.Fly:
+            case MonsterDefine.MoveType.FloatingNormal:
 
                 IsGround = false;
                 IsInAir = true;
@@ -397,6 +426,8 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     }
     private void InitMonsterCondition()
     {
+        // TODO: 몬스터의 방향을 저장한다
+
         RecentDir = DefaultDir;
 
         if (!CenterOfMass) CenterOfMass = this.transform;
@@ -548,7 +579,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             hitBox.IsAttackable = isAttackable;
     }
 
-    // Death & Respawn
+    // death & respawn
     private IEnumerator DeathProcessCoroutine()
     {
         yield return new WaitForSeconds(0.2f);
@@ -637,9 +668,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     {
         return CurrentState is TState;
     }
-    /// <summary>
-    /// 쿨타임 Action과 같은 'myFunction'은 해당 State의 Animation이 Trigger되면서 시작된다
-    /// </summary>
+    /// <summary> 쿨타임 Action과 같은 'myFunction'은 해당 State의 Animation이 Trigger되면서 시작된다 </summary>
     public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState, ActionDelegate myFunction = null, float duration = 0f)
     {
         StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState, myFunction, duration));
@@ -650,7 +679,10 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         if (AnimTransitionEvent != null)
             yield return new WaitUntil(() => AnimTransitionEvent(targetTransitionParam, currentState));
 
-        yield return new WaitForSeconds(duration);
+        if (duration < 0.01f)
+            yield return new WaitForSeconds(duration);
+
+        //Debug.Log("Attack Trigger !");
 
         Animator.SetTrigger(targetTransitionParam);
 
@@ -658,7 +690,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         myFunction?.Invoke();
     }
 
-    // Wrapper
+    // wrapper
     public void SetAnimatorTrigger(string key)
     {
         Animator.SetTrigger(key);
@@ -667,11 +699,70 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     {
         SoundList.PlaySFX(key);
     }
+    public void PlayMultipleSound(string key, int count, float interval)
+    {
+        StartCoroutine(PlayMultipleSoundCoroutine(key, count, interval));
+    }
+    private IEnumerator PlayMultipleSoundCoroutine(string key, int count, float interval)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            SoundList.PlaySFX(key);
+            yield return new WaitForSeconds(interval);
+        }
+    }
     public void DestroyMonsterPrefab()
     {
         // parent: prefab_monsterName
         Destroy(transform.parent.gameObject);
     }
 
+    // control evaluator
+    public void ActivateAttackEvaluator()
+    {
+        if (AttackEvaluator)
+            AttackEvaluator.IsUsable = true;
+    }
+    public void DeactivateAttackEvalutator()
+    {
+        if (AttackEvaluator)
+            AttackEvaluator.IsUsable = false;
+    }
+
+    // luminescence
+    public void SetActiveLuminescence(bool isBool)
+    {
+        if (luminescence)
+        {
+            luminescence.SetActive(isBool);
+        }
+    }
+
+    // cutscene
+    public IEnumerator PlayCutSceneInRunning(string cutsceneName)
+    {
+        // 현재 애니메이션이 95% 완료될 때까지 기다립니다.
+        yield return new WaitUntil(() => {
+            AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+            return stateInfo.normalizedTime >= 0.95f;
+        });
+
+        cutscenePlayerList.PlayCutscene(cutsceneName);
+    }
+
     #endregion
+
+    private void OnDrawGizmos()
+    {
+        /*
+        if (IsGodMode)
+        {
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 25;
+            style.normal.textColor = Color.red;
+            style.alignment = TextAnchor.MiddleCenter;
+            UnityEditor.Handles.Label(transform.position + Vector3.up * 1.5f, "GOD MODE", style);
+        }
+        */
+    }
 }

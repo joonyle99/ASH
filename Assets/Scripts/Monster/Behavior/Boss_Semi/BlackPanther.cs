@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
@@ -21,7 +19,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [Header("――――――― BlackPanther Behaviour ―――――――")]
     [Space]
 
-    [Tooltip("1: Rush1\n2 : VineMissile\n3 : Rush2\n2 : VinePillar")]
+    [Tooltip("1: Rush1\n2 : VineMissile\n3 : Rush2\n4 : VinePillar")]
     [SerializeField] private AttackType _firstAttack;
     [SerializeField] private AttackType _currentAttack;
     [SerializeField] private AttackType _nextAttack;
@@ -48,16 +46,18 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         private set => _totalMissileCount = value;
     }
 
+    private bool _isInterruptVineMissile = false;
+
     [Header("VineMissile - VFX")]
     [Space]
 
-    [SerializeField] private ParticleSystem _smokeEffect;
-    [SerializeField] private ParticleSystem _sparkEffect;
+    [SerializeField] private ParticleHelper _smokeEffect;
+    [SerializeField] private ParticleHelper _sparkEffect;
 
     private Vector2 _targetPos;
     private BlackPanther_VineMissile _currentMissile;
 
-    [SerializeField] private float _vineMissileAnimDuration;
+    private float _vineMissileAnimDuration;
 
     [Header("____ VinePillar ____")]
     [Space]
@@ -66,7 +66,6 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private int _pillarCount;
     [SerializeField] private float _floorHeight;
     [SerializeField] private float _pillarFarDist;
-    [SerializeField] private float _minDistEachPillar;
     [SerializeField] private Range _createTimeRange;
 
     private List<float> _usedPosX;
@@ -75,17 +74,18 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [Header("VinePillar - VFX")]
     [Space]
 
-    [SerializeField] private ParticleSystem _dustEffect;
+    [SerializeField] private ParticleHelper _dustEffect;
     [SerializeField] private float _dustDistFromPillar;
 
-    [SerializeField] private float _vinePillarAnimDuration;
+    private float _vinePillarAnimDuration;
 
     [Header("Cutscene")]
     [Space]
 
-    [SerializeField] private ParticleSystem _shiningEyes;
+    [SerializeField] private ParticleHelper _shinningEffect;
+    [SerializeField] private ParticleHelper _twinkleEffect;
 
-    public bool IsLightingHintInRage => IsRage && TotalMissileCount % 3 == 0;
+    public bool IsLightingHintInRage => IsRage && (TotalMissileCount % 3) == 0;
 
     #endregion
 
@@ -107,6 +107,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         // 공격 판독기의 대기 이벤트 등록
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
+
+        rageTargetHurtCount = finalTargetHurtCount - 6;
     }
     protected override void Start()
     {
@@ -116,8 +118,10 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         if (AttackEvaluator)
             AttackEvaluator.IsUsable = false;
+
+        IsGodMode = false;
     }
-    public void FixedUpdate()
+    private void FixedUpdate()
     {
         if (IsDead)
             return;
@@ -141,6 +145,10 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
                 GroundMovementModule.AffectGravity();
         }
     }
+    private void OnDestroy()
+    {
+        AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
+    }
 
     public void OnLightEnter(LightCapturer capturer, LightSource lightSource)
     {
@@ -159,35 +167,14 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         currentAttackCount++;
 
-        if (_currentAttack == AttackType.VineMissile)
+        if (IsRage && _currentAttack is AttackType.VineMissile)
         {
             TotalMissileCount++;
-        }
-
-        if (!IsRage)
-        {
-            // Rush인 경우에는 GodMode를 해제한다
-            if (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2)
-            {
-                if (IsGodMode)
-                    IsGodMode = false;
-            }
         }
     }
     public override void AttackPostProcess()
     {
         SetToNextAttack();
-
-        if (!IsRage)
-        {
-            if (_currentAttack == AttackType.Rush1 || _currentAttack == AttackType.Rush2)
-            {
-                if (!IsGodMode)
-                    IsGodMode = true;
-
-                currentHitCount = 0;
-            }
-        }
     }
     public override void GroggyPreProcess()
     {
@@ -230,14 +217,25 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
 
     // vine missile
-    public void VineMissilePre_AnimEvent()
-    {
-        var smoke = Instantiate(_smokeEffect, _missileSpawnPoint.position, Quaternion.identity);
-        smoke.Play();
-    }
     public void VineMissile01_AnimEvent()
     {
+        if (_isInterruptVineMissile) return;
+
         _targetPos = SceneContext.Current.Player.HeartCollider.bounds.center;
+
+        // 오른쪽을 보고 있으면 플레이어가 오른쪽에 있을 때만 미사일을 발사한다
+        // 왼쪽을 보고 있으면 플레이어가 왼쪽에 있을 때만 미사일을 발사한다
+        bool isDifferentDir = (RecentDir > 0 && _missileSpawnPoint.position.x > _targetPos.x) ||
+                            (RecentDir < 0 && _missileSpawnPoint.position.x < _targetPos.x);
+        if (isDifferentDir)
+        {
+            _isInterruptVineMissile = true;
+            SetAnimatorTrigger("StopVineMissile");
+            return;
+        }
+
+        var smoke = Instantiate(_smokeEffect, _missileSpawnPoint.position, Quaternion.identity);
+        smoke.Play();
 
         var dir = (_targetPos - (Vector2)_missileSpawnPoint.position).normalized;
 
@@ -269,35 +267,12 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         // 넝쿨 기둥 생성 위치 설정 로직
         for (int i = 0; i < _pillarCount; ++i)
         {
-            /*
-            // check allocation count each pillar spawn
-            var allocationCount = 0;
-
-            float newPosXInRange;
-            // calculate random pillar spawn position
-            do
-            {
-                // set random range
-                var min = player.transform.position.x - _pillarFarDist;
-                var max = player.transform.position.x + _pillarFarDist;
-                newPosXInRange = UnityEngine.Random.Range(min, max);
-
-                // increase allocation count while under the limit
-                allocationCount++;
-
-            } while ((_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistEachPillar) ||
-                      (newPosXInRange >= player.BodyCollider.bounds.min.x && newPosXInRange <= player.BodyCollider.bounds.max.x))
-                     && allocationCount <= _allocationLimit);
-            */
-
             var min = player.transform.position.x - _pillarFarDist;
             var max = player.transform.position.x + _pillarFarDist;
             var dist = max - min;
-            var unitDist = dist / _pillarCount;
+            var unitDist = dist / (_pillarCount - 1);
             var spawnPos = min + unitDist * i;
 
-            // store posX
-            // _usedPosX.Add(newPosXInRange);
             _usedPosX.Add(spawnPos);
         }
 
@@ -340,13 +315,20 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         {
             case AttackType.Rush1:
             case AttackType.Rush2:
-                yield return StartCoroutine(WaitEventCoroutine_Rush());
+                yield return WaitEventCoroutine_Rush();
                 break;
             case AttackType.VineMissile:
-                yield return StartCoroutine(WaitEventCoroutine_VineMissile());
+                yield return WaitEventCoroutine_VineMissile();
+
+                // Light Hint
+                if (IsLightingHintInRage)
+                {
+                    yield return LightingHintCoroutine();
+                }
+
                 break;
             case AttackType.VinePillar:
-                yield return StartCoroutine(WaitEventCoroutine_VinePillar());
+                yield return WaitEventCoroutine_VinePillar();
                 break;
         }
     }
@@ -371,31 +353,23 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         var targetCollider2 = GroundChaseEvaluator.IsTargetWithinRange();
         if (targetCollider2) StartSetRecentDirAfterGrounded(GroundChaseEvaluator.ChaseDir);
     }
-    private IEnumerator LightingHintCoroutine()
-    {
-        // N초간 Capturable 상태로 만들며 대기하는 코루틴
-
-        Debug.Log("LightHintCoroutine 실행");
-
-        IsCapturable = true;
-
-        yield return new WaitForSeconds(3f);
-
-        IsCapturable = false;
-
-        Debug.Log("LightHintCoroutine 종료");
-    }
     private IEnumerator WaitEventCoroutine_VineMissile()
     {
         // 애니메이션이 끝날때까지 기다려야 한다
-        yield return new WaitForSeconds(_vineMissileAnimDuration);
 
-        // Debug.Log("Vine Missile Animation이 종료되었습니다. 이제 Attack Evaluator의 쿨타임이 끝났습니다");
+        // 다른 WaitEvent와는 조금 다른 형태로, 언제든지 종료하기 위해 WaitForSeconds를 사용하지 않는다
 
-        // Light Hint를 제공하는 경우
-        if (IsLightingHintInRage)
+        float eTime = 0f;
+        while (eTime < _vineMissileAnimDuration)
         {
-            yield return LightingHintCoroutine();
+            if (_isInterruptVineMissile)
+            {
+                _isInterruptVineMissile = false;
+                yield break;
+            }
+
+            eTime += Time.deltaTime;
+            yield return null;
         }
     }
     private IEnumerator WaitEventCoroutine_VinePillar()
@@ -404,6 +378,37 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         yield return new WaitForSeconds(_vinePillarAnimDuration);
 
         // Debug.Log("Vine Pillar Animation이 종료되었습니다. 이제 Attack Evaluator의 쿨타임이 끝났습니다");
+    }
+    private IEnumerator LightingHintCoroutine()
+    {
+        // N초간 Capturable 상태로 만들며 대기하는 코루틴
+
+        Debug.Log("LightHintCoroutine 실행");
+
+        IsCapturable = true;
+
+        /*
+         * TODO: 빛의 힌트 연출
+         * 꼬리 내리는 애니메이션
+         * 이마 다이아 문양이 흰색으로 반짝 빛나는 이펙트
+         * 효과음을 추가’하기로 하였습니다.
+         */
+
+        var count = 4;
+        var interval = 1.2f;
+
+        PlayMultipleSound("Twinkle", count, interval);
+
+        for (int i = 0; i < count; i++)
+        {
+            _twinkleEffect.Play();
+            yield return new WaitForSeconds(_twinkleEffect.GetEmissionLifeTime());
+            _twinkleEffect.Stop();
+        }
+
+        IsCapturable = false;
+
+        Debug.Log("LightHintCoroutine 종료");
     }
 
     // effects
@@ -418,6 +423,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         yield return new WaitUntil(() => isEndMoveProcess);
 
+        yield return new WaitForSeconds(2f);
+
         // 최종 컷씬 재생
         cutscenePlayerList.PlayCutscene("Final CutScene");
     }
@@ -425,12 +432,16 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     // etc
     public void ShineEyes()
     {
-        _shiningEyes.Play();
+        _shinningEffect.Play();
     }
-    public void ActivateAttackEvaluator()
+    public void RoarProcess()
     {
-        if (AttackEvaluator)
-            AttackEvaluator.IsUsable = true;
+        if (IsActiveLuminescence == false)
+        {
+            SetActiveLuminescence(true);
+            currentHitCount = 0;
+            IsGodMode = true;
+        }
     }
 
     #endregion
@@ -463,13 +474,6 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
             new Vector3(player.transform.position.x - _pillarFarDist, _floorHeight + 5f, player.transform.position.z));
         Gizmos.DrawLine(new Vector3(player.transform.position.x + _pillarFarDist, _floorHeight, player.transform.position.z),
             new Vector3(player.transform.position.x + _pillarFarDist, _floorHeight + 5f, player.transform.position.z));
-
-        // 넝쿨 기둥 사이 최소 거리
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(new Vector3(player.transform.position.x - _minDistEachPillar / 2f, _floorHeight, player.transform.position.z),
-            new Vector3(player.transform.position.x - _minDistEachPillar / 2f, _floorHeight + 3f, player.transform.position.z));
-        Gizmos.DrawLine(new Vector3(player.transform.position.x + _minDistEachPillar / 2f, _floorHeight, player.transform.position.z),
-            new Vector3(player.transform.position.x + _minDistEachPillar / 2f, _floorHeight + 3f, player.transform.position.z));
 
         // 흙먼지의 넝쿨 기둥으로부터의 최소 거리
         Gizmos.color = Color.cyan;

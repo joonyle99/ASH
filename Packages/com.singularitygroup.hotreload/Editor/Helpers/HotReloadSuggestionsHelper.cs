@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -17,8 +17,11 @@ namespace SingularityGroup.HotReload.Editor {
         [Obsolete] SymbolicLinks,
         AutoRecompiledWhenPlaymodeStateChanges,
         UnityBestDevelopmentToolAward2023,
+#if UNITY_2022_1_OR_NEWER
         AutoRecompiledWhenPlaymodeStateChanges2022,
+#endif
         MultidimensionalArrays,
+        EditorsWithoutHRRunning,
     }
     
 	internal static class HotReloadSuggestionsHelper {
@@ -37,6 +40,20 @@ namespace SingularityGroup.HotReload.Editor {
         
         internal static bool CheckSuggestionActive(HotReloadSuggestionKind hotReloadSuggestionKind) {
             return EditorPrefs.GetBool($"HotReloadWindow.SuggestionsActive.{hotReloadSuggestionKind}");
+        }
+        
+        // used for cases where suggestion might need to be shown more than once
+        internal static void SetSuggestionActive(HotReloadSuggestionKind hotReloadSuggestionKind) {
+            if (EditorPrefs.GetBool($"HotReloadWindow.SuggestionsShown.{hotReloadSuggestionKind}")) {
+                return;
+            }
+            EditorPrefs.SetBool($"HotReloadWindow.SuggestionsActive.{hotReloadSuggestionKind}", true);
+            
+            AlertEntry entry;
+            if (suggestionMap.TryGetValue(hotReloadSuggestionKind, out entry) && !HotReloadTimelineHelper.Suggestions.Contains(entry)) {
+                HotReloadTimelineHelper.Suggestions.Insert(0, entry);
+                HotReloadState.ShowingRedDot = true;
+            }
         }
         
         internal static void SetSuggestionInactive(HotReloadSuggestionKind hotReloadSuggestionKind) {
@@ -70,6 +87,7 @@ namespace SingularityGroup.HotReload.Editor {
         
         internal static readonly OpenURLButton recompileTroubleshootingButton = new OpenURLButton("Documentation", Constants.RecompileTroubleshootingURL);
         internal static readonly OpenURLButton featuresDocumentationButton = new OpenURLButton("Documentation", Constants.FeaturesDocumentationURL);
+        internal static readonly OpenURLButton multipleEditorsDocumentationButton = new OpenURLButton("Documentation", Constants.MultipleEditorsURL);
         public static Dictionary<HotReloadSuggestionKind, AlertEntry> suggestionMap = new Dictionary<HotReloadSuggestionKind, AlertEntry> {
             { HotReloadSuggestionKind.UnityBestDevelopmentToolAward2023, new AlertEntry(
                 AlertType.Suggestion, 
@@ -164,7 +182,7 @@ namespace SingularityGroup.HotReload.Editor {
 #endif
             { HotReloadSuggestionKind.MultidimensionalArrays, new AlertEntry(
                 AlertType.Suggestion, 
-                "Multidimensional arrays are not supported. Use jagged arrays instead",
+                "Use jagged instead of multidimensional arrays",
                 "Hot Reload doesn't support multidimensional ([,]) arrays. Jagged arrays ([][]) are a better alternative, and Microsoft recommends using them instead",
                 iconType: AlertType.UnsupportedChange,
                 actionData: () => {
@@ -178,6 +196,33 @@ namespace SingularityGroup.HotReload.Editor {
                 },
                 timestamp: DateTime.Now,
                 entryType: EntryType.Foldout
+            )},
+            { HotReloadSuggestionKind.EditorsWithoutHRRunning, new AlertEntry(
+                AlertType.Suggestion, 
+                "Some Unity instances don't have Hot Reload running.",
+                "Make sure that either: \n1) Hot Reload is installed and running on all Editor instances, or \n2) Hot Reload is stopped in all Editor instances where it is installed.",
+                actionData: () => {
+                    GUILayout.Space(10f);
+                    using (new EditorGUILayout.HorizontalScope()) {
+                        if (GUILayout.Button(" Stop Hot Reload ")) {
+                            EditorCodePatcher.StopCodePatcher().Forget();
+                        }
+                        GUILayout.Space(5f);
+                        
+                        multipleEditorsDocumentationButton.OnGUI();
+                        GUILayout.Space(5f);
+                        
+                        if (GUILayout.Button(" Don't show again ")) {
+                            HotReloadSuggestionsHelper.SetSuggestionsShown(HotReloadSuggestionKind.EditorsWithoutHRRunning);
+                            HotReloadSuggestionsHelper.SetSuggestionInactive(HotReloadSuggestionKind.EditorsWithoutHRRunning);
+                        }
+                        GUILayout.FlexibleSpace();
+                        GUILayout.FlexibleSpace();
+                    }
+                },
+                timestamp: DateTime.Now,
+                entryType: EntryType.Foldout,
+                iconType: AlertType.UnsupportedChange
             )},
         };
         
@@ -197,15 +242,23 @@ namespace SingularityGroup.HotReload.Editor {
             };
             CompilationPipeline.compilationStarted += obj => {
                 if (DateTime.UtcNow - lastPlaymodeChange < TimeSpan.FromSeconds(1) && !HotReloadState.RecompiledUnsupportedChangesOnExitPlaymode) {
+                    
+#if UNITY_2022_1_OR_NEWER
+                    SetSuggestionsShown(HotReloadSuggestionKind.AutoRecompiledWhenPlaymodeStateChanges2022);
+#else
                     SetSuggestionsShown(HotReloadSuggestionKind.AutoRecompiledWhenPlaymodeStateChanges);
+#endif
                 }
                 HotReloadState.RecompiledUnsupportedChangesOnExitPlaymode = false;
             };
             InitSuggestions();
         }
 
+        private static DateTime lastCheckedUnityInstances = DateTime.UtcNow;
         public static void Check() {
-            if (listRequest.IsCompleted && unsupportedPackagesList == null) {
+            if (listRequest.IsCompleted && 
+                unsupportedPackagesList == null) 
+            {
                 unsupportedPackagesList = new List<string>();
                 var packages = listRequest.Result;
                 foreach (var packageInfo in packages) {
@@ -217,6 +270,8 @@ namespace SingularityGroup.HotReload.Editor {
                     SetSuggestionsShown(HotReloadSuggestionKind.UnsupportedPackages);
                 }
             }
+            
+            CheckEditorsWithoutHR();
 
 #if UNITY_2022_1_OR_NEWER
             if (EditorSettings.spritePackerMode == SpritePackerMode.AlwaysOnAtlas) {
@@ -226,6 +281,48 @@ namespace SingularityGroup.HotReload.Editor {
                 EditorPrefs.SetBool($"HotReloadWindow.SuggestionsShown.{HotReloadSuggestionKind.AutoRecompiledWhenPlaymodeStateChanges2022}", false);
             }
 #endif
+        }
+        
+        private static void CheckEditorsWithoutHR() {
+            if (!ServerHealthCheck.I.IsServerHealthy) {
+                HotReloadSuggestionsHelper.SetSuggestionInactive(HotReloadSuggestionKind.EditorsWithoutHRRunning);
+                return;
+            }
+            if (checkingEditorsWihtoutHR || 
+                (DateTime.UtcNow - lastCheckedUnityInstances).TotalSeconds < 5)
+            {
+                return;
+            }
+            CheckEditorsWithoutHRAsync().Forget();
+        }
+
+        static bool checkingEditorsWihtoutHR;
+        private static async Task CheckEditorsWithoutHRAsync() {
+            try {
+                checkingEditorsWihtoutHR = true;
+                var showSuggestion = await Task.Run(() => {
+                    try {
+                        var runningUnities = Process.GetProcessesByName("Unity").Length;
+                        var runningPatchers = Process.GetProcessesByName("CodePatcherCLI").Length;
+                        return runningUnities > runningPatchers;
+                    } catch (ArgumentException) {
+                        // On some devices GetProcessesByName throws ArgumentException for no good reason.
+                        // it happens rarely and the feature is not the most important so proper solution is not required
+                        return false;
+                    }
+                });
+                if (!showSuggestion) {
+                    HotReloadSuggestionsHelper.SetSuggestionInactive(HotReloadSuggestionKind.EditorsWithoutHRRunning);
+                    return;
+                }
+                if (!HotReloadState.ShowedEditorsWithoutHR && ServerHealthCheck.I.IsServerHealthy) {
+                    HotReloadSuggestionsHelper.SetSuggestionActive(HotReloadSuggestionKind.EditorsWithoutHRRunning);
+                    HotReloadState.ShowedEditorsWithoutHR = true;
+                }
+            } finally {
+                checkingEditorsWihtoutHR = false;
+                lastCheckedUnityInstances = DateTime.UtcNow;
+            }
         }
 	}
 }

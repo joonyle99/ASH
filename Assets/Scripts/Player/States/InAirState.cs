@@ -36,7 +36,6 @@ public class InAirState : PlayerState, IAttackableState, IJumpableState
         {
             if (Player.CanDash && Player.IsMoveXKey)
             {
-                GetComponent<DashState>().SetDashDir(Player.RawInputs.Movement.x);
                 ChangeState<DashState>();
                 return true;
             }
@@ -54,19 +53,6 @@ public class InAirState : PlayerState, IAttackableState, IJumpableState
                 }
             }
         }
-
-        /*
-        // Change to Dive State
-        //if (Input.GetKeyDown(KeyCode.D) && Player.RawInputs.Movement.y < 0)
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            if (Player.GroundDistance > Player.DiveThreshholdHeight)
-            {
-                ChangeState<DiveState>();
-                return;
-            }
-        }
-        */
 
         // Wall Jump에서 In Air State로 넘어온 경우
         if (Player.IsClimbJump)

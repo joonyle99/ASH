@@ -1,4 +1,4 @@
-public sealed class Turtle : MonsterBehaviour
+public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
 {
     private PreserveState _statePreserver;
 
@@ -8,19 +8,36 @@ public sealed class Turtle : MonsterBehaviour
 
         _statePreserver = GetComponent<PreserveState>();
     }
-    protected override void Start()
+    public void OnSceneContextBuilt()
     {
-        base.Start();
-
         if (_statePreserver)
         {
-            bool isDead = _statePreserver.LoadState("_isDead", IsDead);
+            bool isDead = _statePreserver.LoadState("_isDeadSaved", IsDead);
             if (isDead)
             {
                 Die(false, false);
             }
+
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                RecentDir = _statePreserver.LoadState<int>("_recentDirSaved", DefaultDir);
+            }
         }
+
+        SaveAndLoader.OnSaveStarted += SaveTurtleState;
     }
+    
+    // destroy function
+    private void OnDestroy()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState<int>("_recentDir", RecentDir);
+        }
+
+        SaveAndLoader.OnSaveStarted -= SaveTurtleState;
+    }
+
     public void FixedUpdate()
     {
         if (IsDead)
@@ -35,15 +52,6 @@ public sealed class Turtle : MonsterBehaviour
         {
             if (GroundMovementModule)
                 GroundMovementModule.AffectGravity();
-        }
-    }
-
-    // destroy function
-    private void OnDestroy()
-    {
-        if (_statePreserver)
-        {
-            _statePreserver.SaveState("_isDead", IsDead);
         }
     }
 
@@ -70,5 +78,14 @@ public sealed class Turtle : MonsterBehaviour
 
         // Trigger -> Collision
         SetHitBoxStepable(true);
+    }
+
+    private void SaveTurtleState()
+    {
+        if (_statePreserver)
+        {
+            _statePreserver.SaveState("_isDeadSaved", IsDead);
+            _statePreserver.SaveState("_recentDirSaved", RecentDir);
+        }
     }
 }

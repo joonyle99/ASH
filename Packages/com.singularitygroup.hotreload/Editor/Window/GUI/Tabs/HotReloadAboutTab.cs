@@ -8,7 +8,6 @@ using UnityEditor;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.IO;
-using SingularityGroup.HotReload.Editor.Cli;
 using SingularityGroup.HotReload.Newtonsoft.Json;
 using SingularityGroup.HotReload.EditorDependencies;
 
@@ -48,7 +47,7 @@ namespace SingularityGroup.HotReload.Editor {
         private bool _requestedChangelog;
         private int _changelogRequestAttempt;
         private string _changelogDir = Path.Combine(PackageConst.LibraryCachePath, "changelog.json");
-        public static string logsPath = Path.Combine(CliUtils.GetAppDataPath(), "logs");
+        public static string logsPath = Path.Combine(PackageConst.LibraryCachePath, "logs");
 
         private static bool LatestChangelogLoaded(IReadOnlyList<ChangelogVersion> changelog) {
             return changelog.Any() && changelog[0].versionNum == PackageUpdateChecker.lastRemotePackageVersion;

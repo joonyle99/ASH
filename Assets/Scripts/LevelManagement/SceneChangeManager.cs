@@ -2,7 +2,14 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
+public enum SceneChangeType
+{
+    None = 0,
+    ChangeMap = 1,
+    Loading = 2,
+    StageReset = 3,
+}
 
 /// <summary>
 /// 씬 전환을 담당하는 매니저
@@ -10,7 +17,8 @@ using UnityEngine.SceneManagement;
 ///     -> SceneChangeManager
 ///     -> SceneTransitionPlayer
 ///     -> PlayerableSceneTransitionPlayer
-/// </summary>
+/// </summary> 
+
 public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChangeManager>, ISceneContextBuildListener
 {
     public bool IsChanging { get; private set; }
@@ -18,23 +26,38 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     [SerializeField] private LevelGraphData _levelGraphData;                        // 레벨 그래프
     [SerializeField] private SceneTransitionPlayer _defaultSceneTransitionPlayer;   // 기본적으로 사용할 씬 전환 플레이어 (Either Playable or None Playable)
 
+    private SceneChangeType _sceneChangeType = SceneChangeType.None;
+    public SceneChangeType SceneChangeType
+    {
+        get => _sceneChangeType;
+        set => _sceneChangeType = value;
+    }
+
     private void Start()
     {
-        // 씬 컨텍스트 생성
-        SceneContext sceneContext = FindOrCreateSceneContext();
+        // 정의된 씬에 대해서만 동작한다
 
-        var passagesInCurrentScene = FindObjectsByType<Passage>(FindObjectsSortMode.None);
-        var sceneName = SceneManager.GetActiveScene().name;
-        var firstEntranceName = "Enter " + sceneName;
-        var hasEntrance = passagesInCurrentScene.ToList().Find(passage => passage.PassageName == firstEntranceName);
-        var entranceName = hasEntrance ? firstEntranceName : "";
+        var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-        // 씬 컨텍스트 빌드
-        Result buildResult = sceneContext.BuildPlayable(entranceName);
+        // 씬 컨텍스트는 정의된 씬에서만 생성된다
+        if (GameSceneManager.IsDefinedScene(sceneName))
+        {
+            // 씬 컨텍스트 생성
+            SceneContext sceneContext = FindOrCreateSceneContext();
+
+            var passages = FindObjectsByType<Passage>(FindObjectsSortMode.None);
+            var targetEntranceName = "Enter " + sceneName;
+            var hasEntrance = passages.ToList().Find(passage => passage.PassageName == targetEntranceName);
+            var entranceName = hasEntrance ? targetEntranceName : "";
+
+            // 씬 컨텍스트 빌드
+            Result buildResult = sceneContext.BuildPlayable(entranceName);
+        }
 
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
-
+        
+        // 씬 이름 표시
         GameUIManager.SetSceneNameText(sceneName);
     }
 
@@ -53,7 +76,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     }
     public PassageData GetNextPassageData(string fromPassageName)
     {
-        var fromSceneName = SceneManager.GetActiveScene().name;
+        var fromSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
         var fromPassageData = new PassageData(fromSceneName, fromPassageName);
         var toPassageData = _levelGraphData.GetExitPassageData(fromPassageData);
@@ -83,7 +106,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         yield return new WaitUntil(() => load.isDone);
 
         SceneContext sceneContext = FindOrCreateSceneContext();
-        Result buildResult = sceneContext.BuildPlayable("");                // scene context build
+        Result buildResult = sceneContext.BuildPlayable("");
 
         IsChanging = false;
 
@@ -120,9 +143,8 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
         GameUIManager.SetSceneNameText(sceneName);
     }
-
-    // ISceneContextBuildListener 인터페이스 구현 함수
-    // SceneContext가 DefaultBuild되었을 때 호출되는 함수
+    
+    // SceneContext가 DefaultBuild되었을 때 호출되는 함수 (ISceneContextBuildListener 인터페이스 구현)
     public void OnSceneContextBuilt()
     {
         // 플레이어가 씬의 입구에서 나오는 컷씬을 실행한다

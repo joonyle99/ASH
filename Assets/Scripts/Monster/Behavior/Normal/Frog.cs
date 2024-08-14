@@ -4,8 +4,8 @@ public sealed class Frog : MonsterBehaviour
     {
         base.Awake();
 
-        AnimTransitionEvent -= GroundMoveToOtherCondition;  // Prevent multiple subscriptions (Handler)
-        AnimTransitionEvent += GroundMoveToOtherCondition;
+        AnimTransitionEvent -= HandleGroundedTransition;  // Prevent multiple subscriptions (Handler)
+        AnimTransitionEvent += HandleGroundedTransition;
     }
     public void FixedUpdate()
     {
@@ -33,17 +33,17 @@ public sealed class Frog : MonsterBehaviour
 
         return IAttackListener.AttackResult.Success;
     }
-    private bool GroundMoveToOtherCondition(string targetTransitionParam, Monster_StateBase currentState)
+    private bool HandleGroundedTransition(string targetTransitionParam, Monster_StateBase currentState)
     {
-        if (currentState is GroundMoveState)
-        {
-            // Idle, Attack 상태로 전이할 때는 땅에 착지한 후 전이
-            if (targetTransitionParam is "Idle" or "Attack")
-            {
-                return IsGround;
-            }
-        }
+        // Hurt 애니메이션은 어떠한 상황에서도 즉시 전환
+        if (targetTransitionParam is "Hurt") return true;
 
-        return true;
+        // 땅에 닿을 때까지 애니메이션 전환을 미룸
+        return IsGround;
+    }
+
+    private void OnDestroy()
+    {
+        AnimTransitionEvent -= HandleGroundedTransition;
     }
 }

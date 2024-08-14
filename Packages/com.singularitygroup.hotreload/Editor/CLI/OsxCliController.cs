@@ -95,7 +95,6 @@ namespace SingularityGroup.HotReload.Editor.Cli {
             var executableScriptPath = Path.Combine(Path.GetTempPath(), "Start_HotReloadServer.command");
             // You don't need to copy the cli executable on mac
             // omit hashbang line, let shell use the default interpreter (easier than detecting your default shell beforehand)
-
             File.WriteAllText(executableScriptPath, $"echo $$ > \"{pidFilePath}\"" +
                                                     $"\ncd \"{Environment.CurrentDirectory}\"" + // set cwd because 'open' launches script with $HOME as cwd.
                                                     $"\n\"{executablePath}\" {args.cliArguments} || read");

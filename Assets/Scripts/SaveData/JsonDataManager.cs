@@ -108,17 +108,9 @@ public class SerializableObjectType
 [Serializable]
 public class JsonPersistentData
 {
-    public string _sceneName = "";
-    public string SceneName
-    {
-        get => _sceneName; set => _sceneName = value;
-    }
+    public string SceneName = "";
 
-    public string _passageName = "";
-    public string PassageName
-    {
-        get => _passageName; set => _passageName = value;
-    }
+    public string PassageName = "";
 
     public JsonDataArray<string, JsonDataArray<string, SerializableObjectType>> _jsonDataGroups;
     public JsonDataArray<string, SerializableObjectType> _jsonGlobalDataGroup;
@@ -129,9 +121,9 @@ public class JsonPersistentData
 
         PersistentData persistentData = new PersistentData();
 
-        persistentData._sceneName = jsonPersistentData._sceneName;
+        persistentData.SceneName = jsonPersistentData.SceneName;
 
-        persistentData._passageName = jsonPersistentData._passageName;
+        persistentData.PassageName = jsonPersistentData.PassageName;
 
         Dictionary<string, DataGroup> dataGroups = new();
         for (int i = 0; i < jsonPersistentData._jsonDataGroups.data.Count; i++)
@@ -147,7 +139,7 @@ public class JsonPersistentData
 
             dataGroups.Add(key, dataGroup);
         }
-        persistentData._dataGroups = dataGroups;
+        persistentData.DataGroups = dataGroups;
 
         DataGroup globalDataGroup = new();
         for (int i = 0; i < jsonPersistentData._jsonGlobalDataGroup.data.Count; i++)
@@ -157,15 +149,15 @@ public class JsonPersistentData
 
             globalDataGroup.Add(key, value);
         }
-        persistentData._globalDataGroup = globalDataGroup;
+        persistentData.GlobalDataGroup = globalDataGroup;
 
         return persistentData;
     }
 
     public void PrintData()
     {
-        Debug.Log("Scene Name : " + _sceneName);
-        Debug.Log("Passage Name : " + _passageName);
+        Debug.Log("Scene Name : " + SceneName);
+        Debug.Log("Passage Name : " + PassageName);
         Debug.Log("=============dataGroups============");
         for (int i = 0; i < _jsonDataGroups.data.Count; i++)
         {
@@ -222,14 +214,14 @@ public class JsonDataArray<TKey, TValue>
 
     public void Add(TKey key, TValue value)
     {
-        data.Add(new DataDictionary<TKey, TValue>() { Key = key, Value = value } );
+        data.Add(new DataDictionary<TKey, TValue>() { Key = key, Value = value });
     }
 
     public Dictionary<TKey, TValue> ToDictionary()
     {
         Dictionary<TKey, TValue> dictionaryData = new Dictionary<TKey, TValue>();
 
-        for(int i = 0; i < data.Count; i++)
+        for (int i = 0; i < data.Count; i++)
         {
             dictionaryData.Add(data[i].Key, data[i].Value);
         }
@@ -242,6 +234,18 @@ public class JsonDataArray<TKey, TValue>
 public class SaveData
 {
     public Dictionary<string, string> saveDataGroup = new Dictionary<string, string>();
+
+    public void DebugSaveData()
+    {
+        string message = "Debug - SaveData\n";
+        message += "================================\n";
+        foreach (var saveData in saveDataGroup)
+        {
+            message += saveData.Key + " : " + saveData.Value + "\n";
+        }
+        message += "================================\n";
+        Debug.Log(message);
+    }
 }
 
 public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManager>
@@ -251,7 +255,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     private SaveData _globalSaveData = new SaveData();
     public SaveData GlobalSaveData => Instance._globalSaveData;
 
-    private void Start()
+    protected override void Awake()
     {
         path = Path.Combine(Application.dataPath, "database.json");
         JsonLoad();
@@ -266,15 +270,16 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     // 새로운 데이터 추가시 사용
     public static void Add(string key, string value)
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             return;
         }
 
-        if(Has(key))
+        if (Has(key))
         {
             Set(key, value);
-        } else
+        }
+        else
         {
             Instance._globalSaveData.saveDataGroup.Add(key, value);
         }
@@ -283,7 +288,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     // 들어가있는 데이터 수정시 사용
     public static void Set(string key, string value)
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             return;
         }
@@ -294,7 +299,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     // 데이터가 있는지 비교
     public static bool Has(string key)
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             return false;
         }
@@ -311,7 +316,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
         File.WriteAllText(Instance.path, json);
 
-        Debug.Log("Save Gamedata To Json File");
+        // Debug.Log("Save Gamedata To Json File");
     }
 
     // JSON 파일 불러오기
@@ -333,7 +338,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
             Instance._globalSaveData.saveDataGroup = dataDic;
 
-            Debug.Log("Load Gamedata From Json File");
+            // Debug.Log("Load Gamedata From Json File");
         }
     }
 
@@ -388,7 +393,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
         Dictionary<TKey, TValue> returnDictionary = new Dictionary<TKey, TValue>();
 
-        for(int i = 0; i < dataList.data.Count; i++)
+        for (int i = 0; i < dataList.data.Count; i++)
         {
             DataDictionary<TKey, TValue> dataDictionary = dataList.data[i];
             returnDictionary[dataDictionary.Key] = dataDictionary.Value;
@@ -412,6 +417,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
     /// <summary>
     /// 이 함수 단독으로 사용할 경우 JsonDataManager.JsonSave를 호출해 주어야 함
+    /// ※사용안함
     /// </summary>
     /// <param name="jsonPlayerData"></param>
     public static void SavePlayerData(JsonPlayerData jsonPlayerData)
@@ -420,4 +426,9 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         Add("PlayerData", jsonData);
     }
     #endregion
+
+    public void DebugGlobalSaveData()
+    {
+        _globalSaveData.DebugSaveData();
+    }
 }

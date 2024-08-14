@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public struct InputState
@@ -11,6 +12,7 @@ public struct InputState
     public ActionKey AttackKey;
     public ActionKey ShootingAttackKey;
     public ActionKey LightKey;
+    public ActionKey EscapeKey;
 }
 
 public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
@@ -27,6 +29,20 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 
     private InputState _cachedState;
     public InputState State => _cachedState;
+
+    private Coroutine _inputUpdateCoroutine;
+
+    private void Update()
+    {
+        if(_currentSetter == null)
+        {
+            Debug.Log($"_currentSetter is null");
+            return;
+        }
+
+        _currentSetter.Update();
+        _cachedState = _currentSetter.GetState();
+    }
 
     public void ChangeToDefaultSetter()
     {
@@ -74,13 +90,5 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
             return;
 
         _currentSetter = setter;
-    }
-
-    void Update()
-    {
-        if (_currentSetter is InputSetterScriptableObject currentSetter)
-            currentSetter.Update();
-
-        _cachedState = _currentSetter.GetState();
     }
 }

@@ -1,34 +1,23 @@
-using UnityEngine;
-
 public class Mushroom_Devour : Monster_BodySkill
 {
-    [SerializeField]
-    private CutscenePlayerList _cutscenePlayerList;
-
     protected override void Awake()
     {
         base.Awake();
 
-        if (_cutscenePlayerList)
-        {
-            if (_cutscenePlayerList.FindCutscene("Lighting Guide"))
-            {
-                Debug.Log($"{name} 인스턴스에서 LightCutscene을 등록합니다");
-
-                monsterSkillCutScene -= LightCutscene;
-                monsterSkillCutScene += LightCutscene;
-            }
-        }
+        monsterSkillEvent -= OnMushroomLightGuideEvent;
+        monsterSkillEvent += OnMushroomLightGuideEvent;
     }
 
-    private void LightCutscene()
+    // 머쉬룸 연출 이벤트
+    private void OnMushroomLightGuideEvent()
     {
-        Debug.Log("LightCutscene");
+        CutsceneManager.Instance.PlayMushroomLightGuideCutscene();
 
-        // 컷씬을 재생
-        _cutscenePlayerList.PlayCutscene("Lighting Guide");
+        monsterSkillEvent -= OnMushroomLightGuideEvent;
+    }
 
-        // 이벤트를 한 번만 호출하도록 제거
-        monsterSkillCutScene -= LightCutscene;
+    private void OnDestroy()
+    {
+        monsterSkillEvent -= OnMushroomLightGuideEvent;
     }
 }

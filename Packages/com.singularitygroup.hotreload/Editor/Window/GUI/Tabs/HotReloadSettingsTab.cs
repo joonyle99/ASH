@@ -127,13 +127,13 @@ namespace SingularityGroup.HotReload.Editor {
 
                                     if (EditorWindowHelper.supportsNotifications) {
                                         RenderShowNotifications();
-                                        using (new EditorGUILayout.VerticalScope(paddedStyle ?? (paddedStyle = new GUIStyle { padding = new RectOffset(20, 0, 0, 0) }))) {
-                                            RenderShowPatchingNotifications();
-                                            RenderShowCompilingUnsupportedNotifications();
-                                        }
+                                            using (new EditorGUILayout.VerticalScope(paddedStyle ?? (paddedStyle = new GUIStyle { padding = new RectOffset(20, 0, 0, 0) }))) {
+                                                    RenderShowPatchingNotifications();
+                                                    RenderShowCompilingUnsupportedNotifications();
+                                                }
 
-                                        EditorGUILayout.Space();
-                                    }
+                                            EditorGUILayout.Space();
+                                        }
                                     EditorGUILayout.Space();
                                     using (new EditorGUILayout.HorizontalScope()) {
                                         GUILayout.FlexibleSpace();
@@ -273,7 +273,6 @@ namespace SingularityGroup.HotReload.Editor {
             } else {
                 toggleDescription = "Chosen indications are enabled:";
             }
-
             EditorGUILayout.LabelField(toggleDescription, HotReloadWindowStyles.WrapStyle);
         }
 
@@ -418,9 +417,9 @@ namespace SingularityGroup.HotReload.Editor {
                 string text;
                 var ip = IpHelper.GetIpAddressCached();
                 if (string.IsNullOrEmpty(ip)) {
-                    text = $"If auto-pair fails, find your local IP in OS settings, and use this format to connect: '{{ip}}'";
+                    text = $"If auto-pair fails, find your local IP in OS settings, and use this format to connect: '{{ip}}:{RequestHelper.port}'";
                 } else {
-                    text = $"If auto-pair fails, use this IP to connect: {ip}" +
+                    text = $"If auto-pair fails, use this IP and port to connect: {ip}:{RequestHelper.port}" +
                         "\nMake sure you are on the same LAN/WiFi network";
                 }
                 GUILayout.Label(text, HotReloadWindowStyles.H3TitleWrapStyle);

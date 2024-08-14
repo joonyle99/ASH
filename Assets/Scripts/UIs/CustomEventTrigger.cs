@@ -5,7 +5,6 @@ public class CustomEventTrigger : EventTrigger
 {
     private Animator _animator;
 
-    // 모든 버튼을 하나의 포인터로 제어한다
     public static bool isPointerInside = false;
     public static bool isPointerPressing = false;
 

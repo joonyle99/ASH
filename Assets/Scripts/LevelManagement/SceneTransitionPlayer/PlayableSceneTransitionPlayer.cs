@@ -23,9 +23,9 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     /// <returns></returns>
     public override IEnumerator EnterSceneEffectCoroutine()
     {
-        // Debug.Log($"Enter Scene Effect 시작");
+         //Debug.Log($"Enter Scene Effect 시작");
 
-        // Debug.Log("call EnterSceneEffectCoroutine in PlayableSceneTransitionPlayer");
+         //Debug.Log("call EnterSceneEffectCoroutine in PlayableSceneTransitionPlayer");
 
         StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
 
