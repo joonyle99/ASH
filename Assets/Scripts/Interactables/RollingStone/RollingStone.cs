@@ -75,8 +75,12 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
         // 플레이어가 돌을 직접 미는 경우
         if (isStonePushed)
         {
+            //Debug.Log("============= PUSH =============");
+
             if (!_rollAudio.isPlaying)
             {
+                //Debug.Log("============= PUSH - Start =============");
+
                 _rollAudio.volume = _rollAudioOriginalVolume;
                 _rollAudio.Play();
 
@@ -84,9 +88,13 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
             }
             else
             {
+                //Debug.Log("============= PUSH - IsPlaying =============");
+
                 // 기존 음량으로 설정
                 if (_rollAudioTiming < 1f)
                 {
+                    //Debug.Log("============= PUSH - Init Volume =============");
+
                     _rollAudioTiming = 1f;
                     _rollAudio.volume = _rollAudioOriginalVolume * _rollAudioTiming;
                 }
@@ -95,13 +103,19 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
         // 자연스럽게 서서히 멈추는 경우
         else
         {
+            //Debug.Log("============= NOT PUSH =============");
+
             if (_rollAudio.isPlaying)
             {
+                //Debug.Log("============= NOT PUSH - IsPlaying =============");
+
                 _rollAudioTiming -= Time.deltaTime;
                 _rollAudio.volume = _rollAudioOriginalVolume * _rollAudioTiming;
 
                 if (_rollAudioTiming <= 0f)
                 {
+                    //Debug.Log("============= NOT PUSH - DONE =============");
+
                     _rollAudioTiming = 0f;
                     _rollAudio.Stop();
 
