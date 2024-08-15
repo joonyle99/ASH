@@ -20,7 +20,7 @@ public class SoundList : MonoBehaviour
         }
     }
 
-    public void PlaySFX(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
+    public void PlaySFX(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f, bool isLoop = false)
     {
         if (_soundIndexMap.ContainsKey(key))
         {
@@ -32,7 +32,7 @@ public class SoundList : MonoBehaviour
             }
             else
             {
-                SoundManager.Instance.PlaySFX(sound.Clip, sound.Pitch * pitchMultiplier, sound.Volume * volumeMultiplier);
+                SoundManager.Instance.PlaySFX(sound.Clip, sound.Pitch * pitchMultiplier, sound.Volume * volumeMultiplier, isLoop);
             }
         }
         else

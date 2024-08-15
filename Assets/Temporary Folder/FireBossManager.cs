@@ -3,9 +3,44 @@ using UnityEngine;
 
 public class FireBossManager : MonoBehaviour
 {
+    [SerializeField] private BlazeFire _blazeFire;
+    [SerializeField] private Tornado _tornado;
+
+    [Space]
+
     [SerializeField] private GameObject _invisibleWall_Left;
     [SerializeField] private GameObject _invisibleWall_Right;
 
+    public void PlayerTornadoEffect()
+    {
+        TurnOffBlazeFire();
+
+        TurnOnTornado();
+
+        _tornado.TornadoAnimation();
+    }
+
+    // blaze fire
+    public void TurnOnBlazeFire()
+    {
+        _blazeFire.gameObject.SetActive(true);
+    }
+    public void TurnOffBlazeFire()
+    {
+        _blazeFire.gameObject.SetActive(false);
+    }
+
+    // tonado
+    public void TurnOnTornado()
+    {
+        _tornado.gameObject.SetActive(true);
+    }
+    public void TurnOffTornado()
+    {
+        _tornado.gameObject.SetActive(false);
+    }
+
+    // invisible wall
     public void TurnOnInvisibleWall()
     {
         _invisibleWall_Left.SetActive(true);
@@ -17,27 +52,9 @@ public class FireBossManager : MonoBehaviour
         _invisibleWall_Right.SetActive(false);
     }
 
-    public void SetUpBattle()
-    {
-        // StartCoroutine(SetUpBattleCoroutine());
-
-        // SceneContext.Current.CameraController.ZoomOut(0f);
-    }
-    private IEnumerator SetUpBattleCoroutine()
-    {
-        TurnOnInvisibleWall();
-
-        yield return null;
-
-        // yield return SceneContext.Current.CameraController.ZoomOutCoroutine(-25f);
-        
-        // SetCameraBoundaries();
-    }
-
+    // boundaries
     public void SetCameraBoundaries()
     {
-        Debug.Log($"카메라 바운더리 설정");
-
         // 처음에 게임 오브젝트가 비활성화되어 있으면 Bounds가 유효하지 않기 때문에 여기서 가져온다
         var leftWallCollider = _invisibleWall_Left.GetComponent<BoxCollider2D>();
         var rightWallCollider = _invisibleWall_Right.GetComponent<BoxCollider2D>();
@@ -55,8 +72,22 @@ public class FireBossManager : MonoBehaviour
         SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Right, true, rightValue);
     }
 
+    // rooms
     public void SetCameraRooms()
     {
 
+    }
+
+    public void SetUpBattle()
+    {
+        StartCoroutine(SetUpBattleCoroutine());
+    }
+    private IEnumerator SetUpBattleCoroutine()
+    {
+        SceneContext.Current.CameraController.UpdateScreenSize(15f, 2f);
+
+        yield return new WaitUntil(() => SceneContext.Current.CameraController.IsUpdateFinished);
+
+        SetCameraBoundaries();
     }
 }

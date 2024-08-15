@@ -8,8 +8,9 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
 {
     [SerializeField] private GameObject _soundListParent;
 
-    [SerializeField] private AudioSource _sfxPlayer;
     [SerializeField] private AudioSource _bgmPlayer;
+    [SerializeField] private AudioSource _sfxPlayer;
+    [SerializeField] private AudioSource _sfxLoopPlayer;
 
     [SerializeField] private AudioMixer _audioMixer;
 
@@ -17,7 +18,8 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
 
     private SoundList[] _soundLists; // ui, bgm, gimmick ...
     private Dictionary<string, int> _soundListIndexMap = new();
-    private Dictionary<int, AudioSource> _pitchedAudioSources = new();
+    private Dictionary<int, AudioSource> _pitchedAudioSources1 = new();
+    private Dictionary<int, AudioSource> _pitchedAudioSources2 = new();
 
     protected override void Awake()
     {
@@ -36,7 +38,8 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
             }
         }
 
-        _pitchedAudioSources[1 * PitchPrecision] = _sfxPlayer;
+        _pitchedAudioSources1[1 * PitchPrecision] = _sfxPlayer;
+        _pitchedAudioSources2[1 * PitchPrecision] = _sfxLoopPlayer;
     }
     protected void Start()
     {
@@ -88,22 +91,50 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     }
 
     // play sound
-    public void PlaySFX(SoundClipData soundData, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
+    public void PlaySFX(SoundClipData soundData, float pitchMultiplier = 1f, float volumeMultiplier = 1f, bool isLoop = false)
     {
-        PlaySFX(soundData.Clip, soundData.Pitch * pitchMultiplier, soundData.Volume * volumeMultiplier);
+        PlaySFX(soundData.Clip, soundData.Pitch * pitchMultiplier, soundData.Volume * volumeMultiplier, isLoop);
     }
-    public void PlaySFX(AudioClip clip, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
+    public void PlaySFX(AudioClip clip, float pitchMultiplier = 1f, float volumeMultiplier = 1f, bool isLoop = false)
     {
         if (pitchMultiplier < 0)
             pitchMultiplier = 0.001f;
-        int pitch = Mathf.RoundToInt(pitchMultiplier * PitchPrecision);
-        if (!_pitchedAudioSources.ContainsKey(pitch))
-        {
-            _pitchedAudioSources[pitch] = _sfxPlayer.AddComponent<AudioSource>();
-            _pitchedAudioSources[pitch].pitch = (float)pitch / PitchPrecision;
-        }
 
-        _pitchedAudioSources[pitch].PlayOneShot(clip, volumeMultiplier);
+        int pitch = Mathf.RoundToInt(pitchMultiplier * PitchPrecision);
+
+        if (isLoop)
+        {
+            if (!_pitchedAudioSources2.ContainsKey(pitch))
+            {
+                _pitchedAudioSources2[pitch] = _sfxLoopPlayer.AddComponent<AudioSource>();
+                _pitchedAudioSources2[pitch].pitch = (float)pitch / PitchPrecision;
+            }
+
+            if(clip == _sfxLoopPlayer.clip)
+            {
+                Debug.Log($"Already Playing this Audio Clip" +
+                                 $"\n" +
+                                 $"New Audio Source: {clip.name}" +
+                                 $"\n" +
+                                 $"Old Audio Source: {_sfxLoopPlayer.clip}");
+                return;
+            }
+
+            _pitchedAudioSources2[pitch].Stop();
+            _pitchedAudioSources2[pitch].clip = clip;
+            _pitchedAudioSources2[pitch].volume = volumeMultiplier;
+            _pitchedAudioSources2[pitch].Play();
+        }
+        else
+        {
+            if (!_pitchedAudioSources1.ContainsKey(pitch))
+            {
+                _pitchedAudioSources1[pitch] = _sfxPlayer.AddComponent<AudioSource>();
+                _pitchedAudioSources1[pitch].pitch = (float)pitch / PitchPrecision;
+            }
+
+            _pitchedAudioSources1[pitch].PlayOneShot(clip, volumeMultiplier);
+        }
     }
     public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f)
     {
@@ -176,6 +207,13 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     public void StopBGM()
     {
         _bgmPlayer.Stop();
+    }
+    public void StopLoopSFX()
+    {
+        foreach (var audioSource in _pitchedAudioSources2.Values)
+        {
+            audioSource.Stop();
+        }
     }
     public void StopBGMFade(float duration)
     {

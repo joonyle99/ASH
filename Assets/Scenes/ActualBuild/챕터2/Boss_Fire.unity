@@ -691,39 +691,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
   m_PrefabInstance: {fileID: 1385450778}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &395274776 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2968891389422588864, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+--- !u!114 &395274781 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 395274781, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
   m_PrefabInstance: {fileID: 8645362315936482322}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &395274780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 395274776}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _soundDatas:
-  - _key: Blaze
-    _clip: {fileID: 8300000, guid: 6facc8ce875683e44a05c755e78e1490, type: 3}
-    _volumeType: 0
-    _volumeA: 1
-    _volumeB: 0
-    _pitchType: 0
-    _pitchA: 1
-    _pitchB: 0
---- !u!114 &395274781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 395274776}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a3e021f79b2d264ba6a1f42b15252f7, type: 3}
@@ -1074,6 +1047,17 @@ Transform:
   m_Father: {fileID: 1393437006}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &640674566 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8953982496309006690, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+  m_PrefabInstance: {fileID: 8645362315936482322}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc7229e954f3bb4baf04db3050b65cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &643067383 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
@@ -2116,7 +2100,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: -342.86624
+      value: -397.4683
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
@@ -3334,6 +3318,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd80839e806c634491b87f27d733c53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _blazeFire: {fileID: 395274781}
+  _tornado: {fileID: 640674566}
   _invisibleWall_Left: {fileID: 819395320}
   _invisibleWall_Right: {fileID: 2038152449}
 --- !u!1 &1420499251
@@ -3447,7 +3433,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428433873}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -115.1, y: -48.8, z: 0}
+  m_LocalPosition: {x: -109.99, y: -48.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3700,18 +3686,39 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - _type: 4
+  - _type: 7
     DialogueData: {fileID: 11400000, guid: b248f9ee82e356f40846fb073d9bd4d2, type: 2}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
-    Time: 3
+    Time: 0
     InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
     Function:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: BlackPanther, Assembly-CSharp
-          m_MethodName: StartAttack
+        - m_Target: {fileID: 1396333665}
+          m_TargetAssemblyTypeName: FireBossManager, Assembly-CSharp
+          m_MethodName: PlayerTornadoEffect
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _type: 4
+    DialogueData: {fileID: 11400000, guid: b248f9ee82e356f40846fb073d9bd4d2, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 5
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1206468219}
+          m_TargetAssemblyTypeName: MonsterBlocking, Assembly-CSharp
+          m_MethodName: EndBlocking
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -3767,7 +3774,7 @@ MonoBehaviour:
     DialogueData: {fileID: 11400000, guid: b248f9ee82e356f40846fb073d9bd4d2, type: 2}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
-    Time: 0.7
+    Time: 1
     InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
     Function:
       m_PersistentCalls:
@@ -5720,7 +5727,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 643434365837365631, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_RootOrder
@@ -5728,11 +5735,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -117.01779
+      value: -117.58132
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -54.28978
+      value: -50.447315
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5770,18 +5777,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
-    - target: {fileID: 7404777760962103530, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
-      propertyPath: UseLeftBoundary
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7404777760962103530, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
-      propertyPath: UseRightBoundary
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7404777760962103530, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
-      propertyPath: UseNumericBoundaries
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
 --- !u!4 &2124024019 stripped
@@ -5807,30 +5802,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1364081425}
     m_Modifications:
-    - target: {fileID: 2968891389422588864, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
-      propertyPath: m_Name
-      value: Blaze Fire
-      objectReference: {fileID: 0}
-    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
-      propertyPath: _soundDatas.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
-      propertyPath: _soundDatas.Array.data[1]._key
-      value: Blaze
-      objectReference: {fileID: 0}
-    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
-      propertyPath: _soundDatas.Array.data[1]._clip
-      value: 
-      objectReference: {fileID: 8300000, guid: 6facc8ce875683e44a05c755e78e1490, type: 3}
-    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
-      propertyPath: _soundDatas.Array.data[1]._pitchA
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
-      propertyPath: _soundDatas.Array.data[1]._volumeA
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8645362316816253101, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
       propertyPath: m_Name
       value: Prefab_Fire

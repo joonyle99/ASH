@@ -11,11 +11,11 @@ public class BlazeFire : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        _soundList.PlaySFX("Blaze", 1f, 1f, true);
     }
 
     private void OnDisable()
     {
-
+        SoundManager.Instance.StopLoopSFX();
     }
 }

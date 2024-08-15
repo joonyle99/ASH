@@ -5033,9 +5033,11 @@ GameObject:
   - component: {fileID: 1755664024489909281}
   - component: {fileID: 3454969779665261444}
   - component: {fileID: 582780729851160398}
+  - component: {fileID: 7477725863984319258}
   - component: {fileID: 8953982496309006690}
+  - component: {fileID: 640674569}
   m_Layer: 19
-  m_Name: TornadoCore
+  m_Name: Tornado
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5050,7 +5052,7 @@ Transform:
   m_GameObject: {fileID: 1375444568842372763}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.3, y: 2.3, z: 2.3}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5550379080094522760}
@@ -5106,6 +5108,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &7477725863984319258
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1375444568842372763}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b948f0b579773964486d4c9915bfc40b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8953982496309006690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5118,6 +5141,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cc7229e954f3bb4baf04db3050b65cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &640674569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1375444568842372763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: Tornado
+    _clip: {fileID: 8300000, guid: 5bf822feb8cc87348bd2c2a9207e91f9, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!1 &1608491259855054180
 GameObject:
   m_ObjectHideFlags: 0
@@ -14910,9 +14954,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4142399880987041696}
   - component: {fileID: 6504916685964290954}
+  - component: {fileID: 395274781}
   - component: {fileID: 6319124883252683011}
+  - component: {fileID: 395274780}
   m_Layer: 19
-  m_Name: Fire
+  m_Name: Blaze Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19656,6 +19702,18 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &395274781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2968891389422588864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3e021f79b2d264ba6a1f42b15252f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!199 &6319124883252683011
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -19728,6 +19786,27 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &395274780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2968891389422588864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: Blaze
+    _clip: {fileID: 8300000, guid: 6facc8ce875683e44a05c755e78e1490, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!1 &5550379080094522758
 GameObject:
   m_ObjectHideFlags: 0

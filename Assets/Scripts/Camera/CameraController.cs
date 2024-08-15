@@ -45,6 +45,8 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     private ProCamera2DNumericBoundaries _boundariesComponent;
     private ProCamera2DRooms _roomsComponent;
 
+    public bool IsUpdateFinished { get; private set; }
+
     public float OffsetX
     {
         get => _proCamera.OffsetX;
@@ -82,9 +84,17 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
             //   |                 |
             // (0,0)-------------(1,0)
         };
+
+        _proCamera.OnUpdateScreenSizeFinished -= OnUpdateFinished;
+        _proCamera.OnUpdateScreenSizeFinished += OnUpdateFinished;
+    }
+    private void Update()
+    {
+
     }
     private void LateUpdate()
     {
+        /*
         for (int i = 0; i < 4; i++)
         {
             // ºäÆ÷Æ® ÁÂÇ¥(ÁÂÇÏ´Ü, ¿ìÇÏ´Ü, ¿ì»ó´Ü, ÁÂ»ó´Ü)¸¦ ¿ùµå ÁÂÇ¥·Î º¯È¯
@@ -107,6 +117,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
             Debug.DrawLine(TopMiddle, TopMiddle + Vector3.forward, Color.blue);
             Debug.DrawLine(BottomMiddle, BottomMiddle + Vector3.forward, Color.yellow);
         }
+        */
+    }
+    private void OnDestroy()
+    {
+        _proCamera.OnUpdateScreenSizeFinished -= OnUpdateFinished;
     }
 
     // settings
@@ -273,6 +288,18 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
 
     // effect: zoom
+    public void UpdateScreenSize(float target, float duration = 2f)
+    {
+        IsUpdateFinished = false;
+        _proCamera.UpdateScreenSize(target, duration);
+    }
+    public void OnUpdateFinished(float t)
+    {
+        Debug.Log("OnUpdateFinished");
+        IsUpdateFinished = true;
+    }
+
+    /*
     public void ZoomOut(float target)
     {
         StartCoroutine(ZoomOutCoroutine(target));
@@ -296,6 +323,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
         _proCamera.transform.position = new Vector3(_proCamera.transform.position.x, _proCamera.transform.position.y, target);
     }
+    */
 
     // effect: zoom to fit targets
     public void TurnOnZoomToFitTargets()
