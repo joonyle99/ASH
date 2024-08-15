@@ -1,78 +1,59 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// SoundClipData(Key, Clip, Volume, Pitch ..) 를 담아두고 관리한다
+/// </summary>
 public class SoundList : MonoBehaviour
 {
-    [SerializeField] List<SoundClipData> _soundDatas;
-
+    [SerializeField] private List<SoundClipData> _soundDatas;
     public List<SoundClipData> Datas => _soundDatas;
 
-    Dictionary<string, int> _soundMap = new Dictionary<string, int>();
+    // 사운드 클립 데이터 '리스트'에 O(1)로 접근하기 위한 딕셔너리
+    private Dictionary<string, int> _soundIndexMap = new();
 
     private void Awake()
     {
-        for(int i=0; i<_soundDatas.Count; i++)
+        for (int index = 0; index < _soundDatas.Count; index++)
         {
-            _soundMap[_soundDatas[i].Key] = i;
+            _soundIndexMap[_soundDatas[index].Key] = index;
         }
     }
 
-    public void PlayDefaultSFX(string key)
+    public void PlaySFX(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
-        if (_soundMap.ContainsKey(key))
+        if (_soundIndexMap.ContainsKey(key))
         {
-            var sound = _soundDatas[_soundMap[key]];
+            var index = _soundIndexMap[key];
+            var sound = _soundDatas[index];
             if (sound.Clip == null)
+            {
                 Debug.LogWarning("No clip for: " + key);
+            }
             else
-                SoundManager.Instance.PlaySFXPitched(sound.Clip, sound.Pitch, sound.Volume);
+            {
+                SoundManager.Instance.PlaySFX(sound.Clip, sound.Pitch * pitchMultiplier, sound.Volume * volumeMultiplier);
+            }
         }
         else
         {
-            SoundManager.Instance.PlayCommonSFXPitched(key);
-        }
-    }
-    public void PlaySFX(string key, float volumeMultiplier = 1f)
-    {
-        if(_soundMap.ContainsKey(key))
-        {
-            var sound = _soundDatas[_soundMap[key]];
-            if (sound.Clip == null)
-                Debug.LogWarning("No clip for: " + key);
-            else
-                SoundManager.Instance.PlaySFXPitched(sound.Clip, sound.Pitch, sound.Volume * volumeMultiplier);
-        }
-        else
-        {
-            SoundManager.Instance.PlayCommonSFXPitched(key, 1, volumeMultiplier);
-        }
-    }
-    public void PlaySFXPitched(string key, float pitchMultiplier, float volumeMultiplier = 1f)
-    {
-        if (_soundMap.ContainsKey(key))
-        {
-            var sound = _soundDatas[_soundMap[key]];
-            if (sound.Clip == null)
-                Debug.LogWarning("No clip for: " + key);
-            else
-                SoundManager.Instance.PlaySFXPitched(sound.Clip, sound.Pitch * pitchMultiplier, sound.Volume * volumeMultiplier);
-        }
-        else
-        {
-            SoundManager.Instance.PlayCommonSFXPitched(key, pitchMultiplier, volumeMultiplier);
+            SoundManager.Instance.PlayCommonSFX(key, pitchMultiplier, volumeMultiplier);
         }
     }
     public void PlayBGM(string key, float volumeMultiplier = 1f)
     {
-        if (_soundMap.ContainsKey(key))
+        if (_soundIndexMap.ContainsKey(key))
         {
-            var sound = _soundDatas[_soundMap[key]];
+            var index = _soundIndexMap[key];
+            var sound = _soundDatas[index];
             if (sound.Clip == null)
+            {
                 Debug.LogWarning("No clip for: " + key);
+            }
             else
+            {
                 SoundManager.Instance.PlayBGM(sound.Clip, sound.Volume * volumeMultiplier);
+            }
         }
         else
         {
@@ -82,6 +63,6 @@ public class SoundList : MonoBehaviour
 
     public bool Exists(string key)
     {
-        return _soundDatas.Exists(x=>x.Key == key);
+        return _soundDatas.Exists(x => x.Key == key);
     }
 }

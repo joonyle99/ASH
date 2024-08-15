@@ -28,9 +28,11 @@ public class DoorOpenAnimation : MonoBehaviour
         SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);
         _dustParticle.Play();
         StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open_Low", _preheatSoundInterval, _preheadSoundRepeat));
+        Debug.Log("SE_LightDoor_Open_Low");
         yield return new WaitForSeconds(_doorOpenDelay);
         _animator.SetTrigger("Open");
         StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open", _openSoundInterval, _openSoundRepeat));
+        Debug.Log("SE_LightDoor_Open");
         yield return new WaitForSeconds(_stopShakeTiming);
         _dustParticle.Stop();
         SceneEffectManager.Instance.Camera.StopConstantShake();

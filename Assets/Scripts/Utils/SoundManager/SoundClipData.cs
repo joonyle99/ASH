@@ -44,7 +44,6 @@ public class SoundClipData
     [SerializeField][HideInInspector] SelectionType _pitchType;
     [SerializeField][HideInInspector] float _pitchA = 1;
     [SerializeField][HideInInspector] float _pitchB = 1;
-
 }
 
 #if UNITY_EDITOR

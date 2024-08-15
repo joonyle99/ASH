@@ -51,7 +51,7 @@ public class PrologueManager : MonoBehaviour
             yield return PlayScript(script);
             yield return FadeInProceedText();
             yield return new WaitUntil(() => Input.anyKeyDown);
-            SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Button");
+            SoundManager.Instance.PlayCommonSFX("SE_UI_Button");
 
             Color color = _proceedText.color;
             color.a = 0;

@@ -10,6 +10,7 @@ public class DebugBehavior : MonoBehaviour
 #if UNITY_EDITOR
 
     public LayerMask TargetLayer;
+    public MonoScript TargetMono;
 
     void Update()
     {
@@ -52,6 +53,7 @@ public class DebugBehaviorEditor : Editor
 {
     private DebugBehavior refDebugBehavior;
     private SerializedProperty targetLayerProperty;
+    private SerializedProperty targetMonoProperty;
 
     /// <summary>
     /// 해당 컴포넌트가 에디터에 표시될 때 호출되는 콜백 함수
@@ -62,6 +64,7 @@ public class DebugBehaviorEditor : Editor
 
         // 직렬화된 오브젝트로 프로퍼티를 저장한다. (Generic한 데이터)
         targetLayerProperty = serializedObject.FindProperty(nameof(DebugBehavior.TargetLayer));
+        targetMonoProperty = serializedObject.FindProperty(nameof(DebugBehavior.TargetMono));
     }
 
     public override void OnInspectorGUI()
@@ -98,6 +101,19 @@ public class DebugBehaviorEditor : Editor
             if (GUILayout.Button("Calculate Frustum Intersection"))
             {
                 CalcFrustumIntersection();
+            }
+
+            EditorGUILayout.Space(10);
+        }
+
+        // Find All Objects has MonoScript
+        {
+            EditorGUILayout.LabelField("Objects has MonoScript", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(targetMonoProperty);
+            if (GUILayout.Button("Find All Objects has MonoScript"))
+            {
+                MonoScript targetMono = targetMonoProperty.objectReferenceValue as MonoScript;
+                FindAllObjectsHasMono(targetMono);
             }
         }
 
@@ -177,6 +193,17 @@ public class DebugBehaviorEditor : Editor
             intersectionPoints[i] = mainCamera.transform.position + newDirection;
 
             Debug.DrawLine(mainCamera.transform.position, intersectionPoints[i], Color.cyan, 5f);
+        }
+    }
+
+    private void FindAllObjectsHasMono(MonoScript monoScript)
+    {
+        var monoScriptClass = monoScript.GetClass();
+        var allObjects = FindObjectsOfType<GameObject>();
+        foreach (var obj in allObjects)
+        {
+            if (obj.GetComponent(monoScriptClass) != null)
+                Debug.Log($"<color=orange><b>{obj.name}</b></color>", obj.gameObject);
         }
     }
 }

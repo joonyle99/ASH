@@ -80,7 +80,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
             yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
 
-            SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+            SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
 
             #endregion
 
@@ -125,7 +125,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                         yield return new WaitUntil(() => isClicked);
 
                         // 퀘스트 응답 종료 사운드 재생
-                        SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+                        SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
                     }
                 }
             }
@@ -167,7 +167,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             return;
         }
 
-        SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Select");
+        SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
 
         if (_currentDialogueData.InputSetter != null)
             InputManager.Instance.ChangeToDefaultSetter();

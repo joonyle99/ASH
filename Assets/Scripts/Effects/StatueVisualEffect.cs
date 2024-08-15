@@ -153,7 +153,7 @@ public class StatueVisualEffect : MonoBehaviour
             string key = "SE_Point_Save";
             if (_soundList.Exists(key))
             {
-                _soundList.PlaySFX(key, 5);
+                _soundList.PlaySFX(key, 1f, 5f);
             }
             else
                 Debug.Log("SE_Point_Save Audio Clip not found");

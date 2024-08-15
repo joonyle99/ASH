@@ -691,6 +691,44 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
   m_PrefabInstance: {fileID: 1385450778}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &395274776 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2968891389422588864, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+  m_PrefabInstance: {fileID: 8645362315936482322}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &395274780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395274776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soundDatas:
+  - _key: Blaze
+    _clip: {fileID: 8300000, guid: 6facc8ce875683e44a05c755e78e1490, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
+--- !u!114 &395274781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395274776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a3e021f79b2d264ba6a1f42b15252f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &397181192
 GameObject:
   m_ObjectHideFlags: 0
@@ -2078,7 +2116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: -311.47006
+      value: -342.86624
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
@@ -5690,11 +5728,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -117.25
+      value: -117.01779
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -57.150024
+      value: -54.28978
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5769,6 +5807,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1364081425}
     m_Modifications:
+    - target: {fileID: 2968891389422588864, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: m_Name
+      value: Blaze Fire
+      objectReference: {fileID: 0}
+    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _soundDatas.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _soundDatas.Array.data[1]._key
+      value: Blaze
+      objectReference: {fileID: 0}
+    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _soundDatas.Array.data[1]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6facc8ce875683e44a05c755e78e1490, type: 3}
+    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _soundDatas.Array.data[1]._pitchA
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7060576336642996963, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _soundDatas.Array.data[1]._volumeA
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8645362316816253101, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
       propertyPath: m_Name
       value: Prefab_Fire

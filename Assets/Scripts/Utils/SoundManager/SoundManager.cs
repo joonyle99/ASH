@@ -88,11 +88,11 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     }
 
     // play sound
-    public void PlaySFX(SoundClipData soundData, float volumeMultiplier = 1f)
+    public void PlaySFX(SoundClipData soundData, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
-        PlaySFXPitched(soundData.Clip, soundData.Pitch, volumeMultiplier);
+        PlaySFX(soundData.Clip, soundData.Pitch * pitchMultiplier, soundData.Volume * volumeMultiplier);
     }
-    public void PlaySFXPitched(AudioClip clip, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
+    public void PlaySFX(AudioClip clip, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
         if (pitchMultiplier < 0)
             pitchMultiplier = 0.001f;
@@ -101,16 +101,13 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
         {
             _pitchedAudioSources[pitch] = _sfxPlayer.AddComponent<AudioSource>();
             _pitchedAudioSources[pitch].pitch = (float)pitch / PitchPrecision;
-            //_pitchedAudioSources[pitch].spatialBlend = 1f;
-            //_pitchedAudioSources[pitch].minDistance = 5f;
-            //_pitchedAudioSources[pitch].maxDistance = 30f;
         }
 
-        _pitchedAudioSources[pitch].PlayOneShot(clip, volumeMultiplier);        // 새로운 사운드 출력
+        _pitchedAudioSources[pitch].PlayOneShot(clip, volumeMultiplier);
     }
-    public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f, bool replayIfSameClip = false)
+    public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f)
     {
-        if (!replayIfSameClip && clip == _bgmPlayer.clip)
+        if (clip == _bgmPlayer.clip)
         {
             Debug.Log($"Already Playing this Audio Clip" +
                              $"\n" +
@@ -126,12 +123,12 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
         _bgmPlayer.Play();
     }
 
-    // play common sound (searching in sound list)
-    public void PlayCommonSFXPitched(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
+    // play common sound (searching in sound list which sound manager has)
+    public void PlayCommonSFX(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
         if (_soundListIndexMap.ContainsKey(key))
         {
-            _soundLists[_soundListIndexMap[key]].PlaySFXPitched(key, pitchMultiplier, volumeMultiplier);
+            _soundLists[_soundListIndexMap[key]].PlaySFX(key, pitchMultiplier, volumeMultiplier);
         }
         else
         {

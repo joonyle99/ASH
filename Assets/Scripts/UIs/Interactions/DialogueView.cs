@@ -142,7 +142,7 @@ public class DialogueView : MonoBehaviour
                 _dialogue.text = stringBuilder.ToString();      // 현재까지의 stringBuilder를 텍스트로 출력
 
                 // 글자 출력 사운드 재생
-                SoundManager.Instance.PlayCommonSFXPitched("SE_UI_Script" + UnityEngine.Random.Range(1, 6).ToString());
+                SoundManager.Instance.PlayCommonSFX("SE_UI_Script" + UnityEngine.Random.Range(1, 6).ToString());
             }
 
             // 다음 글자로 이동
