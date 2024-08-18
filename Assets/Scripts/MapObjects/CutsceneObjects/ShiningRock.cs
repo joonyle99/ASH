@@ -24,18 +24,18 @@ public class ShiningRock : InteractableObject, IAttackListener
     {
         if (!_hasPlayedDialogue)
         {
-            DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract);                // 거기 누구 있어?
+            DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract, false, !InteractAtFirst);                // 거기 누구 있어?
             _hasPlayedDialogue = true;
             _isHittable = true;
         }
         else
         {
             if (_hp == 3)
-                DialogueController.Instance.StartDialogue(_dialogueAfterSecondAttack);          // 물리적인 공격으로 부서질 거 같아
+                DialogueController.Instance.StartDialogue(_dialogueAfterSecondAttack, false, !InteractAtFirst);          // 물리적인 공격으로 부서질 거 같아
             else if (_hp == 2)
-                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);      // 곧 부서질 거 같아
+                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract, false, !InteractAtFirst);      // 곧 부서질 거 같아
             else if (_hp == 1)
-                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract);      // 곧 부서질 거 같아
+                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract, false, !InteractAtFirst);      // 곧 부서질 거 같아
         }
     }
 
@@ -57,7 +57,7 @@ public class ShiningRock : InteractableObject, IAttackListener
 
         if (_hp == 2)
         {
-            DialogueController.Instance.StartDialogue(_dialogueOnFirstAttack);                  // 어 부서지는 소리가 들려
+            DialogueController.Instance.StartDialogue(_dialogueOnFirstAttack, false, !InteractAtFirst);                  // 어 부서지는 소리가 들려
         }
         else if (_hp == 0)
         {

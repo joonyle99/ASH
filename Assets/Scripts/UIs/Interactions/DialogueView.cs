@@ -18,6 +18,7 @@ public class DialogueView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _dialogue;
     [SerializeField] private TextMeshProUGUI _speaker;
     [SerializeField] private Image _indicator;
+    [SerializeField] private Button _skipButton;
 
     [Tooltip("스테이지 리셋(수락, 거절) 응답 패널")]
     [SerializeField] private ResponsePanel _responsePanel;
@@ -34,13 +35,15 @@ public class DialogueView : MonoBehaviour
     public bool IsDialoguePanelActive => _dialoguePanel.gameObject.activeInHierarchy;
 
     /// <summary> 다이얼로그 뷰 UI 초기화 및 패널 열기 </summary>
-    public void OpenPanel()
+    public void OpenPanel(bool canSkip = false)
     {
         _dialogue.text = "";
         _speaker.text = "";
         _indicator.gameObject.SetActive(false);
         _responsePanel.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
+        _skipButton.gameObject.SetActive(canSkip);
+        Debug.Log(canSkip);
         _textShaker = _dialogue.GetComponent<TextShaker>();
     }
     /// <summary> 다이얼로그 뷰 UI 패널 닫기 </summary>
