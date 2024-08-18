@@ -16,12 +16,15 @@ public class DieState : PlayerState
     [SerializeField] private float _moveUpDistance = 4f;
     [SerializeField] private float _stayInAirDuration = 0.3f;
 
+    public Coroutine DieEnterCoroutine;
+
     protected override bool OnEnter()
     {
-        StartCoroutine(EnterCoroutine());
+        DieEnterCoroutine = StartCoroutine(EnterCoroutine());
 
         return true;
     }
+
     protected override bool OnUpdate()
     {
         return true;
@@ -69,6 +72,8 @@ public class DieState : PlayerState
         passageName = passageName == "" ? SceneContext.Current.EntrancePassage.PassageName : passageName;
 
         SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+
+        DieEnterCoroutine = null;
     }
 
     private IEnumerator MoveUpEffectCoroutine()

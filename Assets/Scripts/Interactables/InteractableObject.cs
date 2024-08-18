@@ -18,7 +18,7 @@ public enum InteractionStateChangeType
 /// <summary>
 /// 플레이어와 상호작용이 가능한 오브젝트
 /// </summary>
-public abstract class InteractableObject : MonoBehaviour
+public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildListener
 {
     #region Variable
 
@@ -45,6 +45,8 @@ public abstract class InteractableObject : MonoBehaviour
 
     public InteractionAnimationType AnimationType => _animationType;
     public InteractionStateChangeType StateChange => _stateChange;
+
+    private bool _interactAtFirst = false;
 
     public Vector3 InteractionMarkerPoint
     {
@@ -108,6 +110,11 @@ public abstract class InteractableObject : MonoBehaviour
         Player.PlayerInteractionController.OnPlayerInteractionExit();     // 플레이어에게 상호작용 종료를 알린다
     }
 
+    public void OnSceneContextBuilt()
+    {
+
+    }
+
     protected virtual void OnDestroy()
     {
         if (IsInteracting)
@@ -115,6 +122,5 @@ public abstract class InteractableObject : MonoBehaviour
             ExitInteraction();
         }
     }
-
     #endregion
 }

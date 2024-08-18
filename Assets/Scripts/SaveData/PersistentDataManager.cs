@@ -373,6 +373,15 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
      */
     public static bool LoadToSavedData()
     {
+        if(SceneContext.Current.Player.CurrentStateIs<DieState>())
+        {
+            Coroutine playerDieEnterCoroutine = ((DieState)SceneContext.Current.Player.CurrentState).DieEnterCoroutine;
+            if (playerDieEnterCoroutine != null)
+            {
+                Instance.StopCoroutine(playerDieEnterCoroutine);
+            }
+        }
+
         JsonDataManager.JsonLoad();
         Instance._savedPersistentData = JsonDataManager.GetObjectInGlobalSaveData<JsonPersistentData>("PersistentData");
 

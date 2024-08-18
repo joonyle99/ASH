@@ -134,6 +134,11 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         yield return new WaitUntil(() => load.isDone);
 
+        if(Time.timeScale != 0)
+        {
+            Time.timeScale = 1;
+        }
+
         SceneContext sceneContext = FindOrCreateSceneContext();
         Result buildResult = sceneContext.BuildPlayable(entranceName);      // scene context build
 
