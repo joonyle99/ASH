@@ -44,11 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08635833dea113e4b83ce529e1eef7ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxRepeatCount: 2
+  _maxRepeatCount: 5
   _currentRepeatCount: 0
   _monsterQuest:
     _monsterKilled: 0
-    _killGoal: 5
+    _killGoal: 1
     _reward:
       m_PersistentCalls:
         m_Calls:
@@ -59,7 +59,7 @@ MonoBehaviour:
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 5
+            m_IntArgument: 2
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
@@ -228,16 +228,30 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 46f556cc52e4c12429577d9fad7fb88c, type: 2}
   - Key: Rejection
     Value: {fileID: 11400000, guid: 1415deb965698ad4bba3e2693d0adeae, type: 2}
-  - Key: Completion
+  - Key: Completion 1
     Value: {fileID: 11400000, guid: cba40d1259f0c1a4b91ee8c72fa61bc7, type: 2}
+  - Key: Completion 2
+    Value: {fileID: 11400000, guid: f39c7e468be8f9c4dbdc38e77ce7d9f4, type: 2}
+  - Key: Completion 3
+    Value: {fileID: 11400000, guid: 446a6e9697beadb41881de8b3f0f68ae, type: 2}
+  - Key: Completion 4
+    Value: {fileID: 11400000, guid: a985d2008066df34b921da7513cf223e, type: 2}
+  - Key: Completion 5
+    Value: {fileID: 11400000, guid: 0183b212519e2b04ca27ad4dd00a2d92, type: 2}
   - Key: Not Yet Completion
     Value: {fileID: 11400000, guid: ffa95a68d517cb84aa764aaded7de89a, type: 2}
-  - Key: Re-request
-    Value: {fileID: 11400000, guid: b15a49c09956878438120f8684ea327b, type: 2}
-  - Key: Re-request After Rejection
-    Value: {fileID: 11400000, guid: c07a418679885f644a05d883401e3342, type: 2}
   - Key: Final Completion
     Value: {fileID: 11400000, guid: 48aaace2ea2b8ee49b2d45eff93940fb, type: 2}
+  - Key: Re-request 1
+    Value: {fileID: 11400000, guid: b15a49c09956878438120f8684ea327b, type: 2}
+  - Key: Re-request 2
+    Value: {fileID: 11400000, guid: 51b10d7fac784634787ec0aff98308b7, type: 2}
+  - Key: Re-request 3
+    Value: {fileID: 11400000, guid: 8b265860f18f0c2439298352e987663f, type: 2}
+  - Key: Re-request 4
+    Value: {fileID: 11400000, guid: 15e9975d62fd58a4d80e6cf5e4e42340, type: 2}
+  - Key: Re-request After Rejection
+    Value: {fileID: 11400000, guid: c07a418679885f644a05d883401e3342, type: 2}
   _questData: {fileID: 3367403295158625857}
 --- !u!1001 &431982738041336752
 PrefabInstance:

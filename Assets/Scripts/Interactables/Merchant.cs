@@ -37,15 +37,14 @@ public class Merchant : InteractableObject
             yield break;
         }
 
-        // TODO: StartDialogueCoroutine를 중간에 Stop (스킵 기능 사용) 하면 문제가 생길 수도 있다.
-        // 이를 해결해야 한다.
-
-        // 퀘스트 완료 프로세스
+        // 퀘스트 활성화 상태 (진행 중)
         if (_questData.IsActive)
         {
+            // 퀘스트 완료
             if (_questData.IsComplete())
             {
-                var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Completion").Value;
+                string completionString = "Completion " + (_questData.CurrentRepeatCount + 1).ToString();
+                var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == completionString).Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 Debug.Log("Start Completion");
                 DialogueController.Instance.StartDialogue(dialogueData);
@@ -54,6 +53,7 @@ public class Merchant : InteractableObject
 
                 QuestController.Instance.CompleteQuest();
             }
+            // 퀘스트 미완료
             else
             {
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Not Yet Completion").Value;
@@ -64,9 +64,10 @@ public class Merchant : InteractableObject
                 Debug.Log("End Not Yet Completion");
             }
         }
-        // 퀘스트 등록 프로세스
+        // 퀘스트 비활성화 상태 (등록 가능)
         else
         {
+            // 최대 반복 횟수에 도달
             if (!_questData.IsRepeatable())
             {
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Final Completion").Value;
@@ -76,7 +77,7 @@ public class Merchant : InteractableObject
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End Final Completion");
             }
-            // 처음 만난 경우 First Meeting 대화 실행과 함께, 퀘스트를 해당 다이얼로그에 링크한다. (자동 수락)
+            // 퀘스트 첫 등록 (자동 수락)
             else if (_questData.IsFirst)
             {
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "First Meeting").Value;
@@ -87,9 +88,12 @@ public class Merchant : InteractableObject
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End First Meeting");
             }
-            // 이미 완료한 적 있는 경우 Re-request 대화 실행과 함께, 퀘스트를 해당 다이얼로그에 링크한다. (응답 요청)
+            // 퀘스트 두번째 등록 (수락 / 거절)
             else
             {
+                /*
+                 * 어색해서 주석 처리함
+                 * 
                 if (!_questData.IsAcceptedBefore)
                 {
                     var dialogueData1 = _dialogueCollection.FirstOrDefault(d => d.Key == "Re-request After Rejection").Value;
@@ -99,8 +103,10 @@ public class Merchant : InteractableObject
                     yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                     Debug.Log("End Re-request After Rejection");
                 }
+                */
 
-                var dialogueData2 = _dialogueCollection.FirstOrDefault(d => d.Key == "Re-request").Value;
+                string requestString = "Re-request " + _questData.CurrentRepeatCount.ToString();
+                var dialogueData2 = _dialogueCollection.FirstOrDefault(d => d.Key == requestString).Value;
                 if (CheckInvalid(dialogueData2) == true) yield break;
                 dialogueData2.LinkQuestData(_questData);
                 Debug.Log("Start Re-request");
@@ -144,7 +150,7 @@ public class Merchant : InteractableObject
 
     private bool CheckInvalid<T>(T temp)
     {
-        if(temp == null)
+        if (temp == null)
         {
             Debug.LogError($"{temp.ToString()} is invalid");
             return true;

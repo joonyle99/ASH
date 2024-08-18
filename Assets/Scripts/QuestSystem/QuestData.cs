@@ -60,6 +60,9 @@ public class QuestData : MonoBehaviour
     public bool IsActive { get; set; } = false;                                 // 퀘스트 활성화 여부
     public bool IsAcceptedBefore { get; set; } = false;                               // 퀘스트 수락 여부
 
+    public int MaxRepeatCount => _maxRepeatCount;
+    public int CurrentRepeatCount => _currentRepeatCount;
+
     #endregion
 
     #region Function
