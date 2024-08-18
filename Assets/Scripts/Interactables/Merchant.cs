@@ -48,7 +48,7 @@ public class Merchant : InteractableObject
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 Debug.Log("Start Completion");
-                DialogueController.Instance.StartDialogue(dialogueData);
+                DialogueController.Instance.StartDialogue(dialogueData, false, !InteractAtFirst);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End Completion");
 
@@ -59,7 +59,7 @@ public class Merchant : InteractableObject
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Not Yet Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 Debug.Log("Start Not Yet Completion");
-                DialogueController.Instance.StartDialogue(dialogueData);
+                DialogueController.Instance.StartDialogue(dialogueData, false, !InteractAtFirst);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End Not Yet Completion");
             }
@@ -72,7 +72,7 @@ public class Merchant : InteractableObject
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Final Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 Debug.Log("Start Final Completion");
-                DialogueController.Instance.StartDialogue(dialogueData);
+                DialogueController.Instance.StartDialogue(dialogueData, false, !InteractAtFirst);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End Final Completion");
             }
@@ -83,7 +83,7 @@ public class Merchant : InteractableObject
                 if (CheckInvalid(dialogueData) == true) yield break;
                 dialogueData.LinkQuestData(_questData);
                 Debug.Log("Start First Meeting");
-                DialogueController.Instance.StartDialogue(dialogueData);
+                DialogueController.Instance.StartDialogue(dialogueData, false, !InteractAtFirst);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End First Meeting");
             }
@@ -95,7 +95,7 @@ public class Merchant : InteractableObject
                     var dialogueData1 = _dialogueCollection.FirstOrDefault(d => d.Key == "Re-request After Rejection").Value;
                     if (CheckInvalid(dialogueData1) == true) yield break;
                     Debug.Log("Start Re-request After Rejection");
-                    DialogueController.Instance.StartDialogue(dialogueData1);
+                    DialogueController.Instance.StartDialogue(dialogueData1, false, !InteractAtFirst);
                     yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                     Debug.Log("End Re-request After Rejection");
                 }
@@ -104,7 +104,7 @@ public class Merchant : InteractableObject
                 if (CheckInvalid(dialogueData2) == true) yield break;
                 dialogueData2.LinkQuestData(_questData);
                 Debug.Log("Start Re-request");
-                DialogueController.Instance.StartDialogue(dialogueData2);
+                DialogueController.Instance.StartDialogue(dialogueData2, false, !InteractAtFirst);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 Debug.Log("End Re-request");
 
@@ -116,7 +116,7 @@ public class Merchant : InteractableObject
                     dialogueData3 = _dialogueCollection.FirstOrDefault(d => d.Key == "Acception").Value;
                     if (CheckInvalid(dialogueData3) == true) yield break;
                     Debug.Log("Start Acception");
-                    DialogueController.Instance.StartDialogue(dialogueData3);
+                    DialogueController.Instance.StartDialogue(dialogueData3, false, !InteractAtFirst);
                     yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                     Debug.Log("End Acception");
                 }
@@ -126,7 +126,7 @@ public class Merchant : InteractableObject
                     dialogueData3 = _dialogueCollection.FirstOrDefault(d => d.Key == "Rejection").Value;
                     if (CheckInvalid(dialogueData3) == true) yield break;
                     Debug.Log("Start Rejection");
-                    DialogueController.Instance.StartDialogue(dialogueData3);
+                    DialogueController.Instance.StartDialogue(dialogueData3, false, !InteractAtFirst);
                     yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                     Debug.Log("End Rejection");
                 }

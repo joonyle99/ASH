@@ -6765,6 +6765,10 @@ PrefabInstance:
       propertyPath: _ID
       value: SavePoint2_1_1
       objectReference: {fileID: 0}
+    - target: {fileID: -4362207956897806080, guid: 328104a086dec5947a147e1f236306bb, type: 3}
+      propertyPath: _groupName
+      value: BossDungeon2
+      objectReference: {fileID: 0}
     - target: {fileID: 9051673257819384037, guid: 328104a086dec5947a147e1f236306bb, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -8238,6 +8242,7 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 1875777837}
   _stateChange: 0
   _animationType: 0
+  _identifier: {fileID: 0}
   _isOpened: 0
   _passage: {fileID: 0}
   _failDialogue: {fileID: 0}
@@ -23800,11 +23805,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -91.593735
+      value: -161.41887
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 13.034662
+      value: 4.6677575
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -25541,6 +25546,7 @@ GameObject:
   - component: {fileID: 5562433879146315169}
   - component: {fileID: 5562433879146315168}
   - component: {fileID: 5562433879146315174}
+  - component: {fileID: 5562433879146315175}
   m_Layer: 0
   m_Name: Letter
   m_TagString: Untagged
@@ -25565,8 +25571,23 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 5562433878688136396}
   _stateChange: 0
   _animationType: 0
+  _identifier: {fileID: 0}
   _canSkip: 0
   _dialogueData: {fileID: 11400000, guid: d42ef9a664b0ae24ba1f716ae9655933, type: 2}
+--- !u!114 &5562433879146315175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562433879146315171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c0ff8802a4e2249a74cc12b664fd58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: Dungeon2
+  _ID: 2_101
 --- !u!4 &5562433879573007244
 Transform:
   m_ObjectHideFlags: 0
@@ -35557,6 +35578,7 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 8047123113886666039}
   _stateChange: 0
   _animationType: 0
+  _identifier: {fileID: 0}
   _isOpened: 1
   _passage: {fileID: 1751912697}
   _failDialogue: {fileID: 0}

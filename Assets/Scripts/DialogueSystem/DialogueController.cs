@@ -29,7 +29,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     private Coroutine _currentDialogueCoroutine;
     private DialogueData _currentDialogueData;
 
-    public void StartDialogue(DialogueData data, bool isContinueDialogue = false)
+    public void StartDialogue(DialogueData data, bool isContinueDialogue = false, bool canSkip = false)
     {
         if (IsDialogueActive)
         {
@@ -44,9 +44,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         }
 
         _currentDialogueData = data;
-        _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue));
+        _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue, canSkip));
     }
-    private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false)
+    private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false, bool canSkip = false)
     {
         // 1. 다이얼로그 시퀀스를 생성한다
         DialogueSequence dialogueSequence = new DialogueSequence(data);
@@ -56,7 +56,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             InputManager.Instance.ChangeInputSetter(data.InputSetter);
 
         // 3. 다이얼로그 뷰 UI를 열어준다
-        View.OpenPanel();
+        View.OpenPanel(canSkip);
 
         IsDialogueActive = true;
 

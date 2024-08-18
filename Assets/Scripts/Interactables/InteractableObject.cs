@@ -33,10 +33,15 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
     [SerializeField] private Transform _interactionMarkerPoint;             // 상호작용 마커 포인트 (가이드 텍스트가 출력되는 위치)
 
     [Space]
-    
+
     [SerializeField] private InteractionStateChangeType _stateChange;       // 상호작용 시 변경할 플레이어의 상태 제어
     [SerializeField] private InteractionAnimationType _animationType;       // 상호작용 시 전달할 플레이어 애니메이션 타입 (NPC의 경우 None)
-    
+
+    [SerializeField] private bool _interactAtFirst = true;
+
+    [SerializeField]
+    [HideInInspector] private Identifier _identifier;
+
     #endregion
 
     #region Property
@@ -45,8 +50,6 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
 
     public InteractionAnimationType AnimationType => _animationType;
     public InteractionStateChangeType StateChange => _stateChange;
-
-    private bool _interactAtFirst = false;
 
     public Vector3 InteractionMarkerPoint
     {
@@ -66,16 +69,29 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
     public bool IsInteracting
     {
         get => _isInteracting;
-        set => _isInteracting = value;
+        set
+        {
+            _isInteracting = value;
+        }
     }
 
-    protected bool IsInteractionKeyUp =>  InputManager.Instance.State.InteractionKey.KeyUp;             // 상호작용 키를 떼는 순간인지
+    public bool InteractAtFirst
+    {
+        get => _interactAtFirst;
+    }
+
+    protected bool IsInteractionKeyUp => InputManager.Instance.State.InteractionKey.KeyUp;             // 상호작용 키를 떼는 순간인지
     protected bool IsPlayerInteractionState => Player.CurrentStateIs<InteractionState>();               // 플레이어가 상호작용 상태인지
     protected bool IsPlayerIsDirSync => Player.IsDirSync;                                               // 플레이어의 바로보는 방향과 입력 방향이 동기화 되었는지
 
     #endregion
 
     #region Function
+
+    private void Awake()
+    {
+        _identifier = GetComponent<Identifier>();
+    }
 
     protected abstract void OnObjectInteractionEnter();             // 상호작용 시작 시 호출되는 함수 (모든 상호작용 오브젝트가 구현하도록 한다)
     protected virtual void OnObjectInteractionExit() { }            // 상호작용 종료 시 호출되는 함수 (모든 상호작용 오브젝트가 구현하지는 않도록 한다)
@@ -103,6 +119,15 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
     {
         //Debug.Log("Exit Interaction");
 
+        if (_identifier)
+        {
+            if (_isInteracting)
+            {
+                _interactAtFirst = false;
+                _identifier.SaveState<bool>("_interactAtFirst", _interactAtFirst);
+            }
+        }
+
         IsInteracting = false;
 
         OnObjectInteractionExit();
@@ -112,7 +137,20 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
 
     public void OnSceneContextBuilt()
     {
+        if (_identifier)
+        {
+            if (SceneChangeManager.Instance &&
+                SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                _interactAtFirst = _identifier.LoadState<bool>("_interactAtFirstSaved", true);
+            }
+            else
+            {
+                _interactAtFirst = _identifier.LoadState<bool>("_interactAtFirst", true);
+            }
+        }
 
+        SaveAndLoader.OnSaveStarted += SaveInteractState;
     }
 
     protected virtual void OnDestroy()
@@ -120,6 +158,16 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
         if (IsInteracting)
         {
             ExitInteraction();
+        }
+
+        SaveAndLoader.OnSaveStarted -= SaveInteractState;
+    }
+
+    private void SaveInteractState()
+    {
+        if (_identifier)
+        {
+            _identifier.SaveState<bool>("_interactAtFirstSaved", _interactAtFirst);
         }
     }
     #endregion

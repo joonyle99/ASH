@@ -17,8 +17,8 @@ public class SaveFlameEffect : MonoBehaviour
     {
         Initialize();
 
-        SaveAndLoader.OnSaveStarted += PlayFlameEffect;
-        SaveAndLoader.OnSaveEnded += StopFlameEffectLogic;
+        //SaveAndLoader.OnSaveStarted += PlayFlameEffect;
+        //SaveAndLoader.OnSaveEnded += StopFlameEffectLogic;
     }
 
     private void Initialize()
