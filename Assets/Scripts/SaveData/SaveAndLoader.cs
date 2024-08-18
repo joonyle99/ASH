@@ -21,13 +21,6 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     {
         if (activator.Type == ActivatorType.Player)
         {
-            if(_statueVisualEffect)
-            {
-                _statueVisualEffect.PlayEffectsOnSaveStarted();
-                _statueVisualEffect.DeactiveSaveTextLogic();
-            }
-
-            Debug.Log("Save");
             Save();
         }
     }
@@ -36,7 +29,13 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     {
         if (_passageName == null) return;
 
-        if(OnSaveStarted != null)
+        if(_statueVisualEffect && !_statueVisualEffect.Played)
+        {
+            PlayerBehaviour PB = SceneContext.Current.Player.GetComponent<PlayerBehaviour>();
+            PB?.RecoverCurHp(1);
+        }
+
+        if (OnSaveStarted != null)
             OnSaveStarted.Invoke();
 
         JsonDataManager.SavePersistentData(_passageName);
