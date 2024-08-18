@@ -139,6 +139,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         {
             _isGodMode = value;
 
+#if UNITY_EDITOR
             if (MaterialController)
             {
                 if (_isGodMode)
@@ -150,6 +151,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
                     MaterialController.DisableGodModeOutline();
                 }
             }
+#endif
         }
     }
     [field: SerializeField]
