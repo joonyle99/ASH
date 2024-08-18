@@ -524,6 +524,10 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         {
             // NavMeshAgent Àü¿ë KnockBack
             // Debug.Log("KnockBack");
+
+            if(FloatingMovementModule.Agent.isStopped == true)
+                FloatingMovementModule.Agent.isStopped = false;
+
             FloatingMovementModule.SetVelocity(forceVector / 2.0f);
         }
         else

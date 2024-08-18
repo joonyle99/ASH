@@ -7700,67 +7700,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7011453829756755116, guid: 74c5483730fe9604ab4812e46f51baf9, type: 3}
   m_PrefabInstance: {fileID: 923969963}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &569328984
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 569328986}
-  - component: {fileID: 569328987}
-  m_Layer: 0
-  m_Name: SFX Player
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &569328986
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 569328984}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -244.9, y: 7.9500003, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1649061049}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &569328987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 569328984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _soundDatas:
-  - _key: SE_Leopard_Howling
-    _clip: {fileID: 8300000, guid: 8c9a8c114424ccf4da608c7cdeb0333c, type: 3}
-    _volumeType: 0
-    _volumeA: 2
-    _volumeB: 0
-    _pitchType: 0
-    _pitchA: 1
-    _pitchB: 0
-  - _key: SE_Leopard_bine2_2
-    _clip: {fileID: 8300000, guid: 17630b140208619418831d9fee9f8090, type: 3}
-    _volumeType: 0
-    _volumeA: 2
-    _volumeB: 0
-    _pitchType: 0
-    _pitchA: 1
-    _pitchB: 0
 --- !u!1 &572982913
 GameObject:
   m_ObjectHideFlags: 0
@@ -8242,6 +8181,7 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 1875777837}
   _stateChange: 0
   _animationType: 0
+  _interactAtFirst: 1
   _identifier: {fileID: 0}
   _isOpened: 0
   _passage: {fileID: 0}
@@ -21642,6 +21582,42 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 392775521}
     m_Modifications:
+    - target: {fileID: 5269891687269057858, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _soundDatas.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057858, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _soundDatas.Array.data[2]._key
+      value: SE_Leopard_Howling
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057858, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _soundDatas.Array.data[3]._key
+      value: SE_Leopard_bine2_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057858, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _soundDatas.Array.data[2]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 8c9a8c114424ccf4da608c7cdeb0333c, type: 3}
+    - target: {fileID: 5269891687269057858, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _soundDatas.Array.data[3]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 17630b140208619418831d9fee9f8090, type: 3}
+    - target: {fileID: 5269891687269057858, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _soundDatas.Array.data[2]._pitchA
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057858, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _soundDatas.Array.data[3]._pitchA
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057858, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _soundDatas.Array.data[2]._volumeA
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5269891687269057858, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _soundDatas.Array.data[3]._volumeA
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5269891687269057861, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
       propertyPath: _cutsceneDictionary.Array.data[0].cutscenePlayer
       value: 
@@ -21782,7 +21758,6 @@ Transform:
   m_Children:
   - {fileID: 816924743}
   - {fileID: 1441944026}
-  - {fileID: 569328986}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -23805,11 +23780,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -161.41887
+      value: -182.40924
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.6677575
+      value: 21.254845
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -24935,9 +24910,9 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 569328987}
-          m_TargetAssemblyTypeName: SoundList, Assembly-CSharp
-          m_MethodName: PlayDefaultSFX
+        - m_Target: {fileID: 1513211177}
+          m_TargetAssemblyTypeName: MonsterBehaviour, Assembly-CSharp
+          m_MethodName: PlaySound
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -25166,9 +25141,9 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 569328987}
-          m_TargetAssemblyTypeName: SoundList, Assembly-CSharp
-          m_MethodName: PlayDefaultSFX
+        - m_Target: {fileID: 1513211177}
+          m_TargetAssemblyTypeName: MonsterBehaviour, Assembly-CSharp
+          m_MethodName: PlaySound
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -25571,6 +25546,7 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 5562433878688136396}
   _stateChange: 0
   _animationType: 0
+  _interactAtFirst: 1
   _identifier: {fileID: 0}
   _canSkip: 0
   _dialogueData: {fileID: 11400000, guid: d42ef9a664b0ae24ba1f716ae9655933, type: 2}
@@ -35578,6 +35554,7 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 8047123113886666039}
   _stateChange: 0
   _animationType: 0
+  _interactAtFirst: 1
   _identifier: {fileID: 0}
   _isOpened: 1
   _passage: {fileID: 1751912697}

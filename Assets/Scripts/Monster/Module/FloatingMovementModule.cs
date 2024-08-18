@@ -8,6 +8,7 @@ using UnityEngine.AI;
 public class FloatingMovementModule : MonoBehaviour
 {
     private NavMeshAgent _agent;
+    public NavMeshAgent Agent => _agent;
     public bool IsOnNavMesh => _agent.isOnNavMesh;
 
     private void Awake()
@@ -32,10 +33,14 @@ public class FloatingMovementModule : MonoBehaviour
     }
     public void SetVelocity(Vector3 velocity)
     {
+        //Debug.Log($"target velocity: {velocity}");
+
         _agent.velocity = velocity;
     }
     public void SetStopAgent(bool isStop)
     {
+        //Debug.Log($"isStop : {isStop}");
+
         _agent.isStopped = isStop;
     }
     public void SetPosition(Vector3 position)

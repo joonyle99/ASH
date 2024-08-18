@@ -35,12 +35,15 @@ public abstract class Monster_StateBase : StateMachineBehaviour
             targetStayTime = stayTimeRange.Random();
         }
 
-        if (Monster.FloatingMovementModule)
+        if (Monster)
         {
-            // when enter not movable state, set agent stop
-            if (Monster.CurrentState is not IMovingState)
+            if (Monster.FloatingMovementModule)
             {
-                Monster.FloatingMovementModule.SetStopAgent(true);
+                // when enter not movable state, set agent stop
+                if (Monster.CurrentState is Monster_AttackState)
+                {
+                    Monster.FloatingMovementModule.SetStopAgent(true);
+                }
             }
         }
     }
@@ -71,7 +74,7 @@ public abstract class Monster_StateBase : StateMachineBehaviour
         {
             if (Monster.FloatingMovementModule)
             {
-                if (Monster.CurrentState is not IMovingState)
+                if (Monster.CurrentState is Monster_AttackState)
                 {
                     Monster.FloatingMovementModule.SetStopAgent(false);
                 }
