@@ -71,6 +71,7 @@ public class LifePiece : MonoBehaviour
         // when you get half of particle, recover health
         RecoverPlayerHealth();
 
+        
         // * ring start effect *
         _ringStart.SetActive(true);
         yield return new WaitForSeconds(2f);
@@ -80,6 +81,7 @@ public class LifePiece : MonoBehaviour
         _ringEnd.SetActive(true);
         yield return new WaitForSeconds(2f);
         _ringEnd.SetActive(true);
+        
 
         Destroy(gameObject);
     }

@@ -18,6 +18,13 @@ public class OptionView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _bgmValue;
     [SerializeField] private TextMeshProUGUI _sfxValue;
 
+    [Space]
+
+    [Header("Resolution")]
+    [SerializeField] private int _width = 1600;
+    [SerializeField] private int _height = 900;
+    [SerializeField] private bool _isFullScreen = true;
+
     private bool _isPause = false;
     public bool IsPause => _isPause;
 
@@ -127,5 +134,15 @@ public class OptionView : MonoBehaviour
         Resume();
 
         SceneChangeManager.Instance.ChangeToNonPlayableScene("TitleScene");
+    }
+
+    public void ToggleResolution()
+    {
+        _isFullScreen = !_isFullScreen;
+
+        _width = _isFullScreen ? Screen.width : 1600;
+        _height = _isFullScreen ? Screen.height : 900;
+
+        Screen.SetResolution(_width, _height, _isFullScreen);
     }
 }

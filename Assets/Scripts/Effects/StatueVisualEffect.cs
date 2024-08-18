@@ -31,7 +31,9 @@ public class StatueVisualEffect : MonoBehaviour
 
     [Header("Preserve State")]
     [SerializeField]
-    private bool Played = false;
+    private bool _played = false;
+    public bool Played => _played;
+
     private Identifier _identifier;
 
     private void Awake()
@@ -56,7 +58,7 @@ public class StatueVisualEffect : MonoBehaviour
             {
                 if (value.TryGetValue(_identifier.ID + "_played", out var alreadyPlayed))
                 {
-                    Played = (bool)alreadyPlayed;
+                    _played = (bool)alreadyPlayed;
                 }
 
             }
@@ -73,12 +75,15 @@ public class StatueVisualEffect : MonoBehaviour
         {
             PersistentDataManager.TryAddDataGroup(_identifier.GroupName);
         }
+
+        SaveAndLoader.OnSaveStarted += PlayEffectsOnSaveStarted;
+
     }
 
     public void PlayEffectsOnSaveStarted()
     {
         //최초 1회만 실시되는 로직들
-        if (!Played)
+        if (!_played)
         {
             PlayDustParticle();
             ActiveEyes();
@@ -86,7 +91,7 @@ public class StatueVisualEffect : MonoBehaviour
 
         ActiveSaveText();
         PlaySaveSound();
-        Played = true;
+        _played = true;
         _identifier.SaveState("_played", true);
     }
 
@@ -122,6 +127,8 @@ public class StatueVisualEffect : MonoBehaviour
 
         _saveText.enabled = true;
         _textDisplayTime = Time.time;
+
+        DeactiveSaveTextLogic();
     }
 
     public void DeactiveSaveTextLogic()
