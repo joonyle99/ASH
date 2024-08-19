@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
+public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, ISceneContextBuildListener
 {
     [SerializeField] private GameObject _soundListParent;
 
@@ -46,10 +46,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
         _pitchedAudioSources1[1 * PitchPrecision] = _sfxPlayer;
         _pitchedAudioSources2[1 * PitchPrecision] = _sfxLoopPlayer;
     }
-    protected void Start()
-    {
-
-    }
 
     // volume setting
     public void InitialVolumeSetting()
@@ -69,7 +65,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
     }
     public void SetSfxVolume(float volume)
     {
-        if (volume == 0)
+        if (volume < 0.01f)
         {
             _audioMixer.SetFloat("SFX", -80);
         }
@@ -261,5 +257,10 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
         }
 
         AudioSources = null;
+    }
+
+    public void OnSceneContextBuilt()
+    {
+        AudioSources = Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
     }
 }
