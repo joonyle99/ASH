@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
-public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, ISceneContextBuildListener
+public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>
 {
     [SerializeField] private GameObject _soundListParent;
 
@@ -17,7 +17,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
     [Space]
 
-    public List<AudioSource> AudioSources;
+    public AudioSource[] AudioSources;
 
     private const int PitchPrecision = 1000;
 
@@ -49,17 +49,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     protected void Start()
     {
 
-    }
-
-    /// <summary>
-    /// 씬에 있는 모든 오디오 소스를 찾아서 저장
-    /// </summary>
-    public void OnSceneContextBuilt()
-    {
-        // Debug.Log("호출된다");
-
-        // AudioSources = new List<AudioSource>();
-        // AudioSources = Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None).ToList();
     }
 
     // volume setting
@@ -254,20 +243,23 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         _bgmPlayer.Stop();
     }
 
-    // Pause All Sound
+    // Pause & UnPause All Sound (TODO: Saved AudioSources)
     public void PauseAllSound()
     {
+        AudioSources = Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
+
         foreach (var audioSource in AudioSources)
         {
             audioSource.Pause();
         }
     }
-    // Resume All Sound
     public void UnPauseAllSound()
     {
         foreach (var audioSource in AudioSources)
         {
             audioSource.UnPause();
         }
+
+        AudioSources = null;
     }
 }
