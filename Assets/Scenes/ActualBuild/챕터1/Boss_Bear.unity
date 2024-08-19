@@ -1490,11 +1490,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -125.08515
+      value: -182.62465
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.8342515
+      value: 8.070209
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4883,6 +4883,8 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 937912732}
   _stateChange: 0
   _animationType: 0
+  _interactAtFirst: 1
+  _identifier: {fileID: 0}
   _isOpened: 0
   _passage: {fileID: 5904064002676807724}
   _failDialogue: {fileID: 11400000, guid: 74a66fb99d254f94ea3126e87addfde1, type: 2}
@@ -15794,6 +15796,36 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+  - _type: 6
+    DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 1
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+  - _type: 7
+    DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 1
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 575531529}
+          m_TargetAssemblyTypeName: BGMPlayer, Assembly-CSharp
+          m_MethodName: PlayBGM
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
     ShakeData: {fileID: 0}
@@ -15836,36 +15868,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - _type: 7
-    DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 1
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 575531529}
-          m_TargetAssemblyTypeName: BGMPlayer, Assembly-CSharp
-          m_MethodName: PlayBGM
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  - _type: 6
-    DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 1
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
 --- !u!4 &5278967500018182526
 Transform:
   m_ObjectHideFlags: 0
