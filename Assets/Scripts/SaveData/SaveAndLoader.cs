@@ -22,6 +22,9 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
         if (activator.Type == ActivatorType.Player)
         {
             Save();
+
+            _statueVisualEffect.PlayEffectsOnSaveStarted();
+            _statueVisualEffect.DeactiveSaveTextLogic();
         }
     }
 

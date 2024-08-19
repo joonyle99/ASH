@@ -93,6 +93,11 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
         _identifier = GetComponent<Identifier>();
     }
 
+    private void Start()
+    {
+        _interactAtFirst = true;
+    }
+
     protected abstract void OnObjectInteractionEnter();             // 상호작용 시작 시 호출되는 함수 (모든 상호작용 오브젝트가 구현하도록 한다)
     protected virtual void OnObjectInteractionExit() { }            // 상호작용 종료 시 호출되는 함수 (모든 상호작용 오브젝트가 구현하지는 않도록 한다)
 

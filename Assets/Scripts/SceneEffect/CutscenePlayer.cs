@@ -85,7 +85,8 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
             }
             else if (effect.Type == SceneEffect.EffectType.Dialogue)
             {
-                DialogueController.Instance.StartDialogue(effect.DialogueData, false, !IsPlayed);
+                Debug.Log(IsPlayed);
+                DialogueController.Instance.StartDialogue(effect.DialogueData, false);
                 yield return new WaitWhile(() => DialogueController.Instance.IsDialogueActive);
             }
             /*

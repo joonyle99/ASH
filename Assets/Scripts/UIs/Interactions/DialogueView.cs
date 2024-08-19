@@ -37,13 +37,13 @@ public class DialogueView : MonoBehaviour
     /// <summary> 다이얼로그 뷰 UI 초기화 및 패널 열기 </summary>
     public void OpenPanel(bool canSkip = false)
     {
+        Debug.Log(canSkip);
         _dialogue.text = "";
         _speaker.text = "";
         _indicator.gameObject.SetActive(false);
         _responsePanel.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
         _skipButton.gameObject.SetActive(canSkip);
-        Debug.Log(canSkip);
         _textShaker = _dialogue.GetComponent<TextShaker>();
     }
     /// <summary> 다이얼로그 뷰 UI 패널 닫기 </summary>

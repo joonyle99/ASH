@@ -29,7 +29,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     private Coroutine _currentDialogueCoroutine;
     private DialogueData _currentDialogueData;
 
-    public void StartDialogue(DialogueData data, bool isContinueDialogue = false, bool canSkip = false)
+    public void StartDialogue(DialogueData data, bool isContinueDialogue = false)
     {
         if (IsDialogueActive)
         {
@@ -44,7 +44,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         }
 
         _currentDialogueData = data;
-        _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue, canSkip));
+        _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue, !data.PlayAtFirst));
     }
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false, bool canSkip = false)
     {
@@ -149,6 +149,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         if (data.InputSetter != null)
             InputManager.Instance.ChangeToDefaultSetter();
 
+        SetCurrentDialogueData(false);
         _currentDialogueCoroutine = null;
         _currentDialogueData = null;
     }
@@ -181,5 +182,13 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         View.ClosePanel();
 
         IsDialogueActive = false;
+    }
+
+    private void SetCurrentDialogueData(bool playAtFirst)
+    {
+        if(_currentDialogueData)
+        {
+            _currentDialogueData.PlayAtFirst = playAtFirst;
+        }
     }
 }

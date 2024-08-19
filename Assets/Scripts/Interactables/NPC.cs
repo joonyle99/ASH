@@ -19,7 +19,7 @@ public class NPC : InteractableObject
         if(_canSkip == false)
             _canSkip = true;
 
-        DialogueController.Instance.StartDialogue(_dialogueData, false, !InteractAtFirst);
+        DialogueController.Instance.StartDialogue(_dialogueData, false);
     }
     public override void UpdateInteracting()
     {

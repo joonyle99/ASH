@@ -99,7 +99,7 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
         }
         else
         {
-            DialogueController.Instance.StartDialogue(_failDialogue, false, !InteractAtFirst);
+            DialogueController.Instance.StartDialogue(_failDialogue, false);
         }
     }
     public override void UpdateInteracting()
@@ -140,7 +140,7 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
         if (_successDialogue != null)
         {
             yield return new WaitForSeconds(2f);
-            DialogueController.Instance.StartDialogue(_successDialogue, false, !InteractAtFirst);
+            DialogueController.Instance.StartDialogue(_successDialogue, false);
             yield return new WaitUntil(() => DialogueController.Instance.IsDialogueActive == false);
         }
 

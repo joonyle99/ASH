@@ -39,7 +39,7 @@ public class StageResetBehaviour : InteractableObject
 
     protected override void OnObjectInteractionEnter()
     {
-        DialogueController.Instance.StartDialogue(_dialogueData, false, !InteractAtFirst);
+        DialogueController.Instance.StartDialogue(_dialogueData, false);
 
         List<ResponseContainer> responseFunctions = new List<ResponseContainer>();
         responseFunctions.Add(new ResponseContainer(ResponseButtonType.Reject, RejectStageReset));

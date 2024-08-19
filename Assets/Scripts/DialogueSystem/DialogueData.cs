@@ -15,6 +15,8 @@ public class DialogueData : ScriptableObject
     [SerializeField] private float _typingSpeed = 12.5f;                    // 글자 속도
     [SerializeField] private InputSetterScriptableObject _inputSetter;      // 플레이어 입력 설정
 
+    [SerializeField] public bool PlayAtFirst = true;
+
     [Space]
 
     [SerializeField] private DialogueAction[] _actions;                     // 대화 액션
@@ -105,5 +107,10 @@ public class DialogueData : ScriptableObject
             dialogueSequence.Add(segment);
         }
         return dialogueSequence;
+    }
+
+    public void SetDialogueData(bool playAtFirst)
+    {
+        PlayAtFirst = playAtFirst;
     }
 }

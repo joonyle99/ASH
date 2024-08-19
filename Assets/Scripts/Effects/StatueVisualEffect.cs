@@ -40,9 +40,7 @@ public class StatueVisualEffect : MonoBehaviour
     {
         Init();
     }
-    private void Start()
-    {
-    }
+
     private void Init()
     {
         _audioSource = GetComponent<AudioSource>();
@@ -75,9 +73,6 @@ public class StatueVisualEffect : MonoBehaviour
         {
             PersistentDataManager.TryAddDataGroup(_identifier.GroupName);
         }
-
-        SaveAndLoader.OnSaveStarted += PlayEffectsOnSaveStarted;
-
     }
 
     public void PlayEffectsOnSaveStarted()
