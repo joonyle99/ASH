@@ -65,24 +65,28 @@ public class OptionView : MonoBehaviour
 
     public void Pause()
     {
+        if (_isPause) return;
+
         _isPause = true;
 
         Time.timeScale = 0f;
 
         _optionPanel.gameObject.SetActive(true);
 
-        InputManager.Instance.ChangeToStayStillSetter();
+        SoundManager.Instance.PauseAllSound();
     }
 
     public void Resume()
     {
+        if (!_isPause) return;
+
         _isPause = false;
 
         Time.timeScale = 1f;
 
         _optionPanel.gameObject.SetActive(false);
 
-        InputManager.Instance.ChangeToDefaultSetter();
+        SoundManager.Instance.UnPauseAllSound();
     }
 
     // volume setting
