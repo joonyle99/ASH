@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using System.Collections;
 
 /// <summary>
 /// 플레이어의 체력 UI를 관리하는 클래스
@@ -14,12 +13,6 @@ public class HealthPanelUI : MonoBehaviour
     private int[] _hpUnit;
 
     private PlayerBehaviour _player;
-
-    [Header("Ring Effect")]
-    [Space]
-
-    [SerializeField] private GameObject _ringStart;
-    [SerializeField] private GameObject _ringEnd;
 
     private void Awake()
     {
@@ -41,9 +34,6 @@ public class HealthPanelUI : MonoBehaviour
         {
             _player.OnHealthChanged -= UpdateLifeIcons;
             _player.OnHealthChanged += UpdateLifeIcons;
-
-            //_player.OnHealthChanged -= RecoverHealthRingEffect;
-            //_player.OnHealthChanged += RecoverHealthRingEffect;
         }
         else
         {
@@ -87,21 +77,5 @@ public class HealthPanelUI : MonoBehaviour
                 // Debug.Log($"{i + 1}번째 아이콘 : {_lifeIcons[i].fillAmount} -> {0f}");
             }
         }
-    }
-
-    private void RecoverHealthRingEffect(int curHp, int maxHp)
-    {
-        StartCoroutine(RecoverHealthRingEffectCoroutine());
-    }
-
-    private IEnumerator RecoverHealthRingEffectCoroutine()
-    {
-        //_ringStart.Get(true);
-        yield return new WaitForSeconds(2f);
-
-        // * ring end effect *
-        _ringEnd.SetActive(true);
-        yield return new WaitForSeconds(2f);
-        _ringEnd.SetActive(true);
     }
 }
