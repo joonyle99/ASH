@@ -54,7 +54,7 @@ public class StatueVisualEffect : MonoBehaviour
             if (pd.DataGroups != null &&
                 pd.DataGroups.TryGetValue(_identifier.GroupName, out var value))
             {
-                if (value.TryGetValue(_identifier.ID + "_played", out var alreadyPlayed))
+                if (value.TryGetValue(_identifier.ID + "_playedSaved", out var alreadyPlayed))
                 {
                     _played = (bool)alreadyPlayed;
                 }
@@ -87,7 +87,7 @@ public class StatueVisualEffect : MonoBehaviour
         ActiveSaveText();
         PlaySaveSound();
         _played = true;
-        _identifier.SaveState("_played", true);
+        _identifier.SaveState("_playedSaved", true);
     }
 
     private void ActiveEyes()

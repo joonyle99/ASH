@@ -58,6 +58,10 @@ public class PersistentData
 
             foreach (var dataGroup in dataGroups.Value)
             {
+                //저장관련된 큰 문제 생기면 아래 코드 삭제 요망
+                if (!dataGroup.Key.Substring(dataGroup.Key.Length - 5, 5).Equals("Saved"))
+                    continue;
+
                 jsonDataGroup.Add(dataGroup.Key,
                     new SerializableObjectType() { Object = dataGroup.Value });
             }

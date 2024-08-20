@@ -6,8 +6,21 @@ public class Identifier : MonoBehaviour, ISceneContextBuildListener
 {
     [SerializeField] private string _groupName;                     // 데이터 그룹의 이름
     public string GroupName => _groupName;
-    [SerializeField] private string _ID;
-    public string ID => _ID;
+    [SerializeField] private string _id;
+    public string ID => _id;
+
+#if UNITY_EDITOR
+    public string EditorGroupName
+    {
+        get => _groupName;
+        set => _groupName = value;
+    }
+    public string EditorID
+    {
+        get => _id;
+        set => _id = value;
+    }
+#endif
 
     public void OnSceneContextBuilt()
     {
@@ -17,21 +30,21 @@ public class Identifier : MonoBehaviour, ISceneContextBuildListener
 
     public T LoadState<T>(string additionalKey, T defaultValue) where T : new()
     {
-        if (PersistentDataManager.Has<T>(_groupName, _ID + additionalKey))
+        if (PersistentDataManager.Has<T>(_groupName, _id + additionalKey))
         {
-            return PersistentDataManager.Get<T>(_groupName, _ID + additionalKey);
+            return PersistentDataManager.Get<T>(_groupName, _id + additionalKey);
         }
 
         return defaultValue;
     }
     public void SaveState<T>(string additionalKey, T value) where T : new()
     {
-        PersistentDataManager.Set(_groupName, _ID + additionalKey, value);
+        PersistentDataManager.Set(_groupName, _id + additionalKey, value);
     }
 
     public bool HasState<T>(string additionalKey) where T : new()
     {
-        return PersistentDataManager.Has<T>(_groupName, _ID + additionalKey);
+        return PersistentDataManager.Has<T>(_groupName, _id + additionalKey);
     }
 
     

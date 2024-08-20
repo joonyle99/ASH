@@ -16,10 +16,10 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     [SerializeField]
     List<DialogueData> _dialogueDatas = new List<DialogueData>();
 
-    string _basicGroupName = "DialogueData"; // 씬전환에 의해 불러와질 그룹
-    string _jsonGroupName = "DialogueDataSaved"; // 저장, 불러오기에 의해 불러와질 그룹
+    string _groupName = "DialogueData";
 
     string _playAtFirstAdditionalKey = "_PlayAtFirst";
+    string _playAtFirstAdditionalKeyForJson = "_PlayAtFirstSaved";
 
     protected override void Awake()
     {
@@ -34,8 +34,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
         if(PersistentDataManager.Instance)
         {
-            PersistentDataManager.TryAddDataGroup(_basicGroupName); 
-            PersistentDataManager.TryAddDataGroup(_jsonGroupName);
+            PersistentDataManager.TryAddDataGroup(_groupName); 
         }
 
         SaveAndLoader.OnSaveStarted += SaveAllDialogueDataWithJson;
@@ -61,19 +60,19 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     /// </summary>
     public static void LoadSyncAllDialogueData(bool isNeedJsonSave)
     {
-        string groupName = isNeedJsonSave ? Instance._jsonGroupName : Instance._basicGroupName;
+        string additionalKey_playAtFirst = isNeedJsonSave ?
+            Instance._playAtFirstAdditionalKeyForJson : Instance._playAtFirstAdditionalKey;
 
         if (PersistentDataManager.Instance)
         {
             for(int i = 0; i < Instance._dialogueDatas.Count; i++)
             {
-                string ID = Instance._dialogueDatas[i].name + Instance._playAtFirstAdditionalKey;
                 bool playAtFirstSaveData = true;
+                string id = Instance._dialogueDatas[i].name + additionalKey_playAtFirst;
 
-                if(PersistentDataManager.Has<bool>(groupName, ID))
+                if (PersistentDataManager.Has<bool>(Instance._groupName, id))
                 {
-                    playAtFirstSaveData = PersistentDataManager.Get<bool>(groupName, ID);
-                    Debug.Log(ID + " " + playAtFirstSaveData);
+                    playAtFirstSaveData = PersistentDataManager.Get<bool>(Instance._groupName, id);
                 }
 
                 SetDialogueData(Instance._dialogueDatas[i], playAtFirstSaveData);
@@ -91,15 +90,16 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     /// </summary>
     public static void SaveAllDialogueData(bool isNeedJsonSave)
     {
-        string groupName = isNeedJsonSave ? Instance._jsonGroupName : Instance._basicGroupName;
+        string additionalKey_playAtFirst = isNeedJsonSave ?
+            Instance._playAtFirstAdditionalKeyForJson : Instance._playAtFirstAdditionalKey;
 
-        for (int i = 0; i < Instance._dialogueDatas.Count(); i++)
+        if (PersistentDataManager.Instance)
         {
-            string ID = Instance._dialogueDatas[i].name + Instance._playAtFirstAdditionalKey;
-
-            if (PersistentDataManager.Instance)
+            for (int i = 0; i < Instance._dialogueDatas.Count; i++)
             {
-                PersistentDataManager.Set(groupName, ID, Instance._dialogueDatas[i].PlayAtFirst);
+                string id = Instance._dialogueDatas[i].name + additionalKey_playAtFirst;
+
+                PersistentDataManager.Set(Instance._groupName, id, Instance._dialogueDatas[i].PlayAtFirst);
             }
         }
     }
