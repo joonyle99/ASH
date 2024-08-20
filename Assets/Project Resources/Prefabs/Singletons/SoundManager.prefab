@@ -301,7 +301,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_UI_Select
+  - _isLoop: 0
+    _key: SE_UI_Select
     _clip: {fileID: 8300000, guid: e7e94131ee1cf994f8eacbe2d5463deb, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -309,7 +310,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_UI_Button
+  - _isLoop: 0
+    _key: SE_UI_Button
     _clip: {fileID: 8300000, guid: c8db7af02c56bc443a088ef0b2646d87, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -317,7 +319,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_UI_Prolog
+  - _isLoop: 0
+    _key: SE_UI_Prolog
     _clip: {fileID: 8300000, guid: 97049c5bd637ab94a857c75b6db4641a, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -325,7 +328,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_UI_Skip
+  - _isLoop: 0
+    _key: SE_UI_Skip
     _clip: {fileID: 8300000, guid: c8db7af02c56bc443a088ef0b2646d87, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -333,7 +337,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_UI_Script1
+  - _isLoop: 0
+    _key: SE_UI_Script1
     _clip: {fileID: 8300000, guid: f4d60ed425ada5044894f99a5256d858, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -341,7 +346,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_UI_Script2
+  - _isLoop: 0
+    _key: SE_UI_Script2
     _clip: {fileID: 8300000, guid: a1cab015ece8d7046a03a8698d0062b9, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -349,7 +355,8 @@ MonoBehaviour:
     _pitchType: 1
     _pitchA: 1
     _pitchB: 1
-  - _key: SE_UI_Script3
+  - _isLoop: 0
+    _key: SE_UI_Script3
     _clip: {fileID: 8300000, guid: f0d0bfaf20425b04c9dc668b0ab92c54, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -357,7 +364,8 @@ MonoBehaviour:
     _pitchType: 1
     _pitchA: 1
     _pitchB: 1
-  - _key: SE_UI_Script4
+  - _isLoop: 0
+    _key: SE_UI_Script4
     _clip: {fileID: 8300000, guid: 658ce116e51534d419196d5c6fd7f322, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -365,7 +373,8 @@ MonoBehaviour:
     _pitchType: 1
     _pitchA: 1
     _pitchB: 1
-  - _key: SE_UI_Script5
+  - _isLoop: 0
+    _key: SE_UI_Script5
     _clip: {fileID: 8300000, guid: e6b29357012a1a84f9548fa2813aa25c, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -460,6 +469,7 @@ MonoBehaviour:
   _sfxPlayer: {fileID: 1160707515}
   _sfxLoopPlayer: {fileID: 5421318497930488246}
   _audioMixer: {fileID: 24100000, guid: 1b816bc5bcef5154091d43569e74b921, type: 2}
+  allSFXPlayers: []
 --- !u!1 &1581199063581203133
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,7 +515,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_CrashRock_hit
+  - _isLoop: 0
+    _key: SE_CrashRock_hit
     _clip: {fileID: 8300000, guid: 49d38d3974af0e740857aad753196b06, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -513,15 +524,17 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_CrashRock_split
+  - _isLoop: 0
+    _key: SE_CrashRock_split
     _clip: {fileID: 8300000, guid: 8b72d6d53f557654a9e3914dc67e49e2, type: 3}
     _volumeType: 0
     _volumeA: 1
     _volumeB: 0
-    _pitchType: 1
-    _pitchA: 0.6
+    _pitchType: 0
+    _pitchA: 0.75
     _pitchB: 0.9
-  - _key: SE_Puddle_boiling
+  - _isLoop: 0
+    _key: SE_Puddle_boiling
     _clip: {fileID: 8300000, guid: 4a1b0a6f3b91e094aa3a8da3e04cb161, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -529,7 +542,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_Puddle_splash
+  - _isLoop: 0
+    _key: SE_Puddle_splash
     _clip: {fileID: 8300000, guid: ae045425ecf61a345bbb7761fb733f09, type: 3}
     _volumeType: 0
     _volumeA: 0.7
@@ -537,7 +551,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: MonsterHit
+  - _isLoop: 0
+    _key: MonsterHit
     _clip: {fileID: 8300000, guid: ae045425ecf61a345bbb7761fb733f09, type: 3}
     _volumeType: 0
     _volumeA: 0.7
@@ -718,7 +733,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: MainTheme
+  - _isLoop: 0
+    _key: MainTheme
     _clip: {fileID: 8300000, guid: ffae6aaf54249cd4394980c4637be776, type: 3}
     _volumeType: 0
     _volumeA: 0.7
@@ -726,7 +742,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Exploration1
+  - _isLoop: 0
+    _key: Exploration1
     _clip: {fileID: 8300000, guid: 4bfda06033ad05f4294fe9193b022bc5, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -734,7 +751,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Exploration2
+  - _isLoop: 0
+    _key: Exploration2
     _clip: {fileID: 8300000, guid: 28f2797281dc84b4993261762d4ef204, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -742,7 +760,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: BossDungeon1
+  - _isLoop: 0
+    _key: BossDungeon1
     _clip: {fileID: 8300000, guid: b6f7812db3b7a2a4c9d3a4627a2d106a, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -750,7 +769,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: BossBattle_Bear
+  - _isLoop: 0
+    _key: BossBattle_Bear
     _clip: {fileID: 8300000, guid: 76096fc0560f53645bf4335d6c9044d0, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -758,7 +778,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: BossBattle_Fire
+  - _isLoop: 0
+    _key: BossBattle_Fire
     _clip: {fileID: 8300000, guid: 720e6c1896a5cc8429a734ba0a0310ba, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -766,7 +787,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Ending
+  - _isLoop: 0
+    _key: Ending
     _clip: {fileID: 8300000, guid: b16c78d6595073f489fd580ea9674d0b, type: 3}
     _volumeType: 0
     _volumeA: 1

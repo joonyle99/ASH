@@ -232,10 +232,10 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return new T();
 
-        Debug.Log(Instance._persistentData.DataGroups[groupName]);
+        // Debug.Log(Instance._persistentData.DataGroups[groupName]);
         if (Instance._persistentData.DataGroups[groupName].TryGetValue(key, out object value))
         {
-            Debug.Log(key + "'s type : " + value.GetType());
+            // Debug.Log(key + "'s type : " + value.GetType());
             return (T)value;
         }
         else

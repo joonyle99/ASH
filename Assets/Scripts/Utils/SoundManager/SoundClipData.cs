@@ -12,6 +12,8 @@ public class SoundClipData
         Single, RandomRange
     }
 
+    public bool IsLoop { get { return _isLoop; } }
+
     public string Key { get { return _key; } }
     public AudioClip Clip { get { return _clip; } }
 
@@ -35,6 +37,8 @@ public class SoundClipData
                 return Random.Range(_pitchA, _pitchB);
         }
     }
+
+    [SerializeField][HideInInspector] bool _isLoop = false;
 
     [SerializeField][HideInInspector] string _key;
     [SerializeField][HideInInspector] AudioClip _clip;
@@ -64,6 +68,7 @@ public class SoundClipDataDrawer : PropertyDrawer
         {
             EditorGUI.indentLevel++;
 
+            position = DrawProperty(position, "IsLoop", "_isLoop", property);
             position = DrawProperty(position, "Key", "_key", property);
             position = DrawProperty(position, "Clip", "_clip", property);
 
@@ -83,10 +88,10 @@ public class SoundClipDataDrawer : PropertyDrawer
                 {
                     contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Volume Range"));
 
-                    Rect fieldRectA = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width/2, HEIGHT));
-                    Rect fieldRectB = EditorGUI.IndentedRect(new Rect(fieldRectA.xMax, contentRect.y, contentRect.width/2, HEIGHT));
+                    Rect fieldRectA = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width / 2, HEIGHT));
+                    Rect fieldRectB = EditorGUI.IndentedRect(new Rect(fieldRectA.xMax, contentRect.y, contentRect.width / 2, HEIGHT));
                     EditorGUI.PropertyField(fieldRectA, property.FindPropertyRelative("_volumeA"), GUIContent.none);
-                    EditorGUI.LabelField(new Rect(fieldRectA.xMax- 5, contentRect.y, contentRect.width / 2, HEIGHT), "~");
+                    EditorGUI.LabelField(new Rect(fieldRectA.xMax - 5, contentRect.y, contentRect.width / 2, HEIGHT), "~");
                     EditorGUI.PropertyField(fieldRectB, property.FindPropertyRelative("_volumeB"), GUIContent.none);
                     position.y += HEIGHT + 2;
                 }
@@ -115,7 +120,6 @@ public class SoundClipDataDrawer : PropertyDrawer
                     position.y += HEIGHT + 2;
                 }
             }
-
         }
         EditorGUI.indentLevel = indent;
         EditorGUI.EndFoldoutHeaderGroup();
@@ -133,7 +137,7 @@ public class SoundClipDataDrawer : PropertyDrawer
     {
         if (property.isExpanded)
         {
-            return (HEIGHT + 2) * 7;
+            return (HEIGHT + 2) * 8;
         }
         else
             return (HEIGHT + 2);

@@ -78,28 +78,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _checkpointManager: {fileID: 0}
+  _lanternRelations:
+  - A: {fileID: 0}
+    B: {fileID: 0}
+    Beam: {fileID: 0}
+    ConnectionSparkEffect: {fileID: 0}
   _beamPrefab: {fileID: 2659143349542992304, guid: 5f0090388504b284d92b0dc79b93ac86, type: 3}
   _beamObstacleLayers:
     serializedVersion: 2
     m_Bits: 4206793
   _sparkEffectPrefab: {fileID: 1740999221600918920, guid: bc6e43e80e19ff4419757651c260599a, type: 3}
   _lightDoor: {fileID: 0}
-  _lanternRelations:
-  - A: {fileID: 0}
-    B: {fileID: 0}
-    Beam: {fileID: 0}
-    ConnectionSparkEffect: {fileID: 0}
+  _silenceTimeOnStart: 2
   _lastConnectionCameraPoint: {fileID: 1207604084}
   _lastConnectionInputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
   _cameraLastLanternStayDuration: 1.5
   _lastBeamDuration: 1
-  _doorOpenDelay: 0.74
   _cameraDoorStayDuration: 1
   _beamHitDoorPreset: {fileID: 11400000, guid: 865c0998fbb884706bc8e9216bc17d0c, type: 2}
   _beamShootingPreset: {fileID: 11400000, guid: 57d1bc348b84d48feaec92922c5473d1, type: 2}
   _soundList: {fileID: 6999117469602735902}
-  _openSoundInterval: 0.15
-  _openSoundRepeat: 7
 --- !u!114 &6999117469602735902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +111,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_Lantern_Line
+  - _isLoop: 0
+    _key: SE_Lantern_Line
     _clip: {fileID: 8300000, guid: 4328036e37315384589d7b52b14d8a42, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -121,7 +120,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_LightDoor_Contact
+  - _isLoop: 0
+    _key: SE_LightDoor_Contact
     _clip: {fileID: 8300000, guid: d8ca7f35d07863e408501e03e6dd1ac1, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -129,11 +129,12 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_LightDoor_Open
+  - _isLoop: 0
+    _key: SE_LightDoor_Open
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1
     _volumeB: 0
-    _pitchType: 1
-    _pitchA: 0.8
+    _pitchType: 0
+    _pitchA: 0.9
     _pitchB: 1

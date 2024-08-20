@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class OptionView : MonoBehaviour
 {
@@ -39,7 +40,7 @@ public class OptionView : MonoBehaviour
     }
     private void Start()
     {
-        InitialVolumeSetting();
+        StartCoroutine(SetupVolumeCoroutine());
     }
 
     private void Update()
@@ -150,5 +151,12 @@ public class OptionView : MonoBehaviour
         _height = _isFullScreen ? Screen.height : 900;
 
         Screen.SetResolution(_width, _height, _isFullScreen);
+    }
+
+    private IEnumerator SetupVolumeCoroutine()
+    {
+        yield return null;
+
+        InitialVolumeSetting();
     }
 }

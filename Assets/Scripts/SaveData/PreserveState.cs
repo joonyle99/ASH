@@ -149,7 +149,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
         if (PersistentDataManager.Has<T>(groupName, key))
         {
             // 데이터를 가져온다
-            Debug.Log("Loading Saved Data : { key : " + key + " value : " + PersistentDataManager.Get<T>(groupName, key).ToString() + " }");
+            // Debug.Log("Loading Saved Data : { key : " + key + " value : " + PersistentDataManager.Get<T>(groupName, key).ToString() + " }");
             var state = PersistentDataManager.Get<T>(groupName, key);
 
             // 데이터를 적용한다

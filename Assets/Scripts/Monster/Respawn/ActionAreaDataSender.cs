@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class ActionAreaDataSender : MonoBehaviour
@@ -15,7 +16,7 @@ public abstract class ActionAreaDataSender : MonoBehaviour
     private void Start()
     {
         // Monster Respawn Manager보다 먼저 행동 반경 데이터를 업데이트한다
-        UpdateActionAreaData();
+        StartCoroutine(UpdateActionAreaDataCoroutine());
     }
 
     public abstract void ExtractActionAreaInfo(out BoxCollider2D boxCollider1, out BoxCollider2D boxCollider2);
@@ -26,4 +27,10 @@ public abstract class ActionAreaDataSender : MonoBehaviour
     /// Receiver에게 전달하기 위한 행동 반경 데이터를 업데이트한다
     /// </summary>
     public abstract void UpdateActionAreaData();
+
+    private IEnumerator UpdateActionAreaDataCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        UpdateActionAreaData();
+    }
 }

@@ -17,7 +17,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
     [Space]
 
-    public AudioSource[] AudioSources;
+    public List<AudioSource> allSFXPlayer;
 
     private const int PitchPrecision = 1000;
 
@@ -70,6 +70,8 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     // volume setting
     public void InitialVolumeSetting()
     {
+        // Debug.Log("InitialVolumeSetting");
+
         float bgmVolume = 1f;
         float sfxVolume = 1f;
 
@@ -85,13 +87,27 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     }
     public void SetSfxVolume(float volume)
     {
+        // Debug.Log("SetSfxVolume");
+
         if (volume < 0.01f)
         {
             _audioMixer.SetFloat("SFX", -80);
+
+            foreach (var sfxPlayer in allSFXPlayer)
+            {
+                sfxPlayer.mute = true;
+                sfxPlayer.volume = volume;
+            }
         }
         else
         {
             _audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
+
+            foreach (var sfxPlayer in allSFXPlayer)
+            {
+                sfxPlayer.mute = false;
+                sfxPlayer.volume = volume;
+            }
         }
 
         // JsonSave ¿¹Á¦
@@ -127,9 +143,16 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         {
             if (_pitchedAudioSources2.ContainsKey(pitchKey) == false)
             {
-                Debug.Log($"_sfxLoopPlayer => AudioSource AddComponent");
+                // Debug.Log($"_sfxLoopPlayer => AudioSource AddComponent (pitchFactor: {pitchFactor})");
+
                 _pitchedAudioSources2[pitchKey] = _sfxLoopPlayer.AddComponent<AudioSource>();
                 _pitchedAudioSources2[pitchKey].pitch = pitchFactor;
+
+                if (allSFXPlayer.Contains(_pitchedAudioSources2[pitchKey]) == false)
+                    allSFXPlayer.Add(_pitchedAudioSources2[pitchKey]);
+
+                // TEMP
+                InitialVolumeSetting();
             }
 
             // TEMP
@@ -152,9 +175,16 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         {
             if (_pitchedAudioSources1.ContainsKey(pitchKey) == false)
             {
-                Debug.Log($"_sfxPlayer => AudioSource AddComponent (pitchFactor: {pitchFactor})");
+                // Debug.Log($"_sfxPlayer => AudioSource AddComponent (pitchFactor: {pitchFactor})");
+
                 _pitchedAudioSources1[pitchKey] = _sfxPlayer.AddComponent<AudioSource>();
                 _pitchedAudioSources1[pitchKey].pitch = pitchFactor;
+
+                if (allSFXPlayer.Contains(_pitchedAudioSources1[pitchKey]) == false)
+                    allSFXPlayer.Add(_pitchedAudioSources1[pitchKey]);
+
+                // TEMP
+                InitialVolumeSetting();
             }
 
             _pitchedAudioSources1[pitchKey].PlayOneShot(clip, volumeFactor);
@@ -262,28 +292,30 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         _bgmPlayer.Stop();
     }
 
-    // Pause & UnPause All Sound (TODO: Saved AudioSources)
     public void PauseAllSound()
     {
-        AudioSources = Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
-
-        foreach (var audioSource in AudioSources)
+        foreach (var sfxPlayer in allSFXPlayer)
         {
-            audioSource.Pause();
+            sfxPlayer.Pause();
         }
+
+        _bgmPlayer.Pause();
     }
     public void UnPauseAllSound()
     {
-        foreach (var audioSource in AudioSources)
+        foreach (var sfxPlayer in allSFXPlayer)
         {
-            audioSource.UnPause();
+            sfxPlayer.UnPause();
         }
 
-        AudioSources = null;
+        _bgmPlayer.UnPause();
     }
 
     public void OnSceneContextBuilt()
     {
-        AudioSources = Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
+        Debug.Log("OnSceneContextBuilt in SoundManager");
+
+        allSFXPlayer = FindObjectsByType<AudioSource>(FindObjectsSortMode.None).ToList();
+        allSFXPlayer.Remove(_bgmPlayer);
     }
 }
