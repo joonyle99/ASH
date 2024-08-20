@@ -8075,10 +8075,6 @@ MonoBehaviour:
   _stopShakeTiming: 2.3
   _doorOpenPreset: {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
   _soundList: {fileID: 667513064}
-  _openSoundInterval: 0.15
-  _openSoundRepeat: 7
-  _preheatSoundInterval: 0.15
-  _preheadSoundRepeat: 7
   _dustParticle: {fileID: 911654024}
 --- !u!114 &667513064
 MonoBehaviour:
@@ -8098,24 +8094,16 @@ MonoBehaviour:
     _volumeType: 0
     _volumeA: 1
     _volumeB: 0
-    _pitchType: 1
-    _pitchA: 0.8
+    _pitchType: 0
+    _pitchA: 1
     _pitchB: 1
   - _key: SE_LightDoor_Open_Low
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1
     _volumeB: 0
-    _pitchType: 1
-    _pitchA: 0.3
-    _pitchB: 0.4
-  - _key: Open
-    _clip: {fileID: 8300000, guid: e3083b1bdf6daab4b9729a64f2bfae5a, type: 3}
-    _volumeType: 0
-    _volumeA: 1
-    _volumeB: 0
     _pitchType: 0
-    _pitchA: 1
+    _pitchA: 0.3
     _pitchB: 0.4
 --- !u!61 &667513065
 BoxCollider2D:
@@ -8181,7 +8169,6 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 1875777837}
   _stateChange: 0
   _animationType: 0
-  _interactAtFirst: 1
   _identifier: {fileID: 0}
   _isOpened: 0
   _passage: {fileID: 0}
@@ -9206,6 +9193,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3656301772621999238, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: TargetMono
+      value: 
+      objectReference: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
     - target: {fileID: 4600537874083143564, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -21375,6 +21366,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneContext_Lantern
       objectReference: {fileID: 0}
+    - target: {fileID: 6999117469602735902, guid: 9357fe544876e9445bd0914d40a4ad53, type: 3}
+      propertyPath: _soundDatas.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999117469602735902, guid: 9357fe544876e9445bd0914d40a4ad53, type: 3}
+      propertyPath: _soundDatas.Array.data[0]._key
+      value: SE_LightDoor_Open
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999117469602735902, guid: 9357fe544876e9445bd0914d40a4ad53, type: 3}
+      propertyPath: _soundDatas.Array.data[1]._key
+      value: SE_LightDoor_Open_Low
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999117469602735902, guid: 9357fe544876e9445bd0914d40a4ad53, type: 3}
+      propertyPath: _soundDatas.Array.data[0]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
+    - target: {fileID: 6999117469602735902, guid: 9357fe544876e9445bd0914d40a4ad53, type: 3}
+      propertyPath: _soundDatas.Array.data[1]._clip
+      value: 
+      objectReference: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
+    - target: {fileID: 6999117469602735902, guid: 9357fe544876e9445bd0914d40a4ad53, type: 3}
+      propertyPath: _soundDatas.Array.data[0]._pitchB
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999117469602735902, guid: 9357fe544876e9445bd0914d40a4ad53, type: 3}
+      propertyPath: _soundDatas.Array.data[1]._pitchA
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999117469602735902, guid: 9357fe544876e9445bd0914d40a4ad53, type: 3}
+      propertyPath: _soundDatas.Array.data[1]._pitchB
+      value: 0.4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9357fe544876e9445bd0914d40a4ad53, type: 3}
 --- !u!4 &1617226751 stripped
@@ -22912,7 +22935,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: -249.36038
+      value: -260.28064
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
@@ -23744,11 +23767,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -93.19209
+      value: -169.24811
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.757642
+      value: 7.0605035
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -25510,7 +25533,6 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 5562433878688136396}
   _stateChange: 0
   _animationType: 0
-  _interactAtFirst: 1
   _identifier: {fileID: 0}
   _canSkip: 0
   _dialogueData: {fileID: 11400000, guid: d42ef9a664b0ae24ba1f716ae9655933, type: 2}
@@ -25693,6 +25715,18 @@ PrefabInstance:
     - target: {fileID: 1109632853423815213, guid: 0cfa10aad408c524b84c84251b769bbd, type: 3}
       propertyPath: m_Name
       value: "\uB79C\uD134_\uBE5B\uC758\uBB38(LightDoor)"
+      objectReference: {fileID: 0}
+    - target: {fileID: 7864044248071564482, guid: 0cfa10aad408c524b84c84251b769bbd, type: 3}
+      propertyPath: _soundDatas.Array.data[0]._pitchA
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7864044248071564482, guid: 0cfa10aad408c524b84c84251b769bbd, type: 3}
+      propertyPath: _soundDatas.Array.data[0]._pitchType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7864044248071564482, guid: 0cfa10aad408c524b84c84251b769bbd, type: 3}
+      propertyPath: _soundDatas.Array.data[1]._pitchType
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0cfa10aad408c524b84c84251b769bbd, type: 3}
@@ -35518,7 +35552,6 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 8047123113886666039}
   _stateChange: 0
   _animationType: 0
-  _interactAtFirst: 1
   _identifier: {fileID: 0}
   _isOpened: 1
   _passage: {fileID: 1751912697}
@@ -35827,24 +35860,16 @@ MonoBehaviour:
     _volumeType: 0
     _volumeA: 1
     _volumeB: 0
-    _pitchType: 1
-    _pitchA: 0.8
+    _pitchType: 0
+    _pitchA: 1
     _pitchB: 1
   - _key: SE_LightDoor_Open_Low
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1
     _volumeB: 0
-    _pitchType: 1
-    _pitchA: 0.3
-    _pitchB: 0.4
-  - _key: Open
-    _clip: {fileID: 8300000, guid: e3083b1bdf6daab4b9729a64f2bfae5a, type: 3}
-    _volumeType: 0
-    _volumeA: 1
-    _volumeB: 0
     _pitchType: 0
-    _pitchA: 1
+    _pitchA: 0.3
     _pitchB: 0.4
 --- !u!114 &8047123114989482587
 MonoBehaviour:
@@ -35862,10 +35887,6 @@ MonoBehaviour:
   _stopShakeTiming: 2.3
   _doorOpenPreset: {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
   _soundList: {fileID: 8047123114989482586}
-  _openSoundInterval: 0.15
-  _openSoundRepeat: 7
-  _preheatSoundInterval: 0.15
-  _preheadSoundRepeat: 7
   _dustParticle: {fileID: 7002406967658103590}
 --- !u!114 &8047123114989482588
 MonoBehaviour:

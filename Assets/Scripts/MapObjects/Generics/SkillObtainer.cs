@@ -46,6 +46,5 @@ public class SkillObtainer : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         SoundManager.Instance.PlaySFX(_skillUISound);
-
     }
 }

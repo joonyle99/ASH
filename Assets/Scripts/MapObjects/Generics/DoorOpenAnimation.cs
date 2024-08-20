@@ -9,10 +9,6 @@ public class DoorOpenAnimation : MonoBehaviour
     [SerializeField] private ConstantShakePreset _doorOpenPreset;
 
     [SerializeField] private SoundList _soundList;
-    [SerializeField] private float _openSoundInterval;
-    [SerializeField] private int _openSoundRepeat;
-    [SerializeField] private float _preheatSoundInterval;
-    [SerializeField] private int _preheadSoundRepeat;
 
     [SerializeField] ParticleHelper _dustParticle;
 
@@ -20,41 +16,45 @@ public class DoorOpenAnimation : MonoBehaviour
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();   
+        _animator = GetComponent<Animator>();
     }
 
     public IEnumerator OpenCoroutine()
     {
+        // 1
         SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);
         _dustParticle.Play();
-        StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open_Low", _preheatSoundInterval, _preheadSoundRepeat));
-        Debug.Log("SE_LightDoor_Open_Low");
+        _soundList.PlaySFX("SE_LightDoor_Open_Low");
+
         yield return new WaitForSeconds(_doorOpenDelay);
+
+        // 2
         _animator.SetTrigger("Open");
-        StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open", _openSoundInterval, _openSoundRepeat));
-        Debug.Log("SE_LightDoor_Open");
+        _soundList.PlaySFX("SE_LightDoor_Open");
+
         yield return new WaitForSeconds(_stopShakeTiming);
+
+        // 3
         _dustParticle.Stop();
         SceneEffectManager.Instance.Camera.StopConstantShake();
     }
     public IEnumerator CloseCoroutine()
     {
+        // 1
         SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);
         _dustParticle.Play();
-        StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open_Low", _preheatSoundInterval, _preheadSoundRepeat));
+        _soundList.PlaySFX("SE_LightDoor_Open_Low");
+
         yield return new WaitForSeconds(_doorOpenDelay);
+
+        // 2
         _animator.SetTrigger("Close");
-        StartCoroutine(PlaySoundCoroutine("SE_LightDoor_Open", _openSoundInterval, _openSoundRepeat));
+        _soundList.PlaySFX("SE_LightDoor_Open");
+
         yield return new WaitForSeconds(_stopShakeTiming);
+
+        // 3
         _dustParticle.Stop();
         SceneEffectManager.Instance.Camera.StopConstantShake();
-    }
-    private IEnumerator PlaySoundCoroutine(string key, float interval, int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            _soundList.PlaySFX(key);
-            yield return new WaitForSeconds(interval);
-        }
     }
 }

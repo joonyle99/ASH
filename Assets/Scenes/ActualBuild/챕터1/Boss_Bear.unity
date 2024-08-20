@@ -1514,11 +1514,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -101.30593
+      value: -134.25656
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.9830074
+      value: -2.62275
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2183,6 +2183,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3656301772621999238, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: TargetMono
+      value: 
+      objectReference: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
     - target: {fileID: 3737342738835799599, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
       propertyPath: m_fontSize
       value: 45
@@ -3804,10 +3808,6 @@ MonoBehaviour:
   _stopShakeTiming: 2.3
   _doorOpenPreset: {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
   _soundList: {fileID: 1881396977}
-  _openSoundInterval: 0.15
-  _openSoundRepeat: 7
-  _preheatSoundInterval: 0.15
-  _preheadSoundRepeat: 7
   _dustParticle: {fileID: 1044997701601650573}
 --- !u!114 &1881396977
 MonoBehaviour:
@@ -3827,24 +3827,16 @@ MonoBehaviour:
     _volumeType: 0
     _volumeA: 1
     _volumeB: 0
-    _pitchType: 1
-    _pitchA: 0.8
+    _pitchType: 0
+    _pitchA: 1
     _pitchB: 1
   - _key: SE_LightDoor_Open_Low
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1
     _volumeB: 0
-    _pitchType: 1
-    _pitchA: 0.3
-    _pitchB: 0.4
-  - _key: Open
-    _clip: {fileID: 8300000, guid: e3083b1bdf6daab4b9729a64f2bfae5a, type: 3}
-    _volumeType: 0
-    _volumeA: 1
-    _volumeB: 0
     _pitchType: 0
-    _pitchA: 1
+    _pitchA: 0.3
     _pitchB: 0.4
 --- !u!1001 &1913160909
 PrefabInstance:
@@ -4907,7 +4899,6 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 937912732}
   _stateChange: 0
   _animationType: 0
-  _interactAtFirst: 1
   _identifier: {fileID: 0}
   _isOpened: 0
   _passage: {fileID: 5904064002676807724}
