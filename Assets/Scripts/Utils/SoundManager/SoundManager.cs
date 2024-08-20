@@ -23,8 +23,8 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
     private SoundList[] _soundLists; // ui, bgm, gimmick ...
     private Dictionary<string, int> _soundListIndexMap = new();
-    private Dictionary<int, AudioSource> _pitchedAudioSources1 = new();
-    private Dictionary<int, AudioSource> _pitchedAudioSources2 = new();
+    private Dictionary<int, AudioSource> _pitchedSFXPlayer = new();
+    private Dictionary<int, AudioSource> _pitchedSFXLoopPlayer = new();
 
     protected override void Awake()
     {
@@ -43,28 +43,28 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             }
         }
 
-        _pitchedAudioSources1[PitchPrecision] = _sfxPlayer;
-        _pitchedAudioSources2[PitchPrecision] = _sfxLoopPlayer;
+        _pitchedSFXPlayer[PitchPrecision] = _sfxPlayer;
+        _pitchedSFXLoopPlayer[PitchPrecision] = _sfxLoopPlayer;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.N))
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            // _pitchedAudioSources1 디버그
-            foreach (var audioSource in _pitchedAudioSources1)
+            foreach (var sfxPlayer in _pitchedSFXPlayer)
             {
-                Debug.Log($"_pitchedAudioSources1 => <color=orange>Key</color>: {audioSource.Key}, <color=yellow>Value</color>: {audioSource.Value}", audioSource.Value.gameObject);
+                Debug.Log($"_pitchedAudioSources1 => <color=orange>Key</color>: {sfxPlayer.Key}, <color=yellow>Value</color>: {sfxPlayer.Value}", sfxPlayer.Value.gameObject);
             }
         }
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.D))
         {
-            // _pitchedAudioSources1 디버그
-            foreach (var audioSource in _pitchedAudioSources2)
+            foreach (var sfxPlayer in _pitchedSFXLoopPlayer)
             {
-                Debug.Log($"_pitchedAudioSources2 => <color=orange>Key</color>: {audioSource.Key}, <color=yellow>Value</color>: {audioSource.Value}", audioSource.Value.gameObject);
+                Debug.Log($"_pitchedAudioSources2 => <color=orange>Key</color>: {sfxPlayer.Key}, <color=yellow>Value</color>: {sfxPlayer.Value}", sfxPlayer.Value.gameObject);
             }
         }
+#endif
     }
 
     // volume setting
@@ -93,20 +93,32 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         {
             _audioMixer.SetFloat("SFX", -80);
 
-            foreach (var sfxPlayer in allSFXPlayer)
+            for (int i = 0; i < allSFXPlayer.Count; i++)
             {
-                sfxPlayer.mute = true;
-                sfxPlayer.volume = volume;
+                if (allSFXPlayer[i] == null)
+                {
+                    allSFXPlayer.RemoveAt(i);
+                    continue;
+                }
+
+                allSFXPlayer[i].mute = true;
+                allSFXPlayer[i].volume = volume;
             }
         }
         else
         {
             _audioMixer.SetFloat("SFX", Mathf.Log10(volume) * 20);
 
-            foreach (var sfxPlayer in allSFXPlayer)
+            for (int i = 0; i < allSFXPlayer.Count; i++)
             {
-                sfxPlayer.mute = false;
-                sfxPlayer.volume = volume;
+                if (allSFXPlayer[i] == null)
+                {
+                    allSFXPlayer.RemoveAt(i);
+                    continue;
+                }
+
+                allSFXPlayer[i].mute = false;
+                allSFXPlayer[i].volume = volume;
             }
         }
 
@@ -141,15 +153,15 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
         if (isLoop)
         {
-            if (_pitchedAudioSources2.ContainsKey(pitchKey) == false)
+            if (_pitchedSFXLoopPlayer.ContainsKey(pitchKey) == false)
             {
                 // Debug.Log($"_sfxLoopPlayer => AudioSource AddComponent (pitchFactor: {pitchFactor})");
 
-                _pitchedAudioSources2[pitchKey] = _sfxLoopPlayer.AddComponent<AudioSource>();
-                _pitchedAudioSources2[pitchKey].pitch = pitchFactor;
+                _pitchedSFXLoopPlayer[pitchKey] = _sfxLoopPlayer.AddComponent<AudioSource>();
+                _pitchedSFXLoopPlayer[pitchKey].pitch = pitchFactor;
 
-                if (allSFXPlayer.Contains(_pitchedAudioSources2[pitchKey]) == false)
-                    allSFXPlayer.Add(_pitchedAudioSources2[pitchKey]);
+                if (allSFXPlayer.Contains(_pitchedSFXLoopPlayer[pitchKey]) == false)
+                    allSFXPlayer.Add(_pitchedSFXLoopPlayer[pitchKey]);
 
                 // TEMP
                 InitialVolumeSetting();
@@ -166,28 +178,28 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
                 return;
             }
 
-            _pitchedAudioSources2[pitchKey].Stop();
-            _pitchedAudioSources2[pitchKey].clip = clip;
-            _pitchedAudioSources2[pitchKey].volume = volumeFactor;
-            _pitchedAudioSources2[pitchKey].Play();
+            _pitchedSFXLoopPlayer[pitchKey].Stop();
+            _pitchedSFXLoopPlayer[pitchKey].clip = clip;
+            _pitchedSFXLoopPlayer[pitchKey].volume = volumeFactor;
+            _pitchedSFXLoopPlayer[pitchKey].Play();
         }
         else
         {
-            if (_pitchedAudioSources1.ContainsKey(pitchKey) == false)
+            if (_pitchedSFXPlayer.ContainsKey(pitchKey) == false)
             {
                 // Debug.Log($"_sfxPlayer => AudioSource AddComponent (pitchFactor: {pitchFactor})");
 
-                _pitchedAudioSources1[pitchKey] = _sfxPlayer.AddComponent<AudioSource>();
-                _pitchedAudioSources1[pitchKey].pitch = pitchFactor;
+                _pitchedSFXPlayer[pitchKey] = _sfxPlayer.AddComponent<AudioSource>();
+                _pitchedSFXPlayer[pitchKey].pitch = pitchFactor;
 
-                if (allSFXPlayer.Contains(_pitchedAudioSources1[pitchKey]) == false)
-                    allSFXPlayer.Add(_pitchedAudioSources1[pitchKey]);
+                if (allSFXPlayer.Contains(_pitchedSFXPlayer[pitchKey]) == false)
+                    allSFXPlayer.Add(_pitchedSFXPlayer[pitchKey]);
 
                 // TEMP
                 InitialVolumeSetting();
             }
 
-            _pitchedAudioSources1[pitchKey].PlayOneShot(clip, volumeFactor);
+            _pitchedSFXPlayer[pitchKey].PlayOneShot(clip, volumeFactor);
         }
     }
     public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f)
@@ -264,7 +276,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     }
     public void StopLoopSFX()
     {
-        foreach (var audioSource in _pitchedAudioSources2.Values)
+        foreach (var audioSource in _pitchedSFXLoopPlayer.Values)
         {
             audioSource.Stop();
         }
@@ -294,18 +306,30 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
     public void PauseAllSound()
     {
-        foreach (var sfxPlayer in allSFXPlayer)
+        for (int i = 0; i < allSFXPlayer.Count; i++)
         {
-            sfxPlayer.Pause();
+            if (allSFXPlayer[i] == null)
+            {
+                allSFXPlayer.RemoveAt(i);
+                continue;
+            }
+
+            allSFXPlayer[i].Pause();
         }
 
         _bgmPlayer.Pause();
     }
     public void UnPauseAllSound()
     {
-        foreach (var sfxPlayer in allSFXPlayer)
+        for (int i = 0; i < allSFXPlayer.Count; i++)
         {
-            sfxPlayer.UnPause();
+            if (allSFXPlayer[i] == null)
+            {
+                allSFXPlayer.RemoveAt(i);
+                continue;
+            }
+
+            allSFXPlayer[i].UnPause();
         }
 
         _bgmPlayer.UnPause();
