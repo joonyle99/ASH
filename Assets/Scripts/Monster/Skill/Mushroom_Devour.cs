@@ -16,7 +16,7 @@ public class Mushroom_Devour : Monster_BodySkill
         monsterSkillEvent -= OnMushroomLightGuideEvent;
     }
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
         monsterSkillEvent -= OnMushroomLightGuideEvent;
     }
