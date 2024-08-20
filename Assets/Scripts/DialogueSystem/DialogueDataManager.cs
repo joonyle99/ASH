@@ -28,8 +28,6 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
     private void Init()
     {
-        _dialogueDatas = LoadAssetsOfType<DialogueData>().ToList();
-
         ResetAllDialogueData();
 
         if(PersistentDataManager.Instance)
@@ -177,6 +175,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
         dialogueData.PlayAtFirst = playAtFirst;
     }
 
+#if UNITY_EDITOR
     public static T[] LoadAssetsOfType<T>() where T : UnityEngine.Object
     {
         return AssetDatabase
@@ -185,4 +184,5 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
             .Select(AssetDatabase.LoadAssetAtPath<T>)
             .ToArray();
     }
+#endif
 }

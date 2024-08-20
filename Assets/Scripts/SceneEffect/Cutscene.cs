@@ -4,11 +4,16 @@ using UnityEngine;
 public class Cutscene
 {
     private MonoBehaviour _owner;
+    public MonoBehaviour Owner => _owner;
+
     private IEnumerator _cutsceneCoroutine;
     private bool _useLetterbox = true;
     private System.Action _onEndCallback;
     public bool IsDone { get; private set; } = false;
     public bool IsStartted { get; private set; } = false;
+
+    public Coroutine CutSceneCoreCoroutine = null;
+
     public Cutscene(MonoBehaviour owner, IEnumerator cutsceneCoroutineFunction, bool useLetterbox = true)
     {
         _owner = owner;
@@ -30,8 +35,9 @@ public class Cutscene
         if (_useLetterbox)
             GameUIManager.OpenLetterbox();
 
-        yield return _owner.StartCoroutine(_cutsceneCoroutine);
+        yield return CutSceneCoreCoroutine = _owner.StartCoroutine(_cutsceneCoroutine);
 
+        CutSceneCoreCoroutine = null;
         IsDone = true;
         _onEndCallback.Invoke();
 

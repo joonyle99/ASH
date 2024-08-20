@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class StatueVisualEffect : MonoBehaviour
+public class StatueVisualEffect : MonoBehaviour, ISceneContextBuildListener
 {
     [Header("UI")]
     [SerializeField] private TMP_Text _saveText;
@@ -38,15 +38,18 @@ public class StatueVisualEffect : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
+        _soundList = GetComponent<SoundList>();
+        _identifier = GetComponent<Identifier>();
+    }
+
+    public void OnSceneContextBuilt()
+    {
         Init();
     }
 
     private void Init()
     {
-        _audioSource = GetComponent<AudioSource>();
-        _soundList = GetComponent<SoundList>();
-        _identifier = GetComponent<Identifier>();
-
         if (_identifier)
         {
             PersistentData pd = PersistentDataManager.Instance.PersistentData;

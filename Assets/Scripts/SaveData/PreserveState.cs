@@ -42,8 +42,8 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
     [SerializeField] private bool _preserveTransform = true;        // 트랜스폼 데이터를 저장할지 여부
     [SerializeField] private bool _preserveDestruction = true;      // 파괴 상태를 저장할지 여부
 
-    public string TransformKey => _ID + "_transformState";          // 트랜스폼 데이터의 키
-    public string DestructionKey => _ID + "_destructed";            // 파괴 상태의 키
+    public string TransformKey => _ID + "_transformStateSaved";          // 트랜스폼 데이터의 키
+    public string DestructionKey => _ID + "_destructedSaved";            // 파괴 상태의 키
 
 #if UNITY_EDITOR
     public string EditorGroupName

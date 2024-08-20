@@ -22,9 +22,6 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
         if (activator.Type == ActivatorType.Player)
         {
             Save();
-
-            _statueVisualEffect.PlayEffectsOnSaveStarted();
-            _statueVisualEffect.DeactiveSaveTextLogic();
         }
     }
 
@@ -38,14 +35,15 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
             PB?.RecoverCurHp(1);
         }
 
-        if (OnSaveStarted != null)
-            OnSaveStarted.Invoke();
+        _statueVisualEffect.PlayEffectsOnSaveStarted();
+        _statueVisualEffect.DeactiveSaveTextLogic();
+
+        OnSaveStarted?.Invoke();
 
         JsonDataManager.SavePersistentData(_passageName);
 
         JsonDataManager.JsonSave();
 
-        if(OnSaveEnded != null)
-            OnSaveEnded.Invoke();
+        OnSaveEnded?.Invoke();
     }
 }

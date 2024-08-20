@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffectManager>, ISceneContextBuildListener
 {
@@ -35,6 +36,8 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     private State _currentState = State.Idle;
 
     private List<Cutscene> _cutSceneQueue;              // Cutscene
+    public List<Cutscene> CutsceneQueue => _cutSceneQueue;
+
     private List<SceneEffectEvent> _sceneEvents;        // SceneEvent
     private SceneEventComparator _eventComparator;
 
@@ -56,6 +59,8 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
             return _currentCamera;
         }
     }
+
+    private Cutscene _recentCutscene = null;
 
     protected override void Awake()
     {
@@ -85,6 +90,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     }
     private void EnterIdleState()
     {
+        _recentCutscene = null;
         _currentState = State.Idle;
         Camera.ResetCameraSettings();
     }
@@ -93,18 +99,24 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     public void PushCutscene(Cutscene cutscene)
     {
         // 컷씬이 없는 경우 바로 재생
-        if (_cutSceneQueue.Count == 0) PlayCutscene(cutscene);
+        if (_cutSceneQueue.Count == 0)
+        {
+            PlayCutscene(cutscene);
+        }
         // 컷씬이 있는 경우 큐에 추가
         else _cutSceneQueue.Add(cutscene);
 
         // 컷씬이 재생되는 동안 다른 이벤트들은 비활성화
         DisableAllSceneEvents();
     }
+
     private void PlayCutscene(Cutscene cutscene)
     {
+        _recentCutscene = cutscene;
         _currentState = State.Cutscene;
         cutscene.Play(CutsceneEndCallback);
     }
+
     private void CutsceneEndCallback()
     {
         if (_cutSceneQueue.Count > 0)
@@ -180,5 +192,16 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
                 }
             }
         }
+    }
+
+    public static void StopPlayingCutscene()
+    {
+        if(Instance._recentCutscene != null && 
+            Instance._recentCutscene.CutSceneCoreCoroutine != null)
+        {
+            Instance._recentCutscene.Owner.StopCoroutine(Instance._recentCutscene.CutSceneCoreCoroutine);
+        }
+
+        Instance._cutSceneQueue.Clear();
     }
 }
