@@ -18,7 +18,7 @@ public enum InteractionStateChangeType
 /// <summary>
 /// 플레이어와 상호작용이 가능한 오브젝트
 /// </summary>
-public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildListener
+public abstract class InteractableObject : MonoBehaviour
 {
     #region Variable
 
@@ -36,8 +36,6 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
 
     [SerializeField] private InteractionStateChangeType _stateChange;       // 상호작용 시 변경할 플레이어의 상태 제어
     [SerializeField] private InteractionAnimationType _animationType;       // 상호작용 시 전달할 플레이어 애니메이션 타입 (NPC의 경우 None)
-
-    [SerializeField] private bool _interactAtFirst = true;
 
     [SerializeField]
     [HideInInspector] private Identifier _identifier;
@@ -75,11 +73,6 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
         }
     }
 
-    public bool InteractAtFirst
-    {
-        get => _interactAtFirst;
-    }
-
     protected bool IsInteractionKeyUp => InputManager.Instance.State.InteractionKey.KeyUp;             // 상호작용 키를 떼는 순간인지
     protected bool IsPlayerInteractionState => Player.CurrentStateIs<InteractionState>();               // 플레이어가 상호작용 상태인지
     protected bool IsPlayerIsDirSync => Player.IsDirSync;                                               // 플레이어의 바로보는 방향과 입력 방향이 동기화 되었는지
@@ -91,11 +84,6 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
     private void Awake()
     {
         _identifier = GetComponent<Identifier>();
-    }
-
-    private void Start()
-    {
-        _interactAtFirst = true;
     }
 
     protected abstract void OnObjectInteractionEnter();             // 상호작용 시작 시 호출되는 함수 (모든 상호작용 오브젝트가 구현하도록 한다)
@@ -124,15 +112,6 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
     {
         //Debug.Log("Exit Interaction");
 
-        if (_identifier)
-        {
-            if (_isInteracting)
-            {
-                _interactAtFirst = false;
-                _identifier.SaveState<bool>("_interactAtFirst", _interactAtFirst);
-            }
-        }
-
         IsInteracting = false;
 
         OnObjectInteractionExit();
@@ -140,39 +119,11 @@ public abstract class InteractableObject : MonoBehaviour, ISceneContextBuildList
         Player.PlayerInteractionController.OnPlayerInteractionExit();     // 플레이어에게 상호작용 종료를 알린다
     }
 
-    public void OnSceneContextBuilt()
-    {
-        if (_identifier)
-        {
-            if (SceneChangeManager.Instance &&
-                SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
-            {
-                _interactAtFirst = _identifier.LoadState<bool>("_interactAtFirstSaved", true);
-            }
-            else
-            {
-                _interactAtFirst = _identifier.LoadState<bool>("_interactAtFirst", true);
-            }
-        }
-
-        SaveAndLoader.OnSaveStarted += SaveInteractState;
-    }
-
     protected virtual void OnDestroy()
     {
         if (IsInteracting)
         {
             ExitInteraction();
-        }
-
-        SaveAndLoader.OnSaveStarted -= SaveInteractState;
-    }
-
-    private void SaveInteractState()
-    {
-        if (_identifier)
-        {
-            _identifier.SaveState<bool>("_interactAtFirstSaved", _interactAtFirst);
         }
     }
     #endregion

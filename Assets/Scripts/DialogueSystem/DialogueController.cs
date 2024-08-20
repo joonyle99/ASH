@@ -27,7 +27,10 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     }
 
     private Coroutine _currentDialogueCoroutine;
+    [SerializeField]
     private DialogueData _currentDialogueData;
+
+    private bool _isSkipSequence = false;
 
     public void StartDialogue(DialogueData data, bool isContinueDialogue = false)
     {
@@ -46,6 +49,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         _currentDialogueData = data;
         _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue, !data.PlayAtFirst));
     }
+
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false, bool canSkip = false)
     {
         // 1. 다이얼로그 시퀀스를 생성한다
@@ -73,9 +77,13 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             {
                 yield return null;
 
-                // CHEAT: F3 키를 누르면 대화를 빠르게 진행
-                if (Input.GetKeyDown(KeyCode.F3))
+                // 스킵버튼을 누르거나 키다운시 스킵
+                if (canSkip
+                    && (_isSkipSequence || InputManager.Instance.State.InteractionKey.KeyDown))
+                {
                     View.FastForward();
+                    _isSkipSequence = false;
+                }
             }
 
             yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
@@ -182,6 +190,14 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         View.ClosePanel();
 
         IsDialogueActive = false;
+    }
+
+    public void SkipDialogue()
+    {
+        if(!View.IsCurrentSegmentOver)
+        {
+            _isSkipSequence = true;
+        }
     }
 
     private void SetCurrentDialogueData(bool playAtFirst)

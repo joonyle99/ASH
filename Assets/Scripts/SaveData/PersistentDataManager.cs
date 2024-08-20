@@ -373,7 +373,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
      */
     public static bool LoadToSavedData()
     {
-        if(SceneContext.Current.Player.CurrentStateIs<DieState>())
+        ///---------씬 파괴 전 수행되어야 하는 것----------
+        if(SceneContext.Current.Player && SceneContext.Current.Player.CurrentStateIs<DieState>())
         {
             Coroutine playerDieEnterCoroutine = ((DieState)SceneContext.Current.Player.CurrentState).DieEnterCoroutine;
             if (playerDieEnterCoroutine != null)
@@ -381,6 +382,10 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
                 Instance.StopCoroutine(playerDieEnterCoroutine);
             }
         }
+
+        DialogueController.Instance.ShutdownDialogue();
+
+        ///----------------------------------------------
 
         JsonDataManager.JsonLoad();
         Instance._savedPersistentData = JsonDataManager.GetObjectInGlobalSaveData<JsonPersistentData>("PersistentData");

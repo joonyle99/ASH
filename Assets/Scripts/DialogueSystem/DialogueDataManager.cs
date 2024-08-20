@@ -1,0 +1,188 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
+using UnityEngine;
+
+public enum FindDialogueDataType
+{
+    None = 0,
+    Name = 1,
+    Text = 2,
+}
+
+public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDataManager>
+{
+    [SerializeField]
+    List<DialogueData> _dialogueDatas = new List<DialogueData>();
+
+    string _basicGroupName = "DialogueData"; // 씬전환에 의해 불러와질 그룹
+    string _jsonGroupName = "DialogueDataSaved"; // 저장, 불러오기에 의해 불러와질 그룹
+
+    string _playAtFirstAdditionalKey = "_PlayAtFirst";
+
+    protected override void Awake()
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        _dialogueDatas = LoadAssetsOfType<DialogueData>().ToList();
+
+        ResetAllDialogueData();
+
+        if(PersistentDataManager.Instance)
+        {
+            PersistentDataManager.TryAddDataGroup(_basicGroupName); 
+            PersistentDataManager.TryAddDataGroup(_jsonGroupName);
+        }
+
+        SaveAndLoader.OnSaveStarted += SaveAllDialogueDataWithJson;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        SaveAndLoader.OnSaveStarted -= SaveAllDialogueDataWithJson;
+    }
+    
+    public static void ResetAllDialogueData()
+    {
+        for (int i = 0; i < Instance._dialogueDatas.Count; i++)
+        {
+            Instance._dialogueDatas[i].PlayAtFirst = true;
+        }
+    }
+
+    /// <summary>
+    /// PersistentDataManager에 저장된 dialogueData값들을 실제 dialoguedata에 동기화
+    /// </summary>
+    public static void LoadSyncAllDialogueData(bool isNeedJsonSave)
+    {
+        string groupName = isNeedJsonSave ? Instance._jsonGroupName : Instance._basicGroupName;
+
+        if (PersistentDataManager.Instance)
+        {
+            for(int i = 0; i < Instance._dialogueDatas.Count; i++)
+            {
+                string ID = Instance._dialogueDatas[i].name + Instance._playAtFirstAdditionalKey;
+                bool playAtFirstSaveData = true;
+
+                if(PersistentDataManager.Has<bool>(groupName, ID))
+                {
+                    playAtFirstSaveData = PersistentDataManager.Get<bool>(groupName, ID);
+                    Debug.Log(ID + " " + playAtFirstSaveData);
+                }
+
+                SetDialogueData(Instance._dialogueDatas[i], playAtFirstSaveData);
+            }
+        }
+    }
+
+    private static void SaveAllDialogueDataWithJson()
+    {
+        SaveAllDialogueData(true);
+    }
+
+    /// <summary>
+    /// dialogueData를 PersistentDataManager에 저장
+    /// </summary>
+    public static void SaveAllDialogueData(bool isNeedJsonSave)
+    {
+        string groupName = isNeedJsonSave ? Instance._jsonGroupName : Instance._basicGroupName;
+
+        for (int i = 0; i < Instance._dialogueDatas.Count(); i++)
+        {
+            string ID = Instance._dialogueDatas[i].name + Instance._playAtFirstAdditionalKey;
+
+            if (PersistentDataManager.Instance)
+            {
+                PersistentDataManager.Set(groupName, ID, Instance._dialogueDatas[i].PlayAtFirst);
+            }
+        }
+    }
+
+    public static List<DialogueData> FindDialogueDatas(FindDialogueDataType findDialogueDataType, string text)
+    {
+        List<DialogueData> result = new List<DialogueData>();
+
+        switch (findDialogueDataType)
+        {
+            case FindDialogueDataType.Name:
+                {
+                    for (int i = 0; i < Instance._dialogueDatas.Count; i++)
+                    {
+                        if (Instance._dialogueDatas[i].name != "" && Instance._dialogueDatas[i].name.Contains(text))
+                        {
+                            result.Add(Instance._dialogueDatas[i]);
+                        }
+                    }
+
+                    break;
+                }
+            case FindDialogueDataType.Text:
+                {
+                    for (int i = 0; i < Instance._dialogueDatas.Count; i++)
+                    {
+                        if (Instance._dialogueDatas[i].ScriptText != "" && Instance._dialogueDatas[i].ScriptText.Contains(text))
+                        {
+                            result.Add(Instance._dialogueDatas[i]);
+                        }
+                    }
+
+                    break;
+                }
+        }
+
+        return result;
+    }
+    public static DialogueData FindDialogueData(FindDialogueDataType findDialogueDataType, string text)
+    {
+        switch (findDialogueDataType)
+        {
+            case FindDialogueDataType.Name:
+                {
+                    for (int i = 0; i < Instance._dialogueDatas.Count; i++)
+                    {
+                        if (Instance._dialogueDatas[i].name != "" && Instance._dialogueDatas[i].name.Contains(text))
+                        {
+                            return Instance._dialogueDatas[i];
+                        }
+                    }
+
+                    break;
+                }
+            case FindDialogueDataType.Text:
+                {
+                    for (int i = 0; i < Instance._dialogueDatas.Count; i++)
+                    {
+                        if (Instance._dialogueDatas[i].ScriptText != "" && Instance._dialogueDatas[i].ScriptText.Contains(text))
+                        {
+                            return Instance._dialogueDatas[i];
+                        }
+                    }
+
+                    break;
+                }
+        }
+
+        return null;
+    }
+    public static void SetDialogueData(DialogueData dialogueData, bool playAtFirst = true)
+    {
+        if (!dialogueData) return;
+
+        dialogueData.PlayAtFirst = playAtFirst;
+    }
+
+    public static T[] LoadAssetsOfType<T>() where T : UnityEngine.Object
+    {
+        return AssetDatabase
+            .FindAssets($"t:{typeof(T).Name}")
+            .Select(AssetDatabase.GUIDToAssetPath)
+            .Select(AssetDatabase.LoadAssetAtPath<T>)
+            .ToArray();
+    }
+}

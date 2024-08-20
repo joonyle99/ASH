@@ -37,7 +37,6 @@ public class DialogueView : MonoBehaviour
     /// <summary> 다이얼로그 뷰 UI 초기화 및 패널 열기 </summary>
     public void OpenPanel(bool canSkip = false)
     {
-        Debug.Log(canSkip);
         _dialogue.text = "";
         _speaker.text = "";
         _indicator.gameObject.SetActive(false);
@@ -219,6 +218,6 @@ public class DialogueView : MonoBehaviour
     public void SkipDialogue()
     {
         if(DialogueController.Instance)
-            DialogueController.Instance.ShutdownDialogue();
+            DialogueController.Instance.SkipDialogue();
     }
 }

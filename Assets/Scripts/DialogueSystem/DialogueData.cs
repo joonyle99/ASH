@@ -22,6 +22,7 @@ public class DialogueData : ScriptableObject
     [SerializeField] private DialogueAction[] _actions;                     // 대화 액션
 
     [SerializeField, TextArea(3, 30)] private string _scriptText;
+    public string ScriptText => _scriptText;
     
     public QuestData QuestData { get; private set; }                        // 대화에 연결된 퀘스트 데이터
 

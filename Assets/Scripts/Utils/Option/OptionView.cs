@@ -86,6 +86,8 @@ public class OptionView : MonoBehaviour
 
         _optionPanel.gameObject.SetActive(false);
 
+        DialogueController.Instance.ShutdownDialogue();
+
         SoundManager.Instance.UnPauseAllSound();
     }
 

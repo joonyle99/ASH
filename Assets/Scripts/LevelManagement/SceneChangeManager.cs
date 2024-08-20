@@ -125,6 +125,15 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         if (IsChanging)
             return;
 
+        if(SceneChangeType == SceneChangeType.Loading)
+        {
+            DialogueDataManager.LoadSyncAllDialogueData(true);
+        }
+        else
+        {
+            DialogueDataManager.LoadSyncAllDialogueData(false);
+        }
+
         StartCoroutine(ChangeToPlayableSceneCoroutine(sceneName, passageName));
     }
     private IEnumerator ChangeToPlayableSceneCoroutine(string sceneName, string entranceName)

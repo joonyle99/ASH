@@ -69,6 +69,7 @@ public class StageResetBehaviour : InteractableObject
     {
         PersistentDataManager.Instance.PersistentData.DataGroups[_currentSceneBasicGroupName].Clear();
         SceneChangeManager.Instance.SceneChangeType = SceneChangeType.StageReset;
+        MonsterRespawnManager.Instance.StopRespawnCoroutine();
         BossDungeonManager.Instance.MakeDataGroup();
         SceneChangeManager.Instance.ChangeToPlayableScene(_sceneName, _entrancePassage);
     }
