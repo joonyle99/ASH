@@ -6,6 +6,13 @@ public class InstantRespawnOnContact : TriggerZone
 
     public override void OnPlayerEnter(PlayerBehaviour player)
     {
+        var temp = GetComponent<ASHObject>();
+        if (temp != null)
+        {
+            if (temp.Type == ObjectType.WaterPool)
+                SoundManager.Instance.PlayCommonSFX("SE_Puddle_splash");
+        }
+
         player.TriggerInstantRespawn(_damage);
     }
 

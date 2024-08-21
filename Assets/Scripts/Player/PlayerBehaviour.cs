@@ -275,7 +275,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         // CHEAT: ~ 키를 누르면 체력 1 회복
         if (Input.GetKeyDown(KeyCode.BackQuote))
         {
-            RecoverCurHp(2);
+            if (Input.GetKey(KeyCode.LeftShift))
+                RecoverCurHp(-2);
+            else
+                RecoverCurHp(2);
         }
 
         // CHEAT: F10 키를 누르면 가장 가까운 보스문 열기
@@ -300,15 +303,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
                 closestBossDoor.CloseDoor();
             else
                 closestBossDoor.OpenDoor();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            PlaySound_SE_Climb01();
-        }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            PlaySound_SE_Climb02();
         }
 
         #endregion

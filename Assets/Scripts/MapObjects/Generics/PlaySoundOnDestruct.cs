@@ -8,7 +8,7 @@ public class PlaySoundOnDestruct : MonoBehaviour, IDestructionListener
     public void OnDestruction()
     {
         if (SoundManager.Instance != null && _soundData.Clip != null)
-            SoundManager.Instance.PlaySFX(_soundData);
+            SoundManager.Instance.PlaySFX_SoundClipData(_soundData);
     }
 
 }

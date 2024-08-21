@@ -45,6 +45,6 @@ public class SkillObtainer : MonoBehaviour
     IEnumerator PlaySoundCoroutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        SoundManager.Instance.PlaySFX(_skillUISound);
+        SoundManager.Instance.PlaySFX_SoundClipData(_skillUISound);
     }
 }

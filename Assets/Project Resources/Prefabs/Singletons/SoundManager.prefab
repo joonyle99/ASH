@@ -448,7 +448,6 @@ Transform:
   - {fileID: 2100785251}
   - {fileID: 694524222}
   - {fileID: 1160707514}
-  - {fileID: 7259150858372055161}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -467,7 +466,6 @@ MonoBehaviour:
   _soundListParent: {fileID: 2100785250}
   _bgmPlayer: {fileID: 694524223}
   _sfxPlayer: {fileID: 1160707515}
-  _sfxLoopPlayer: {fileID: 5421318497930488246}
   _audioMixer: {fileID: 24100000, guid: 1b816bc5bcef5154091d43569e74b921, type: 2}
   allSFXPlayer: []
 --- !u!1 &1581199063581203133
@@ -516,24 +514,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _soundDatas:
   - _isLoop: 0
-    _key: SE_CrashRock_hit
-    _clip: {fileID: 8300000, guid: 49d38d3974af0e740857aad753196b06, type: 3}
-    _volumeType: 0
-    _volumeA: 1
-    _volumeB: 0
-    _pitchType: 0
-    _pitchA: 1
-    _pitchB: 0
-  - _isLoop: 0
-    _key: SE_CrashRock_split
-    _clip: {fileID: 8300000, guid: 8b72d6d53f557654a9e3914dc67e49e2, type: 3}
-    _volumeType: 0
-    _volumeA: 1
-    _volumeB: 0
-    _pitchType: 0
-    _pitchA: 0.75
-    _pitchB: 0.9
-  - _isLoop: 0
     _key: SE_Puddle_boiling
     _clip: {fileID: 8300000, guid: 4a1b0a6f3b91e094aa3a8da3e04cb161, type: 3}
     _volumeType: 0
@@ -552,142 +532,14 @@ MonoBehaviour:
     _pitchA: 1
     _pitchB: 0
   - _isLoop: 0
-    _key: MonsterHit
-    _clip: {fileID: 8300000, guid: ae045425ecf61a345bbb7761fb733f09, type: 3}
+    _key: SE_Lever_Work
+    _clip: {fileID: 8300000, guid: 2ba6948f1935f2346b5d88f5fe6ee480, type: 3}
     _volumeType: 0
-    _volumeA: 0.7
+    _volumeA: 1
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
---- !u!1 &2691540178353764020
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7259150858372055161}
-  - component: {fileID: 5421318497930488246}
-  m_Layer: 0
-  m_Name: SFXSource_Loop
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7259150858372055161
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2691540178353764020}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8633755868666026086}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &5421318497930488246
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2691540178353764020}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: -6882587806943760171, guid: 1b816bc5bcef5154091d43569e74b921, type: 2}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &9152459998049813284
 GameObject:
   m_ObjectHideFlags: 0
@@ -737,7 +589,7 @@ MonoBehaviour:
     _key: MainTheme
     _clip: {fileID: 8300000, guid: ffae6aaf54249cd4394980c4637be776, type: 3}
     _volumeType: 0
-    _volumeA: 0.7
+    _volumeA: 0.5
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
@@ -746,7 +598,7 @@ MonoBehaviour:
     _key: Exploration1
     _clip: {fileID: 8300000, guid: 4bfda06033ad05f4294fe9193b022bc5, type: 3}
     _volumeType: 0
-    _volumeA: 0.7
+    _volumeA: 0.5
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
@@ -755,7 +607,7 @@ MonoBehaviour:
     _key: Exploration2
     _clip: {fileID: 8300000, guid: 28f2797281dc84b4993261762d4ef204, type: 3}
     _volumeType: 0
-    _volumeA: 0.7
+    _volumeA: 0.5
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
@@ -764,7 +616,7 @@ MonoBehaviour:
     _key: BossDungeon1
     _clip: {fileID: 8300000, guid: b6f7812db3b7a2a4c9d3a4627a2d106a, type: 3}
     _volumeType: 0
-    _volumeA: 0.8
+    _volumeA: 0.5
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
@@ -773,7 +625,7 @@ MonoBehaviour:
     _key: BossBattle_Bear
     _clip: {fileID: 8300000, guid: 76096fc0560f53645bf4335d6c9044d0, type: 3}
     _volumeType: 0
-    _volumeA: 0.8
+    _volumeA: 0.5
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
@@ -782,7 +634,7 @@ MonoBehaviour:
     _key: BossBattle_Fire
     _clip: {fileID: 8300000, guid: 720e6c1896a5cc8429a734ba0a0310ba, type: 3}
     _volumeType: 0
-    _volumeA: 0.8
+    _volumeA: 0.5
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1
@@ -791,7 +643,7 @@ MonoBehaviour:
     _key: Ending
     _clip: {fileID: 8300000, guid: b16c78d6595073f489fd580ea9674d0b, type: 3}
     _volumeType: 0
-    _volumeA: 0.8
+    _volumeA: 0.5
     _volumeB: 0
     _pitchType: 0
     _pitchA: 1

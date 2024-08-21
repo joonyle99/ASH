@@ -8,14 +8,12 @@ public class BlazeFire : MonoBehaviour
     {
         _soundList = GetComponent<SoundList>();
     }
-
     private void OnEnable()
     {
-        _soundList.PlaySFX("Blaze", 1f, 1f, true);
+        _soundList.PlaySFX("Blaze");
     }
-
     private void OnDisable()
     {
-        SoundManager.Instance.StopLoopSFX();
+        // _soundList.StopSFX("Blaze", isLoop: true);
     }
 }

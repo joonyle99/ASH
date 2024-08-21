@@ -9,15 +9,13 @@ public class Tornado : MonoBehaviour
     {
         _soundList = GetComponent<SoundList>();
     }
-
     private void OnEnable()
     {
-        _soundList.PlaySFX("Tornado", 1f, 1f, true);
+        _soundList.PlaySFX("Tornado");
     }
-
     private void OnDisable()
     {
-        SoundManager.Instance.StopLoopSFX();
+        // _soundList.StopSFX("Tornado", isLoop: true);
     }
 
     public void TornadoAnimation()

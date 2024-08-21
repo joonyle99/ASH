@@ -20,23 +20,27 @@ public class SoundList : MonoBehaviour
         }
     }
 
-    public void PlaySFX(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f, bool isLoop = false)
+    public void PlaySFX(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
+        // 해당 SoundList에 등록해둔 키가 존재한다면
         if (_soundIndexMap.ContainsKey(key))
         {
             var index = _soundIndexMap[key];
             var sound = _soundDatas[index];
+
             if (sound.Clip == null)
             {
                 Debug.LogWarning("No clip for: " + key);
+                return;
             }
-            else
-            {
-                SoundManager.Instance.PlaySFX(sound.Clip, sound.Pitch * pitchMultiplier, sound.Volume * volumeMultiplier, isLoop);
-            }
+
+            SoundManager.Instance.PlaySFX_AudioClip(sound.Clip, sound.Pitch * pitchMultiplier, sound.Volume * volumeMultiplier);
         }
         else
         {
+            Debug.Log($"SoundList에서 PlaySFX를 시도했으나 해당 'Key'가 존재하지 않아 SoundManager의 PlayCommonSFX로 넘깁니다");
+
+            // 키가 존재하지 않는다면 SoundManager의 CommonSFX에서 재생을 시도한다
             SoundManager.Instance.PlayCommonSFX(key, pitchMultiplier, volumeMultiplier);
         }
     }
