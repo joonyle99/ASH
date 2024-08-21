@@ -7,7 +7,7 @@ using CanvasGroup = UnityEngine.CanvasGroup;
 /// <summary>
 /// 퀘스트 데이터를 전달받아 뷰 UI에 표시하는 클래스
 /// </summary>
-public class QuestView : MonoBehaviour
+public class QuestView : MonoBehaviour, ISceneContextBuildListener
 {
     public Image QuestPanel;
     public TextMeshProUGUI Counter;
@@ -15,6 +15,17 @@ public class QuestView : MonoBehaviour
     [Space]
 
     public float FadeTime = 1.5f;
+
+    public void OnSceneContextBuilt()
+    {
+        var currentQuest = QuestController.Instance.CurrentQuest;
+
+        if (currentQuest != null)
+        {
+            UpdatePanel(currentQuest);
+            OpenPanel();
+        }
+    }
 
     public void OpenPanel()
     {
@@ -24,10 +35,10 @@ public class QuestView : MonoBehaviour
     {
         StartCoroutine(ControlPanelCoroutine(false));
     }
-    public void UpdatePanel(QuestData questData)
+    public void UpdatePanel(Quest quest)
     {
-        Counter.text = questData.MonsterQuest.MonsterKilled.ToString()
-            + " / " + questData.MonsterQuest.KillGoal.ToString();
+        Counter.text = quest.CurrentCount.ToString()
+            + " / " + quest.QuestData.GoalCount.ToString();
     }
     private IEnumerator ControlPanelCoroutine(bool isOpen, float delay = 2f)
     {

@@ -24,7 +24,7 @@ public class DialogueData : ScriptableObject
     [SerializeField, TextArea(3, 30)] private string _scriptText;
     public string ScriptText => _scriptText;
     
-    public QuestData QuestData { get; private set; }                        // 대화에 연결된 퀘스트 데이터
+    public Quest Quest { get; private set; }                                // 대화에 연결된 퀘스트 데이터
 
     public InputSetterScriptableObject InputSetter => _inputSetter;
 
@@ -37,24 +37,22 @@ public class DialogueData : ScriptableObject
     }
 
     /// <summary>
-    /// NPC가 가지고 있는 QuestData를 DialogueData에 연결한다
+    /// Quest를 DialogueData에 연결한다
     /// </summary>
-    /// <param name="questData"></param>
-    public void LinkQuestData(QuestData questData)
+    public void LinkQuestData(Quest quest)
     {
-        Debug.Log("다이얼로그에 퀘스트 데이터 연결 성공");
-        this.QuestData = questData;
+        Debug.Log("다이얼로그에 퀘스트 연결 성공");
+        this.Quest = quest;
     }
     public void UnlinkQuestData()
     {
-        Debug.Log("다이얼로그에서 퀘스트 데이터 해제 성공");
-        this.QuestData = null;
+        Debug.Log("다이얼로그에서 퀘스트 해제 성공");
+        this.Quest = null;
     }
 
     /// <summary>
     /// 다이얼로그 세그먼트 처리를 통해 시퀀스를 반환한다
     /// </summary>
-    /// <returns></returns>
     public List<DialogueSegment> GetDialogueSequence()
     {
         List<DialogueSegment> dialogueSequence = new List<DialogueSegment>();

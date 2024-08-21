@@ -78,12 +78,19 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                 yield return null;
 
                 // 스킵버튼을 누르거나 키다운시 스킵
-                if (canSkip
-                    && (_isSkipSequence || InputManager.Instance.State.InteractionKey.KeyDown))
+                if (canSkip && (_isSkipSequence || InputManager.Instance.State.InteractionKey.KeyDown))
                 {
                     View.FastForward();
                     _isSkipSequence = false;
                 }
+
+#if UNITY_EDITOR
+                // CHEAT: F3 키를 누르면 현재 Segment를 빠르게 넘긴다
+                if (Input.GetKeyDown(KeyCode.F3))
+                {
+                    View.FastForward();
+                }
+#endif
             }
 
             yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
@@ -98,20 +105,20 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             if (dialogueSequence.IsLastSegment)
             {
                 // 다이얼로그에 퀘스트가 등록되어 있는 경우
-                if (data.QuestData != null)
+                if (data.Quest != null)
                 {
                     // 퀘스트를 처음 받은 경우, 자동 수락
-                    if (data.QuestData.IsFirst)
+                    if (data.Quest.IsFirst)
                     {
-                        data.QuestData.IsFirst = false;
+                        data.Quest.IsFirst = false;
 
-                        QuestController.Instance.AcceptQuest(data.QuestData);
+                        QuestController.Instance.AcceptQuest(data.Quest);
                     }
                     else
                     {
                         List<ResponseContainer> contaienr = new List<ResponseContainer>();
-                        contaienr.Add(new ResponseContainer(ResponseButtonType.Accept, () => QuestController.Instance.AcceptQuest(data.QuestData)));
-                        contaienr.Add(new ResponseContainer(ResponseButtonType.Reject, () => QuestController.Instance.RejectQuest(data.QuestData)));
+                        contaienr.Add(new ResponseContainer(ResponseButtonType.Accept, () => QuestController.Instance.AcceptQuest(data.Quest)));
+                        contaienr.Add(new ResponseContainer(ResponseButtonType.Reject, () => QuestController.Instance.RejectQuest(data.Quest)));
 
                         // 퀘스트 응답 패널을 연다
                         View.OpenResponsePanel(contaienr);

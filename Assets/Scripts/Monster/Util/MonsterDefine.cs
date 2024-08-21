@@ -88,6 +88,8 @@ public static class MonsterDefine
         Normal,
         SemiBoss,
         FinalBoss,
+
+        Special = 1000,
     }
 
     public enum MoveType

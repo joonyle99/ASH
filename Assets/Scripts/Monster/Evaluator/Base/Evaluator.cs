@@ -167,7 +167,7 @@ public abstract class Evaluator : MonoBehaviour
 
         if (isNeverBoth)
         {
-            Debug.LogWarning($"쿨타임이 실행되었지만, 어떠한 이벤트나 대기 시간을 기다리지 않습니다");
+            Debug.Log($"쿨타임이 실행되었지만, 어떠한 이벤트나 대기 시간을 기다리지 않습니다");
             yield return null;
         }
     }

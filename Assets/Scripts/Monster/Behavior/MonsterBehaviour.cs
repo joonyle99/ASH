@@ -614,14 +614,11 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         }
 
         var currentQuest = QuestController.Instance.CurrentQuest;
-        if (currentQuest && currentQuest.IsActive)
+        if (currentQuest != null && currentQuest.IsActive)
         {
             // 해당 퀘스트에 해당하는 몬스터인지 확인
-            if (monsterData.RankType.Equals(MonsterDefine.RankType.Normal)
-                && !monsterData.MonsterName.Equals("Turtle"))
-            {
+            if (monsterData.RankType.Equals(MonsterDefine.RankType.Normal))
                 currentQuest.IncreaseCount();
-            }
         }
 
         // Wait until death effect is done
