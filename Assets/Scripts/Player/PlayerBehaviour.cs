@@ -302,6 +302,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
                 closestBossDoor.OpenDoor();
         }
 
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            PlaySound_SE_Climb01();
+        }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            PlaySound_SE_Climb02();
+        }
+
         #endregion
 
         #region Basic Behavior
@@ -590,6 +599,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public void PlaySound_SE_Die_02()
     {
         _soundList.PlaySFX("SE_Die_02(Short)");
+    }
+    public void PlaySound_SE_Climb01()
+    {
+        _soundList.PlaySFX("SE_Climb_01");
+
+        _landDustEmitter.Emit(1);
+    }
+    public void PlaySound_SE_Climb02()
+    {
+        _soundList.PlaySFX("SE_Climb_02");
+
+        _landDustEmitter.Emit(1);
     }
 
     public void PlaySound(string key)
