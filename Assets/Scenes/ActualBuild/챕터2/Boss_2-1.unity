@@ -6766,6 +6766,10 @@ PrefabInstance:
       value: SavePoint2_1_1D
       objectReference: {fileID: 0}
     - target: {fileID: -4362207956897806080, guid: 328104a086dec5947a147e1f236306bb, type: 3}
+      propertyPath: _id
+      value: SavePointBD2_1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4362207956897806080, guid: 328104a086dec5947a147e1f236306bb, type: 3}
       propertyPath: _groupName
       value: BossDungeon2
       objectReference: {fileID: 0}
@@ -8089,7 +8093,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_LightDoor_Open
+  - _isLoop: 0
+    _key: SE_LightDoor_Open
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -8097,7 +8102,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 1
-  - _key: SE_LightDoor_Open_Low
+  - _isLoop: 0
+    _key: SE_LightDoor_Open_Low
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -23767,11 +23773,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -188.40417
+      value: -153.79
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.8502636
+      value: 2.43
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -35843,7 +35849,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_LightDoor_Open
+  - _isLoop: 0
+    _key: SE_LightDoor_Open
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -35851,7 +35858,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 1
-  - _key: SE_LightDoor_Open_Low
+  - _isLoop: 0
+    _key: SE_LightDoor_Open_Low
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1

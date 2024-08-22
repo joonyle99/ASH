@@ -5362,11 +5362,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 185.51
+      value: 95.865425
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.360671
+      value: 9.627914
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6615,7 +6615,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: Hit
+  - _isLoop: 0
+    _key: Hit
     _clip: {fileID: 8300000, guid: 49d38d3974af0e740857aad753196b06, type: 3}
     _volumeType: 0
     _volumeA: 0.3
@@ -6623,7 +6624,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 0.8
     _pitchB: 0
-  - _key: Die
+  - _isLoop: 0
+    _key: Die
     _clip: {fileID: 8300000, guid: 8b72d6d53f557654a9e3914dc67e49e2, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -35164,6 +35166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _skillKey: LightSkill
   _skillUISound:
+    _isLoop: 0
     _key: 
     _clip: {fileID: 8300000, guid: a20b803cb8de33847ab5ef7c3276544b, type: 3}
     _volumeType: 0
@@ -37325,7 +37328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _groupName: Exploration1
-  _ID: 1_101
+  _id: 
 --- !u!4 &1504615732 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
@@ -50456,6 +50459,10 @@ PrefabInstance:
     - target: {fileID: -4362207956897806080, guid: a9a9d7e83ea93bc49a4ce581843d2413, type: 3}
       propertyPath: _ID
       value: SavePoint_1_1_1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4362207956897806080, guid: a9a9d7e83ea93bc49a4ce581843d2413, type: 3}
+      propertyPath: _id
+      value: SavePoint1_1_1
       objectReference: {fileID: 0}
     - target: {fileID: 1565001323, guid: a9a9d7e83ea93bc49a4ce581843d2413, type: 3}
       propertyPath: _groupName
