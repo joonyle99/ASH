@@ -18,6 +18,8 @@ public class QuestView : MonoBehaviour, ISceneContextBuildListener
 
     public void OnSceneContextBuilt()
     {
+        /*
+         * TODO: 퀘스트 시스템 완성하기
         var currentQuest = QuestController.Instance.CurrentQuest;
 
         if (currentQuest != null)
@@ -25,6 +27,7 @@ public class QuestView : MonoBehaviour, ISceneContextBuildListener
             UpdatePanel(currentQuest);
             OpenPanel();
         }
+        */
     }
 
     public void OpenPanel()

@@ -21,8 +21,11 @@ public class Merchant : InteractableObject
     [Header("Merchant")]
     [Space]
 
+    // Merchant는 각자 고유한 퀘스트를 가질 수 있음
+    [SerializeField] private Quest _quest;          // 직렬화 되었기 때문에 null이 아닌 상태로 존재
+    public Quest Quest => _quest;
+
     [SerializeField] private List<DialogueDictionary> _dialogueCollection = new List<DialogueDictionary>();
-    [SerializeField] private Quest _quest;      // 해당 퀘스트는 Merchant NPC가 소유하고 있는 씬에 종속된 인스턴스 객체
 
     private Coroutine _interactCoroutine;
 
@@ -39,36 +42,25 @@ public class Merchant : InteractableObject
             return;
         }
 
-        if (_quest == null)
-        {
-            Debug.LogWarning("퀘스트를 추가해주세요.");
-            return;
-        }
-
-        Quest assignedQuest = _quest;
-
-        var currentQuest = QuestController.Instance.CurrentQuest;
+        /*
+         * TODO: 퀘스트 시스템 완성하기
+        Quest currentQuest = QuestController.Instance.CurrentQuest;
         if (currentQuest != null)
-        {
-            // Debug.LogWarning("이미 퀘스트가 진행 중입니다");
-            // return;
+            _quest = currentQuest;
 
-            // 내 퀘스트를 실행하지 않고
-            assignedQuest = currentQuest;
-        }
-
-        _interactCoroutine = StartCoroutine(OnInteractCoroutine(assignedQuest));
+        _interactCoroutine = StartCoroutine(OnInteractCoroutine(_quest));
+        */
     }
 
-    private IEnumerator OnInteractCoroutine(Quest assignedQuest)
+    private IEnumerator OnInteractCoroutine(Quest nowQuest)
     {
         // 퀘스트 활성화 상태 (진행 중)
-        if (assignedQuest.IsActive)
+        if (nowQuest.IsActive)
         {
             // 퀘스트 완료
-            if (assignedQuest.IsComplete())
+            if (nowQuest.IsComplete())
             {
-                string completionString = "Completion " + (assignedQuest.CurrentRepeatCount + 1).ToString();
+                string completionString = "Completion " + (nowQuest.CurrentRepeatCount + 1).ToString();
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == completionString).Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 DialogueController.Instance.StartDialogue(dialogueData, false);
@@ -89,7 +81,7 @@ public class Merchant : InteractableObject
         else
         {
             // 최대 반복 횟수에 도달
-            if (!assignedQuest.IsRepeatable())
+            if (!nowQuest.IsRepeatable())
             {
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Final Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
@@ -97,12 +89,12 @@ public class Merchant : InteractableObject
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
             }
             // 퀘스트 첫 등록 (자동 수락)
-            else if (assignedQuest.IsFirst)
+            else if (nowQuest.IsFirst)
             {
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "First Meeting").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
 
-                dialogueData.LinkQuestData(assignedQuest);
+                dialogueData.LinkQuestData(nowQuest);
 
                 DialogueController.Instance.StartDialogue(dialogueData, false);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
@@ -124,11 +116,11 @@ public class Merchant : InteractableObject
                 }
                 */
 
-                string requestString = "Re-request " + assignedQuest.CurrentRepeatCount.ToString();
+                string requestString = "Re-request " + nowQuest.CurrentRepeatCount.ToString();
                 var dialogueData2 = _dialogueCollection.FirstOrDefault(d => d.Key == requestString).Value;
                 if (CheckInvalid(dialogueData2) == true) yield break;
 
-                dialogueData2.LinkQuestData(assignedQuest);
+                dialogueData2.LinkQuestData(nowQuest);
 
                 DialogueController.Instance.StartDialogue(dialogueData2, false);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
@@ -136,7 +128,7 @@ public class Merchant : InteractableObject
                 DialogueData dialogueData3;
 
                 // 수락 시
-                if (assignedQuest.IsAcceptedBefore)
+                if (nowQuest.IsAcceptedBefore)
                 {
                     dialogueData3 = _dialogueCollection.FirstOrDefault(d => d.Key == "Acception").Value;
                     if (CheckInvalid(dialogueData3) == true) yield break;

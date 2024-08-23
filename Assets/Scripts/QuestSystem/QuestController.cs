@@ -1,3 +1,5 @@
+using UnityEngine;
+
 /// <summary>
 /// 실행 중인 퀘스트를 관리하고
 /// 퀘스트 데이터를 뷰에 전달하는 클래스
@@ -5,7 +7,7 @@
 public class QuestController : HappyTools.SingletonBehaviourFixed<QuestController>
 {
     // SerializeField로 직렬화하면 기본적으로 null이 아닌 상태로 존재하기 때문에 사용 안 함
-    private Quest _currentQuest = null;
+    [SerializeField] private Quest _currentQuest;
     public Quest CurrentQuest => _currentQuest;
 
     private QuestView _view;
