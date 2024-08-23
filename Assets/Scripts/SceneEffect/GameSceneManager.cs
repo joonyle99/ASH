@@ -31,6 +31,10 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     {
         "Boss_Bear", "Boss_Fire"
     };
+    private static HashSet<string> endingScene = new HashSet<string>
+    {
+        "EndingScene"
+    };
     // TEMP
     private static HashSet<string> testScenes = new HashSet<string>
     {
@@ -64,15 +68,21 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     {
         return bossScenes.Contains(sceneName);
     }
-    // TEMP
-    public static bool IsTestScene(string sceneName)
+    public static bool IsEndingScene(string sceneName)
     {
-        return testScenes.Contains(sceneName);
+        return endingScene.Contains(sceneName);
     }
+
     public static bool IsDefinedScene(string sceneName)
     {
         return IsOpeningScene(sceneName) || IsExploration1(sceneName) || IsExploration2(sceneName) ||
                IsBossDungeon1(sceneName) || IsBossDungeon2(sceneName) || IsBossScene(sceneName) ||
                IsTestScene(sceneName);
+    }
+
+    // TEMP
+    public static bool IsTestScene(string sceneName)
+    {
+        return testScenes.Contains(sceneName);
     }
 }

@@ -9,6 +9,9 @@ using UnityEngine;
 /// </summary>
 public abstract class TriggerZone : MonoBehaviour
 {
+    [Header("─────────── TriggerZone ───────────")]
+    [Space]
+
     [SerializeField] protected List<TriggerActivator> triggerActivators;
 
     public virtual void OnActivatorEnter(TriggerActivator activator) { }

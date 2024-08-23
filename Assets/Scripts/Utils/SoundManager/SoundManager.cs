@@ -216,6 +216,10 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         {
             PlayCommonBGM("BossDungeon1");
         }
+        else if (GameSceneManager.IsEndingScene(sceneName))
+        {
+            PlayCommonBGM("EndingTheme");
+        }
         else
         {
             // 기본 BGM 재생

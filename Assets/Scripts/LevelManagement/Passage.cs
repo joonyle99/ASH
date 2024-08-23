@@ -8,8 +8,13 @@ using UnityEditor.SceneManagement;
 
 public class Passage : TriggerZone
 {
+    [Header("─────────── Passage ───────────")]
+    [Space]
+
     [Tooltip("플레이어가 여기로 들어가서 다음 스테이지로 갈 때")][SerializeField] InputSetterScriptableObject _enterInputSetter;
     [Tooltip("플레이어가 이전 스테이지에서 여기로 나올 때")][SerializeField] InputSetterScriptableObject _exitInputSetter;
+
+    [Space]
 
     [Tooltip("해당 입구를 통해 씬에 입성했을 때 실행하는 컷씬")]
     [SerializeField] private CutscenePlayer _entranceCutscenePlayer;
