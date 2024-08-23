@@ -23,8 +23,13 @@ public class DialogueData : ScriptableObject
 
     [SerializeField, TextArea(3, 30)] private string _scriptText;
     public string ScriptText => _scriptText;
-    
-    public Quest Quest { get; private set; }                                // 대화에 연결된 퀘스트 데이터
+
+    private Quest _quest;
+    public Quest Quest
+    {
+        get => _quest;
+        set => _quest = value;
+    }
 
     public InputSetterScriptableObject InputSetter => _inputSetter;
 
