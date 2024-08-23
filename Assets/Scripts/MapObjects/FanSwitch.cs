@@ -12,14 +12,12 @@ public class FanSwitch : InteractableObject, ISceneContextBuildListener
 
     [Space]
 
-    [SerializeField] private float _leverAngleZ;
-
-    [Space]
-
     [SerializeField] private float _leverRotateDuration = 0.4f;
     [SerializeField] private float _cameraMoveDelay = 1.0f;
     [SerializeField] private float _cameraMoveDuration = 1.5f;
 
+    // ¿˙¿Â
+    private float _leverAngleZ = 50f;
     private PreserveState _statePreserver;
 
     private void Awake()
