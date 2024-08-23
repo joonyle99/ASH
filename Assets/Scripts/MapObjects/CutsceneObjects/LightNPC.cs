@@ -16,22 +16,20 @@ public class LightNPC : MonoBehaviour
     [SerializeField] private float _flashDuration = 0.4f;
     [SerializeField] private float _flashEndDuration = 0.5f;
     [SerializeField] private Light2D _flashLight;
-    
+
+    private SoundList _soundList;
+    private AudioSource _loopSound;
+
+    private void Awake()
+    {
+        _soundList = GetComponent<SoundList>();
+        _loopSound = GetComponent<AudioSource>();
+    }
+
     public void StartStartingPointMovement()
     {
         StartCoroutine(MoveToStartingPointCoroutine());
     }
-    public void StartCurveMovement()
-    {
-        _curvePath.ControlPoints[_curvePath.Length - 1].position = SceneContext.Current.Player.HandRigidBody.transform.position;
-        StartCoroutine(CurveMovementCoroutine());
-    }
-
-    public void StartFlash()
-    {
-        StartCoroutine(FlashCoroutine());
-    }
-
     private IEnumerator MoveToStartingPointCoroutine()
     {
         Vector3 originalPosition = transform.position;
@@ -40,13 +38,22 @@ public class LightNPC : MonoBehaviour
         {
             float t = eTime / _moveToStartingPointDuration;
             transform.position = Vector3.Lerp(originalPosition, _curvePath.ControlPoints[0].position, t);
-            eTime += Time.deltaTime;
             yield return null;
+            eTime += Time.deltaTime;
         }
         transform.position = _curvePath.ControlPoints[0].position;
+        _loopSound.Play();
+    }
+
+    public void StartCurveMovement()
+    {
+        _curvePath.ControlPoints[_curvePath.Length - 1].position = SceneContext.Current.Player.HandRigidBody.transform.position;
+        StartCoroutine(CurveMovementCoroutine());
     }
     private IEnumerator CurveMovementCoroutine()
     {
+        _loopSound.Stop();
+        _soundList.PlaySFX("SE_Light_move");
         float eTime = 0f;
         while (eTime < _curveMovementDuration)
         {
@@ -56,6 +63,11 @@ public class LightNPC : MonoBehaviour
             yield return null;
         }
         yield return FlashCoroutine();
+    }
+
+    public void StartFlash()
+    {
+        StartCoroutine(FlashCoroutine());
     }
     private IEnumerator FlashCoroutine()
     {
@@ -68,6 +80,8 @@ public class LightNPC : MonoBehaviour
             eTime += Time.deltaTime;
         }
         yield return new WaitForSeconds(_flashDuration);
+        _soundList.PlaySFX("SE_Light_absorb");
+        SceneContext.Current.Player.SetCapeIntensity(2.7f);
         eTime = 0f;
         while (eTime < _flashEndDuration)
         {
@@ -77,10 +91,7 @@ public class LightNPC : MonoBehaviour
             eTime += Time.deltaTime;
         }
 
-        // 플레이어의 Cape Material을 변경한다
-        SceneContext.Current.Player.SetCapeIntensity(2.7f);
-
-        if(_isDestroyAfterFlash)
+        if (_isDestroyAfterFlash)
             Destroy(gameObject);
     }
 }

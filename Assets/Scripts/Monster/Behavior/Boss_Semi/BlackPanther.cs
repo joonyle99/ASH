@@ -336,8 +336,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         // 추격 위치 설정
         var player = SceneContext.Current.Player;
-        var dir = Mathf.Sign(player.transform.position.x - transform.position.x);
-        float targetPosX = Mathf.Clamp(player.transform.position.x + dir * _rushBackDist, _rushableRange.Start, _rushableRange.End);
+        var direction = Mathf.Sign(player.transform.position.x - transform.position.x);
+        float targetPosX = Mathf.Clamp(player.transform.position.x + direction * _rushBackDist, _rushableRange.Start, _rushableRange.End);
 
         // 디버그 코드
         Vector3 startPoint = new Vector3(targetPosX, transform.position.y, transform.position.z);

@@ -32,12 +32,14 @@ public class LifePiece : MonoBehaviour
     [SerializeField] private GameObject _ringEnd;
 
     private ParticleCounter _particleCounter;
+    private ParticleRotator _particleRotator;
     private ParticleSystem _particleSystem;
     private ParticleSystem.VelocityOverLifetimeModule _velocityOverLifetimeModule;
 
     private void Awake()
     {
         _particleCounter = GetComponentInChildren<ParticleCounter>();
+        _particleRotator = GetComponentInChildren<ParticleRotator>();
         _particleSystem = GetComponentInChildren<ParticleSystem>();
 
         _velocityOverLifetimeModule = _particleSystem.velocityOverLifetime;
@@ -71,7 +73,6 @@ public class LifePiece : MonoBehaviour
         // when you get half of particle, recover health
         RecoverPlayerHealth();
 
-        
         // * ring start effect *
         _ringStart.SetActive(true);
         yield return new WaitForSeconds(2f);
@@ -93,6 +94,8 @@ public class LifePiece : MonoBehaviour
         // 모이는 위치를 플레이어로 변경
         transform.position = player.HeartCollider.bounds.center;
         transform.parent = player.transform;
+
+        _particleRotator.SetTarget(player.transform);
     }
 
     private void RecoverPlayerHealth()

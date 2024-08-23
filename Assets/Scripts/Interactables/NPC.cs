@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +14,7 @@ public class NPC : InteractableObject
     [Space]
 
     [SerializeField] private DialogueData _dialogueData;
+    [SerializeField] private DialogueData _responseDialogueData;
 
     protected override void OnObjectInteractionEnter()
     {
@@ -25,7 +27,17 @@ public class NPC : InteractableObject
     {
         if (!DialogueController.Instance.IsDialogueActive)
         {
-            ExitInteraction();
+            if (_responseDialogueData == null) ExitInteraction();
+            else StartCoroutine(ExitInteractionAfterResponse());
         }
+    }
+    private IEnumerator ExitInteractionAfterResponse()
+    {
+        InputManager.Instance.ChangeToStayStillSetter();
+        yield return new WaitForSeconds(1f);
+        DialogueController.Instance.StartDialogue(_responseDialogueData, false);
+        yield return new WaitUntil(() => !DialogueController.Instance.IsDialogueActive);
+        InputManager.Instance.ChangeToDefaultSetter();
+        ExitInteraction();
     }
 }

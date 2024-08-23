@@ -1,6 +1,6 @@
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
 
+[RequireComponent(typeof(ParticleSystem))]
 public class ParticleCounter : MonoBehaviour
 {
     private ParticleSystem _particleSystem;

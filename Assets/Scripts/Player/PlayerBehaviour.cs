@@ -487,11 +487,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         MaxHp += amount;
         CurHp = MaxHp;      // 체력을 최대 체력만큼 회복한다
 
+        _soundList.PlaySFX("SE_Healing_01");
+
         // Debug.Log("최대 체력 증가 성공");
     }
     public void RecoverCurHp(int amount)
     {
         CurHp += amount;
+
+        _soundList.PlaySFX("SE_Healing_01");
 
         // Debug.Log("체력 회복 성공");
     }
