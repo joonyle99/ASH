@@ -29,8 +29,9 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     private void Init()
     {
         ResetAllDialogueData();
+        _dialogueDatas = LoadAssetsOfType<DialogueData>().ToList();
 
-        if(PersistentDataManager.Instance)
+        if (PersistentDataManager.Instance)
         {
             PersistentDataManager.TryAddDataGroup(_groupName); 
         }
@@ -58,9 +59,12 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     /// </summary>
     public static void LoadSyncAllDialogueData(bool isNeedJsonSave)
     {
+        ResetAllDialogueData();
+        PersistentDataManager.TryAddDataGroup(Instance._groupName);
+
         string additionalKey_playAtFirst = isNeedJsonSave ?
             Instance._playAtFirstAdditionalKeyForJson : Instance._playAtFirstAdditionalKey;
-
+        
         if (PersistentDataManager.Instance)
         {
             for(int i = 0; i < Instance._dialogueDatas.Count; i++)
@@ -175,14 +179,9 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
         dialogueData.PlayAtFirst = playAtFirst;
     }
 
-#if UNITY_EDITOR
     public static T[] LoadAssetsOfType<T>() where T : UnityEngine.Object
     {
-        return AssetDatabase
-            .FindAssets($"t:{typeof(T).Name}")
-            .Select(AssetDatabase.GUIDToAssetPath)
-            .Select(AssetDatabase.LoadAssetAtPath<T>)
-            .ToArray();
+        Resources.LoadAll("ScriptableObjects/DialogueData");
+        return (T[])Resources.FindObjectsOfTypeAll(typeof(T));
     }
-#endif
 }

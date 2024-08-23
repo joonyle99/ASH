@@ -103,7 +103,9 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
         // 플레이 모드에서만 저장
         if (Application.isPlaying)
         {
-            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            if (SceneChangeManager.Instance &&
+                (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap || 
+                 SceneChangeManager.Instance.SceneChangeType == SceneChangeType.PlayerRespawn))
             {
                 // 트랜스폼 데이터 저장 (씬 전환 시)
                 SaveTransformState();
@@ -111,6 +113,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
             SaveAndLoader.OnSaveStarted -= OnSaveData;
         }
     }
+
     // 오브젝트가 파괴되었을 때 파괴 상태의 데이터를 저장하는 작업
     public void OnDestruction()
     {
@@ -119,7 +122,6 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
         {
             PersistentDataManager.Set(_groupName, DestructionKey, true);
             SaveAndLoader.OnSaveStarted -= OnSaveData;
-
         }
     }
 
