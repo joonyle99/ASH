@@ -24,8 +24,8 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
         }
     }
 
-    public int CurrentKeyCount => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount");
-    public bool IsAllKeysCollected => PersistentDataManager.Get<int>(_dataGroupName, "bossKeyCount") == _maxKeyCount;
+    public int CurrentKeyCount => PersistentDataManager.Get<int>(_dataGroupName, "_bossKeyCountSaved");
+    public bool IsAllKeysCollected => PersistentDataManager.Get<int>(_dataGroupName, "_bossKeyCountSaved") == _maxKeyCount;
 
     protected override void Awake()
     {
@@ -36,7 +36,9 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
 
     public void OnKeyObtained(BossKey key = null)
     {
-        PersistentDataManager.UpdateValue<int>(_dataGroupName, "bossKeyCount", x => Math.Clamp(x + 1, 0, _maxKeyCount));
+        if (!PersistentDataManager.HasDataGroup(_dataGroupName))
+            MakeDataGroup();
+        PersistentDataManager.UpdateValue<int>(_dataGroupName, "_bossKeyCountSaved", x => Math.Clamp(x + 1, 0, _maxKeyCount));
 
         GameUIManager.AddBossKey();
 
@@ -48,7 +50,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     }
     public void OnOpenBossDoor()
     {
-        PersistentDataManager.UpdateValue<int>(_dataGroupName, "bossKeyCount", x => 0);
+        PersistentDataManager.UpdateValue<int>(_dataGroupName, "_bossKeyCountSaved", x => 0);
     }
 
     public void MakeDataGroup()

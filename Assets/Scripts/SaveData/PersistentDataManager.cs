@@ -4,6 +4,8 @@ using UnityEngine;
 using DataGroup = System.Collections.Generic.Dictionary<string, object>;
 
 using static JsonPersistentData;
+using UnityEditor;
+using JetBrains.Annotations;
 
 /// <summary> 지속성 있는 데이터 </summary>
 public class PersistentData
@@ -59,8 +61,8 @@ public class PersistentData
             foreach (var dataGroup in dataGroups.Value)
             {
                 //저장관련된 큰 문제 생기면 아래 코드 삭제 요망
-                if (!dataGroup.Key.Substring(dataGroup.Key.Length - 5, 5).Equals("Saved"))
-                    continue;
+                //if (!dataGroup.Key.Substring(dataGroup.Key.Length - 5, 5).Equals("Saved"))
+                //    continue;
 
                 jsonDataGroup.Add(dataGroup.Key,
                     new SerializableObjectType() { Object = dataGroup.Value });
@@ -116,6 +118,10 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     public static SkillOrderData SkillOrderData => Instance._skillOrderData;
 
     private int _cheatSkillId = 0;
+
+    //gui var
+    Vector2 scrollPos = Vector2.zero;
+    string t = "";
 
     private void Update()
     {
@@ -376,7 +382,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     public static bool LoadToSavedData()
     {
         ///---------씬 파괴 전 수행되어야 하는 것----------
-        if(SceneContext.Current.Player && SceneContext.Current.Player.CurrentStateIs<DieState>())
+        if (SceneContext.Current.Player && SceneContext.Current.Player.CurrentStateIs<DieState>())
         {
             Coroutine playerDieEnterCoroutine = ((DieState)SceneContext.Current.Player.CurrentState).DieEnterCoroutine;
             if (playerDieEnterCoroutine != null)
@@ -393,7 +399,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         JsonDataManager.JsonLoad();
         Instance._savedPersistentData = JsonDataManager.GetObjectInGlobalSaveData<JsonPersistentData>("PersistentData");
 
-        if(Instance._savedPersistentData != null)
+        if (Instance._savedPersistentData != null)
         {
             ReplacePDataToSavedPData();
 
@@ -423,4 +429,64 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         Instance.PersistentData.DataGroups.Clear();
         Instance.PersistentData.GlobalDataGroup.Clear();
     }
+
+    private void OnGUI()
+    {
+        GUIStyle _guiStyle = new();
+        _guiStyle.normal.textColor = Color.green;
+
+        GUILayout.BeginArea(new Rect(0, 0, 200, 200));
+        scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Width(200), GUILayout.Height(200));
+        GUILayout.Label(t, _guiStyle);
+
+        if (GUILayout.Button("View DataGroup", GUILayout.Width(200), GUILayout.Height(50)))
+        {
+            for (int i = 0; _savedPersistentData._jsonDataGroups != null &&
+                _savedPersistentData._jsonDataGroups.data != null &&
+                i < _savedPersistentData._jsonDataGroups.data.Count; i++)
+            {
+                t += "group : " + _savedPersistentData._jsonDataGroups.data[i].Key + "\n";
+                for(int j = 0; j < _savedPersistentData._jsonDataGroups.data[i].Value.data.Count; j++)
+                {
+                    t += "key : " + _savedPersistentData._jsonDataGroups.data[i].Value.data[j].Key + "\n";
+                    t += "value : " + _savedPersistentData._jsonDataGroups.data[i].Value.data[j].Value.ObjectSerialized + "\n";
+                }
+            }
+        }
+
+        if (GUILayout.Button("View GlobalDataGroup", GUILayout.Width(200), GUILayout.Height(50)))
+        {
+            t += "SavedSceneName : " + _savedPersistentData.SceneName + "\n";
+            t += "PassageName : " + _savedPersistentData.PassageName + "\n";
+
+            for (int i = 0; _savedPersistentData._jsonGlobalDataGroup != null &&
+                _savedPersistentData._jsonGlobalDataGroup.data != null &&
+                i < _savedPersistentData._jsonGlobalDataGroup.data.Count; i++)
+            {
+                t += "key : " + _savedPersistentData._jsonGlobalDataGroup.data[i].Key + "\n";
+                t += "value : " + _savedPersistentData._jsonGlobalDataGroup.data[i].Value.ObjectSerialized + "\n";
+            }
+        }
+
+        if (GUILayout.Button("Clear", GUILayout.Width(200), GUILayout.Height(50)))
+            t = "";
+
+        GUILayout.EndScrollView();
+
+        GUILayout.EndArea();
+    }
+    /*
+    void OnGUI()
+    {
+        EditorGUILayout.BeginHorizontal();
+        scrollPos =
+            EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(100), GUILayout.Height(100));
+        GUILayout.Label(t);
+        EditorGUILayout.EndScrollView();
+        if (GUILayout.Button("Add More Text", GUILayout.Width(100), GUILayout.Height(100)))
+            t += " \nAnd this is more text!";
+        EditorGUILayout.EndHorizontal();
+        if (GUILayout.Button("Clear"))
+            t = "";
+    }*/
 }

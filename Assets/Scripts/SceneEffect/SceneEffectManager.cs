@@ -70,6 +70,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
         _sceneEvents = new List<SceneEffectEvent>();
         _eventComparator = new SceneEventComparator();
     }
+
     private void Update()
     {
         if (_currentState == State.SceneEvent)

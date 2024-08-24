@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(LightNPC), typeof(CutscenePlayer))]
+[RequireComponent(typeof(StageResetLight), typeof(CutscenePlayer))]
 public class StageResetBehaviour : InteractableObject
 {
     [Header("Dialogue")]
@@ -65,6 +65,7 @@ public class StageResetBehaviour : InteractableObject
     {
         DialogueController.Instance.ShutdownDialogue();
     }
+
     public void ResetStage()
     {
         PersistentDataManager.Instance.PersistentData.DataGroups[_currentSceneBasicGroupName].Clear();
