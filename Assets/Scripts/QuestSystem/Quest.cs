@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[System.Serializable]
+// [System.Serializable]
 public class Quest
 {
     public Quest(Quest quest)

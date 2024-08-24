@@ -8,7 +8,6 @@ public class EndingPassage : TriggerZone
         StartCoroutine(ExitSceneCoroutine());
     }
 
-    // 다음 씬으로 넘어가기 위한 로직
     private IEnumerator ExitSceneCoroutine()
     {
         // * push cutscene
