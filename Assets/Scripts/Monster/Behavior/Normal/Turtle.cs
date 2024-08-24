@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
 {
     private PreserveState _statePreserver;
@@ -19,16 +21,18 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
                 Die(false, false);
             }
 
+            int tmpDir = DefaultDir;
+
             if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                RecentDir = _statePreserver.LoadState<int>("_recentDirSaved", DefaultDir);
+                tmpDir = _statePreserver.LoadState<int>("_recentDirSaved", DefaultDir);
             }
             else
             {
-                RecentDir = _statePreserver.LoadState<int>("_recentDir", DefaultDir);
+                tmpDir = _statePreserver.LoadState<int>("_recentDir", DefaultDir);
             }
 
-            SetRecentDir(RecentDir);
+            SetRecentDir(tmpDir);
         }
 
         SaveAndLoader.OnSaveStarted += SaveTurtleState;
