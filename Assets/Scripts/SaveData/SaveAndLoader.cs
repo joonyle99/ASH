@@ -31,7 +31,7 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
 
         if(_statueVisualEffect && !_statueVisualEffect.Played)
         {
-            PlayerBehaviour PB = SceneContext.Current.Player.GetComponent<PlayerBehaviour>();
+            PlayerBehaviour PB = SceneContext.Current.Player;
             PB?.RecoverCurHp(1);
         }
 

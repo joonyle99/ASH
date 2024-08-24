@@ -138,7 +138,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
             UpdateValueByGlobal<int>("SkillPiece", x => x + 3);
 
-            _cheatSkillId++;
+            _cheatSkillId = _cheatSkillId == 0 ? 1 : 0;
         }
 
 #if UNITY_EDITOR
@@ -422,6 +422,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         return false;
     }
 
+    //프롤로그 화면에서 호출되도록 하기
     public static void ClearPersistentData()
     {
         Instance.PersistentData.SceneName = "";
@@ -439,6 +440,21 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Width(200), GUILayout.Height(200));
         GUILayout.Label(t, _guiStyle);
 
+        if (GUILayout.Button("View DataGroup", GUILayout.Width(200), GUILayout.Height(50)))
+        {
+            foreach(var pair in Instance.PersistentData.DataGroups)
+            {
+                t += "group : " + pair.Key + "\n";
+                t += "---------------\n";
+                foreach(var innerPair in Instance.PersistentData.DataGroups[pair.Key])
+                {
+                    t += "key : " + innerPair.Key + "\n";
+                    t += "value : " + innerPair.Value + "\n";
+                }
+            }
+            t += "\n\n\n";
+        }
+        /*
         if (GUILayout.Button("View DataGroup", GUILayout.Width(200), GUILayout.Height(50)))
         {
             for (int i = 0; _savedPersistentData._jsonDataGroups != null &&
@@ -467,6 +483,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
                 t += "value : " + _savedPersistentData._jsonGlobalDataGroup.data[i].Value.ObjectSerialized + "\n";
             }
         }
+        */
 
         if (GUILayout.Button("Clear", GUILayout.Width(200), GUILayout.Height(50)))
             t = "";

@@ -13,6 +13,7 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
         if (_statePreserver)
         {
             bool isDead = _statePreserver.LoadState("_isDeadSaved", IsDead);
+
             if (isDead)
             {
                 Die(false, false);
@@ -21,10 +22,13 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
             if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
                 RecentDir = _statePreserver.LoadState<int>("_recentDirSaved", DefaultDir);
-            }else
+            }
+            else
             {
                 RecentDir = _statePreserver.LoadState<int>("_recentDir", DefaultDir);
             }
+
+            SetRecentDir(RecentDir);
         }
 
         SaveAndLoader.OnSaveStarted += SaveTurtleState;

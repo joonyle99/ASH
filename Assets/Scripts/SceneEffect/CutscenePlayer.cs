@@ -21,6 +21,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
     {
         _statePreserver = GetComponent<PreserveState>();
     }
+
     public void OnSceneContextBuilt()
     {
         if(_statePreserver)
