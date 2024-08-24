@@ -45,6 +45,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     private ProCamera2DNumericBoundaries _boundariesComponent;
     private ProCamera2DRooms _roomsComponent;
 
+    /*
+    public ShakePreset largeexplosion;
+    public ConstantShakePreset beamshoot;
+    */
+
     public bool IsUpdateFinished { get; private set; }
 
     public float OffsetX
@@ -90,7 +95,18 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     private void Update()
     {
-
+        /*
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            // largeexplosion
+            StartShake(largeexplosion);
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            // beamshoot
+            StartConstantShake(beamshoot);
+        }
+        */
     }
     private void LateUpdate()
     {
@@ -252,7 +268,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void StartConstantShake(ConstantShakePreset preset)
     {
-        _shakeComponent.StopConstantShaking(0.3f);
+        // _shakeComponent.StopConstantShaking(0.3f);
         _shakeComponent.ConstantShake(preset);
     }
     public void StopConstantShake(float smooth = 0.1f)
