@@ -9,9 +9,7 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
         base.Awake();
 
         _statePreserver = GetComponent<PreserveState>();
-    }
-    public void OnSceneContextBuilt()
-    {
+
         if (_statePreserver)
         {
             bool isDead = _statePreserver.LoadState("_isDeadSaved", IsDead);
@@ -22,6 +20,7 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
             }
 
             int tmpDir = DefaultDir;
+            RecentDir = tmpDir;
 
             if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
@@ -36,6 +35,10 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
         }
 
         SaveAndLoader.OnSaveStarted += SaveTurtleState;
+    }
+
+    public void OnSceneContextBuilt()
+    {
     }
     
     // destroy function
@@ -95,6 +98,7 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
     {
         if (_statePreserver)
         {
+            Debug.Log("save");
             _statePreserver.SaveState("_isDeadSaved", IsDead);
             _statePreserver.SaveState("_recentDirSaved", RecentDir);
         }

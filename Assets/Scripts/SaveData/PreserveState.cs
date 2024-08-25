@@ -1,5 +1,6 @@
-using UnityEngine;
 using System;
+using UnityEngine;
+using System.Data;
 
 /// <summary>
 /// 트랜스폼 상태를 저장하는 구조체
@@ -61,10 +62,6 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
     // 트랜스폼과 파괴 상태를 불러와 초기화 하는 작업 (고유한 데이터는 따로 초기화 해야한다)
     private void Awake()
     {
-        
-    }
-    public void OnSceneContextBuilt()
-    {
         //OnSave함수 바인딩
         SaveAndLoader.OnSaveStarted += OnSaveData;
 
@@ -74,6 +71,8 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
         // 트랜스폼 데이터 불러오기
         if (_preserveTransform)
         {
+            if(gameObject.name == "Monster_Turtle")
+                Debug.Log("1111");
             LoadAndApplyState<TransformState>(_groupName, TransformKey, transformState =>
             {
                 // Debug.Log($"Apply Transform");
@@ -95,6 +94,10 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
                 }
             });
         }
+    }
+
+    public void OnSceneContextBuilt()
+    {
     }
 
     // 오브젝트 파괴 시 (씬 전환 시) 데이터를 저장하는 작업
@@ -132,11 +135,12 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
         {
             try
             {
-                // 해당 데이터 그룹이 존재한다면
-                if (PersistentDataManager.HasDataGroup(_groupName))
+                if (!PersistentDataManager.HasDataGroup(_groupName))
                 {
-                    PersistentDataManager.Set(_groupName, TransformKey, new TransformState(transform));
+                    PersistentDataManager.TryAddDataGroup(_groupName);
                 }
+
+                PersistentDataManager.Set(_groupName, TransformKey, new TransformState(transform));
             }
             catch (Exception e)
             {

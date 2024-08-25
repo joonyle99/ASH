@@ -11,15 +11,24 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     public static Action OnSaveStarted;
     public static Action OnSaveEnded;
 
+    private float _time = 3f;
+    private float _timer = 0f;
+
     private void Awake()
     {
         _passageName = gameObject.name;
         _statueVisualEffect = GetComponent<StatueVisualEffect>();
+        _timer = 0;
+    }
+
+    private void Update()
+    {
+        _timer += Time.deltaTime;
     }
 
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
-        if (activator.Type == ActivatorType.Player)
+        if (_timer >= _time && activator.Type == ActivatorType.Player)
         {
             Save();
         }

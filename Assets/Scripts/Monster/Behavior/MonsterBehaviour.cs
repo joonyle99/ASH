@@ -468,15 +468,14 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     {
         // flip을 시킬지에 대한 값
         var flipValue = RecentDir * targetDir;
-
         if (flipValue == 1)
         {
-            // Debug.Log("recentDir == targetDir");
+            Debug.Log("recentDir == targetDir");
             return;
         }
         if (flipValue == 0)
         {
-            // Debug.Log("recentDir or targetDir is '0'");
+            Debug.Log("recentDir or targetDir is '0'");
             return;
         }
 
@@ -525,7 +524,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             // NavMeshAgent 전용 KnockBack
             // Debug.Log("KnockBack");
 
-            if(FloatingMovementModule.Agent.isStopped == true)
+            if (FloatingMovementModule.Agent.isStopped == true)
                 FloatingMovementModule.Agent.isStopped = false;
 
             FloatingMovementModule.SetVelocity(forceVector / 2.0f);
@@ -746,7 +745,8 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     public IEnumerator PlayCutSceneInRunning(string cutsceneName)
     {
         // 현재 애니메이션이 95% 완료될 때까지 기다립니다.
-        yield return new WaitUntil(() => {
+        yield return new WaitUntil(() =>
+        {
             AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
             return stateInfo.normalizedTime >= 0.95f;
         });

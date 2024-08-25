@@ -8,7 +8,9 @@ using UnityEditor;
 public class DebugBehavior : MonoBehaviour
 {
     public LayerMask TargetLayer;
+#if UNITY_EDITOR
     public MonoScript TargetMono;
+#endif
 
     void Update()
     {

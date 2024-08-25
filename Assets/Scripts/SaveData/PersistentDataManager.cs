@@ -6,6 +6,7 @@ using DataGroup = System.Collections.Generic.Dictionary<string, object>;
 using static JsonPersistentData;
 using UnityEditor;
 using JetBrains.Annotations;
+using System.Linq;
 
 /// <summary> 지속성 있는 데이터 </summary>
 public class PersistentData
@@ -436,33 +437,21 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         GUIStyle _guiStyle = new();
         _guiStyle.normal.textColor = Color.green;
 
-        GUILayout.BeginArea(new Rect(0, 0, 200, 200));
+        GUILayout.BeginArea(new Rect((float)Screen.width - 200, 150, 200, 320));
         scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Width(200), GUILayout.Height(200));
         GUILayout.Label(t, _guiStyle);
 
-        if (GUILayout.Button("View DataGroup", GUILayout.Width(200), GUILayout.Height(50)))
-        {
-            foreach(var pair in Instance.PersistentData.DataGroups)
-            {
-                t += "group : " + pair.Key + "\n";
-                t += "---------------\n";
-                foreach(var innerPair in Instance.PersistentData.DataGroups[pair.Key])
-                {
-                    t += "key : " + innerPair.Key + "\n";
-                    t += "value : " + innerPair.Value + "\n";
-                }
-            }
-            t += "\n\n\n";
-        }
-        /*
-        if (GUILayout.Button("View DataGroup", GUILayout.Width(200), GUILayout.Height(50)))
+        GUILayout.EndScrollView();
+
+        if (GUILayout.Button("View Json DataGroup", GUILayout.Width(200), GUILayout.Height(20)))
         {
             for (int i = 0; _savedPersistentData._jsonDataGroups != null &&
                 _savedPersistentData._jsonDataGroups.data != null &&
                 i < _savedPersistentData._jsonDataGroups.data.Count; i++)
             {
                 t += "group : " + _savedPersistentData._jsonDataGroups.data[i].Key + "\n";
-                for(int j = 0; j < _savedPersistentData._jsonDataGroups.data[i].Value.data.Count; j++)
+                t += "--------------------\n";
+                for (int j = 0; j < _savedPersistentData._jsonDataGroups.data[i].Value.data.Count; j++)
                 {
                     t += "key : " + _savedPersistentData._jsonDataGroups.data[i].Value.data[j].Key + "\n";
                     t += "value : " + _savedPersistentData._jsonDataGroups.data[i].Value.data[j].Value.ObjectSerialized + "\n";
@@ -470,7 +459,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             }
         }
 
-        if (GUILayout.Button("View GlobalDataGroup", GUILayout.Width(200), GUILayout.Height(50)))
+        if (GUILayout.Button("View Json GlobalDataGroup", GUILayout.Width(200), GUILayout.Height(20)))
         {
             t += "SavedSceneName : " + _savedPersistentData.SceneName + "\n";
             t += "PassageName : " + _savedPersistentData.PassageName + "\n";
@@ -483,12 +472,38 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
                 t += "value : " + _savedPersistentData._jsonGlobalDataGroup.data[i].Value.ObjectSerialized + "\n";
             }
         }
-        */
 
-        if (GUILayout.Button("Clear", GUILayout.Width(200), GUILayout.Height(50)))
+        if (GUILayout.Button("View DataGroup", GUILayout.Width(200), GUILayout.Height(20)))
+        {
+            foreach (var pair in Instance.PersistentData.DataGroups)
+            {
+                t += "group : " + pair.Key + "\n";
+                t += "--------------------\n";
+                var sortedDict = pair.Value.OrderBy(pair => pair.Key).ToDictionary(pair => pair.Key, pair => pair.Value);
+                
+                foreach (var innerPair in sortedDict)
+                {
+                    t += "key : " + innerPair.Key + "\n";
+                    t += "value : " + innerPair.Value + "\n";
+                }
+            }
+            t += "\n\n\n";
+        }
+
+        if (GUILayout.Button("View GlobalDataGroup", GUILayout.Width(200), GUILayout.Height(20)))
+        {
+            var sortedDict = Instance.PersistentData.GlobalDataGroup.OrderBy(pair => pair.Key).ToDictionary(pair => pair.Key, pair => pair.Value);
+
+            foreach (var pair in sortedDict)
+            {
+                t += "key : " + pair.Key + "\n";
+                t += "value : " + pair.Value + "\n";
+            }
+            t += "\n\n\n";
+        }
+
+        if (GUILayout.Button("Clear", GUILayout.Width(200), GUILayout.Height(20)))
             t = "";
-
-        GUILayout.EndScrollView();
 
         GUILayout.EndArea();
     }
