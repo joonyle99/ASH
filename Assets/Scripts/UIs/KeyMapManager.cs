@@ -41,7 +41,7 @@ public class KeyMapManager : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (_keyMap.activeSelf)
             {

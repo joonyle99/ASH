@@ -7,8 +7,6 @@ using UnityEditor;
 
 public class DebugBehavior : MonoBehaviour
 {
-#if UNITY_EDITOR
-
     public LayerMask TargetLayer;
     public MonoScript TargetMono;
 
@@ -26,6 +24,7 @@ public class DebugBehavior : MonoBehaviour
             DialogueController.Instance.ShutdownDialogue();
         }
 
+#if UNITY_EDITOR
         // DEBUG: 현재 마지막 CheckPoint를 표시한다 (없다면 입구를 표시한다)
         if (Input.GetKeyDown(KeyCode.F1))
         {
@@ -42,9 +41,8 @@ public class DebugBehavior : MonoBehaviour
             Debug.DrawLine(checkPoint + diagonal1 * LENGTH, checkPoint + diagonal3 * LENGTH, Color.red, 5f);
             Debug.DrawLine(checkPoint + diagonal2 * LENGTH, checkPoint + diagonal4 * LENGTH, Color.red, 5f);
         }
-    }
-
 #endif
+    }
 }
 
 #if UNITY_EDITOR

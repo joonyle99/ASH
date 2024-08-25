@@ -84,13 +84,11 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                     _isSkipSequence = false;
                 }
 
-#if UNITY_EDITOR
                 // CHEAT: F3 키를 누르면 현재 Segment를 빠르게 넘긴다
                 if (Input.GetKeyDown(KeyCode.F3))
                 {
                     View.FastForward();
                 }
-#endif
             }
 
             yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
