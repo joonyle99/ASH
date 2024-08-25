@@ -431,7 +431,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         Instance.PersistentData.DataGroups.Clear();
         Instance.PersistentData.GlobalDataGroup.Clear();
     }
-
+    /*
     private void OnGUI()
     {
         GUIStyle _guiStyle = new();
@@ -506,19 +506,5 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             t = "";
 
         GUILayout.EndArea();
-    }
-    /*
-    void OnGUI()
-    {
-        EditorGUILayout.BeginHorizontal();
-        scrollPos =
-            EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Width(100), GUILayout.Height(100));
-        GUILayout.Label(t);
-        EditorGUILayout.EndScrollView();
-        if (GUILayout.Button("Add More Text", GUILayout.Width(100), GUILayout.Height(100)))
-            t += " \nAnd this is more text!";
-        EditorGUILayout.EndHorizontal();
-        if (GUILayout.Button("Clear"))
-            t = "";
     }*/
 }
