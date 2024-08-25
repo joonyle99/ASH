@@ -11,7 +11,7 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
     public static Action OnSaveStarted;
     public static Action OnSaveEnded;
 
-    private float _time = 3f;
+    private float _time = 0.1f;
     private float _timer = 0f;
 
     private void Awake()
