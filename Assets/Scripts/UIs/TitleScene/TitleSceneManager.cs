@@ -7,6 +7,21 @@ public class TitleSceneManager : MonoBehaviour
     [SerializeField]
     private OptionView _optionView;
 
+    public GameObject Chapter1Cheat;
+    public GameObject Chapter2Cheat;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            Chapter1Cheat.SetActive(!Chapter1Cheat.activeSelf);
+        }
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            Chapter2Cheat.SetActive(!Chapter2Cheat.activeSelf);
+        }
+    }
+
     public void OpenPrologueScene()
     {
         StartCoroutine(OpenPrologueSceneCoroutine());

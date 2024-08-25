@@ -130,11 +130,14 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
 
         IsOpened = true;
 
+        /*
+         * TODO: 보스와 싸우다 중간에 죽으면 보스키가 소모된 상태이므로 문이 열리지 않는 버그 존재
         // 열쇠를 소모한다
         if (BossDungeonManager.Instance.IsAllKeysCollected)
         {
             BossDungeonManager.Instance.OnOpenBossDoor();
         }
+        */
 
         // 성공 다이얼로그 실행
         if (_successDialogue != null)
