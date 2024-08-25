@@ -470,12 +470,12 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         var flipValue = RecentDir * targetDir;
         if (flipValue == 1)
         {
-            Debug.Log("recentDir == targetDir");
+            //Debug.Log("recentDir == targetDir");
             return;
         }
         if (flipValue == 0)
         {
-            Debug.Log("recentDir or targetDir is '0'");
+            //Debug.Log("recentDir or targetDir is '0'");
             return;
         }
 

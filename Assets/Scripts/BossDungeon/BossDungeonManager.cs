@@ -51,6 +51,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
             DialogueController.Instance.StartDialogue(_firstKeyDialogue);
         }
     }
+
     public void OnOpenBossDoor()
     {
         PersistentDataManager.UpdateValue<int>(_dataGroupName, "_bossKeyCountSaved", x => 0);
