@@ -71,8 +71,6 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
         // 트랜스폼 데이터 불러오기
         if (_preserveTransform)
         {
-            if(gameObject.name == "Monster_Turtle")
-                Debug.Log("1111");
             LoadAndApplyState<TransformState>(_groupName, TransformKey, transformState =>
             {
                 // Debug.Log($"Apply Transform");

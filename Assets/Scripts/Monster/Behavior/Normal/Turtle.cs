@@ -19,19 +19,16 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
                 Die(false, false);
             }
 
-            int tmpDir = DefaultDir;
-            RecentDir = tmpDir;
-
             if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                tmpDir = _statePreserver.LoadState<int>("_recentDirSaved", DefaultDir);
+                RecentDir = _statePreserver.LoadState<int>("_recentDirSaved", DefaultDir);
             }
             else
             {
+                int tmpDir = DefaultDir;
                 tmpDir = _statePreserver.LoadState<int>("_recentDir", DefaultDir);
+                SetRecentDir(tmpDir);
             }
-
-            SetRecentDir(tmpDir);
         }
 
         SaveAndLoader.OnSaveStarted += SaveTurtleState;
@@ -98,7 +95,6 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
     {
         if (_statePreserver)
         {
-            Debug.Log("save");
             _statePreserver.SaveState("_isDeadSaved", IsDead);
             _statePreserver.SaveState("_recentDirSaved", RecentDir);
         }

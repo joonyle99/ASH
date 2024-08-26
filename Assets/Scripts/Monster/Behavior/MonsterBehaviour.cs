@@ -277,15 +277,19 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
         // Cutscene Player
         cutscenePlayerList = GetComponent<CutscenePlayerList>();
-    }
-    protected virtual void Start()
-    {
+
         InitMonsterData();
 
         InitMonsterCondition();
 
         InitMonsterState();
     }
+
+
+    protected virtual void Start()
+    {
+    }
+
     protected virtual void Update()
     {
         // CHEAT: F5 키를 누르면 몬스터의 무적 상태를 조작한다
