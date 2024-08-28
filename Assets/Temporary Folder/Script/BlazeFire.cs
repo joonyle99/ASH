@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class BlazeFire : MonoBehaviour
 {
-    private SoundList _soundList;
+    private AudioSource _loopSound;
 
     private void Awake()
     {
-        _soundList = GetComponent<SoundList>();
+        _loopSound = GetComponent<AudioSource>();
     }
     private void OnEnable()
     {
-        _soundList.PlaySFX("Blaze");
+        _loopSound.Play();
     }
     private void OnDisable()
     {
-        // _soundList.StopSFX("Blaze", isLoop: true);
+        _loopSound.Stop();
     }
 }

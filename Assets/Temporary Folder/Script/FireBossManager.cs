@@ -11,10 +11,9 @@ public class FireBossManager : MonoBehaviour
     [SerializeField] private GameObject _invisibleWall_Left;
     [SerializeField] private GameObject _invisibleWall_Right;
 
-    public void PlayerTornadoEffect()
+    public void ExcuteTornadoEffect()
     {
         TurnOffBlazeFire();
-
         TurnOnTornado();
 
         _tornado.TornadoAnimation();
