@@ -1,5 +1,11 @@
+using UnityEngine;
+
 public class Mushroom_Devour : Monster_BodySkill
 {
+    [Header("Cutscene")]
+    [SerializeField]
+    private CutscenePlayer _mushroomLightGuideCutscenePlayer;
+
     protected override void Awake()
     {
         base.Awake();
@@ -11,7 +17,7 @@ public class Mushroom_Devour : Monster_BodySkill
     // 머쉬룸 연출 이벤트
     private void OnMushroomLightGuideEvent()
     {
-        CutsceneManager.Instance.PlayMushroomLightGuideCutscene();
+        _mushroomLightGuideCutscenePlayer?.Play();
 
         monsterSkillEvent -= OnMushroomLightGuideEvent;
     }
