@@ -18,14 +18,23 @@ public struct InputState
 public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 {
     [SerializeField] private InputSetterScriptableObject _defaultInputSetter;
+    public InputSetterScriptableObject DefaultInputSetter => _defaultInputSetter;
 
     [Space]
 
     [SerializeField] private InputSetterScriptableObject _moveRightInputSetter;
+    public InputSetterScriptableObject MoveRightInputSetter => _moveRightInputSetter;
+
+
     [SerializeField] private InputSetterScriptableObject _moveLeftInputSetter;
+    public InputSetterScriptableObject MoveLeftInputSetter => _moveLeftInputSetter;
+
+
     [SerializeField] private InputSetterScriptableObject _stayStillInputSetter;
+    public InputSetterScriptableObject StayStillInputSetter => _stayStillInputSetter;
 
     private IInputSetter _currentSetter;
+    public IInputSetter CurrentSetter => _currentSetter;
 
     private InputState _cachedState;
     public InputState State => _cachedState;

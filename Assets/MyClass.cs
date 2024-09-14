@@ -12,7 +12,6 @@ class MyClass
 
     static void Update()
     {
-        Debug.Log("Updating");
         UnityEditor.SceneView.RepaintAll();
     }
 }

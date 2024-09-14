@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -61,6 +62,8 @@ public class InteractionMarker : MonoBehaviour
 
         // Debug.Log("Enable Marker");
 
+        SetInteractionMarkerKey();
+
         gameObject.SetActive(true);
 
         _isMarking = true;
@@ -98,5 +101,13 @@ public class InteractionMarker : MonoBehaviour
     {
         var markerPosAtScreen = Camera.main.WorldToScreenPoint(markerPosAtWorlds);
         _rectTransform.position = markerPosAtScreen;
+    }
+
+    public void SetInteractionMarkerKey()
+    {
+        TMP_Text keyText = transform.Find("Key Box").GetComponentInChildren<TMP_Text>();
+        PCInputSetter pcInputSetter = InputManager.Instance.DefaultInputSetter as PCInputSetter;
+
+        keyText.text = pcInputSetter.GetKeyCode("상호작용").KeyCode.ToString();
     }
 }
