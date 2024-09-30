@@ -18,9 +18,16 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
 
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
 
-        // 모든 몬스터를 찾고, 리스트에 추가한다
+        // 웨이브 몬스터를 제외한 모든 몬스터를 찾고, 리스트에 추가한다
         var monsterArray = FindObjectsOfType<MonsterBehaviour>();
-        MonsterList = new List<MonsterBehaviour>(monsterArray);
+
+        foreach(var monster in monsterArray)
+        {
+            if(!monster.IsWaveMonster)
+            {
+                MonsterList.Add(monster);
+            }
+        }
     }
     protected override void OnDestroy()
     {

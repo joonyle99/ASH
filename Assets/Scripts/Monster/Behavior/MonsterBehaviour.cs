@@ -69,6 +69,12 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     [Header("！！！！！！！ Monster Behaviour ！！！！！！！")]
     [Space]
 
+    [Header("SpawnType")]
+    [Space]
+
+    [SerializeField] private bool _isWaveMonster = false;
+    public bool IsWaveMonster => _isWaveMonster;
+
     [Header("Condition")]
     [Space]
 

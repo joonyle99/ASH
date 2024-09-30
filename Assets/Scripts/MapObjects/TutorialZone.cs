@@ -2,9 +2,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class TutorialZone : TriggerZone
 {
+    [SerializeField] private List<string> _keyCodeName = new();
+
     [SerializeField] private GameObject skillObject;
     [SerializeField] private float _fadeInDuration = 0.3f;
     [SerializeField] private float _fadeOffDuration = 0.3f;
@@ -36,6 +39,7 @@ public class TutorialZone : TriggerZone
 
     public override void OnPlayerEnter(PlayerBehaviour player)
     {
+        UpdateKeyCodeText();
         StartCoroutine(FadeAllCoroutine(0f, _originalAlpha, _fadeInDuration));
     }
     public override void OnPlayerExit(PlayerBehaviour player)
@@ -81,6 +85,22 @@ public class TutorialZone : TriggerZone
             var color = text.color;
             color.a = to;
             text.color = color;
+        }
+    }
+
+    public void UpdateKeyCodeText()
+    {
+        if(skillObject != null)
+        {
+            TMP_Text[] keyText = skillObject.transform?.Find("Key Box")?.GetComponentsInChildren<TMP_Text>();
+            PCInputSetter pcInputSetter = InputManager.Instance.DefaultInputSetter as PCInputSetter;
+            
+            for(int i = 0; i < keyText.Length; i++)
+            {
+                if (keyText[i].name != "Key") continue;
+
+                keyText[i].text = pcInputSetter.GetKeyCode(_keyCodeName[i])?.KeyCode.ToString();
+            }
         }
     }
 }

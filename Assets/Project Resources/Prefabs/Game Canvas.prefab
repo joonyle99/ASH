@@ -700,8 +700,8 @@ RectTransform:
   m_Father: {fileID: 455239273}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -875,7 +875,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2895,8 +2895,8 @@ RectTransform:
   m_Father: {fileID: 1366239215}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4158,7 +4158,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -13804,9 +13804,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 766905292378889498}
-        m_TargetAssemblyTypeName: OptionView, Assembly-CSharp
-        m_MethodName: ToggleResolution
+      - m_Target: {fileID: 8703604131044747957}
+        m_TargetAssemblyTypeName: KeySettingUIManager, Assembly-CSharp
+        m_MethodName: ToggleKeySettingPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -16477,7 +16477,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5643727788297051424
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17038,9 +17038,13 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 580723913738958743, guid: 2ceee58658a592345ba63f444c3c68c3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 580723913874056642, guid: 2ceee58658a592345ba63f444c3c68c3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 580723914174002990, guid: 2ceee58658a592345ba63f444c3c68c3, type: 3}
       propertyPath: m_Pivot.x
@@ -17142,6 +17146,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: -17
       objectReference: {fileID: 0}
+    - target: {fileID: 8719664246790381502, guid: 2ceee58658a592345ba63f444c3c68c3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2ceee58658a592345ba63f444c3c68c3, type: 3}
 --- !u!224 &6385260350954775965 stripped
@@ -17149,3 +17157,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 580723914174002990, guid: 2ceee58658a592345ba63f444c3c68c3, type: 3}
   m_PrefabInstance: {fileID: 5805743722589180595}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8703604131044747957 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2908002578634291206, guid: 2ceee58658a592345ba63f444c3c68c3, type: 3}
+  m_PrefabInstance: {fileID: 5805743722589180595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf3c978d16bfc04aab8611ec0c4f6dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
