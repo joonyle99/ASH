@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class KeySettingManager : MonoBehaviour
 {
-    private static HashSet<KeyCode> _unusableKey = new HashSet<KeyCode>() {  };
+    private static HashSet<KeyCode> _unusableKey = new HashSet<KeyCode>() { KeyCode.LeftApple };
 
     public static void SetKeyboardSetting(InputSetterDataType inputSetterDataType, string keyName, KeyCode newKeyCode)
     {

@@ -124,23 +124,8 @@ public class WaveSystemController : MonoBehaviour
         if (SwitchWaveInfosAndMonsterBundles()) return;
 
         //할당된 필드몬스터 몬스터번들로 부모 전환
-        for (int i = 0; i < _waveInfos.Count; i++)
-        {
-            WaveSpawnMonsterInfo[] monsterInfo = _waveInfos[i].WaveMonsters;
+        SetParentAssiginedFieldMonster();
 
-            foreach (var monster in monsterInfo)
-            {
-                if (monster.Monster == null) continue;
-
-                bool hasCorrectParent = monster.Monster.transform.parent != null &&
-                                        monster.Monster.transform.parent.tag == "WaveMonsterBundle";
-                if (monster.InstanceType == WaveSpawnMonsterInfo.MonsterInstanceType.Field &&
-                    !hasCorrectParent)
-                {
-                    monster.Monster.transform.SetParent(transform.GetChild(i + 1), true);
-                }
-            }
-        }
         //삭제된 필드몬스터 몬스터번들로 부터 삭제
         RemoveFieldMonsterFromWaveInfos(monsterBundles);
     }
@@ -223,6 +208,27 @@ public class WaveSystemController : MonoBehaviour
         }
 
         return isSwitched;
+    }
+
+    private void SetParentAssiginedFieldMonster()
+    {
+        for (int i = 0; i < _waveInfos.Count; i++)
+        {
+            WaveSpawnMonsterInfo[] monsterInfo = _waveInfos[i].WaveMonsters;
+
+            foreach (var monster in monsterInfo)
+            {
+                if (monster.Monster == null) continue;
+
+                bool hasCorrectParent = monster.Monster.transform.parent != null &&
+                                        monster.Monster.transform.parent.tag == "WaveMonsterBundle";
+                if (monster.InstanceType == WaveSpawnMonsterInfo.MonsterInstanceType.Field &&
+                    !hasCorrectParent)
+                {
+                    monster.Monster.transform.SetParent(transform.GetChild(i + 1), true);
+                }
+            }
+        }
     }
 
     private void RemoveFieldMonsterFromWaveInfos(List<GameObject> monsterBundles)

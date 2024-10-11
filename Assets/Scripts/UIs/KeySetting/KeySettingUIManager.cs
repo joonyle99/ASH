@@ -108,7 +108,7 @@ public class KeySettingUIManager : MonoBehaviour
 
             boxRect.localPosition = new Vector3(nextBoxPosX, nextBoxPosY);
             boxRect.sizeDelta = new Vector2(boxWidth, boxRect.sizeDelta.y);
-            newBox.transform.parent = content.transform;
+            newBox.transform.SetParent(content.transform, false);
 
             nextBoxPosY -= boxRect.sizeDelta.y + _boxBottomMargin + _boxTopMargin;
         }

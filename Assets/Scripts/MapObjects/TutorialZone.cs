@@ -39,9 +39,16 @@ public class TutorialZone : TriggerZone
 
     public override void OnPlayerEnter(PlayerBehaviour player)
     {
-        UpdateKeyCodeText();
         StartCoroutine(FadeAllCoroutine(0f, _originalAlpha, _fadeInDuration));
     }
+
+    public override void OnPlayerStay(PlayerBehaviour player)
+    {
+        base.OnPlayerStay(player);
+
+        UpdateKeyCodeText();
+    }
+
     public override void OnPlayerExit(PlayerBehaviour player)
     {
         StartCoroutine(FadeAllCoroutine(_originalAlpha, 0f, _fadeOffDuration));
