@@ -82,7 +82,8 @@ public class WaveInfo
     }
 }
 
-public class WaveSystemController : MonoBehaviour
+[RequireComponent(typeof(Identifier))]
+public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneContextBuildListener
 {
     [Header("Prefabs"), Space(10)]
 
@@ -91,15 +92,32 @@ public class WaveSystemController : MonoBehaviour
 
     [Header("Variable"), Space(10)]
 
-    [SerializeField]
-    private List<WaveInfo> _waveInfos;
+    [SerializeField] private List<WaveInfo> _waveInfos;
+    [SerializeField] private bool _isClearAllWaves = false;
 
-    [Header("External Called GameObject"), Space(10)]
+    Coroutine _currentPlayingWaveCoroutine;
 
-    [SerializeField]
-    private CutscenePlayer _startWaveCutscenePlayer;
-    [SerializeField]
-    private CutscenePlayer _endWaveCutscenePlayer;
+    public bool IsClearAllWaves
+    {
+        get { return _isClearAllWaves; }
+        set 
+        { 
+            _isClearAllWaves = value;
+
+            if(_identifier && _isClearAllWaves)
+            {
+                _identifier.SaveState("_isClearAllWaves", true);
+                _identifier.SaveState("_isClearAllWavesSaved", true);
+            }
+        }
+    }
+
+    private Identifier _identifier;
+
+    [Header("Doors")]
+
+    [SerializeField] private WaveDoor _enterWaveDoor;
+    [SerializeField] private WaveDoor _exitWaveDoor;
 
     #region Editor Property Function
     private void OnValidate()
@@ -280,6 +298,8 @@ public class WaveSystemController : MonoBehaviour
 
     private void Init()
     {
+        _identifier = GetComponent<Identifier>();
+
         foreach (var waveInfo in _waveInfos)
         {
             foreach (var monster in waveInfo.WaveMonsters)
@@ -294,13 +314,39 @@ public class WaveSystemController : MonoBehaviour
         }
     }
 
+    public void OnSceneContextBuilt()
+    {
+        if (_identifier)
+        {
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                _isClearAllWaves = _identifier.LoadState<bool>("_isClearAllWavesSaved", false);
+            }
+            else
+            {
+                _isClearAllWaves = _identifier.LoadState<bool>("_isClearAllWaves", false);
+            }
+        }
+    }
+
+    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
+    {
+        if(activator.Type == ActivatorType.Player &&
+            !_isClearAllWaves && _currentPlayingWaveCoroutine == null)
+        {
+            StartWaveSystem();
+        }
+    }
+
     public void StartWaveSystem()
     {
-        StartCoroutine(WaveSystemLogic());
+        _currentPlayingWaveCoroutine = StartCoroutine(WaveSystemLogic());
     }
 
     IEnumerator WaveSystemLogic()
     {
+        StartOfWaveSystemLogic();
+
         for (int i = 0; i < _waveInfos.Count; i++)
         {
             //해당 웨이브의 몬스터 스폰
@@ -347,8 +393,18 @@ public class WaveSystemController : MonoBehaviour
         }
     }
 
+    private void StartOfWaveSystemLogic()
+    {
+        _enterWaveDoor.CloseDoor(false);
+        _exitWaveDoor.CloseDoor(false);
+    }
+
     private void EndOfWaveSystemLogic()
     {
-        _endWaveCutscenePlayer.GetComponent<BoxCollider2D>().enabled = true;
+        _currentPlayingWaveCoroutine = null;
+        IsClearAllWaves = true;
+
+        _enterWaveDoor.OpenDoor(false);
+        _exitWaveDoor.OpenDoor(false);
     }
 }

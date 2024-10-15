@@ -1,9 +1,15 @@
 using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class DoorOpenAnimation : MonoBehaviour
 {
+    [SerializeField] private string _openLowSoundKey = "SE_LightDoor_Open_Low";
+    [SerializeField] private string _openSoundKey = "SE_LightDoor_Open";
+
     [SerializeField] private float _doorOpenDelay;
     [SerializeField] private float _stopShakeTiming = 2f;
     [SerializeField] private ConstantShakePreset _doorOpenPreset;
@@ -22,39 +28,56 @@ public class DoorOpenAnimation : MonoBehaviour
     public IEnumerator OpenCoroutine()
     {
         // 1
-        SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);
-        _dustParticle.Play();
-        _soundList.PlaySFX("SE_LightDoor_Open_Low");
+        if(_doorOpenPreset)
+            SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);
+
+        _dustParticle?.Play();
+
+        if (_openLowSoundKey.Length != 0)
+            _soundList.PlaySFX(_openLowSoundKey);
 
         yield return new WaitForSeconds(_doorOpenDelay);
 
         // 2
         _animator.SetTrigger("Open");
-        _soundList.PlaySFX("SE_LightDoor_Open");
+
+        if (_openSoundKey.Length != 0)
+            _soundList.PlaySFX(_openSoundKey);
 
         yield return new WaitForSeconds(_stopShakeTiming);
 
         // 3
-        _dustParticle.Stop();
-        SceneEffectManager.Instance.Camera.StopConstantShake();
+        _dustParticle?.Stop();
+
+        if (_doorOpenPreset)
+            SceneEffectManager.Instance.Camera.StopConstantShake();
     }
+
     public IEnumerator CloseCoroutine()
     {
         // 1
-        SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);
-        _dustParticle.Play();
-        _soundList.PlaySFX("SE_LightDoor_Open_Low");
+        if (_doorOpenPreset)
+            SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);
+
+        _dustParticle?.Play();
+
+        if (_openLowSoundKey.Length != 0)
+            _soundList.PlaySFX(_openLowSoundKey);
 
         yield return new WaitForSeconds(_doorOpenDelay);
 
         // 2
         _animator.SetTrigger("Close");
-        _soundList.PlaySFX("SE_LightDoor_Open");
+
+        if (_openSoundKey.Length != 0)
+            _soundList.PlaySFX(_openSoundKey);
 
         yield return new WaitForSeconds(_stopShakeTiming);
 
         // 3
-        _dustParticle.Stop();
-        SceneEffectManager.Instance.Camera.StopConstantShake();
+        _dustParticle?.Stop();
+
+        if (_doorOpenPreset)
+            SceneEffectManager.Instance.Camera.StopConstantShake();
     }
 }

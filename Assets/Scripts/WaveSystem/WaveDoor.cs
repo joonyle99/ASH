@@ -2,12 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaveDoor : MonoBehaviour
+public class WaveDoor : Door
 {
+    [Header("Model")]
+
     [SerializeField] private GameObject _model;
 
-    public void ToggleDoor(bool value)
+    public void CloseImmediately()
     {
-        _model.SetActive(value);
+        if(_animator)
+        {
+            _animator.SetTrigger("CloseImmediately");
+        }
     }
 }
