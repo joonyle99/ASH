@@ -29,15 +29,27 @@ public sealed class Fire : BossBehaviour
     {
         public FireBallDirType FireballDirType;
 
-        public Vector3 SpawnPoint;
-        public Vector3 Direction;
+        public Vector3 SpawnPoint { get; private set; }
+        public Vector3 Direction { get; private set; }
         public float Rotation;
 
         public FireBallInfo(FireBallDirType fireballDirType)
         {
             FireballDirType = fireballDirType;
 
+            // Debug.Log(fireballDirType.ToString());
+
             var cameraController = SceneContext.Current.CameraController;
+
+            // joonyle99.Util.DebugDrawX(cameraController.TopMiddle);
+            // Debug.Log($"{cameraController.TopMiddle}");
+            // joonyle99.Util.DebugDrawX(cameraController.RightTop);
+            // Debug.Log($"{cameraController.RightTop}");
+            // joonyle99.Util.DebugDrawX(cameraController.LeftTop);
+            // Debug.Log($"{cameraController.LeftTop}");
+            // joonyle99.Util.DebugDrawX(cameraController.BottomMiddle);
+            // Debug.Log($"{cameraController.BottomMiddle}");
+
             if (cameraController == null)
             {
                 Debug.LogError($"cameraController is invalid");
@@ -52,21 +64,25 @@ public sealed class Fire : BossBehaviour
             switch (FireballDirType)
             {
                 case FireBallDirType.Down:
+                    //Debug.Log("Down");
                     SpawnPoint = SceneContext.Current.CameraController.TopMiddle;
                     Direction = new Vector3(0f, -1f, 0f).normalized;
                     Rotation = 90f;
                     break;
                 case FireBallDirType.DiagonalLeft:
+                    //Debug.Log("DiagonalLeft");
                     SpawnPoint = (SceneContext.Current.CameraController.RightTop + SceneContext.Current.CameraController.TopMiddle) / 2f;
                     Direction = new Vector3(-1f, -1f, 0f).normalized;
                     Rotation = -45f;
                     break;
                 case FireBallDirType.DiagonalRight:
+                    //Debug.Log("DiagonalRight");
                     SpawnPoint = (SceneContext.Current.CameraController.LeftTop + SceneContext.Current.CameraController.TopMiddle) / 2f;
                     Direction = new Vector3(1f, -1f, 0f).normalized;
                     Rotation = 45f;
                     break;
                 default:
+                    //Debug.Log("default");
                     SpawnPoint = default;
                     Direction = default;
                     Rotation = default;
@@ -369,7 +385,6 @@ public sealed class Fire : BossBehaviour
             FireBallInfo info = new FireBallInfo(dirType);
 
             var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
-
             var fireBallParticle = fireBall.GetComponent<ParticleSystem>();
 
             // module
@@ -488,8 +503,8 @@ public sealed class Fire : BossBehaviour
     {
         if (_flameBeamCoroutine != null)
         {
-            Debug.LogError($"_flameBeamCoroutine is not null");
-            return;
+            Debug.LogWarning($"_flameBeamCoroutine is not null");
+            StopTargetCoroutine(ref _flameBeamCoroutine);
         }
 
         _flameBeamCoroutine = StartCoroutine(FlameBeamCoroutine());
@@ -498,8 +513,8 @@ public sealed class Fire : BossBehaviour
     {
         if (_fireBallCoroutine != null)
         {
-            Debug.LogError($"_fireballCoroutine is not null");
-            return;
+            Debug.LogWarning($"_fireballCoroutine is not null");
+            StopTargetCoroutine(ref _fireBallCoroutine);
         }
 
         _fireBallCoroutine = StartCoroutine(FireBallCoroutine());
@@ -508,8 +523,8 @@ public sealed class Fire : BossBehaviour
     {
         if (_ashPillarCoroutine != null)
         {
-            Debug.LogError($"_ashPillarCoroutine is not null");
-            return;
+            Debug.LogWarning($"_ashPillarCoroutine is not null");
+            StopTargetCoroutine(ref _ashPillarCoroutine);
         }
 
         _ashPillarCoroutine = StartCoroutine(AshPillarCoroutine());
@@ -518,8 +533,8 @@ public sealed class Fire : BossBehaviour
     {
         if (_firePillarCoroutine != null)
         {
-            Debug.LogError($"_firePillarCoroutine is not null");
-            return;
+            Debug.LogWarning($"_firePillarCoroutine is not null");
+            StopTargetCoroutine(ref _firePillarCoroutine);
         }
 
         _firePillarCoroutine = StartCoroutine(FirePillarCoroutine());
@@ -567,22 +582,34 @@ public sealed class Fire : BossBehaviour
     private IEnumerator WaitEventCoroutine_FlameBeam()
     {
         yield return new WaitForSeconds(_flameBeamAnimDuration);
-        yield return new WaitUntil(() => _flameBeamCoroutine == null);
+        // TEMP
+        yield return new WaitForSeconds(1f);
+        // 너무 루즈해지기 때문에, 애니메이션의 종료만 기다린다
+        // yield return new WaitUntil(() => _flameBeamCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_Fireball()
     {
         yield return new WaitForSeconds(_fireBallAnimDuration);
-        yield return new WaitUntil(() => _fireBallCoroutine == null);
+        // TEMP
+        yield return new WaitForSeconds(1f);
+        // 너무 루즈해지기 때문에, 애니메이션의 종료만 기다린다
+        // yield return new WaitUntil(() => _fireBallCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_AshPillar()
     {
         yield return new WaitForSeconds(_ashPillarAnimDuration);
-        yield return new WaitUntil(() => _ashPillarCoroutine == null);
+        // TEMP
+        yield return new WaitForSeconds(1f);
+        // 너무 루즈해지기 때문에, 애니메이션의 종료만 기다린다
+        // yield return new WaitUntil(() => _ashPillarCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_FirePillar()
     {
         yield return new WaitForSeconds(_firePillarAnimDuration);
-        yield return new WaitUntil(() => _firePillarCoroutine == null);
+        // TEMP
+        yield return new WaitForSeconds(1f);
+        // 너무 루즈해지기 때문에, 애니메이션의 종료만 기다린다
+        // yield return new WaitUntil(() => _firePillarCoroutine == null);
     }
 
     private bool HandleTeleportTransition(string targetTransitionParam, Monster_StateBase currentState)

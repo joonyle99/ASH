@@ -83,10 +83,15 @@ public class FireBossManager : MonoBehaviour
     }
     private IEnumerator SetUpBattleCoroutine()
     {
-        SceneContext.Current.CameraController.UpdateScreenSize(15f, 2f);
+        // set boundaries
+        TurnOnInvisibleWall();
+        SetCameraBoundaries();
+
+        // set camera size
+        SceneContext.Current.CameraController.UpdateScreenSize(13f, 2f);
 
         yield return new WaitUntil(() => SceneContext.Current.CameraController.IsUpdateFinished);
 
-        SetCameraBoundaries();
+        yield return null;
     }
 }

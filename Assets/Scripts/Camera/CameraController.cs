@@ -110,7 +110,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     private void LateUpdate()
     {
-        /*
         for (int i = 0; i < 4; i++)
         {
             // ºäÆ÷Æ® ÁÂÇ¥(ÁÂÇÏ´Ü, ¿ìÇÏ´Ü, ¿ì»ó´Ü, ÁÂ»ó´Ü)¸¦ ¿ùµå ÁÂÇ¥·Î º¯È¯
@@ -133,7 +132,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
             Debug.DrawLine(TopMiddle, TopMiddle + Vector3.forward, Color.blue);
             Debug.DrawLine(BottomMiddle, BottomMiddle + Vector3.forward, Color.yellow);
         }
-        */
     }
     private void OnDestroy()
     {
@@ -185,6 +183,17 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
 
     // effect: follow
+    public void EnableFollow()
+    {
+        _proCamera.FollowHorizontal = true;
+        _proCamera.FollowVertical = true;
+    }
+    public void DisableFollow()
+    {
+        _proCamera.FollowHorizontal = false;
+        _proCamera.FollowVertical = false;
+    }
+
     public void AddFollowTarget(Transform target)
     {
         _proCamera.AddCameraTarget(target);

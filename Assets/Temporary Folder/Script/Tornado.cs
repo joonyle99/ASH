@@ -16,11 +16,11 @@ public class Tornado : MonoBehaviour
     }
     private IEnumerator TornadoAnimationCoroutine()
     {
-        yield return GrowUpEffectCoroutine(2.5f);
+        yield return GrowUpEffectCoroutine(2f);
 
         yield return new WaitForSeconds(2f);
 
-        yield return GrowDownEffectCoroutine(2.5f);
+        yield return GrowDownEffectCoroutine(2f);
     }
 
     private IEnumerator GrowUpEffectCoroutine(float duration)
@@ -69,6 +69,8 @@ public class Tornado : MonoBehaviour
         var material = TornadoRenderer.material;
         var startSpeed = material.GetFloat("_ShapeYSpeed");
         var targetSpeed = 0f;
+
+        material.SetFloat("_ShapeYSpeed", 0f);
 
         while (eTime < duration)
         {
