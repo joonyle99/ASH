@@ -36,29 +36,27 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
     private void Start()
     {
-        // 정의된 씬에 대해서만 동작한다
-
         var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-        // 씬 컨텍스트는 정의된 씬에서만 생성된다
         if (GameSceneManager.IsDefinedScene(sceneName))
         {
-            // 씬 컨텍스트 생성
+            // create sceneContext
             SceneContext sceneContext = FindOrCreateSceneContext();
 
+            // entrance
             var passages = FindObjectsByType<Passage>(FindObjectsSortMode.None);
             var targetEntranceName = "Enter " + sceneName;
             var hasEntrance = passages.ToList().Find(passage => passage.PassageName == targetEntranceName);
             var entranceName = hasEntrance ? targetEntranceName : "";
 
-            // 씬 컨텍스트 빌드
+            // build sceneContext
             Result buildResult = sceneContext.BuildPlayable(entranceName);
         }
 
-        // 씬에 대한 BGM 재생
+        // play BGM
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
-        
-        // 씬 이름 표시
+
+        // TEMP: set scene name text for debug
         GameUIManager.SetSceneNameText(sceneName);
     }
 

@@ -35,13 +35,12 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     {
         "EndingScene"
     };
-    // TEMP
     private static HashSet<string> testScenes = new HashSet<string>
     {
         // Ãß°¡·Î Å×½ºÆ® ¾À¿¡ '¾ÀÀÇ ÀÌ¸§À¸·ÎµÈ Passage'°¡ Á¸ÀçÇØ¾ß ÇÕ´Ï´Ù.
-        // e.g) Passage Name: "MyScene 1"
+        // e.g) Passage Name: "Enter JunyeolScene"
 
-        "MyScene 1", "ÁØ¿± ¾À", "ÁöÈñ ¾À"
+        "JunyeolScene", "ÁØ¿± ¾À", "ÁöÈñ ¾À"
     };
 
     public static bool IsOpeningScene(string sceneName)
