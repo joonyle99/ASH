@@ -24,9 +24,9 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
 
     public void OnSceneContextBuilt()
     {
-        if(_statePreserver)
+        if (_statePreserver)
         {
-            if(SceneChangeManager.Instance && 
+            if (SceneChangeManager.Instance &&
                 SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
                 bool played = _statePreserver.LoadState("_playSaved", _played);
@@ -89,13 +89,6 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
                 DialogueController.Instance.StartDialogue(effect.DialogueData, false);
                 yield return new WaitWhile(() => DialogueController.Instance.IsDialogueActive);
             }
-            /*
-            else if (effect.Type == SceneEffect.EffectType.LifePurchase)
-            {
-                GameUIManager.OpenLifePurchasePanel();
-                yield return new WaitWhile(() => GameUIManager.IsLifePurchasePanelOpen);
-            }
-            */
             else if (effect.Type == SceneEffect.EffectType.WaitForSeconds)
             {
                 yield return new WaitForSeconds(effect.Time);
@@ -111,7 +104,13 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
             else if (effect.Type == SceneEffect.EffectType.FunctionCall)
             {
                 effect.Function?.Invoke();
-                // yield return new WaitWhile(() => effect.Function);
+            }
+            else if (effect.Type == SceneEffect.EffectType.CoroutineCall)
+            {
+                /*
+                effect.TargetScript.GetType
+                yield return effect.MethodName;
+                */
             }
         }
 
@@ -119,9 +118,6 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
 
         // 플레이어 무적 상태 해제
         SceneContext.Current.Player.IsGodMode = false;
-        // Debug.Log($"{SceneContext.Current.Player}의 GodMode가 해제됩니다. => IsGodMode : {SceneContext.Current.Player.IsGodMode}");
-
-        // Debug.Log("Sequence 코루틴 종료");
     }
 
     /// <summary>
@@ -143,7 +139,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
             InputManager.Instance.ChangeToDefaultSetter();
         }
     }
-    
+
     /// <summary>
     /// 트리거로 인한 시퀀스 재생
     /// </summary>

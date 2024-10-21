@@ -7,7 +7,13 @@ using UnityEngine.UI;
 /// </summary>
 public class SceneTransitionPlayer : MonoBehaviour
 {
-    protected enum FadeType { Lighten, Darken }
+    public enum FadeType
+    {
+        Lighten,        // fade in
+        Darken,         // fade out
+
+        Dim,
+    }
 
     [SerializeField] Image _fadeImage;
     [SerializeField] float _fadeDuration;
@@ -29,15 +35,29 @@ public class SceneTransitionPlayer : MonoBehaviour
     {
         yield return FadeCoroutine(_fadeDuration, FadeType.Darken);
     }
-    protected IEnumerator FadeCoroutine(float duration, FadeType fadeType)
+    public IEnumerator FadeCoroutine(float duration, FadeType fadeType)
     {
-        float from = fadeType == FadeType.Darken ? 0f : 1f;
-        float to = fadeType == FadeType.Darken ? 1f : 0f;
-
         if (_fadeImage == null)
         {
             Debug.LogWarning("No Fade Image!!");
             yield break;
+        }
+
+        float from = _fadeImage.color.a;
+        float to = 1f;
+
+        // FadeType에 따라 시작 및 종료 값을 설정
+        switch (fadeType)
+        {
+            case FadeType.Darken:
+                to = 1f;
+                break;
+            case FadeType.Lighten:
+                to = 0f;
+                break;
+            case FadeType.Dim:
+                to = 0.5f;
+                break;
         }
 
         Color imageColor = _fadeImage.color;

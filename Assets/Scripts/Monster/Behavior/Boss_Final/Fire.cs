@@ -171,6 +171,14 @@ public sealed class Fire : BossBehaviour
     [SerializeField] private bool _isTeleporting;
     public bool IsTeleporting => _isTeleporting;
 
+    [Space]
+
+    [SerializeField] private ParticleHelper _teleportPreEffect;
+    public ParticleHelper TeleportPreEffect => _teleportPreEffect;
+
+    [SerializeField] private ParticleHelper _teleportPostEffect;
+    public ParticleHelper TeleportPostEffect => _teleportPostEffect;
+
     [Header("____ FlameBeam ____")]
     [Space]
 
@@ -346,6 +354,7 @@ public sealed class Fire : BossBehaviour
         _nextAttack = (AttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
+
     // skill
     private void InitSkillVariable()
     {
@@ -538,6 +547,16 @@ public sealed class Fire : BossBehaviour
         }
 
         _firePillarCoroutine = StartCoroutine(FirePillarCoroutine());
+    }
+
+    // skill effect anim event
+    public void TeleportPreEffect_AnimEvent()
+    {
+        var ashEffect = Instantiate(TeleportPreEffect, CenterOfMass.position, Quaternion.identity);
+    }
+    public void TeleportPostEffect_AnimEvent()
+    {
+        var ashEffect = Instantiate(TeleportPostEffect, CenterOfMass.position, Quaternion.identity);
     }
 
     // etc

@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
+using static SceneTransitionPlayer;
 
 public class FireBossManager : MonoBehaviour
 {
@@ -11,44 +14,53 @@ public class FireBossManager : MonoBehaviour
     [SerializeField] private GameObject _invisibleWall_Left;
     [SerializeField] private GameObject _invisibleWall_Right;
 
+    [Space]
+
+    [SerializeField] private ParticleHelper _rageAshEffectEmitting;
+
+    [Space]
+
+    [SerializeField] private GameObject _footholds;
+
+    // effects
     public void ExcuteTornadoEffect()
     {
-        TurnOffBlazeFire();
-        TurnOnTornado();
+        _blazeFire.gameObject.SetActive(false);
+        _tornado.gameObject.SetActive(true);
 
         _tornado.TornadoAnimation();
     }
 
-    // blaze fire
-    public void TurnOnBlazeFire()
+    // ...
+    public void ExcuteRageEffect()
     {
-        _blazeFire.gameObject.SetActive(true);
+        StartCoroutine(ExcuteRageEffectCoroutine());
     }
-    public void TurnOffBlazeFire()
+    private IEnumerator ExcuteRageEffectCoroutine()
     {
-        _blazeFire.gameObject.SetActive(false);
-    }
+        // playing
+        var effectObject = _rageAshEffectEmitting.gameObject;
+        effectObject.SetActive(true);
 
-    // tonado
-    public void TurnOnTornado()
-    {
-        _tornado.gameObject.SetActive(true);
-    }
-    public void TurnOffTornado()
-    {
-        _tornado.gameObject.SetActive(false);
-    }
+        // emitting
+        var particle = _rageAshEffectEmitting.ParticleSystem;
+        var burst = particle.emission.GetBurst(0);
+        var burstDuration = (burst.cycleCount - 1) * burst.repeatInterval;
+        yield return new WaitForSeconds(burstDuration);
+        yield return new WaitForSeconds(0.2f);
 
-    // invisible wall
-    public void TurnOnInvisibleWall()
-    {
-        _invisibleWall_Left.SetActive(true);
-        _invisibleWall_Right.SetActive(true);
-    }
-    public void TurnOffInvisibleWall()
-    {
-        _invisibleWall_Left.SetActive(false);
-        _invisibleWall_Right.SetActive(false);
+        // pause
+        particle.Pause();
+        yield return new WaitForSeconds(5f);
+
+        // fade out
+        yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(2f, FadeType.Darken);
+
+        effectObject.SetActive(false);
+        yield return new WaitForSeconds(3f);
+
+        // fade in
+        yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(2f, FadeType.Dim);
     }
 
     // boundaries
@@ -84,7 +96,8 @@ public class FireBossManager : MonoBehaviour
     private IEnumerator SetUpBattleCoroutine()
     {
         // set boundaries
-        TurnOnInvisibleWall();
+        _invisibleWall_Left.SetActive(true);
+        _invisibleWall_Right.SetActive(true);
         SetCameraBoundaries();
 
         // set camera size

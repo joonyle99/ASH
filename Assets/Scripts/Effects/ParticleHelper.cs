@@ -1,12 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ParticleHelper : MonoBehaviour
 {
     ParticleSystem _particleSystem;
-    protected ParticleSystem ParticleSystem => _particleSystem;
+    public ParticleSystem ParticleSystem => _particleSystem;
 
     protected void Awake()
     {
@@ -63,9 +60,19 @@ public class ParticleHelper : MonoBehaviour
 
     public float GetEmissionLifeTime()
     {
-        var main = _particleSystem.main;
-        // var totalDuration = main.duration + main.startLifetime.constantMax;  // 지속적으로 생기는 파티클의 경우
-        var totalDuration = main.startLifetime.constantMax;
+        var totalDuration = (_particleSystem.main.startLifetime.constantMin + _particleSystem.main.startLifetime.constantMax) / 2f;
+
+        /*
+        var emission = _particleSystem.emission;
+        for (int i = 0; i < emission.burstCount; i++)
+        {
+            var burst = emission.GetBurst(i);
+            var burstDuration = burst.time + burst.cycleCount * burst.repeatInterval;
+            totalDuration += burstDuration;
+        }
+        */
+
+        Debug.Log($"totalDuration: {totalDuration}");
 
         return totalDuration;
     }
