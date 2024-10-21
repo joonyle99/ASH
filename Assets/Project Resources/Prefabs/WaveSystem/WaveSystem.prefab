@@ -94,6 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6789934717586960922}
   - component: {fileID: 6789934717586960920}
+  - component: {fileID: 3036495164363291756}
   m_Layer: 0
   m_Name: WaveSystem
   m_TagString: Untagged
@@ -131,8 +132,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waveMonstersPref: {fileID: 4441840435354539114, guid: 8e598b9d33c6fec489ea00dcd4392599, type: 3}
   _waveInfos: []
-  _startWaveCutscenePlayer: {fileID: 0}
-  _endWaveCutscenePlayer: {fileID: 0}
+  _isClearAllWaves: 0
+  _startWaveCutscene: {fileID: 0}
+  _endWaveCutscene: {fileID: 0}
+  _enterWaveDoor: {fileID: 6789934718982414196}
+  _exitWaveDoor: {fileID: 6789934717904900025}
+--- !u!114 &3036495164363291756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6789934717586960923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6c0ff8802a4e2249a74cc12b664fd58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groupName: Exploration1
+  _id: WaveSystem_1_3_1
 --- !u!1 &6789934717904900026
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +180,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6789934717904900026}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.04, y: 0.13, z: 0}
+  m_LocalPosition: {x: 8.04, y: 12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -188,7 +206,7 @@ MonoBehaviour:
   _stateChange: 0
   _animationType: 0
   _identifier: {fileID: 0}
-  _isOpened: 0
+  _isOpened: 1
   _enterInputSetter: {fileID: 0}
   _model: {fileID: 6789934718327113793}
 --- !u!61 &7704354920911384719
@@ -204,7 +222,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.2116909}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -215,7 +233,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 8.5362015}
   m_EdgeRadius: 0
 --- !u!114 &1751227424935203911
 MonoBehaviour:
@@ -229,10 +247,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2176e78879feeff4f9eddd53cf7f0d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _openLowSoundKey: 
+  _openSoundKey: SE_missionDoor_open
   _doorOpenDelay: 0
   _stopShakeTiming: 2
   _doorOpenPreset: {fileID: 0}
-  _soundList: {fileID: 0}
+  _soundList: {fileID: 4988682546197079508}
   _dustParticle: {fileID: 0}
 --- !u!95 &4043040853300800376
 Animator:
@@ -244,10 +264,10 @@ Animator:
   m_GameObject: {fileID: 6789934717904900026}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 87d10ea4455d29243a654336a1d5b622, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -267,7 +287,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _soundDatas: []
+  _soundDatas:
+  - _isLoop: 0
+    _key: SE_missionDoor_open
+    _clip: {fileID: 8300000, guid: 9514b00c62edebf4fb2c398511a4ab87, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0
 --- !u!1 &6789934718327113793
 GameObject:
   m_ObjectHideFlags: 0
@@ -414,7 +443,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6789934718982414198}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.51, y: -0.28, z: 0}
+  m_LocalPosition: {x: -13.51, y: 12, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -440,7 +469,7 @@ MonoBehaviour:
   _stateChange: 0
   _animationType: 0
   _identifier: {fileID: 0}
-  _isOpened: 0
+  _isOpened: 1
   _enterInputSetter: {fileID: 0}
   _model: {fileID: 6789934717103885569}
 --- !u!114 &2698429126049096592
@@ -455,10 +484,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2176e78879feeff4f9eddd53cf7f0d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _openLowSoundKey: 
+  _openSoundKey: SE_missionDoor_open
   _doorOpenDelay: 0
   _stopShakeTiming: 2
   _doorOpenPreset: {fileID: 0}
-  _soundList: {fileID: 0}
+  _soundList: {fileID: 8423997078702461431}
   _dustParticle: {fileID: 0}
 --- !u!95 &2869640331590054597
 Animator:
@@ -470,10 +501,10 @@ Animator:
   m_GameObject: {fileID: 6789934718982414198}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 87d10ea4455d29243a654336a1d5b622, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -494,7 +525,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 1.7684352}
+  m_Offset: {x: 0, y: 0.5607014}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -505,7 +536,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 5.9516177}
+  m_Size: {x: 1, y: 8.367085}
   m_EdgeRadius: 0
 --- !u!114 &8423997078702461431
 MonoBehaviour:
@@ -519,4 +550,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1464142a4da29bf4787c6a201430b74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _soundDatas: []
+  _soundDatas:
+  - _isLoop: 0
+    _key: SE_missionDoor_open
+    _clip: {fileID: 8300000, guid: 9514b00c62edebf4fb2c398511a4ab87, type: 3}
+    _volumeType: 0
+    _volumeA: 1
+    _volumeB: 0
+    _pitchType: 0
+    _pitchA: 1
+    _pitchB: 0

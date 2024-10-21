@@ -89,7 +89,7 @@ public class BossDoor : Door
         {
             //_soundList.PlaySFX("Open"); 사운드 플레이는 DoorOpenAnimation에서 수행
 
-            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenBossDoorCoroutine()));
+            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine()));
         }
         else
         {
@@ -113,13 +113,13 @@ public class BossDoor : Door
     }
 
     // control door (open / close)
-    private IEnumerator OpenBossDoorCoroutine()
+    protected override IEnumerator OpenDoorCoroutine(bool useCameraEffect = true)
     {
         // 상호작용으로 여는 경우에만 InputSetter를 변경한다
         if (IsInteractable)
             InputManager.Instance.ChangeToStayStillSetter();
 
-        yield return StartCoroutine(OpenDoorCoroutine(true));
+        yield return StartCoroutine(OpenDoorCoroutine(useCameraEffect));
 
         /*
          * TODO: 보스와 싸우다 중간에 죽으면 보스키가 소모된 상태이므로 문이 열리지 않는 버그 존재
@@ -155,7 +155,30 @@ public class BossDoor : Door
 
     public override void OpenDoor(bool useCameraEffect = true)
     {
-        StartCoroutine(OpenBossDoorCoroutine());
+        StartCoroutine(OpenDoorCoroutine(useCameraEffect));
+    }
+
+    protected override IEnumerator CloseDoorCoroutine(bool useCameraEffect)
+    {
+        if (IsInteractable)
+            InputManager.Instance.ChangeToStayStillSetter();
+
+        yield return StartCoroutine(base.CloseDoorCoroutine(useCameraEffect));
+
+        IsOpened = false;
+
+        if (IsInteractable)
+        {
+            if (_enterInputSetter)
+                InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+            else
+                InputManager.Instance.ChangeToDefaultSetter();
+        }
+    }
+
+    public override void CloseDoor(bool useCameraEffect = true)
+    {
+        StartCoroutine(CloseDoorCoroutine(useCameraEffect));
     }
 
     // anim event

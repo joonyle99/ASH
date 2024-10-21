@@ -27,7 +27,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7851655696915322927}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -223.49, y: -8.87, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -48,7 +48,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -4.1439514, y: -0.29380608}
+  m_Offset: {x: -3.8471146, y: -0.29380608}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -59,7 +59,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 18.865356, y: 3.8380737}
+  m_Size: {x: 14.540054, y: 3.8380737}
   m_EdgeRadius: 0
 --- !u!114 &7851655696915322931
 MonoBehaviour:
@@ -80,7 +80,7 @@ MonoBehaviour:
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
-    Time: 1
+    Time: 0
     InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
     Function:
       m_PersistentCalls:
@@ -107,50 +107,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: WaveDoor, Assembly-CSharp
-          m_MethodName: ToggleDoor
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  - _type: 7
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 0}
-    Function:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: WaveDoor, Assembly-CSharp
-          m_MethodName: ToggleDoor
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  - _type: 4
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 3
-    InputSetter: {fileID: 0}
-    Function:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: WaveDoor, Assembly-CSharp
-          m_MethodName: ToggleDoor
+          m_TargetAssemblyTypeName: Door, Assembly-CSharp
+          m_MethodName: CloseDoor
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -164,8 +122,71 @@ MonoBehaviour:
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
-    Time: 1
+    Time: 0
     InputSetter: {fileID: 0}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: Door, Assembly-CSharp
+          m_MethodName: CloseDoor
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _type: 4
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2
+    InputSetter: {fileID: 11400000, guid: e3a2b65bbd1c5b348a6d1e68f5914f23, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: WaveSystemController, Assembly-CSharp
+          m_MethodName: StartWaveSystem
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _type: 7
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 0}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: WaveSystemController, Assembly-CSharp
+          m_MethodName: StartWaveSystem
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - _type: 4
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 3
+    InputSetter: {fileID: 11400000, guid: e3a2b65bbd1c5b348a6d1e68f5914f23, type: 2}
     Function:
       m_PersistentCalls:
         m_Calls:
@@ -185,7 +206,7 @@ MonoBehaviour:
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
-    Time: 1
+    Time: 0
     InputSetter: {fileID: 11400000, guid: e3a2b65bbd1c5b348a6d1e68f5914f23, type: 2}
     Function:
       m_PersistentCalls:

@@ -30,7 +30,6 @@ public class Door : InteractableObject, ISceneContextBuildListener
         _doorOpenAnimation = GetComponent<DoorOpenAnimation>();
         _animator = GetComponent<Animator>();
         _collider = GetComponent<BoxCollider2D>();
-        Debug.Log(_collider);
         _soundList = GetComponent<SoundList>();
     }
 
@@ -38,7 +37,7 @@ public class Door : InteractableObject, ISceneContextBuildListener
 
     protected override void OnObjectInteractionEnter() { }
 
-    protected IEnumerator OpenDoorCoroutine(bool useCameraEffect)
+    protected virtual IEnumerator OpenDoorCoroutine(bool useCameraEffect)
     {
         if(useCameraEffect)
             SceneEffectManager.Instance.Camera.StartFollow(transform);
@@ -51,11 +50,8 @@ public class Door : InteractableObject, ISceneContextBuildListener
         IsOpened = true;
     }
 
-    protected IEnumerator CloseDoorCoroutine(bool useCameraEffect)
+    protected virtual IEnumerator CloseDoorCoroutine(bool useCameraEffect)
     {
-        if (IsInteractable)
-            InputManager.Instance.ChangeToStayStillSetter();
-
         if (useCameraEffect)
             SceneEffectManager.Instance.Camera.StartFollow(transform);
 
@@ -65,14 +61,6 @@ public class Door : InteractableObject, ISceneContextBuildListener
             SceneEffectManager.Instance.Camera.StartFollow(SceneContext.Current.Player.transform);
 
         IsOpened = false;
-
-        if (IsInteractable)
-        {
-            if (_enterInputSetter)
-                InputManager.Instance.ChangeInputSetter(_enterInputSetter);
-            else
-                InputManager.Instance.ChangeToDefaultSetter();
-        }
     }
 
     public virtual void OpenDoor(bool useCameraEffect)
@@ -84,4 +72,18 @@ public class Door : InteractableObject, ISceneContextBuildListener
     {
         StartCoroutine(CloseDoorCoroutine(useCameraEffect));
     }
+
+    public virtual void ToggleDoor(bool useCameraEffect = false)
+    {
+        if(IsOpened)
+        {
+            CloseDoor(useCameraEffect);
+        }
+        else
+        {
+            OpenDoor(useCameraEffect);
+        }
+    }
+
+
 }

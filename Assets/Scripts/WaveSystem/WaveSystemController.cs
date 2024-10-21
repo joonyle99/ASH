@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -94,6 +95,11 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
 
     [SerializeField] private List<WaveInfo> _waveInfos;
     [SerializeField] private bool _isClearAllWaves = false;
+
+    [Header("External Called GameObject"), Space(10)]
+
+    [SerializeField] private CutscenePlayer _startWaveCutscene;
+    [SerializeField] private CutscenePlayer _endWaveCutscene;
 
     Coroutine _currentPlayingWaveCoroutine;
 
@@ -329,14 +335,16 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
         }
     }
 
+    /* renewal에 사용
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
         if(activator.Type == ActivatorType.Player &&
             !_isClearAllWaves && _currentPlayingWaveCoroutine == null)
         {
-            StartWaveSystem();
+            //StartWaveSystem();
         }
     }
+    */
 
     public void StartWaveSystem()
     {
@@ -347,12 +355,21 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
     {
         StartOfWaveSystemLogic();
 
+        bool isFirstOfSpawn = true;
+
         for (int i = 0; i < _waveInfos.Count; i++)
         {
             //해당 웨이브의 몬스터 스폰
             foreach (var monster in _waveInfos[i].WaveMonsters)
             {
-                SpawnWaveMonster(i + 1, monster);
+                Transform monsterTransform = SpawnWaveMonster(i + 1, monster);
+
+                if(monsterTransform != null &&
+                    isFirstOfSpawn)
+                {
+                    SceneEffectManager.Instance.Camera.StartFollow(monsterTransform);
+                    isFirstOfSpawn = false;
+                }
             }
 
             while (true)
@@ -370,33 +387,45 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
         EndOfWaveSystemLogic();
     }
 
-    private void SpawnWaveMonster(int waveStage, WaveSpawnMonsterInfo waveMonsterInfo)
+    /// <summary>
+    /// 웨이브 몬스터를 스폰하는 작업
+    /// </summary>
+    /// <param name="waveStage"></param>
+    /// <param name="waveMonsterInfo"></param>
+    /// <returns> 웨이브 몬스터가 스폰될 지점(Position) </returns>
+    private Transform SpawnWaveMonster(int waveStage, WaveSpawnMonsterInfo waveMonsterInfo)
     {
         switch (waveMonsterInfo.InstanceType)
         {
             case WaveSpawnMonsterInfo.MonsterInstanceType.Prefab:
                 {
+                    GameObject spawnedMonster = null;
                     for (int i = 0; i < waveMonsterInfo.Count; i++)
                     {
-                        GameObject spawnedMonster = Instantiate(waveMonsterInfo.Monster, transform.GetChild(waveStage - 1));
+                        spawnedMonster = Instantiate(waveMonsterInfo.Monster, transform.GetChild(waveStage - 1));
                         spawnedMonster.transform.position = waveMonsterInfo.SpawnPosition;
                     }
-                    break;
+
+                    return spawnedMonster.transform;
                 }
             case WaveSpawnMonsterInfo.MonsterInstanceType.Field:
                 {
                     waveMonsterInfo.Monster?.transform.GetChild(0).gameObject.SetActive(true);
                     waveMonsterInfo.Monster?.GetComponentInChildren<MonsterBehaviour>().RespawnProcess();
 
-                    break;
+                    return waveMonsterInfo.Monster.transform;
                 }
         }
+
+        return null;
     }
 
     private void StartOfWaveSystemLogic()
     {
-        _enterWaveDoor.CloseDoor(false);
-        _exitWaveDoor.CloseDoor(false);
+        /* renewal에 사용
+        //_enterWaveDoor.CloseDoor(false);
+        //_exitWaveDoor.CloseDoor(false);
+        */
     }
 
     private void EndOfWaveSystemLogic()
@@ -404,7 +433,11 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
         _currentPlayingWaveCoroutine = null;
         IsClearAllWaves = true;
 
-        _enterWaveDoor.OpenDoor(false);
-        _exitWaveDoor.OpenDoor(false);
+        _endWaveCutscene?.Play();
+
+        /* renewal에 사용
+        //_enterWaveDoor.OpenDoor(false);
+        //_exitWaveDoor.OpenDoor(false);
+        */
     }
 }
