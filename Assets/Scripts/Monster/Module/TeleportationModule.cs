@@ -14,10 +14,16 @@ public class TeleportationModule : MonoBehaviour
 
     public void ChangeGraphTo1()
     {
+        _teleportGraph1.gameObject.SetActive(true);
+        _teleportGraph2.gameObject.SetActive(false);
+
         _currentGraph = _teleportGraph1;
     }
     public void ChangeGraphTo2()
     {
+        _teleportGraph1.gameObject.SetActive(false);
+        _teleportGraph2.gameObject.SetActive(true);
+
         _currentGraph = _teleportGraph2;
     }
 }

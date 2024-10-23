@@ -98,6 +98,11 @@ public class MaterialController : MonoBehaviour
             material.DisableKeyword("HITEFFECT_ON");
         }
     }
+
+    public static void SetMaterial()
+    {
+
+    }
 }
 
 #if UNITY_EDITOR

@@ -317,7 +317,14 @@ public sealed class Fire : BossBehaviour
         }
         else
         {
-            SetToNextAttack();
+            if (IsRage)
+            {
+                SetToFireBall();
+            }
+            else
+            {
+                SetToNextAttack();
+            }
         }
     }
     public override void GroggyPreProcess()
@@ -351,6 +358,12 @@ public sealed class Fire : BossBehaviour
     {
         var nextAttackNumber = (int)AttackType.Teleport;
 
+        _nextAttack = (AttackType)nextAttackNumber;
+        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
+    }
+    private void SetToFireBall()
+    {
+        var nextAttackNumber = (int)AttackType.Fireball;
         _nextAttack = (AttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
@@ -390,8 +403,10 @@ public sealed class Fire : BossBehaviour
     {
         for (int i = 0; i < _fireBallCastCount; i++)
         {
-            FireBallDirType dirType = Math.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight);
+            FireBallDirType dirType = IsRage ? Math.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight) : FireBallDirType.Down;
             FireBallInfo info = new FireBallInfo(dirType);
+
+            // Debug.Log("FireBall »ý¼º");
 
             var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
             var fireBallParticle = fireBall.GetComponent<ParticleSystem>();
@@ -571,6 +586,32 @@ public sealed class Fire : BossBehaviour
         {
             Debug.LogError($"targetCoroutine is already null");
             return;
+        }
+    }
+    public void StopAllSkillCoroutine()
+    {
+        if (_flameBeamCoroutine != null)
+        {
+            Debug.Log("stop falmebeam coroutine");
+            StopCoroutine(_flameBeamCoroutine);
+        }
+
+        if (_fireBallCoroutine != null)
+        {
+            Debug.Log("stop fireball coroutine");
+            StopCoroutine(_fireBallCoroutine);
+        }
+
+        if (_ashPillarCoroutine != null)
+        {
+            Debug.Log("stop ashpillar coroutine");
+            StopCoroutine(_ashPillarCoroutine);
+        }
+
+        if (_firePillarCoroutine != null)
+        {
+            Debug.Log("stop firepillar coroutine");
+            StopCoroutine(_firePillarCoroutine);
         }
     }
 

@@ -19,6 +19,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
 
     private Camera _mainCamera;
+    public Camera MainCamera => _mainCamera;
 
     private Vector3[] _viewportCorners = new Vector3[4];        // 뷰포트(카메라가 보는 화면의 '정규화'된 2D 좌표 시스템)의 4개 코너 좌표
     private Vector3[] _worldCorners = new Vector3[4];           // 월드 공간에서의 뷰포트 프러스텀 코너 좌표
@@ -38,6 +39,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public Vector3 BottomMiddle => (LeftBottom + RightBottom) / 2f;
 
     private ProCamera2D _proCamera;
+    public ProCamera2D ProCamera => _proCamera;
 
     private ProCamera2DShake _shakeComponent;
     private ProCamera2DTriggerZoom _triggerZoomComponent;
@@ -161,7 +163,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         // Debug.Log($"카메라 리셋");
 
-        if (SceneContext.Current.Player)
+        if (SceneContext.Current.Player && (SceneContext.Current.SceneRunningType == SceneRunningType.Normal))
         {
             // 카메라 타겟에 플레이머만 포함시킨다 (나머지 타겟 삭제)
             StartFollow(SceneContext.Current.Player.transform);
@@ -320,7 +322,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void OnUpdateFinished(float t)
     {
-        Debug.Log("OnUpdateFinished");
+        // Debug.Log("OnUpdateFinished");
         IsUpdateFinished = true;
     }
 

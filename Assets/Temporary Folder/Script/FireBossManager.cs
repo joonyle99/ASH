@@ -1,28 +1,42 @@
-using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Events;
+using System.Collections;
 using static SceneTransitionPlayer;
 
 public class FireBossManager : MonoBehaviour
 {
+    // tornado effect
     [SerializeField] private BlazeFire _blazeFire;
     [SerializeField] private Tornado _tornado;
 
     [Space]
 
+    // boundaries
     [SerializeField] private GameObject _invisibleWall_Left;
     [SerializeField] private GameObject _invisibleWall_Right;
 
     [Space]
 
-    [SerializeField] private ParticleHelper _rageAshEffectEmitting;
+    // rage effect
+    [SerializeField] private ParticleHelper _rageEffectEmitting;
+    [SerializeField] private GameObject _footholds;
 
     [Space]
 
-    [SerializeField] private GameObject _footholds;
+    // teleport effect
+    [SerializeField] private GameObject _firePrefab;
+    [SerializeField] private ParticleHelper _warpEffect;
+    [SerializeField] private AnimationCurve _scaleXCurve;
+    [SerializeField] private AnimationCurve _scaleYCurve;
+    [SerializeField] private Transform _warpPoint;
+    [SerializeField] private float _duration;
 
-    // effects
+    /*
+    [Space]
+
+    [SerializeField] private 
+    */
+
+    // tornado effect
     public void ExcuteTornadoEffect()
     {
         _blazeFire.gameObject.SetActive(false);
@@ -31,7 +45,7 @@ public class FireBossManager : MonoBehaviour
         _tornado.TornadoAnimation();
     }
 
-    // ...
+    // rage effect
     public void ExcuteRageEffect()
     {
         StartCoroutine(ExcuteRageEffectCoroutine());
@@ -39,28 +53,90 @@ public class FireBossManager : MonoBehaviour
     private IEnumerator ExcuteRageEffectCoroutine()
     {
         // playing
-        var effectObject = _rageAshEffectEmitting.gameObject;
-        effectObject.SetActive(true);
+        _rageEffectEmitting.gameObject.SetActive(true);
 
-        // emitting
-        var particle = _rageAshEffectEmitting.ParticleSystem;
+        // emitting => 3段
+        var particle = _rageEffectEmitting.ParticleSystem;
         var burst = particle.emission.GetBurst(0);
-        var burstDuration = (burst.cycleCount - 1) * burst.repeatInterval;
+        var burstDuration = (burst.cycleCount - 1) * burst.repeatInterval;      // cycle: 7, repeatInterval: 0.4 = 2.8
         yield return new WaitForSeconds(burstDuration);
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.4f);
 
-        // pause
+        // pause => 3段
         particle.Pause();
-        yield return new WaitForSeconds(5f);
-
-        // fade out
-        yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(2f, FadeType.Darken);
-
-        effectObject.SetActive(false);
         yield return new WaitForSeconds(3f);
 
-        // fade in
+        // screen fade out => 2段
+        yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(2f, FadeType.Darken);
+
+        // waiting => 2段
+        SceneEffectManager.Instance.Camera.StopConstantShake();
+        yield return new WaitForSeconds(2f);
+
+        // screen fade in => 2段
         yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(2f, FadeType.Dim);
+
+        // effect fade out => 2段
+        var particleRenderer = particle.GetComponent<ParticleSystemRenderer>();
+        var particleMaterial = particleRenderer.material;
+
+        var eTime = 0f;
+        var startAplpha = particleRenderer.material.GetFloat("_Alpha");
+
+        while (eTime < 2f)
+        {
+            var t = eTime / 2f;
+
+            var nextAlpha = Mathf.Lerp(startAplpha, 0f, t);
+            particleMaterial.SetFloat("_Alpha", nextAlpha);
+
+            yield return null;
+
+            eTime += Time.deltaTime;
+        }
+
+        _rageEffectEmitting.gameObject.SetActive(false);
+
+        // => 3 + 3 + 2 + 2 + 2 + 2 = 14段
+    }
+
+    // teleport effect
+    public void ExcuteTeleportEffect()
+    {
+        StartCoroutine(ExcuteTeleportEffectCoroutine());
+    }
+    private IEnumerator ExcuteTeleportEffectCoroutine()
+    {
+        var effectObject = _warpEffect.gameObject;
+        effectObject.SetActive(true);
+
+        var fireTrans = _firePrefab.transform;
+        var startScale = fireTrans.localScale;
+
+        var eTime = 0f;
+
+        while (eTime < _duration)
+        {
+            var curveValueX = _scaleXCurve.Evaluate(eTime);
+            var curveValueY = _scaleYCurve.Evaluate(eTime);
+
+            var nextScale = new Vector3(curveValueX, curveValueY, startScale.z);
+
+            fireTrans.localScale = nextScale;
+
+            yield return null;
+
+            eTime += Time.deltaTime;
+        }
+
+        fireTrans.position = _warpPoint.position;
+        fireTrans.localScale = startScale;
+        effectObject.SetActive(false);
+    }
+
+    public void ExcuteFootholds()
+    {
+        _footholds.SetActive(true);
     }
 
     // boundaries
@@ -81,12 +157,6 @@ public class FireBossManager : MonoBehaviour
 
         SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Left, true, leftValue);
         SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Right, true, rightValue);
-    }
-
-    // rooms
-    public void SetCameraRooms()
-    {
-
     }
 
     public void SetUpBattle()

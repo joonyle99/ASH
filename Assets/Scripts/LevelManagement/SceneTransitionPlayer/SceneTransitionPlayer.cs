@@ -43,6 +43,9 @@ public class SceneTransitionPlayer : MonoBehaviour
             yield break;
         }
 
+        // _fadeImage.color.a 0: 검정색 이미지가 투명
+        // _fadeImage.color.a 1: 검정색 이미지가 불투명
+
         float from = _fadeImage.color.a;
         float to = 1f;
 
@@ -56,7 +59,7 @@ public class SceneTransitionPlayer : MonoBehaviour
                 to = 0f;
                 break;
             case FadeType.Dim:
-                to = 0.5f;
+                to = 0.2f;
                 break;
         }
 

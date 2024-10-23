@@ -2,6 +2,14 @@ using UnityEngine;
 using System.Linq;
 using Com.LuisPedroFonseca.ProCamera2D;
 
+[System.Serializable]
+public enum SceneRunningType
+{
+    Normal,
+    Chasing,
+    Surrounding,
+}
+
 /// <summary>
 /// 현재 씬에 대한 동작은 모두 담당함.
 /// 씬의 '주요 오브젝트'에 대한 레퍼런스를 갖고 있음
@@ -9,6 +17,8 @@ using Com.LuisPedroFonseca.ProCamera2D;
 public class SceneContext : MonoBehaviour
 {
     public static SceneContext Current { get; private set; }                // singleton
+
+    public SceneRunningType SceneRunningType { get; set; } = SceneRunningType.Normal;
 
     // basic
     public PlayerBehaviour Player { get; private set; }                     // 플레이어

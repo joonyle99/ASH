@@ -44,6 +44,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     [Header("Parts")]
     [Space]
 
+    [SerializeField] private Transform _headTrans;
     [SerializeField] private CapsuleCollider2D _bodyCollider;
     [SerializeField] private Rigidbody2D _handRigidbody;
     [SerializeField] private Collider2D _heartCollider;
@@ -202,6 +203,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public PlayerMovementController PlayerMovementController => _playerMovementController;
 
     // ETC
+    public Transform HeadTrans => _headTrans;
     public CapsuleCollider2D BodyCollider => _bodyCollider;
     public Collider2D HeartCollider => _heartCollider;
     public MaterialController MaterialController => materialController;

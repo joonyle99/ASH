@@ -17,7 +17,6 @@ GameObject:
   - component: {fileID: 79121818037108792}
   - component: {fileID: 643434365837365631}
   - component: {fileID: 7404777760962103530}
-  - component: {fileID: 6992439173665392867}
   - component: {fileID: 1272279960}
   - component: {fileID: 3829097960754704903}
   m_Layer: 0
@@ -233,39 +232,6 @@ MonoBehaviour:
   SoftAreaSize: 0.1
   UseBoundaryDelayOnEnterScene: 0
   BoundaryDelayFrames: 10
---- !u!114 &6992439173665392867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3829097960754704901}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30112d3b8decd43b5bf051e67694b027, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pc2D: {fileID: 71106182603244374}
-  _serializedAxis: 0
-  Rooms: []
-  UpdateInterval: 0.1
-  UseTargetsMidPoint: 1
-  TriggerTarget: {fileID: 0}
-  TransitionInstanlyOnStart: 1
-  RestoreOnRoomExit: 0
-  RestoreDuration: 1
-  RestoreEaseType: 0
-  AutomaticRoomActivation: 1
-  UseRelativePosition: 0
-  OnStartedTransition:
-    m_PersistentCalls:
-      m_Calls: []
-  OnFinishedTransition:
-    m_PersistentCalls:
-      m_Calls: []
-  OnExitedAllRooms:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1272279960
 MonoBehaviour:
   m_ObjectHideFlags: 0
