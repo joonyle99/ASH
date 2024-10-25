@@ -253,6 +253,8 @@ public sealed class Fire : BossBehaviour
 
     #endregion
 
+    private ParticleSystem _fireBallParticle;
+
     #region Function
 
     protected override void Awake()
@@ -409,13 +411,13 @@ public sealed class Fire : BossBehaviour
             // Debug.Log("FireBall »ý¼º");
 
             var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
-            var fireBallParticle = fireBall.GetComponent<ParticleSystem>();
+            _fireBallParticle = fireBall.GetComponent<ParticleSystem>();
 
             // module
-            var mainModule = fireBallParticle.main;
-            var velocityModule = fireBallParticle.velocityOverLifetime;
-            var emissionModule = fireBallParticle.emission;
-            var triggerModule = fireBallParticle.trigger;
+            var mainModule = _fireBallParticle.main;
+            var velocityModule = _fireBallParticle.velocityOverLifetime;
+            var emissionModule = _fireBallParticle.emission;
+            var triggerModule = _fireBallParticle.trigger;
 
             // main module
             mainModule.startRotation = new ParticleSystem.MinMaxCurve(info.Rotation * Mathf.Deg2Rad);
@@ -435,11 +437,14 @@ public sealed class Fire : BossBehaviour
             triggerModule.AddCollider(SceneContext.Current.Player.BodyCollider);
 
             // play particle
-            fireBallParticle.Play();
+            _fireBallParticle.Play();
 
             // cast interval
             yield return new WaitForSeconds(_fireBallCastInterval);
         }
+
+        _fireBallParticle.Stop();
+        _fireBallParticle = null;
 
         StopTargetCoroutine(ref _fireBallCoroutine);
     }
@@ -538,6 +543,15 @@ public sealed class Fire : BossBehaviour
         if (_fireBallCoroutine != null)
         {
             Debug.LogWarning($"_fireballCoroutine is not null");
+
+            if (_fireBallParticle != null)
+            {
+                Debug.LogWarning($"-> _fireBallParticle is not null");
+
+                _fireBallParticle.Stop();
+                _fireBallParticle = null;
+            }
+
             StopTargetCoroutine(ref _fireBallCoroutine);
         }
 
@@ -599,6 +613,15 @@ public sealed class Fire : BossBehaviour
         if (_fireBallCoroutine != null)
         {
             Debug.Log("stop fireball coroutine");
+
+            if (_fireBallParticle != null)
+            {
+                Debug.LogWarning($"-> _fireBallParticle is not null");
+
+                _fireBallParticle.Stop();
+                _fireBallParticle = null;
+            }
+
             StopCoroutine(_fireBallCoroutine);
         }
 
