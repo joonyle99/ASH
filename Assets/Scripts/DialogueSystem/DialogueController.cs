@@ -112,7 +112,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
                         QuestController.Instance.AcceptQuest(data.Quest);
                     }
-                    else
+                    else if(data.IsResponseDialougue)
                     {
                         List<ResponseContainer> contaienr = new List<ResponseContainer>();
                         contaienr.Add(new ResponseContainer(ResponseButtonType.Accept, () => QuestController.Instance.AcceptQuest(data.Quest)));

@@ -55,7 +55,7 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
         _currentQuest.CompleteProcess();
 
         // 현재 실행 중인 퀘스트 해제
-        _currentQuest = null;
+        //_currentQuest = null;
     }
     public void UpdateQuest()
     {

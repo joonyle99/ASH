@@ -18,16 +18,16 @@ public class QuestView : MonoBehaviour, ISceneContextBuildListener
 
     public void OnSceneContextBuilt()
     {
-        /*
-         * TODO: 퀘스트 시스템 완성하기
+        
+        // * TODO: 퀘스트 시스템 완성하기
         var currentQuest = QuestController.Instance.CurrentQuest;
 
-        if (currentQuest != null)
+        if (currentQuest.QuestData != null && currentQuest.IsActive)
         {
             UpdatePanel(currentQuest);
             OpenPanel();
         }
-        */
+        
     }
 
     public void OpenPanel()
@@ -40,8 +40,10 @@ public class QuestView : MonoBehaviour, ISceneContextBuildListener
     }
     public void UpdatePanel(Quest quest)
     {
+        Debug.Log("Quest argument in QuestView 'UpdatePanel()' Function : " + quest.QuestData);
+
         Counter.text = quest.CurrentCount.ToString()
-            + " / " + quest.QuestData.GoalCount.ToString();
+                + " / " + quest.QuestData.GoalCount.ToString();
     }
     private IEnumerator ControlPanelCoroutine(bool isOpen, float delay = 2f)
     {
