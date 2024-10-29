@@ -3,7 +3,7 @@ using System.Linq;
 using Com.LuisPedroFonseca.ProCamera2D;
 
 [System.Serializable]
-public enum SceneRunningType
+public enum CameraType
 {
     Normal,
     Chasing,
@@ -18,7 +18,7 @@ public class SceneContext : MonoBehaviour
 {
     public static SceneContext Current { get; private set; }                // singleton
 
-    public SceneRunningType SceneRunningType { get; set; } = SceneRunningType.Normal;
+    public CameraType CameraType { get; set; } = CameraType.Normal;
 
     // basic
     public PlayerBehaviour Player { get; private set; }                     // 플레이어

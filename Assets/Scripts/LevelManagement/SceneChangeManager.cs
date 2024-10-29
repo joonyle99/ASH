@@ -67,8 +67,15 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // SceneContext를 생성해주는 경우
         if (sceneContext == null)
         {
+            Debug.Log("The sceneContext doesn't exist in the scene, so we'll create a new one");
+
             GameObject go = new GameObject("SceneContext (Created)");
             sceneContext = go.AddComponent<SceneContext>();
+        }
+        // 이미 존재하는 SceneContext가 있는 경우
+        else
+        {
+            Debug.Log("The scene already has a sceneContext. Returns it immediately");
         }
 
         return sceneContext;

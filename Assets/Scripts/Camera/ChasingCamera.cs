@@ -51,7 +51,7 @@ public class ChasingCamera : MonoBehaviour
         _isChasing = true;
 
         // 1. Camera -> HelperTrans (Follow)
-        SceneContext.Current.SceneRunningType = SceneRunningType.Chasing;
+        SceneContext.Current.CameraType = CameraType.Chasing;
         SceneContext.Current.CameraController.StartFollow(_helperTrans.transform);
 
         _helperTrans.position = SceneContext.Current.Player.transform.position;
@@ -61,7 +61,7 @@ public class ChasingCamera : MonoBehaviour
         _isChasing = false;
 
         // 3. Camera -> Player (Follow) - Reset
-        SceneContext.Current.SceneRunningType = SceneRunningType.Normal;
+        SceneContext.Current.CameraType = CameraType.Normal;
         SceneContext.Current.CameraController.StartFollow(SceneContext.Current.Player.transform);
     }
 }

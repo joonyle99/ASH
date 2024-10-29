@@ -48,6 +48,9 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     private void Update()
     {
 #if UNITY_EDITOR
+        /*
+         * TEST CODE
+         * 
         if (Input.GetKeyDown(KeyCode.A))
         {
             foreach (var sfxPlayer in _pitchedSFXPlayer)
@@ -55,6 +58,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
                 Debug.Log($"_pitchedSFXPlayer => <color=orange>Key</color>: {sfxPlayer.Key}, <color=yellow>Value</color>: {sfxPlayer.Value}", sfxPlayer.Value.gameObject);
             }
         }
+        */
 #endif
     }
 

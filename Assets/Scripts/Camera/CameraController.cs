@@ -163,7 +163,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         // Debug.Log($"카메라 리셋");
 
-        if (SceneContext.Current.Player && (SceneContext.Current.SceneRunningType == SceneRunningType.Normal))
+        if (SceneContext.Current.Player && (SceneContext.Current.CameraType == CameraType.Normal))
         {
             // 카메라 타겟에 플레이머만 포함시킨다 (나머지 타겟 삭제)
             StartFollow(SceneContext.Current.Player.transform);

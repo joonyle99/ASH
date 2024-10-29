@@ -14,6 +14,7 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         public float OuterRadius;
         public float Intensity;
     }
+
     bool _isInsideCave = false;
     [SerializeField] bool _turnedOnAtStart = false;
     [SerializeField] float _lightUpTime = 1.5f;
@@ -48,6 +49,32 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
     void Awake()
     {
         _statePreserver = GetComponent<PreserveState>();
+    }
+    void Update()
+    {
+        if (!IsLightOn || (IsLightOn && !_isExplodeDone && !_turnedOnAtStart))
+            return;
+        _idleTime += Time.deltaTime;
+        if (_idleTime > _idleInterval)
+        {
+            _idleTime -= _idleInterval;
+            _idleInterval = Random.Range(_idleEffectIntervalMin, _idleEffectIntervalMax);
+        }
+        float sinValue = Mathf.Cos((_idleTime / _idleInterval) * Mathf.PI * 2);
+        _currentSpotLight.pointLightOuterRadius = Mathf.Lerp(_idleEffectScaleMin, _idleEffectScaleMax, (sinValue + 1) / 2) * _currentSettings.OuterRadius;
+
+    }
+    void OnDestroy()
+    {
+        if (_statePreserver)
+        {
+            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
+            {
+                _statePreserver.SaveState("_isOn", IsLightOn);
+            }
+
+            SaveAndLoader.OnSaveStarted -= SaveLanternOnState;
+        }
     }
 
     void TurnCurrentSpotLightOn()
@@ -115,38 +142,37 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         SaveAndLoader.OnSaveStarted += SaveLanternOnState;
     }
 
-    void OnDestroy()
+    void TurnLightOn()
     {
-        if (_statePreserver)
-        {
-            if (SceneChangeManager.Instance && SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap)
-            {
-                _statePreserver.SaveState("_isOn", IsLightOn);
-            }
-
-            SaveAndLoader.OnSaveStarted -= SaveLanternOnState;
-        }
-    }
-    void Update()
-    {
-        if (!IsLightOn || (IsLightOn && !_isExplodeDone && !_turnedOnAtStart))
+        if (IsLightOn)
             return;
-        _idleTime += Time.deltaTime;
-        if (_idleTime > _idleInterval)
-        {
-            _idleTime -= _idleInterval;
-            _idleInterval = Random.Range(_idleEffectIntervalMin, _idleEffectIntervalMax);
-        }
-        float sinValue = Mathf.Cos((_idleTime / _idleInterval) * Mathf.PI * 2);
-        _currentSpotLight.pointLightOuterRadius = Mathf.Lerp(_idleEffectScaleMin, _idleEffectScaleMax, (sinValue + 1) / 2) * _currentSettings.OuterRadius;
 
+        IsLightOn = true;
+
+        if (!_isExplodeDone)
+            StartCoroutine(ExplodeCoroutine());
+    }
+    void TurnLightOff()
+    {
+        if (!IsLightOn)
+            return;
+
+        _currentSpotLight.gameObject.SetActive(false);
+
+        IsLightOn = false;
+
+        _isExplodeDone = false;
+
+        StopAllCoroutines();
     }
     IEnumerator ExplodeCoroutine()
     {
         float eTime = 0f;
         float originalRadius = _currentSpotLight.pointLightOuterRadius;
         float originalIntensity = _currentSpotLight.intensity;
+
         _soundList.PlaySFX("SE_Lantern_Work");
+
         while (eTime < _explosionStartDuration)
         {
             float t = (eTime / _explosionStartDuration);
@@ -155,37 +181,35 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
             yield return null;
             eTime += Time.deltaTime;
         }
+
         eTime = 0f;
+
         while (eTime < _explosionEndDuration)
         {
-            float t = (eTime / _explosionStartDuration);
-            _currentSpotLight.pointLightOuterRadius = Mathf.Lerp(_currentSettings.OuterRadius * _explosionScale, _currentSettings.OuterRadius,
-                                                                    Utils.Curves.EaseOut(eTime / _explosionEndDuration));
-            _currentSpotLight.intensity = Mathf.Lerp(originalIntensity * _explosionIntensityScale, originalIntensity,
-                                                                    Utils.Curves.EaseOut(eTime / _explosionEndDuration));
+            float t = (eTime / _explosionEndDuration);
+            _currentSpotLight.pointLightOuterRadius = Mathf.Lerp(_currentSettings.OuterRadius * _explosionScale, _currentSettings.OuterRadius, Utils.Curves.EaseOut(t));
+            _currentSpotLight.intensity = Mathf.Lerp(originalIntensity * _explosionIntensityScale, originalIntensity, Utils.Curves.EaseOut(t));
             yield return null;
             eTime += Time.deltaTime;
         }
+
         _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
         _isExplodeDone = true;
+
+        var lightSceneContext = LanternSceneContext.Current;
+        if (lightSceneContext != null)
+        {
+            var boss = lightSceneContext.Boss;
+            if (boss != null)
+            {
+                Debug.Log("1. Call Lantern Attack");
+
+                LanternAttack lanternAttack = new LanternAttack(this, boss);
+                lightSceneContext.LenternAttack(lanternAttack);
+            }
+        }
     }
-    void TurnLightOn()
-    {
-        if (IsLightOn)
-            return;
-        IsLightOn = true;
-        if (!_isExplodeDone)
-            StartCoroutine(ExplodeCoroutine());
-    }
-    void TurnLightOff()
-    {
-        if (!IsLightOn)
-            return;
-        _currentSpotLight.gameObject.SetActive(false);
-        IsLightOn = false;
-        _isExplodeDone = false;
-        StopAllCoroutines();
-    }
+
     public void OnDarkBeamCollision()
     {
         TurnLightOff();
