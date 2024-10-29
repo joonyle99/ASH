@@ -202,6 +202,7 @@ public sealed class LanternSceneContext : SceneContext
         _StopCheckingConnections = true;
 
         // 랜턴으로 카메라 이동 후 대기
+        CameraController.GetComponent<ChasingCamera>().StopChasing();
         SceneEffectManager.Instance.Camera.StartFollow(lanternAttack.Lantern.transform);
         InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
         yield return new WaitForSeconds(_cameraLastLanternStayDuration);
@@ -226,6 +227,7 @@ public sealed class LanternSceneContext : SceneContext
         yield return new WaitForSeconds(1f);
 
         // 초기화
+        CameraController.GetComponent<ChasingCamera>().StartChasing();
         lanternAttack.Beam.gameObject.SetActive(false);
         InputManager.Instance.ChangeToDefaultSetter();
     }

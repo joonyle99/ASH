@@ -202,10 +202,7 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
             var boss = lightSceneContext.Boss;
             if (boss != null)
             {
-                Debug.Log("1. Call Lantern Attack");
-
-                LanternAttack lanternAttack = new LanternAttack(this, boss);
-                lightSceneContext.LenternAttack(lanternAttack);
+                lightSceneContext.LenternAttack(new LanternAttack(this, boss));
             }
         }
     }

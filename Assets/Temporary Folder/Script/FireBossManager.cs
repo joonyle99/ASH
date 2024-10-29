@@ -5,7 +5,6 @@ using static SceneTransitionPlayer;
 public class FireBossManager : MonoBehaviour
 {
     // tornado effect
-    [SerializeField] private BlazeFire _blazeFire;
     [SerializeField] private Tornado _tornado;
 
     [Space]
@@ -18,6 +17,14 @@ public class FireBossManager : MonoBehaviour
 
     // rage effect
     [SerializeField] private ParticleHelper _rageEffectEmitting;
+    [SerializeField] private ParticleHelper _rageEffectStaying;
+    [SerializeField] private float _emittingWaitTime = 3f;
+    [SerializeField] private float _emittingFadeTime = 2f;
+    [SerializeField] private float _fadeDuration = 2f;
+    [SerializeField] private float _fadeWaitTime = 2f;
+
+    [Space]
+
     [SerializeField] private GameObject _footholds;
 
     [Space]
@@ -30,62 +37,100 @@ public class FireBossManager : MonoBehaviour
     [SerializeField] private Transform _warpPoint;
     [SerializeField] private float _duration;
 
-    /*
     [Space]
 
-    [SerializeField] private 
-    */
+    // camera chasing
+    [SerializeField] private ChasingCamera _chasingCamera;
 
-    // tornado effect
-    public void ExcuteTornadoEffect()
+    // fire find cutscene
+    public void ExecuteTornadoEffect()
     {
-        _blazeFire.gameObject.SetActive(false);
         _tornado.gameObject.SetActive(true);
-
         _tornado.TornadoAnimation();
     }
-
-    // rage effect
-    public void ExcuteRageEffect()
+    public void SetCameraBoundaries()
     {
-        StartCoroutine(ExcuteRageEffectCoroutine());
+        // 처음에 게임 오브젝트가 비활성화되어 있으면 Bounds가 유효하지 않기 때문에 여기서 가져온다
+        var leftWallCollider = _invisibleWall_Left.GetComponent<BoxCollider2D>();
+        var rightWallCollider = _invisibleWall_Right.GetComponent<BoxCollider2D>();
+
+        if (leftWallCollider == null || rightWallCollider == null)
+        {
+            Debug.LogError("Left or Right Wall Collider is null");
+            return;
+        }
+
+        var leftValue = _invisibleWall_Left.transform.position.x + leftWallCollider.bounds.extents.x;
+        var rightValue = _invisibleWall_Right.transform.position.x - rightWallCollider.bounds.extents.x;
+
+        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Left, true, leftValue);
+        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Right, true, rightValue);
     }
-    private IEnumerator ExcuteRageEffectCoroutine()
+    public void SetUpBattle()
+    {
+        StartCoroutine(SetUpBattleCoroutine());
+    }
+    private IEnumerator SetUpBattleCoroutine()
+    {
+        // set boundaries
+        _invisibleWall_Left.SetActive(true);
+        _invisibleWall_Right.SetActive(true);
+        SetCameraBoundaries();
+
+        // set camera size
+        SceneContext.Current.CameraController.UpdateScreenSize(13f, 2f);
+
+        yield return new WaitUntil(() => SceneContext.Current.CameraController.IsUpdateFinished);
+
+        yield return null;
+    }
+
+    // fire rage cutscene
+    public void ExecuteRageEffect()
+    {
+        StartCoroutine(ExecuteRageEffectCoroutine());
+    }
+    private IEnumerator ExecuteRageEffectCoroutine()
     {
         // playing
         _rageEffectEmitting.gameObject.SetActive(true);
 
-        // emitting => 3초
+        yield return new WaitForSeconds(_emittingWaitTime);
+
+        /*
         var particle = _rageEffectEmitting.ParticleSystem;
+
         var burst = particle.emission.GetBurst(0);
         var burstDuration = (burst.cycleCount - 1) * burst.repeatInterval;      // cycle: 7, repeatInterval: 0.4 = 2.8
         yield return new WaitForSeconds(burstDuration);
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(_lastEmittingStopTime);
 
-        // pause => 3초
         particle.Pause();
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(_lastEmittingWaitTime);
+        */
 
         // screen fade out => 2초
-        yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(2f, FadeType.Darken);
+        yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(_fadeDuration, FadeType.Darken);
 
         // waiting => 2초
+        yield return new WaitForSeconds(_fadeWaitTime);
         SceneEffectManager.Instance.Camera.StopConstantShake();
-        yield return new WaitForSeconds(2f);
+        _rageEffectEmitting.gameObject.SetActive(false);
+        _rageEffectStaying.gameObject.SetActive(true);
 
         // screen fade in => 2초
-        yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(2f, FadeType.Dim);
+        yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(_fadeDuration, FadeType.Dim);
 
         // effect fade out => 2초
-        var particleRenderer = particle.GetComponent<ParticleSystemRenderer>();
+        var particleRenderer = _rageEffectStaying.ParticleSystem.GetComponent<ParticleSystemRenderer>();
         var particleMaterial = particleRenderer.material;
 
         var eTime = 0f;
         var startAplpha = particleRenderer.material.GetFloat("_Alpha");
 
-        while (eTime < 2f)
+        while (eTime < _emittingFadeTime)
         {
-            var t = eTime / 2f;
+            var t = eTime / _emittingFadeTime;
 
             var nextAlpha = Mathf.Lerp(startAplpha, 0f, t);
             particleMaterial.SetFloat("_Alpha", nextAlpha);
@@ -95,17 +140,13 @@ public class FireBossManager : MonoBehaviour
             eTime += Time.deltaTime;
         }
 
-        _rageEffectEmitting.gameObject.SetActive(false);
-
-        // => 3 + 3 + 2 + 2 + 2 + 2 = 14초
+        _rageEffectStaying.gameObject.SetActive(false);
     }
-
-    // teleport effect
-    public void ExcuteTeleportEffect()
+    public void ExecuteTeleportEffect()
     {
-        StartCoroutine(ExcuteTeleportEffectCoroutine());
+        StartCoroutine(ExecuteTeleportEffectCoroutine());
     }
-    private IEnumerator ExcuteTeleportEffectCoroutine()
+    private IEnumerator ExecuteTeleportEffectCoroutine()
     {
         var effectObject = _warpEffect.gameObject;
         effectObject.SetActive(true);
@@ -133,48 +174,17 @@ public class FireBossManager : MonoBehaviour
         fireTrans.localScale = startScale;
         effectObject.SetActive(false);
     }
-
-    public void ExcuteFootholds()
+    public void ExecuteVisibleFootholds()
     {
         _footholds.SetActive(true);
     }
 
-    // boundaries
-    public void SetCameraBoundaries()
+    public void StartCameraChasing()
     {
-        // 처음에 게임 오브젝트가 비활성화되어 있으면 Bounds가 유효하지 않기 때문에 여기서 가져온다
-        var leftWallCollider = _invisibleWall_Left.GetComponent<BoxCollider2D>();
-        var rightWallCollider = _invisibleWall_Right.GetComponent<BoxCollider2D>();
-
-        if (leftWallCollider == null || rightWallCollider == null)
-        {
-            Debug.LogError("Left or Right Wall Collider is null");
-            return;
-        }
-
-        var leftValue = _invisibleWall_Left.transform.position.x + leftWallCollider.bounds.extents.x;
-        var rightValue = _invisibleWall_Right.transform.position.x - rightWallCollider.bounds.extents.x;
-
-        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Left, true, leftValue);
-        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Right, true, rightValue);
+        _chasingCamera.StartChasing();
     }
-
-    public void SetUpBattle()
+    public void StopCameraChasing()
     {
-        StartCoroutine(SetUpBattleCoroutine());
-    }
-    private IEnumerator SetUpBattleCoroutine()
-    {
-        // set boundaries
-        _invisibleWall_Left.SetActive(true);
-        _invisibleWall_Right.SetActive(true);
-        SetCameraBoundaries();
-
-        // set camera size
-        SceneContext.Current.CameraController.UpdateScreenSize(13f, 2f);
-
-        yield return new WaitUntil(() => SceneContext.Current.CameraController.IsUpdateFinished);
-
-        yield return null;
+        _chasingCamera.StopChasing();
     }
 }

@@ -33,7 +33,7 @@ public class DiveState : PlayerState
 
     protected override bool OnEnter()
     {
-        StartCoroutine(ExcuteDive());
+        StartCoroutine(ExecuteDive());
 
         return true;
     }
@@ -99,7 +99,7 @@ public class DiveState : PlayerState
     }
 
     // 코루틴을 사용해서 플레이어를 공중에서 멈추게 한다
-    IEnumerator ExcuteDive()
+    IEnumerator ExecuteDive()
     {
         Charging();
 

@@ -3,14 +3,21 @@ using UnityEngine;
 
 public class Tornado : MonoBehaviour
 {
+    public GameObject BlazeFire;
     public GameObject FireBody;
+
     public Renderer TornadoRenderer;
     public Renderer TornadoExteriorRenderer;
 
     [Space]
 
+    public Vector3 TargetSize = new Vector3(2.3f, 2.3f, 2.3f);
     public float TargetSpeed = 0.2f;
     public float TargetDuration = 3f;
+
+    [Space]
+
+    public float TornadoWaitTime = 2f;
 
     private void Awake()
     {
@@ -25,7 +32,7 @@ public class Tornado : MonoBehaviour
     {
         yield return GrowUpEffectCoroutine(TargetDuration);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(TornadoWaitTime);
 
         yield return GrowDownEffectCoroutine(TargetDuration);
     }
@@ -36,7 +43,7 @@ public class Tornado : MonoBehaviour
 
         // size
         var startSize = transform.localScale;
-        var targetSize = new Vector3(2.3f, 2.3f, 2.3f);
+        var targetSize = TargetSize;
 
         // speed
         var material = TornadoRenderer.material;
@@ -46,11 +53,12 @@ public class Tornado : MonoBehaviour
         while (eTime < duration)
         {
             var t = eTime / duration;
+            var easeOutT = joonyle99.Math.EaseOutQuad(t);
 
-            var nextScale = Vector3.Lerp(startSize, targetSize, t);
+            var nextScale = Vector3.Lerp(startSize, targetSize, easeOutT);
             transform.localScale = nextScale;
 
-            var nextSpeed = Mathf.Lerp(startSpeed, targetSpeed, t);
+            var nextSpeed = Mathf.Lerp(startSpeed, targetSpeed, easeOutT);
             material.SetFloat("_TextureScrollYSpeed", nextSpeed);
 
             yield return new WaitForEndOfFrame();
@@ -62,7 +70,8 @@ public class Tornado : MonoBehaviour
 
         material.SetFloat("_TextureScrollYSpeed", targetSpeed);
 
-        FireBody.gameObject.SetActive(true);
+        BlazeFire.SetActive(false);
+        FireBody.SetActive(true);
     }
     private IEnumerator GrowDownEffectCoroutine(float duration)
     {
@@ -70,7 +79,7 @@ public class Tornado : MonoBehaviour
 
         // size
         var startSize = transform.localScale;
-        var targetSize = new Vector3(0f, 0f, 0f);
+        var targetSize = Vector3.zero;
 
         // speed
         var material = TornadoRenderer.material;
@@ -80,11 +89,12 @@ public class Tornado : MonoBehaviour
         while (eTime < duration)
         {
             var t = eTime / duration;
+            var easeOutT = joonyle99.Math.EaseOutQuad(t);
 
-            var nextScale = Vector3.Lerp(startSize, targetSize, t);
+            var nextScale = Vector3.Lerp(startSize, targetSize, easeOutT);
             transform.localScale = nextScale;
 
-            var nextSpeed = Mathf.Lerp(startSpeed, targetSpeed, t);
+            var nextSpeed = Mathf.Lerp(startSpeed, targetSpeed, easeOutT);
             material.SetFloat("_TextureScrollYSpeed", nextSpeed);
 
             yield return new WaitForEndOfFrame();

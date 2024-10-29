@@ -8,9 +8,33 @@ public class ChasingCamera : MonoBehaviour
     [Space]
 
     [SerializeField] private float _speed = 10f;
+    [SerializeField] private float _distance = 1f;
 
     private bool _isChasing = false;
 
+    private void Update()
+    {
+        if (_isChasing)
+        {
+            // 카메라가 타겟 높이에 도달했는지 확인
+            if (Mathf.Abs(_targetTrans.position.y - _helperTrans.position.y) < _distance)
+            {
+                Debug.Log("카메라가 타겟 높이에 도달했습니다.");
+
+                StopChasing();
+                return;
+            }
+
+            // 2. HelperTrans -> TargetTrans
+            var nextHelperPos = new Vector3
+                (
+                SceneContext.Current.Player.transform.position.x,
+                Mathf.MoveTowards(_helperTrans.position.y, _targetTrans.position.y, _speed * Time.deltaTime),
+                SceneContext.Current.Player.transform.position.z
+                );
+            _helperTrans.position = nextHelperPos;
+        }
+    }
     private void LateUpdate()
     {
         if (_isChasing)
@@ -22,31 +46,18 @@ public class ChasingCamera : MonoBehaviour
             if (playerViewportPos.x < 0 || playerViewportPos.x > 1 || playerViewportPos.y < 0)
             {
                 Debug.Log("카메라 밖으로 플레이어가 나가서 사망합니다.");
+
                 player.CurHp -= player.CurHp;
-                RevokeChaseProcess();
+
+                if (_isChasing)
+                    StopChasing();
+
                 return;
             }
-
-            // 카메라가 타겟 위치에 도달했는지 확인
-            if (Vector2.Distance(_helperTrans.position, _targetTrans.position) < 3f)
-            {
-                Debug.Log("카메라가 타겟 위치에 도달했습니다.");
-                RevokeChaseProcess();
-                return;
-            }
-
-            // 2. HelperTrans -> TargetTrans
-            var nextHelperPos = new Vector3
-                (
-                player.transform.position.x,
-                Mathf.MoveTowards(_helperTrans.position.y, _targetTrans.position.y, _speed * Time.deltaTime),
-                player.transform.position.z
-                );
-            _helperTrans.position = nextHelperPos;
         }
     }
 
-    public void ExcuteChaseProcess()
+    public void StartChasing()
     {
         _isChasing = true;
 
@@ -56,11 +67,11 @@ public class ChasingCamera : MonoBehaviour
 
         _helperTrans.position = SceneContext.Current.Player.transform.position;
     }
-    public void RevokeChaseProcess()
+    public void StopChasing()
     {
         _isChasing = false;
 
-        // 3. Camera -> Player (Follow) - Reset
+        // 3. Camera -> Player (Follow)
         SceneContext.Current.CameraType = CameraType.Normal;
         SceneContext.Current.CameraController.StartFollow(SceneContext.Current.Player.transform);
     }

@@ -93,6 +93,25 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
         if (setter == _currentSetter)
             return;
 
+        var setterObject = (object)setter;
+
+        if (setterObject == (object)_defaultInputSetter)
+        {
+            Debug.Log("_defaultInputSetter");
+        }
+        else if (setterObject == (object)_moveRightInputSetter)
+        {
+            Debug.Log("_moveRightInputSetter");
+        }
+        else if (setterObject == (object)_moveLeftInputSetter)
+        {
+            Debug.Log("_moveLeftInputSetter");
+        }
+        else if (setterObject == (object)_stayStillInputSetter)
+        {
+            Debug.Log("_stayStillInputSetter");
+        }
+
         _currentSetter = setter;
     }
 }
