@@ -68,6 +68,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
         // Debug.Log("Sequence 코루틴 시작");
 
         IsPlaying = true;
+
         for (int i = 0; i < sequence.Count; i++)
         {
             var effect = sequence[i];

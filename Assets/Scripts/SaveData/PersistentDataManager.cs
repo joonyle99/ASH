@@ -143,6 +143,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         }
 
 #if UNITY_EDITOR
+        /*
         // 데이터 그룹 출력
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -164,6 +165,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             Debug.Log("=============Save Data============");
             SavedPersistentData.PrintData();
         }
+        */
 #endif
     }
 

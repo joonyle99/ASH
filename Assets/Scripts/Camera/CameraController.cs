@@ -10,6 +10,15 @@ using System.Collections.Generic;
 /// </summary>
 public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
+    [System.Serializable]
+    public enum CameraType
+    {
+        Normal,
+        Chasing,
+        Surrounding,
+    }
+
+    [System.Serializable]
     public enum BoundaryType
     {
         Top,
@@ -20,6 +29,8 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
     private Camera _mainCamera;
     public Camera MainCamera => _mainCamera;
+
+    public CameraType CurrentCameraType { get; set; } = CameraType.Normal;
 
     private Vector3[] _viewportCorners = new Vector3[4];        // 뷰포트(카메라가 보는 화면의 '정규화'된 2D 좌표 시스템)의 4개 코너 좌표
     private Vector3[] _worldCorners = new Vector3[4];           // 월드 공간에서의 뷰포트 프러스텀 코너 좌표
@@ -163,7 +174,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         // Debug.Log($"카메라 리셋");
 
-        if (SceneContext.Current.Player && (SceneContext.Current.CameraType == CameraType.Normal))
+        if (SceneContext.Current.Player && CurrentCameraType == CameraType.Normal)
         {
             // 카메라 타겟에 플레이머만 포함시킨다 (나머지 타겟 삭제)
             StartFollow(SceneContext.Current.Player.transform);

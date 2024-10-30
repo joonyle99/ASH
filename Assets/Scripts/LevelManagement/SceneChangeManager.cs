@@ -130,7 +130,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         if (IsChanging)
             return;
 
-        if(SceneChangeType == SceneChangeType.Loading)
+        if (SceneChangeType == SceneChangeType.Loading)
         {
             DialogueDataManager.LoadSyncAllDialogueData(true);
         }
@@ -148,7 +148,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         yield return new WaitUntil(() => load.isDone);
 
-        if(Time.timeScale != 0)
+        if (Time.timeScale != 0)
         {
             Time.timeScale = 1;
         }
@@ -163,7 +163,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
         GameUIManager.SetSceneNameText(sceneName);
     }
-    
+
     // SceneContext가 DefaultBuild되었을 때 호출되는 함수 (ISceneContextBuildListener 인터페이스 구현)
     public void OnSceneContextBuilt()
     {

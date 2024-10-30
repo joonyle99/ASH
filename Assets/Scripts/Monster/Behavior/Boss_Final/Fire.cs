@@ -490,10 +490,8 @@ public sealed class Fire : BossBehaviour
             yield return new WaitForSeconds(_fireBallCastInterval);
         }
 
-        /*
         _fireBallParticle.Stop();
         _fireBallParticle = null;
-        */
 
         _fireBallCoroutine = null;
     }
@@ -590,9 +588,6 @@ public sealed class Fire : BossBehaviour
     {
         if (_fireBallCoroutine != null)
         {
-            /*
-             * 다른 스킬들에도 이 파티클별 작업 해줘야 하는지 확인하기
-             * 
             if (_fireBallParticle != null)
             {
                 Debug.Log($"-> _fireBallParticle is not null");
@@ -600,7 +595,6 @@ public sealed class Fire : BossBehaviour
                 _fireBallParticle.Stop();
                 _fireBallParticle = null;
             }
-            */
 
             StopTargetCoroutine(ref _fireBallCoroutine, "_fireBallCoroutine");
         }
@@ -661,17 +655,15 @@ public sealed class Fire : BossBehaviour
 
         if (_fireBallCoroutine != null)
         {
-            StopTargetCoroutine(ref _fireBallCoroutine, "_fireBallCoroutine");
-
-            /*
             if (_fireBallParticle != null)
             {
-                Debug.LogWarning($"-> _fireBallParticle is not null");
+                Debug.Log($"-> _fireBallParticle is not null");
 
                 _fireBallParticle.Stop();
                 _fireBallParticle = null;
             }
-            */
+
+            StopTargetCoroutine(ref _fireBallCoroutine, "_fireBallCoroutine");
         }
 
         if (_ashPillarCoroutine != null)
