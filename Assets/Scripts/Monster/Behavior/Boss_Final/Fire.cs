@@ -162,6 +162,24 @@ public sealed class Fire : BossBehaviour
     [Header("！！！！！！！ Fire Behaviour ！！！！！！！")]
     [Space]
 
+    [Header("____ Attributes ____")]
+    [Space]
+
+    [SerializeField] private int _shouldLanternAttackedCount = 5;
+    [SerializeField] private int _currentLanternAttackedCount = 0;
+    public int LanternAttackCount
+    {
+        get => _currentLanternAttackedCount;
+        set
+        {
+            _currentLanternAttackedCount = value;
+
+            Debug.Log("call lantern attack cutscene");
+
+            StartCoroutine(PlayCutSceneInRunning("LanternAttack_" + _currentLanternAttackedCount.ToString()));
+        }
+    }
+
     [Tooltip("1: FlameBeam\n2 : Fireball\n3 : AshPillar\n4 : FirePillar")]
     [SerializeField] private AttackType _firstAttack;
     [SerializeField] private AttackType _currentAttack;
@@ -300,7 +318,7 @@ public sealed class Fire : BossBehaviour
 
         InitSkillVariable();
 
-        rageTargetHurtCount = finalTargetHurtCount - 5;
+        rageTargetHurtCount = finalTargetHurtCount - _shouldLanternAttackedCount;
 
         SetToFirstAttack();
 
@@ -310,6 +328,23 @@ public sealed class Fire : BossBehaviour
     {
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AnimTransitionEvent -= HandleTeleportTransition;
+    }
+
+    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
+    {
+        var result = base.OnHit(attackInfo);
+
+        if (result == IAttackListener.AttackResult.Fail)
+        {
+            return result;
+        }
+
+        if (attackInfo.Type == global::AttackType.GimmickAttack)
+        {
+            LanternAttackCount++;
+        }
+
+        return result;
     }
 
     public override void AttackPreProcess()

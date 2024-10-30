@@ -85,7 +85,10 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        if (IsGodMode || IsDead)
+        if (IsDead)
+            return IAttackListener.AttackResult.Fail;
+
+        if (IsGodMode && attackInfo.Type != AttackType.GimmickAttack)
             return IAttackListener.AttackResult.Fail;
 
         // Hit Process
