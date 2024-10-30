@@ -763,6 +763,10 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
         cutscenePlayerList.PlayCutscene(cutsceneName);
     }
+    public void PlayCutSceneImmediately(string cutsceneName)
+    {
+        cutscenePlayerList.PlayCutscene(cutsceneName);
+    }
 
     #endregion
 

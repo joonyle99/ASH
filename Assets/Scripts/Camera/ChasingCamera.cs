@@ -41,16 +41,16 @@ public class ChasingCamera : MonoBehaviour
     }
     private void LateUpdate()
     {
-        /*
         if (_isChasing)
         {
             var player = SceneContext.Current.Player;
 
             // 플레이어가 카메라 안에 있는지 확인
             var playerViewportPos = SceneContext.Current.CameraController.MainCamera.WorldToViewportPoint(player.HeadTrans.position);
-            if (playerViewportPos.x < 0 || playerViewportPos.x > 1 || playerViewportPos.y < 0)
+            if (playerViewportPos.y < 0)
             {
-                Debug.Log("카메라 밖으로 플레이어가 나가서 사망합니다.");
+                /*
+                Debug.Log("플레이어가 카메라 아래로 떨어져서 사망합니다.");
 
                 player.CurHp -= player.CurHp;
 
@@ -58,25 +58,37 @@ public class ChasingCamera : MonoBehaviour
                     StopChasing();
 
                 return;
+                */
+            }
+            else if (playerViewportPos.y > 1)
+            {
+                Debug.Log("플레이어가 카메라 위로 올라가서 따라갑니다.");
+
+                _helperTrans.position = player.HeadTrans.position;
             }
         }
-        */
     }
     private void OnEnable()
     {
         Debug.Log("Chasing Camera On !");
 
-        SceneEffectManager.Instance.OnAdditionalBefore -= StopChasing;
-        SceneEffectManager.Instance.OnAdditionalBefore += StopChasing;
-        SceneEffectManager.Instance.OnAdditionalAfter -= StartChasing;
-        SceneEffectManager.Instance.OnAdditionalAfter += StartChasing;
+        if (SceneEffectManager.Instance != null)
+        {
+            SceneEffectManager.Instance.OnAdditionalBefore -= StopChasing;
+            SceneEffectManager.Instance.OnAdditionalBefore += StopChasing;
+            SceneEffectManager.Instance.OnAdditionalAfter -= StartChasing;
+            SceneEffectManager.Instance.OnAdditionalAfter += StartChasing;
+        }
     }
     private void OnDisable()
     {
         Debug.Log("Chasing Camera Off !");
 
-        SceneEffectManager.Instance.OnAdditionalBefore -= StopChasing;
-        SceneEffectManager.Instance.OnAdditionalAfter -= StartChasing;
+        if (SceneEffectManager.Instance != null)
+        {
+            SceneEffectManager.Instance.OnAdditionalBefore -= StopChasing;
+            SceneEffectManager.Instance.OnAdditionalAfter -= StartChasing;
+        }
     }
 
     public void StartChasing()

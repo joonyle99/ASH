@@ -176,7 +176,9 @@ public sealed class Fire : BossBehaviour
 
             Debug.Log("call lantern attack cutscene");
 
-            StartCoroutine(PlayCutSceneInRunning("LanternAttack_" + _currentLanternAttackedCount.ToString()));
+            // TODO: 랜턴의 빛이 밝아지는 컷씬과 랜턴 공격 컷씬을 어떻게 연결할지 고민하자
+            // StartCoroutine(PlayCutSceneInRunning();
+            // PlayCutSceneImmediately("LanternAttack_" + _currentLanternAttackedCount.ToString());
         }
     }
 
@@ -238,8 +240,6 @@ public sealed class Fire : BossBehaviour
     private float _fireBallAnimDuration;
     private Coroutine _fireBallCoroutine;
 
-    private ParticleSystem _fireBallParticle;
-
     [Header("____ AshPillar ____")]
     [Space]
 
@@ -283,6 +283,7 @@ public sealed class Fire : BossBehaviour
     [Space]
 
     [SerializeField] private float _extraAttackCooldown = 1f;
+    [SerializeField] private float _extraFireballCooldown = 2f;
 
     #endregion
 
@@ -458,13 +459,13 @@ public sealed class Fire : BossBehaviour
             // Debug.Log("FireBall 생성");
 
             var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
-            _fireBallParticle = fireBall.GetComponent<ParticleSystem>();
+            var fireBallParticle = fireBall.GetComponent<ParticleSystem>();
 
             // module
-            var mainModule = _fireBallParticle.main;
-            var velocityModule = _fireBallParticle.velocityOverLifetime;
-            var emissionModule = _fireBallParticle.emission;
-            var triggerModule = _fireBallParticle.trigger;
+            var mainModule = fireBallParticle.main;
+            var velocityModule = fireBallParticle.velocityOverLifetime;
+            var emissionModule = fireBallParticle.emission;
+            var triggerModule = fireBallParticle.trigger;
 
             // main module
             mainModule.startRotation = new ParticleSystem.MinMaxCurve(info.Rotation * Mathf.Deg2Rad);
@@ -484,14 +485,11 @@ public sealed class Fire : BossBehaviour
             triggerModule.AddCollider(SceneContext.Current.Player.BodyCollider);
 
             // play particle
-            _fireBallParticle.Play();
+            fireBallParticle.Play();
 
             // cast interval
             yield return new WaitForSeconds(_fireBallCastInterval);
         }
-
-        _fireBallParticle.Stop();
-        _fireBallParticle = null;
 
         _fireBallCoroutine = null;
     }
@@ -588,14 +586,6 @@ public sealed class Fire : BossBehaviour
     {
         if (_fireBallCoroutine != null)
         {
-            if (_fireBallParticle != null)
-            {
-                Debug.Log($"-> _fireBallParticle is not null");
-
-                _fireBallParticle.Stop();
-                _fireBallParticle = null;
-            }
-
             StopTargetCoroutine(ref _fireBallCoroutine, "_fireBallCoroutine");
         }
 
@@ -655,14 +645,6 @@ public sealed class Fire : BossBehaviour
 
         if (_fireBallCoroutine != null)
         {
-            if (_fireBallParticle != null)
-            {
-                Debug.Log($"-> _fireBallParticle is not null");
-
-                _fireBallParticle.Stop();
-                _fireBallParticle = null;
-            }
-
             StopTargetCoroutine(ref _fireBallCoroutine, "_fireBallCoroutine");
         }
 
@@ -711,6 +693,7 @@ public sealed class Fire : BossBehaviour
     private IEnumerator WaitEventCoroutine_Fireball()
     {
         yield return new WaitForSeconds(_fireBallAnimDuration);
+        yield return new WaitForSeconds(_extraFireballCooldown);
         // yield return new WaitUntil(() => _fireBallCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_AshPillar()

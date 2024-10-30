@@ -132,10 +132,10 @@ public class SceneContext : MonoBehaviour
             }
         }
 
-        // broadcast to all scene_context_build listener
+        // broadcast to all scene context build listener
         if (buildResult == Result.Success)
         {
-            var monoBehaviours = FindObjectsOfType<MonoBehaviour>();
+            var monoBehaviours = FindObjectsOfType<MonoBehaviour>(true);                // should include inactive objects
             var buildListeners = monoBehaviours.OfType<ISceneContextBuildListener>();
 
             foreach (var buildListener in buildListeners)

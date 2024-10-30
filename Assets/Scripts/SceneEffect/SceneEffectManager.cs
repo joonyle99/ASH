@@ -75,7 +75,6 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
         _sceneEvents = new List<SceneEffectEvent>();
         _eventComparator = new SceneEventComparator();
     }
-
     private void Update()
     {
         if (_currentState == State.SceneEvent)
@@ -87,6 +86,34 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
                     sceneEvent.OnUpdate();
             }
         }
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            string result = $"<color=yellow><Cutscene List></color>\n";
+
+            if (_recentCutscene != null)
+            {
+                result += _recentCutscene.GetCutsceneName() + '\n';
+            }
+
+            foreach (var cutscene in _cutSceneQueue)
+            {
+                result += cutscene.GetCutsceneName() + '\n';
+            }
+
+            Debug.Log(result);
+        }
+#endif
+    }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        _cutSceneQueue.Clear();
+        _sceneEvents.Clear();
+
+        _onAdditionalBefore = null;
+        _onAdditionalAfter = null;
     }
 
     public void OnSceneContextBuilt()
@@ -110,19 +137,20 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
             PlayCutscene(cutscene);
         }
         // 컷씬이 있는 경우 큐에 추가
-        else _cutSceneQueue.Add(cutscene);
+        else
+        {
+            _cutSceneQueue.Add(cutscene);
+        }
 
         // 컷씬이 재생되는 동안 다른 이벤트들은 비활성화
         DisableAllSceneEvents();
     }
-
     private void PlayCutscene(Cutscene cutscene)
     {
         _recentCutscene = cutscene;
         _currentState = State.Cutscene;
         cutscene.Play(CutsceneEndCallback, OnAdditionalBefore, OnAdditionalAfter);
     }
-
     private void CutsceneEndCallback()
     {
         if (_cutSceneQueue.Count > 0)

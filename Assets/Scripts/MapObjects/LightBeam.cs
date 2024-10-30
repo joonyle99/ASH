@@ -36,7 +36,7 @@ public class LightBeam : MonoBehaviour
         {
             if (_endBoss != null)
             {
-                _beamEffect.StartBeamEffect(new Transform[] { _startLantern.LightPoint, _endBoss.transform });
+                _beamEffect.StartBeamEffect(new Transform[] { _startLantern.LightPoint, _endBoss.CenterOfMass });
             }
             else
             {

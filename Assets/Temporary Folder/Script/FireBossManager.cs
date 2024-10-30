@@ -179,14 +179,22 @@ public class FireBossManager : MonoBehaviour
         _footholds.SetActive(true);
     }
 
-    public void StartCameraChasing()
+    public void ActiveCameraChasing()
     {
         _chasingCamera.enabled = true;
+        _chasingCamera.StartChasing();
+    }
+    public void DeActiveCameraChasing()
+    {
+        _chasingCamera.StopChasing();
+        _chasingCamera.enabled = false;
+    }
+    public void StartCameraChasing()
+    {
         _chasingCamera.StartChasing();
     }
     public void StopCameraChasing()
     {
         _chasingCamera.StopChasing();
-        _chasingCamera.enabled = false;
     }
 }

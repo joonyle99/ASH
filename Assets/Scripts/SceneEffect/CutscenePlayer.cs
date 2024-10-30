@@ -65,8 +65,6 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
     /// <returns></returns>
     private IEnumerator PlaySequenceCoroutine(List<SceneEffect> sequence)
     {
-        // Debug.Log("Sequence 코루틴 시작");
-
         IsPlaying = true;
 
         for (int i = 0; i < sequence.Count; i++)
@@ -116,9 +114,6 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
         }
 
         IsPlaying = false;
-
-        // 플레이어 무적 상태 해제
-        SceneContext.Current.Player.IsGodMode = false;
     }
 
     /// <summary>
@@ -128,12 +123,9 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
     {
         if (!_playOnce || !_played)
         {
-            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
             _played = true;
 
-            // 플레이어를 무적 상태로 만든다
-            SceneContext.Current.Player.IsGodMode = true;
-            // Debug.Log($"{SceneContext.Current.Player}의 GodMode가 설정됩니다. => IsGodMode : {SceneContext.Current.Player.IsGodMode}");
+            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence)));
         }
         else
         {
