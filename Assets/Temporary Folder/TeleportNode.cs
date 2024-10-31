@@ -1,17 +1,13 @@
 using System.Collections.Generic;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class TeleportNode : MonoBehaviour
 {
-    public int ID;
-
-    [SerializeField] private TextMeshPro _numberText;
-    // [FormerlySerializedAs("connectNodes")]
     [SerializeField] private List<TeleportNode> connectedNodes = new List<TeleportNode>();
-
-    public TextMeshPro NumberText => _numberText;
     public List<TeleportNode> ConnectedNodes => connectedNodes;
 
     /// <summary>
@@ -60,21 +56,7 @@ public class TeleportNode : MonoBehaviour
         Debug.Log($"a: {a.GetHashCode()} b: {b.GetHashCode()} str: {str.GetHashCode()} str2: {str2.GetHashCode()}");
         */
     }
-    private void OnValidate()
-    {
-        InitializeNode();
-    }
 
-    public void InitializeNode()
-    {
-        var number = joonyle99.Util.ExtractNumber(_numberText.text);
-        if (number == -1)
-        {
-            Debug.LogError($"there is no number");
-            return;
-        }
-        ID = number;
-    }
     public TeleportNode GetRandomConnectedNode()
     {
         var nextIndex = Random.Range(0, connectedNodes.Count);
@@ -97,6 +79,7 @@ public class TeleportNode : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(TeleportNode), true)]
 public class TeleportNodeEditor : Editor
 {
@@ -120,10 +103,12 @@ public class TeleportNodeEditor : Editor
                 return;
             }
 
-            t.ConnectedNodes.Sort((node1, node2) => node1.ID.CompareTo(node2.ID));
+            // ID를 제거함
+            // t.ConnectedNodes.Sort((node1, node2) => node1.ID.CompareTo(node2.ID));
         }
 
         // 인스펙터를 다시 그리도록 합니다.
         Repaint();
     }
 }
+#endif

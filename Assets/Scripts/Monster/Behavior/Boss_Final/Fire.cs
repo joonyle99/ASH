@@ -176,7 +176,7 @@ public sealed class Fire : BossBehaviour
 
             Debug.Log("call lantern attack cutscene");
 
-            StartCoroutine(PlayCutSceneInRunning("LanternAttack_" + _currentLanternAttackedCount.ToString()));
+            PlayCutSceneImmediately("LanternAttack_" + _currentLanternAttackedCount.ToString());
         }
     }
 
@@ -237,6 +237,8 @@ public sealed class Fire : BossBehaviour
 
     private float _fireBallAnimDuration;
     private Coroutine _fireBallCoroutine;
+
+    private List<Fire_FireBall> _fireBallList = new List<Fire_FireBall>();
 
     [Header("____ AshPillar ____")]
     [Space]
@@ -459,6 +461,10 @@ public sealed class Fire : BossBehaviour
             var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
             var fireBallParticle = fireBall.GetComponent<ParticleSystem>();
 
+            // fireBall이 파괴되면 _fireBallList에서 제거
+            fireBall.SetOwner(this);
+            _fireBallList.Add(fireBall);
+
             // module
             var mainModule = fireBallParticle.main;
             var velocityModule = fireBallParticle.velocityOverLifetime;
@@ -575,7 +581,7 @@ public sealed class Fire : BossBehaviour
     {
         if (_flameBeamCoroutine != null)
         {
-            StopTargetCoroutine(ref _flameBeamCoroutine, "_flameBeamCoroutine");
+            StopTargetSkillCoroutine(ref _flameBeamCoroutine, "_flameBeamCoroutine");
         }
 
         _flameBeamCoroutine = StartCoroutine(FlameBeamCoroutine());
@@ -584,7 +590,8 @@ public sealed class Fire : BossBehaviour
     {
         if (_fireBallCoroutine != null)
         {
-            StopTargetCoroutine(ref _fireBallCoroutine, "_fireBallCoroutine");
+            ClearAllFireBall();
+            StopTargetSkillCoroutine(ref _fireBallCoroutine, "_fireBallCoroutine");
         }
 
         _fireBallCoroutine = StartCoroutine(FireBallCoroutine());
@@ -593,7 +600,7 @@ public sealed class Fire : BossBehaviour
     {
         if (_ashPillarCoroutine != null)
         {
-            StopTargetCoroutine(ref _ashPillarCoroutine, "_ashPillarCoroutine");
+            StopTargetSkillCoroutine(ref _ashPillarCoroutine, "_ashPillarCoroutine");
         }
 
         _ashPillarCoroutine = StartCoroutine(AshPillarCoroutine());
@@ -602,7 +609,7 @@ public sealed class Fire : BossBehaviour
     {
         if (_firePillarCoroutine != null)
         {
-            StopTargetCoroutine(ref _firePillarCoroutine, "_firePillarCoroutine");
+            StopTargetSkillCoroutine(ref _firePillarCoroutine, "_firePillarCoroutine");
         }
 
         _firePillarCoroutine = StartCoroutine(FirePillarCoroutine());
@@ -619,7 +626,7 @@ public sealed class Fire : BossBehaviour
     }
 
     // etc
-    private void StopTargetCoroutine(ref Coroutine targetCoroutine, string coroutineName)
+    private void StopTargetSkillCoroutine(ref Coroutine targetCoroutine, string coroutineName)
     {
         if (targetCoroutine != null)
         {
@@ -634,26 +641,44 @@ public sealed class Fire : BossBehaviour
             return;
         }
     }
+    public void RemvoeFireBall(Fire_FireBall fireball)
+    {
+        if (_fireBallList.Contains(fireball))
+        {
+            _fireBallList.Remove(fireball);
+        }
+    }
+    private void ClearAllFireBall()
+    {
+        foreach (var fireball in _fireBallList)
+        {
+            fireball.Ps.Stop();
+            fireball.Ps.Clear();
+        }
+
+        _fireBallList.Clear();
+    }
     public void StopAllSkillCoroutine()
     {
         if (_flameBeamCoroutine != null)
         {
-            StopTargetCoroutine(ref _flameBeamCoroutine, "_flameBeamCoroutine");
+            StopTargetSkillCoroutine(ref _flameBeamCoroutine, "_flameBeamCoroutine");
         }
 
         if (_fireBallCoroutine != null)
         {
-            StopTargetCoroutine(ref _fireBallCoroutine, "_fireBallCoroutine");
+            ClearAllFireBall();
+            StopTargetSkillCoroutine(ref _fireBallCoroutine, "_fireBallCoroutine");
         }
 
         if (_ashPillarCoroutine != null)
         {
-            StopTargetCoroutine(ref _ashPillarCoroutine, "_ashPillarCoroutine");
+            StopTargetSkillCoroutine(ref _ashPillarCoroutine, "_ashPillarCoroutine");
         }
 
         if (_firePillarCoroutine != null)
         {
-            StopTargetCoroutine(ref _firePillarCoroutine, "_firePillarCoroutine");
+            StopTargetSkillCoroutine(ref _firePillarCoroutine, "_firePillarCoroutine");
         }
     }
 

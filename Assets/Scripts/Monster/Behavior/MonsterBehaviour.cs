@@ -364,11 +364,18 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             if (!AttackEvaluator.IsUsable) return;
             if (AttackEvaluator.IsDuringCoolTime || AttackEvaluator.IsWaitingEvent) return;
 
+            /*
             // 컷씬 실행 중이면 안되게 하기
             if (cutscenePlayerList)
             {
                 if (cutscenePlayerList.CheckAnyPlaying())
                     return;
+            }
+            */
+
+            if (SceneEffectManager.Instance.IsPlayingCutscene)
+            {
+                return;
             }
 
             // 공격 가능한 대상이 있는지 확인

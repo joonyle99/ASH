@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Fire_FireBall : Monster_IndependentSkill
 {
+    public Fire Owner;
+
     private ParticleSystem _ps;
     public ParticleSystem Ps => _ps;
 
@@ -109,5 +111,17 @@ public class Fire_FireBall : Monster_IndependentSkill
                 }
             }
         }
+    }
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        Owner.RemvoeFireBall(this);
+    }
+
+    public void SetOwner(Fire fire)
+    {
+        Owner = fire;
     }
 }

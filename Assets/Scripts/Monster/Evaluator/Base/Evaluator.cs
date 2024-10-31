@@ -1,7 +1,9 @@
 using System.Collections;
-using UnityEditor;
 using UnityEngine;
-using static PrologueManager;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 /// <summary>
 /// 범위 안에 대상이 들어왔는 지를 판단하는 '판독기' 클래스
@@ -210,9 +212,10 @@ public abstract class Evaluator : MonoBehaviour
             _debugCoolTime -= Time.deltaTime;
         }
     }
-}
 #endif
+}
 
+#if UNITY_EDITOR
 // 커스텀 에디터
 [CustomEditor(typeof(Evaluator), true)]
 public class EvaluatorEditor : Editor
@@ -243,3 +246,4 @@ public class EvaluatorEditor : Editor
         Repaint();
     }
 }
+#endif

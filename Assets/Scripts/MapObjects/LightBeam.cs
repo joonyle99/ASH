@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class LightBeam : MonoBehaviour
@@ -47,5 +48,10 @@ public class LightBeam : MonoBehaviour
     public bool IsConnectedTo(Lantern lantern)
     {
         return _startLantern == lantern || _endLantern == lantern;
+    }
+    public IEnumerator FadeOutBeamCoroutine()
+    {
+        yield return _beamEffect.FadeOutLineCoroutine();
+        this.gameObject.SetActive(false);
     }
 }

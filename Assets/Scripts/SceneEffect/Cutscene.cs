@@ -36,7 +36,8 @@ public class Cutscene
 
         _onAdditionalBefore?.Invoke();
 
-        SceneContext.Current.Player.IsGodMode = true;
+        if (SceneContext.Current != null && SceneContext.Current.Player != null)
+            SceneContext.Current.Player.IsGodMode = true;
 
         // process
         IsStartted = true;
@@ -64,7 +65,8 @@ public class Cutscene
         // main end callback
         _onEndCallback?.Invoke();
 
-        SceneContext.Current.Player.IsGodMode = false;
+        if (SceneContext.Current != null && SceneContext.Current.Player != null)
+            SceneContext.Current.Player.IsGodMode = false;
 
         _onAdditionalAfter?.Invoke();
 

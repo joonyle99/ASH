@@ -49,7 +49,6 @@ public class ChasingCamera : MonoBehaviour
             var playerViewportPos = SceneContext.Current.CameraController.MainCamera.WorldToViewportPoint(player.HeadTrans.position);
             if (playerViewportPos.y < 0)
             {
-                /*
                 Debug.Log("플레이어가 카메라 아래로 떨어져서 사망합니다.");
 
                 player.CurHp -= player.CurHp;
@@ -58,7 +57,6 @@ public class ChasingCamera : MonoBehaviour
                     StopChasing();
 
                 return;
-                */
             }
             else if (playerViewportPos.y > 1)
             {

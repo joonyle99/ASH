@@ -67,6 +67,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     }
 
     private Cutscene _recentCutscene = null;
+    public bool IsPlayingCutscene => _currentState == State.Cutscene;
 
     protected override void Awake()
     {
@@ -134,9 +135,10 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     {
         Debug.Log($"PushCutscene - {cutscene.Owner.name}");
 
+        // 진행중인 컷이 있는 경우 대기
         if (_recentCutscene != null)
         {
-            yield return new WaitUntil(() => (_recentCutscene == null) || _recentCutscene.IsDone);
+            yield return new WaitWhile(() => IsPlayingCutscene);
         }
 
         // 컷씬이 없는 경우 바로 재생

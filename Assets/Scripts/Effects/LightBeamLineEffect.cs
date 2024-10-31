@@ -1,18 +1,23 @@
 using System.Collections;
 using UnityEngine;
 
+[System.Serializable]
 public class LightBeamLineEffect : MonoBehaviour
 {
     public Vector3 CurrentShootingPosition { get; private set; }
-    public bool IsShootingDone { get { return _isShootingDone;} }
+    public bool IsShootingDone { get { return _isShootingDone; } }
     [SerializeField] LineRenderer _lineRenderer;
 
     [SerializeField] float _lineDrawSpeed = 30f;
     [SerializeField] float _lastLineDrawSpeed = 10f;
     [SerializeField] float _lineIdleIntensityMax = 1.2f;
     [SerializeField] float _lineIdleIntensityMin = 0.6f;
-    [SerializeField] float _lineIdleEffectInterval= 1f;
+    [SerializeField] float _lineIdleEffectInterval = 1f;
     [SerializeField] float _lastIdleInterval = 0.2f;
+
+    [Space]
+
+    [SerializeField] float _fadeDuration = 1.5f;
 
     Transform[] _connectedTransforms = null;
 
@@ -40,7 +45,7 @@ public class LightBeamLineEffect : MonoBehaviour
                 _idleTime = (_idleTime + Time.deltaTime) % _lineIdleEffectInterval;
                 //sin 파형으로 intensity 조정
                 float sinValue = Mathf.Sin((_idleTime / _lineIdleEffectInterval) * Mathf.PI * 2);
-                _lineRenderer.material.SetFloat("_Intensity", Mathf.Lerp(_lineIdleIntensityMin, _lineIdleIntensityMax, (sinValue + 1)/2));
+                _lineRenderer.material.SetFloat("_Intensity", Mathf.Lerp(_lineIdleIntensityMin, _lineIdleIntensityMax, (sinValue + 1) / 2));
             }
         }
 
@@ -68,6 +73,7 @@ public class LightBeamLineEffect : MonoBehaviour
         _lineRenderer.positionCount = 2;
         int targetPointIndex = 1;
         Vector3 currentPosition = _connectedTransforms[0].position;
+        CurrentShootingPosition = currentPosition;
 
         _isShootingDone = false;
         while (targetPointIndex < _connectedTransforms.Length)
@@ -98,14 +104,40 @@ public class LightBeamLineEffect : MonoBehaviour
             yield return null;
         }
         _isShootingDone = true;
-
     }
     float[] GetAccumulatedDistances(Vector3[] positions)
     {
         float[] result = new float[positions.Length];
         result[0] = 0;
         for (int i = 1; i < positions.Length; i++)
-            result[i] = result[i-1] + Vector3.Distance(positions[i], positions[i + 1]);
+            result[i] = result[i - 1] + Vector3.Distance(positions[i], positions[i + 1]);
         return result;
+    }
+    public IEnumerator FadeOutLineCoroutine()
+    {
+        Gradient gradient = _lineRenderer.colorGradient;
+        GradientAlphaKey[] alphaKeys = gradient.alphaKeys;
+
+        float eTime = 0f;
+
+        while (eTime < _fadeDuration)
+        {
+            float t = eTime / _fadeDuration;
+            for (int i = 0; i < alphaKeys.Length; i++)
+            {
+                alphaKeys[i].alpha = Mathf.Lerp(1f, 0f, t);
+            }
+            gradient.SetKeys(gradient.colorKeys, alphaKeys);
+            _lineRenderer.colorGradient = gradient;
+            yield return null;
+            eTime += Time.deltaTime;
+        }
+
+        for (int i = 0; i < alphaKeys.Length; i++)
+        {
+            alphaKeys[i].alpha = 0f;
+        }
+        gradient.SetKeys(_lineRenderer.colorGradient.colorKeys, alphaKeys);
+        _lineRenderer.colorGradient = gradient;
     }
 }

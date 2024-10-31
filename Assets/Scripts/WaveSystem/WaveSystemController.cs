@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -125,6 +123,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
     [SerializeField] private WaveDoor _enterWaveDoor;
     [SerializeField] private WaveDoor _exitWaveDoor;
 
+#if UNITY_EDITOR
     #region Editor Property Function
     private void OnValidate()
     {
@@ -296,6 +295,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
         }
     }
     #endregion
+#endif
 
     private void Awake()
     {

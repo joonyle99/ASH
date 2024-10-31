@@ -196,7 +196,7 @@ public sealed class LanternSceneContext : SceneContext
 
         lanternAttack.Beam.SetLanternsWithBoss(lanternAttack.Lantern, lanternAttack.Boss);
 
-        SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, BossConnectionCameraCoroutine(lanternAttack))));
+        SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, BossConnectionCameraCoroutine(lanternAttack), false)));
     }
     IEnumerator BossConnectionCameraCoroutine(LanternAttack lanternAttack)
     {
@@ -227,7 +227,7 @@ public sealed class LanternSceneContext : SceneContext
         yield return new WaitForSeconds(_beamShootingWaitTime);
 
         // 초기화
-        lanternAttack.Beam.gameObject.SetActive(false);
+        StartCoroutine(lanternAttack.Beam.FadeOutBeamCoroutine());
         InputManager.Instance.ChangeToDefaultSetter();
     }
     IEnumerator ConnectionCoroutine(LanternAttack lanternAttack)

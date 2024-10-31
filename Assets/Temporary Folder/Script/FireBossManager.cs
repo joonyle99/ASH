@@ -32,10 +32,9 @@ public class FireBossManager : MonoBehaviour
     // teleport effect
     [SerializeField] private GameObject _firePrefab;
     [SerializeField] private ParticleHelper _warpEffect;
-    [SerializeField] private AnimationCurve _scaleXCurve;
-    [SerializeField] private AnimationCurve _scaleYCurve;
     [SerializeField] private Transform _warpPoint;
-    [SerializeField] private float _duration;
+    [SerializeField] private Vector3 _targetScale;
+    [SerializeField] private float _targetDuration = 0.3f;
 
     [Space]
 
@@ -156,12 +155,15 @@ public class FireBossManager : MonoBehaviour
 
         var eTime = 0f;
 
-        while (eTime < _duration)
+        while (eTime < _targetDuration)
         {
-            var curveValueX = _scaleXCurve.Evaluate(eTime);
-            var curveValueY = _scaleYCurve.Evaluate(eTime);
+            var t = eTime / _targetDuration;
+            var easeTime = joonyle99.Math.EaseOutQuart(t);
 
-            var nextScale = new Vector3(curveValueX, curveValueY, startScale.z);
+            var nextScaleX = Mathf.Lerp(startScale.x, _targetScale.x, easeTime);
+            var nextScaleY = Mathf.Lerp(startScale.y, _targetScale.y, easeTime);
+
+            var nextScale = new Vector3(nextScaleX, nextScaleY, startScale.z);
 
             fireTrans.localScale = nextScale;
 
@@ -170,8 +172,8 @@ public class FireBossManager : MonoBehaviour
             eTime += Time.deltaTime;
         }
 
-        fireTrans.position = _warpPoint.position;
-        fireTrans.localScale = startScale;
+        fireTrans.position = _warpPoint.position;   // 텔레포트
+        fireTrans.localScale = startScale;          // 원래 크기로 되돌림
         effectObject.SetActive(false);
     }
     public void ExecuteVisibleFootholds()

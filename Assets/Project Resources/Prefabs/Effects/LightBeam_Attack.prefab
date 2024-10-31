@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2659143349542992304}
   - component: {fileID: 2665224815397146767}
   m_Layer: 0
-  m_Name: LightBeam
+  m_Name: LightBeam_Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,7 +54,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fbad1d890e300fd458d4f329071e0866, type: 2}
+  - {fileID: 2100000, guid: 621a4f5f2b22254428cfaa6994d36ef4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -78,13 +78,13 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 2
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 0.51734006
+        time: 0.4613329
+        value: 0.5057453
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -162,3 +162,4 @@ MonoBehaviour:
   _lineIdleIntensityMin: 1
   _lineIdleEffectInterval: 2.5
   _lastIdleInterval: 0.2
+  _fadeDuration: 1.5
