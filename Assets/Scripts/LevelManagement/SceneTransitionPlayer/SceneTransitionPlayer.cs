@@ -43,6 +43,8 @@ public class SceneTransitionPlayer : MonoBehaviour
             yield break;
         }
 
+        GameUIManager.SetDebugText($"fadeType: {fadeType.ToString()}");
+
         // _fadeImage.color.a 0: 검정색 이미지가 투명
         // _fadeImage.color.a 1: 검정색 이미지가 불투명
 

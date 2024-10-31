@@ -125,7 +125,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
         {
             _played = true;
 
-            SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence))));
+            StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence))));
         }
         else
         {

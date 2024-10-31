@@ -32,8 +32,9 @@ public class Cutscene
     }
     public IEnumerator CutsceneCoroutine()
     {
-        //Debug.Log($"{_owner.name}으로부터 시작된 컷씬입니다");
+        Debug.Log($"{_owner.name}으로부터 시작된 컷씬입니다");
 
+        // ex) ChasingCamera - StopChasing()
         _onAdditionalBefore?.Invoke();
 
         if (SceneContext.Current != null && SceneContext.Current.Player != null)
@@ -62,15 +63,16 @@ public class Cutscene
         IsStartted = false;
         IsDone = true;
 
-        // main end callback
-        _onEndCallback?.Invoke();
-
         if (SceneContext.Current != null && SceneContext.Current.Player != null)
             SceneContext.Current.Player.IsGodMode = false;
 
+        // ex) ChasingCamera - StartChasing
         _onAdditionalAfter?.Invoke();
 
-        //Debug.Log($"{_owner.name}으로부터 시작된 컷씬이 종료되었습니다");
+        Debug.Log($"{_owner.name}으로부터 시작된 컷씬이 종료되었습니다");
+
+        // main end callback
+        _onEndCallback?.Invoke();
     }
 
     public string GetCutsceneName()

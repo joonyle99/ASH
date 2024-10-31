@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using static SceneTransitionPlayer;
 
 public enum SceneChangeType
 {
@@ -75,7 +76,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // 이미 존재하는 SceneContext가 있는 경우
         else
         {
-            Debug.Log("The scene already has a sceneContext. Returns it immediately");
+            // Debug.Log("The scene already has a sceneContext. Returns it immediately");
         }
 
         return sceneContext;
@@ -168,9 +169,12 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     public void OnSceneContextBuilt()
     {
         // 플레이어가 씬의 입구에서 나오는 컷씬을 실행한다
-        SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false)));
+        StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false)));
 
         if (SceneContext.Current.SceneTransitionPlayer != _defaultSceneTransitionPlayer)
-            _defaultSceneTransitionPlayer.SetFadeImageAlpha(0);
+        {
+            GameUIManager.SetDebugText("SetFadeImageAlpha(0f)");
+            _defaultSceneTransitionPlayer.SetFadeImageAlpha(0f);
+        }
     }
 }

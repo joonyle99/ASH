@@ -171,7 +171,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     {
         if (_currentDialogueCoroutine == null)
         {
-            Debug.Log("대화가 진행 중이 아닙니다");
+            // Debug.Log("대화가 진행 중이 아닙니다");
             return;
         }
 

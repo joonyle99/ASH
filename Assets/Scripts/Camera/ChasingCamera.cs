@@ -43,13 +43,15 @@ public class ChasingCamera : MonoBehaviour
     {
         if (_isChasing)
         {
+            if (SceneEffectManager.Instance.IsPlayingCutscene) return;
+
             var player = SceneContext.Current.Player;
 
             // 플레이어가 카메라 안에 있는지 확인
             var playerViewportPos = SceneContext.Current.CameraController.MainCamera.WorldToViewportPoint(player.HeadTrans.position);
             if (playerViewportPos.y < 0)
             {
-                Debug.Log("플레이어가 카메라 아래로 떨어져서 사망합니다.");
+                // Debug.Log("플레이어가 카메라 아래로 떨어져서 사망합니다.");
 
                 player.CurHp -= player.CurHp;
 
@@ -60,9 +62,14 @@ public class ChasingCamera : MonoBehaviour
             }
             else if (playerViewportPos.y > 1)
             {
-                Debug.Log("플레이어가 카메라 위로 올라가서 따라갑니다.");
+                // Debug.Log("플레이어가 카메라 위로 올라가서 따라갑니다.");
 
-                _helperTrans.position = player.HeadTrans.position;
+                _helperTrans.position = new Vector3
+                    (
+                    _helperTrans.position.x,
+                    (_helperTrans.position.y + player.HeadTrans.position.y) / 2f,
+                    _helperTrans.position.z
+                    );
             }
         }
     }
@@ -72,9 +79,7 @@ public class ChasingCamera : MonoBehaviour
 
         if (SceneEffectManager.Instance != null)
         {
-            SceneEffectManager.Instance.OnAdditionalBefore -= StopChasing;
             SceneEffectManager.Instance.OnAdditionalBefore += StopChasing;
-            SceneEffectManager.Instance.OnAdditionalAfter -= StartChasing;
             SceneEffectManager.Instance.OnAdditionalAfter += StartChasing;
         }
     }
@@ -94,22 +99,21 @@ public class ChasingCamera : MonoBehaviour
         if (_isChasing == true)
             return;
 
-        //Debug.Log("Start Chasing");
+        // Debug.Log("Start Chasing");
 
         _isChasing = true;
 
         // 1. Camera -> HelperTrans (Follow)
         _camera.CurrentCameraType = CameraController.CameraType.Chasing;
-        SceneContext.Current.CameraController.StartFollow(_helperTrans.transform);
-
         _helperTrans.position = SceneContext.Current.Player.transform.position;
+        SceneContext.Current.CameraController.StartFollow(_helperTrans.transform);
     }
     public void StopChasing()
     {
         if (_isChasing == false)
             return;
 
-        //Debug.Log("Stop Chasing");
+        // Debug.Log("Stop Chasing");
 
         _isChasing = false;
 

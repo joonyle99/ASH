@@ -53,7 +53,8 @@ public abstract class BossBehaviour : MonsterBehaviour
                     IsRage = true;
                     IsGodMode = true;
 
-                    StartCoroutine(PlayCutSceneInRunning("Change RageState"));
+                    // StartCoroutine(PlayCutSceneInRunning("Change RageState"));
+                    PlayCutSceneImmediately("Change RageState");
                 }
             }
         }

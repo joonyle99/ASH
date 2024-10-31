@@ -145,7 +145,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         {
             _isGodMode = value;
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
             if (MaterialController)
             {
                 if (_isGodMode)
@@ -157,7 +157,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
                     MaterialController.DisableGodModeOutline();
                 }
             }
-#endif
+//#endif
         }
     }
     [field: SerializeField]
@@ -390,6 +390,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     public virtual IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         if (IsGodMode || IsDead)
+            return IAttackListener.AttackResult.Fail;
+
+        if (this is Mushroom)
             return IAttackListener.AttackResult.Fail;
 
         HitProcess(attackInfo);

@@ -69363,7 +69363,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5550379080094522758}
-  m_BodyType: 2
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -69372,9 +69372,9 @@ Rigidbody2D:
   m_AngularDrag: 0
   m_GravityScale: 0
   m_Material: {fileID: 0}
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 4
 --- !u!70 &4370448402647912425
 CapsuleCollider2D:
@@ -69466,6 +69466,7 @@ MonoBehaviour:
   _distanceFromBoss: 6
   _shouldLanternAttackedCount: 5
   _currentLanternAttackedCount: 0
+  _extraAttackCooldown: 1
   _firstAttack: 2
   _currentAttack: 0
   _nextAttack: 0
@@ -69495,8 +69496,6 @@ MonoBehaviour:
   _firePillarSpawnHeight: -57.3
   _firePillarFarDist: 25
   _firePillarEachDist: 3
-  _extraAttackCooldown: 1
-  _extraFireballCooldown: 2
 --- !u!114 &939166307086520023
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69740,8 +69739,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 4
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 5829965062317189423}
   - {fileID: 5829965061601946917}
@@ -69842,8 +69839,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 2
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 5829965061039023765}
   - {fileID: 5829965062540180468}
@@ -69944,8 +69939,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 3
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 5829965062317189423}
   - {fileID: 5829965062540180468}
@@ -70046,8 +70039,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 5829965062278104762}
   - {fileID: 5829965061039023765}
@@ -70261,8 +70252,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 5
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 5829965062317189423}
   - {fileID: 5829965061601946917}
@@ -70364,8 +70353,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 6
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 7368553284588853439}
   - {fileID: 7368553285047448352}
@@ -70468,8 +70455,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 2
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 7368553286223745807}
   - {fileID: 7368553284538037928}
@@ -70570,8 +70555,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 3
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 7368553285346041013}
   - {fileID: 7368553285259169390}
@@ -70674,8 +70657,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 5
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 7368553285346041013}
   - {fileID: 7368553285047448352}
@@ -70894,8 +70875,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 1
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 7368553285047448352}
   - {fileID: 7368553286223745807}
@@ -70999,8 +70978,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 8
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 7368553285346041013}
   - {fileID: 7368553284538037928}
@@ -71101,8 +71078,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 4
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 7368553285346041013}
   - {fileID: 7368553284588853439}
@@ -71205,8 +71180,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76834c990a470f04caf9162c5042e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ID: 7
-  _numberText: {fileID: 0}
   connectedNodes:
   - {fileID: 7368553285047448352}
   - {fileID: 7368553286223745807}

@@ -9,7 +9,21 @@ using UnityEditor;
 /// </summary>
 public abstract class LanternLike : MonoBehaviour
 {
-    public virtual Transform LightPoint { get { return transform; } }
+    [SerializeField] private Transform _cameraPoint;
+    public virtual Transform LightPoint
+    {
+        get
+        {
+            if (_cameraPoint == null)
+            {
+                return this.transform;
+            }
+            else
+            {
+                return _cameraPoint;
+            }
+        }
+    }
     public bool IsLightOn
     {
         get { return _isLightOn; }
@@ -18,7 +32,7 @@ public abstract class LanternLike : MonoBehaviour
             if (value == _isLightOn)
                 return;
             _isLightOn = value;
-            if(LanternSceneContext.Current != null)
+            if (LanternSceneContext.Current != null)
             {
                 if (value)
                     LanternSceneContext.Current.RecordActivationTime(this);
@@ -30,5 +44,5 @@ public abstract class LanternLike : MonoBehaviour
 
     bool _isLightOn = false;
     public virtual void OnBeamConnected(LightBeam beam) { }
-    public virtual void OnBeamDisconnected(LightBeam beam){ }
+    public virtual void OnBeamDisconnected(LightBeam beam) { }
 }

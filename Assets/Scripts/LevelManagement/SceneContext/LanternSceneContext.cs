@@ -196,7 +196,7 @@ public sealed class LanternSceneContext : SceneContext
 
         lanternAttack.Beam.SetLanternsWithBoss(lanternAttack.Lantern, lanternAttack.Boss);
 
-        SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, BossConnectionCameraCoroutine(lanternAttack), false)));
+        StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, BossConnectionCameraCoroutine(lanternAttack), false)));
     }
     IEnumerator BossConnectionCameraCoroutine(LanternAttack lanternAttack)
     {
@@ -259,7 +259,7 @@ public sealed class LanternSceneContext : SceneContext
         if (relation.A.transform == _lightDoor.transform || relation.B.transform == _lightDoor.transform)
         {
             if (!_lightDoor.IsOpened)
-                SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, LastConnectionCameraCoroutine(relation))));
+                StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, LastConnectionCameraCoroutine(relation))));
         }
         else
         {

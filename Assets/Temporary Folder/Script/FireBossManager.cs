@@ -33,7 +33,7 @@ public class FireBossManager : MonoBehaviour
     [SerializeField] private GameObject _firePrefab;
     [SerializeField] private ParticleHelper _warpEffect;
     [SerializeField] private Transform _warpPoint;
-    [SerializeField] private Vector3 _targetScale;
+    [SerializeField] private Vector2 _targetScale;
     [SerializeField] private float _targetDuration = 0.3f;
 
     [Space]
@@ -150,8 +150,8 @@ public class FireBossManager : MonoBehaviour
         var effectObject = _warpEffect.gameObject;
         effectObject.SetActive(true);
 
-        var fireTrans = _firePrefab.transform;
-        var startScale = fireTrans.localScale;
+        var fireTransform = _firePrefab.transform;
+        var startScale = fireTransform.localScale;
 
         var eTime = 0f;
 
@@ -160,20 +160,21 @@ public class FireBossManager : MonoBehaviour
             var t = eTime / _targetDuration;
             var easeTime = joonyle99.Math.EaseOutQuart(t);
 
-            var nextScaleX = Mathf.Lerp(startScale.x, _targetScale.x, easeTime);
-            var nextScaleY = Mathf.Lerp(startScale.y, _targetScale.y, easeTime);
-
-            var nextScale = new Vector3(nextScaleX, nextScaleY, startScale.z);
-
-            fireTrans.localScale = nextScale;
+            fireTransform.localScale = new Vector3(
+                Mathf.Lerp(startScale.x, _targetScale.x, easeTime),
+                Mathf.Lerp(startScale.y, _targetScale.y, easeTime),
+                startScale.z);
 
             yield return null;
 
             eTime += Time.deltaTime;
         }
 
-        fireTrans.position = _warpPoint.position;   // 텔레포트
-        fireTrans.localScale = startScale;          // 원래 크기로 되돌림
+        fireTransform.GetChild(0).position = _warpPoint.position;
+        // fireTransform.position = _warpPoint.position;               // 텔레포트 이동
+        // _fireRigidbody.position = _warpPoint.position;
+        fireTransform.localScale = startScale;                      // 원래 크기로 되돌림
+
         effectObject.SetActive(false);
     }
     public void ExecuteVisibleFootholds()

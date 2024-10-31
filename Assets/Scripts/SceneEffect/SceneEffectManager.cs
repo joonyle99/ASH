@@ -127,23 +127,25 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     {
         _recentCutscene = null;
         _currentState = State.Idle;
+        // Debug.Log("current state - Idle");
         Camera.ResetCameraSettings();
     }
 
     // cutscene
     public IEnumerator PushCutscene(Cutscene cutscene)
     {
-        Debug.Log($"PushCutscene - {cutscene.Owner.name}");
-
-        // 진행중인 컷이 있는 경우 대기
-        if (_recentCutscene != null)
-        {
-            yield return new WaitWhile(() => IsPlayingCutscene);
-        }
+        // Debug.Log($"PushCutscene - {cutscene.Owner.name}");
 
         // 컷씬이 없는 경우 바로 재생
-        if (_cutSceneQueue.Count == 0)
+        if (_cutSceneQueue.Count == 0 && _recentCutscene == null)
         {
+            /*
+            if (_recentCutscene != null)
+            {
+                yield return new WaitWhile(() => IsPlayingCutscene);
+            }
+            */
+
             PlayCutscene(cutscene);
         }
         // 컷씬이 있는 경우 큐에 추가
@@ -154,11 +156,14 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
 
         // 컷씬이 재생되는 동안 다른 이벤트들은 비활성화
         DisableAllSceneEvents();
+
+        yield return null;
     }
     private void PlayCutscene(Cutscene cutscene)
     {
         _recentCutscene = cutscene;
         _currentState = State.Cutscene;
+        // Debug.Log("current state - Cutscene");
         cutscene.Play(CutsceneEndCallback, OnAdditionalBefore, OnAdditionalAfter);
     }
     private void CutsceneEndCallback()

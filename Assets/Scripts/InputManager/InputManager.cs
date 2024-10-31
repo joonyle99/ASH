@@ -93,7 +93,6 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
         if (setter == _currentSetter)
             return;
 
-        /*
         var setterObject = (object)setter;
 
         if (setterObject == (object)_defaultInputSetter)
@@ -112,7 +111,6 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
         {
             Debug.Log("_stayStillInputSetter");
         }
-        */
 
         _currentSetter = setter;
     }

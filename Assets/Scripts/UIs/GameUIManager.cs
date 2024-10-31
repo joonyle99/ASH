@@ -48,6 +48,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     [SerializeField] private Letterbox _letterBox;
     [SerializeField] private OptionView _optionView;
     [SerializeField] private TextMeshProUGUI _sceneNameText;
+    [SerializeField] private TextMeshProUGUI _debugText;
 
     private void Awake()
     {
@@ -171,5 +172,13 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
         if (Instance == null) return;
 
         Instance._sceneNameText.text = "Scene Name: " + sceneName;
+    }
+
+    // debug text
+    public static void SetDebugText(string text)
+    {
+        if (Instance == null) return;
+
+        Instance._debugText.text = text;
     }
 }
