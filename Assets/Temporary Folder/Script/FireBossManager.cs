@@ -170,9 +170,12 @@ public class FireBossManager : MonoBehaviour
             eTime += Time.deltaTime;
         }
 
-        fireTransform.GetChild(0).position = _warpPoint.position;
-        // fireTransform.position = _warpPoint.position;               // 텔레포트 이동
+        // fireTransform.GetChild(0).position = _warpPoint.position;
         // _fireRigidbody.position = _warpPoint.position;
+
+        // TODO: 이상하게 동작한다
+
+        fireTransform.position = _warpPoint.position;               // 텔레포트 이동
         fireTransform.localScale = startScale;                      // 원래 크기로 되돌림
 
         effectObject.SetActive(false);

@@ -53,6 +53,8 @@ public abstract class BossBehaviour : MonsterBehaviour
                     IsRage = true;
                     IsGodMode = true;
 
+                    // TODO: 여기서 공격으로 안 들어가도록 하기
+
                     // StartCoroutine(PlayCutSceneInRunning("Change RageState"));
                     PlayCutSceneImmediately("Change RageState");
                 }
