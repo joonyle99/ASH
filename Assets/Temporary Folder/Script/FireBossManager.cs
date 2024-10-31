@@ -181,13 +181,13 @@ public class FireBossManager : MonoBehaviour
 
     public void ActiveCameraChasing()
     {
-        _chasingCamera.enabled = true;
+        _chasingCamera.enabled = true;          // chasing camera의 OnEnable에서 event listener를 등록하는 로직이 실행된다
         _chasingCamera.StartChasing();
     }
     public void DeActiveCameraChasing()
     {
         _chasingCamera.StopChasing();
-        _chasingCamera.enabled = false;
+        _chasingCamera.enabled = false;         // chasing camera의 OnDisable에서 event listener를 해제하는 로직이 실행된다
     }
     public void StartCameraChasing()
     {

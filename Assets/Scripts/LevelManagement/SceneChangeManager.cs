@@ -168,7 +168,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     public void OnSceneContextBuilt()
     {
         // 플레이어가 씬의 입구에서 나오는 컷씬을 실행한다
-        SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false));
+        SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false)));
 
         if (SceneContext.Current.SceneTransitionPlayer != _defaultSceneTransitionPlayer)
             _defaultSceneTransitionPlayer.SetFadeImageAlpha(0);

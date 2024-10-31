@@ -176,9 +176,7 @@ public sealed class Fire : BossBehaviour
 
             Debug.Log("call lantern attack cutscene");
 
-            // TODO: 랜턴의 빛이 밝아지는 컷씬과 랜턴 공격 컷씬을 어떻게 연결할지 고민하자
-            // StartCoroutine(PlayCutSceneInRunning();
-            // PlayCutSceneImmediately("LanternAttack_" + _currentLanternAttackedCount.ToString());
+            StartCoroutine(PlayCutSceneInRunning("LanternAttack_" + _currentLanternAttackedCount.ToString()));
         }
     }
 

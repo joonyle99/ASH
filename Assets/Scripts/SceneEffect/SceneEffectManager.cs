@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -129,8 +130,15 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     }
 
     // cutscene
-    public void PushCutscene(Cutscene cutscene)
+    public IEnumerator PushCutscene(Cutscene cutscene)
     {
+        Debug.Log($"PushCutscene - {cutscene.Owner.name}");
+
+        if (_recentCutscene != null)
+        {
+            yield return new WaitUntil(() => (_recentCutscene == null) || _recentCutscene.IsDone);
+        }
+
         // 컷씬이 없는 경우 바로 재생
         if (_cutSceneQueue.Count == 0)
         {

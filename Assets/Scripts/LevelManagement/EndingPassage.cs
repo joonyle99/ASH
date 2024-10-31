@@ -12,7 +12,7 @@ public class EndingPassage : TriggerZone
     {
         // * push cutscene
         Cutscene exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine(), false);
-        SceneEffectManager.Instance.PushCutscene(exitSceneCutscene);
+        SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(exitSceneCutscene));
 
         // * wait cutscene
         yield return new WaitUntil(() => exitSceneCutscene.IsDone);

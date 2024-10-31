@@ -89,7 +89,7 @@ public class BossDoor : Door
         {
             //_soundList.PlaySFX("Open"); 사운드 플레이는 DoorOpenAnimation에서 수행
 
-            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine()));
+            SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine())));
         }
         else
         {

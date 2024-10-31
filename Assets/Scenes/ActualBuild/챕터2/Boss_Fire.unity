@@ -809,17 +809,6 @@ MonoBehaviour:
   _playOnce: 1
   _played: 0
   _sequence:
-  - _type: 5
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-    TargetScript: {fileID: 0}
-    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -866,6 +855,17 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -874,7 +874,19 @@ MonoBehaviour:
     InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
     Function:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1396333665}
+          m_TargetAssemblyTypeName: FireBossManager, Assembly-CSharp
+          m_MethodName: StartCameraChasing
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
   - _type: 0
@@ -989,7 +1001,6 @@ Transform:
   m_Children:
   - {fileID: 2117906370}
   - {fileID: 592763218}
-  - {fileID: 1086036714}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1217,29 +1228,6 @@ MonoBehaviour:
   _playOnce: 1
   _played: 0
   _sequence:
-  - _type: 5
-    DialogueData: {fileID: 11400000, guid: b248f9ee82e356f40846fb073d9bd4d2, type: 2}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: BlackPanther, Assembly-CSharp
-          m_MethodName: StartAttack
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    TargetScript: {fileID: 0}
-    MethodName: 
   - _type: 7
     DialogueData: {fileID: 11400000, guid: b248f9ee82e356f40846fb073d9bd4d2, type: 2}
     ShakeData: {fileID: 0}
@@ -1252,6 +1240,29 @@ MonoBehaviour:
         - m_Target: {fileID: 1034649944}
           m_TargetAssemblyTypeName: Fire, Assembly-CSharp
           m_MethodName: StopAllSkillCoroutine
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 11400000, guid: b248f9ee82e356f40846fb073d9bd4d2, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: BlackPanther, Assembly-CSharp
+          m_MethodName: StartAttack
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1451,7 +1462,7 @@ MonoBehaviour:
     DialogueData: {fileID: 11400000, guid: b248f9ee82e356f40846fb073d9bd4d2, type: 2}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
-    Time: 3
+    Time: 2
     InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
     Function:
       m_PersistentCalls:
@@ -1927,17 +1938,6 @@ MonoBehaviour:
   _playOnce: 1
   _played: 0
   _sequence:
-  - _type: 5
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-    TargetScript: {fileID: 0}
-    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -1984,6 +1984,17 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -1992,7 +2003,19 @@ MonoBehaviour:
     InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
     Function:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1396333665}
+          m_TargetAssemblyTypeName: FireBossManager, Assembly-CSharp
+          m_MethodName: StartCameraChasing
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
   - _type: 0
@@ -3179,6 +3202,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fa4da4a810aee64d888381a5c05d7a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1034649945 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5550379080094522760, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+  m_PrefabInstance: {fileID: 8645362315936482322}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1045634901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3330,7 +3358,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: -877.94995
+      value: -887.5049
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
@@ -3388,8 +3416,8 @@ Transform:
   - {fileID: 1745308569}
   - {fileID: 1224090211}
   - {fileID: 878137033}
-  m_Father: {fileID: 397181194}
-  m_RootOrder: 2
+  m_Father: {fileID: 1737057685}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1092682175
 GameObject:
@@ -3440,17 +3468,6 @@ MonoBehaviour:
   _playOnce: 1
   _played: 0
   _sequence:
-  - _type: 5
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-    TargetScript: {fileID: 0}
-    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -3497,6 +3514,17 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -3506,6 +3534,52 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 7
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2124024025}
+          m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
+          m_MethodName: FollowOnly
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 2037084710}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 4
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1396333665}
+          m_TargetAssemblyTypeName: FireBossManager, Assembly-CSharp
+          m_MethodName: StartCameraChasing
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
   - _type: 0
@@ -4043,17 +4117,6 @@ MonoBehaviour:
   _playOnce: 1
   _played: 0
   _sequence:
-  - _type: 5
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-    TargetScript: {fileID: 0}
-    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4100,6 +4163,17 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4120,6 +4194,29 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 4
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1396333665}
+          m_TargetAssemblyTypeName: FireBossManager, Assembly-CSharp
+          m_MethodName: StartCameraChasing
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
   - _type: 0
@@ -5459,7 +5556,7 @@ MonoBehaviour:
           m_MethodName: FollowOnly
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 2073085120}
+            m_ObjectArgument: {fileID: 1034649945}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: -25
@@ -5969,6 +6066,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+--- !u!4 &1461375372 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7011453829756755106, guid: 74c5483730fe9604ab4812e46f51baf9, type: 3}
+  m_PrefabInstance: {fileID: 919872286}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1476958809 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
@@ -6144,17 +6246,6 @@ MonoBehaviour:
   _playOnce: 1
   _played: 0
   _sequence:
-  - _type: 5
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-    TargetScript: {fileID: 0}
-    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -6201,6 +6292,17 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -6209,7 +6311,19 @@ MonoBehaviour:
     InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
     Function:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 1396333665}
+          m_TargetAssemblyTypeName: FireBossManager, Assembly-CSharp
+          m_MethodName: StartCameraChasing
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
   - _type: 0
@@ -6560,6 +6674,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 843658274}
+  - {fileID: 1086036714}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7754,6 +7869,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
   m_PrefabInstance: {fileID: 997798747}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &2037084710 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7011453829756755106, guid: 74c5483730fe9604ab4812e46f51baf9, type: 3}
+  m_PrefabInstance: {fileID: 1547002943}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2038152449
 GameObject:
   m_ObjectHideFlags: 0
@@ -7919,17 +8039,6 @@ MonoBehaviour:
   _playOnce: 1
   _played: 0
   _sequence:
-  - _type: 5
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 0
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-    TargetScript: {fileID: 0}
-    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -7976,6 +8085,17 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 0
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -7985,6 +8105,52 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 7
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2124024025}
+          m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
+          m_MethodName: FollowOnly
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1461375372}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 4
+    DialogueData: {fileID: 0}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1396333665}
+          m_TargetAssemblyTypeName: FireBossManager, Assembly-CSharp
+          m_MethodName: StartCameraChasing
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
   - _type: 0
@@ -8314,11 +8480,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -135.12146
+      value: -126.33628
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -29.68136
+      value: 7.9639473
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8393,7 +8559,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetTrans: {fileID: 1859016624}
   _helperTrans: {fileID: 716224459}
-  _speed: 1
+  _speed: 2
   _distance: 1
 --- !u!114 &2627876379476271777 stripped
 MonoBehaviour:
@@ -8426,11 +8592,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4855291631474455181, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
       propertyPath: _cutsceneDictionary.Array.size
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4855291631474455181, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
       propertyPath: _cutsceneDictionary.Array.data[1].name
       value: LanternAttack_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4855291631474455181, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _cutsceneDictionary.Array.data[2].name
+      value: LanternAttack_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4855291631474455181, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _cutsceneDictionary.Array.data[3].name
+      value: LanternAttack_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4855291631474455181, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _cutsceneDictionary.Array.data[4].name
+      value: LanternAttack_4
       objectReference: {fileID: 0}
     - target: {fileID: 4855291631474455181, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
       propertyPath: _cutsceneDictionary.Array.data[0].cutscenePlayer
@@ -8440,6 +8618,18 @@ PrefabInstance:
       propertyPath: _cutsceneDictionary.Array.data[1].cutscenePlayer
       value: 
       objectReference: {fileID: 1589089578}
+    - target: {fileID: 4855291631474455181, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _cutsceneDictionary.Array.data[2].cutscenePlayer
+      value: 
+      objectReference: {fileID: 725447563}
+    - target: {fileID: 4855291631474455181, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _cutsceneDictionary.Array.data[3].cutscenePlayer
+      value: 
+      objectReference: {fileID: 342027062}
+    - target: {fileID: 4855291631474455181, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
+      propertyPath: _cutsceneDictionary.Array.data[4].cutscenePlayer
+      value: 
+      objectReference: {fileID: 1123156880}
     - target: {fileID: 5109503229807077104, guid: d39b60e67586ec348b6d22687743bf5a, type: 3}
       propertyPath: InitialModule.maxNumParticles
       value: 1000

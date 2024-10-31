@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+[System.Serializable]
 public class Cutscene
 {
     private MonoBehaviour _owner;

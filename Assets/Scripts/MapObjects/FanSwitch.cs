@@ -63,7 +63,7 @@ public class FanSwitch : InteractableObject, ISceneContextBuildListener
 
         SoundManager.Instance.PlayCommonSFX("SE_Lever_Work");
 
-        SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SwitchCoroutine()));
+        SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SwitchCoroutine())));
     }
     protected override void OnObjectInteractionExit()
     {

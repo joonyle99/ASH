@@ -55,6 +55,7 @@ public sealed class LanternSceneContext : SceneContext
     [SerializeField] float _cameraDoorStayDuration;
     [SerializeField] ShakePreset _beamHitDoorPreset;
     [SerializeField] ConstantShakePreset _beamShootingPreset;
+    [SerializeField] float _beamShootingWaitTime = 1f;
 
     [SerializeField] SoundList _soundList;
 
@@ -195,15 +196,15 @@ public sealed class LanternSceneContext : SceneContext
 
         lanternAttack.Beam.SetLanternsWithBoss(lanternAttack.Lantern, lanternAttack.Boss);
 
-        SceneEffectManager.Instance.PushCutscene(new Cutscene(this, BossConnectionCameraCoroutine(lanternAttack)));
+        SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, BossConnectionCameraCoroutine(lanternAttack))));
     }
     IEnumerator BossConnectionCameraCoroutine(LanternAttack lanternAttack)
     {
         _StopCheckingConnections = true;
 
         // 랜턴으로 카메라 이동 후 대기
-        SceneEffectManager.Instance.Camera.StartFollow(lanternAttack.Lantern.transform);
         InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
+        SceneEffectManager.Instance.Camera.StartFollow(lanternAttack.Lantern.transform);
         yield return new WaitForSeconds(_cameraLastLanternStayDuration);
 
         // 레이저 발사
@@ -222,8 +223,8 @@ public sealed class LanternSceneContext : SceneContext
         SceneEffectManager.Instance.Camera.StopConstantShake();
 
         // 레이저 히트
-        lanternAttack.Boss.OnHit(new AttackInfo(0, Vector2.zero, AttackType.GimmickAttack));
-        yield return new WaitForSeconds(1f);
+        lanternAttack.Boss.OnHit(new AttackInfo(0f, Vector2.zero, AttackType.GimmickAttack));
+        yield return new WaitForSeconds(_beamShootingWaitTime);
 
         // 초기화
         lanternAttack.Beam.gameObject.SetActive(false);
@@ -258,7 +259,7 @@ public sealed class LanternSceneContext : SceneContext
         if (relation.A.transform == _lightDoor.transform || relation.B.transform == _lightDoor.transform)
         {
             if (!_lightDoor.IsOpened)
-                SceneEffectManager.Instance.PushCutscene(new Cutscene(this, LastConnectionCameraCoroutine(relation)));
+                SceneEffectManager.Instance.StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, LastConnectionCameraCoroutine(relation))));
         }
         else
         {

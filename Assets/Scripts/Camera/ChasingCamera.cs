@@ -70,7 +70,7 @@ public class ChasingCamera : MonoBehaviour
     }
     private void OnEnable()
     {
-        Debug.Log("Chasing Camera On !");
+        //Debug.Log("Chasing Camera On !");
 
         if (SceneEffectManager.Instance != null)
         {
@@ -82,7 +82,7 @@ public class ChasingCamera : MonoBehaviour
     }
     private void OnDisable()
     {
-        Debug.Log("Chasing Camera Off !");
+        //Debug.Log("Chasing Camera Off !");
 
         if (SceneEffectManager.Instance != null)
         {
@@ -96,7 +96,7 @@ public class ChasingCamera : MonoBehaviour
         if (_isChasing == true)
             return;
 
-        Debug.Log("Start Chasing");
+        //Debug.Log("Start Chasing");
 
         _isChasing = true;
 
@@ -111,7 +111,7 @@ public class ChasingCamera : MonoBehaviour
         if (_isChasing == false)
             return;
 
-        Debug.Log("Stop Chasing");
+        //Debug.Log("Stop Chasing");
 
         _isChasing = false;
 
