@@ -45,9 +45,9 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         _pitchedSFXPlayer[PitchPrecision] = _sfxPlayer;
     }
 
+#if UNITY_EDITOR
     private void Update()
     {
-#if UNITY_EDITOR
         /*
          * TEST CODE
          * 
@@ -59,8 +59,8 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             }
         }
         */
-#endif
     }
+#endif
 
     // volume setting
     public void InitialVolumeSetting()

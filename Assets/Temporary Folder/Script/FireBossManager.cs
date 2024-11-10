@@ -41,6 +41,10 @@ public class FireBossManager : MonoBehaviour
     // camera chasing
     [SerializeField] private ChasingCamera _chasingCamera;
 
+    [Space]
+
+    [SerializeField] private SoundList _soundList;
+
     // fire find cutscene
     public void ExecuteTornadoEffect()
     {
@@ -93,6 +97,8 @@ public class FireBossManager : MonoBehaviour
     {
         // playing
         _rageEffectEmitting.gameObject.SetActive(true);
+
+        _soundList.PlaySFX("SE_Fire_Ashes");
 
         yield return new WaitForSeconds(_emittingWaitTime);
 

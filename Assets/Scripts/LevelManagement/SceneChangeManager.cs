@@ -173,7 +173,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
         if (SceneContext.Current.SceneTransitionPlayer != _defaultSceneTransitionPlayer)
         {
-            GameUIManager.SetDebugText("SetFadeImageAlpha(0f)");
+            // GameUIManager.SetDebugText("SetFadeImageAlpha(0f)");
             _defaultSceneTransitionPlayer.SetFadeImageAlpha(0f);
         }
     }

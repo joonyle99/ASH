@@ -566,7 +566,7 @@ public sealed class Fire : BossBehaviour
 
             yield return new WaitUntil(() =>
                 {
-                    Debug.DrawLine(ashPillar.transform.position, info.DestroyPoint, Color.gray, 0.1f);
+                    // Debug.DrawLine(ashPillar.transform.position, info.DestroyPoint, Color.gray, 0.1f);
 
                     return (dirType == AshPillarDirType.LeftToRight)
                         ? ashPillar.transform.position.x >= info.DestroyPoint.x
@@ -605,25 +605,33 @@ public sealed class Fire : BossBehaviour
         }
 
         // 전조 증상
-        foreach (var posX in usedPosX)
         {
-            var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
-            var symptom = Instantiate(_firePillarSymptom, spawnPosition, Quaternion.identity);
-            symptom.PlayAll();
+            SoundList.PlaySFX("SE_Fire_Volcano1");
+
+            foreach (var posX in usedPosX)
+            {
+                var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
+                var symptom = Instantiate(_firePillarSymptom, spawnPosition, Quaternion.identity);
+                symptom.PlayAll();
+            }
+
+            yield return new WaitForSeconds(_symptomWaitTimePreShake);
+
+            SceneContext.Current.CameraController.StartShake(_firePillarShake);
+
+            yield return new WaitForSeconds(_symptomWaitTimePostShake);
         }
 
-        yield return new WaitForSeconds(_symptomWaitTimePreShake);
-
-        SceneContext.Current.CameraController.StartShake(_firePillarShake);
-
-        yield return new WaitForSeconds(_symptomWaitTimePostShake);
-
         // 불기둥 생성
-        foreach (var posX in usedPosX)
         {
-            var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
-            var firePillar = Instantiate(_firePillar, spawnPosition, Quaternion.identity);
-            firePillar.StartCoroutine(firePillar.ExecutePillar());
+            SoundList.PlaySFX("SE_Fire_Volcano2");
+
+            foreach (var posX in usedPosX)
+            {
+                var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
+                var firePillar = Instantiate(_firePillar, spawnPosition, Quaternion.identity);
+                firePillar.StartCoroutine(firePillar.ExecutePillar());
+            }
         }
 
         firePillarCoroutine = null;
@@ -676,6 +684,11 @@ public sealed class Fire : BossBehaviour
         firePillarCoroutine = StartCoroutine(FirePillarCoroutine());
     }
 
+    public void Fireball_SoundAnimEvent()
+    {
+        SoundList.PlaySFX("SE_Fire_Fireball1");
+    }
+
     // skill effect anim event
     public void TeleportPreEffect_AnimEvent()
     {
@@ -684,6 +697,8 @@ public sealed class Fire : BossBehaviour
     public void TeleportPostEffect_AnimEvent()
     {
         var postAshEffect = Instantiate(TeleportPostEffect, CenterOfMass.position, Quaternion.identity);
+
+        SoundList.PlaySFX("SE_Fire_Move");
     }
 
     // etc
@@ -805,27 +820,27 @@ public sealed class Fire : BossBehaviour
                 break;
         }
 
-        yield return new WaitForSeconds(_extraAttackCooldown);
+        // yield return new WaitForSeconds(_extraAttackCooldown);
     }
     private IEnumerator WaitEventCoroutine_FlameBeam()
     {
         yield return new WaitForSeconds(_flameBeamAnimDuration);
-        // yield return new WaitUntil(() => _flameBeamCoroutine == null);
+        yield return new WaitUntil(() => _flameBeamCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_Fireball()
     {
         yield return new WaitForSeconds(_fireBallAnimDuration);
-        // yield return new WaitUntil(() => _fireBallCoroutine == null);
+        yield return new WaitUntil(() => _fireBallCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_AshPillar()
     {
         yield return new WaitForSeconds(_ashPillarAnimDuration);
-        // yield return new WaitUntil(() => _ashPillarCoroutine == null);
+        yield return new WaitUntil(() => _ashPillarCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_FirePillar()
     {
         yield return new WaitForSeconds(_firePillarAnimDuration);
-        // yield return new WaitUntil(() => _firePillarCoroutine == null);
+        yield return new WaitUntil(() => _firePillarCoroutine == null);
     }
 
     private bool HandleTeleportTransition(string targetTransitionParam, Monster_StateBase currentState)

@@ -19,11 +19,82 @@ public class Tornado : MonoBehaviour
 
     public float TornadoWaitTime = 2f;
 
+    private enum AnimationState { None, GrowingUp, Waiting, GrowingDown }
+    private AnimationState currentState = AnimationState.None;
+
+    private float elapsedTime;
+    private Vector3 startSize;
+    private Vector3 targetSize;
+    private float startSpeed;
+    private float targetSpeed;
+    private Material material;
+
     private void Awake()
     {
-        transform.localScale = new Vector3(0f, 0f, 0f);
+        transform.localScale = Vector3.zero;
+        material = TornadoRenderer.material;
+    }
+    private void Update()
+    {
+        if (currentState == AnimationState.None) return;
+
+        elapsedTime += Time.deltaTime;
+
+        switch (currentState)
+        {
+            case AnimationState.GrowingUp:
+                AnimateTornado(TargetDuration, startSize, targetSize, startSpeed, targetSpeed, AnimationState.Waiting);
+                if (elapsedTime >= TargetDuration)
+                {
+                    currentState = AnimationState.Waiting;
+                    elapsedTime = 0f;
+                }
+                break;
+            case AnimationState.Waiting:
+                if (elapsedTime >= TornadoWaitTime)
+                {
+                    BlazeFire.SetActive(false);
+                    FireBody.SetActive(true);
+
+                    currentState = AnimationState.GrowingDown;
+                    elapsedTime = 0f;
+
+                    startSize = transform.localScale;
+                    targetSize = Vector3.zero;
+                    startSpeed = material.GetFloat("_TextureScrollYSpeed");
+                    targetSpeed = 0f;
+                }
+                break;
+            case AnimationState.GrowingDown:
+                AnimateTornado(TargetDuration, startSize, targetSize, startSpeed, targetSpeed, AnimationState.None);
+                if (elapsedTime >= TargetDuration)
+                {
+                    TornadoRenderer.gameObject.SetActive(false);
+                    currentState = AnimationState.None;
+                }
+                break;
+        }
     }
 
+    public void TornadoAnimation()
+    {
+        currentState = AnimationState.GrowingUp;
+        elapsedTime = 0f;
+        startSize = transform.localScale;
+        targetSize = TargetSize;
+        startSpeed = material.GetFloat("_TextureScrollYSpeed");
+        targetSpeed = TargetSpeed;
+    }
+    private void AnimateTornado(float duration, Vector3 startScale, Vector3 endScale, float startSpd, float endSpd, AnimationState nextState)
+    {
+        float t = elapsedTime / duration;
+        float easeOutT = joonyle99.Math.EaseOutQuad(t);
+
+        transform.localScale = Vector3.Lerp(startScale, endScale, easeOutT);
+        material.SetFloat("_TextureScrollYSpeed", Mathf.Lerp(startSpd, endSpd, easeOutT));
+    }
+
+    /*
     public void TornadoAnimation()
     {
         StartCoroutine(TornadoAnimationCoroutine());
@@ -108,4 +179,5 @@ public class Tornado : MonoBehaviour
 
         TornadoRenderer.gameObject.SetActive(false);
     }
+    */
 }
