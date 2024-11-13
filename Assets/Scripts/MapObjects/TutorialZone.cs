@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class TutorialZone : TriggerZone
 {
+    private Dictionary<KeyCode, string> _displayReplaceKeyCode = new Dictionary<KeyCode, string>();
     [SerializeField] private List<string> _keyCodeName = new();
 
     [SerializeField] private GameObject skillObject;
@@ -19,6 +20,11 @@ public class TutorialZone : TriggerZone
 
     private void Awake()
     {
+        _displayReplaceKeyCode.Add(KeyCode.RightArrow, "กๆ");
+        _displayReplaceKeyCode.Add(KeyCode.LeftArrow, "ก็");
+        _displayReplaceKeyCode.Add(KeyCode.UpArrow, "ก่");
+        _displayReplaceKeyCode.Add(KeyCode.DownArrow, "ก้");
+
         // get every image and text
         _images = skillObject.GetComponentsInChildren<Image>();
         _texts = skillObject.GetComponentsInChildren<TextMeshProUGUI>();
@@ -99,14 +105,32 @@ public class TutorialZone : TriggerZone
     {
         if(skillObject != null)
         {
-            TMP_Text[] keyText = skillObject.transform?.Find("Key Box")?.GetComponentsInChildren<TMP_Text>();
+            List<TMP_Text> keyText = new List<TMP_Text>();
+            for(int i = 0; i < transform.GetChild(0).childCount; i++)
+            {
+                Transform keyBox = transform.GetChild(0).GetChild(i);
+                if (keyBox.tag == "KeyBox")
+                {
+                    keyText.Add(keyBox.GetComponentInChildren<TMP_Text>());
+                }
+            }
+
             PCInputSetter pcInputSetter = InputManager.Instance.DefaultInputSetter as PCInputSetter;
             
-            for(int i = 0; i < keyText.Length; i++)
+            for(int i = 0; i < keyText.Count; i++)
             {
-                if (keyText[i].name != "Key") continue;
+                KeyCode newKeyCode = pcInputSetter.GetKeyCode(_keyCodeName[i]).KeyCode;
 
-                keyText[i].text = pcInputSetter.GetKeyCode(_keyCodeName[i])?.KeyCode.ToString();
+                if (newKeyCode == KeyCode.None) continue;
+
+
+                if (_displayReplaceKeyCode.ContainsKey(newKeyCode))
+                {
+                    keyText[i].text = _displayReplaceKeyCode[newKeyCode];
+                }else
+                {
+                    keyText[i].text = newKeyCode.ToString();
+                }
             }
         }
     }
