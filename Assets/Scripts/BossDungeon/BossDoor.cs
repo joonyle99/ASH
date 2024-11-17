@@ -118,8 +118,8 @@ public class BossDoor : Door
         // 상호작용으로 여는 경우에만 InputSetter를 변경한다
         if (IsInteractable)
             InputManager.Instance.ChangeToStayStillSetter();
-
-        yield return StartCoroutine(OpenDoorCoroutine(useCameraEffect));
+        Debug.Log("Call OpenDoor Coroutine");
+        yield return StartCoroutine(base.OpenDoorCoroutine(useCameraEffect));
 
         /*
          * TODO: 보스와 싸우다 중간에 죽으면 보스키가 소모된 상태이므로 문이 열리지 않는 버그 존재
