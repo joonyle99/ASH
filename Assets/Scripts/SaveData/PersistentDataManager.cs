@@ -433,7 +433,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         Instance.PersistentData.DataGroups.Clear();
         Instance.PersistentData.GlobalDataGroup.Clear();
     }
-    
+    /*
     private void OnGUI()
     {
         GUIStyle _guiStyle = new();
@@ -508,5 +508,5 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             t = "";
 
         GUILayout.EndArea();
-    }
+    }*/
 }
