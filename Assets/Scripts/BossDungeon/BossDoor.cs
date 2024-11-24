@@ -13,6 +13,8 @@ public class BossDoor : Door
     [SerializeField] private DialogueData _failDialogue;                        // 문 열기 실패 대사
     [SerializeField] private DialogueData _successDialogue;                     // 문 열기 성공 대사
 
+    [Space] private float _waitTime = 2f;
+
     protected PreserveState _statePreserver;
 
     public override bool IsOpened
@@ -81,7 +83,6 @@ public class BossDoor : Door
         SaveAndLoader.OnSaveStarted += SaveDoorState;
     }
 
-
     // interaction
     protected override void OnObjectInteractionEnter()
     {
@@ -118,7 +119,9 @@ public class BossDoor : Door
         // 상호작용으로 여는 경우에만 InputSetter를 변경한다
         if (IsInteractable)
             InputManager.Instance.ChangeToStayStillSetter();
-        Debug.Log("Call OpenDoor Coroutine");
+        
+        // Debug.Log("Call OpenDoor Coroutine");
+
         yield return StartCoroutine(base.OpenDoorCoroutine(useCameraEffect));
 
         /*
@@ -130,10 +133,11 @@ public class BossDoor : Door
         }
         */
 
+        yield return new WaitForSeconds(_waitTime);
+
         // 성공 다이얼로그 실행
         if (_successDialogue != null)
         {
-            yield return new WaitForSeconds(2f);
             DialogueController.Instance.StartDialogue(_successDialogue, false);
             yield return new WaitUntil(() => DialogueController.Instance.IsDialogueActive == false);
         }

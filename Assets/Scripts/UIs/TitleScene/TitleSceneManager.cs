@@ -10,6 +10,7 @@ public class TitleSceneManager : MonoBehaviour
     public GameObject Chapter1Cheat;
     public GameObject Chapter2Cheat;
 
+#if UNITY_EDITOR
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.F1))
@@ -21,6 +22,7 @@ public class TitleSceneManager : MonoBehaviour
             Chapter2Cheat.SetActive(!Chapter2Cheat.activeSelf);
         }
     }
+#endif
 
     public void OpenPrologueScene()
     {

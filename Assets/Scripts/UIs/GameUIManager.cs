@@ -56,7 +56,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     }
     private void Start()
     {
-        _sceneNameText.gameObject.SetActive(true);
+        // _sceneNameText.gameObject.SetActive(true);
     }
     private void Update()
     {
@@ -171,7 +171,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     {
         if (Instance == null) return;
 
-        Instance._sceneNameText.text = "Scene Name: " + sceneName;
+        // Instance._sceneNameText.text = "Scene Name: " + sceneName;
     }
 
     // debug text
@@ -179,6 +179,6 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     {
         if (Instance == null) return;
 
-        Instance._debugText.text = text;
+        // Instance._debugText.text = text;
     }
 }
