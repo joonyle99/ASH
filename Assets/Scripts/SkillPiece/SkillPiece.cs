@@ -18,7 +18,14 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
                 var info = new SkillObtainPanel.SkillInfo();
                 info.Icon = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].UnlockImage;
                 info.MainText = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].Name;
-                info.DetailText = PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].DetailText;
+                info.DetailText = "";
+                CustomKeyCode keyCode = InputManager.Instance.DefaultInputSetter.
+                    GetKeyCode(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key);
+                if (keyCode != null)
+                {
+                    info.DetailText += keyCode.KeyCode.ToString();
+                }
+                info.DetailText += PersistentDataManager.SkillOrderData[skillPieceCount / 3-1].DetailText;
                 PersistentDataManager.SetByGlobal<bool>(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key, true);
                 GameUIManager.OpenSkillObtainPanel(info);
                 SceneContext.Current.StartCoroutine(PlaySoundCoroutine("Skill", 0.25f));

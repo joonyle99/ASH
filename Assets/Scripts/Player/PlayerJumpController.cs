@@ -33,7 +33,7 @@ public class PlayerJumpController : MonoBehaviour
 
     // Properties
     public bool CanJump => _remainingJumpCount > 0 && _timeAfterPlatformLeft <= _coyoteTime;
-    public int MaxJumpCount => PersistentDataManager.GetByGlobal<bool>("DoubleJump") ? _maxJumpCount : 1;
+    public int MaxJumpCount => PersistentDataManager.GetByGlobal<bool>("Jump") ? _maxJumpCount : 1;
 
     private bool _isJumpKeyQueued;
     private bool _isStartJump;
