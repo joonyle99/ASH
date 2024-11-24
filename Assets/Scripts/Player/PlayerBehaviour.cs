@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextBuildListener
@@ -186,8 +187,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     // Direction Property
     public int RecentDir { get; set; }
-    public bool IsDirSync => Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) > 0.01f;
-    public bool IsOppositeDirSync => Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) < -0.01f;
+    public bool IsDirSync => PlayerLookDir2D.x * RawInputs.Movement.x > 0.01f;
+    public bool IsOppositeDirSync => PlayerLookDir2D.x * RawInputs.Movement.x < -0.01f;
     public Vector2 PlayerLookDir2D => new(RecentDir, 0f);
     public Vector3 PlayerLookDir3D => new(RecentDir, 0f, 0f);
 
@@ -337,6 +338,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
 
         Animator.SetBool("IsDirSync", IsDirSync);
+        Debug.Log($"IsDirSync: {IsDirSync} => PlayerLookDir2D.x * RawInputs.Movement.x: {PlayerLookDir2D.x * RawInputs.Movement.x} / PlayerLookDir2D: {PlayerLookDir2D} / RawInputs.Movement: {RawInputs.Movement}");
+
         Animator.SetBool("IsOppositeDirSync", IsOppositeDirSync);
 
         #endregion
@@ -357,7 +360,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     {
         // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);
-
 
         switch (SceneChangeManager.Instance.SceneChangeType)
         {
