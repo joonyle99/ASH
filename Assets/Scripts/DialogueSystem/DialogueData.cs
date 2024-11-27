@@ -17,7 +17,7 @@ public class DialogueData : ScriptableObject
     [SerializeField] private bool _isResponseDialougue = false;               // 반응형 대화 패널 여부
     public bool IsResponseDialougue => _isResponseDialougue;
 
-    [SerializeField] public bool PlayAtFirst = true;
+    [SerializeField] public bool PlayAtFirst;
 
     [Space]
 

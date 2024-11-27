@@ -411,7 +411,13 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
             case WaveSpawnMonsterInfo.MonsterInstanceType.Field:
                 {
                     waveMonsterInfo.Monster?.transform.GetChild(0).gameObject.SetActive(true);
-                    waveMonsterInfo.Monster?.GetComponentInChildren<MonsterBehaviour>().RespawnProcess();
+
+                    MonsterBehaviour monsterBehaviour = waveMonsterInfo.Monster?.GetComponentInChildren<MonsterBehaviour>();
+                    if (monsterBehaviour != null)
+                    {
+                        monsterBehaviour.GetComponent<MaterialController>().InitMaterialForRespawn();
+                        monsterBehaviour.RespawnProcess();
+                    }
 
                     return waveMonsterInfo.Monster.transform;
                 }

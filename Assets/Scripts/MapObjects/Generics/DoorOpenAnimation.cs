@@ -11,6 +11,7 @@ public class DoorOpenAnimation : MonoBehaviour
     [SerializeField] private string _openSoundKey = "SE_LightDoor_Open";
 
     [SerializeField] private float _doorOpenDelay;
+    [SerializeField] private float _doorOpenSoundDelay;
     [SerializeField] private float _stopShakeTiming = 2f;
     [SerializeField] private ConstantShakePreset _doorOpenPreset;
 
@@ -41,6 +42,8 @@ public class DoorOpenAnimation : MonoBehaviour
         // 2
         _animator.SetTrigger("Open");
 
+        yield return new WaitForSeconds(_doorOpenSoundDelay);
+
         if (_openSoundKey.Length != 0)
             _soundList.PlaySFX(_openSoundKey);
 
@@ -68,6 +71,8 @@ public class DoorOpenAnimation : MonoBehaviour
 
         // 2
         _animator.SetTrigger("Close");
+
+        yield return new WaitForSeconds(_doorOpenSoundDelay);
 
         if (_openSoundKey.Length != 0)
             _soundList.PlaySFX(_openSoundKey);
