@@ -3,7 +3,6 @@ using UnityEngine;
 
 using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections.Generic;
-using UnityEditor.Presets;
 
 /// <summary>
 /// Main 카메라에 붙어있는 컴포넌트이며
