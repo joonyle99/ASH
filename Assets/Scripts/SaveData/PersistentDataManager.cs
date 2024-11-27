@@ -127,13 +127,13 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     private void Update()
     {
         // CHEAT: F7 Å°¸¦ ´©¸£¸é ºû ½ºÅ³ È¹µæ
-        if (Input.GetKeyDown(KeyCode.F7))
+        if (Input.GetKeyDown(KeyCode.F7) && GameSceneManager.Instance.CheatMode == true)
         {
             SetByGlobal<bool>("LightSkill", true);
         }
 
         // CHEAT: F8 Å°¸¦ ´©¸£¸é ´õºí Á¡ÇÁ, ´ë½¬ È¹µæ
-        if (Input.GetKeyDown(KeyCode.F8))
+        if (Input.GetKeyDown(KeyCode.F8) && GameSceneManager.Instance.CheatMode == true)
         {
             SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
 

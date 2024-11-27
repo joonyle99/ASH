@@ -299,7 +299,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     protected virtual void Update()
     {
         // CHEAT: F5 키를 누르면 몬스터의 무적 상태를 조작한다
-        if (Input.GetKeyDown(KeyCode.F5))
+        if (Input.GetKeyDown(KeyCode.F5) && GameSceneManager.Instance.CheatMode == true)
         {
             IsGodMode = !IsGodMode;
         }

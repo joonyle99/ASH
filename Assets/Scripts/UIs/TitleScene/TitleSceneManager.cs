@@ -20,11 +20,11 @@ public class TitleSceneManager : MonoBehaviour
         }
 
         // ChapterCheat
-        if (Input.GetKeyDown(KeyCode.F1) && HelperText.activeSelf == true)
+        if (Input.GetKeyDown(KeyCode.F1) && GameSceneManager.Instance.CheatMode == true)
         {
             Chapter1Cheat.SetActive(!Chapter1Cheat.activeSelf);
         }
-        if (Input.GetKeyDown(KeyCode.F2) && HelperText.activeSelf == true)
+        if (Input.GetKeyDown(KeyCode.F2) && GameSceneManager.Instance.CheatMode == true)
         {
             Chapter2Cheat.SetActive(!Chapter2Cheat.activeSelf);
         }

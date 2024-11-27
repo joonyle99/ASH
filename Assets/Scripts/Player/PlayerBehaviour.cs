@@ -276,7 +276,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         }
 
         // CHEAT: ~ 키를 누르면 체력 1 회복
-        if (Input.GetKeyDown(KeyCode.BackQuote))
+        if (Input.GetKeyDown(KeyCode.BackQuote) && GameSceneManager.Instance.CheatMode == true)
         {
             if (Input.GetKey(KeyCode.LeftShift))
                 RecoverCurHp(-2);
@@ -285,7 +285,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         }
 
         // CHEAT: F10 키를 누르면 가장 가까운 보스문 열기
-        if (Input.GetKeyDown(KeyCode.F10))
+        if (Input.GetKeyDown(KeyCode.F10) && GameSceneManager.Instance.CheatMode == true)
         {
             // 가장 가까운 BossDoor를 찾는다
             var closestBossDoor = FindObjectsByType<BossDoor>(FindObjectsSortMode.None)
@@ -556,7 +556,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         vec.x = 0f;
         _capeCloth.externalAcceleration = vec;
     }
-
+    public void CapeControlY()
+    {
+        var vec = _capeCloth.externalAcceleration;
+        vec.y = -100f;
+        _capeCloth.externalAcceleration = vec;
+    }
+    public void CapeZeroY()
+    {
+        var vec = _capeCloth.externalAcceleration;
+        vec.y = -20f;
+        _capeCloth.externalAcceleration = vec;
+    }
     #endregion
 
     #region Sound

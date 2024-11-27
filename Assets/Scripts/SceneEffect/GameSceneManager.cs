@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneManager>
 {
@@ -6,6 +7,9 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     // -> 중복 요소를 허용하지 않는다
     // Dictionary는 해시테이블을 사용하고, 키를 이용해 '값'을 검색하는 데 사용합니다
     // -> 중복 값은 허용하나, 중복 키는 허용하지 않는다
+
+    // TEMP
+    public bool CheatMode = false;
 
     private static HashSet<string> openingScene = new HashSet<string>
     {
@@ -42,6 +46,14 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
 
         "JunyeolScene", "준엽 씬", "지희 씬"
     };
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.Space))
+        {
+            CheatMode = !CheatMode;
+        }
+    }
 
     public static bool IsOpeningScene(string sceneName)
     {

@@ -85,7 +85,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                 }
 
                 // CHEAT: F3 키를 누르면 현재 Segment를 빠르게 넘긴다
-                if (Input.GetKeyDown(KeyCode.F3))
+                if (Input.GetKeyDown(KeyCode.F3) && GameSceneManager.Instance.CheatMode == true)
                 {
                     View.FastForward();
                 }

@@ -21,8 +21,6 @@ public class WallClimbState : WallState
 
         Animator.SetBool("IsClimb", true);
 
-        // TODO: 사다리 타는 SFX 여기에다가 해도됨 Loop라면
-
         return true;
     }
 
@@ -40,9 +38,8 @@ public class WallClimbState : WallState
             if (Player.UpwardGroundHitForClimb)
                 return false;
 
-            // TODO: 사다리 타는 SFX 추가
-
-            transform.position += Vector3.up * _wallClimbSpeed * Time.deltaTime;
+            transform.position += transform.up * _wallClimbSpeed * Time.deltaTime;
+            // Player.Rigidbody.MovePosition(transform.position + transform.up * _wallClimbSpeed * Time.deltaTime);
         }
         else if (Player.IsMoveDownKey)
         {
@@ -52,9 +49,8 @@ public class WallClimbState : WallState
                 return true;
             }
 
-            // TODO: 사다리 타는 SFX 추가
-
-            transform.position -= Vector3.up * _wallClimbSpeed * Time.deltaTime;
+            transform.position -= transform.up * _wallClimbSpeed * Time.deltaTime;
+            // Player.Rigidbody.MovePosition(transform.position - transform.up * _wallClimbSpeed * Time.deltaTime);
         }
         else
         {
@@ -77,8 +73,6 @@ public class WallClimbState : WallState
         Player.Rigidbody.gravityScale = _prevGravity;
 
         Animator.SetBool("IsClimb", false);
-
-        // TODO: 사다리 타는 SFX 여기에다가 해도됨 Loop라면
 
         base.OnExit();
 

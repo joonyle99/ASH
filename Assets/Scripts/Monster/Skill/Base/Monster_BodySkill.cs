@@ -24,7 +24,7 @@ public class Monster_BodySkill : Monster_Skill
 
         if (actor.IsDead)
         {
-            Debug.Log("BodySkill의 Actor가 사망 상태입니다");
+            // Debug.Log("BodySkill의 Actor가 사망 상태입니다");
             return;
         }
 
