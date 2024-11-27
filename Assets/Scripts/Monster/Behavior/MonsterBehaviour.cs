@@ -291,9 +291,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         InitMonsterState();
     }
 
-
     protected virtual void Start()
     {
+
     }
 
     protected virtual void Update()

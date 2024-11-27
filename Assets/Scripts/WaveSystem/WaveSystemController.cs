@@ -47,9 +47,9 @@ public class WaveInfo
     {
         get
         {
-            foreach(var monster in WaveMonsters)
+            foreach (var monster in WaveMonsters)
             {
-                if(!monster.Monster.GetComponentInChildren<MonsterBehaviour>().IsDead)
+                if (!monster.Monster.GetComponentInChildren<MonsterBehaviour>().IsDead)
                 {
                     return false;
                 }
@@ -104,11 +104,11 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
     public bool IsClearAllWaves
     {
         get { return _isClearAllWaves; }
-        set 
-        { 
+        set
+        {
             _isClearAllWaves = value;
 
-            if(_identifier && _isClearAllWaves)
+            if (_identifier && _isClearAllWaves)
             {
                 _identifier.SaveState("_isClearAllWaves", true);
                 _identifier.SaveState("_isClearAllWavesSaved", true);
@@ -364,7 +364,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
             {
                 Transform monsterTransform = SpawnWaveMonster(i + 1, monster);
 
-                if(monsterTransform != null &&
+                if (monsterTransform != null &&
                     isFirstOfSpawn)
                 {
                     SceneEffectManager.Instance.Camera.StartFollow(monsterTransform);
