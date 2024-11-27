@@ -32,7 +32,7 @@ public class Cutscene
     }
     public IEnumerator CutsceneCoroutine()
     {
-        Debug.Log($"{_owner.name}으로부터 시작된 컷씬입니다");
+        // Debug.Log($"{_owner.name}으로부터 시작된 컷씬입니다");
 
         // ex) ChasingCamera - StopChasing()
         _onAdditionalBefore?.Invoke();
@@ -69,7 +69,7 @@ public class Cutscene
         // ex) ChasingCamera - StartChasing
         _onAdditionalAfter?.Invoke();
 
-        Debug.Log($"{_owner.name}으로부터 시작된 컷씬이 종료되었습니다");
+        // Debug.Log($"{_owner.name}으로부터 시작된 컷씬이 종료되었습니다");
 
         // main end callback
         _onEndCallback?.Invoke();

@@ -18,7 +18,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
                 return _instance;
             else
             {
-                Debug.Log("There is no GameUIManager Instance");
+                Debug.LogWarning("There is no GameUIManager Instance");
                 return null;
             }
         }

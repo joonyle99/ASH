@@ -165,7 +165,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         }
         else
         {
-            Debug.LogWarning("Player not found in the scene");
+            Debug.LogWarning("<color=orange>[SceneContext Build]</color> Player not found in scene");
         }
 
         SnapFollow();

@@ -402,7 +402,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         for (int i = 0; i < count; i++)
         {
             _twinkleEffect.Play();
-            yield return new WaitForSeconds(_twinkleEffect.GetEmissionLifeTime());
+            yield return new WaitForSeconds(_twinkleEffect.GetTwinkleLifeTime());
             _twinkleEffect.Stop();
         }
 

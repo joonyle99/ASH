@@ -12,9 +12,15 @@ public class InAirState : PlayerState, IAttackableState, IJumpableState
     [SerializeField] float _fastDropPower = 1.2f;        // 빨리 떨어지는 힘
     [SerializeField] float _maxDropSpeed = 60f;        // 떨어지는 속도 최대값
 
+    public bool IsInAir;
+
     protected override bool OnEnter()
     {
-        Player.Animator.SetBool("IsInAir", true);
+        IsInAir = true;
+        Player.Animator.SetBool("IsInAir", IsInAir);
+
+        // Debug.Log($"Animator Current State: {Player.Animator.GetCurrentAnimatorStateInfo(0).IsName("In Air")}");
+        // Debug.Log($"InAirState OnEnter() IsInAir: {Player.Animator.GetBool("IsInAir")} (IsInAir variable: {IsInAir})");
 
         return true;
     }
@@ -22,7 +28,7 @@ public class InAirState : PlayerState, IAttackableState, IJumpableState
     protected override bool OnUpdate()
     {
         // Change to Idle State
-        if (Player.IsGrounded)
+        if (Player.IsGrounded == true)
         {
             // 공중에서 바닥에 닿으면 나는 사운드
             Player.PlaySound_SE_Jump_02();
@@ -42,7 +48,7 @@ public class InAirState : PlayerState, IAttackableState, IJumpableState
         }
 
         // Change to Wall Grab State
-        if (Player.IsTouchedWall)
+        if (Player.IsTouchedWall == true)
         {
             if (Player.IsClimbable)
             {
@@ -53,6 +59,10 @@ public class InAirState : PlayerState, IAttackableState, IJumpableState
                 }
             }
         }
+
+        // 임시 해결책
+        Player.Animator.SetBool("IsInAir", IsInAir);
+        // Debug.Log($"InAirState OnUpdate() IsInAir: {Player.Animator.GetBool("IsInAir")} (IsInAir variable: {IsInAir})");
 
         // Wall Jump에서 In Air State로 넘어온 경우
         if (Player.IsClimbJump)
@@ -100,7 +110,10 @@ public class InAirState : PlayerState, IAttackableState, IJumpableState
 
     protected override bool OnExit()
     {
-        Player.Animator.SetBool("IsInAir", false);
+        IsInAir = false;
+        Player.Animator.SetBool("IsInAir", IsInAir);
+
+        // Debug.Log($"InAirState OnExit() IsInAir: {Player.Animator.GetBool("IsInAir")} (IsInAir variable: {IsInAir})");
 
         return true;
     }

@@ -166,9 +166,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         {
             Debug.Log($"Already Playing this Audio Clip" +
                              $"\n" +
-                             $"New Audio Source: {clip.name}" +
-                             $"\n" +
-                             $"Old Audio Source: {_bgmPlayer.clip}");
+                             $"<color=yellow>New Audio Source</color>: {clip.name} <color=green>Old Audio Source</color>: {_bgmPlayer.clip.name}");
             return;
         }
 

@@ -338,8 +338,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         Animator.SetFloat("AirSpeedY", Rigidbody.velocity.y);
 
         Animator.SetBool("IsDirSync", IsDirSync);
-        Debug.Log($"IsDirSync: {IsDirSync} => PlayerLookDir2D.x * RawInputs.Movement.x: {PlayerLookDir2D.x * RawInputs.Movement.x} / PlayerLookDir2D: {PlayerLookDir2D} / RawInputs.Movement: {RawInputs.Movement}");
-
         Animator.SetBool("IsOppositeDirSync", IsOppositeDirSync);
 
         #endregion
@@ -438,10 +436,16 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     }
     private void ChangeInAirState()
     {
-        if (!IsGrounded)
+        // Debug.Log($"[ChangeInAirState] IsGrounded: {IsGrounded}");
+
+        if (IsGrounded == false)
         {
-            if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
+            if (CurrentStateIs<IdleState>()
+                || CurrentStateIs<RunState>()
+                || CurrentStateIs<JumpState>())
+            {
                 ChangeState<InAirState>();
+            }
         }
     }
 

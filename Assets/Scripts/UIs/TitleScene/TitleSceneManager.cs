@@ -7,22 +7,28 @@ public class TitleSceneManager : MonoBehaviour
     [SerializeField]
     private OptionView _optionView;
 
+    public GameObject HelperText;
     public GameObject Chapter1Cheat;
     public GameObject Chapter2Cheat;
 
-#if UNITY_EDITOR
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1))
+        // HelperText
+        if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.Space))
+        {
+            HelperText.SetActive(!HelperText.activeSelf);
+        }
+
+        // ChapterCheat
+        if (Input.GetKeyDown(KeyCode.F1) && HelperText.activeSelf == true)
         {
             Chapter1Cheat.SetActive(!Chapter1Cheat.activeSelf);
         }
-        if (Input.GetKeyDown(KeyCode.F2))
+        if (Input.GetKeyDown(KeyCode.F2) && HelperText.activeSelf == true)
         {
             Chapter2Cheat.SetActive(!Chapter2Cheat.activeSelf);
         }
     }
-#endif
 
     public void OpenPrologueScene()
     {
@@ -38,7 +44,7 @@ public class TitleSceneManager : MonoBehaviour
     }
     public void ToggleSettingPanel()
     {
-        if(_optionView != null)
+        if (_optionView != null)
         {
             _optionView.TogglePanel();
         }

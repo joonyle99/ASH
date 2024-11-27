@@ -58,7 +58,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
 
         // TEMP: set scene name text for debug
-        GameUIManager.SetSceneNameText(sceneName);
+        // GameUIManager.SetSceneNameText(sceneName);
     }
 
     public SceneContext FindOrCreateSceneContext()
@@ -68,7 +68,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // SceneContext를 생성해주는 경우
         if (sceneContext == null)
         {
-            Debug.Log("The sceneContext doesn't exist in the scene, so we'll create a new one");
+            Debug.Log("SceneContext doesn't exist in the scene, so we'll create a new one (exception: LanternSceneContext)");
 
             GameObject go = new GameObject("SceneContext (Created)");
             sceneContext = go.AddComponent<SceneContext>();
@@ -122,7 +122,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
 
-        GameUIManager.SetSceneNameText(sceneName);
+        // GameUIManager.SetSceneNameText(sceneName);
     }
 
     // 플레이 가능한 씬으로 전환 (탐험구간, 보스던전, 보스전 등)
@@ -162,7 +162,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
 
-        GameUIManager.SetSceneNameText(sceneName);
+        // GameUIManager.SetSceneNameText(sceneName);
     }
 
     // SceneContext가 DefaultBuild되었을 때 호출되는 함수 (ISceneContextBuildListener 인터페이스 구현)

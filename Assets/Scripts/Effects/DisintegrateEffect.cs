@@ -56,11 +56,12 @@ public class DisintegrateEffect : MonoBehaviour
             foreach (var particleHelper in _particles)
             {
                 particleHelper.gameObject.SetActive(true);
-                particleHelper.transform.parent = null;
+                particleHelper.transform.SetParent(null);
                 particleHelper.transform.position = transform.position;
 
                 // Destroy Particle System
-                Destroy(particleHelper.gameObject, particleHelper.GetEmissionLifeTime());
+                Destroy(particleHelper.gameObject, particleHelper.GetDisintegrateLifeTime());
+                // Destroy(particleHelper.gameObject, 5f);
             }
 
             // Disintegrate Material Initialize

@@ -58,11 +58,39 @@ public class ParticleHelper : MonoBehaviour
         _particleSystem.Stop();
     }
 
-    public float GetEmissionLifeTime()
+    public float GetTwinkleLifeTime()
     {
-        var totalDuration = (_particleSystem.main.startLifetime.constantMin + _particleSystem.main.startLifetime.constantMax) / 2f;
+        return _particleSystem.main.startLifetime.constantMin + _particleSystem.main.startLifetime.constantMax / 2f;
+    }
+    public float GetDisintegrateLifeTime()
+    {
+        // Main Module의 Start Lifetime에서 최대값 가져오기
+        var totalDuration = _particleSystem.main.startLifetime.constantMax;
+
+        // Emission 모듈 가져오기
+        var emission = _particleSystem.emission;
+
+        // Burst로 인한 추가 지속 시간 계산
+        for (int i = 0; i < emission.burstCount; i++)
+        {
+            var burst = emission.GetBurst(i);
+            var burstDuration = burst.time + burst.cycleCount * burst.repeatInterval;
+            totalDuration = Mathf.Max(totalDuration, burstDuration + _particleSystem.main.startLifetime.constantMax);
+        }
+
+        // Rate Over Time으로 인해 생성된 파티클의 지속 시간 계산
+        if (emission.rateOverTime.constant > 0)
+        {
+            var simulationDuration = _particleSystem.main.duration;
+            var rateOverTimeDuration = simulationDuration + _particleSystem.main.startLifetime.constantMax;
+            totalDuration = Mathf.Max(totalDuration, rateOverTimeDuration);
+        }
+
+        Debug.Log($"Calculated Total Duration: {totalDuration}");
 
         /*
+        var totalDuration = _particleSystem.main.startLifetime.constantMax;
+
         var emission = _particleSystem.emission;
         for (int i = 0; i < emission.burstCount; i++)
         {
@@ -70,12 +98,13 @@ public class ParticleHelper : MonoBehaviour
             var burstDuration = burst.time + burst.cycleCount * burst.repeatInterval;
             totalDuration += burstDuration;
         }
-        */
 
-        Debug.Log($"totalDuration: {totalDuration}");
+        Debug.Log(totalDuration);
+        */
 
         return totalDuration;
     }
+
     public int GetParticleCount()
     {
         return _particleSystem.particleCount;
