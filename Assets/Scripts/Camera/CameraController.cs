@@ -3,6 +3,7 @@ using UnityEngine;
 
 using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections.Generic;
+using UnityEditor.Presets;
 
 /// <summary>
 /// Main 카메라에 붙어있는 컴포넌트이며
@@ -286,11 +287,15 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     // effect: shake
     public void StartShake(ShakePreset preset)
     {
+        // Debug.Log($"ShakePreset: {preset.name}");
+
         _shakeComponent.Shake(preset);
     }
     public void StartConstantShake(ConstantShakePreset preset)
     {
-        // _shakeComponent.StopConstantShaking(0.3f);
+        // Debug.Log($"ConstantShakePreset: {preset.name}");
+
+        _shakeComponent.StopConstantShaking(0f);    // 이전에 적용된 ConstantShake를 중지
         _shakeComponent.ConstantShake(preset);
     }
     public void StopConstantShake(float smooth = 0.1f)

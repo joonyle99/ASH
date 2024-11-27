@@ -213,6 +213,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
     public override void GroggyPreProcess()
     {
+        // Debug.Log("bear groggy pre process");
+
         // 그로기 상태 진입 (더이상 손전등의 영향을 받지 않음)
         IsGroggy = true;
 
@@ -221,6 +223,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
     public override void GroggyPostProcess()
     {
+        // Debug.Log("bear groggy post process");
+
         // 그로기 상태 종료 (이제 손전등의 영향을 받음)
         IsGroggy = false;
 

@@ -393,6 +393,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -414,6 +416,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -435,6 +439,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -444,6 +450,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -465,6 +473,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -474,6 +484,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 37e68a1506a8096428d31e84ab6d2637, type: 2}
     ShakeData: {fileID: 0}
@@ -483,6 +495,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -492,6 +506,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -513,6 +529,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -534,6 +552,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 6
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -543,6 +563,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
 --- !u!1 &80741665
 GameObject:
   m_ObjectHideFlags: 0
@@ -1395,6 +1417,7 @@ Transform:
   - {fileID: 2050435956}
   - {fileID: 58826314}
   - {fileID: 1458285218}
+  - {fileID: 642623376}
   m_Father: {fileID: 1933185835}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1514,11 +1537,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -99.048744
+      value: -262.56583
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 38.918995
+      value: 1.1161407
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1906,6 +1929,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Common_Wall_Passage
       objectReference: {fileID: 0}
+    - target: {fileID: 3248710096958337792, guid: 8670c3187a8f748469661b37f977c94d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6919618930599457516, guid: 8670c3187a8f748469661b37f977c94d, type: 3}
       propertyPath: m_LocalAABB.m_Center.x
       value: -61.850006
@@ -2082,6 +2109,240 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1001 &642623375
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 364521373}
+    m_Modifications:
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[0].x
+      value: -4.619975
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[0].y
+      value: -12.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[1].x
+      value: -4.619975
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[1].y
+      value: 3.1999998
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[2].x
+      value: 5.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[2].y
+      value: 3.1999998
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[3].x
+      value: 5.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[3].y
+      value: -12.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[4].x
+      value: -1.8649399
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[4].y
+      value: -12.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[5].x
+      value: -1.9199759
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[5].y
+      value: -12.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[6].x
+      value: -4.619975
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[6].y
+      value: -12.59
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[7].x
+      value: -160.73163
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[7].y
+      value: -0.9000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[8].x
+      value: -162.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[8].y
+      value: -0.9000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[9].x
+      value: -163.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411323428517960697, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Points.Array.data[9].y
+      value: 0.2983092
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.0362414
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.8790171
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3624
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -186.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.46
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3787043256011601582, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Name
+      value: Common_Ground (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[0].corner
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[1].corner
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[2].corner
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[3].corner
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[0].position.x
+      value: -3.4199753
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[0].position.y
+      value: -11.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[1].position.x
+      value: -3.4199753
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[1].position.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[2].position.x
+      value: 3.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[3].position.x
+      value: 3.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7138872218325051693, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Spline.m_ControlPoints.Array.data[3].position.y
+      value: -11.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763045659675981634, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalAABB.m_Center.x
+      value: 0.24001217
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763045659675981634, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalAABB.m_Center.y
+      value: -4.6950006
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763045659675981634, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalAABB.m_Extent.x
+      value: 5.1599884
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763045659675981634, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_LocalAABB.m_Extent.y
+      value: 8.195002
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763045659675981634, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Sprites.Array.data[8]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763045659675981634, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Sprites.Array.data[9]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763045659675981634, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Sprites.Array.data[10]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763045659675981634, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+      propertyPath: m_Sprites.Array.data[11]
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+--- !u!4 &642623376 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+  m_PrefabInstance: {fileID: 642623375}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &657296340
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2391,7 +2652,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: 1706.7917
+      value: 1703.3793
       objectReference: {fileID: 0}
     - target: {fileID: 5171320284482388752, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2553,6 +2814,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2574,6 +2837,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2595,6 +2860,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2616,6 +2883,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2637,6 +2906,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2658,6 +2929,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 670274e5482e91f46b482c6dbe97f24a, type: 2}
     ShakeData: {fileID: 0}
@@ -2667,6 +2940,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2676,6 +2951,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2697,6 +2974,8 @@ MonoBehaviour:
             m_StringArgument: Shout
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 2
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2706,6 +2985,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2715,6 +2996,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 3
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2724,6 +3007,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2745,6 +3030,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 6
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2754,6 +3041,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2775,6 +3064,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -2796,6 +3087,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
 --- !u!114 &871409744 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 51306245, guid: d4d1ff459d9970940ae8f6a81d597d06, type: 3}
@@ -3804,6 +4097,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2176e78879feeff4f9eddd53cf7f0d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _openLowSoundKey: SE_LightDoor_Open_Low
+  _openSoundKey: SE_LightDoor_Open
   _doorOpenDelay: 2
   _stopShakeTiming: 2.3
   _doorOpenPreset: {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
@@ -4348,7 +4643,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 19.7
+      value: 19.5
       objectReference: {fileID: 0}
     - target: {fileID: 3662497261388711893, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4613,6 +4908,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4622,6 +4919,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 8304dd9a879badb419f85ae22e2797c0, type: 2}
     ShakeData: {fileID: 0}
@@ -4631,6 +4930,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4640,6 +4941,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4661,6 +4964,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4670,6 +4975,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 9e4c285f771f147459d7077c3c626274, type: 2}
     ShakeData: {fileID: 0}
@@ -4679,6 +4986,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4700,6 +5009,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4712,7 +5023,7 @@ MonoBehaviour:
         - m_Target: {fileID: 627304411898063673}
           m_TargetAssemblyTypeName: BossDoor, Assembly-CSharp
           m_MethodName: OpenDoor
-          m_Mode: 1
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4721,6 +5032,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4742,6 +5055,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 6
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -4763,6 +5078,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
 --- !u!1 &2102905929
 GameObject:
   m_ObjectHideFlags: 0
@@ -4903,10 +5220,10 @@ MonoBehaviour:
   _animationType: 0
   _identifier: {fileID: 0}
   _isOpened: 0
-  _passage: {fileID: 5904064002676807724}
+  _enterInputSetter: {fileID: 11400000, guid: bda65bfa556fab147895b7d4385ad239, type: 2}
+  _passage: {fileID: 0}
   _failDialogue: {fileID: 11400000, guid: 74a66fb99d254f94ea3126e87addfde1, type: 2}
   _successDialogue: {fileID: 0}
-  _enterInputSetter: {fileID: 11400000, guid: bda65bfa556fab147895b7d4385ad239, type: 2}
 --- !u!4 &627304411898063674
 Transform:
   m_ObjectHideFlags: 0
@@ -14661,6 +14978,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 388d989010fad1c4a9cf46f2bebd8bca, type: 2}
     ShakeData: {fileID: 0}
@@ -14670,6 +14989,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 388d989010fad1c4a9cf46f2bebd8bca, type: 2}
     ShakeData: {fileID: 0}
@@ -14679,6 +15000,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 6
     DialogueData: {fileID: 11400000, guid: 388d989010fad1c4a9cf46f2bebd8bca, type: 2}
     ShakeData: {fileID: 0}
@@ -14688,6 +15011,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
 --- !u!1 &1622557959342159690
 GameObject:
   m_ObjectHideFlags: 0
@@ -14863,6 +15188,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -14872,6 +15199,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -14893,6 +15222,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -14902,6 +15233,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -14923,6 +15256,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -14932,6 +15267,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 5e5b61396c565b3458be849a60e47da9, type: 2}
     ShakeData: {fileID: 0}
@@ -14941,6 +15278,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 6
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -14950,6 +15289,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
 --- !u!61 &4070224167427083001
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15122,6 +15463,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -15131,6 +15474,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -15152,6 +15497,8 @@ MonoBehaviour:
             m_StringArgument: TurnHead
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -15161,6 +15508,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -15182,6 +15531,8 @@ MonoBehaviour:
             m_StringArgument: SitToStand
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -15191,6 +15542,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -15212,6 +15565,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -15221,6 +15576,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: e814915cea5e27e478d6c3cbffc82d69, type: 2}
     ShakeData: {fileID: 0}
@@ -15230,6 +15587,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 6
     DialogueData: {fileID: 0}
     ShakeData: {fileID: 0}
@@ -15239,6 +15598,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
 --- !u!212 &4553757282609745207
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -15356,6 +15717,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 73f719fc7a5f7e340b56d85c2a441d78, type: 2}
     ShakeData: {fileID: 0}
@@ -15365,6 +15728,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 11400000, guid: 7632899af67e3f64fba808c3e42e519e, type: 2}
     ShakeData: {fileID: 0}
@@ -15386,6 +15751,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 2
     DialogueData: {fileID: 11400000, guid: 2def0e420536c4147890279ac633ce46, type: 2}
     ShakeData: {fileID: 0}
@@ -15395,6 +15762,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 73f719fc7a5f7e340b56d85c2a441d78, type: 2}
     ShakeData: {fileID: 0}
@@ -15404,6 +15773,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 73f719fc7a5f7e340b56d85c2a441d78, type: 2}
     ShakeData: {fileID: 0}
@@ -15413,6 +15784,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 73f719fc7a5f7e340b56d85c2a441d78, type: 2}
     ShakeData: {fileID: 0}
@@ -15422,6 +15795,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 11400000, guid: 73f719fc7a5f7e340b56d85c2a441d78, type: 2}
     ShakeData: {fileID: 0}
@@ -15443,6 +15818,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 3
     DialogueData: {fileID: 11400000, guid: 73f719fc7a5f7e340b56d85c2a441d78, type: 2}
     ShakeData: {fileID: 0}
@@ -15452,6 +15829,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 11400000, guid: 7632899af67e3f64fba808c3e42e519e, type: 2}
     ShakeData: {fileID: 0}
@@ -15485,6 +15864,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 73f719fc7a5f7e340b56d85c2a441d78, type: 2}
     ShakeData: {fileID: 0}
@@ -15494,6 +15875,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 7632899af67e3f64fba808c3e42e519e, type: 2}
     ShakeData: {fileID: 0}
@@ -15503,6 +15886,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 6
     DialogueData: {fileID: 11400000, guid: 7632899af67e3f64fba808c3e42e519e, type: 2}
     ShakeData: {fileID: 0}
@@ -15512,6 +15897,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
 --- !u!1 &5278967498674801082
 GameObject:
   m_ObjectHideFlags: 0
@@ -15576,6 +15963,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 2def0e420536c4147890279ac633ce46, type: 2}
     ShakeData: {fileID: 0}
@@ -15585,6 +15974,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 2def0e420536c4147890279ac633ce46, type: 2}
     ShakeData: {fileID: 0}
@@ -15594,6 +15985,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 6
     DialogueData: {fileID: 11400000, guid: 2def0e420536c4147890279ac633ce46, type: 2}
     ShakeData: {fileID: 0}
@@ -15603,6 +15996,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
 --- !u!61 &5278967499662812534
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15687,6 +16082,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 73f719fc7a5f7e340b56d85c2a441d78, type: 2}
     ShakeData: {fileID: 0}
@@ -15696,6 +16093,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 11400000, guid: 2def0e420536c4147890279ac633ce46, type: 2}
     ShakeData: {fileID: 0}
@@ -15717,6 +16116,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
     ShakeData: {fileID: 0}
@@ -15738,6 +16139,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 0fda39c3acb04694a89e231fad4652ea, type: 2}
     ShakeData: {fileID: 0}
@@ -15747,6 +16150,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
     ShakeData: {fileID: 0}
@@ -15768,6 +16173,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 5
     DialogueData: {fileID: 11400000, guid: 7632899af67e3f64fba808c3e42e519e, type: 2}
     ShakeData: {fileID: 0}
@@ -15777,6 +16184,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 7632899af67e3f64fba808c3e42e519e, type: 2}
     ShakeData: {fileID: 0}
@@ -15786,6 +16195,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 5
     DialogueData: {fileID: 11400000, guid: 7632899af67e3f64fba808c3e42e519e, type: 2}
     ShakeData: {fileID: 0}
@@ -15795,6 +16206,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 7632899af67e3f64fba808c3e42e519e, type: 2}
     ShakeData: {fileID: 0}
@@ -15804,6 +16217,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
     ShakeData: {fileID: 0}
@@ -15813,6 +16228,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 6
     DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
     ShakeData: {fileID: 0}
@@ -15822,6 +16239,8 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
     ShakeData: {fileID: 0}
@@ -15843,6 +16262,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 4
     DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
     ShakeData: {fileID: 0}
@@ -15864,6 +16285,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
     ShakeData: {fileID: 0}
@@ -15885,6 +16308,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
 --- !u!4 &5278967500018182526
 Transform:
   m_ObjectHideFlags: 0
