@@ -291,7 +291,7 @@
 			#pragma shader_feature_local SHADOW_ON
 			#pragma shader_feature_local SHINE_ON
 			#pragma shader_feature_local CONTRAST_ON
-			#pragma shader_feature_local OVERLAY_ON
+			#pragma multi_compile _ OVERLAY_ON
 			#pragma shader_feature_local OVERLAYMULT_ON
 			#pragma shader_feature_local ALPHACUTOFF_ON
 			#pragma shader_feature_local ALPHAROUND_ON
