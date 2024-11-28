@@ -1,5 +1,7 @@
 using joonyle99;
 using UnityEngine;
+using System.Collections;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -14,6 +16,15 @@ public class DebugBehavior : MonoBehaviour
 
     void Update()
     {
+        // CHEAT: F5 키를 누르면 보스전으로 이동한다
+        if (Input.GetKeyDown(KeyCode.F5) && GameSceneManager.Instance.CheatMode == true)
+        {
+            PersistentDataManager.Instance.ObtainSkill_Light();
+            PersistentDataManager.Instance.ObtainSkill_Moving();
+            PersistentDataManager.Instance.ObtainSkill_Moving();
+            StartCoroutine(SceneChangeCoroutine("Boss_Bear"));
+        }
+
         // CHEAT: F11 키를 누르면 보스키 획득
         if (Input.GetKeyDown(KeyCode.F11) && GameSceneManager.Instance.CheatMode == true)
         {
@@ -25,6 +36,8 @@ public class DebugBehavior : MonoBehaviour
         {
             DialogueController.Instance.ShutdownDialogue();
         }
+
+        // CHEAT: F5 키를 누르면 다이얼로그 스킵
 
 #if UNITY_EDITOR
         // DEBUG: 현재 마지막 CheckPoint를 표시한다 (없다면 입구를 표시한다)
@@ -44,6 +57,12 @@ public class DebugBehavior : MonoBehaviour
             Debug.DrawLine(checkPoint + diagonal2 * LENGTH, checkPoint + diagonal4 * LENGTH, Color.red, 5f);
         }
 #endif
+    }
+
+    private IEnumerator SceneChangeCoroutine(string sceneName)
+    {
+        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
+        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, "Enter " + sceneName.ToString());
     }
 }
 
