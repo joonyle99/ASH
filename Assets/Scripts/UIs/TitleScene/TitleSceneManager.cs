@@ -13,11 +13,13 @@ public class TitleSceneManager : MonoBehaviour
 
     private void Update()
     {
+        /*
         // HelperText
         if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.Space))
         {
             HelperText.SetActive(!HelperText.activeSelf);
         }
+        */
 
         // ChapterCheat
         if (Input.GetKeyDown(KeyCode.F1) && GameSceneManager.Instance.CheatMode == true)
