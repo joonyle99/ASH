@@ -129,17 +129,13 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         // CHEAT: F7 Å°¸¦ ´©¸£¸é ºû ½ºÅ³ È¹µæ
         if (Input.GetKeyDown(KeyCode.F7) && GameSceneManager.Instance.CheatMode == true)
         {
-            SetByGlobal<bool>("LightSkill", true);
+            ObtainSkill_Light();
         }
 
         // CHEAT: F8 Å°¸¦ ´©¸£¸é ´õºí Á¡ÇÁ, ´ë½¬ È¹µæ
         if (Input.GetKeyDown(KeyCode.F8) && GameSceneManager.Instance.CheatMode == true)
         {
-            SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
-
-            UpdateValueByGlobal<int>("SkillPiece", x => x + 3);
-
-            _cheatSkillId = _cheatSkillId == 0 ? 1 : 0;
+            ObtainSkill_Moving();
         }
 
 #if UNITY_EDITOR
@@ -516,4 +512,17 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
         GUILayout.EndArea();
     }*/
+
+    public void ObtainSkill_Light()
+    {
+        SetByGlobal<bool>("LightSkill", true);
+    }
+    public void ObtainSkill_Moving()
+    {
+        SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
+
+        UpdateValueByGlobal<int>("SkillPiece", x => x + 3);
+
+        _cheatSkillId = _cheatSkillId == 0 ? 1 : 0;
+    }
 }
