@@ -90,6 +90,8 @@ public class OptionView : MonoBehaviour
         DialogueController.Instance.ShutdownDialogue();
 
         SoundManager.Instance.UnPauseAllSound();
+
+        InputManager.Instance.ChangeToDefaultSetter();
     }
 
     // volume setting
