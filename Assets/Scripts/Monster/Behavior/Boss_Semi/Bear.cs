@@ -412,7 +412,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         wave2.SetActor(this);
     }
 
-    // effects
+    // cutscene
     public override void ExecutePostDeathActions()
     {
         base.ExecutePostDeathActions();
@@ -426,8 +426,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
         yield return new WaitForSeconds(2f);
 
-        yield return StartCoroutine(ChangeImageCoroutine());
-        yield return StartCoroutine(ChangeBackgroundCoroutine());
+        yield return ChangeImageCoroutine();
+        yield return ChangeBackgroundCoroutine();
 
         // ÃÖÁ¾ ÄÆ¾À Àç»ý
         cutscenePlayerList.PlayCutscene("Final CutScene");
