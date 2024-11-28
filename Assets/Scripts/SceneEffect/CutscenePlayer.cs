@@ -9,11 +9,15 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
 {
     [SerializeField] bool _playOnce = true;
     [SerializeField] bool _played = false;
+    public bool IsPlayed
+    {
+        get => _played;
+        set { _played = value; }
+    }
 
     [SerializeField] List<SceneEffect> _sequence;
 
     public bool IsPlaying { get; private set; } = false;
-    public bool IsPlayed => _played;
 
     private PreserveState _statePreserver;
 

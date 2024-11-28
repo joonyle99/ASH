@@ -332,6 +332,12 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
             {
                 _isClearAllWaves = _identifier.LoadState<bool>("_isClearAllWaves", false);
             }
+
+            if(!_isClearAllWaves)
+            {
+                _startWaveCutscene.GetComponent<PreserveState>().SaveState("_played", false);
+                _startWaveCutscene.IsPlayed = false;
+            }
         }
     }
 
