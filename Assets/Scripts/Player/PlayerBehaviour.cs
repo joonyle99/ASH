@@ -82,7 +82,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     /// </summary>
     public bool CanAttack
     {
-        get => _isCanAttack && CurrentState is IAttackableState &&
+        get => _isCanAttack && (CurrentState is IAttackableState) &&
                _playerLightSkillController.IsLightButtonPressable &&
                !_playerLightSkillController.IsLightWorking;
 
