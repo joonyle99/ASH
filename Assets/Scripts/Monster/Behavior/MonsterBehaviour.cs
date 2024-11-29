@@ -758,11 +758,11 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     // cutscene
     public IEnumerator PlayCutSceneInRunning(string cutsceneName)
     {
-        // 현재 애니메이션이 95% 완료될 때까지 기다립니다.
+        // 현재 애니메이션이 99% 완료될 때까지 기다립니다.
         yield return new WaitUntil(() =>
         {
             AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
-            return stateInfo.normalizedTime >= 0.95f;
+            return stateInfo.normalizedTime >= 0.99f;
         });
 
         cutscenePlayerList.PlayCutscene(cutsceneName);

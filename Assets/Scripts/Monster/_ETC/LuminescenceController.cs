@@ -17,6 +17,6 @@ public class LuminescenceController : MonoBehaviour
     void Update()
     {
         // luminescence의 intensity를 _startIntensity + (-0.5 ~ 0.5) 를 계속 반복하도록
-        luminescence.intensity = _startIntensity + (Mathf.Sin(Time.time * speed) * 0.5f);
+        luminescence.intensity = _startIntensity + (Mathf.Sin(Time.time * speed) * _startIntensity / 2f);
     }
 }

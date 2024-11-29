@@ -68,10 +68,15 @@ public class StageResetBehaviour : InteractableObject
 
     public void ResetStage()
     {
+        // 최신 데이터 (PersistentData) 가 아닌 씬의 원본 데이터를 가져오기 위해 스테이지 리셋 대상 데이터를 삭제
         PersistentDataManager.Instance.PersistentData.DataGroups[_currentSceneBasicGroupName].Clear();
+        // 씬 전환 타입 변경
         SceneChangeManager.Instance.SceneChangeType = SceneChangeType.StageReset;
+        // 몬스터가 리스폰 대기하는 코루틴을 정지한다 (씬 전환 코루틴은 유지되기 때문)
         MonsterRespawnManager.Instance.StopRespawnCoroutine();
+        // ...
         BossDungeonManager.Instance.MakeDataGroup();
+        // 
         SceneChangeManager.Instance.ChangeToPlayableScene(_sceneName, _entrancePassage);
     }
 }

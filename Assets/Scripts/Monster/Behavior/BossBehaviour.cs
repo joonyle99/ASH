@@ -48,7 +48,7 @@ public abstract class BossBehaviour : MonsterBehaviour
             {
                 if (_totalHitCount == rageTargetHurtCount)
                 {
-                    Debug.Log("call rage cutscene");
+                    // Debug.Log("call rage cutscene");
 
                     IsRage = true;
                     IsGodMode = true;

@@ -47,7 +47,7 @@ public class PrologueManager : MonoBehaviour
     }
     private IEnumerator PlayScripts()
     {
-        foreach(var script in _scripts)
+        foreach (var script in _scripts)
         {
             yield return PlayScript(script);
             yield return FadeInProceedText();
@@ -60,7 +60,7 @@ public class PrologueManager : MonoBehaviour
 
             float eTime = 0f;
             color = _texts[0].color;
-            while(eTime < _fadeOutDuration)
+            while (eTime < _fadeOutDuration)
             {
                 color.a = 1 - eTime / _fadeOutDuration;
                 foreach (var text in _texts)
@@ -77,7 +77,7 @@ public class PrologueManager : MonoBehaviour
     }
     private IEnumerator PlayScript(Script script)
     {
-        for(int i=0; i<_texts.Length; i++)
+        for (int i = 0; i < _texts.Length; i++)
         {
             if (i < script.Lines.Count)
             {
@@ -90,7 +90,7 @@ public class PrologueManager : MonoBehaviour
             else
                 _texts[i].gameObject.SetActive(false);
         }
-        for(int i=0; i< script.Lines.Count; i++)
+        for (int i = 0; i < script.Lines.Count; i++)
         {
 
             float eTime = 0f;
@@ -121,7 +121,7 @@ public class PrologueManager : MonoBehaviour
             yield return null;
             eTime += Time.deltaTime;
         }
-        color.a = 1; 
+        color.a = 1;
         _proceedText.color = color;
     }
 }

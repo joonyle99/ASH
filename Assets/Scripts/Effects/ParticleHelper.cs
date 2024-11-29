@@ -86,7 +86,7 @@ public class ParticleHelper : MonoBehaviour
             totalDuration = Mathf.Max(totalDuration, rateOverTimeDuration);
         }
 
-        Debug.Log($"Calculated Total Duration: {totalDuration}");
+        // Debug.Log($"Calculated Total Duration: {totalDuration}");
 
         /*
         var totalDuration = _particleSystem.main.startLifetime.constantMax;

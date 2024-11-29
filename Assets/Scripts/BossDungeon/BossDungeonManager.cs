@@ -61,5 +61,4 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     {
         PersistentDataManager.TryAddDataGroup(_dataGroupName);
     }
-
 }

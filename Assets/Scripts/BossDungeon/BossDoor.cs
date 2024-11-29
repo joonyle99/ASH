@@ -51,11 +51,11 @@ public class BossDoor : Door
 
     public override void OnSceneContextBuilt()
     {
-        if(_statePreserver)
+        if (_statePreserver)
         {
-            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                if(IsOpened = _statePreserver.LoadState<bool>("_isOpenSaved", IsOpened))
+                if (IsOpened = _statePreserver.LoadState<bool>("_isOpenSaved", IsOpened))
                 {
                     _animator.SetTrigger("InstantOpen");
 
@@ -65,7 +65,8 @@ public class BossDoor : Door
                 {
                     InitClosing();
                 }
-            }else
+            }
+            else
             {
                 if (IsOpened = _statePreserver.LoadState<bool>("_isOpened", IsOpened))
                 {
@@ -118,8 +119,10 @@ public class BossDoor : Door
     {
         // 상호작용으로 여는 경우에만 InputSetter를 변경한다
         if (IsInteractable)
+        {
             InputManager.Instance.ChangeToStayStillSetter();
-        
+        }
+
         // Debug.Log("Call OpenDoor Coroutine");
 
         yield return StartCoroutine(base.OpenDoorCoroutine(useCameraEffect));
@@ -146,9 +149,13 @@ public class BossDoor : Door
         if (IsInteractable)
         {
             if (_enterInputSetter)
+            {
                 InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+            }
             else
+            {
                 InputManager.Instance.ChangeToDefaultSetter();
+            }
         }
 
         /*
@@ -165,7 +172,9 @@ public class BossDoor : Door
     protected override IEnumerator CloseDoorCoroutine(bool useCameraEffect)
     {
         if (IsInteractable)
+        {
             InputManager.Instance.ChangeToStayStillSetter();
+        }
 
         yield return StartCoroutine(base.CloseDoorCoroutine(useCameraEffect));
 
@@ -174,9 +183,13 @@ public class BossDoor : Door
         if (IsInteractable)
         {
             if (_enterInputSetter)
+            {
                 InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+            }
             else
+            {
                 InputManager.Instance.ChangeToDefaultSetter();
+            }
         }
     }
 

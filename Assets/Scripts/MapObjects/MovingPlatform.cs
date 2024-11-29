@@ -76,7 +76,6 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
         }
     }
 
-
     private void Update()
     {
         if (_isMoving)
@@ -108,6 +107,24 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
                 }
             }
         }
+
+        /*
+        if (_type == Type.Vertical)
+        {
+            var target = _path.GetPosition(_travelDistance);
+            var direction = (target - transform.position).normalized;
+
+            var rayLength = 0.1f;
+            var isDetected = Physics2D.Raycast(transform.position, Vector2.up * direction, rayLength);
+
+            // Debug.DrawRay(transform.position, Vector2.up * direction, );
+        }
+        else if (_type == Type.Horizontal)
+        {
+
+        }
+        */
+
         _rigidbody.MovePosition(_path.GetPosition(_travelDistance));
     }
 

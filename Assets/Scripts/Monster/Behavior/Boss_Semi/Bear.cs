@@ -185,7 +185,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
             if (_totalEarthquakeCount == 3 && _isAbleLightGuideCutscene == true)
             {
-                Debug.Log("Lighting Guide ÄÆ¾À È£Ãâ");
+                // Debug.Log("Lighting Guide ÄÆ¾À È£Ãâ");
 
                 _isAbleLightGuideCutscene = false;
                 StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));

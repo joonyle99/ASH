@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using static SceneTransitionPlayer;
 
 public enum SceneChangeType
 {

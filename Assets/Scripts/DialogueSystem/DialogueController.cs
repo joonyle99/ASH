@@ -82,6 +82,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                 {
                     View.FastForward();
                     _isSkipSequence = false;
+
+                    yield return null;
                 }
 
                 // CHEAT: F3 키를 누르면 현재 Segment를 빠르게 넘긴다

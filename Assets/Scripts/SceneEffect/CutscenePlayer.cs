@@ -133,7 +133,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
         }
         else
         {
-            InputManager.Instance.ChangeToDefaultSetter();
+            // InputManager.Instance.ChangeToDefaultSetter();
         }
     }
 
