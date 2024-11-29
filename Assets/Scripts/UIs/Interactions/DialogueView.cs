@@ -24,6 +24,8 @@ public class DialogueView : MonoBehaviour
     [SerializeField] private ResponsePanel _responsePanel;
     public ResponsePanel ResponsePanel => _responsePanel;
 
+    [SerializeField] private TMP_Text _skipText;
+
     private TextShaker _textShaker;
 
     private DialogueSegment _currentSegment;
@@ -44,6 +46,8 @@ public class DialogueView : MonoBehaviour
         _dialoguePanel.gameObject.SetActive(true);
         _skipButton.gameObject.SetActive(canSkip);
         _textShaker = _dialogue.GetComponent<TextShaker>();
+        string dialogueKeyCode = InputManager.Instance.StayStillInputSetter.GetKeyCode("Dialogue").KeyCode.ToString();
+        _skipText.text = "SKIP(" + dialogueKeyCode + ")";
     }
     /// <summary> ´ÙÀÌ¾ó·Î±× ºä UI ÆÐ³Î ´Ý±â </summary>
     public void ClosePanel()

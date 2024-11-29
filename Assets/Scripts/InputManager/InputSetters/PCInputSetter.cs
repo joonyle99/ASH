@@ -54,18 +54,4 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
 
         return state;
     }
-
-    public override void SetKeyCode(string keyName, KeyCode newKeyCode)
-    {
-        CustomKeyCode targetKeyCode = GetKeyCode(keyName);
-        
-        if(targetKeyCode == null)
-        {
-            Debug.Log(keyName + " not exist keyname");
-            return;
-        }
-        Debug.Log(keyName + " change key to " + newKeyCode);
-
-        targetKeyCode.KeyCode = newKeyCode;
-    }
 }
