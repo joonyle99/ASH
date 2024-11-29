@@ -436,6 +436,14 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         Instance.PersistentData.DataGroups.Clear();
         Instance.PersistentData.GlobalDataGroup.Clear();
     }
+
+    public static void ClearSavedPersistentData()
+    {
+        Instance.SavedPersistentData.SceneName = "";
+        Instance.SavedPersistentData.PassageName = "";
+        Instance.SavedPersistentData._jsonDataGroups?.data?.Clear();
+        Instance.SavedPersistentData._jsonGlobalDataGroup?.data?.Clear();
+    }
     /*
     private void OnGUI()
     {

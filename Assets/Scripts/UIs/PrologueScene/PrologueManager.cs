@@ -40,6 +40,7 @@ public class PrologueManager : MonoBehaviour
     private IEnumerator StartGame()
     {
         PersistentDataManager.ClearPersistentData();
+        PersistentDataManager.ClearSavedPersistentData();
 
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
         SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "Enter 1-1");
