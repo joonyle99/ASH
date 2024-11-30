@@ -353,7 +353,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &62868061
 Transform:
   m_ObjectHideFlags: 0
@@ -1562,10 +1562,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prefab_Bear
       objectReference: {fileID: 0}
-    - target: {fileID: 1814476920007087283, guid: 1d1a67366c4e4da49bd76dd5ff3b3bd8, type: 3}
-      propertyPath: m_FalloffIntensity
-      value: 0.8
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d1a67366c4e4da49bd76dd5ff3b3bd8, type: 3}
 --- !u!4 &403945400 stripped
@@ -1582,6 +1578,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2701949f649d1e4e9954ac297a66948, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &409182688 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 766905292378889498, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+  m_PrefabInstance: {fileID: 748571772}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea00c9ebf8c904f458c46e7a24d4de7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &430312452
@@ -1611,11 +1618,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -135.71825
+      value: -116.87977
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.38851
+      value: -1.657483
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2472,9 +2479,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 7897079100632287607, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
-      propertyPath: m_ExternalAcceleration.y
-      value: -100
+    - target: {fileID: 5733063111376558414, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _targetAttackCoolTime
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
@@ -2774,7 +2781,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: 1698.6018
+      value: 1677.4445
       objectReference: {fileID: 0}
     - target: {fileID: 5171320284482388752, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5181,8 +5188,8 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
-  - _type: 6
-    DialogueData: {fileID: 0}
+  - _type: 0
+    DialogueData: {fileID: 11400000, guid: dd49f77b8ba508b44be1d11b0a057619, type: 2}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
     Time: 6
@@ -5193,6 +5200,29 @@ MonoBehaviour:
         - m_Target: {fileID: 627304411898063673}
           m_TargetAssemblyTypeName: BossDoor, Assembly-CSharp
           m_MethodName: OpenDoor
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 7
+    DialogueData: {fileID: 11400000, guid: dd49f77b8ba508b44be1d11b0a057619, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 6
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 409182688}
+          m_TargetAssemblyTypeName: OptionView, Assembly-CSharp
+          m_MethodName: GoToTitleScene
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -16352,6 +16382,52 @@ MonoBehaviour:
     Function:
       m_PersistentCalls:
         m_Calls: []
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 4
+    DialogueData: {fileID: 11400000, guid: 72a3382cdab067a4f9adff6dcf9a3848, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 1
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1442626540}
+          m_TargetAssemblyTypeName: BearBlocking, Assembly-CSharp
+          m_MethodName: EndBlocking
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 0
+    DialogueData: {fileID: 11400000, guid: 37e68a1506a8096428d31e84ab6d2637, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 1
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1442626540}
+          m_TargetAssemblyTypeName: BearBlocking, Assembly-CSharp
+          m_MethodName: EndBlocking
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
   - _type: 6

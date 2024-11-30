@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAttackController : MonoBehaviour
@@ -14,6 +15,11 @@ public class PlayerAttackController : MonoBehaviour
     [SerializeField] private int _attackDamage = 1;
     [SerializeField] private float _attackPowerX = 7f;
     [SerializeField] private float _attackPowerY = 10f;
+
+    [Space]
+
+    [SerializeField] private float _targetAttackCoolTime;
+    private Coroutine _attackCooldownCoroutine;
 
     [Header("Effects")]
     [Space]
@@ -31,6 +37,13 @@ public class PlayerAttackController : MonoBehaviour
     public void CastAttack()
     {
         _player.CanAttack = false;
+
+        if (_attackCooldownCoroutine != null)
+        {
+            StopCoroutine(_attackCooldownCoroutine);
+        }
+
+        _attackCooldownCoroutine = StartCoroutine(AttackCooldown());
 
         _player.Animator.SetTrigger("Attack");
         _player.PlaySound_SE_Attack();
@@ -75,9 +88,9 @@ public class PlayerAttackController : MonoBehaviour
             }
         }
     }
-    public void AttackFinish_AnimEvent()
+    private IEnumerator AttackCooldown()
     {
-        // now you can cast attack
+        yield return new WaitForSeconds(_targetAttackCoolTime);
         _player.CanAttack = true;
     }
 }

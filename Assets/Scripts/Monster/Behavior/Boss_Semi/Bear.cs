@@ -98,9 +98,9 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [Header("Cutscene")]
     [Space]
 
-    [SerializeField] private bool _isAbleLightGuideCutscene = true;
+    // [SerializeField] private bool _isAbleLightGuideCutscene = true;
 
-    [Space]
+    // [Space]
 
     [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;             // 색이 서서히 돌아오는 효과
     [SerializeField] private ParticleSystem[] _disintegrateEffects;                             // 잿가루 효과 파티클
@@ -168,8 +168,10 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         // 그로기 상태로 진입
         SetAnimatorTrigger("Groggy");
 
+        /*
         if (_isAbleLightGuideCutscene)
             _isAbleLightGuideCutscene = false;
+        */
     }
 
     // boss base
@@ -183,6 +185,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
             currentAttackCount = 0;
             TotalEarthquakeCount++;
 
+            /*
             if (_totalEarthquakeCount == 3 && _isAbleLightGuideCutscene == true)
             {
                 // Debug.Log("Lighting Guide 컷씬 호출");
@@ -190,8 +193,9 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
                 _isAbleLightGuideCutscene = false;
                 StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
             }
+            */
 
-            IsCapturable = true;
+            // IsCapturable = true;
         }
         else
             currentAttackCount++;
@@ -200,7 +204,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     {
         if (_currentAttack is AttackType.EarthQuake)
         {
-            IsCapturable = false;
+            // IsCapturable = false;
         }
 
         if (currentAttackCount >= targetAttackCount)

@@ -270,9 +270,16 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         #region Input
 
         // Attack
-        if (InputManager.Instance.State.AttackKey.KeyDown && CanAttack)
+        if (InputManager.Instance.State.AttackKey.KeyDown)
         {
-            _playerAttackController.CastAttack();
+            //Debug.Log("AttackKey.KeyDown !");
+
+            if (CanAttack)
+            {
+                //Debug.Log("CastAttack !");
+
+                _playerAttackController.CastAttack();
+            }
         }
 
         // CHEAT: ~ 키를 누르면 체력 1 회복

@@ -145,7 +145,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         {
             _isGodMode = value;
 
-//#if UNITY_EDITOR
+            //#if UNITY_EDITOR
             if (MaterialController)
             {
                 if (_isGodMode)
@@ -157,7 +157,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
                     MaterialController.DisableGodModeOutline();
                 }
             }
-//#endif
+            //#endif
         }
     }
     [field: SerializeField]
@@ -758,10 +758,13 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     // cutscene
     public IEnumerator PlayCutSceneInRunning(string cutsceneName)
     {
+        // Debug.Log("PlayCutSceneInRunning");
+
         // 현재 애니메이션이 99% 완료될 때까지 기다립니다.
         yield return new WaitUntil(() =>
         {
             AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+            // Debug.Log(GetStateNameByHash(Animator, stateInfo.nameHash));
             return stateInfo.normalizedTime >= 0.99f;
         });
 
@@ -770,6 +773,30 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     public void PlayCutSceneImmediately(string cutsceneName)
     {
         cutscenePlayerList.PlayCutscene(cutsceneName);
+    }
+
+    public void TurnOnIsCapturable()
+    {
+        IsCapturable = true;
+    }
+    public void TurnOffIsCapturable()
+    {
+        IsCapturable = false;
+    }
+
+    /// <summary>
+    /// 애니메이션의 해시값을 통해 해당 애니메이션의 이름을 반환합니다.
+    /// </summary>
+    public string GetStateNameByHash(Animator animator, int hash)
+    {
+        foreach (var clip in animator.runtimeAnimatorController.animationClips)
+        {
+            if (Animator.StringToHash(clip.name) == hash)
+            {
+                return clip.name;
+            }
+        }
+        return "Unknown State";
     }
 
     #endregion

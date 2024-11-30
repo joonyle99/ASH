@@ -518,7 +518,6 @@ MonoBehaviour:
   _waveSkillPrefab: {fileID: 1687034788766365448, guid: 839e0876f9e523a42bb75e4004df8274, type: 3}
   _earthquakeCameraShake: {fileID: 11400000, guid: 137dc22b9fdef2c42b664891a72693ad, type: 2}
   _totalEarthquakeCount: 0
-  _isAbleLightGuideCutscene: 1
   bossClearColorChangeEffect: {fileID: 0}
   _disintegrateEffects:
   - {fileID: 5403583929865551525}
@@ -24454,6 +24453,10 @@ PrefabInstance:
     - target: {fileID: 8098683574932484918, guid: 6a93010b5d148cd498331cb359aa95e9, type: 3}
       propertyPath: m_Intensity
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098683574932484918, guid: 6a93010b5d148cd498331cb359aa95e9, type: 3}
+      propertyPath: m_FalloffIntensity
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a93010b5d148cd498331cb359aa95e9, type: 3}

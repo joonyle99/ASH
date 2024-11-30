@@ -33,7 +33,8 @@ public class PlayerLightSkillController : MonoBehaviour
         _isLightableState = _player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<RunState>();
 
         // Auto Light Source Off
-        if (_isLightWorking && !_isLightableState)
+        if ((_isLightWorking && !_isLightableState)
+            || SceneEffectManager.Instance.IsPlayingCutscene)
         {
             _player.Animator.SetBool("IsLightWorking", false);
         }
@@ -66,6 +67,8 @@ public class PlayerLightSkillController : MonoBehaviour
         if (_isLightWorking)
             return;
 
+        //Debug.Log("TurnOnLight");
+
         _isLightWorking = true;
         _player.Animator.SetBool("IsLightWorking", _isLightWorking);
 
@@ -73,11 +76,12 @@ public class PlayerLightSkillController : MonoBehaviour
         _light.SetActive(true);
         _player.SoundList.PlaySFX("SE_LightSkill");
     }
-
     public void TurnOffLight()
     {
         if (!_isLightWorking)
             return;
+
+        //Debug.Log("TurnOffLight");
 
         _isLightWorking = false;
         _player.Animator.SetBool("IsLightWorking", _isLightWorking);
@@ -93,11 +97,15 @@ public class PlayerLightSkillController : MonoBehaviour
 
     public void LightButtonPressable()
     {
+        //Debug.Log("Pressable");
+
         // 빛 스킬 시전 시간 동안은 Press 불가능
         _isLightButtonPressable = true;
     }
     public void LightButtonDisPressable()
     {
+        //Debug.Log("DisPressable");
+
         // 빛 스킬 시전이 시작되면 Press 불가능
         _isLightButtonPressable = false;
     }
