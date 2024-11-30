@@ -17,7 +17,7 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     [SerializeField] float _respawnDelay = 0.5f;
     [SerializeField] float _capeFlyDuration = 1f;
 
-    public bool IsPlayable = false;
+    public bool IsPlayable = true;
 
     /// <summary>
     /// 씬 입장 시 화면을 밝게 만드는 효과

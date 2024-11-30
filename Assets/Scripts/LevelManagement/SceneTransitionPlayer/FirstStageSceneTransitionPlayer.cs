@@ -22,6 +22,8 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
         }
         else
         {
+            IsPlayable = false;
+
             SceneContext.Current.Player.transform.position = _spawnPoint.position;
             SceneContext.Current.Player.gameObject.SetActive(false);
             // SceneEffectManager.Instance.Camera.SnapFollow();
@@ -46,6 +48,8 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
             GameUIManager.CloseLetterbox();
             InputManager.Instance.ChangeToDefaultSetter();
             PersistentDataManager.SetByGlobal("seenPlayerFirstSpawn", true);
+
+            IsPlayable = true;
         }
     }
 
