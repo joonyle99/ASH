@@ -1,3 +1,4 @@
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 /// <summary>
@@ -12,6 +13,7 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
 
     [SerializeField] private Type _type = Type.Vertical;
     [SerializeField] private float _speed = 1;
+    [SerializeField] private LayerMask _playerLayer;
 
     [Space]
 
@@ -31,7 +33,10 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
     private Rigidbody2D _rigidbody;
     [SerializeField]
     private float _travelDistance = 0f;
+    //스위치의 활성화 여부(true이더라도 _hasPlayerAtPath가 true이면 플랫폼은 움직이지 않음)
     private bool _isMoving = false;
+    //스위치 경로에 플레이어가 있는지 판별, 버닝비버 임시 코드
+    private bool _hasPlayerAtPath = false;
 
     private PreserveState _statePreserver;
     private SceneEffectEvent _recentEvent;
@@ -78,15 +83,22 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
 
     private void Update()
     {
-        if (_isMoving)
+        if (_isMoving && !_hasPlayerAtPath)
         {
             if (!_moveAudio.isPlaying)
                 _moveAudio.Play();
         }
+        else
+        {
+            ///버닝비버 임시 코드
+            if (_moveAudio.isPlaying)
+                _moveAudio.Stop();
+            ///
+        }
     }
     private void FixedUpdate()
     {
-        if (_isMoving)
+        if (_isMoving && !_hasPlayerAtPath)
         {
             if (IsOn)
             {
@@ -108,24 +120,43 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
             }
         }
 
-        /*
+        ///버닝비버 임시코드
+        var target = _path.GetPosition(_travelDistance);
+        var direction = (target - transform.position).normalized;
+        var rayLength = 0.5f;
+        Vector2 origin = Vector2.zero, boxSize = Vector2.zero, dir = Vector2.zero;
+        RaycastHit2D hit = new RaycastHit2D();
         if (_type == Type.Vertical)
         {
-            var target = _path.GetPosition(_travelDistance);
-            var direction = (target - transform.position).normalized;
-
-            var rayLength = 0.1f;
-            var isDetected = Physics2D.Raycast(transform.position, Vector2.up * direction, rayLength);
-
-            // Debug.DrawRay(transform.position, Vector2.up * direction, );
+            origin = transform.position + direction * _colliderSizes[0].y / 2;
+            boxSize = new Vector2(_colliderSizes[0].x, rayLength);
+            dir = Vector2.up * direction;
+            hit = Physics2D.BoxCast(origin, boxSize, 1f, dir, 0f, _playerLayer);
         }
         else if (_type == Type.Horizontal)
         {
-
+            origin = transform.position + direction * _colliderSizes[0].x / 2;
+            boxSize = new Vector2(rayLength, _colliderSizes[0].y);
+            dir = Vector2.right * direction;
+            hit = Physics2D.BoxCast(origin, boxSize, 1f, dir, 0f, _playerLayer);
         }
-        */
 
-        _rigidbody.MovePosition(_path.GetPosition(_travelDistance));
+        if (!hit.collider)
+        {
+            _rigidbody.MovePosition(_path.GetPosition(_travelDistance));
+
+            if (_hasPlayerAtPath)
+                _hasPlayerAtPath = false;
+        }
+        else
+        {
+            Debug.Log("raycast hit target : " + hit.collider);
+
+            if (!_hasPlayerAtPath)
+                _hasPlayerAtPath = true;
+        }
+        ///
+        //_rigidbody.MovePosition(_path.GetPosition(_travelDistance));
     }
 
     protected override void OnTurnedOff()
