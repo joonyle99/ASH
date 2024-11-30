@@ -18,7 +18,7 @@ public class SceneContext : MonoBehaviour
     // extra
     public Passage EntrancePassage { get; private set; }                                                                                // 씬의 입구
     public SceneTransitionPlayer SceneTransitionPlayer { get; private set; }                                                            // 씬 전환 플레이어 (타이틀, 프롤로그로의 이동)
-    private PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer => SceneTransitionPlayer as PlayableSceneTransitionPlayer;      // 씬 전환 플레이어 (탐험구간, 보스던전, 보스전으로의 이동)
+    public PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer => SceneTransitionPlayer as PlayableSceneTransitionPlayer;      // 씬 전환 플레이어 (탐험구간, 보스던전, 보스전으로의 이동)
 
     [SerializeField] private CheckpointManager _checkpointManager;          // 체크포인트 매니저
     public CheckpointManager CheckPointManager => _checkpointManager;

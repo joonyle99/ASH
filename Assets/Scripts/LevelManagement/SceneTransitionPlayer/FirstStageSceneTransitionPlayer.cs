@@ -26,7 +26,13 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
             SceneContext.Current.Player.gameObject.SetActive(false);
             // SceneEffectManager.Instance.Camera.SnapFollow();
             GameUIManager.OpenLetterbox(true);
-            StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
+
+            if (_fadeCoroutine != null)
+            {
+                StopCoroutine(_fadeCoroutine);
+            }
+
+            _fadeCoroutine = StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
 
             InputManager.Instance.ChangeToStayStillSetter();
 

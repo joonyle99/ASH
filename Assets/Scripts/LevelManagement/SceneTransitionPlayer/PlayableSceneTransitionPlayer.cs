@@ -17,17 +17,26 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     [SerializeField] float _respawnDelay = 0.5f;
     [SerializeField] float _capeFlyDuration = 1f;
 
+    public bool IsPlayable = false;
+
     /// <summary>
     /// 씬 입장 시 화면을 밝게 만드는 효과
     /// </summary>
     /// <returns></returns>
     public override IEnumerator EnterSceneEffectCoroutine()
     {
-         //Debug.Log($"Enter Scene Effect 시작");
+        IsPlayable = false;
 
-         //Debug.Log("call EnterSceneEffectCoroutine in PlayableSceneTransitionPlayer");
+        //Debug.Log($"Enter Scene Effect 시작");
 
-        StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
+        //Debug.Log("call EnterSceneEffectCoroutine in PlayableSceneTransitionPlayer");
+
+        if (_fadeCoroutine != null)
+        {
+            StopCoroutine(_fadeCoroutine);
+        }
+
+        _fadeCoroutine = StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
 
         Passage entrance = SceneContext.Current.EntrancePassage;
 
@@ -41,7 +50,9 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
 
         // ** 여기서 만약 씬 입장 시 플레이 해야하는 컷씬이 있다면 실행 **
         // yield return 하지 않고 즉시 실행한다
-        StartCoroutine(entrance.PlayEnterCutscene());
+        yield return StartCoroutine(entrance.PlayEnterCutscene());
+
+        IsPlayable = true;
     }
     /// <summary>
     /// 씬 퇴장 시 화면을 어둡게 만드는 효과
@@ -49,9 +60,20 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
     /// <returns></returns>
     public override IEnumerator ExitSceneEffectCoroutine()
     {
+        IsPlayable = false;
+
         SceneEffectManager.Instance.Camera.DisableCameraFollow();
 
-        yield return FadeCoroutine(TransitionDuration, FadeType.Darken);
+        if (_fadeCoroutine != null)
+        {
+            StopCoroutine(_fadeCoroutine);
+        }
+
+        _fadeCoroutine = StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Darken));
+
+        yield return _fadeCoroutine;
+
+        IsPlayable = true;
     }
 
     // TODO : Global 플레이어 상태 관리 오브젝트로 옮겨야함
@@ -74,7 +96,7 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         {
             yield return null;
             eTime += Time.deltaTime;
-            SceneContext.Current.Player.transform.position = Vector3.Lerp(originalPosition, spawnPosition, Curves.EaseOut(eTime/_capeFlyDuration));
+            SceneContext.Current.Player.transform.position = Vector3.Lerp(originalPosition, spawnPosition, Curves.EaseOut(eTime / _capeFlyDuration));
         }
 
         SceneContext.Current.Player.transform.position = spawnPosition;

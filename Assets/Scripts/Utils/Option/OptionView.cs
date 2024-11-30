@@ -47,6 +47,12 @@ public class OptionView : MonoBehaviour
     {
         if (InputManager.Instance.State.EscapeKey.KeyDown)
         {
+            var PlayablePlayer = SceneContext.Current.PlayableSceneTransitionPlayer;
+            if (PlayablePlayer != null && PlayablePlayer.IsPlayable == false)
+            {
+                return;
+            }
+
             TogglePanel();
         }
     }

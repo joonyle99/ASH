@@ -20,6 +20,8 @@ public class SceneTransitionPlayer : MonoBehaviour
 
     protected float FadeDuration => _fadeDuration;
 
+    protected Coroutine _fadeCoroutine;
+
     public void SetFadeImageAlpha(float alpha)
     {
         Color color = _fadeImage.color;
@@ -29,11 +31,25 @@ public class SceneTransitionPlayer : MonoBehaviour
 
     public virtual IEnumerator EnterSceneEffectCoroutine()
     {
-        yield return FadeCoroutine(_fadeDuration, FadeType.Lighten);
+        if (_fadeCoroutine != null)
+        {
+            StopCoroutine(_fadeCoroutine);
+        }
+
+        _fadeCoroutine = StartCoroutine(FadeCoroutine(_fadeDuration, FadeType.Lighten));
+
+        yield return _fadeCoroutine;
     }
     public virtual IEnumerator ExitSceneEffectCoroutine()
     {
-        yield return FadeCoroutine(_fadeDuration, FadeType.Darken);
+        if (_fadeCoroutine != null)
+        {
+            StopCoroutine(_fadeCoroutine);
+        }
+
+        _fadeCoroutine = StartCoroutine(FadeCoroutine(_fadeDuration, FadeType.Darken));
+
+        yield return _fadeCoroutine;
     }
     public IEnumerator FadeCoroutine(float duration, FadeType fadeType)
     {
@@ -79,5 +95,7 @@ public class SceneTransitionPlayer : MonoBehaviour
 
         imageColor.a = to;
         _fadeImage.color = imageColor;
+
+        _fadeCoroutine = null;
     }
 }
