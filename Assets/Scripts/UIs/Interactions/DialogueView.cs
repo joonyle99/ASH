@@ -47,7 +47,7 @@ public class DialogueView : MonoBehaviour
         _skipButton.gameObject.SetActive(canSkip);
         _textShaker = _dialogue.GetComponent<TextShaker>();
         string dialogueKeyCode = InputManager.Instance.StayStillInputSetter.GetKeyCode("Dialogue").KeyCode.ToString();
-        _skipText.text = "SKIP(" + dialogueKeyCode + ")";
+        _skipText.text = dialogueKeyCode;
     }
     /// <summary> 다이얼로그 뷰 UI 패널 닫기 </summary>
     public void ClosePanel()

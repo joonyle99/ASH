@@ -31,7 +31,7 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
             InputManager.Instance.ChangeToStayStillSetter();
 
             yield return new WaitForSeconds(_waitDuration);
-            _spawnFireEffectOnScene.SetActive(true);
+            _spawnFireEffectOnScene?.SetActive(true);
             yield return new WaitForSeconds(_playerSpawnTiming);
 
             SceneContext.Current.Player.gameObject.SetActive(true);
