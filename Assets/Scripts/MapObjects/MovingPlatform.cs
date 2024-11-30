@@ -13,6 +13,7 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
 
     [SerializeField] private Type _type = Type.Vertical;
     [SerializeField] private float _speed = 1;
+    //버닝비버
     [SerializeField] private LayerMask _playerLayer;
 
     [Space]
@@ -90,10 +91,9 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
         }
         else
         {
-            ///버닝비버 임시 코드
+            //버닝비버 임시 코드
             if (_moveAudio.isPlaying)
                 _moveAudio.Stop();
-            ///
         }
     }
     private void FixedUpdate()
@@ -120,7 +120,7 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
             }
         }
 
-        ///버닝비버 임시코드
+        //버닝비버 임시코드
         var target = _path.GetPosition(_travelDistance);
         var direction = (target - transform.position).normalized;
         var rayLength = 0.5f;
@@ -154,8 +154,8 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
 
             if (!_hasPlayerAtPath)
                 _hasPlayerAtPath = true;
-        }
-        ///
+        }//
+
         //_rigidbody.MovePosition(_path.GetPosition(_travelDistance));
     }
 
