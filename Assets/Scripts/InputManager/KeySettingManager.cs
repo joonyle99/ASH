@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeySettingManager : MonoBehaviour
+public class KeySettingManager
 {
     private static HashSet<KeyCode> _unusableKey = new HashSet<KeyCode>() { KeyCode.LeftApple };
 

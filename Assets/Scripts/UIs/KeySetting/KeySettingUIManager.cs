@@ -9,13 +9,13 @@ using UnityEngine.UI;
 [Serializable]
 public class ChangeKeyCodeArgs : EventArgs
 {
-    public TMP_Text ButtonText;
+    public KeySettingBox KeySettingBox;
     public InputSetterDataType InputSetterDataType;
     public CustomKeyCode TargetKeyCode;
 
-    public ChangeKeyCodeArgs(TMP_Text buttonText, InputSetterDataType inputSetterDataType, CustomKeyCode targetKeyCode)
+    public ChangeKeyCodeArgs(KeySettingBox keySettingBox, InputSetterDataType inputSetterDataType, CustomKeyCode targetKeyCode)
     {
-        ButtonText = buttonText;
+        KeySettingBox = keySettingBox;
         InputSetterDataType = inputSetterDataType;
         TargetKeyCode = targetKeyCode;
     }
@@ -128,7 +128,7 @@ public class KeySettingUIManager : MonoBehaviour
         Button button = newBox.transform.GetChild(0).Find("Button").GetComponent<Button>();
         TMP_Text buttonText = newBox.transform.GetChild(0).Find("Button").GetComponentInChildren<TMP_Text>();
 
-        button.onClick.AddListener(() => OnChangedKeyboardSetting(this, new ChangeKeyCodeArgs(buttonText, inputSetterDataType, keyCode)));
+        button.onClick.AddListener(() => OnChangedKeyboardSetting(this, new ChangeKeyCodeArgs(newBox.GetComponent<KeySettingBox>(), inputSetterDataType, keyCode)));
         actionText.text = keyCode.Name;
         buttonText.text = keyCode.KeyCode.ToString();
 
@@ -188,12 +188,22 @@ public class KeySettingUIManager : MonoBehaviour
     #region Events
     private void OnChangedKeyboardSetting(object sender, ChangeKeyCodeArgs changeKeyCodeArgs)
     {
+        Debug.Log("Call ButtonClick : " + changeKeyCodeArgs.KeySettingBox.MouseClickCount);
+        if (changeKeyCodeArgs.KeySettingBox.MouseClickCount >= 1)
+        {
+            changeKeyCodeArgs.KeySettingBox.MouseClickCount = 0;
+            return;
+        }
+
+        TMP_Text buttonText = changeKeyCodeArgs.KeySettingBox.transform.GetChild(0).Find("Button").GetComponentInChildren<TMP_Text>();
+        buttonText.GetComponentInParent<Button>().interactable = false;
         StartCoroutine(ChangeKeyboardSettingLogic(this, changeKeyCodeArgs));
     }
 
     private IEnumerator ChangeKeyboardSettingLogic(object sender, ChangeKeyCodeArgs changeKeyCodeArgs)
     {
-        changeKeyCodeArgs.ButtonText.text = "사용하실 키를 입력해 주세요.";
+        TMP_Text buttonText = changeKeyCodeArgs.KeySettingBox.transform.GetChild(0).Find("Button").GetComponentInChildren<TMP_Text>();
+        buttonText.text = "사용하실 키를 입력해 주세요.";
         yield return null;
 
         while (true)
@@ -204,22 +214,31 @@ public class KeySettingUIManager : MonoBehaviour
                 {
                     if (Input.GetKey(kCode))
                     {
+                        if (kCode == KeyCode.Mouse0)
+                        {
+                            changeKeyCodeArgs.KeySettingBox.MouseClickCount++;
+                            Debug.Log("ChangeKeyboard Setting Logic in Mouse click Count : " + changeKeyCodeArgs.KeySettingBox.MouseClickCount);
+                        }
+
                         ChangeKeySettingErrorReason changeKeySettingErrorReason = KeySettingManager.CheckKeyCode(changeKeyCodeArgs.TargetKeyCode.Name, kCode);
                         string errorString = KeySettingErrorString(changeKeySettingErrorReason);
-
                         if (changeKeySettingErrorReason == ChangeKeySettingErrorReason.None)
                         {
                             KeySettingManager.SetKeyboardSetting(changeKeyCodeArgs.InputSetterDataType,
                             changeKeyCodeArgs.TargetKeyCode.Name, kCode);
-                            changeKeyCodeArgs.ButtonText.text = kCode.ToString();
+                            buttonText.text = kCode.ToString();
                         }
                         else
                         {
-                            //changeKeyCodeArgs.ButtonText.text = errorString;
+                            buttonText.text = errorString;
+                            Debug.Log("Fail to Change Key reason : " + errorString);
+
                         }
                     }
                 }
-                changeKeyCodeArgs.ButtonText.text = changeKeyCodeArgs.TargetKeyCode.KeyCode.ToString();
+
+                buttonText.GetComponentInParent<Button>().interactable = true;
+                buttonText.text = changeKeyCodeArgs.TargetKeyCode.KeyCode.ToString();
 
                 yield break;
             }

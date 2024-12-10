@@ -28,7 +28,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
     private void Init()
     {
-        //ResetAllDialogueData();
+        ResetAllDialogueData();
         _dialogueDatas = LoadAssetsOfType<DialogueData>().ToList();
 
         if (PersistentDataManager.Instance)
@@ -50,7 +50,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         for (int i = 0; i < Instance._dialogueDatas.Count; i++)
         {
-            //Instance._dialogueDatas[i].PlayAtFirst = true;
+            Instance._dialogueDatas[i].PlayAtFirst = true;
         }
     }
 
@@ -176,7 +176,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         if (!dialogueData) return;
 
-        //dialogueData.PlayAtFirst = playAtFirst;
+        dialogueData.PlayAtFirst = playAtFirst;
     }
 
     public static T[] LoadAssetsOfType<T>() where T : UnityEngine.Object

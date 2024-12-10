@@ -73,7 +73,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
         {
             LoadAndApplyState<TransformState>(_groupName, TransformKey, transformState =>
             {
-                // Debug.Log($"Apply Transform");
+                //Debug.Log($"Apply Transform value : " + transformState);
                 transform.localPosition = transformState.Position;
                 transform.localRotation = transformState.Rotation;
                 transform.localScale = transformState.Scale;

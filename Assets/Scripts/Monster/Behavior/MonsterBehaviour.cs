@@ -496,6 +496,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         // 바라보는 방향 변경
         RecentDir = targetDir;
 
+        //Debug.Log("Flip Monster");
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
