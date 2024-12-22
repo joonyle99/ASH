@@ -31,7 +31,9 @@ public enum ChangeKeySettingErrorReason
 public class KeySettingUIManager : MonoBehaviour
 {
     [SerializeField] RectTransform _scrollViewContent;
+    [SerializeField] Transform _window;
 
+    [Header("Prefabs")]
     [SerializeField] GameObject _keySettingBundlePrefab;
 
     [SerializeField] GameObject _keySettingBoxPrefab;
@@ -53,6 +55,20 @@ public class KeySettingUIManager : MonoBehaviour
     private void Start()
     {
         Init();
+    }
+
+    private void Update()
+    {
+        if (InputManager.Instance.State.EscapeKey.KeyDown)
+        {
+            var PlayablePlayer = SceneContext.Current.PlayableSceneTransitionPlayer;
+            if (PlayablePlayer != null && PlayablePlayer.IsPlayable == false)
+            {
+                return;
+            }
+
+            ClosePanel();
+        }
     }
     #region Initialize
     private void Init()
@@ -145,9 +161,26 @@ public class KeySettingUIManager : MonoBehaviour
 
     public void ToggleKeySettingPanel()
     {
-        bool value = !transform.Find("Window").gameObject.activeSelf;
+        bool value = !_window.gameObject.activeSelf;
 
-        transform.Find("Window").gameObject.SetActive(value);
+        if(value)
+        {
+            _window.gameObject.SetActive(value);
+        }
+        else
+        {
+            ClosePanel();
+        }
+    }
+
+    public void ClosePanel()
+    {
+        transform.Find("Window").gameObject.SetActive(false);
+    }
+
+    public bool IsOpened()
+    {
+        return _window.gameObject.activeSelf;
     }
 
     public void ToggleDropDownBox(RectTransform keySettingBundle)

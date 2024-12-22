@@ -24,6 +24,8 @@ public class TutorialZone : TriggerZone
         _displayReplaceKeyCode.Add(KeyCode.LeftArrow, "ก็");
         _displayReplaceKeyCode.Add(KeyCode.UpArrow, "ก่");
         _displayReplaceKeyCode.Add(KeyCode.DownArrow, "ก้");
+        _displayReplaceKeyCode.Add(KeyCode.Mouse0, "Mouse Left");
+        _displayReplaceKeyCode.Add(KeyCode.Mouse1, "Mouse Right");
 
         // get every image and text
         _images = skillObject.GetComponentsInChildren<Image>();

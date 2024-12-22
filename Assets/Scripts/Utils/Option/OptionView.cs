@@ -26,6 +26,10 @@ public class OptionView : MonoBehaviour
     [SerializeField] private int _height = 900;
     [SerializeField] private bool _isFullScreen = true;
 
+    [Header("External Reference")]
+    [Space]
+    [SerializeField] private KeySettingUIManager _keySettingUIManager;
+
     private bool _isPause = false;
     public bool IsPause => _isPause;
 
@@ -48,7 +52,8 @@ public class OptionView : MonoBehaviour
         if (InputManager.Instance.State.EscapeKey.KeyDown)
         {
             var PlayablePlayer = SceneContext.Current.PlayableSceneTransitionPlayer;
-            if (PlayablePlayer != null && PlayablePlayer.IsPlayable == false)
+            if ((PlayablePlayer != null && PlayablePlayer.IsPlayable == false) ||
+                _keySettingUIManager.IsOpened())
             {
                 return;
             }
