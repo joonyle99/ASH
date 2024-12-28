@@ -101,6 +101,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public bool IsUpWardGrounded => UpwardGroundHit;
     public bool IsUpWardGroundedForClimb => UpwardGroundHitForClimb;
     public bool IsTouchedWall => ClimbHit;
+    public bool IsWallToBehind => BackwardGroundHit;
     public bool IsClimbable { get; set; }
     public bool IsClimbJump { get; set; }
     public bool IsHurt
@@ -195,6 +196,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     // RayCastHit
     public RaycastHit2D GroundHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
+    public RaycastHit2D BackwardGroundHit { get; set; }
     public RaycastHit2D UpwardGroundHitForClimb { get; set; }
     public RaycastHit2D ClimbHit { get; set; }
 
@@ -334,7 +336,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         {
             CapeZeroX();
         }
-
         #endregion
 
         #region Animaotr Parameter

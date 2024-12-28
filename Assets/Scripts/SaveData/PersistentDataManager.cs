@@ -380,13 +380,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
      */
     public static bool LoadToSavedData()
     {
-        if((object)InputManager.Instance.CurrentSetter != InputManager.Instance.DefaultInputSetter)
-        {
-            Debug.LogWarning("Can't load saved data, because input setter is not Default");
-
-            return false;
-        }
-
         ///---------씬 파괴 전 수행되어야 하는 것----------
         if (SceneContext.Current.Player && SceneContext.Current.Player.CurrentStateIs<DieState>())
         {

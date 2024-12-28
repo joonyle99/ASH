@@ -150,7 +150,7 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
         }
         else
         {
-            Debug.Log("raycast hit target : " + hit.collider);
+            //Debug.Log("raycast hit target : " + hit.collider);
 
             if (!_hasPlayerAtPath)
                 _hasPlayerAtPath = true;

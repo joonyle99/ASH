@@ -180,7 +180,11 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
                     _rigidbody.velocity = Vector2.zero;
                 }
 
-                _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower * 0.7f);
+                //뒤에 벽이 없을 때만 힘을 가함, 뒤에 벽이 있을 때는 그 즉시 힘 삭제
+                if (!Player.IsWallToBehind)
+                    _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower * 0.7f);
+                else
+                    _rigidbody.velocity = Vector2.zero;
             }
         }
 
