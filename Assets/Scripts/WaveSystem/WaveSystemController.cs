@@ -93,6 +93,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
 
     [SerializeField] private List<WaveInfo> _waveInfos;
     [SerializeField] private bool _isClearAllWaves = false;
+    [SerializeField] private float _timeOfEndOnceWaveCycle = 1.0f;
 
     [Header("External Called GameObject"), Space(10)]
 
@@ -383,6 +384,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
                 if (_waveInfos[i].IsClear)
                 {
                     //한 웨이브 클리어시 행동
+                    yield return new WaitForSeconds(_timeOfEndOnceWaveCycle);
 
                     break;
                 }

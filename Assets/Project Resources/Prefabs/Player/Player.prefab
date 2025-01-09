@@ -73557,7 +73557,7 @@ MonoBehaviour:
   _groundCheckRadius: 0.33
   _groundUpwardCheckRadius: 0.33
   _groundUpwardCheckDistance: 0
-  _groundBackwardCheckDistance: 0
+  _groundBackwardCheckDistance: 0.5
   _climbLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -73739,8 +73739,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inAirMoveAcceleration: 30
   _maxInAirMoveSpeed: 6
-  _fastDropThreshhold: 4
-  _fastDropPower: 3
+  _fastDropThreshhold: 3
+  _fastDropPower: 2
   _maxDropSpeed: 150
   IsInAir: 0
 --- !u!114 &2830612171427376689
@@ -84538,6 +84538,22 @@ PrefabInstance:
     - target: {fileID: 6269096060717206652, guid: 52819199f7de02841938328f2e62050d, type: 3}
       propertyPath: m_ExternalAcceleration.y
       value: -100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6990369637176003982, guid: 52819199f7de02841938328f2e62050d, type: 3}
+      propertyPath: m_AABB.m_Center.x
+      value: 0.0051488876
+      objectReference: {fileID: 0}
+    - target: {fileID: 6990369637176003982, guid: 52819199f7de02841938328f2e62050d, type: 3}
+      propertyPath: m_AABB.m_Center.y
+      value: -0.0063027143
+      objectReference: {fileID: 0}
+    - target: {fileID: 6990369637176003982, guid: 52819199f7de02841938328f2e62050d, type: 3}
+      propertyPath: m_AABB.m_Extent.x
+      value: 2.0258882
+      objectReference: {fileID: 0}
+    - target: {fileID: 6990369637176003982, guid: 52819199f7de02841938328f2e62050d, type: 3}
+      propertyPath: m_AABB.m_Extent.y
+      value: 1.9213027
       objectReference: {fileID: 0}
     - target: {fileID: 7434955177750918305, guid: 52819199f7de02841938328f2e62050d, type: 3}
       propertyPath: m_Bounds.m_Center.x

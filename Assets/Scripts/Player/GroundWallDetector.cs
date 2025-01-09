@@ -43,7 +43,7 @@ public class GroundWallDetector : MonoBehaviour
 
         // Check Backward Wall
         _player.BackwardGroundHit = Physics2D.Raycast(_groundBackwardCheckTrans.position, -_player.PlayerLookDir2D, _groundBackwardCheckDistance, _groundLayer);
-        
+
         // Check Wall
         _player.ClimbHit = Physics2D.Raycast(_climbCheckTrans.position, _player.PlayerLookDir2D, _climbCheckLength, _climbLayer);
 
@@ -68,6 +68,9 @@ public class GroundWallDetector : MonoBehaviour
 
         // Draw Upward Ground Check
         Gizmos.DrawWireSphere(_groundUpwardCheckTrans.position, _groundUpwardCheckRadius);
+
+        // Draw Upward Ground Check
+        Gizmos.DrawRay(_groundBackwardCheckTrans.position, -_player.PlayerLookDir2D * _groundBackwardCheckDistance);
 
         // Draw Wall Check
         Gizmos.DrawRay(_climbCheckTrans.position, _player.PlayerLookDir3D * _climbCheckLength);
