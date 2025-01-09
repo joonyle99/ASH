@@ -8137,6 +8137,7 @@ MonoBehaviour:
   _openLowSoundKey: SE_LightDoor_Open_Low
   _openSoundKey: SE_LightDoor_Open
   _doorOpenDelay: 2
+  _doorOpenSoundDelay: 0
   _stopShakeTiming: 2.3
   _doorOpenPreset: {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
   _soundList: {fileID: 667513064}
@@ -16745,6 +16746,11 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: fc0549419c7dcb446b2ef2f38f70dc47, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 407293ad413fd8043bbe6d73d12caae6, type: 3}
+--- !u!4 &1048095687 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1441827728603587034, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+  m_PrefabInstance: {fileID: 1634419396}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1049319923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21676,6 +21682,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 392775521}
     m_Modifications:
+    - target: {fileID: 240287703327325214, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
+      propertyPath: _forwardTransform
+      value: 
+      objectReference: {fileID: 1048095687}
     - target: {fileID: 5269891687269057861, guid: 133b968fc1275df4c96b6e18fbd516e0, type: 3}
       propertyPath: _cutsceneDictionary.Array.data[0].cutscenePlayer
       value: 
@@ -23021,7 +23031,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: -263.01074
+      value: -285.5341
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
@@ -23864,11 +23874,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -104.37629
+      value: -187.0031
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.2701545
+      value: 6.7411604
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -36046,6 +36056,7 @@ MonoBehaviour:
   _openLowSoundKey: SE_LightDoor_Open_Low
   _openSoundKey: SE_LightDoor_Open
   _doorOpenDelay: 2
+  _doorOpenSoundDelay: 0
   _stopShakeTiming: 2.3
   _doorOpenPreset: {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
   _soundList: {fileID: 8047123114989482586}
