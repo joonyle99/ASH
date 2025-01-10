@@ -77,8 +77,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             {
                 yield return null;
 
-                // 스킵버튼을 누르거나 키다운시 스킵
-                if (canSkip && (_isSkipSequence || InputManager.Instance.State.InteractionKey.KeyDown))
+                // (*변경)스킵버튼을 누르거나 키다운시 스킵
+                // 어떤 키라도 눌러졌다면 스킵
+                if (canSkip && (_isSkipSequence || Input.anyKeyDown))
                 {
                     View.FastForward();
                     _isSkipSequence = false;
@@ -93,7 +94,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                 }
             }
 
-            yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
+            yield return new WaitUntil(() => Input.anyKeyDown);
 
             SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
 
