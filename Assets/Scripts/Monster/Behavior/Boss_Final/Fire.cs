@@ -7,11 +7,12 @@ using UnityEngine;
 
 public sealed class Fire : BossBehaviour
 {
+    #region Attack
     public enum AttackType
     {
         None = 0,
 
-        FlameBeam = 1,
+        FlameBeam,
         Fireball,
         AshPillar,
         FirePillar,
@@ -29,15 +30,27 @@ public sealed class Fire : BossBehaviour
     {
         public FireBallDirType FireballDirType;
 
-        public Vector3 SpawnPoint;
-        public Vector3 Direction;
+        public Vector3 SpawnPoint { get; private set; }
+        public Vector3 Direction { get; private set; }
         public float Rotation;
 
         public FireBallInfo(FireBallDirType fireballDirType)
         {
             FireballDirType = fireballDirType;
 
+            // Debug.Log(fireballDirType.ToString());
+
             var cameraController = SceneContext.Current.CameraController;
+
+            // joonyle99.Util.DebugDrawX(cameraController.TopMiddle);
+            // Debug.Log($"{cameraController.TopMiddle}");
+            // joonyle99.Util.DebugDrawX(cameraController.RightTop);
+            // Debug.Log($"{cameraController.RightTop}");
+            // joonyle99.Util.DebugDrawX(cameraController.LeftTop);
+            // Debug.Log($"{cameraController.LeftTop}");
+            // joonyle99.Util.DebugDrawX(cameraController.BottomMiddle);
+            // Debug.Log($"{cameraController.BottomMiddle}");
+
             if (cameraController == null)
             {
                 Debug.LogError($"cameraController is invalid");
@@ -52,21 +65,25 @@ public sealed class Fire : BossBehaviour
             switch (FireballDirType)
             {
                 case FireBallDirType.Down:
+                    //Debug.Log("Down");
                     SpawnPoint = SceneContext.Current.CameraController.TopMiddle;
                     Direction = new Vector3(0f, -1f, 0f).normalized;
                     Rotation = 90f;
                     break;
                 case FireBallDirType.DiagonalLeft:
+                    //Debug.Log("DiagonalLeft");
                     SpawnPoint = (SceneContext.Current.CameraController.RightTop + SceneContext.Current.CameraController.TopMiddle) / 2f;
                     Direction = new Vector3(-1f, -1f, 0f).normalized;
                     Rotation = -45f;
                     break;
                 case FireBallDirType.DiagonalRight:
+                    //Debug.Log("DiagonalRight");
                     SpawnPoint = (SceneContext.Current.CameraController.LeftTop + SceneContext.Current.CameraController.TopMiddle) / 2f;
                     Direction = new Vector3(1f, -1f, 0f).normalized;
                     Rotation = 45f;
                     break;
                 default:
+                    //Debug.Log("default");
                     SpawnPoint = default;
                     Direction = default;
                     Rotation = default;
@@ -138,11 +155,35 @@ public sealed class Fire : BossBehaviour
             }
         }
     }
+    #endregion
 
     #region Variable
 
     [Header("――――――― Fire Behaviour ―――――――")]
     [Space]
+
+    [Header("____ Attributes ____")]
+    [Space]
+
+    [SerializeField] private int _shouldLanternAttackedCount = 5;
+    [SerializeField] private int _currentLanternAttackedCount = 0;
+    public int LanternAttackCount
+    {
+        get => _currentLanternAttackedCount;
+        set
+        {
+            _currentLanternAttackedCount = value;
+
+            Debug.Log("call lantern attack cutscene");
+
+            // StartCoroutine(PlayCutSceneInRunning("LanternAttack_" + _currentLanternAttackedCount.ToString()));
+            PlayCutSceneImmediately("LanternAttack_" + _currentLanternAttackedCount.ToString());
+        }
+    }
+
+    [Space]
+
+    [SerializeField] private float _extraAttackCooldown = 1f;
 
     [Tooltip("1: FlameBeam\n2 : Fireball\n3 : AshPillar\n4 : FirePillar")]
     [SerializeField] private AttackType _firstAttack;
@@ -154,6 +195,14 @@ public sealed class Fire : BossBehaviour
 
     [SerializeField] private bool _isTeleporting;
     public bool IsTeleporting => _isTeleporting;
+
+    [Space]
+
+    [SerializeField] private ParticleHelper _teleportPreEffect;
+    public ParticleHelper TeleportPreEffect => _teleportPreEffect;
+
+    [SerializeField] private ParticleHelper _teleportPostEffect;
+    public ParticleHelper TeleportPostEffect => _teleportPostEffect;
 
     [Header("____ FlameBeam ____")]
     [Space]
@@ -173,9 +222,6 @@ public sealed class Fire : BossBehaviour
     private float _flameBeamAngle;                                                  // each flame beam angle
     private float _flameBeamAngleEachCast;                                          // flame beam cast angle
 
-    private float _flameBeamAnimDuration;
-    private Coroutine _flameBeamCoroutine;
-
     [Header("____ Fireball ____")]
     [Space]
 
@@ -191,8 +237,7 @@ public sealed class Fire : BossBehaviour
     [SerializeField] private float _fireBallSpeed = 20f;
     [SerializeField] private float _fireBallCastInterval = 1.5f;
 
-    private float _fireBallAnimDuration;
-    private Coroutine _fireBallCoroutine;
+    private List<Fire_FireBall> _fireBallList = new List<Fire_FireBall>();
 
     [Header("____ AshPillar ____")]
     [Space]
@@ -202,10 +247,8 @@ public sealed class Fire : BossBehaviour
     [Space]
 
     [SerializeField] private int _ashPillarCastCount = 3;
+    [SerializeField] private float _ashPillarCastInterval = 0.5f;
     [SerializeField] private float _ashPillarSpeed = 10f;
-
-    private float _ashPillarAnimDuration;
-    private Coroutine _ashPillarCoroutine;
 
     [Header("____ FirePillar ____")]
     [Space]
@@ -220,12 +263,69 @@ public sealed class Fire : BossBehaviour
 
     [Space]
 
+    [SerializeField] private float _symptomWaitTimePreShake = 0.2f;
+    [SerializeField] private float _symptomWaitTimePostShake = 1f;
+
+    [Space]
+
     [SerializeField] private float _firePillarSpawnHeight;
     [SerializeField] private float _firePillarFarDist;
     [SerializeField] private float _firePillarEachDist = 1f;
 
+    [Header("____ Skill Process ____")]
+    [Space]
+
+    private float _flameBeamAnimDuration;
+    private Coroutine _flameBeamCoroutine;
+    public Coroutine flameBeamCoroutine
+    {
+        get => _flameBeamCoroutine;
+        set
+        {
+            _flameBeamCoroutine = value;
+            _isCastingFlameBeam = _flameBeamCoroutine != null;
+        }
+    }
+    private bool _isCastingFlameBeam;
+
+    private float _fireBallAnimDuration;
+    private Coroutine _fireBallCoroutine;
+    public Coroutine fireBallCoroutine
+    {
+        get => _fireBallCoroutine;
+        set
+        {
+            _fireBallCoroutine = value;
+            _isCastingFireBall = _fireBallCoroutine != null;
+        }
+    }
+    private bool _isCastingFireBall;
+
+    private float _ashPillarAnimDuration;
+    private Coroutine _ashPillarCoroutine;
+    public Coroutine ashPillarCoroutine
+    {
+        get => _ashPillarCoroutine;
+        set
+        {
+            _ashPillarCoroutine = value;
+            _isCastingAshPillar = _ashPillarCoroutine != null;
+        }
+    }
+    private bool _isCastingAshPillar;
+
     private float _firePillarAnimDuration;
     private Coroutine _firePillarCoroutine;
+    public Coroutine firePillarCoroutine
+    {
+        get => _firePillarCoroutine;
+        set
+        {
+            _firePillarCoroutine = value;
+            _isCastingFirePillar = _firePillarCoroutine != null;
+        }
+    }
+    private bool _isCastingFirePillar;
 
     #endregion
 
@@ -254,24 +354,51 @@ public sealed class Fire : BossBehaviour
         // 텔레포트 전이 이벤트 등록
         AnimTransitionEvent -= HandleTeleportTransition;
         AnimTransitionEvent += HandleTeleportTransition;
-
-        InitSkillVariable();
-
-        // TEMP
-        rageTargetHurtCount = finalTargetHurtCount - 5;
     }
     protected override void Start()
     {
         base.Start();
 
+        InitSkillVariable();
+
+        rageTargetHurtCount = finalTargetHurtCount - _shouldLanternAttackedCount;
+
         SetToFirstAttack();
 
         IsGodMode = false;
+    }
+    protected override void Update()
+    {
+        base.Update();
+
+#if UNITY_EDITOR
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
+        {
+            PrintSkillCoroutine();
+        }
+#endif
     }
     private void OnDestroy()
     {
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AnimTransitionEvent -= HandleTeleportTransition;
+    }
+
+    public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
+    {
+        var result = base.OnHit(attackInfo);
+
+        if (result == IAttackListener.AttackResult.Fail)
+        {
+            return result;
+        }
+
+        if (attackInfo.Type == global::AttackType.GimmickAttack)
+        {
+            LanternAttackCount++;
+        }
+
+        return result;
     }
 
     public override void AttackPreProcess()
@@ -293,16 +420,23 @@ public sealed class Fire : BossBehaviour
         }
         else
         {
-            SetToNextAttack();
+            if (IsRage)
+            {
+                SetToFireBall();
+            }
+            else
+            {
+                SetToNextAttack();
+            }
         }
     }
     public override void GroggyPreProcess()
     {
-
+        //throw new System.NotImplementedException();
     }
     public override void GroggyPostProcess()
     {
-
+        //throw new System.NotImplementedException();
     }
 
     // basic
@@ -330,6 +464,13 @@ public sealed class Fire : BossBehaviour
         _nextAttack = (AttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
+    private void SetToFireBall()
+    {
+        var nextAttackNumber = (int)AttackType.Fireball;
+        _nextAttack = (AttackType)nextAttackNumber;
+        Animator.SetInteger("NextAttackNumber", nextAttackNumber);
+    }
+
     // skill
     private void InitSkillVariable()
     {
@@ -359,18 +500,23 @@ public sealed class Fire : BossBehaviour
             yield return new WaitForSeconds(_flameBeamInterval);
         }
 
-        StopTargetCoroutine(ref _flameBeamCoroutine);
+        flameBeamCoroutine = null;
     }
     private IEnumerator FireBallCoroutine()
     {
         for (int i = 0; i < _fireBallCastCount; i++)
         {
-            FireBallDirType dirType = Math.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight);
+            FireBallDirType dirType = IsRage ? Math.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight) : FireBallDirType.Down;
             FireBallInfo info = new FireBallInfo(dirType);
 
-            var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
+            // Debug.Log("FireBall 생성");
 
+            var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
             var fireBallParticle = fireBall.GetComponent<ParticleSystem>();
+
+            // fireBall이 파괴되면 _fireBallList에서 제거
+            fireBall.SetOwner(this);
+            _fireBallList.Add(fireBall);
 
             // module
             var mainModule = fireBallParticle.main;
@@ -402,7 +548,7 @@ public sealed class Fire : BossBehaviour
             yield return new WaitForSeconds(_fireBallCastInterval);
         }
 
-        StopTargetCoroutine(ref _fireBallCoroutine);
+        fireBallCoroutine = null;
     }
     private IEnumerator AshPillarCoroutine()
     {
@@ -420,7 +566,7 @@ public sealed class Fire : BossBehaviour
 
             yield return new WaitUntil(() =>
                 {
-                    Debug.DrawLine(ashPillar.transform.position, info.DestroyPoint, Color.gray, 0.1f);
+                    // Debug.DrawLine(ashPillar.transform.position, info.DestroyPoint, Color.gray, 0.1f);
 
                     return (dirType == AshPillarDirType.LeftToRight)
                         ? ashPillar.transform.position.x >= info.DestroyPoint.x
@@ -429,10 +575,10 @@ public sealed class Fire : BossBehaviour
 
             ashPillar.DestroyImmediately();
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(_ashPillarCastInterval);
         }
 
-        StopTargetCoroutine(ref _ashPillarCoroutine);
+        ashPillarCoroutine = null;
     }
     private IEnumerator FirePillarCoroutine()
     {
@@ -440,7 +586,7 @@ public sealed class Fire : BossBehaviour
         var random = new System.Random();
         var usedPosX = new List<float>();
 
-        const int maxAttempts = 15;
+        const int MAX_ATTEMT = 15;
 
         for (int i = 0; i < _firePillarCount; i++)
         {
@@ -453,96 +599,206 @@ public sealed class Fire : BossBehaviour
 
             } while ((usedPosX.Any(oldPosX => Mathf.Abs(oldPosX - newPosX) <= _firePillarEachDist)
                       || (newPosX >= player.BodyCollider.bounds.min.x && newPosX <= player.BodyCollider.bounds.max.x))
-                     && attempt <= maxAttempts);
+                     && attempt <= MAX_ATTEMT);
 
             usedPosX.Add(newPosX);
         }
 
         // 전조 증상
-        foreach (var posX in usedPosX)
         {
-            var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
-            var symptom = Instantiate(_firePillarSymptom, spawnPosition, Quaternion.identity);
-            symptom.PlayAll();
+            SoundList.PlaySFX("SE_Fire_Volcano1");
+
+            foreach (var posX in usedPosX)
+            {
+                var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
+                var symptom = Instantiate(_firePillarSymptom, spawnPosition, Quaternion.identity);
+                symptom.PlayAll();
+            }
+
+            yield return new WaitForSeconds(_symptomWaitTimePreShake);
+
+            SceneContext.Current.CameraController.StartShake(_firePillarShake);
+
+            yield return new WaitForSeconds(_symptomWaitTimePostShake);
         }
-
-        yield return new WaitForSeconds(0.2f);
-
-        SceneContext.Current.CameraController.StartShake(_firePillarShake);
-
-        yield return new WaitForSeconds(1f);
 
         // 불기둥 생성
-        foreach (var posX in usedPosX)
         {
-            var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
-            var firePillar = Instantiate(_firePillar, spawnPosition, Quaternion.identity);
-            firePillar.StartCoroutine(firePillar.ExecutePillar());
+            SoundList.PlaySFX("SE_Fire_Volcano2");
+
+            foreach (var posX in usedPosX)
+            {
+                var spawnPosition = new Vector3(posX, _firePillarSpawnHeight, 0f);
+                var firePillar = Instantiate(_firePillar, spawnPosition, Quaternion.identity);
+                firePillar.StartCoroutine(firePillar.ExecutePillar());
+            }
         }
 
-        StopTargetCoroutine(ref _firePillarCoroutine);
+        firePillarCoroutine = null;
     }
 
     // skill anim event
     public void FlameBeam_AnimEvent()
     {
-        if (_flameBeamCoroutine != null)
+        if (flameBeamCoroutine != null)
         {
-            Debug.LogError($"_flameBeamCoroutine is not null");
-            return;
+            StopCoroutine(flameBeamCoroutine);
+            flameBeamCoroutine = null;
+            //StopTargetSkillCoroutine(flameBeamCoroutine, "_flameBeamCoroutine");
         }
 
-        _flameBeamCoroutine = StartCoroutine(FlameBeamCoroutine());
+        flameBeamCoroutine = StartCoroutine(FlameBeamCoroutine());
     }
     public void Fireball_AnimEvent()
     {
-        if (_fireBallCoroutine != null)
+        if (fireBallCoroutine != null)
         {
-            Debug.LogError($"_fireballCoroutine is not null");
-            return;
+            ClearAllFireBall();
+            StopCoroutine(fireBallCoroutine);
+            fireBallCoroutine = null;
+            //StopTargetSkillCoroutine(fireBallCoroutine, "_fireBallCoroutine");
         }
 
-        _fireBallCoroutine = StartCoroutine(FireBallCoroutine());
+        fireBallCoroutine = StartCoroutine(FireBallCoroutine());
     }
     public void AshPillar_AnimEvent()
     {
-        if (_ashPillarCoroutine != null)
+        if (ashPillarCoroutine != null)
         {
-            Debug.LogError($"_ashPillarCoroutine is not null");
-            return;
+            StopCoroutine(ashPillarCoroutine);
+            ashPillarCoroutine = null;
+            //StopTargetSkillCoroutine(ashPillarCoroutine, "_ashPillarCoroutine");
         }
 
-        _ashPillarCoroutine = StartCoroutine(AshPillarCoroutine());
+        ashPillarCoroutine = StartCoroutine(AshPillarCoroutine());
     }
     public void FirePillar_AnimEvent()
     {
-        if (_firePillarCoroutine != null)
+        if (firePillarCoroutine != null)
         {
-            Debug.LogError($"_firePillarCoroutine is not null");
-            return;
+            StopCoroutine(firePillarCoroutine);
+            firePillarCoroutine = null;
+            //StopTargetSkillCoroutine(firePillarCoroutine, "_firePillarCoroutine");
         }
 
-        _firePillarCoroutine = StartCoroutine(FirePillarCoroutine());
+        firePillarCoroutine = StartCoroutine(FirePillarCoroutine());
+    }
+
+    public void Fireball_SoundAnimEvent()
+    {
+        SoundList.PlaySFX("SE_Fire_Fireball1");
+    }
+
+    // skill effect anim event
+    public void TeleportPreEffect_AnimEvent()
+    {
+        var preAshEffect = Instantiate(TeleportPreEffect, CenterOfMass.position, Quaternion.identity);
+    }
+    public void TeleportPostEffect_AnimEvent()
+    {
+        var postAshEffect = Instantiate(TeleportPostEffect, CenterOfMass.position, Quaternion.identity);
+
+        SoundList.PlaySFX("SE_Fire_Move");
     }
 
     // etc
-    private void StopTargetCoroutine(ref Coroutine targetCoroutine)
+    private void StopTargetSkillCoroutine(Coroutine targetCoroutine, string coroutineName)
     {
         if (targetCoroutine != null)
         {
+            Debug.Log($"{coroutineName} is not null - stop this coroutine");
+
             StopCoroutine(targetCoroutine);
             targetCoroutine = null;
         }
         else
         {
-            Debug.LogError($"targetCoroutine is already null");
+            Debug.LogError($"{coroutineName} is already null");
             return;
         }
+    }
+    public void StopAllSkillCoroutine()
+    {
+        // Debug.Log("모든 스킬을 종료합니다");
+
+        if (flameBeamCoroutine != null)
+        {
+            StopCoroutine(flameBeamCoroutine);
+            flameBeamCoroutine = null;
+            // StopTargetSkillCoroutine(flameBeamCoroutine, "_flameBeamCoroutine");
+        }
+
+        if (fireBallCoroutine != null)
+        {
+            ClearAllFireBall();
+            StopCoroutine(fireBallCoroutine);
+            fireBallCoroutine = null;
+            // StopTargetSkillCoroutine(fireBallCoroutine, "_fireBallCoroutine");
+        }
+
+        if (ashPillarCoroutine != null)
+        {
+            StopCoroutine(ashPillarCoroutine);
+            ashPillarCoroutine = null;
+            // StopTargetSkillCoroutine(ashPillarCoroutine, "_ashPillarCoroutine");
+        }
+
+        if (firePillarCoroutine != null)
+        {
+            StopCoroutine(firePillarCoroutine);
+            firePillarCoroutine = null;
+            // StopTargetSkillCoroutine(firePillarCoroutine, "_firePillarCoroutine");
+        }
+    }
+
+    public void RemvoeFireBall(Fire_FireBall fireball)
+    {
+        if (_fireBallList.Contains(fireball))
+        {
+            _fireBallList.Remove(fireball);
+        }
+    }
+    private void ClearAllFireBall()
+    {
+        foreach (var fireball in _fireBallList)
+        {
+            fireball.Ps.Stop();
+            fireball.Ps.Clear();
+        }
+
+        _fireBallList.Clear();
+    }
+
+    private void PrintSkillCoroutine()
+    {
+        string result = string.Empty;
+
+        if (flameBeamCoroutine != null)
+        {
+            result += $"<color=orange>_flameBeamCoroutine</color>: {_flameBeamCoroutine}\n";
+        }
+
+        if (fireBallCoroutine != null)
+        {
+            result += $"<color=orange>fireBallCoroutine</color>: {fireBallCoroutine}\n";
+        }
+
+        if (ashPillarCoroutine != null)
+        {
+            result += $"<color=orange>ashPillarCoroutine</color>: {ashPillarCoroutine}\n";
+        }
+
+        if (firePillarCoroutine != null)
+        {
+            result += $"<color=orange>firePillarCoroutine</color>: {firePillarCoroutine}\n";
+        }
+
+        Debug.Log(result);
     }
 
     /// <summary>
     /// 모든 공격 애니메이션의 Duration 만큼 대기
-    /// + 텔레포트 턴이라면, 텔레포트 끝날 때까지 대기 (+ 1초 추가 대기)
+    /// + 텔레포트 턴이라면, 텔레포트 끝날 때까지 대기 (+ N초 추가 대기)
     ///
     /// Attack Trigger 직후 호출되는 WaitEvent (그 다음은 Duration 대기)
     /// </summary>
@@ -563,6 +819,8 @@ public sealed class Fire : BossBehaviour
                 yield return WaitEventCoroutine_FirePillar();
                 break;
         }
+
+        // yield return new WaitForSeconds(_extraAttackCooldown);
     }
     private IEnumerator WaitEventCoroutine_FlameBeam()
     {
@@ -591,7 +849,7 @@ public sealed class Fire : BossBehaviour
         if (targetTransitionParam is not "Teleport") return true;
 
         // 공격 중이 아닐 때까지 애니메이션 전환을 미룸
-        return !IsAttacking && _fireBallCoroutine == null;
+        return !IsAttacking && fireBallCoroutine == null;
     }
 
     #endregion
@@ -627,5 +885,4 @@ public sealed class Fire : BossBehaviour
         Gizmos.DrawLine(new Vector3(player.transform.position.x + _firePillarEachDist / 2f, _firePillarSpawnHeight, player.transform.position.z),
             new Vector3(player.transform.position.x + _firePillarEachDist / 2f, _firePillarSpawnHeight + 1f, player.transform.position.z));
     }
-
 }

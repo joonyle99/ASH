@@ -12,6 +12,7 @@ public class Checkpoint : TriggerZone
 
     public override void OnActivatorEnter(TriggerActivator activator) 
     {
+        // Debug.Log($"check point : {this.gameObject.name}", this.gameObject);
         SceneContext.Current.CheckPointManager.OnPlayPassedCheckpoint(this);
     }
 #if UNITY_EDITOR

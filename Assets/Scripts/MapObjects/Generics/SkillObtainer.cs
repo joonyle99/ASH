@@ -37,7 +37,13 @@ public class SkillObtainer : MonoBehaviour
         var info = new SkillObtainPanel.SkillInfo();
         info.Icon = skillToGet.UnlockImage;
         info.MainText = skillToGet.Name;
-        info.DetailText = skillToGet.DetailText;
+        info.DetailText = "";
+        CustomKeyCode keyCode = InputManager.Instance.DefaultInputSetter.GetKeyCode(skillToGet.Key);
+        if(keyCode != null)
+        {
+            info.DetailText += keyCode.KeyCode.ToString();
+        }
+        info.DetailText += skillToGet.DetailText;
         GameUIManager.OpenSkillObtainPanel(info);
         PersistentDataManager.SetByGlobal(ObtainSkillKey, true);
         StartCoroutine(PlaySoundCoroutine(0.25f));

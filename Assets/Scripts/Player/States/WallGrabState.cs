@@ -8,6 +8,7 @@ using UnityEngine;
 public class WallGrabState : WallState
 {
     private float _prevGravity;
+    private float _offsetFromCenter = 0.5f;
 
     protected override bool OnEnter()
     {
@@ -22,7 +23,9 @@ public class WallGrabState : WallState
         Animator.SetTrigger("Grab");
         Animator.SetBool("IsGrab", true);
 
-        transform.position = new Vector3(wallHitPos.x - 0.5f * Player.PlayerLookDir2D.x, transform.position.y, transform.position.z);
+        var targetPos = new Vector3(wallHitPos.x - (_offsetFromCenter * Player.PlayerLookDir2D.x), transform.position.y, transform.position.z);
+        transform.position = targetPos;
+        // Player.Rigidbody.MovePosition(targetPos);
 
         return true;
     }

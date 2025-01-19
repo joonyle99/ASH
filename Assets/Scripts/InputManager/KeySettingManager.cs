@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KeySettingManager : MonoBehaviour
+public class KeySettingManager
 {
-    private static HashSet<KeyCode> _unusableKey = new HashSet<KeyCode>() {  };
+    private static HashSet<KeyCode> _unusableKey = new HashSet<KeyCode>() { KeyCode.LeftApple };
 
     public static void SetKeyboardSetting(InputSetterDataType inputSetterDataType, string keyName, KeyCode newKeyCode)
     {
@@ -25,7 +25,9 @@ public class KeySettingManager : MonoBehaviour
                 break;
             case InputSetterDataType.MoveLeftInputSetter: 
                 break;
-            case InputSetterDataType.StayStillInputSetter: 
+            case InputSetterDataType.StayStillInputSetter:
+                StayStillInputSetter SSInputSetter = InputManager.Instance?.StayStillInputSetter as StayStillInputSetter;
+                SSInputSetter.SetKeyCode(keyName, newKeyCode);
                 break;
         }
     }

@@ -42,24 +42,26 @@ public class Merchant : InteractableObject
             return;
         }
 
-        /*
-         * TODO: 퀘스트 시스템 완성하기
+        
+        // * TODO: 퀘스트 시스템 완성하기
         Quest currentQuest = QuestController.Instance.CurrentQuest;
-        if (currentQuest != null)
+        if (currentQuest.QuestData != null)
             _quest = currentQuest;
 
         _interactCoroutine = StartCoroutine(OnInteractCoroutine(_quest));
-        */
+        
     }
 
     private IEnumerator OnInteractCoroutine(Quest nowQuest)
     {
+        Debug.Log("Quest argument in Merchant 'OnInteractCoroutine()' Function : " + nowQuest.QuestData);
         // 퀘스트 활성화 상태 (진행 중)
         if (nowQuest.IsActive)
         {
             // 퀘스트 완료
             if (nowQuest.IsComplete())
             {
+                Debug.Log("Complete Quest");
                 string completionString = "Completion " + (nowQuest.CurrentRepeatCount + 1).ToString();
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == completionString).Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
@@ -71,6 +73,7 @@ public class Merchant : InteractableObject
             // 퀘스트 미완료
             else
             {
+                Debug.Log("Not Succeeded Quest");
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Not Yet Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 DialogueController.Instance.StartDialogue(dialogueData, false);
@@ -83,6 +86,7 @@ public class Merchant : InteractableObject
             // 최대 반복 횟수에 도달
             if (!nowQuest.IsRepeatable())
             {
+                Debug.Log("Already Max Repeat Quest Count Played");
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Final Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 DialogueController.Instance.StartDialogue(dialogueData, false);
@@ -91,6 +95,7 @@ public class Merchant : InteractableObject
             // 퀘스트 첫 등록 (자동 수락)
             else if (nowQuest.IsFirst)
             {
+                Debug.Log("Accept Quest At First");
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "First Meeting").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
 
@@ -102,6 +107,7 @@ public class Merchant : InteractableObject
             // 퀘스트 두번째 등록 (수락 / 거절)
             else
             {
+                Debug.Log("Accept Quest After Secend Time");
                 /*
                  * 어색해서 주석 처리함
                  * 

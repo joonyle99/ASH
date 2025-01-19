@@ -137,6 +137,50 @@ namespace joonyle99
         {
             Gizmos.DrawLine(new Vector3(origin.x + LINE_LENGTH, origin.y, origin.z), new Vector3(origin.x - LINE_LENGTH, origin.y, origin.z));
         }
+
+        public static void GizmosDrawArrow(Vector3 start, Vector2 dir, float arrowAngle = 20f, Color? bodyColor = null, Color? headColor = null, float bodyLength = 3f, float headLength = 1f)
+        {
+            Gizmos.color = bodyColor ?? Color.white;
+
+            Vector3 centerPoint = start.CombineWith(dir * bodyLength);
+            Gizmos.DrawLine(start, centerPoint);
+
+            Gizmos.color = headColor ?? Color.white;
+
+            var oppositeDir = (-1) * dir;
+
+            // 시계 방향이 (-) 회전
+            Vector3 leftPoint = centerPoint + Quaternion.Euler(0f, 0f, -arrowAngle) * oppositeDir * headLength;
+            // 반시계 방향이 (+) 회전
+            Vector3 rightPoint = centerPoint + Quaternion.Euler(0f, 0f, arrowAngle) * oppositeDir * headLength;
+
+            Gizmos.DrawLine(centerPoint, leftPoint);
+            Gizmos.DrawLine(centerPoint, rightPoint);
+        }
+
+        /// <summary>
+        /// 문자열 안에서 숫자만 추출합니다
+        /// </summary>
+        public static int ExtractNumber(string str)
+        {
+            string result = string.Empty;
+
+            foreach (char c in str)
+            {
+                // 한 문자씩 숫자인지 확인
+                if (c < 48 || c > 57)
+                    break;
+
+                result += c;
+            }
+
+            if (result.Length <= 0)
+            {
+                return -1;
+            }
+
+            return int.Parse(result);
+        }
     }
 
     public static class ExtensionMethod
@@ -157,6 +201,14 @@ namespace joonyle99
         public static Vector3 ToVector3XZ(this Vector2 vec, float y = 0)
         {
             return new Vector3(vec.x, y, vec.y);
+        }
+        public static Vector3 CombineWith(this Vector2 v2, Vector3 v3)
+        {
+            return new Vector3(v2.x + v3.x, v2.y + v3.y, v3.z);
+        }
+        public static Vector3 CombineWith(this Vector3 v3, Vector2 v2)
+        {
+            return new Vector3(v3.x + v2.x, v3.y + v2.y, v3.z);
         }
 
         // Random Extension Methods

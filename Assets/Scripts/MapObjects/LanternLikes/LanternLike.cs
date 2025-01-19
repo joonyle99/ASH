@@ -1,12 +1,29 @@
 using UnityEngine;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-//광선이 연결되는 판정은 해야하는데 랜턴은 아닌 것들
+/// <summary>
+/// 광선이 연결되는 판정은 해야하는데 랜턴은 아닌 것들
+/// </summary>
 public abstract class LanternLike : MonoBehaviour
 {
-    public virtual Transform LightPoint { get { return transform; } }
+    [SerializeField] private Transform _cameraPoint;
+    public virtual Transform LightPoint
+    {
+        get
+        {
+            if (_cameraPoint == null)
+            {
+                return this.transform;
+            }
+            else
+            {
+                return _cameraPoint;
+            }
+        }
+    }
     public bool IsLightOn
     {
         get { return _isLightOn; }
@@ -15,7 +32,7 @@ public abstract class LanternLike : MonoBehaviour
             if (value == _isLightOn)
                 return;
             _isLightOn = value;
-            if(LanternSceneContext.Current != null)
+            if (LanternSceneContext.Current != null)
             {
                 if (value)
                     LanternSceneContext.Current.RecordActivationTime(this);
@@ -27,6 +44,5 @@ public abstract class LanternLike : MonoBehaviour
 
     bool _isLightOn = false;
     public virtual void OnBeamConnected(LightBeam beam) { }
-    public virtual void OnBeamDisconnected(LightBeam beam){ }
-
+    public virtual void OnBeamDisconnected(LightBeam beam) { }
 }

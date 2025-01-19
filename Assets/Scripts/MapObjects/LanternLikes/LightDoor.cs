@@ -71,7 +71,7 @@ public class LightDoor : LanternLike, ISceneContextBuildListener
     public void Update()
     {
         // CHEAT: F9 키를 누르면 빛의 문 열기
-        if (Input.GetKeyDown(KeyCode.F9))
+        if (Input.GetKeyDown(KeyCode.F9) && GameSceneManager.Instance.CheatMode == true)
         {
             StartCoroutine(OpenCoroutine());
         }

@@ -127,22 +127,19 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     private void Update()
     {
         // CHEAT: F7 키를 누르면 빛 스킬 획득
-        if (Input.GetKeyDown(KeyCode.F7))
+        if (Input.GetKeyDown(KeyCode.F7) && GameSceneManager.Instance.CheatMode == true)
         {
-            SetByGlobal<bool>("LightSkill", true);
+            ObtainSkill_Light();
         }
 
         // CHEAT: F8 키를 누르면 더블 점프, 대쉬 획득
-        if (Input.GetKeyDown(KeyCode.F8))
+        if (Input.GetKeyDown(KeyCode.F8) && GameSceneManager.Instance.CheatMode == true)
         {
-            SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
-
-            UpdateValueByGlobal<int>("SkillPiece", x => x + 3);
-
-            _cheatSkillId = _cheatSkillId == 0 ? 1 : 0;
+            ObtainSkill_Moving();
         }
 
 #if UNITY_EDITOR
+        /*
         // 데이터 그룹 출력
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -164,6 +161,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             Debug.Log("=============Save Data============");
             SavedPersistentData.PrintData();
         }
+        */
 #endif
     }
 
@@ -423,7 +421,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         return false;
     }
 
-    //프롤로그 화면에서 호출되도록 하기
+    // 프롤로그 화면에서 호출되도록 하기
     public static void ClearPersistentData()
     {
         Instance.PersistentData.SceneName = "";
@@ -431,7 +429,15 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         Instance.PersistentData.DataGroups.Clear();
         Instance.PersistentData.GlobalDataGroup.Clear();
     }
-    
+    public static void ClearSavedPersistentData()
+    {
+        Instance.SavedPersistentData.SceneName = "";
+        Instance.SavedPersistentData.PassageName = "";
+        Instance.SavedPersistentData._jsonDataGroups?.data?.Clear();
+        Instance.SavedPersistentData._jsonGlobalDataGroup?.data?.Clear();
+    }
+
+    /*
     private void OnGUI()
     {
         GUIStyle _guiStyle = new();
@@ -506,5 +512,18 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
             t = "";
 
         GUILayout.EndArea();
+    }*/
+
+    public void ObtainSkill_Light()
+    {
+        SetByGlobal<bool>("LightSkill", true);
+    }
+    public void ObtainSkill_Moving()
+    {
+        SetByGlobal<bool>(SkillOrderData[_cheatSkillId].Key, true);
+
+        UpdateValueByGlobal<int>("SkillPiece", x => x + 3);
+
+        _cheatSkillId = _cheatSkillId == 0 ? 1 : 0;
     }
 }

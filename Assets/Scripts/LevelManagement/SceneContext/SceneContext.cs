@@ -18,7 +18,7 @@ public class SceneContext : MonoBehaviour
     // extra
     public Passage EntrancePassage { get; private set; }                                                                                // 씬의 입구
     public SceneTransitionPlayer SceneTransitionPlayer { get; private set; }                                                            // 씬 전환 플레이어 (타이틀, 프롤로그로의 이동)
-    private PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer => SceneTransitionPlayer as PlayableSceneTransitionPlayer;      // 씬 전환 플레이어 (탐험구간, 보스던전, 보스전으로의 이동)
+    public PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer => SceneTransitionPlayer as PlayableSceneTransitionPlayer;      // 씬 전환 플레이어 (탐험구간, 보스던전, 보스전으로의 이동)
 
     [SerializeField] private CheckpointManager _checkpointManager;          // 체크포인트 매니저
     public CheckpointManager CheckPointManager => _checkpointManager;
@@ -132,10 +132,10 @@ public class SceneContext : MonoBehaviour
             }
         }
 
-        // broadcast to all scene_context_build listener
+        // broadcast to all scene context build listener
         if (buildResult == Result.Success)
         {
-            var monoBehaviours = FindObjectsOfType<MonoBehaviour>();
+            var monoBehaviours = FindObjectsOfType<MonoBehaviour>(true);                // should include inactive objects
             var buildListeners = monoBehaviours.OfType<ISceneContextBuildListener>();
 
             foreach (var buildListener in buildListeners)

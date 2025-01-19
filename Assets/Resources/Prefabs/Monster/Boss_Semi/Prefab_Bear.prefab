@@ -425,6 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2701949f649d1e4e9954ac297a66948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isWaveMonster: 0
   _curHp: 0
   <DefaultDir>k__BackingField: 1
   <RecentDir>k__BackingField: 0
@@ -491,7 +492,7 @@ MonoBehaviour:
   _nextAttack: 0
   _slash01: {fileID: 7501307551420893577, guid: 0e4912bd354e0a745b23c90eeca2032d, type: 3}
   _slash02: {fileID: 7501307551420893577, guid: 8d76e949b7f36ac4198f8bb85cbfb2ae, type: 3}
-  _bodySlamPower: 70
+  _bodySlamPower: 100
   _stomp: {fileID: 9197840957116043268}
   _stompEffectPrefab: {fileID: 4196376847951404993, guid: 8c9746120f8843545ba62bd1c65a294a, type: 3}
   _stalactitePrefab: {fileID: 6190995042310891283, guid: e11f98982e6347c47be5d6f4d5fbc091, type: 3}
@@ -517,7 +518,6 @@ MonoBehaviour:
   _waveSkillPrefab: {fileID: 1687034788766365448, guid: 839e0876f9e523a42bb75e4004df8274, type: 3}
   _earthquakeCameraShake: {fileID: 11400000, guid: 137dc22b9fdef2c42b664891a72693ad, type: 2}
   _totalEarthquakeCount: 0
-  _isAbleLightGuideCutscene: 1
   bossClearColorChangeEffect: {fileID: 0}
   _disintegrateEffects:
   - {fileID: 5403583929865551525}
@@ -668,7 +668,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: Hurt
+  - _isLoop: 0
+    _key: Hurt
     _clip: {fileID: 8300000, guid: 3ae94ecee806e984a8ef72c269bb8200, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -676,7 +677,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Slash
+  - _isLoop: 0
+    _key: Slash
     _clip: {fileID: 8300000, guid: 271791b4c17a9ac4eb0184fff62ef75e, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -684,7 +686,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: BodySlam
+  - _isLoop: 0
+    _key: BodySlam
     _clip: {fileID: 8300000, guid: bcc6d6a29ecd94d45804e5430a832479, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -692,7 +695,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Stomp
+  - _isLoop: 0
+    _key: Stomp
     _clip: {fileID: 8300000, guid: 8e013c6a813e1124cba497080217dc82, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -700,7 +704,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Earthquake
+  - _isLoop: 0
+    _key: Earthquake
     _clip: {fileID: 8300000, guid: d27d74c7e049d8642ae90e09e035331d, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -708,7 +713,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Groggy
+  - _isLoop: 0
+    _key: Groggy
     _clip: {fileID: 8300000, guid: cc7fb8bc31fec0d4aaf0d9cd12d560d0, type: 3}
     _volumeType: 0
     _volumeA: 0.5
@@ -716,7 +722,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Rage
+  - _isLoop: 0
+    _key: Rage
     _clip: {fileID: 8300000, guid: 418b1998b05280e4cadd6700a37a8545, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -724,7 +731,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Die
+  - _isLoop: 0
+    _key: Die
     _clip: {fileID: 8300000, guid: bf454ef6fdd598648bac53f83d3c9439, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -24444,7 +24452,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8098683574932484918, guid: 6a93010b5d148cd498331cb359aa95e9, type: 3}
       propertyPath: m_Intensity
-      value: 1
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8098683574932484918, guid: 6a93010b5d148cd498331cb359aa95e9, type: 3}
+      propertyPath: m_FalloffIntensity
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6a93010b5d148cd498331cb359aa95e9, type: 3}

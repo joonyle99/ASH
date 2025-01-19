@@ -2,19 +2,28 @@ using UnityEngine;
 
 public class TeleportationModule : MonoBehaviour
 {
-    [SerializeField] private BoxCollider2D _teleportableArea;
+    [SerializeField] private TeleportGraph _teleportGraph1;
+    [SerializeField] private TeleportGraph _teleportGraph2;
 
-    public void ExecuteTeleportation_AnimEvent()
+    [SerializeField] private TeleportGraph _currentGraph;
+
+    public void ExecuteTeleport_AnimEvent()
     {
-        /*
-        var xPos = Random.Range(_teleportableArea.bounds.min.x, _teleportableArea.bounds.max.x);
-        var yPos = Random.Range(_teleportableArea.bounds.min.y, _teleportableArea.bounds.max.y);
+        _currentGraph.Move();
+    }
 
-        var randomPosition = new Vector2(xPos, yPos);
+    public void ChangeGraphTo1()
+    {
+        _teleportGraph1.gameObject.SetActive(true);
+        _teleportGraph2.gameObject.SetActive(false);
 
-        transform.position = randomPosition;
-        */
+        _currentGraph = _teleportGraph1;
+    }
+    public void ChangeGraphTo2()
+    {
+        _teleportGraph1.gameObject.SetActive(false);
+        _teleportGraph2.gameObject.SetActive(true);
 
-        // N개의 노드를 생성한다.
+        _currentGraph = _teleportGraph2;
     }
 }

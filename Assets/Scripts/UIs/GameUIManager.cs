@@ -18,7 +18,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
                 return _instance;
             else
             {
-                Debug.Log("There is no GameUIManager Instance");
+                Debug.LogWarning("There is no GameUIManager Instance");
                 return null;
             }
         }
@@ -48,6 +48,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     [SerializeField] private Letterbox _letterBox;
     [SerializeField] private OptionView _optionView;
     [SerializeField] private TextMeshProUGUI _sceneNameText;
+    [SerializeField] private TextMeshProUGUI _debugText;
 
     private void Awake()
     {
@@ -55,7 +56,7 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     }
     private void Start()
     {
-        _sceneNameText.gameObject.SetActive(true);
+        // _sceneNameText.gameObject.SetActive(true);
     }
     private void Update()
     {
@@ -170,6 +171,14 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     {
         if (Instance == null) return;
 
-        Instance._sceneNameText.text = "Scene Name: " + sceneName;
+        // Instance._sceneNameText.text = "Scene Name: " + sceneName;
+    }
+
+    // debug text
+    public static void SetDebugText(string text)
+    {
+        if (Instance == null) return;
+
+        // Instance._debugText.text = text;
     }
 }

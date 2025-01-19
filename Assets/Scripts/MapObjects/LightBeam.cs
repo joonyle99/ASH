@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LightBeam : MonoBehaviour
@@ -8,6 +7,8 @@ public class LightBeam : MonoBehaviour
 
     LanternLike _startLantern;
     LanternLike _endLantern;
+
+    BossBehaviour _endBoss;
 
     public bool IsShootingDone { get { return _beamEffect.IsShootingDone; } }
     public Vector3 CurrentShootingPosition { get { return _beamEffect.CurrentShootingPosition; } }
@@ -23,13 +24,34 @@ public class LightBeam : MonoBehaviour
         if (_endLantern == LanternSceneContext.Current.LightDoor)
             _beamEffect.MarkAsLastConnection();
     }
+    public void SetLanternsWithBoss(LanternLike start, BossBehaviour end)
+    {
+        _startLantern = start;
+        _endBoss = end;
+        _beamEffect = GetComponent<LightBeamLineEffect>();
+        _beamEffect.MarkAsLastConnection();
+    }
     private void OnEnable()
     {
         if (_startLantern != null)
-            _beamEffect.StartBeamEffect(new Transform[] { _startLantern.LightPoint, _endLantern.LightPoint });
+        {
+            if (_endBoss != null)
+            {
+                _beamEffect.StartBeamEffect(new Transform[] { _startLantern.LightPoint, _endBoss.CenterOfMass });
+            }
+            else
+            {
+                _beamEffect.StartBeamEffect(new Transform[] { _startLantern.LightPoint, _endLantern.LightPoint });
+            }
+        }
     }
     public bool IsConnectedTo(Lantern lantern)
     {
         return _startLantern == lantern || _endLantern == lantern;
+    }
+    public IEnumerator FadeOutBeamCoroutine()
+    {
+        yield return _beamEffect.FadeOutLineCoroutine();
+        this.gameObject.SetActive(false);
     }
 }

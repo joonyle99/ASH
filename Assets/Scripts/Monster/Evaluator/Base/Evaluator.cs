@@ -1,6 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 /// <summary>
 /// 범위 안에 대상이 들어왔는 지를 판단하는 '판독기' 클래스
 /// </summary>
@@ -26,6 +30,9 @@ public abstract class Evaluator : MonoBehaviour
     [Header("____ CoolTime ____")]
     [Space]
 
+    private float _debugCoolTime;
+    public float DebugCoolTime { get => _debugCoolTime; set => _debugCoolTime = value; }
+
     [SerializeField] private bool _isWaitingEvent;              // 이벤트 대기 여부
     public bool IsWaitingEvent
     {
@@ -36,7 +43,11 @@ public abstract class Evaluator : MonoBehaviour
     public bool IsDuringCoolTime
     {
         get => _isDuringCoolTime;
-        set => _isDuringCoolTime = value;
+        set
+        {
+            _isDuringCoolTime = value;
+            _debugCoolTime = _targetEvaluatorCoolTime;
+        }
     }
     [SerializeField] private float _targetEvaluatorCoolTime;    // 판독 쿨타임 시간
     public float TargetCheckCoolTime
@@ -167,7 +178,7 @@ public abstract class Evaluator : MonoBehaviour
 
         if (isNeverBoth)
         {
-            Debug.Log($"쿨타임이 실행되었지만, 어떠한 이벤트나 대기 시간을 기다리지 않습니다");
+            // Debug.Log($"쿨타임이 실행되었지만, 어떠한 이벤트나 대기 시간을 기다리지 않습니다");
             yield return null;
         }
     }
@@ -192,4 +203,47 @@ public abstract class Evaluator : MonoBehaviour
 
         IsUsable = true;
     }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (IsDuringCoolTime)
+        {
+            _debugCoolTime -= Time.deltaTime;
+        }
+    }
+#endif
 }
+
+#if UNITY_EDITOR
+// 커스텀 에디터
+[CustomEditor(typeof(Evaluator), true)]
+public class EvaluatorEditor : Editor
+{
+    // Unity 에디터에서 인스펙터 GUI를 그리는 메서드입니다.
+    // OnInspectorGUI 메서드를 오버라이드하여 커스텀 GUI를 정의합니다.
+    public override void OnInspectorGUI()
+    {
+        // 현재 인스펙터에서 편집 중인 TeleportNode '객체'를 가져옵니다.
+        Evaluator t = (Evaluator)target;
+
+        // 기본 인스펙터 GUI를 그립니다.
+        DrawDefaultInspector();
+
+        // 스페이스
+        EditorGUILayout.Space();
+
+        // 기본 슬라이더 UI
+        t.DebugCoolTime = EditorGUILayout.Slider("DebugCoolTime", t.DebugCoolTime, 0f, t.TargetCheckCoolTime);
+
+        // 값이 바뀌었을 때 변경된 내용을 적용
+        if (GUI.changed)
+        {
+            EditorUtility.SetDirty(target);
+        }
+
+        // 인스펙터를 다시 그리도록 합니다.
+        Repaint();
+    }
+}
+#endif

@@ -12,7 +12,7 @@ namespace HappyTools
         /// 씬이 로드되기 전에 자동으로 실행되는 함수. 게임을 초기화한다.
         /// </summary>
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void InstantiateBootstrapper()
+        private static void InstantiateBootstrapper()
         {
             // 부트스트랩 프리팹을 로드한다
             Object resourcePrefab = Resources.Load(BootstrapperPrefabPath);

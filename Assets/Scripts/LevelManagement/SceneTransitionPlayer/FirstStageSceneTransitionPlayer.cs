@@ -22,16 +22,24 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
         }
         else
         {
+            IsPlayable = false;
+
             SceneContext.Current.Player.transform.position = _spawnPoint.position;
             SceneContext.Current.Player.gameObject.SetActive(false);
             // SceneEffectManager.Instance.Camera.SnapFollow();
             GameUIManager.OpenLetterbox(true);
-            StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
+
+            if (_fadeCoroutine != null)
+            {
+                StopCoroutine(_fadeCoroutine);
+            }
+
+            _fadeCoroutine = StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
 
             InputManager.Instance.ChangeToStayStillSetter();
 
             yield return new WaitForSeconds(_waitDuration);
-            _spawnFireEffectOnScene.SetActive(true);
+            _spawnFireEffectOnScene?.SetActive(true);
             yield return new WaitForSeconds(_playerSpawnTiming);
 
             SceneContext.Current.Player.gameObject.SetActive(true);
@@ -40,6 +48,8 @@ public class FirstStageSceneTransitionPlayer : PlayableSceneTransitionPlayer
             GameUIManager.CloseLetterbox();
             InputManager.Instance.ChangeToDefaultSetter();
             PersistentDataManager.SetByGlobal("seenPlayerFirstSpawn", true);
+
+            IsPlayable = true;
         }
     }
 

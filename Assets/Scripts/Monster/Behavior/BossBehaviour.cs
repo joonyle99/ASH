@@ -48,12 +48,16 @@ public abstract class BossBehaviour : MonsterBehaviour
             {
                 if (_totalHitCount == rageTargetHurtCount)
                 {
-                    Debug.Log("Change RageState 컷씬 호출");
+                    // Debug.Log("call rage cutscene");
 
-                    // 호출되는 순간 GodMode로 전환
+                    IsRage = true;
                     IsGodMode = true;
 
+                    // TODO: 여기서 공격으로 안 들어가도록 하기
+
+                    // TEMP 버닝비버라서 이렇게 해본다
                     StartCoroutine(PlayCutSceneInRunning("Change RageState"));
+                    // PlayCutSceneImmediately("Change RageState");
                 }
             }
         }
@@ -85,7 +89,10 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        if (IsGodMode || IsDead)
+        if (IsDead)
+            return IAttackListener.AttackResult.Fail;
+
+        if (IsGodMode && attackInfo.Type != AttackType.GimmickAttack)
             return IAttackListener.AttackResult.Fail;
 
         // Hit Process
@@ -180,28 +187,28 @@ public abstract class BossBehaviour : MonsterBehaviour
         // 플레이어 위치
         var player = SceneContext.Current.Player;
         var playerPosX = player.transform.position.x;
-        Debug.DrawRay(player.transform.position, Vector3.down * 5f, Color.cyan, 10f);
+        // Debug.DrawRay(player.transform.position, Vector3.down * 5f, Color.cyan, 10f);
 
         // 보스에서 플레이어까지의 방향
         var BossToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
-        Debug.DrawRay(transform.position + Vector3.up, Vector3.right * BossToPlayerDir * _distanceFromBoss, Color.cyan, 10f);
+        // Debug.DrawRay(transform.position + Vector3.up, Vector3.right * BossToPlayerDir * _distanceFromBoss, Color.cyan, 10f);
 
         // 플레이어가 이동할 목표 위치
         var playerMoveTargetPosX = transform.position.x + (BossToPlayerDir) * _distanceFromBoss;
-        Debug.DrawRay(new Vector3(playerMoveTargetPosX, transform.position.y, transform.position.z), Vector3.down * 5f, Color.cyan, 10f);
+        // Debug.DrawRay(new Vector3(playerMoveTargetPosX, transform.position.y, transform.position.z), Vector3.down * 5f, Color.cyan, 10f);
 
         // 플레이어 이동 방향
         var playerMoveDir = System.Math.Sign(playerMoveTargetPosX - playerPosX);
-        Debug.DrawRay(player.transform.position, Vector3.right * playerMoveDir * 5f, Color.cyan, 10f);
+        // Debug.DrawRay(player.transform.position, Vector3.right * playerMoveDir * 5f, Color.cyan, 10f);
 
         // 플레이어 이동을 대기
-        yield return StartCoroutine(MoveCoroutine(playerMoveDir, playerMoveTargetPosX));
+        yield return MoveCoroutine(playerMoveDir, playerMoveTargetPosX);
 
         // 만약 플레이어가 뒤돌고 있다면 방향을 돌려준다
         if (BossToPlayerDir == player.RecentDir)
         {
             var dirForLookToBear = (-1) * playerMoveDir;
-            yield return StartCoroutine(MoveCoroutine(dirForLookToBear, playerMoveTargetPosX + dirForLookToBear * 0.1f));
+            yield return MoveCoroutine(dirForLookToBear, playerMoveTargetPosX + dirForLookToBear * 0.2f);
         }
 
         InputManager.Instance.ChangeToStayStillSetter();
@@ -211,11 +218,15 @@ public abstract class BossBehaviour : MonsterBehaviour
         var isRight = moveDir > 0;
 
         if (isRight)
+        {
             InputManager.Instance.ChangeToMoveRightSetter();
+        }
         else
+        {
             InputManager.Instance.ChangeToMoveLeftSetter();
+        }
 
-        yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.1f);
+        yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.2f);
 
         isEndMoveProcess = true;
     }

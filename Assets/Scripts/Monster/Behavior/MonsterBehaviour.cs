@@ -145,7 +145,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         {
             _isGodMode = value;
 
-#if UNITY_EDITOR
+            //#if UNITY_EDITOR
             if (MaterialController)
             {
                 if (_isGodMode)
@@ -157,7 +157,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
                     MaterialController.DisableGodModeOutline();
                 }
             }
-#endif
+            //#endif
         }
     }
     [field: SerializeField]
@@ -291,19 +291,13 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         InitMonsterState();
     }
 
-
     protected virtual void Start()
     {
+
     }
 
     protected virtual void Update()
     {
-        // CHEAT: F5 키를 누르면 몬스터의 무적 상태를 조작한다
-        if (Input.GetKeyDown(KeyCode.F5))
-        {
-            IsGodMode = !IsGodMode;
-        }
-
         if (IsDead)
             return;
 
@@ -364,11 +358,18 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             if (!AttackEvaluator.IsUsable) return;
             if (AttackEvaluator.IsDuringCoolTime || AttackEvaluator.IsWaitingEvent) return;
 
+            /*
             // 컷씬 실행 중이면 안되게 하기
             if (cutscenePlayerList)
             {
                 if (cutscenePlayerList.CheckAnyPlaying())
                     return;
+            }
+            */
+
+            if (SceneEffectManager.Instance.IsPlayingCutscene)
+            {
+                return;
             }
 
             // 공격 가능한 대상이 있는지 확인
@@ -383,6 +384,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     public virtual IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         if (IsGodMode || IsDead)
+            return IAttackListener.AttackResult.Fail;
+
+        if (this is Mushroom)
             return IAttackListener.AttackResult.Fail;
 
         HitProcess(attackInfo);
@@ -492,6 +496,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         // 바라보는 방향 변경
         RecentDir = targetDir;
 
+        //Debug.Log("Flip Monster");
         // 바라보는 방향으로 Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
@@ -754,14 +759,45 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     // cutscene
     public IEnumerator PlayCutSceneInRunning(string cutsceneName)
     {
-        // 현재 애니메이션이 95% 완료될 때까지 기다립니다.
+        // Debug.Log("PlayCutSceneInRunning");
+
+        // 현재 애니메이션이 99% 완료될 때까지 기다립니다.
         yield return new WaitUntil(() =>
         {
             AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
-            return stateInfo.normalizedTime >= 0.95f;
+            // Debug.Log(GetStateNameByHash(Animator, stateInfo.nameHash));
+            return stateInfo.normalizedTime >= 0.99f;
         });
 
         cutscenePlayerList.PlayCutscene(cutsceneName);
+    }
+    public void PlayCutSceneImmediately(string cutsceneName)
+    {
+        cutscenePlayerList.PlayCutscene(cutsceneName);
+    }
+
+    public void TurnOnIsCapturable()
+    {
+        IsCapturable = true;
+    }
+    public void TurnOffIsCapturable()
+    {
+        IsCapturable = false;
+    }
+
+    /// <summary>
+    /// 애니메이션의 해시값을 통해 해당 애니메이션의 이름을 반환합니다.
+    /// </summary>
+    public string GetStateNameByHash(Animator animator, int hash)
+    {
+        foreach (var clip in animator.runtimeAnimatorController.animationClips)
+        {
+            if (Animator.StringToHash(clip.name) == hash)
+            {
+                return clip.name;
+            }
+        }
+        return "Unknown State";
     }
 
     #endregion

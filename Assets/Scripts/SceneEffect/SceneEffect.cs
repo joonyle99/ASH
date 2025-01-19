@@ -27,11 +27,13 @@ public class SceneEffect
         ChangeInputSetter,
         ChangeToDefaultInputSetter,
         FunctionCall,
+        CoroutineCall,
     }
 
     // effect type
     [SerializeField][HideInInspector] private EffectType _type = EffectType.Dialogue;
     public EffectType Type => _type;
+
     public bool IsCameraEffect =>
         _type == EffectType.CameraShake ||
         _type == EffectType.ConstantCameraShake ||
@@ -44,6 +46,8 @@ public class SceneEffect
     [SerializeField][HideInInspector] public float Time = 0f;
     [SerializeField][HideInInspector] public InputSetterScriptableObject InputSetter = null;
     [SerializeField][HideInInspector] public UnityEvent Function;
+    [SerializeField][HideInInspector] public MonoBehaviour TargetScript;
+    [SerializeField][HideInInspector] public string MethodName;
 }
 
 #if UNITY_EDITOR
@@ -52,6 +56,7 @@ public class SceneEffectDrawer : PropertyDrawer
 {
     private int HEIGHT = 18;
     private UnityEventDrawer _eventDrawer;
+
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
@@ -96,6 +101,11 @@ public class SceneEffectDrawer : PropertyDrawer
                     break;
                 case SceneEffect.EffectType.FunctionCall:
                     DrawField("Function", position, property);
+                    break;
+                case SceneEffect.EffectType.CoroutineCall:
+                    DrawField("TargetScript", position, property);
+                    position.y += HEIGHT + 2;
+                    DrawField("MethodName", position, property);
                     break;
             }
             position.y += HEIGHT + 2;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,6 +42,11 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     private List<SceneEffectEvent> _sceneEvents;        // SceneEvent
     private SceneEventComparator _eventComparator;
 
+    private Action _onAdditionalBefore = null;
+    public Action OnAdditionalBefore { get { return _onAdditionalBefore; } set { _onAdditionalBefore = value; } }
+    private Action _onAdditionalAfter = null;
+    public Action OnAdditionalAfter { get { return _onAdditionalAfter; } set { _onAdditionalAfter = value; } }
+
     private CameraController _currentCamera;
     public CameraController Camera
     {
@@ -61,6 +67,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     }
 
     private Cutscene _recentCutscene = null;
+    public bool IsPlayingCutscene => _currentState == State.Cutscene;
 
     protected override void Awake()
     {
@@ -70,7 +77,6 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
         _sceneEvents = new List<SceneEffectEvent>();
         _eventComparator = new SceneEventComparator();
     }
-
     private void Update()
     {
         if (_currentState == State.SceneEvent)
@@ -82,6 +88,34 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
                     sceneEvent.OnUpdate();
             }
         }
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            string result = $"<color=yellow><Cutscene List></color>\n";
+
+            if (_recentCutscene != null)
+            {
+                result += _recentCutscene.GetCutsceneName() + '\n';
+            }
+
+            foreach (var cutscene in _cutSceneQueue)
+            {
+                result += cutscene.GetCutsceneName() + '\n';
+            }
+
+            Debug.Log(result);
+        }
+#endif
+    }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        _cutSceneQueue.Clear();
+        _sceneEvents.Clear();
+
+        _onAdditionalBefore = null;
+        _onAdditionalAfter = null;
     }
 
     public void OnSceneContextBuilt()
@@ -93,31 +127,45 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     {
         _recentCutscene = null;
         _currentState = State.Idle;
+        // Debug.Log("current state - Idle");
         Camera.ResetCameraSettings();
     }
 
     // cutscene
-    public void PushCutscene(Cutscene cutscene)
+    public IEnumerator PushCutscene(Cutscene cutscene)
     {
+        // Debug.Log($"PushCutscene - {cutscene.Owner.name}");
+
         // 컷씬이 없는 경우 바로 재생
-        if (_cutSceneQueue.Count == 0)
+        if (_cutSceneQueue.Count == 0 && _recentCutscene == null)
         {
+            /*
+            if (_recentCutscene != null)
+            {
+                yield return new WaitWhile(() => IsPlayingCutscene);
+            }
+            */
+
             PlayCutscene(cutscene);
         }
         // 컷씬이 있는 경우 큐에 추가
-        else _cutSceneQueue.Add(cutscene);
+        else
+        {
+            _cutSceneQueue.Add(cutscene);
+        }
 
         // 컷씬이 재생되는 동안 다른 이벤트들은 비활성화
         DisableAllSceneEvents();
-    }
 
+        yield return null;
+    }
     private void PlayCutscene(Cutscene cutscene)
     {
         _recentCutscene = cutscene;
         _currentState = State.Cutscene;
-        cutscene.Play(CutsceneEndCallback);
+        // Debug.Log("current state - Cutscene");
+        cutscene.Play(CutsceneEndCallback, OnAdditionalBefore, OnAdditionalAfter);
     }
-
     private void CutsceneEndCallback()
     {
         if (_cutSceneQueue.Count > 0)
@@ -185,7 +233,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
             {
                 if (i + 1 < _sceneEvents.Count)
                 {
-                    if (_sceneEvents[i].Priority != _sceneEvents[i + 1].Priority 
+                    if (_sceneEvents[i].Priority != _sceneEvents[i + 1].Priority
                        || _sceneEvents[i].MergePolicyWithSamePriority == SceneEffectEvent.MergePolicy.OverrideWithRecent)
                     {
                         enable = false;
@@ -197,7 +245,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
 
     public static void StopPlayingCutscene()
     {
-        if(Instance._recentCutscene != null && 
+        if (Instance._recentCutscene != null &&
             Instance._recentCutscene.CutSceneCoreCoroutine != null)
         {
             Instance._recentCutscene.Owner.StopCoroutine(Instance._recentCutscene.CutSceneCoreCoroutine);

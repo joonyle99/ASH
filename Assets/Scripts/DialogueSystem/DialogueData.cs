@@ -14,8 +14,10 @@ public class DialogueData : ScriptableObject
     [SerializeField] private TextAsset _script;                             // 대사 스크립트
     [SerializeField] private float _typingSpeed = 12.5f;                    // 글자 속도
     [SerializeField] private InputSetterScriptableObject _inputSetter;      // 플레이어 입력 설정
+    [SerializeField] private bool _isResponseDialougue = false;               // 반응형 대화 패널 여부
+    public bool IsResponseDialougue => _isResponseDialougue;
 
-    [SerializeField] public bool PlayAtFirst = true;
+    [SerializeField] public bool PlayAtFirst;
 
     [Space]
 

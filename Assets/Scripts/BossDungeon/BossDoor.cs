@@ -4,24 +4,20 @@ using UnityEngine;
 /// <summary>
 /// 애니메이션이 연출이 들어간 특별한 문으로 Passage를 제어한다
 /// </summary>
-public class BossDoor : InteractableObject, ISceneContextBuildListener
+public class BossDoor : Door
 {
     [Header("Boss Door")]
     [Space]
 
-    [SerializeField] private bool _isOpened = false;
     [SerializeField] private GameObject _passage;
     [SerializeField] private DialogueData _failDialogue;                        // 문 열기 실패 대사
     [SerializeField] private DialogueData _successDialogue;                     // 문 열기 성공 대사
-    [SerializeField] private InputSetterScriptableObject _enterInputSetter;     // 문으로 들어갈 때의 InputSetter
 
-    private PreserveState _statePreserver;
-    private DoorOpenAnimation _doorOpenAnimation;
-    private Animator _animator;
-    private Collider2D _collider;
-    private SoundList _soundList;
+    [Space] private float _waitTime = 2f;
 
-    public bool IsOpened
+    protected PreserveState _statePreserver;
+
+    public override bool IsOpened
     {
         get => _isOpened;
         set
@@ -35,25 +31,31 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
         }
     }
 
-    private void Awake()
+    public override bool CanOpenDoor
     {
-        _statePreserver = GetComponent<PreserveState>();
-        _doorOpenAnimation = GetComponent<DoorOpenAnimation>();
-        _animator = GetComponent<Animator>();
-        _collider = GetComponent<Collider2D>();
-        _soundList = GetComponent<SoundList>();
-    }
-    private void Start()
-    {
+        get => BossDungeonManager.Instance.IsAllKeysCollected;
     }
 
-    public void OnSceneContextBuilt()
+    protected override void Awake()
     {
-        if(_statePreserver)
+        base.Awake();
+        _statePreserver = GetComponent<PreserveState>();
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        SaveAndLoader.OnSaveStarted -= SaveDoorState;
+    }
+
+    public override void OnSceneContextBuilt()
+    {
+        if (_statePreserver)
         {
-            if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
-                if(IsOpened = _statePreserver.LoadState<bool>("_isOpenSaved", IsOpened))
+                if (IsOpened = _statePreserver.LoadState<bool>("_isOpenSaved", IsOpened))
                 {
                     _animator.SetTrigger("InstantOpen");
 
@@ -63,7 +65,8 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
                 {
                     InitClosing();
                 }
-            }else
+            }
+            else
             {
                 if (IsOpened = _statePreserver.LoadState<bool>("_isOpened", IsOpened))
                 {
@@ -78,33 +81,27 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
             }
         }
 
-        SaveAndLoader.OnSaveStarted += SaveBossDoorState;
-    }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-
-        SaveAndLoader.OnSaveStarted -= SaveBossDoorState;
+        SaveAndLoader.OnSaveStarted += SaveDoorState;
     }
 
     // interaction
     protected override void OnObjectInteractionEnter()
     {
-        if (BossDungeonManager.Instance.IsAllKeysCollected)
+        if (CanOpenDoor)
         {
-            _soundList.PlaySFX("Open");
+            //_soundList.PlaySFX("Open"); 사운드 플레이는 DoorOpenAnimation에서 수행
 
-            SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine()));
+            StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine())));
         }
         else
         {
             DialogueController.Instance.StartDialogue(_failDialogue, false);
         }
     }
+
     public override void UpdateInteracting()
     {
-        if (BossDungeonManager.Instance.IsAllKeysCollected)
+        if (CanOpenDoor)
         {
 
         }
@@ -118,17 +115,17 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
     }
 
     // control door (open / close)
-    private IEnumerator OpenDoorCoroutine()
+    protected override IEnumerator OpenDoorCoroutine(bool useCameraEffect = true)
     {
         // 상호작용으로 여는 경우에만 InputSetter를 변경한다
         if (IsInteractable)
+        {
             InputManager.Instance.ChangeToStayStillSetter();
+        }
 
-        SceneEffectManager.Instance.Camera.StartFollow(transform);
-        yield return _doorOpenAnimation.OpenCoroutine();
-        SceneEffectManager.Instance.Camera.StartFollow(SceneContext.Current.Player.transform);
+        // Debug.Log("Call OpenDoor Coroutine");
 
-        IsOpened = true;
+        yield return StartCoroutine(base.OpenDoorCoroutine(useCameraEffect));
 
         /*
          * TODO: 보스와 싸우다 중간에 죽으면 보스키가 소모된 상태이므로 문이 열리지 않는 버그 존재
@@ -139,10 +136,11 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
         }
         */
 
+        yield return new WaitForSeconds(_waitTime);
+
         // 성공 다이얼로그 실행
         if (_successDialogue != null)
         {
-            yield return new WaitForSeconds(2f);
             DialogueController.Instance.StartDialogue(_successDialogue, false);
             yield return new WaitUntil(() => DialogueController.Instance.IsDialogueActive == false);
         }
@@ -151,9 +149,13 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
         if (IsInteractable)
         {
             if (_enterInputSetter)
+            {
                 InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+            }
             else
+            {
                 InputManager.Instance.ChangeToDefaultSetter();
+            }
         }
 
         /*
@@ -161,32 +163,39 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
         // yield return _doorOpenAnimation.StartCoroutine(_doorOpenAnimation.OpenCoroutine());          // 명시적으로 코루틴을 시작한다  (영화관 직원에게 부탁해 영화를 상영하고 영화가 끝날 때까지 기다린다)
         */
     }
-    private IEnumerator CloseDoorCoroutine()
+
+    public override void OpenDoor(bool useCameraEffect = true)
+    {
+        StartCoroutine(OpenDoorCoroutine(useCameraEffect));
+    }
+
+    protected override IEnumerator CloseDoorCoroutine(bool useCameraEffect)
     {
         if (IsInteractable)
+        {
             InputManager.Instance.ChangeToStayStillSetter();
+        }
 
-        SceneEffectManager.Instance.Camera.StartFollow(transform);
-        yield return _doorOpenAnimation.CloseCoroutine();
-        SceneEffectManager.Instance.Camera.StartFollow(SceneContext.Current.Player.transform);
+        yield return StartCoroutine(base.CloseDoorCoroutine(useCameraEffect));
 
         IsOpened = false;
 
         if (IsInteractable)
         {
             if (_enterInputSetter)
+            {
                 InputManager.Instance.ChangeInputSetter(_enterInputSetter);
+            }
             else
+            {
                 InputManager.Instance.ChangeToDefaultSetter();
+            }
         }
     }
-    public void OpenDoor()
+
+    public override void CloseDoor(bool useCameraEffect = true)
     {
-        StartCoroutine(OpenDoorCoroutine());
-    }
-    public void CloseDoor()
-    {
-        StartCoroutine(CloseDoorCoroutine());
+        StartCoroutine(CloseDoorCoroutine(useCameraEffect));
     }
 
     // anim event
@@ -207,6 +216,7 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
         }
         _collider.enabled = false;
     }
+
     private void InitClosing()
     {
         if (_passage)
@@ -216,9 +226,9 @@ public class BossDoor : InteractableObject, ISceneContextBuildListener
         _collider.enabled = true;
     }
 
-    private void SaveBossDoorState()
+    protected void SaveDoorState()
     {
-        if(_statePreserver)
+        if (_statePreserver)
         {
             _statePreserver.SaveState<bool>("_isOpenSaved", IsOpened);
         }

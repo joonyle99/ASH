@@ -1,10 +1,11 @@
+#if UNITY_EDITOR
+using static WaveSpawnMonsterInfo;
 using System.Text.RegularExpressions;
+using UnityEngine;
+
 using UnityEditor;
 using UnityEditorInternal;
-using UnityEngine;
-using static WaveSpawnMonsterInfo;
 
-#if UNITY_EDITOR
 [CustomPropertyDrawer(typeof(WaveSpawnMonsterInfo))]
 public class WaveMonsterInfoDrawer : PropertyDrawer
 {

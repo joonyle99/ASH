@@ -82,9 +82,13 @@ public class DealDamageOnFastContact : MonoBehaviour, ICollisionWithPlayerListen
 
     public void OnPlayerEnter(PlayerBehaviour player)
     {
+        Debug.Log("OnPlayerEnter Spike");
+
         // 속도가 임계 값보다 높은 경우
         if (_rigidbody.velocity.sqrMagnitude > Mathf.Pow(_threatVelocityThreshold, 2))
         {
+            Debug.Log("_threatVelocityThreshold Spike");
+
             // 데미지를 줄 수 있는 경우
             if (CanDealDamage(player))
             {
@@ -93,6 +97,8 @@ public class DealDamageOnFastContact : MonoBehaviour, ICollisionWithPlayerListen
                     Vector2 knockbackForce = new Vector2(_knockbackPowerXToPlayer * Mathf.Sign(player.transform.position.x - this.transform.position.x), _knockbackPowerYToPlayer);
                     AttackInfo attackInfo = new AttackInfo(_damageToPlayer, knockbackForce, AttackType.GimmickAttack);
                     var result = player.OnHit(attackInfo);
+
+                    Debug.Log("OnHit From Spike");
                 }
             }
         }

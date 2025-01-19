@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class LightSource : MonoBehaviour
 {
@@ -11,7 +12,20 @@ public class LightSource : MonoBehaviour
     [SerializeField] LayerMask _capturerMask;
     [SerializeField] LayerMask _rayCastLayers;
 
+    public Light2D lightSource;
+
     int lookDir => Math.Sign(transform.lossyScale.x);
+
+    void Awake()
+    {
+        lightSource.pointLightInnerAngle = _angle;
+        lightSource.pointLightOuterAngle = _angle;
+    }
+
+    void Start()
+    {
+
+    }
 
     void OnEnable()
     {

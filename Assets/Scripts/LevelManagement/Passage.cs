@@ -47,7 +47,7 @@ public class Passage : TriggerZone
     public InputSetterScriptableObject EnterInputSetter => _enterInputSetter;
     public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
 
-    private bool _isPlayerExiting;
+    [SerializeField]private bool _isPlayerExiting;
 
     void Awake()
     {
@@ -76,7 +76,7 @@ public class Passage : TriggerZone
     {
         // * push cutscene
         Cutscene exitSceneCutscene = new Cutscene(this, ExitSceneCutsceneCoroutine(), false);
-        SceneEffectManager.Instance.PushCutscene(exitSceneCutscene);
+        StartCoroutine(SceneEffectManager.Instance.PushCutscene(exitSceneCutscene));
 
         // # load next passage data
         var fromPassageName = name;
@@ -102,7 +102,8 @@ public class Passage : TriggerZone
     // Passage를 통해 밖으로 나옴
     public IEnumerator PlayerExitCoroutine()
     {
-        _isPlayerExiting = true;
+        if(_canEnter)
+            _isPlayerExiting = true;
 
         // spawn point로 이동
         SceneContext.Current.Player.transform.position = _playerSpawnPoint.position;

@@ -49,7 +49,20 @@ public abstract class InputSetterScriptableObject : ScriptableObject, IInputSett
     }
 
     public virtual void Update() { }
-    public virtual void SetKeyCode(string keyCode, KeyCode newKeyCode) { }
+
+    public virtual void SetKeyCode(string keyName, KeyCode newKeyCode)
+    {
+        CustomKeyCode targetKeyCode = GetKeyCode(keyName);
+
+        if (targetKeyCode == null)
+        {
+            Debug.Log(keyName + " not exist keyname");
+            return;
+        }
+        Debug.Log(keyName + " change key to " + newKeyCode);
+
+        targetKeyCode.KeyCode = newKeyCode;
+    }
 
     public CustomKeyCode GetKeyCode(string name)
     {

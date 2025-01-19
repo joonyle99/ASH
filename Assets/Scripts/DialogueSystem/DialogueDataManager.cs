@@ -28,7 +28,6 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
     private void Init()
     {
-        ResetAllDialogueData();
         _dialogueDatas = LoadAssetsOfType<DialogueData>().ToList();
 
         if (PersistentDataManager.Instance)

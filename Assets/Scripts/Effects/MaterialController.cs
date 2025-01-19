@@ -73,7 +73,8 @@ public class MaterialController : MonoBehaviour
         //Debug.Log("Enable GodMode Outline");
         foreach (var material in _instanceMaterials)
         {
-            material.EnableKeyword("OUTBASE_ON");
+            // material.EnableKeyword("OUTBASE_ON");
+            material.EnableKeyword("OVERLAY_ON");
         }
     }
     public void DisableGodModeOutline()
@@ -81,7 +82,8 @@ public class MaterialController : MonoBehaviour
         //Debug.Log("Disable GodMode Outline");
         foreach (var material in _instanceMaterials)
         {
-            material.DisableKeyword("OUTBASE_ON");
+            // material.DisableKeyword("OUTBASE_ON");
+            material.DisableKeyword("OVERLAY_ON");
         }
     }
     public void EnableHitEffect()

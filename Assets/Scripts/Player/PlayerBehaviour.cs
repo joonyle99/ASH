@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextBuildListener
@@ -44,6 +45,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     [Header("Parts")]
     [Space]
 
+    [SerializeField] private Transform _headTrans;
     [SerializeField] private CapsuleCollider2D _bodyCollider;
     [SerializeField] private Rigidbody2D _handRigidbody;
     [SerializeField] private Collider2D _heartCollider;
@@ -80,7 +82,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     /// </summary>
     public bool CanAttack
     {
-        get => _isCanAttack && CurrentState is IAttackableState &&
+        get => _isCanAttack && (CurrentState is IAttackableState) &&
                _playerLightSkillController.IsLightButtonPressable &&
                !_playerLightSkillController.IsLightWorking;
 
@@ -99,6 +101,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public bool IsUpWardGrounded => UpwardGroundHit;
     public bool IsUpWardGroundedForClimb => UpwardGroundHitForClimb;
     public bool IsTouchedWall => ClimbHit;
+    public bool IsWallToBehind => BackwardGroundHit;
     public bool IsClimbable { get; set; }
     public bool IsClimbJump { get; set; }
     public bool IsHurt
@@ -185,14 +188,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     // Direction Property
     public int RecentDir { get; set; }
-    public bool IsDirSync => Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) > 0.01f;
-    public bool IsOppositeDirSync => Mathf.Sign(PlayerLookDir2D.x * RawInputs.Movement.x) < -0.01f;
+    public bool IsDirSync => PlayerLookDir2D.x * RawInputs.Movement.x > 0.01f;
+    public bool IsOppositeDirSync => PlayerLookDir2D.x * RawInputs.Movement.x < -0.01f;
     public Vector2 PlayerLookDir2D => new(RecentDir, 0f);
     public Vector3 PlayerLookDir3D => new(RecentDir, 0f, 0f);
 
     // RayCastHit
     public RaycastHit2D GroundHit { get; set; }
     public RaycastHit2D UpwardGroundHit { get; set; }
+    public RaycastHit2D BackwardGroundHit { get; set; }
     public RaycastHit2D UpwardGroundHitForClimb { get; set; }
     public RaycastHit2D ClimbHit { get; set; }
 
@@ -202,6 +206,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public PlayerMovementController PlayerMovementController => _playerMovementController;
 
     // ETC
+    public Transform HeadTrans => _headTrans;
     public CapsuleCollider2D BodyCollider => _bodyCollider;
     public Collider2D HeartCollider => _heartCollider;
     public MaterialController MaterialController => materialController;
@@ -267,13 +272,20 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         #region Input
 
         // Attack
-        if (InputManager.Instance.State.AttackKey.KeyDown && CanAttack)
+        if (InputManager.Instance.State.AttackKey.KeyDown)
         {
-            _playerAttackController.CastAttack();
+            //Debug.Log("AttackKey.KeyDown !");
+
+            if (CanAttack)
+            {
+                //Debug.Log("CastAttack !");
+
+                _playerAttackController.CastAttack();
+            }
         }
 
         // CHEAT: ~ 키를 누르면 체력 1 회복
-        if (Input.GetKeyDown(KeyCode.BackQuote))
+        if (Input.GetKeyDown(KeyCode.BackQuote) && GameSceneManager.Instance.CheatMode == true)
         {
             if (Input.GetKey(KeyCode.LeftShift))
                 RecoverCurHp(-2);
@@ -282,7 +294,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         }
 
         // CHEAT: F10 키를 누르면 가장 가까운 보스문 열기
-        if (Input.GetKeyDown(KeyCode.F10))
+        if (Input.GetKeyDown(KeyCode.F10) && GameSceneManager.Instance.CheatMode == true)
         {
             // 가장 가까운 BossDoor를 찾는다
             var closestBossDoor = FindObjectsByType<BossDoor>(FindObjectsSortMode.None)
@@ -324,7 +336,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         {
             CapeZeroX();
         }
-
         #endregion
 
         #region Animaotr Parameter
@@ -355,7 +366,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     {
         // 바라보는 방향 설정
         RecentDir = Math.Sign(transform.localScale.x);
-
 
         switch (SceneChangeManager.Instance.SceneChangeType)
         {
@@ -434,10 +444,16 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     }
     private void ChangeInAirState()
     {
-        if (!IsGrounded)
+        // Debug.Log($"[ChangeInAirState] IsGrounded: {IsGrounded}");
+
+        if (IsGrounded == false)
         {
-            if (CurrentStateIs<IdleState>() || CurrentStateIs<RunState>() || CurrentStateIs<JumpState>())
+            if (CurrentStateIs<IdleState>()
+                || CurrentStateIs<RunState>()
+                || CurrentStateIs<JumpState>())
+            {
                 ChangeState<InAirState>();
+            }
         }
     }
 
@@ -548,7 +564,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         vec.x = 0f;
         _capeCloth.externalAcceleration = vec;
     }
-
+    public void CapeControlY()
+    {
+        var vec = _capeCloth.externalAcceleration;
+        vec.y = -100f;
+        _capeCloth.externalAcceleration = vec;
+    }
+    public void CapeZeroY()
+    {
+        var vec = _capeCloth.externalAcceleration;
+        vec.y = -20f;
+        _capeCloth.externalAcceleration = vec;
+    }
     #endregion
 
     #region Sound

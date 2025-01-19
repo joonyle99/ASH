@@ -77,21 +77,24 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             {
                 yield return null;
 
-                // 스킵버튼을 누르거나 키다운시 스킵
-                if (canSkip && (_isSkipSequence || InputManager.Instance.State.InteractionKey.KeyDown))
+                // (*변경)스킵버튼을 누르거나 키다운시 스킵
+                // 어떤 키라도 눌러졌다면 스킵
+                if (canSkip && (_isSkipSequence || Input.anyKeyDown))
                 {
                     View.FastForward();
                     _isSkipSequence = false;
+
+                    yield return null;
                 }
 
                 // CHEAT: F3 키를 누르면 현재 Segment를 빠르게 넘긴다
-                if (Input.GetKeyDown(KeyCode.F3))
+                if (Input.GetKeyDown(KeyCode.F3) && GameSceneManager.Instance.CheatMode == true)
                 {
                     View.FastForward();
                 }
             }
 
-            yield return new WaitUntil(() => InputManager.Instance.State.InteractionKey.KeyDown);
+            yield return new WaitUntil(() => Input.anyKeyDown);
 
             SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
 
@@ -112,7 +115,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
                         QuestController.Instance.AcceptQuest(data.Quest);
                     }
-                    else
+                    else if(data.IsResponseDialougue)
                     {
                         List<ResponseContainer> contaienr = new List<ResponseContainer>();
                         contaienr.Add(new ResponseContainer(ResponseButtonType.Accept, () => QuestController.Instance.AcceptQuest(data.Quest)));
@@ -171,7 +174,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     {
         if (_currentDialogueCoroutine == null)
         {
-            Debug.Log("대화가 진행 중이 아닙니다");
+            // Debug.Log("대화가 진행 중이 아닙니다");
             return;
         }
 

@@ -33,7 +33,7 @@ public class PlayerJumpController : MonoBehaviour
 
     // Properties
     public bool CanJump => _remainingJumpCount > 0 && _timeAfterPlatformLeft <= _coyoteTime;
-    public int MaxJumpCount => PersistentDataManager.GetByGlobal<bool>("DoubleJump") ? _maxJumpCount : 1;
+    public int MaxJumpCount => PersistentDataManager.GetByGlobal<bool>("Jump") ? _maxJumpCount : 1;
 
     private bool _isJumpKeyQueued;
     private bool _isStartJump;
@@ -130,7 +130,7 @@ public class PlayerJumpController : MonoBehaviour
     }
     public void CastJump()
     {
-        // Debug.Log("cast jump");
+         //Debug.Log("cast jump");
 
         _isJumpKeyQueued = false;
         _isLongJumping = true;
@@ -156,7 +156,7 @@ public class PlayerJumpController : MonoBehaviour
     }
     private IEnumerator JumpQueueCoroutine()
     {
-        // Debug.Log("Jump Queued");
+         // Debug.Log("Jump Queued");
 
         // push jump input to 'jump queue'
         _isJumpKeyQueued = true;
@@ -188,7 +188,12 @@ public class PlayerJumpController : MonoBehaviour
         _player.Rigidbody.velocity = new Vector2(_player.Rigidbody.velocity.x, 0f);
 
         // ForceMode2D.Force : 충격파와 같은 힘을 가한다 (Jump를 위한 출력방식)
-        _player.Rigidbody.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        Vector2 forwardWeight = _player.RawInputs.Movement * 3f;
+        if(_player.Rigidbody.velocity.x != 0)
+        {
+            forwardWeight = Vector2.zero;
+        }
+        _player.Rigidbody.AddForce(forwardWeight + Vector2.up * jumpPower, ForceMode2D.Impulse);
     }
     /// <summary>
     /// Wall Jump

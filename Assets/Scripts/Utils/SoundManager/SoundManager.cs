@@ -45,9 +45,12 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         _pitchedSFXPlayer[PitchPrecision] = _sfxPlayer;
     }
 
+#if UNITY_EDITOR
     private void Update()
     {
-#if UNITY_EDITOR
+        /*
+         * TEST CODE
+         * 
         if (Input.GetKeyDown(KeyCode.A))
         {
             foreach (var sfxPlayer in _pitchedSFXPlayer)
@@ -55,8 +58,9 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
                 Debug.Log($"_pitchedSFXPlayer => <color=orange>Key</color>: {sfxPlayer.Key}, <color=yellow>Value</color>: {sfxPlayer.Value}", sfxPlayer.Value.gameObject);
             }
         }
-#endif
+        */
     }
+#endif
 
     // volume setting
     public void InitialVolumeSetting()
@@ -162,9 +166,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         {
             Debug.Log($"Already Playing this Audio Clip" +
                              $"\n" +
-                             $"New Audio Source: {clip.name}" +
-                             $"\n" +
-                             $"Old Audio Source: {_bgmPlayer.clip}");
+                             $"<color=yellow>New Audio Source</color>: {clip.name} <color=green>Old Audio Source</color>: {_bgmPlayer.clip.name}");
             return;
         }
 

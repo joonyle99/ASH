@@ -22,12 +22,15 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
             if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
             {
                 RecentDir = _statePreserver.LoadState<int>("_recentDirSaved", DefaultDir);
+                //Debug.Log("Change Scene by Loading, Recent direction value : " + RecentDir);
             }
             else
             {
                 int tmpDir = DefaultDir;
                 tmpDir = _statePreserver.LoadState<int>("_recentDir", DefaultDir);
-                SetRecentDir(tmpDir);
+                RecentDir = tmpDir;
+                //Debug.Log("Change Scene by Loading, Recent direction value : " + tmpDir);
+                //SetRecentDir(tmpDir);
             }
         }
 
@@ -43,7 +46,10 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
     {
         if (_statePreserver)
         {
-            _statePreserver.SaveState<int>("_recentDir", RecentDir);
+            if(SceneChangeManager.Instance.SceneChangeType != SceneChangeType.StageReset)
+            {
+                _statePreserver.SaveState<int>("_recentDir", RecentDir);
+            }
         }
 
         SaveAndLoader.OnSaveStarted -= SaveTurtleState;

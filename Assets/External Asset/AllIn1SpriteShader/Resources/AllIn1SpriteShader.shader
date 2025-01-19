@@ -273,7 +273,7 @@
 			#pragma shader_feature_local CHANGECOLOR3_ON
 			#pragma shader_feature_local COLORRAMP_ON
 			#pragma shader_feature_local GRADIENTCOLORRAMP_ON
-			#pragma shader_feature_local HITEFFECT_ON
+			#pragma multi_compile _ HITEFFECT_ON
 			#pragma shader_feature_local NEGATIVE_ON
 			#pragma shader_feature_local PIXELATE_ON
 			#pragma shader_feature_local GREYSCALE_ON
@@ -291,7 +291,7 @@
 			#pragma shader_feature_local SHADOW_ON
 			#pragma shader_feature_local SHINE_ON
 			#pragma shader_feature_local CONTRAST_ON
-			#pragma shader_feature_local OVERLAY_ON
+			#pragma multi_compile _ OVERLAY_ON
 			#pragma shader_feature_local OVERLAYMULT_ON
 			#pragma shader_feature_local ALPHACUTOFF_ON
 			#pragma shader_feature_local ALPHAROUND_ON

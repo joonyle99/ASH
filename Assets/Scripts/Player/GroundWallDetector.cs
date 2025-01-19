@@ -10,9 +10,11 @@ public class GroundWallDetector : MonoBehaviour
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private Transform _groundCheckTrans;
     [SerializeField] private Transform _groundUpwardCheckTrans;
+    [SerializeField] private Transform _groundBackwardCheckTrans;
     [SerializeField] private float _groundCheckRadius;
     [SerializeField] private float _groundUpwardCheckRadius;
     [SerializeField] private float _groundUpwardCheckDistance;
+    [SerializeField] private float _groundBackwardCheckDistance;
 
     [Header("Climb Check")]
     [Space]
@@ -39,6 +41,9 @@ public class GroundWallDetector : MonoBehaviour
         // Check Upward Ground (For Wall Climb)
         _player.UpwardGroundHitForClimb = Physics2D.Raycast(_groundUpwardCheckTrans.position, Vector2.up, _groundUpwardCheckDistance, _groundLayer);
 
+        // Check Backward Wall
+        _player.BackwardGroundHit = Physics2D.Raycast(_groundBackwardCheckTrans.position, -_player.PlayerLookDir2D, _groundBackwardCheckDistance, _groundLayer);
+
         // Check Wall
         _player.ClimbHit = Physics2D.Raycast(_climbCheckTrans.position, _player.PlayerLookDir2D, _climbCheckLength, _climbLayer);
 
@@ -64,7 +69,13 @@ public class GroundWallDetector : MonoBehaviour
         // Draw Upward Ground Check
         Gizmos.DrawWireSphere(_groundUpwardCheckTrans.position, _groundUpwardCheckRadius);
 
+        // Draw Upward Ground Check
+        Gizmos.DrawRay(_groundBackwardCheckTrans.position, -_player.PlayerLookDir2D * _groundBackwardCheckDistance);
+
         // Draw Wall Check
         Gizmos.DrawRay(_climbCheckTrans.position, _player.PlayerLookDir3D * _climbCheckLength);
+
+        // Draw Wall Check
+        Gizmos.DrawRay(_groundBackwardCheckTrans.position, _player.PlayerLookDir2D * _groundBackwardCheckDistance);
     }
 }

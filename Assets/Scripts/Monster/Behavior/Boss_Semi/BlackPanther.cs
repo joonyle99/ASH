@@ -345,7 +345,9 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         Debug.DrawLine(startPoint, endPoint, Color.cyan, 1f);
 
         // 대상 뒷편으로 지나갈 때까지 기다린다
-        yield return new WaitUntil(() => Mathf.Abs(transform.position.x - targetPosX) < 0.5f);
+        GroundChecker groundChecker = GetComponent<GroundChecker>();
+        
+        yield return new WaitUntil(() => (Mathf.Abs(transform.position.x - targetPosX) < 0.5f) || groundChecker.IsAnyGroundChecked);
 
         Animator.SetTrigger("Stop");
 
@@ -402,7 +404,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         for (int i = 0; i < count; i++)
         {
             _twinkleEffect.Play();
-            yield return new WaitForSeconds(_twinkleEffect.GetEmissionLifeTime());
+            yield return new WaitForSeconds(_twinkleEffect.GetTwinkleLifeTime());
             _twinkleEffect.Stop();
         }
 

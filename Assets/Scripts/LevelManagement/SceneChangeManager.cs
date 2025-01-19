@@ -36,30 +36,28 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
 
     private void Start()
     {
-        // 정의된 씬에 대해서만 동작한다
-
         var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
-        // 씬 컨텍스트는 정의된 씬에서만 생성된다
         if (GameSceneManager.IsDefinedScene(sceneName))
         {
-            // 씬 컨텍스트 생성
+            // create sceneContext
             SceneContext sceneContext = FindOrCreateSceneContext();
 
+            // entrance
             var passages = FindObjectsByType<Passage>(FindObjectsSortMode.None);
             var targetEntranceName = "Enter " + sceneName;
             var hasEntrance = passages.ToList().Find(passage => passage.PassageName == targetEntranceName);
             var entranceName = hasEntrance ? targetEntranceName : "";
 
-            // 씬 컨텍스트 빌드
+            // build sceneContext
             Result buildResult = sceneContext.BuildPlayable(entranceName);
         }
 
-        // 씬에 대한 BGM 재생
+        // play BGM
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
-        
-        // 씬 이름 표시
-        GameUIManager.SetSceneNameText(sceneName);
+
+        // TEMP: set scene name text for debug
+        // GameUIManager.SetSceneNameText(sceneName);
     }
 
     public SceneContext FindOrCreateSceneContext()
@@ -69,8 +67,15 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // SceneContext를 생성해주는 경우
         if (sceneContext == null)
         {
+            Debug.Log("SceneContext doesn't exist in the scene, so we'll create a new one (exception: LanternSceneContext)");
+
             GameObject go = new GameObject("SceneContext (Created)");
             sceneContext = go.AddComponent<SceneContext>();
+        }
+        // 이미 존재하는 SceneContext가 있는 경우
+        else
+        {
+            // Debug.Log("The scene already has a sceneContext. Returns it immediately");
         }
 
         return sceneContext;
@@ -116,7 +121,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
 
-        GameUIManager.SetSceneNameText(sceneName);
+        // GameUIManager.SetSceneNameText(sceneName);
     }
 
     // 플레이 가능한 씬으로 전환 (탐험구간, 보스던전, 보스전 등)
@@ -125,7 +130,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         if (IsChanging)
             return;
 
-        if(SceneChangeType == SceneChangeType.Loading)
+        if (SceneChangeType == SceneChangeType.Loading)
         {
             DialogueDataManager.LoadSyncAllDialogueData(true);
         }
@@ -143,7 +148,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         AsyncOperation load = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         yield return new WaitUntil(() => load.isDone);
 
-        if(Time.timeScale != 0)
+        if (Time.timeScale != 0)
         {
             Time.timeScale = 1;
         }
@@ -156,16 +161,19 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // 씬에 대한 BGM 재생
         SoundManager.Instance.PlayCommonBGMForScene(sceneName);
 
-        GameUIManager.SetSceneNameText(sceneName);
+        // GameUIManager.SetSceneNameText(sceneName);
     }
-    
+
     // SceneContext가 DefaultBuild되었을 때 호출되는 함수 (ISceneContextBuildListener 인터페이스 구현)
     public void OnSceneContextBuilt()
     {
         // 플레이어가 씬의 입구에서 나오는 컷씬을 실행한다
-        SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false));
+        StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, SceneContext.Current.SceneTransitionPlayer.EnterSceneEffectCoroutine(), false)));
 
         if (SceneContext.Current.SceneTransitionPlayer != _defaultSceneTransitionPlayer)
-            _defaultSceneTransitionPlayer.SetFadeImageAlpha(0);
+        {
+            // GameUIManager.SetDebugText("SetFadeImageAlpha(0f)");
+            _defaultSceneTransitionPlayer.SetFadeImageAlpha(0f);
+        }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 
 [Serializable]
@@ -48,9 +47,9 @@ public class WaveInfo
     {
         get
         {
-            foreach(var monster in WaveMonsters)
+            foreach (var monster in WaveMonsters)
             {
-                if(!monster.Monster.GetComponentInChildren<MonsterBehaviour>().IsDead)
+                if (!monster.Monster.GetComponentInChildren<MonsterBehaviour>().IsDead)
                 {
                     return false;
                 }
@@ -82,7 +81,8 @@ public class WaveInfo
     }
 }
 
-public class WaveSystemController : MonoBehaviour
+[RequireComponent(typeof(Identifier))]
+public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneContextBuildListener
 {
     [Header("Prefabs"), Space(10)]
 
@@ -91,16 +91,40 @@ public class WaveSystemController : MonoBehaviour
 
     [Header("Variable"), Space(10)]
 
-    [SerializeField]
-    private List<WaveInfo> _waveInfos;
+    [SerializeField] private List<WaveInfo> _waveInfos;
+    [SerializeField] private bool _isClearAllWaves = false;
+    [SerializeField] private float _timeOfEndOnceWaveCycle = 1.0f;
 
     [Header("External Called GameObject"), Space(10)]
 
-    [SerializeField]
-    private CutscenePlayer _startWaveCutscenePlayer;
-    [SerializeField]
-    private CutscenePlayer _endWaveCutscenePlayer;
+    [SerializeField] private CutscenePlayer _startWaveCutscene;
+    [SerializeField] private CutscenePlayer _endWaveCutscene;
 
+    Coroutine _currentPlayingWaveCoroutine;
+
+    public bool IsClearAllWaves
+    {
+        get { return _isClearAllWaves; }
+        set
+        {
+            _isClearAllWaves = value;
+
+            if (_identifier && _isClearAllWaves)
+            {
+                _identifier.SaveState("_isClearAllWaves", true);
+                _identifier.SaveState("_isClearAllWavesSaved", true);
+            }
+        }
+    }
+
+    private Identifier _identifier;
+
+    [Header("Doors")]
+
+    [SerializeField] private WaveDoor _enterWaveDoor;
+    [SerializeField] private WaveDoor _exitWaveDoor;
+
+#if UNITY_EDITOR
     #region Editor Property Function
     private void OnValidate()
     {
@@ -124,23 +148,8 @@ public class WaveSystemController : MonoBehaviour
         if (SwitchWaveInfosAndMonsterBundles()) return;
 
         //할당된 필드몬스터 몬스터번들로 부모 전환
-        for (int i = 0; i < _waveInfos.Count; i++)
-        {
-            WaveSpawnMonsterInfo[] monsterInfo = _waveInfos[i].WaveMonsters;
+        SetParentAssiginedFieldMonster();
 
-            foreach (var monster in monsterInfo)
-            {
-                if (monster.Monster == null) continue;
-
-                bool hasCorrectParent = monster.Monster.transform.parent != null &&
-                                        monster.Monster.transform.parent.tag == "WaveMonsterBundle";
-                if (monster.InstanceType == WaveSpawnMonsterInfo.MonsterInstanceType.Field &&
-                    !hasCorrectParent)
-                {
-                    monster.Monster.transform.SetParent(transform.GetChild(i + 1), true);
-                }
-            }
-        }
         //삭제된 필드몬스터 몬스터번들로 부터 삭제
         RemoveFieldMonsterFromWaveInfos(monsterBundles);
     }
@@ -225,6 +234,27 @@ public class WaveSystemController : MonoBehaviour
         return isSwitched;
     }
 
+    private void SetParentAssiginedFieldMonster()
+    {
+        for (int i = 0; i < _waveInfos.Count; i++)
+        {
+            WaveSpawnMonsterInfo[] monsterInfo = _waveInfos[i].WaveMonsters;
+
+            foreach (var monster in monsterInfo)
+            {
+                if (monster.Monster == null) continue;
+
+                bool hasCorrectParent = monster.Monster.transform.parent != null &&
+                                        monster.Monster.transform.parent.tag == "WaveMonsterBundle";
+                if (monster.InstanceType == WaveSpawnMonsterInfo.MonsterInstanceType.Field &&
+                    !hasCorrectParent)
+                {
+                    monster.Monster.transform.SetParent(transform.GetChild(i + 1), true);
+                }
+            }
+        }
+    }
+
     private void RemoveFieldMonsterFromWaveInfos(List<GameObject> monsterBundles)
     {
         for (int i = 0; i < monsterBundles.Count; i++)
@@ -266,6 +296,7 @@ public class WaveSystemController : MonoBehaviour
         }
     }
     #endregion
+#endif
 
     private void Awake()
     {
@@ -274,6 +305,8 @@ public class WaveSystemController : MonoBehaviour
 
     private void Init()
     {
+        _identifier = GetComponent<Identifier>();
+
         foreach (var waveInfo in _waveInfos)
         {
             foreach (var monster in waveInfo.WaveMonsters)
@@ -288,19 +321,62 @@ public class WaveSystemController : MonoBehaviour
         }
     }
 
+    public void OnSceneContextBuilt()
+    {
+        if (_identifier)
+        {
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            {
+                _isClearAllWaves = _identifier.LoadState<bool>("_isClearAllWavesSaved", false);
+            }
+            else
+            {
+                _isClearAllWaves = _identifier.LoadState<bool>("_isClearAllWaves", false);
+            }
+
+            if(!_isClearAllWaves)
+            {
+                _startWaveCutscene.GetComponent<PreserveState>().SaveState("_played", false);
+                _startWaveCutscene.IsPlayed = false;
+            }
+        }
+    }
+
+    /* renewal에 사용
+    public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
+    {
+        if(activator.Type == ActivatorType.Player &&
+            !_isClearAllWaves && _currentPlayingWaveCoroutine == null)
+        {
+            //StartWaveSystem();
+        }
+    }
+    */
+
     public void StartWaveSystem()
     {
-        StartCoroutine(WaveSystemLogic());
+        _currentPlayingWaveCoroutine = StartCoroutine(WaveSystemLogic());
     }
 
     IEnumerator WaveSystemLogic()
     {
+        StartOfWaveSystemLogic();
+
+        bool isFirstOfSpawn = true;
+
         for (int i = 0; i < _waveInfos.Count; i++)
         {
             //해당 웨이브의 몬스터 스폰
             foreach (var monster in _waveInfos[i].WaveMonsters)
             {
-                SpawnWaveMonster(i + 1, monster);
+                Transform monsterTransform = SpawnWaveMonster(i + 1, monster);
+
+                if (monsterTransform != null &&
+                    isFirstOfSpawn)
+                {
+                    SceneEffectManager.Instance.Camera.StartFollow(monsterTransform);
+                    isFirstOfSpawn = false;
+                }
             }
 
             while (true)
@@ -308,6 +384,7 @@ public class WaveSystemController : MonoBehaviour
                 if (_waveInfos[i].IsClear)
                 {
                     //한 웨이브 클리어시 행동
+                    yield return new WaitForSeconds(_timeOfEndOnceWaveCycle);
 
                     break;
                 }
@@ -318,31 +395,63 @@ public class WaveSystemController : MonoBehaviour
         EndOfWaveSystemLogic();
     }
 
-    private void SpawnWaveMonster(int waveStage, WaveSpawnMonsterInfo waveMonsterInfo)
+    /// <summary>
+    /// 웨이브 몬스터를 스폰하는 작업
+    /// </summary>
+    /// <param name="waveStage"></param>
+    /// <param name="waveMonsterInfo"></param>
+    /// <returns> 웨이브 몬스터가 스폰될 지점(Position) </returns>
+    private Transform SpawnWaveMonster(int waveStage, WaveSpawnMonsterInfo waveMonsterInfo)
     {
         switch (waveMonsterInfo.InstanceType)
         {
             case WaveSpawnMonsterInfo.MonsterInstanceType.Prefab:
                 {
+                    GameObject spawnedMonster = null;
                     for (int i = 0; i < waveMonsterInfo.Count; i++)
                     {
-                        GameObject spawnedMonster = Instantiate(waveMonsterInfo.Monster, transform.GetChild(waveStage - 1));
+                        spawnedMonster = Instantiate(waveMonsterInfo.Monster, transform.GetChild(waveStage - 1));
                         spawnedMonster.transform.position = waveMonsterInfo.SpawnPosition;
                     }
-                    break;
+
+                    return spawnedMonster.transform;
                 }
             case WaveSpawnMonsterInfo.MonsterInstanceType.Field:
                 {
                     waveMonsterInfo.Monster?.transform.GetChild(0).gameObject.SetActive(true);
-                    waveMonsterInfo.Monster?.GetComponentInChildren<MonsterBehaviour>().RespawnProcess();
 
-                    break;
+                    MonsterBehaviour monsterBehaviour = waveMonsterInfo.Monster?.GetComponentInChildren<MonsterBehaviour>();
+                    if (monsterBehaviour != null)
+                    {
+                        monsterBehaviour.GetComponent<MaterialController>().InitMaterialForRespawn();
+                        monsterBehaviour.RespawnProcess();
+                    }
+
+                    return waveMonsterInfo.Monster.transform;
                 }
         }
+
+        return null;
+    }
+
+    private void StartOfWaveSystemLogic()
+    {
+        /* renewal에 사용
+        //_enterWaveDoor.CloseDoor(false);
+        //_exitWaveDoor.CloseDoor(false);
+        */
     }
 
     private void EndOfWaveSystemLogic()
     {
-        _endWaveCutscenePlayer.GetComponent<BoxCollider2D>().enabled = true;
+        _currentPlayingWaveCoroutine = null;
+        IsClearAllWaves = true;
+
+        _endWaveCutscene?.Play();
+
+        /* renewal에 사용
+        //_enterWaveDoor.OpenDoor(false);
+        //_exitWaveDoor.OpenDoor(false);
+        */
     }
 }

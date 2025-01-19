@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public struct InputState
@@ -38,8 +37,6 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
 
     private InputState _cachedState;
     public InputState State => _cachedState;
-
-    private Coroutine _inputUpdateCoroutine;
 
     private void Update()
     {
@@ -96,8 +93,27 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
         if (setter == _currentSetter)
             return;
 
+        /*
+        var setterObject = (object)setter;
+
+        if (setterObject == (object)_defaultInputSetter)
+        {
+            Debug.Log("_defaultInputSetter");
+        }
+        else if (setterObject == (object)_moveRightInputSetter)
+        {
+            Debug.Log("_moveRightInputSetter");
+        }
+        else if (setterObject == (object)_moveLeftInputSetter)
+        {
+            Debug.Log("_moveLeftInputSetter");
+        }
+        else if (setterObject == (object)_stayStillInputSetter)
+        {
+            Debug.Log("_stayStillInputSetter");
+        }
+        */
+
         _currentSetter = setter;
     }
-
-    public IInputSetter GetCurrentInputSetter() => _currentSetter;
 }

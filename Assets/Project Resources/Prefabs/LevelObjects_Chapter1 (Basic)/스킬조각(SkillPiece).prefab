@@ -4862,7 +4862,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.584
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1.84
+  m_Intensity: 2.5
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000ff527bb8
@@ -4936,8 +4936,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 723c8b2cddeb40a479f2d991ee649468, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _frequency: 2
-  _scaleDiffAmount: 0.1
+  _frequency: 1
+  _scaleDiffAmount: 0.3
 --- !u!1 &1358083303
 GameObject:
   m_ObjectHideFlags: 0
@@ -5176,7 +5176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: Piece
+  - _isLoop: 0
+    _key: Piece
     _clip: {fileID: 8300000, guid: 81cfb0c881279964aa3592e1b2433a69, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -5184,7 +5185,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: Skill
+  - _isLoop: 0
+    _key: Skill
     _clip: {fileID: 8300000, guid: a20b803cb8de33847ab5ef7c3276544b, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -5205,6 +5207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundData:
+    _isLoop: 0
     _key: 
     _clip: {fileID: 8300000, guid: 91fbb9f19bef9954194d8993458483d3, type: 3}
     _volumeType: 0

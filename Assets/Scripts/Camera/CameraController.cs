@@ -10,6 +10,15 @@ using System.Collections.Generic;
 /// </summary>
 public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
+    [System.Serializable]
+    public enum CameraType
+    {
+        Normal,
+        Chasing,
+        Surrounding,
+    }
+
+    [System.Serializable]
     public enum BoundaryType
     {
         Top,
@@ -19,6 +28,9 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
 
     private Camera _mainCamera;
+    public Camera MainCamera => _mainCamera;
+
+    public CameraType CurrentCameraType { get; set; } = CameraType.Normal;
 
     private Vector3[] _viewportCorners = new Vector3[4];        // 뷰포트(카메라가 보는 화면의 '정규화'된 2D 좌표 시스템)의 4개 코너 좌표
     private Vector3[] _worldCorners = new Vector3[4];           // 월드 공간에서의 뷰포트 프러스텀 코너 좌표
@@ -38,6 +50,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public Vector3 BottomMiddle => (LeftBottom + RightBottom) / 2f;
 
     private ProCamera2D _proCamera;
+    public ProCamera2D ProCamera => _proCamera;
 
     private ProCamera2DShake _shakeComponent;
     private ProCamera2DTriggerZoom _triggerZoomComponent;
@@ -110,7 +123,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     private void LateUpdate()
     {
-        /*
         for (int i = 0; i < 4; i++)
         {
             // 뷰포트 좌표(좌하단, 우하단, 우상단, 좌상단)를 월드 좌표로 변환
@@ -133,7 +145,6 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
             Debug.DrawLine(TopMiddle, TopMiddle + Vector3.forward, Color.blue);
             Debug.DrawLine(BottomMiddle, BottomMiddle + Vector3.forward, Color.yellow);
         }
-        */
     }
     private void OnDestroy()
     {
@@ -154,7 +165,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         }
         else
         {
-            Debug.LogWarning("Player not found in the scene");
+            Debug.LogWarning("<color=orange>[SceneContext Build]</color> Player not found in scene");
         }
 
         SnapFollow();
@@ -163,7 +174,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         // Debug.Log($"카메라 리셋");
 
-        if (SceneContext.Current.Player)
+        if (SceneContext.Current.Player && CurrentCameraType == CameraType.Normal)
         {
             // 카메라 타겟에 플레이머만 포함시킨다 (나머지 타겟 삭제)
             StartFollow(SceneContext.Current.Player.transform);
@@ -185,6 +196,17 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
 
     // effect: follow
+    public void EnableFollow()
+    {
+        _proCamera.FollowHorizontal = true;
+        _proCamera.FollowVertical = true;
+    }
+    public void DisableFollow()
+    {
+        _proCamera.FollowHorizontal = false;
+        _proCamera.FollowVertical = false;
+    }
+
     public void AddFollowTarget(Transform target)
     {
         _proCamera.AddCameraTarget(target);
@@ -264,11 +286,15 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     // effect: shake
     public void StartShake(ShakePreset preset)
     {
+        // Debug.Log($"ShakePreset: {preset.name}");
+
         _shakeComponent.Shake(preset);
     }
     public void StartConstantShake(ConstantShakePreset preset)
     {
-        // _shakeComponent.StopConstantShaking(0.3f);
+        // Debug.Log($"ConstantShakePreset: {preset.name}");
+
+        _shakeComponent.StopConstantShaking(0f);    // 이전에 적용된 ConstantShake를 중지
         _shakeComponent.ConstantShake(preset);
     }
     public void StopConstantShake(float smooth = 0.1f)
@@ -311,7 +337,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void OnUpdateFinished(float t)
     {
-        Debug.Log("OnUpdateFinished");
+        // Debug.Log("OnUpdateFinished");
         IsUpdateFinished = true;
     }
 

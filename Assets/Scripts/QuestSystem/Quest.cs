@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// [System.Serializable]
+[System.Serializable]
 public class Quest
 {
     public Quest(Quest quest)
@@ -87,6 +87,7 @@ public class Quest
         SceneContext.Current.Player.IncreaseMaxHp(_questData.RewardAmount);
 
         _currentRepeatCount++;
+        _currentCount = 0;
 
         IsActive = false;
     }

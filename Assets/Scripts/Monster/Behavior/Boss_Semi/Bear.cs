@@ -98,9 +98,9 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     [Header("Cutscene")]
     [Space]
 
-    [SerializeField] private bool _isAbleLightGuideCutscene = true;
+    // [SerializeField] private bool _isAbleLightGuideCutscene = true;
 
-    [Space]
+    // [Space]
 
     [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;             // 색이 서서히 돌아오는 효과
     [SerializeField] private ParticleSystem[] _disintegrateEffects;                             // 잿가루 효과 파티클
@@ -168,8 +168,10 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         // 그로기 상태로 진입
         SetAnimatorTrigger("Groggy");
 
+        /*
         if (_isAbleLightGuideCutscene)
             _isAbleLightGuideCutscene = false;
+        */
     }
 
     // boss base
@@ -183,15 +185,17 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
             currentAttackCount = 0;
             TotalEarthquakeCount++;
 
+            /*
             if (_totalEarthquakeCount == 3 && _isAbleLightGuideCutscene == true)
             {
-                Debug.Log("Lighting Guide 컷씬 호출");
+                // Debug.Log("Lighting Guide 컷씬 호출");
 
                 _isAbleLightGuideCutscene = false;
                 StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
             }
+            */
 
-            IsCapturable = true;
+            // IsCapturable = true;
         }
         else
             currentAttackCount++;
@@ -200,7 +204,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     {
         if (_currentAttack is AttackType.EarthQuake)
         {
-            IsCapturable = false;
+            // IsCapturable = false;
         }
 
         if (currentAttackCount >= targetAttackCount)
@@ -213,6 +217,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
     public override void GroggyPreProcess()
     {
+        // Debug.Log("bear groggy pre process");
+
         // 그로기 상태 진입 (더이상 손전등의 영향을 받지 않음)
         IsGroggy = true;
 
@@ -221,6 +227,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
     public override void GroggyPostProcess()
     {
+        // Debug.Log("bear groggy post process");
+
         // 그로기 상태 종료 (이제 손전등의 영향을 받음)
         IsGroggy = false;
 
@@ -408,7 +416,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         wave2.SetActor(this);
     }
 
-    // effects
+    // cutscene
     public override void ExecutePostDeathActions()
     {
         base.ExecutePostDeathActions();
@@ -422,8 +430,8 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
         yield return new WaitForSeconds(2f);
 
-        yield return StartCoroutine(ChangeImageCoroutine());
-        yield return StartCoroutine(ChangeBackgroundCoroutine());
+        yield return ChangeImageCoroutine();
+        yield return ChangeBackgroundCoroutine();
 
         // 최종 컷씬 재생
         cutscenePlayerList.PlayCutscene("Final CutScene");
