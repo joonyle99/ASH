@@ -150,11 +150,14 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             {
                 if (_isGodMode)
                 {
-                    MaterialController.EnableGodModeOutline();
+                    // TODO: 임시로 불보스는 GodModeOutline을 사용하지 않도록 설정
+                    if (monsterData.RankType != MonsterDefine.RankType.FinalBoss)
+                        MaterialController.EnableGodModeOutline();
                 }
                 else
                 {
-                    MaterialController.DisableGodModeOutline();
+                    if (monsterData.RankType != MonsterDefine.RankType.FinalBoss)
+                        MaterialController.DisableGodModeOutline();
                 }
             }
             //#endif
