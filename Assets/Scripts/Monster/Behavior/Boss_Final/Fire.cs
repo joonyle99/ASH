@@ -7,7 +7,7 @@ using UnityEngine;
 
 public sealed class Fire : BossBehaviour
 {
-    #region Attack
+    #region Enum & Struct
     public enum AttackType
     {
         None = 0,
@@ -335,6 +335,7 @@ public sealed class Fire : BossBehaviour
     {
         base.Awake();
 
+        // 스킬 애니메이션(4종)의 Duration을 가져옴
         foreach (var clip in Animator.runtimeAnimatorController.animationClips)
         {
             if (clip.name == "ani_fireBoss_fireBeam")
@@ -348,23 +349,25 @@ public sealed class Fire : BossBehaviour
         }
 
         // 공격 판독기의 대기 이벤트 등록
-        AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
-
         // 텔레포트 전이 이벤트 등록
-        AnimTransitionEvent -= HandleTeleportTransition;
         AnimTransitionEvent += HandleTeleportTransition;
+
+        // 스킬 변수 초기화
+
+        // flame beam
+        _flameBeamAngle = 360f / _flameBeamCount; // 360 / 8 = 45
+        _flameBeamAngleEachCast = _flameBeamAngle / _flameBeamCastCount;  // 45 / 3 = 15
+        // rage target hurt count
+        rageTargetHurtCount = finalTargetHurtCount - _shouldLanternAttackedCount;
     }
     protected override void Start()
     {
         base.Start();
 
-        InitSkillVariable();
-
-        rageTargetHurtCount = finalTargetHurtCount - _shouldLanternAttackedCount;
-
         SetToFirstAttack();
 
+        // 무적 상태 초기화
         IsGodMode = false;
     }
     protected override void Update()
@@ -372,6 +375,7 @@ public sealed class Fire : BossBehaviour
         base.Update();
 
 #if UNITY_EDITOR
+        // CHEAT: 실행 중인 스킬 코루틴 디버그
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
         {
             PrintSkillCoroutine();
@@ -471,13 +475,6 @@ public sealed class Fire : BossBehaviour
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
 
-    // skill
-    private void InitSkillVariable()
-    {
-        // flame beam
-        _flameBeamAngle = 360f / _flameBeamCount; // 360 / 8 = 45
-        _flameBeamAngleEachCast = _flameBeamAngle / _flameBeamCastCount;  // 45 / 3 = 15
-    }
     private IEnumerator FlameBeamCoroutine()
     {
         var currentNumber = 0;
