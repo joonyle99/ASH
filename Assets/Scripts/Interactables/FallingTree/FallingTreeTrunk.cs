@@ -13,6 +13,8 @@ public class FallingTreeTrunk : MonoBehaviour
 
     private PreserveState _statePreserver;
 
+    [SerializeField] private GameObject _fence;
+
     bool _isFallingSoundPlayed = false;
     float _originalRotation;
 
@@ -47,5 +49,10 @@ public class FallingTreeTrunk : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void RemoveFence()
+    {
+        _fence.gameObject.SetActive(false);
     }
 }

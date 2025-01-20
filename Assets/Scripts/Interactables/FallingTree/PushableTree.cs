@@ -73,6 +73,8 @@ public class PushableTree : InteractableObject, ISceneContextBuildListener
         {
             if (IsFallen)
             {
+                _treeTrunk.RemoveFence();
+
                 IsInteractable = false;
             }
         }
@@ -82,6 +84,7 @@ public class PushableTree : InteractableObject, ISceneContextBuildListener
     {
         _moveDirection = Player.RecentDir;
     }
+
     public override void UpdateInteracting()
     {
         if (IsInteractionKeyUp || !IsPlayerInteractionState || IsFallen)
@@ -89,6 +92,7 @@ public class PushableTree : InteractableObject, ISceneContextBuildListener
             ExitInteraction();
         }
     }
+
     public override void FixedUpdateInteracting()
     {
         if (IsPlayerIsDirSync)

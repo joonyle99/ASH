@@ -3,6 +3,7 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class OptionView : MonoBehaviour
 {
@@ -22,9 +23,28 @@ public class OptionView : MonoBehaviour
     [Space]
 
     [Header("Resolution")]
+    [SerializeField] private GameObject Window;
+    [SerializeField] private GameObject WindowChecked;
+    [SerializeField] private GameObject FullScreen;
+    [SerializeField] private GameObject FullScreenChecked;
+
     [SerializeField] private int _width = 1600;
     [SerializeField] private int _height = 900;
     [SerializeField] private bool _isFullScreen = true;
+    public bool IsFullScreen
+    {
+        get => _isFullScreen;
+        set
+        {
+            Window?.SetActive(value);
+            WindowChecked?.SetActive(!value);
+
+            FullScreen?.SetActive(!value);
+            FullScreenChecked?.SetActive(value);
+            Debug.Log("IsfullScreen property called");
+            _isFullScreen = value;
+        }
+    }
 
     [Header("External Reference")]
     [Space]
@@ -44,6 +64,8 @@ public class OptionView : MonoBehaviour
     }
     private void Start()
     {
+        //IsFullScreen = true;
+
         StartCoroutine(SetupVolumeCoroutine());
     }
 
@@ -154,14 +176,18 @@ public class OptionView : MonoBehaviour
         SceneChangeManager.Instance.ChangeToNonPlayableScene("TitleScene");
     }
 
-    public void ToggleResolution()
+    public void SetFullScreenResolution()
     {
-        _isFullScreen = !_isFullScreen;
+        IsFullScreen = true;
+        Screen.SetResolution(Screen.width, Screen.height, true);
+        Debug.Log("Set resolution to FullScreen");
+    }
 
-        _width = _isFullScreen ? Screen.width : 1600;
-        _height = _isFullScreen ? Screen.height : 900;
-
-        Screen.SetResolution(_width, _height, _isFullScreen);
+    public void SetWindowResolution()
+    {
+        IsFullScreen = false;
+        Screen.SetResolution(1600, 900, false);
+        Debug.Log("Set resolution to Window");
     }
 
     private IEnumerator SetupVolumeCoroutine()
