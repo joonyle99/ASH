@@ -2,13 +2,13 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// »óÈ£ÀÛ¿ë ÅØ½ºÆ® °¡ÀÌµå¸¦ Ãâ·ÂÇÏ±â À§ÇÑ UI
+/// ìƒí˜¸ì‘ìš© í…ìŠ¤íŠ¸ ê°€ì´ë“œë¥¼ ì¶œë ¥í•˜ê¸° ìœ„í•œ UI
 ///
-/// »óÈ£ÀÛ¿ë ¸¶Ä¿ UI °æ¿ìÀÇ ¼ö
-///     1. ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ®ÀÇ Æ®¸®°Å ¹Ú½º¿¡ µé¾î°£ °æ¿ì
-///     2. ÇÃ·¹ÀÌ¾î¿Í ¿ÀºêÁ§Æ®°¡ »óÈ£ÀÛ¿ë ÁßÀÎ °æ¿ì
-///     3. ÇÃ·¹ÀÌ¾î¿Í ¿ÀºêÁ§Æ®ÀÇ »óÈ£ÀÛ¿ëÀÌ °Å¸®°¡ ¸Ö¾îÁ® ³¡³­ °æ¿ì
-///     4. ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ëÀ» ³¡¸¶Ä£ °æ¿ì
+/// ìƒí˜¸ì‘ìš© ë§ˆì»¤ UI ê²½ìš°ì˜ ìˆ˜
+///     1. í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ì˜ íŠ¸ë¦¬ê±° ë°•ìŠ¤ì— ë“¤ì–´ê°„ ê²½ìš°
+///     2. í”Œë ˆì´ì–´ì™€ ì˜¤ë¸Œì íŠ¸ê°€ ìƒí˜¸ì‘ìš© ì¤‘ì¸ ê²½ìš°
+///     3. í”Œë ˆì´ì–´ì™€ ì˜¤ë¸Œì íŠ¸ì˜ ìƒí˜¸ì‘ìš©ì´ ê±°ë¦¬ê°€ ë©€ì–´ì ¸ ëë‚œ ê²½ìš°
+///     4. í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš©ì„ ëë§ˆì¹œ ê²½ìš°
 /// </summary>
 public class InteractionMarker : MonoBehaviour
 {
@@ -25,12 +25,15 @@ public class InteractionMarker : MonoBehaviour
         _rectTransform = GetComponent<RectTransform>();
         _canvasGroup = GetComponent<CanvasGroup>();
     }
+
     public void Update()
     {
         if (_isMarking)
         {
-            // 2. ÇÃ·¹ÀÌ¾î¿Í ¿ÀºêÁ§Æ®°¡ »óÈ£ÀÛ¿ë ÁßÀÎ °æ¿ì (feat. InteractionMarker.cs)
-            if (_currentObject.IsInteracting)
+            OptionView optionView = GameUIManager.Instance.OptionView;
+
+            // 2. í”Œë ˆì´ì–´ì™€ ì˜¤ë¸Œì íŠ¸ê°€ ìƒí˜¸ì‘ìš© ì¤‘ì¸ ê²½ìš° (feat. InteractionMarker.cs)
+            if (_currentObject.IsInteracting || optionView.IsPause)
             {
                 InvisibleMarker();
             }
@@ -43,11 +46,12 @@ public class InteractionMarker : MonoBehaviour
             }
         }
     }
+
     public void LateUpdate()
     {
         //
-        // ¿ä¾à:
-        //     »óÈ£ÀÛ¿ë ÅØ½ºÆ® °¡ÀÌµåÀÇ À§Ä¡ ¼³Á¤Àº Update()¿¡¼­ ÇöÀç '»óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ®°¡ Á¤ÇØÁø ÈÄ'¿¡ °è»êÇÑ´Ù
+        // ìš”ì•½:
+        //     ìƒí˜¸ì‘ìš© í…ìŠ¤íŠ¸ ê°€ì´ë“œì˜ ìœ„ì¹˜ ì„¤ì •ì€ Update()ì—ì„œ í˜„ì¬ 'ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ê°€ ì •í•´ì§„ í›„'ì— ê³„ì‚°í•œë‹¤
         //
 
         if (_isMarking)
@@ -80,6 +84,7 @@ public class InteractionMarker : MonoBehaviour
 
         _currentObject = null;
     }
+
     public void VisibleMarker()
     {
         if (_canvasGroup.alpha > 0.99f) return;
@@ -88,6 +93,7 @@ public class InteractionMarker : MonoBehaviour
 
         _canvasGroup.alpha = 1f;
     }
+
     public void InvisibleMarker()
     {
         if (_canvasGroup.alpha < 0.01f) return;
@@ -108,6 +114,6 @@ public class InteractionMarker : MonoBehaviour
         TMP_Text keyText = transform.Find("Key Box").GetComponentInChildren<TMP_Text>();
         PCInputSetter pcInputSetter = InputManager.Instance.DefaultInputSetter as PCInputSetter;
 
-        keyText.text = pcInputSetter.GetKeyCode("»óÈ£ÀÛ¿ë").KeyCode.ToString();
+        keyText.text = pcInputSetter.GetKeyCode("ìƒí˜¸ì‘ìš©").KeyCode.ToString();
     }
 }

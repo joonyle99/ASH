@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// ³ª¹« ±âµÕ
+/// ë‚˜ë¬´ ê¸°ë‘¥
 /// </summary>
 public class FallingTreeTrunk : MonoBehaviour
 {
@@ -53,6 +53,6 @@ public class FallingTreeTrunk : MonoBehaviour
 
     public void RemoveFence()
     {
-        _fence.gameObject.SetActive(false);
+        _fence?.gameObject.SetActive(false);
     }
 }

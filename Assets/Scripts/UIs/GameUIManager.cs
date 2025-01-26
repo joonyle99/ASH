@@ -2,10 +2,11 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 /// <summary>
-/// ¸ğµç Playable Scene¿¡´Â GameCanvas¿Í GameUIManager°¡ ÀÖ´Ù
-/// µû¶ó¼­ ½Ì±ÛÅæÀÌ ¾Æ´Ñ ÀÌ Å¬·¡½º¸¦ »ç¿ëÇÏ¿© UI¸¦ °ü¸®ÇÑ´Ù
+/// ëª¨ë“  Playable Sceneì—ëŠ” GameCanvasì™€ GameUIManagerê°€ ìˆë‹¤
+/// ë”°ë¼ì„œ ì‹±ê¸€í†¤ì´ ì•„ë‹Œ ì´ í´ë˜ìŠ¤ë¥¼ ì‚¬ìš©í•˜ì—¬ UIë¥¼ ê´€ë¦¬í•œë‹¤
 /// </summary>
 public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
 {
@@ -46,7 +47,10 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     [Space]
 
     [SerializeField] private Letterbox _letterBox;
+
     [SerializeField] private OptionView _optionView;
+    public OptionView OptionView => _optionView;
+
     [SerializeField] private TextMeshProUGUI _sceneNameText;
     [SerializeField] private TextMeshProUGUI _debugText;
 
@@ -115,6 +119,30 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
         Instance.StartCoroutine(Instance.CloseSkillObtainPanel(Instance._skillObtainPanelDuration));
         Instance._statusUI.alpha = 0;
     }
+
+    public static void OpenDoubleJumpSkillObtainPanel()
+    {
+        int skillPieceCount = PersistentDataManager.GetByGlobal<int>("SkillPiece");
+
+            var info = new SkillObtainPanel.SkillInfo();
+
+            info.Icon = PersistentDataManager.SkillOrderData[skillPieceCount / 3].UnlockImage;
+            info.MainText = PersistentDataManager.SkillOrderData[skillPieceCount / 3].Name;
+            info.DetailText = "";
+
+            CustomKeyCode keyCode = InputManager.Instance.DefaultInputSetter.GetKeyCode(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key);
+
+            if (keyCode != null)
+            {
+                info.DetailText += keyCode.KeyCode.ToString();
+            }
+
+            info.DetailText += PersistentDataManager.SkillOrderData[skillPieceCount / 3].DetailText;
+
+            OpenSkillObtainPanel(info);
+        
+    }
+
     private IEnumerator CloseSkillObtainPanel(float duration)
     {
         if (Instance == null) yield break;

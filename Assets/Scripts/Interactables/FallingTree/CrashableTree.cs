@@ -3,6 +3,7 @@ using UnityEngine;
 public class CrashableTree : MonoBehaviour
 {
     [SerializeField] private FallingTreeTrunk _treeTrunk;
+
     private PreserveState _statePreserver;
 
     private void Awake()
@@ -20,11 +21,13 @@ public class CrashableTree : MonoBehaviour
             _treeTrunk.transform.localScale = newTreeTransform.Scale;
         }
     }
+
+
     private void OnDestroy()
     {
         if (_statePreserver)
         {
-            // falling treeÀÇ µ¥ÀÌÅÍ¸¦ ÀúÀåÇÑ´Ù.
+            // falling treeì˜ ë°ì´í„°ë¥¼ ì €ì¥í•œë‹¤.
             _statePreserver.SaveState("_isFallingTreeTransform", new TransformState(_treeTrunk.transform));
         }
     }
