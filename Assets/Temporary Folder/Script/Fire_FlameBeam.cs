@@ -14,4 +14,12 @@ public class Fire_FlameBeam : Monster_IndependentSkill
     {
         Destroy(this.gameObject);
     }
+    public void PlaySound_SE_Fire_Flamebeam1()
+    {
+        SoundManager.Instance.PlayCommonSFX("SE_Fire_Flamebeam1");
+    }
+    public void PlaySound_SE_Fire_Flamebeam2()
+    {
+        SoundManager.Instance.PlayCommonSFX("SE_Fire_Flamebeam2");
+    }
 }

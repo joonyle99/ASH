@@ -2,14 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// SoundClipData(Key, Clip, Volume, Pitch ..) ¸¦ ´ã¾ÆµÎ°í °ü¸®ÇÑ´Ù
+/// SoundClipData(Key, Clip, Volume, Pitch ..) ë¥¼ ë‹´ì•„ë‘ê³  ê´€ë¦¬í•œë‹¤
 /// </summary>
+[System.Serializable]
 public class SoundList : MonoBehaviour
 {
     [SerializeField] private List<SoundClipData> _soundDatas;
     public List<SoundClipData> Datas => _soundDatas;
 
-    // »ç¿îµå Å¬¸³ µ¥ÀÌÅÍ '¸®½ºÆ®'¿¡ O(1)·Î Á¢±ÙÇÏ±â À§ÇÑ µñ¼Å³Ê¸®
+    // ì‚¬ìš´ë“œ í´ë¦½ ë°ì´í„° 'ë¦¬ìŠ¤íŠ¸'ì— O(1)ë¡œ ì ‘ê·¼í•˜ê¸° ìœ„í•œ ë”•ì…”ë„ˆë¦¬
     private Dictionary<string, int> _soundIndexMap = new();
 
     private void Awake()
@@ -22,7 +23,7 @@ public class SoundList : MonoBehaviour
 
     public void PlaySFX(string key, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
     {
-        // ÇØ´ç SoundList¿¡ µî·ÏÇØµĞ Å°°¡ Á¸ÀçÇÑ´Ù¸é
+        // í•´ë‹¹ SoundListì— ë“±ë¡í•´ë‘” í‚¤ê°€ ì¡´ì¬í•œë‹¤ë©´
         if (_soundIndexMap.ContainsKey(key))
         {
             var index = _soundIndexMap[key];
@@ -38,9 +39,7 @@ public class SoundList : MonoBehaviour
         }
         else
         {
-            Debug.Log($"SoundList¿¡¼­ PlaySFX¸¦ ½ÃµµÇßÀ¸³ª ÇØ´ç 'Key'°¡ Á¸ÀçÇÏÁö ¾Ê¾Æ SoundManagerÀÇ PlayCommonSFX·Î ³Ñ±é´Ï´Ù");
-
-            // Å°°¡ Á¸ÀçÇÏÁö ¾Ê´Â´Ù¸é SoundManagerÀÇ CommonSFX¿¡¼­ Àç»ıÀ» ½ÃµµÇÑ´Ù
+            // í‚¤ê°€ ì¡´ì¬í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ SoundManagerì˜ CommonSFXì—ì„œ ì¬ìƒì„ ì‹œë„í•œë‹¤
             SoundManager.Instance.PlayCommonSFX(key, pitchMultiplier, volumeMultiplier);
         }
     }

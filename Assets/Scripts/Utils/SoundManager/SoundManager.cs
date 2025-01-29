@@ -20,7 +20,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
     private const int PitchPrecision = 1000;
 
-    private SoundList[] _soundListMap; // ui, bgm, gimmick ...
+    private SoundList[] _soundLists; // ui, bgm, gimmick, skill ...
 
     private Dictionary<string, int> _soundListIndexMap = new();
     private Dictionary<int, AudioSource> _pitchedSFXPlayer = new();
@@ -29,15 +29,15 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     {
         base.Awake();
 
-        _soundListMap = _soundListParent.GetComponentsInChildren<SoundList>();
+        _soundLists = _soundListParent.GetComponentsInChildren<SoundList>();
 
         // each 'sound list'
-        for (int i = 0; i < _soundListMap.Length; i++)
+        for (int i = 0; i < _soundLists.Length; i++)
         {
             // each 'sound data' in sound list
-            for (int j = 0; j < _soundListMap[i].Datas.Count; j++)
+            for (int j = 0; j < _soundLists[i].Datas.Count; j++)
             {
-                var soundDataKey = _soundListMap[i].Datas[j].Key;
+                var soundDataKey = _soundLists[i].Datas[j].Key;
                 _soundListIndexMap[soundDataKey] = i;
             }
         }
@@ -70,7 +70,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         float bgmVolume = 1f;
         float sfxVolume = 1f;
 
-        // JsonLoad ¿¹Á¦
+        // JsonLoad ì˜ˆì œ
         if (JsonDataManager.Has("BGMVolume"))
             bgmVolume = float.Parse(JsonDataManager.Instance.GlobalSaveData.saveDataGroup["BGMVolume"]);
 
@@ -117,7 +117,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             }
         }
 
-        // JsonSave ¿¹Á¦
+        // JsonSave ì˜ˆì œ
         JsonDataManager.Add("SFXVolume", volume.ToString());
     }
     public void SetBgmVolume(float volume)
@@ -141,7 +141,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     }
     public void PlaySFX_AudioClip(AudioClip clip, float pitchFactor, float volumeFactor)
     {
-        // À½¼öÀÇ PitchFactor´Â Çã¿ëÇÏÁö ¾ÊÀ½
+        // ìŒìˆ˜ì˜ PitchFactorëŠ” í—ˆìš©í•˜ì§€ ì•ŠìŒ
         if (pitchFactor < 0f)
             pitchFactor = 0.001f;
 
@@ -149,14 +149,20 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
         if (_pitchedSFXPlayer.ContainsKey(pitchKey) == false)
         {
+            Debug.Log($"Create New AudioSource for Pitched SFX (pitch key: {pitchKey})", _pitchedSFXPlayer[pitchKey].gameObject);
+
             _pitchedSFXPlayer[pitchKey] = _sfxPlayer.AddComponent<AudioSource>();
             _pitchedSFXPlayer[pitchKey].pitch = pitchFactor;
 
             if (allSFXPlayer.Contains(_pitchedSFXPlayer[pitchKey]) == false)
+            {
                 allSFXPlayer.Add(_pitchedSFXPlayer[pitchKey]);
+            }
 
             InitialVolumeSetting();
         }
+
+        Debug.Log($"PlaySFX_AudioClip: {clip.name} (pitch key: {pitchKey})", _pitchedSFXPlayer[pitchKey].gameObject);
 
         _pitchedSFXPlayer[pitchKey].PlayOneShot(clip, volumeFactor);
     }
@@ -181,8 +187,9 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     {
         if (_soundListIndexMap.TryGetValue(key, out var soundListIndex))
         {
-            // SoundManagerÀÇ SoundList¿¡ Á¢±ÙÇÏ¿© ÇØ´ç Å°¿¡ ¸Â´Â SFX¸¦ Àç»ı
-            _soundListMap[soundListIndex].PlaySFX(key, pitchMultiplier, volumeMultiplier);
+            // SoundManagerì˜ SoundListì— ì ‘ê·¼í•˜ì—¬ í•´ë‹¹ í‚¤ì— ë§ëŠ” SFXë¥¼ ì¬ìƒ
+            Debug.Log("PlayCommonSFX: " + key);
+            _soundLists[soundListIndex].PlaySFX(key, pitchMultiplier, volumeMultiplier);
             return;
         }
 
@@ -192,7 +199,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     {
         if (_soundListIndexMap.TryGetValue(key, out var soundListIndex))
         {
-            _soundListMap[soundListIndex].PlayBGM(key, volumeMultiplier);
+            _soundLists[soundListIndex].PlayBGM(key, volumeMultiplier);
             return;
         }
 
@@ -224,7 +231,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         }
         else
         {
-            // ±âº» BGM Àç»ı
+            // ê¸°ë³¸ BGM ì¬ìƒ
             PlayCommonBGM("BasicBGM");
         }
     }

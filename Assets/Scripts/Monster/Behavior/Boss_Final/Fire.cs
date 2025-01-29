@@ -22,9 +22,9 @@ public sealed class Fire : BossBehaviour
 
     public enum FireBallDirType
     {
-        Down,           // ¾Æ·¡ (ºÏ -> ³²)
-        DiagonalLeft,   // ¿ŞÂÊ ¾Æ·¡ ´ë°¢¼± (ºÏµ¿ -> ³²¼­)
-        DiagonalRight,  // ¿À¸¥ÂÊ ¾Æ·¡ ´ë°¢¼± (ºÏ¼­ -> ³²µ¿)
+        Down,           // ì•„ë˜ (ë¶ -> ë‚¨)
+        DiagonalLeft,   // ì™¼ìª½ ì•„ë˜ ëŒ€ê°ì„  (ë¶ë™ -> ë‚¨ì„œ)
+        DiagonalRight,  // ì˜¤ë¥¸ìª½ ì•„ë˜ ëŒ€ê°ì„  (ë¶ì„œ -> ë‚¨ë™)
     }
     public struct FireBallInfo
     {
@@ -94,8 +94,8 @@ public sealed class Fire : BossBehaviour
 
     public enum AshPillarDirType
     {
-        LeftToRight,        // ¿ŞÂÊ¿¡¼­ ¿À¸¥ÂÊ
-        RightToLeft,        // ¿À¸¥ÂÊ¿¡¼­ ¿ŞÂÊ
+        LeftToRight,        // ì™¼ìª½ì—ì„œ ì˜¤ë¥¸ìª½
+        RightToLeft,        // ì˜¤ë¥¸ìª½ì—ì„œ ì™¼ìª½
     }
     public struct AshPillarInfo
     {
@@ -159,7 +159,7 @@ public sealed class Fire : BossBehaviour
 
     #region Variable
 
-    [Header("¡ª¡ª¡ª¡ª¡ª¡ª¡ª Fire Behaviour ¡ª¡ª¡ª¡ª¡ª¡ª¡ª")]
+    [Header("â€•â€•â€•â€•â€•â€•â€• Fire Behaviour â€•â€•â€•â€•â€•â€•â€•")]
     [Space]
 
     [Header("____ Attributes ____")]
@@ -335,7 +335,7 @@ public sealed class Fire : BossBehaviour
     {
         base.Awake();
 
-        // ½ºÅ³ ¾Ö´Ï¸ŞÀÌ¼Ç(4Á¾)ÀÇ DurationÀ» °¡Á®¿È
+        // ìŠ¤í‚¬ ì• ë‹ˆë©”ì´ì…˜(4ì¢…)ì˜ Durationì„ ê°€ì ¸ì˜´
         foreach (var clip in Animator.runtimeAnimatorController.animationClips)
         {
             if (clip.name == "ani_fireBoss_fireBeam")
@@ -348,12 +348,12 @@ public sealed class Fire : BossBehaviour
                 _firePillarAnimDuration = clip.length;
         }
 
-        // °ø°İ ÆÇµ¶±âÀÇ ´ë±â ÀÌº¥Æ® µî·Ï
+        // ê³µê²© íŒë…ê¸°ì˜ ëŒ€ê¸° ì´ë²¤íŠ¸ ë“±ë¡
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
-        // ÅÚ·¹Æ÷Æ® ÀüÀÌ ÀÌº¥Æ® µî·Ï
+        // í…”ë ˆí¬íŠ¸ ì „ì´ ì´ë²¤íŠ¸ ë“±ë¡
         AnimTransitionEvent += HandleTeleportTransition;
 
-        // ½ºÅ³ º¯¼ö ÃÊ±âÈ­
+        // ìŠ¤í‚¬ ë³€ìˆ˜ ì´ˆê¸°í™”
 
         // flame beam
         _flameBeamAngle = 360f / _flameBeamCount; // 360 / 8 = 45
@@ -367,7 +367,7 @@ public sealed class Fire : BossBehaviour
 
         SetToFirstAttack();
 
-        // ¹«Àû »óÅÂ ÃÊ±âÈ­
+        // ë¬´ì  ìƒíƒœ ì´ˆê¸°í™”
         IsGodMode = false;
     }
     protected override void Update()
@@ -375,7 +375,7 @@ public sealed class Fire : BossBehaviour
         base.Update();
 
 #if UNITY_EDITOR
-        // CHEAT: ½ÇÇà ÁßÀÎ ½ºÅ³ ÄÚ·çÆ¾ µğ¹ö±×
+        // CHEAT: ì‹¤í–‰ ì¤‘ì¸ ìŠ¤í‚¬ ì½”ë£¨í‹´ ë””ë²„ê·¸
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
         {
             PrintSkillCoroutine();
@@ -457,7 +457,7 @@ public sealed class Fire : BossBehaviour
         var nextAttackNumber =
             random.RangeExcept((int)AttackType.FlameBeam, (int)AttackType.FirePillar + 1, (int)_currentAttack);
 
-        // ´ÙÀ½ °ø°İ Å¸ÀÔÀ» ¼³Á¤ÇÕ´Ï´Ù.
+        // ë‹¤ìŒ ê³µê²© íƒ€ì…ì„ ì„¤ì •í•©ë‹ˆë‹¤.
         _nextAttack = (AttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
@@ -478,6 +478,8 @@ public sealed class Fire : BossBehaviour
     private IEnumerator FlameBeamCoroutine()
     {
         var currentNumber = 0;
+
+        //StartCoroutine(FlameBeamSoundCoroutine());
 
         for (int castCount = 0; castCount < _flameBeamCastCount; castCount++)
         {
@@ -506,12 +508,12 @@ public sealed class Fire : BossBehaviour
             FireBallDirType dirType = IsRage ? Math.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight) : FireBallDirType.Down;
             FireBallInfo info = new FireBallInfo(dirType);
 
-            // Debug.Log("FireBall »ı¼º");
+            // Debug.Log("FireBall ìƒì„±");
 
             var fireBall = Instantiate(_fireBall, info.SpawnPoint, Quaternion.identity);
             var fireBallParticle = fireBall.GetComponent<ParticleSystem>();
 
-            // fireBallÀÌ ÆÄ±«µÇ¸é _fireBallList¿¡¼­ Á¦°Å
+            // fireBallì´ íŒŒê´´ë˜ë©´ _fireBallListì—ì„œ ì œê±°
             fireBall.SetOwner(this);
             _fireBallList.Add(fireBall);
 
@@ -540,6 +542,9 @@ public sealed class Fire : BossBehaviour
 
             // play particle
             fireBallParticle.Play();
+
+            // play sound
+            SoundList.PlaySFX("SE_Fire_Fireball2");
 
             // cast interval
             yield return new WaitForSeconds(_fireBallCastInterval);
@@ -601,7 +606,7 @@ public sealed class Fire : BossBehaviour
             usedPosX.Add(newPosX);
         }
 
-        // ÀüÁ¶ Áõ»ó
+        // ì „ì¡° ì¦ìƒ
         {
             SoundList.PlaySFX("SE_Fire_Volcano1");
 
@@ -619,7 +624,7 @@ public sealed class Fire : BossBehaviour
             yield return new WaitForSeconds(_symptomWaitTimePostShake);
         }
 
-        // ºÒ±âµÕ »ı¼º
+        // ë¶ˆê¸°ë‘¥ ìƒì„±
         {
             SoundList.PlaySFX("SE_Fire_Volcano2");
 
@@ -632,6 +637,52 @@ public sealed class Fire : BossBehaviour
         }
 
         firePillarCoroutine = null;
+    }
+
+    private IEnumerator FlameBeamSoundCoroutine()
+    {
+        // flameBeamì˜ ì• ë‹ˆë©”ì´í„°ë¥¼ ê°€ì ¸ì˜¨ë‹¤
+        var animator = _flameBeam.GetComponent<Animator>();
+        var runTimeController = animator.runtimeAnimatorController;
+
+        var SE_Fire_Flamebeam1 = 0f;
+        var SE_Fire_Flamebeam2 = 0f;
+
+        // í•´ë‹¹ ì• ë‹ˆë©”ì´ì…˜ì˜ ì´ë²¤íŠ¸ í‚¤ì˜ ìœ„ì¹˜ë¥¼ ê°€ì ¸ì˜¨ë‹¤
+        foreach (var clip in runTimeController.animationClips)
+        {
+            foreach (var animationEvent in clip.events)
+            {
+                if (animationEvent.functionName == "PlaySound_SE_Fire_Flamebeam1")
+                {
+                    Debug.Log($"SE_Fire_Flamebeam1 = {animationEvent.time}");
+                    SE_Fire_Flamebeam1 = animationEvent.time;
+                }
+                else if (animationEvent.functionName == "PlaySound_SE_Fire_Flamebeam2")
+                {
+                    Debug.Log($"SE_Fire_Flamebeam2 = {animationEvent.time}");
+                    SE_Fire_Flamebeam2 = animationEvent.time;
+                }
+            }
+        }
+
+        // ì´ë²¤íŠ¸ í‚¤ì˜ íƒ€ì´ë°ì— ë§ì¶° ì‚¬ìš´ë“œë¥¼ ì¬ìƒí•œë‹¤
+        if (SE_Fire_Flamebeam1 > 0.01f)
+        {
+            Debug.Log($"SE_Fire_Flamebeam1ë¥¼ {SE_Fire_Flamebeam1}ì´ˆ í›„ì— ì‹¤í–‰í•©ë‹ˆë‹¤");
+            yield return new WaitForSeconds(SE_Fire_Flamebeam1);
+            SoundManager.Instance.PlayCommonSFX("SE_Fire_Flamebeam1");
+        }
+
+        // ì´ë²¤íŠ¸ í‚¤ì˜ íƒ€ì´ë°ì— ë§ì¶° ì‚¬ìš´ë“œë¥¼ ì¬ìƒí•œë‹¤
+        if (SE_Fire_Flamebeam2 > 0.01f)
+        {
+            Debug.Log($"SE_Fire_Flamebeam2ë¥¼ {SE_Fire_Flamebeam2}ì´ˆ í›„ì— ì‹¤í–‰í•©ë‹ˆë‹¤");
+            yield return new WaitForSeconds(SE_Fire_Flamebeam2);
+            SoundManager.Instance.PlayCommonSFX("SE_Fire_Flamebeam2");
+        }
+
+        yield return null;
     }
 
     // skill anim event
@@ -716,7 +767,7 @@ public sealed class Fire : BossBehaviour
     }
     public void StopAllSkillCoroutine()
     {
-        // Debug.Log("¸ğµç ½ºÅ³À» Á¾·áÇÕ´Ï´Ù");
+        // Debug.Log("ëª¨ë“  ìŠ¤í‚¬ì„ ì¢…ë£Œí•©ë‹ˆë‹¤");
 
         if (flameBeamCoroutine != null)
         {
@@ -794,10 +845,10 @@ public sealed class Fire : BossBehaviour
     }
 
     /// <summary>
-    /// ¸ğµç °ø°İ ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ Duration ¸¸Å­ ´ë±â
-    /// + ÅÚ·¹Æ÷Æ® ÅÏÀÌ¶ó¸é, ÅÚ·¹Æ÷Æ® ³¡³¯ ¶§±îÁö ´ë±â (+ NÃÊ Ãß°¡ ´ë±â)
+    /// ëª¨ë“  ê³µê²© ì• ë‹ˆë©”ì´ì…˜ì˜ Duration ë§Œí¼ ëŒ€ê¸°
+    /// + í…”ë ˆí¬íŠ¸ í„´ì´ë¼ë©´, í…”ë ˆí¬íŠ¸ ëë‚  ë•Œê¹Œì§€ ëŒ€ê¸° (+ Nì´ˆ ì¶”ê°€ ëŒ€ê¸°)
     ///
-    /// Attack Trigger Á÷ÈÄ È£ÃâµÇ´Â WaitEvent (±× ´ÙÀ½Àº Duration ´ë±â)
+    /// Attack Trigger ì§í›„ í˜¸ì¶œë˜ëŠ” WaitEvent (ê·¸ ë‹¤ìŒì€ Duration ëŒ€ê¸°)
     /// </summary>
     private IEnumerator OnAttackWaitEvent()
     {
@@ -842,10 +893,10 @@ public sealed class Fire : BossBehaviour
 
     private bool HandleTeleportTransition(string targetTransitionParam, Monster_StateBase currentState)
     {
-        // ÀüÀÌÇÒ ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ Teleport°¡ ¾Æ´Ï¶ó¸é Áï½Ã ÀüÈ¯
+        // ì „ì´í•  ì• ë‹ˆë©”ì´ì…˜ì´ Teleportê°€ ì•„ë‹ˆë¼ë©´ ì¦‰ì‹œ ì „í™˜
         if (targetTransitionParam is not "Teleport") return true;
 
-        // °ø°İ ÁßÀÌ ¾Æ´Ò ¶§±îÁö ¾Ö´Ï¸ŞÀÌ¼Ç ÀüÈ¯À» ¹Ì·ë
+        // ê³µê²© ì¤‘ì´ ì•„ë‹ ë•Œê¹Œì§€ ì• ë‹ˆë©”ì´ì…˜ ì „í™˜ì„ ë¯¸ë£¸
         return !IsAttacking && fireBallCoroutine == null;
     }
 
@@ -863,19 +914,19 @@ public sealed class Fire : BossBehaviour
         if (player == null)
             return;
 
-        // ºÒ±âµÕÀÌ »ı¼ºµÇ´Â ¶¥ÀÇ ³ôÀÌ
+        // ë¶ˆê¸°ë‘¥ì´ ìƒì„±ë˜ëŠ” ë•…ì˜ ë†’ì´
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector3(player.transform.position.x - 50f, _firePillarSpawnHeight, player.transform.position.z),
             new Vector3(player.transform.position.x + 50f, _firePillarSpawnHeight, player.transform.position.z));
 
-        // ºÒ±âµÕÀÌ »ı¼ºµÇ´Â ¹üÀ§
+        // ë¶ˆê¸°ë‘¥ì´ ìƒì„±ë˜ëŠ” ë²”ìœ„
         Gizmos.color = Color.yellow;
         var left = player.transform.position + Vector3.left * _firePillarFarDist;
         var right = player.transform.position + Vector3.right * _firePillarFarDist;
         Gizmos.DrawLine(left + Vector3.down * 10f, left + Vector3.up * 10f);
         Gizmos.DrawLine(right + Vector3.down * 10f, right + Vector3.up * 10f);
 
-        // ºÒ±âµÕ »çÀÌÀÇ ÃÖ¼Ò °Å¸®
+        // ë¶ˆê¸°ë‘¥ ì‚¬ì´ì˜ ìµœì†Œ ê±°ë¦¬
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(new Vector3(player.transform.position.x - _firePillarEachDist / 2f, _firePillarSpawnHeight, player.transform.position.z),
             new Vector3(player.transform.position.x - _firePillarEachDist / 2f, _firePillarSpawnHeight + 1f, player.transform.position.z));
