@@ -149,8 +149,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
         if (_pitchedSFXPlayer.ContainsKey(pitchKey) == false)
         {
-            Debug.Log($"Create New AudioSource for Pitched SFX (pitch key: {pitchKey})", _pitchedSFXPlayer[pitchKey].gameObject);
-
             _pitchedSFXPlayer[pitchKey] = _sfxPlayer.AddComponent<AudioSource>();
             _pitchedSFXPlayer[pitchKey].pitch = pitchFactor;
 
@@ -161,8 +159,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
             InitialVolumeSetting();
         }
-
-        Debug.Log($"PlaySFX_AudioClip: {clip.name} (pitch key: {pitchKey})", _pitchedSFXPlayer[pitchKey].gameObject);
 
         _pitchedSFXPlayer[pitchKey].PlayOneShot(clip, volumeFactor);
     }

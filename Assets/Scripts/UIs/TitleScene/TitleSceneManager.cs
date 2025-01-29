@@ -21,11 +21,12 @@ public class TitleSceneManager : MonoBehaviour
         }
         */
 
-        // ChapterCheat
+        // CHEAT: F1 키를 누르면 첫 번째 챕터의 치트메뉴를 활성화한다
         if (Input.GetKeyDown(KeyCode.F1) && GameSceneManager.Instance.CheatMode == true)
         {
             Chapter1Cheat.SetActive(!Chapter1Cheat.activeSelf);
         }
+        // CHEAT: F2 키를 누르면 두 번째 챕터의 치트메뉴를 활성화한다
         if (Input.GetKeyDown(KeyCode.F2) && GameSceneManager.Instance.CheatMode == true)
         {
             Chapter2Cheat.SetActive(!Chapter2Cheat.activeSelf);
@@ -61,7 +62,7 @@ public class TitleSceneManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ���ѷα� ������ ��ȯ�մϴ�
+    /// 프롤로그 씬으로 전환합니다
     /// </summary>
     /// <returns></returns>
     IEnumerator OpenPrologueSceneCoroutine()
@@ -70,9 +71,9 @@ public class TitleSceneManager : MonoBehaviour
         SceneChangeManager.Instance.ChangeToNonPlayableScene("PrologueScene");
     }
     /// <summary>
-    /// �ش� ������ ��ȯ�մϴ�
+    /// 해당 씬으로 전환합니다
     /// </summary>
-    /// <param name="sceneName">�̵��Ϸ��� �� �̸�</param>
+    /// <param name="sceneName">이동하려는 씬 이름</param>
     /// <returns></returns>
     IEnumerator SceneChangeCoroutine(string sceneName)
     {

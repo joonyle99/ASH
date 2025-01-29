@@ -375,7 +375,7 @@ public sealed class Fire : BossBehaviour
         base.Update();
 
 #if UNITY_EDITOR
-        // CHEAT: 실행 중인 스킬 코루틴 디버그
+        // CHEAT: Left Ctrl + S 키를 누르면 실행 중인 스킬 코루틴 디버그
         if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.S))
         {
             PrintSkillCoroutine();
@@ -873,22 +873,28 @@ public sealed class Fire : BossBehaviour
     private IEnumerator WaitEventCoroutine_FlameBeam()
     {
         yield return new WaitForSeconds(_flameBeamAnimDuration);
-        yield return new WaitUntil(() => _flameBeamCoroutine == null);
+        //yield return new WaitUntil(() => _flameBeamCoroutine == null);
     }
     private IEnumerator WaitEventCoroutine_Fireball()
     {
         yield return new WaitForSeconds(_fireBallAnimDuration);
-        yield return new WaitUntil(() => _fireBallCoroutine == null);
+        //yield return new WaitUntil(() => _fireBallCoroutine == null);
+
+        //독립적인 스킬이므로 다른 스킬과 중복되어 발동될 수 있다.
+        //스킬 시전 후, 추가적으로 필드에 남아있음
     }
     private IEnumerator WaitEventCoroutine_AshPillar()
     {
         yield return new WaitForSeconds(_ashPillarAnimDuration);
-        yield return new WaitUntil(() => _ashPillarCoroutine == null);
+        //yield return new WaitUntil(() => _ashPillarCoroutine == null);
+
+        //독립적인 스킬이므로 다른 스킬과 중복되어 발동될 수 있다.
+        //스킬 시전 후, 추가적으로 필드에 남아있음
     }
     private IEnumerator WaitEventCoroutine_FirePillar()
     {
         yield return new WaitForSeconds(_firePillarAnimDuration);
-        yield return new WaitUntil(() => _firePillarCoroutine == null);
+        //yield return new WaitUntil(() => _firePillarCoroutine == null);
     }
 
     private bool HandleTeleportTransition(string targetTransitionParam, Monster_StateBase currentState)

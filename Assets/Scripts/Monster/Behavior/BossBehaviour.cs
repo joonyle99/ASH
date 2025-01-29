@@ -5,7 +5,7 @@ public abstract class BossBehaviour : MonsterBehaviour
 {
     #region Variable
 
-    [field: Header("¡ª¡ª¡ª¡ª¡ª¡ª¡ª Boss Behaviour ¡ª¡ª¡ª¡ª¡ª¡ª¡ª")]
+    [field: Header("â€•â€•â€•â€•â€•â€•â€• Boss Behaviour â€•â€•â€•â€•â€•â€•â€•")]
     [field: Space]
 
     [field: Header("Condition")]
@@ -17,25 +17,25 @@ public abstract class BossBehaviour : MonsterBehaviour
     [Space]
 
     [Tooltip("[Final Target Hurt Count] x [Boss Health Unit] = MaxHp")]
-    [SerializeField] protected int finalTargetHurtCount;        // º¸½º ¸ó½ºÅÍÀÇ ÃÖ´ë ÇÇ°İ È½¼ö
-    [SerializeField] protected int rageTargetHurtCount;         // ºĞ³ë »óÅÂÀÇ°¡ µÇ±â À§ÇÑ ÇÇ°İ È½¼ö
+    [SerializeField] protected int finalTargetHurtCount;        // ë³´ìŠ¤ ëª¬ìŠ¤í„°ì˜ ìµœëŒ€ í”¼ê²© íšŸìˆ˜
+    [SerializeField] protected int rageTargetHurtCount;         // ë¶„ë…¸ ìƒíƒœì˜ê°€ ë˜ê¸° ìœ„í•œ í”¼ê²© íšŸìˆ˜
 
     [Space]
 
     [Header("Attack Count")]
     [Tooltip("Count of attacks for Ultimate Skill")]
-    [SerializeField] protected RangeInt attackCountRange;       // ±Ã±Ø±â »ç¿ëÀ» À§ÇÑ ÀÏ¹İ °ø°İ È½¼ö ¹üÀ§
-    [SerializeField] protected int targetAttackCount;           // ¸ñÇ¥ ÀÏ¹İ °ø°İ È½¼ö
-    [SerializeField] protected int currentAttackCount;          // ÇöÀç ÀÏ¹İ °ø°İ È½¼ö
+    [SerializeField] protected RangeInt attackCountRange;       // ê¶ê·¹ê¸° ì‚¬ìš©ì„ ìœ„í•œ ì¼ë°˜ ê³µê²© íšŸìˆ˜ ë²”ìœ„
+    [SerializeField] protected int targetAttackCount;           // ëª©í‘œ ì¼ë°˜ ê³µê²© íšŸìˆ˜
+    [SerializeField] protected int currentAttackCount;          // í˜„ì¬ ì¼ë°˜ ê³µê²© íšŸìˆ˜
 
     [Space]
 
     [Header("Hit Count")]
     [Tooltip("Count of hits for Groggy state")]
-    [SerializeField] protected RangeInt hitCountRange;          // ±×·Î±â »óÅÂ¿¡¼­ ÇÇ°İ °¡´ÉÇÑ È½¼ö ¹üÀ§
-    [SerializeField] protected int targetHitCount;              // ¸ñÇ¥ ÇÇ°İ È½¼ö
-    [SerializeField] protected int currentHitCount;             // ÇöÀç ÇÇ°İ È½¼ö
-    [SerializeField] private int _totalHitCount;                // ÃÑ ÇÇ°İ È½¼ö
+    [SerializeField] protected RangeInt hitCountRange;          // ê·¸ë¡œê¸° ìƒíƒœì—ì„œ í”¼ê²© ê°€ëŠ¥í•œ íšŸìˆ˜ ë²”ìœ„
+    [SerializeField] protected int targetHitCount;              // ëª©í‘œ í”¼ê²© íšŸìˆ˜
+    [SerializeField] protected int currentHitCount;             // í˜„ì¬ í”¼ê²© íšŸìˆ˜
+    [SerializeField] private int _totalHitCount;                // ì´ í”¼ê²© íšŸìˆ˜
 
     public int TotalHitCount
     {
@@ -53,11 +53,11 @@ public abstract class BossBehaviour : MonsterBehaviour
                     IsRage = true;
                     IsGodMode = true;
 
-                    // TODO: ¿©±â¼­ °ø°İÀ¸·Î ¾È µé¾î°¡µµ·Ï ÇÏ±â
+                    // TODO: ì—¬ê¸°ì„œ ê³µê²©ìœ¼ë¡œ ì•ˆ ë“¤ì–´ê°€ë„ë¡ í•˜ê¸°
 
-                    // TEMP ¹ö´×ºñ¹ö¶ó¼­ ÀÌ·¸°Ô ÇØº»´Ù
-                    StartCoroutine(PlayCutSceneInRunning("Change RageState"));
-                    // PlayCutSceneImmediately("Change RageState");
+                    // TEMP ë²„ë‹ë¹„ë²„ë¼ì„œ ì´ë ‡ê²Œ í•´ë³¸ë‹¤
+                    //StartCoroutine(PlayCutSceneInRunning("Change RageState"));
+                    PlayCutSceneImmediately("Change RageState");
                 }
             }
         }
@@ -67,7 +67,7 @@ public abstract class BossBehaviour : MonsterBehaviour
 
     [Header("Cutscene")]
     [SerializeField] protected bool isEndMoveProcess = false;
-    [SerializeField] private float _distanceFromBoss = 6f;      // º¸½º »ç¸Á ÈÄ ¶³¾îÁ®¾ßÇÒ °Å¸®
+    [SerializeField] private float _distanceFromBoss = 6f;      // ë³´ìŠ¤ ì‚¬ë§ í›„ ë–¨ì–´ì ¸ì•¼í•  ê±°ë¦¬
 
     #endregion
 
@@ -81,10 +81,10 @@ public abstract class BossBehaviour : MonsterBehaviour
     {
         base.Start();
 
-        InitBossMonsterCondition();         // º¸½º ¸ó½ºÅÍ ÃÊ±âÈ­
+        InitBossMonsterCondition();         // ë³´ìŠ¤ ëª¬ìŠ¤í„° ì´ˆê¸°í™”
 
-        RandomTargetAttackCount();          // ¸ñÇ¥ ÀÏ¹İ °ø°İ È½¼ö ·£´ı ¼³Á¤
-        RandomTargetHitCount();             // ¸ñÇ¥ ÇÇ°İ È½¼ö ·£´ı ¼³Á¤
+        RandomTargetAttackCount();          // ëª©í‘œ ì¼ë°˜ ê³µê²© íšŸìˆ˜ ëœë¤ ì„¤ì •
+        RandomTargetHitCount();             // ëª©í‘œ í”¼ê²© íšŸìˆ˜ ëœë¤ ì„¤ì •
     }
 
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
@@ -98,11 +98,11 @@ public abstract class BossBehaviour : MonsterBehaviour
         // Hit Process
         HitProcess(attackInfo, false, false, true);
 
-        // ÇÇ°İ È½¼ö Áõ°¡
+        // í”¼ê²© íšŸìˆ˜ ì¦ê°€
         TotalHitCount++;
         currentHitCount++;
 
-        // Ã¼·Â °¨¼Ò
+        // ì²´ë ¥ ê°ì†Œ
         CurHp -= MonsterDefine.BossHealthUnit;
 
         CheckHurtState();
@@ -111,16 +111,16 @@ public abstract class BossBehaviour : MonsterBehaviour
     }
     public override void Die(bool isHitBoxDisable, bool isDeathProcess)
     {
-        // º¸½º´Â »ç¸Á ÀÌÆåÆ®¸¦ Àç»ıÇÏÁö ¾Ê´Â´Ù
+        // ë³´ìŠ¤ëŠ” ì‚¬ë§ ì´í™íŠ¸ë¥¼ ì¬ìƒí•˜ì§€ ì•ŠëŠ”ë‹¤
         base.Die(true, false);
 
         StartCoroutine(SlowMotionCoroutine(5f));
     }
 
-    public abstract void AttackPreProcess();        // °ø°İ ½Ã ÀüÃ³¸® ÇÔ¼ö
-    public abstract void AttackPostProcess();       // °ø°İ ½Ã ÈÄÃ³¸® ÇÔ¼ö
-    public abstract void GroggyPreProcess();        // ±×·Î±â »óÅÂ ½Ã ÀüÃ³¸® ÇÔ¼ö
-    public abstract void GroggyPostProcess();       // ±×·Î±â »óÅÂ ½Ã ÈÄÃ³¸® ÇÔ¼ö
+    public abstract void AttackPreProcess();        // ê³µê²© ì‹œ ì „ì²˜ë¦¬ í•¨ìˆ˜
+    public abstract void AttackPostProcess();       // ê³µê²© ì‹œ í›„ì²˜ë¦¬ í•¨ìˆ˜
+    public abstract void GroggyPreProcess();        // ê·¸ë¡œê¸° ìƒíƒœ ì‹œ ì „ì²˜ë¦¬ í•¨ìˆ˜
+    public abstract void GroggyPostProcess();       // ê·¸ë¡œê¸° ìƒíƒœ ì‹œ í›„ì²˜ë¦¬ í•¨ìˆ˜
 
     private void CheckHurtState()
     {
@@ -128,7 +128,7 @@ public abstract class BossBehaviour : MonsterBehaviour
 
         if (!IsGroggy) return;
 
-        // ±×·Î±â »óÅÂ ÇØÁ¦µÇ¸ç ÇÇ°İ
+        // ê·¸ë¡œê¸° ìƒíƒœ í•´ì œë˜ë©° í”¼ê²©
         if (currentHitCount % targetHitCount == 0)
         {
             SetAnimatorTrigger("Hurt");
@@ -168,14 +168,14 @@ public abstract class BossBehaviour : MonsterBehaviour
         monsterData.MaxHp = finalTargetHurtCount * MonsterDefine.BossHealthUnit;
         CurHp = monsterData.MaxHp;
 
-        // º¸½º ¸ó½ºÅÍ´Â ±âº»ÀûÀ¸·Î ¹«Àû »óÅÂÀÌ´Ù.
+        // ë³´ìŠ¤ ëª¬ìŠ¤í„°ëŠ” ê¸°ë³¸ì ìœ¼ë¡œ ë¬´ì  ìƒíƒœì´ë‹¤.
         IsGodMode = true;
     }
 
     // cutscene
     public virtual void ExecutePostDeathActions()
     {
-        // ÇÃ·¹ÀÌ¾î ÀÌµ¿ ¿¬Ãâ
+        // í”Œë ˆì´ì–´ ì´ë™ ì—°ì¶œ
         StartCoroutine(PlayerMoveCoroutine());
     }
     private IEnumerator PlayerMoveCoroutine()
@@ -184,27 +184,27 @@ public abstract class BossBehaviour : MonsterBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        // ÇÃ·¹ÀÌ¾î À§Ä¡
+        // í”Œë ˆì´ì–´ ìœ„ì¹˜
         var player = SceneContext.Current.Player;
         var playerPosX = player.transform.position.x;
         // Debug.DrawRay(player.transform.position, Vector3.down * 5f, Color.cyan, 10f);
 
-        // º¸½º¿¡¼­ ÇÃ·¹ÀÌ¾î±îÁöÀÇ ¹æÇâ
+        // ë³´ìŠ¤ì—ì„œ í”Œë ˆì´ì–´ê¹Œì§€ì˜ ë°©í–¥
         var BossToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
         // Debug.DrawRay(transform.position + Vector3.up, Vector3.right * BossToPlayerDir * _distanceFromBoss, Color.cyan, 10f);
 
-        // ÇÃ·¹ÀÌ¾î°¡ ÀÌµ¿ÇÒ ¸ñÇ¥ À§Ä¡
+        // í”Œë ˆì´ì–´ê°€ ì´ë™í•  ëª©í‘œ ìœ„ì¹˜
         var playerMoveTargetPosX = transform.position.x + (BossToPlayerDir) * _distanceFromBoss;
         // Debug.DrawRay(new Vector3(playerMoveTargetPosX, transform.position.y, transform.position.z), Vector3.down * 5f, Color.cyan, 10f);
 
-        // ÇÃ·¹ÀÌ¾î ÀÌµ¿ ¹æÇâ
+        // í”Œë ˆì´ì–´ ì´ë™ ë°©í–¥
         var playerMoveDir = System.Math.Sign(playerMoveTargetPosX - playerPosX);
         // Debug.DrawRay(player.transform.position, Vector3.right * playerMoveDir * 5f, Color.cyan, 10f);
 
-        // ÇÃ·¹ÀÌ¾î ÀÌµ¿À» ´ë±â
+        // í”Œë ˆì´ì–´ ì´ë™ì„ ëŒ€ê¸°
         yield return MoveCoroutine(playerMoveDir, playerMoveTargetPosX);
 
-        // ¸¸¾à ÇÃ·¹ÀÌ¾î°¡ µÚµ¹°í ÀÖ´Ù¸é ¹æÇâÀ» µ¹·ÁÁØ´Ù
+        // ë§Œì•½ í”Œë ˆì´ì–´ê°€ ë’¤ëŒê³  ìˆë‹¤ë©´ ë°©í–¥ì„ ëŒë ¤ì¤€ë‹¤
         if (BossToPlayerDir == player.RecentDir)
         {
             var dirForLookToBear = (-1) * playerMoveDir;
@@ -240,7 +240,7 @@ public abstract class BossBehaviour : MonsterBehaviour
         effect.Play();
         yield return new WaitUntil(() => effect.IsEffectDone);
 
-        var prefabMonster = transform.parent.gameObject; // ÇÁ¸®ÆÕÀ» »èÁ¦ÇÑ´Ù
+        var prefabMonster = transform.parent.gameObject; // í”„ë¦¬íŒ¹ì„ ì‚­ì œí•œë‹¤
         if (prefabMonster.GetComponent<DestructEventCaller>()) Destruction.Destruct(prefabMonster);
         else Destroy(prefabMonster);
     }

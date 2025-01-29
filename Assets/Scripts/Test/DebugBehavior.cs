@@ -16,7 +16,13 @@ public class DebugBehavior : MonoBehaviour
 
     void Update()
     {
-        // CHEAT: F5 Å°¸¦ ´©¸£¸é º¸½ºÀüÀ¸·Î ÀÌµ¿ÇÑ´Ù
+        // CHEAT: F4 í‚¤ë¥¼ ëˆ„ë¥´ë©´ ë‹¤ì´ì–¼ë¡œê·¸ ì…§ë‹¤ìš´
+        if (Input.GetKeyDown(KeyCode.F4) && GameSceneManager.Instance.CheatMode == true)
+        {
+            DialogueController.Instance.ShutdownDialogue();
+        }
+
+        // CHEAT: F5 í‚¤ë¥¼ ëˆ„ë¥´ë©´ ë³´ìŠ¤ì „ìœ¼ë¡œ ì´ë™í•œë‹¤
         if (Input.GetKeyDown(KeyCode.F5) && GameSceneManager.Instance.CheatMode == true)
         {
             PersistentDataManager.Instance.ObtainSkill_Light();
@@ -25,27 +31,19 @@ public class DebugBehavior : MonoBehaviour
             StartCoroutine(SceneChangeCoroutine("Boss_Bear"));
         }
 
-        // CHEAT: F11 Å°¸¦ ´©¸£¸é º¸½ºÅ° È¹µæ
+        // CHEAT: F11 í‚¤ë¥¼ ëˆ„ë¥´ë©´ ë³´ìŠ¤í‚¤ íšë“
         if (Input.GetKeyDown(KeyCode.F11) && GameSceneManager.Instance.CheatMode == true)
         {
             BossDungeonManager.Instance.OnKeyObtained();
         }
 
-        // CHEAT: F4 Å°¸¦ ´©¸£¸é ´ÙÀÌ¾ó·Î±× ¼Ë´Ù¿î
-        if (Input.GetKeyDown(KeyCode.F4) && GameSceneManager.Instance.CheatMode == true)
-        {
-            DialogueController.Instance.ShutdownDialogue();
-        }
-
-        // CHEAT: F5 Å°¸¦ ´©¸£¸é ´ÙÀÌ¾ó·Î±× ½ºÅµ
-
 #if UNITY_EDITOR
-        // DEBUG: ÇöÀç ¸¶Áö¸· CheckPoint¸¦ Ç¥½ÃÇÑ´Ù (¾ø´Ù¸é ÀÔ±¸¸¦ Ç¥½ÃÇÑ´Ù)
+        // CHEAT: F1 í‚¤ë¥¼ ëˆ„ë¥´ë©´ í˜„ì¬ ë§ˆì§€ë§‰ CheckPointë¥¼ í‘œì‹œí•œë‹¤ (ì—†ë‹¤ë©´ ì…êµ¬ë¥¼ í‘œì‹œí•œë‹¤)
         if (Input.GetKeyDown(KeyCode.F1))
         {
             var checkPoint = SceneContext.Current.CheckPointManager.LatestCheckpointPosition;
 
-            // ¿©·Á °³ÀÇ ¶óÀÎÀ» ±×·Á checkPoint¸¦ ÁßÁ¡À¸·Î * ¸ğ¾çÀ» ±×¸°´Ù
+            // ì—¬ë ¤ ê°œì˜ ë¼ì¸ì„ ê·¸ë ¤ checkPointë¥¼ ì¤‘ì ìœ¼ë¡œ * ëª¨ì–‘ì„ ê·¸ë¦°ë‹¤
             const float LENGTH = 3f;
             Debug.DrawLine(checkPoint + Vector3.up * LENGTH, checkPoint + Vector3.down * LENGTH, Color.red, 5f);
             Debug.DrawLine(checkPoint + Vector3.left * LENGTH, checkPoint + Vector3.right * LENGTH, Color.red, 5f);
@@ -55,6 +53,15 @@ public class DebugBehavior : MonoBehaviour
             var diagonal4 = (Vector3.down + Vector3.right).normalized;
             Debug.DrawLine(checkPoint + diagonal1 * LENGTH, checkPoint + diagonal3 * LENGTH, Color.red, 5f);
             Debug.DrawLine(checkPoint + diagonal2 * LENGTH, checkPoint + diagonal4 * LENGTH, Color.red, 5f);
+        }
+        // CHEAT: F2 í‚¤ë¥¼ ëˆ„ë¥´ë©´ ê²Œì„ ì†ë„ë¥¼ 3ë°°ë¡œ ë†’ì¸ë‹¤
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            Time.timeScale = 3f;
+        }
+        else if (Input.GetKeyUp(KeyCode.F2))
+        {
+            Time.timeScale = 1f;
         }
 #endif
     }
@@ -75,13 +82,13 @@ public class DebugBehaviorEditor : Editor
     private SerializedProperty targetMonoProperty;
 
     /// <summary>
-    /// ÇØ´ç ÄÄÆ÷³ÍÆ®°¡ ¿¡µğÅÍ¿¡ Ç¥½ÃµÉ ¶§ È£ÃâµÇ´Â Äİ¹é ÇÔ¼ö
+    /// í•´ë‹¹ ì»´í¬ë„ŒíŠ¸ê°€ ì—ë””í„°ì— í‘œì‹œë  ë•Œ í˜¸ì¶œë˜ëŠ” ì½œë°± í•¨ìˆ˜
     /// </summary>
     private void OnEnable()
     {
         refDebugBehavior = (DebugBehavior)base.target;
 
-        // Á÷·ÄÈ­µÈ ¿ÀºêÁ§Æ®·Î ÇÁ·ÎÆÛÆ¼¸¦ ÀúÀåÇÑ´Ù. (GenericÇÑ µ¥ÀÌÅÍ)
+        // ì§ë ¬í™”ëœ ì˜¤ë¸Œì íŠ¸ë¡œ í”„ë¡œí¼í‹°ë¥¼ ì €ì¥í•œë‹¤. (Genericí•œ ë°ì´í„°)
         targetLayerProperty = serializedObject.FindProperty(nameof(DebugBehavior.TargetLayer));
         targetMonoProperty = serializedObject.FindProperty(nameof(DebugBehavior.TargetMono));
     }
@@ -141,7 +148,7 @@ public class DebugBehaviorEditor : Editor
     }
 
     /// <summary>
-    /// ÇØ´ç ¾À¿¡¼­ Preserve State ÄÄÆ÷³ÍÆ®¸¦ °¡Áö´Â ¸ğµç ¿ÀºêÁ§Æ®¸¦ Ãâ·ÂÇÑ´Ù
+    /// í•´ë‹¹ ì”¬ì—ì„œ Preserve State ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì§€ëŠ” ëª¨ë“  ì˜¤ë¸Œì íŠ¸ë¥¼ ì¶œë ¥í•œë‹¤
     /// </summary>
     private void FindAllPreserveState()
     {
@@ -154,7 +161,7 @@ public class DebugBehaviorEditor : Editor
     }
 
     /// <summary>
-    /// ÇØ´ç ¾À¿¡¼­ TargetLayer¿¡ ÇØ´çÇÏ´Â ¸ğµç ¿ÀºêÁ§Æ®¸¦ Ãâ·ÂÇÑ´Ù
+    /// í•´ë‹¹ ì”¬ì—ì„œ TargetLayerì— í•´ë‹¹í•˜ëŠ” ëª¨ë“  ì˜¤ë¸Œì íŠ¸ë¥¼ ì¶œë ¥í•œë‹¤
     /// </summary>
     private void FindObjectsInLayer(int layerMaskValue)
     {
@@ -171,17 +178,17 @@ public class DebugBehaviorEditor : Editor
 
     private void CalcFrustumIntersection()
     {
-        // 3D Ä«¸Ş¶óÀÇ ÇÁ·¯½ºÅÒÀÌ 2D »óÀÇ ¸Ê (Z = 0ÀÎ) ¿¡ Á¢ÇÏ´Â ÁöÁ¡À» ±¸ÇÑ´Ù
+        // 3D ì¹´ë©”ë¼ì˜ í”„ëŸ¬ìŠ¤í…€ì´ 2D ìƒì˜ ë§µ (Z = 0ì¸) ì— ì ‘í•˜ëŠ” ì§€ì ì„ êµ¬í•œë‹¤
 
         var mainCamera = Camera.main;
 
-        // ºäÆ÷Æ®(Ä«¸Ş¶ó°¡ º¸´Â È­¸éÀÇ 'Á¤±ÔÈ­'µÈ 2D ÁÂÇ¥ ½Ã½ºÅÛ)ÀÇ 4°³ ÄÚ³Ê ÁÂÇ¥
+        // ë·°í¬íŠ¸(ì¹´ë©”ë¼ê°€ ë³´ëŠ” í™”ë©´ì˜ 'ì •ê·œí™”'ëœ 2D ì¢Œí‘œ ì‹œìŠ¤í…œ)ì˜ 4ê°œ ì½”ë„ˆ ì¢Œí‘œ
         Vector3[] viewportCorners = new Vector3[]
         {
-            new Vector3(0, 0, mainCamera.nearClipPlane), // ÁÂÇÏ´Ü
-            new Vector3(1, 0, mainCamera.nearClipPlane), // ¿ìÇÏ´Ü
-            new Vector3(1, 1, mainCamera.nearClipPlane), // ¿ì»ó´Ü
-            new Vector3(0, 1, mainCamera.nearClipPlane)  // ÁÂ»ó´Ü
+            new Vector3(0, 0, mainCamera.nearClipPlane), // ì¢Œí•˜ë‹¨
+            new Vector3(1, 0, mainCamera.nearClipPlane), // ìš°í•˜ë‹¨
+            new Vector3(1, 1, mainCamera.nearClipPlane), // ìš°ìƒë‹¨
+            new Vector3(0, 1, mainCamera.nearClipPlane)  // ì¢Œìƒë‹¨
 
             // (0,1)-------------(1,1)
             //   |                 |
@@ -192,23 +199,23 @@ public class DebugBehaviorEditor : Editor
             // (0,0)-------------(1,0)
         };
 
-        // ¿ùµå °ø°£¿¡¼­ÀÇ ÇÁ·¯½ºÅÒ ÄÚ³Ê ÁöÁ¡
+        // ì›”ë“œ ê³µê°„ì—ì„œì˜ í”„ëŸ¬ìŠ¤í…€ ì½”ë„ˆ ì§€ì 
         Vector3[] worldCorners = new Vector3[4];
-        // Z == 0 Æò¸é°úÀÇ ±³Â÷Á¡
+        // Z == 0 í‰ë©´ê³¼ì˜ êµì°¨ì 
         Vector3[] intersectionPoints = new Vector3[4];
 
         for (int i = 0; i < 4; i++)
         {
-            // ºäÆ÷Æ® ÁÂÇ¥(ÁÂÇÏ´Ü, ¿ìÇÏ´Ü, ¿ì»ó´Ü, ÁÂ»ó´Ü)¸¦ ¿ùµå ÁÂÇ¥·Î º¯È¯
+            // ë·°í¬íŠ¸ ì¢Œí‘œ(ì¢Œí•˜ë‹¨, ìš°í•˜ë‹¨, ìš°ìƒë‹¨, ì¢Œìƒë‹¨)ë¥¼ ì›”ë“œ ì¢Œí‘œë¡œ ë³€í™˜
             worldCorners[i] = mainCamera.ViewportToWorldPoint(viewportCorners[i]);
 
-            // Ä«¸Ş¶ó À§Ä¡¿¡¼­ ¿ùµå ÄÚ³Ê ÁöÁ¡À¸·ÎÀÇ ¹æÇâ º¤ÅÍ
+            // ì¹´ë©”ë¼ ìœ„ì¹˜ì—ì„œ ì›”ë“œ ì½”ë„ˆ ì§€ì ìœ¼ë¡œì˜ ë°©í–¥ ë²¡í„°
             Vector3 direction = worldCorners[i] - mainCamera.transform.position;
-            // directionÀÌ Z == 0ÀÎ XY Æò¸é°ú ÀÌ·ç´Â ºñÀ²
+            // directionì´ Z == 0ì¸ XY í‰ë©´ê³¼ ì´ë£¨ëŠ” ë¹„ìœ¨
             float ratio = (-1) * mainCamera.transform.position.z / direction.z;
-            // directionÀ» Z == 0ÀÎ XY Æò¸é±îÁöÀÇ ½î´Â º¤ÅÍ
+            // directionì„ Z == 0ì¸ XY í‰ë©´ê¹Œì§€ì˜ ì˜ëŠ” ë²¡í„°
             Vector3 newDirection = new Vector3(direction.x * ratio, direction.y * ratio, (-1) * mainCamera.transform.position.z);
-            // newDirection°ú Z == 0ÀÎ XY Æò¸éÀÇ ±³Â÷Á¡
+            // newDirectionê³¼ Z == 0ì¸ XY í‰ë©´ì˜ êµì°¨ì 
             intersectionPoints[i] = mainCamera.transform.position + newDirection;
 
             Debug.DrawLine(mainCamera.transform.position, intersectionPoints[i], Color.cyan, 5f);
