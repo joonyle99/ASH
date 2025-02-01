@@ -59,21 +59,17 @@ public class DieState : PlayerState
 
         yield return new WaitUntil(() => Player.MaterialController.DisintegrateEffect.IsEffectDone);
 
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
+        //yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
 
-        // ü�� �ʱ�ȭ
+        // 체력 초기화
         Player.CurHp = Player.MaxHp;
 
-        SceneChangeManager.Instance.SceneChangeType = SceneChangeType.PlayerRespawn;
-
-        var sceneName = PersistentDataManager.Instance.SavedPersistentData.SceneName;
-        sceneName = sceneName == "" ? SceneManager.GetActiveScene().name : sceneName;
-        var passageName = PersistentDataManager.Instance.SavedPersistentData.PassageName;
-        passageName = passageName == "" ? SceneContext.Current.EntrancePassage.PassageName : passageName;
-
-        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+        //PlayerBehaviour.Respon();
 
         DieEnterCoroutine = null;
+
+        //추가
+        GameUIManager.OpenDeadPanel();
     }
 
     private IEnumerator MoveUpEffectCoroutine()

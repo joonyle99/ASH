@@ -51,6 +51,8 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     [SerializeField] private OptionView _optionView;
     public OptionView OptionView => _optionView;
 
+    [SerializeField] private DeadPanel _deadPanel;
+
     [SerializeField] private TextMeshProUGUI _sceneNameText;
     [SerializeField] private TextMeshProUGUI _debugText;
 
@@ -192,6 +194,14 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
         if (Instance == null) return;
 
         Instance._optionView.TogglePanel();
+    }
+
+    // dead panel
+    public static void OpenDeadPanel()
+    {
+        if (Instance == null) return;
+
+        Instance._deadPanel.Open();
     }
 
     // scene name text

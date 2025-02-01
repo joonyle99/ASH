@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextBuildListener
 {
@@ -78,7 +79,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     #region Properties
 
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î°¡ °ø°İÀ» ÇÒ ¼ö ÀÖ´Â »óÅÂ¸¦ ³ªÅ¸³¿
+    /// í”Œë ˆì´ì–´ê°€ ê³µê²©ì„ í•  ìˆ˜ ìˆëŠ” ìƒíƒœë¥¼ ë‚˜íƒ€ëƒ„
     /// </summary>
     public bool CanAttack
     {
@@ -97,7 +98,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public bool CanInteract => CurrentState is IInteractableState;
 
     // Condition Property
-    public bool IsGrounded => GroundHit;                                    // ÇÃ·¹ÀÌ¾îÀÇ ¾Æ·¡ ¹æÇâÀ¸·Î Circle Cast
+    public bool IsGrounded => GroundHit;                                    // í”Œë ˆì´ì–´ì˜ ì•„ë˜ ë°©í–¥ìœ¼ë¡œ Circle Cast
     public bool IsUpWardGrounded => UpwardGroundHit;
     public bool IsUpWardGroundedForClimb => UpwardGroundHitForClimb;
     public bool IsTouchedWall => ClimbHit;
@@ -114,12 +115,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         get => _isGodMode;
         set
         {
-            // ·¹ÆÛ·±½º Ä«¿îÆÃ ±â¹ı Àû¿ë
+            // ë ˆí¼ëŸ°ìŠ¤ ì¹´ìš´íŒ… ê¸°ë²• ì ìš©
 
-            // Blink Effect¿¡¼­ True·Î ¼³Á¤µÇ°í, CutscenePlayer¿¡¼­ True·Î ¼³Á¤µÇ¸é
-            // ·¹ÆÛ·±½º Ä«¿îÅÍ°¡ 2°¡ µÈ´Ù.
-            // ÀÌÈÄ Blink Effect°¡ Á¾·áµÈ ÈÄ, GodMode¸¦ False·Î ¼³Á¤ÇÏ·Á ÇÏ¸é
-            // ·¹ÆÛ·±½º Ä«¿îÅÍ°¡ 1ÀÌ µÇ¸é¼­, GodMode°¡ True·Î À¯ÁöµÈ´Ù.
+            // Blink Effectì—ì„œ Trueë¡œ ì„¤ì •ë˜ê³ , CutscenePlayerì—ì„œ Trueë¡œ ì„¤ì •ë˜ë©´
+            // ë ˆí¼ëŸ°ìŠ¤ ì¹´ìš´í„°ê°€ 2ê°€ ëœë‹¤.
+            // ì´í›„ Blink Effectê°€ ì¢…ë£Œëœ í›„, GodModeë¥¼ Falseë¡œ ì„¤ì •í•˜ë ¤ í•˜ë©´
+            // ë ˆí¼ëŸ°ìŠ¤ ì¹´ìš´í„°ê°€ 1ì´ ë˜ë©´ì„œ, GodModeê°€ Trueë¡œ ìœ ì§€ëœë‹¤.
 
             if (value)
             {
@@ -145,18 +146,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         {
             _curHp = value;
 
-            if (_curHp > _maxHp) _curHp = _maxHp;   // ÃÖ´ë Ã¼·ÂÀ» ³Ñ¾î°¥ ¼ö´Â ¾ø´Ù
+            if (_curHp > _maxHp) _curHp = _maxHp;   // ìµœëŒ€ ì²´ë ¥ì„ ë„˜ì–´ê°ˆ ìˆ˜ëŠ” ì—†ë‹¤
 
             if (_curHp <= 0)
             {
-                _curHp = 0;                         // Ã¼·ÂÀÌ 0 ¹Ì¸¸ÀÌ µÉ ¼ö´Â ¾ø´Ù
+                _curHp = 0;                         // ì²´ë ¥ì´ 0 ë¯¸ë§Œì´ ë  ìˆ˜ëŠ” ì—†ë‹¤
                 ChangeState<DieState>();
             }
 
-            // CurHP¸¦ Global Data Group¿¡ ¾÷µ¥ÀÌÆ®ÇÑ´Ù
+            // CurHPë¥¼ Global Data Groupì— ì—…ë°ì´íŠ¸í•œë‹¤
             PersistentDataManager.SetByGlobal("PlayerCurHp", _curHp);
 
-            // Health UI ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ²´Ù
+            // Health UI ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¨ë‹¤
             OnHealthChanged?.Invoke(_curHp, _maxHp);
         }
     }
@@ -167,10 +168,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         {
             _maxHp = value;
 
-            if (_maxHp > LIMIT_HP) _maxHp = LIMIT_HP; // ÃÖ´ë Ã¼·ÂÀº Á¦ÇÑµÈ´Ù
-            else if (_maxHp < 0) _maxHp = 0;          // ÃÖ´ë Ã¼·ÂÀº 0 ¹Ì¸¸ÀÌ µÉ ¼ö´Â ¾ø´Ù
+            if (_maxHp > LIMIT_HP) _maxHp = LIMIT_HP; // ìµœëŒ€ ì²´ë ¥ì€ ì œí•œëœë‹¤
+            else if (_maxHp < 0) _maxHp = 0;          // ìµœëŒ€ ì²´ë ¥ì€ 0 ë¯¸ë§Œì´ ë  ìˆ˜ëŠ” ì—†ë‹¤
 
-            // MaxHp¸¦ Global Data Group¿¡ ¾÷µ¥ÀÌÆ®ÇÑ´Ù
+            // MaxHpë¥¼ Global Data Groupì— ì—…ë°ì´íŠ¸í•œë‹¤
             PersistentDataManager.SetByGlobal("PlayerMaxHp", _maxHp);
 
             OnHealthChanged?.Invoke(_curHp, _maxHp);
@@ -222,12 +223,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     private bool _isValidatable = false;
     private IEnumerator ValidateCoroutine()
     {
-        yield return null;          // ¸ğµç °´Ã¼ÀÇ Awake()°¡ È£ÃâµÈ ÀÌÈÄ¿¡ ½ÇÇàµÇµµ·Ï ÇÑ´Ù
+        yield return null;          // ëª¨ë“  ê°ì²´ì˜ Awake()ê°€ í˜¸ì¶œëœ ì´í›„ì— ì‹¤í–‰ë˜ë„ë¡ í•œë‹¤
         _isValidatable = true;
     }
     private void OnValidate()
     {
-        // ¾îÇÃ¸®ÄÉÀÌ¼ÇÀÌ ½ÇÇà ÁßÀÌ¶ó¸é
+        // ì–´í”Œë¦¬ì¼€ì´ì…˜ì´ ì‹¤í–‰ ì¤‘ì´ë¼ë©´
         if (Application.isPlaying && _isValidatable)
         {
             MaxHp = _maxHp;
@@ -284,7 +285,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             }
         }
 
-        // CHEAT: ~ Å°¸¦ ´©¸£¸é Ã¼·Â 1 È¸º¹
+        // CHEAT: ~ í‚¤ë¥¼ ëˆ„ë¥´ë©´ ì²´ë ¥ 1 íšŒë³µ
         if (Input.GetKeyDown(KeyCode.BackQuote) && GameSceneManager.Instance.CheatMode == true)
         {
             if (Input.GetKey(KeyCode.LeftShift))
@@ -293,10 +294,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
                 RecoverCurHp(2);
         }
 
-        // CHEAT: F10 Å°¸¦ ´©¸£¸é °¡Àå °¡±î¿î º¸½º¹® ¿­±â
+        // CHEAT: F10 í‚¤ë¥¼ ëˆ„ë¥´ë©´ ê°€ì¥ ê°€ê¹Œìš´ ë³´ìŠ¤ë¬¸ ì—´ê¸°
         if (Input.GetKeyDown(KeyCode.F10) && GameSceneManager.Instance.CheatMode == true)
         {
-            // °¡Àå °¡±î¿î BossDoor¸¦ Ã£´Â´Ù
+            // ê°€ì¥ ê°€ê¹Œìš´ BossDoorë¥¼ ì°¾ëŠ”ë‹¤
             var closestBossDoor = FindObjectsByType<BossDoor>(FindObjectsSortMode.None)
                 .OrderBy(door => Vector3.Distance(transform.position, door.transform.position))
                 .FirstOrDefault();
@@ -307,10 +308,10 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
                 return;
             }
 
-            // »óÈ£ÀÛ¿ë ºÒ°¡´ÉÇÑ »óÅÂ·Î ¸¸µç´Ù
+            // ìƒí˜¸ì‘ìš© ë¶ˆê°€ëŠ¥í•œ ìƒíƒœë¡œ ë§Œë“ ë‹¤
             closestBossDoor.IsInteractable = false;
 
-            // °¡Àå °¡±î¿î BossDoor°¡ ¿­·ÁÀÖÀ¸¸é ´İ±â, ´İÇôÀÖÀ¸¸é ¿­±â
+            // ê°€ì¥ ê°€ê¹Œìš´ BossDoorê°€ ì—´ë ¤ìˆìœ¼ë©´ ë‹«ê¸°, ë‹«í˜€ìˆìœ¼ë©´ ì—´ê¸°
             if (closestBossDoor.IsOpened)
                 closestBossDoor.CloseDoor();
             else
@@ -364,7 +365,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     // basic
     private void InitPlayer()
     {
-        // ¹Ù¶óº¸´Â ¹æÇâ ¼³Á¤
+        // ë°”ë¼ë³´ëŠ” ë°©í–¥ ì„¤ì •
         RecentDir = Math.Sign(transform.localScale.x);
 
         switch (SceneChangeManager.Instance.SceneChangeType)
@@ -435,7 +436,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         {
             if (IsOppositeDirSync && IsMoveXKey)
             {
-                // Debug.Log("¹æÇâ ÀüÈ¯");
+                // Debug.Log("ë°©í–¥ ì „í™˜");
 
                 RecentDir = (int)RawInputs.Movement.x;
                 transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * RecentDir, transform.localScale.y, transform.localScale.z);
@@ -501,11 +502,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     public void IncreaseMaxHp(int amount)
     {
         MaxHp += amount;
-        CurHp = MaxHp;      // Ã¼·ÂÀ» ÃÖ´ë Ã¼·Â¸¸Å­ È¸º¹ÇÑ´Ù
+        CurHp = MaxHp;      // ì²´ë ¥ì„ ìµœëŒ€ ì²´ë ¥ë§Œí¼ íšŒë³µí•œë‹¤
 
         _soundList.PlaySFX("SE_Healing_01");
 
-        // Debug.Log("ÃÖ´ë Ã¼·Â Áõ°¡ ¼º°ø");
+        // Debug.Log("ìµœëŒ€ ì²´ë ¥ ì¦ê°€ ì„±ê³µ");
     }
     public void RecoverCurHp(int amount)
     {
@@ -513,7 +514,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
         _soundList.PlaySFX("SE_Healing_01");
 
-        // Debug.Log("Ã¼·Â È¸º¹ ¼º°ø");
+        // Debug.Log("ì²´ë ¥ íšŒë³µ ì„±ê³µ");
     }
 
     // respawn
@@ -575,6 +576,19 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         var vec = _capeCloth.externalAcceleration;
         vec.y = -20f;
         _capeCloth.externalAcceleration = vec;
+    }
+
+    // respawn
+    public void Respawn()
+    {
+        SceneChangeManager.Instance.SceneChangeType = SceneChangeType.PlayerRespawn;
+
+        var sceneName = PersistentDataManager.Instance.SavedPersistentData.SceneName;
+        sceneName = sceneName == "" ? SceneManager.GetActiveScene().name : sceneName;
+        var passageName = PersistentDataManager.Instance.SavedPersistentData.PassageName;
+        passageName = passageName == "" ? SceneContext.Current.EntrancePassage.PassageName : passageName;
+
+        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
     }
     #endregion
 
