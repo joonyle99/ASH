@@ -42,7 +42,7 @@ public class LightNPC : MonoBehaviour
             eTime += Time.deltaTime;
         }
         transform.position = _curvePath.ControlPoints[0].position;
-        _loopSound.Play();
+        _soundList.PlaySFX("SE_Light");
     }
 
     public void StartCurveMovement()
@@ -52,7 +52,8 @@ public class LightNPC : MonoBehaviour
     }
     private IEnumerator CurveMovementCoroutine()
     {
-        _loopSound.Stop();
+        _soundList.StopRecentLoopPlayedSFX();
+
         _soundList.PlaySFX("SE_Light_move");
         float eTime = 0f;
         while (eTime < _curveMovementDuration)

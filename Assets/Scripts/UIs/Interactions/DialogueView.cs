@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System;
 
 /// <summary>
-/// ´ÙÀÌ¾ó·Î±×¸¦ Ãâ·ÂÇÏ±â À§ÇÑ ºä UI
+/// ë‹¤ì´ì–¼ë¡œê·¸ë¥¼ ì¶œë ¥í•˜ê¸° ìœ„í•œ ë·° UI
 /// </summary>
 public class DialogueView : MonoBehaviour
 {
@@ -19,8 +19,9 @@ public class DialogueView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _speaker;
     [SerializeField] private Image _indicator;
     [SerializeField] private Button _skipButton;
+    [SerializeField] private const int CountOfPlaySoundCharacter = 2;
 
-    [Tooltip("½ºÅ×ÀÌÁö ¸®¼Â(¼ö¶ô, °ÅÀı) ÀÀ´ä ÆĞ³Î")]
+    [Tooltip("ìŠ¤í…Œì´ì§€ ë¦¬ì…‹(ìˆ˜ë½, ê±°ì ˆ) ì‘ë‹µ íŒ¨ë„")]
     [SerializeField] private ResponsePanel _responsePanel;
     public ResponsePanel ResponsePanel => _responsePanel;
 
@@ -29,14 +30,14 @@ public class DialogueView : MonoBehaviour
     private TextShaker _textShaker;
 
     private DialogueSegment _currentSegment;
-    private string _exceptTimeSegmentText;          // '[3]'°ú °°Àº ´ë±â ½Ã°£À» Á¦¿ÜÇÑ ¼¼±×¸ÕÆ® ÅØ½ºÆ®
+    private string _exceptTimeSegmentText;          // '[3]'ê³¼ ê°™ì€ ëŒ€ê¸° ì‹œê°„ì„ ì œì™¸í•œ ì„¸ê·¸ë¨¼íŠ¸ í…ìŠ¤íŠ¸
 
     private Coroutine _currentSegmentCoroutine;
 
     public bool IsCurrentSegmentOver { get; private set; }
     public bool IsDialoguePanelActive => _dialoguePanel.gameObject.activeInHierarchy;
 
-    /// <summary> ´ÙÀÌ¾ó·Î±× ºä UI ÃÊ±âÈ­ ¹× ÆĞ³Î ¿­±â </summary>
+    /// <summary> ë‹¤ì´ì–¼ë¡œê·¸ ë·° UI ì´ˆê¸°í™” ë° íŒ¨ë„ ì—´ê¸° </summary>
     public void OpenPanel(bool canSkip = false)
     {
         _dialogue.text = "";
@@ -49,13 +50,13 @@ public class DialogueView : MonoBehaviour
         string dialogueKeyCode = InputManager.Instance.StayStillInputSetter.GetKeyCode("Dialogue").KeyCode.ToString();
         _skipText.text = dialogueKeyCode;
     }
-    /// <summary> ´ÙÀÌ¾ó·Î±× ºä UI ÆĞ³Î ´İ±â </summary>
+    /// <summary> ë‹¤ì´ì–¼ë¡œê·¸ ë·° UI íŒ¨ë„ ë‹«ê¸° </summary>
     public void ClosePanel()
     {
         _dialoguePanel.gameObject.SetActive(false);
     }
 
-    /// <summary> ÀÀ´ä ÆĞ³Î ¿­±â </summary>
+    /// <summary> ì‘ë‹µ íŒ¨ë„ ì—´ê¸° </summary>
     public void OpenResponsePanel(List<ResponseContainer> responseFunctions)
     {
         _indicator.gameObject.SetActive(false);
@@ -71,17 +72,17 @@ public class DialogueView : MonoBehaviour
         }
     }
 
-    /// <summary> ´ÙÀ½ ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ® ½ÃÀÛ </summary>
+    /// <summary> ë‹¤ìŒ ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ ì‹œì‘ </summary>
     public void StartNextSegment(DialogueSegment segment)
     {
         IsCurrentSegmentOver = false;
 
-        // ¼¼±×¸ÕÆ® ÃÊ±âÈ­
+        // ì„¸ê·¸ë¨¼íŠ¸ ì´ˆê¸°í™”
         _dialogue.text = "";
         _dialogue.alpha = 1f;
         _indicator.gameObject.SetActive(false);
 
-        // ¼¼±×¸ÕÆ® ¼³Á¤
+        // ì„¸ê·¸ë¨¼íŠ¸ ì„¤ì •
         _currentSegment = segment;
         _exceptTimeSegmentText = ExtractTextWithoutTime(segment.Text);
         _speaker.text = segment.Speaker;
@@ -95,35 +96,36 @@ public class DialogueView : MonoBehaviour
             _textShaker.StartShake();
         }
 
-        // ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ® ÇÁ·Î¼¼½º ÄÚ·çÆ¾ ½ÃÀÛ ¹× ÀúÀå
+        // ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ í”„ë¡œì„¸ìŠ¤ ì½”ë£¨í‹´ ì‹œì‘ ë° ì €ì¥
         _currentSegmentCoroutine = StartCoroutine(SegmentCoroutine());
     }
-    /// <summary> ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ®¸¦ ÇÑ ±ÛÀÚ¾¿ Ãâ·ÂÇÏ´Â ÄÚ·çÆ¾ </summary>
+    /// <summary> ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ë¥¼ í•œ ê¸€ìì”© ì¶œë ¥í•˜ëŠ” ì½”ë£¨í‹´ </summary>
     private IEnumerator SegmentCoroutine()
     {
-        // ÇÑ ÇÁ·¹ÀÓ ½¬°í ½ÃÀÛ
+        // í•œ í”„ë ˆì„ ì‰¬ê³  ì‹œì‘
         yield return null;
 
-        // ¼¼±×¸ÕÆ®ÀÇ ´ë»ç Å©±â¸¸Å­ StringBuilder »ı¼º
+        // ì„¸ê·¸ë¨¼íŠ¸ì˜ ëŒ€ì‚¬ í¬ê¸°ë§Œí¼ StringBuilder ìƒì„±
         StringBuilder stringBuilder = new StringBuilder(_currentSegment.Text.Length);
 
         int textIndex = 0;
+        int playSoundCharacterIndex = 0;
 
-        // ¼¼±×¸ÕÆ®ÀÇ ´ë»ç¸¦ ÇÑ ±ÛÀÚ¾¿ ¼øÈ¸
+        // ì„¸ê·¸ë¨¼íŠ¸ì˜ ëŒ€ì‚¬ë¥¼ í•œ ê¸€ìì”© ìˆœíšŒ
         while (true)
         {
-            // ÀÌ´Â ÅÂ±×¸¦ ÆÄ½ÌÇÏ±â À§ÇÔ
+            // ì´ëŠ” íƒœê·¸ë¥¼ íŒŒì‹±í•˜ê¸° ìœ„í•¨
             if (_currentSegment.Text[textIndex] == '<')
             {
                 int from = textIndex;
                 int to = _currentSegment.Text.IndexOf('>', from);
-                string textTag = _currentSegment.Text.Substring(from, to - from + 1);       // fromÀ» Æ÷ÇÔÇÑ length¸¸Å­ substring
+                string textTag = _currentSegment.Text.Substring(from, to - from + 1);       // fromì„ í¬í•¨í•œ lengthë§Œí¼ substring
 
                 stringBuilder.Append(textTag);
 
                 textIndex = to;
             }
-            // ÅØ½ºÆ® ÃµÃµÈ÷ Ãâ·Â
+            // í…ìŠ¤íŠ¸ ì²œì²œíˆ ì¶œë ¥
             else if (_currentSegment.Text[textIndex] == '[')
             {
                 int from = textIndex;
@@ -141,30 +143,37 @@ public class DialogueView : MonoBehaviour
 
                 textIndex = to;
             }
-            // ÀÏ¹İ ÅØ½ºÆ®¸¦ stringBuilder¿¡ Ãß°¡
+            // ì¼ë°˜ í…ìŠ¤íŠ¸ë¥¼ stringBuilderì— ì¶”ê°€
             else
             {
                 stringBuilder.Append(_currentSegment.Text[textIndex]);
-                _dialogue.text = stringBuilder.ToString();      // ÇöÀç±îÁöÀÇ stringBuilder¸¦ ÅØ½ºÆ®·Î Ãâ·Â
+                _dialogue.text = stringBuilder.ToString();      // í˜„ì¬ê¹Œì§€ì˜ stringBuilderë¥¼ í…ìŠ¤íŠ¸ë¡œ ì¶œë ¥
 
-                // ±ÛÀÚ Ãâ·Â »ç¿îµå Àç»ı
-                SoundManager.Instance.PlayCommonSFX("SE_UI_Script" + UnityEngine.Random.Range(1, 6).ToString());
+                // ê¸€ì ì¶œë ¥ ì‚¬ìš´ë“œ ì¬ìƒ
+
+                if(playSoundCharacterIndex % CountOfPlaySoundCharacter == 0)
+                {
+                    SoundManager.Instance.PlayCommonSFX("SE_UI_Script" + UnityEngine.Random.Range(1, 6).ToString());
+                    playSoundCharacterIndex = 0;
+                }
+
+                playSoundCharacterIndex++;
             }
 
-            // ´ÙÀ½ ±ÛÀÚ·Î ÀÌµ¿
+            // ë‹¤ìŒ ê¸€ìë¡œ ì´ë™
             textIndex++;
 
-            // ¼¼±×¸ÕÆ®ÀÇ ´ë»ç¸¦ ¸ğµÎ Ãâ·ÂÇßÀ» °æ¿ì Á¾·á, ¶Ç´Â °­Á¦Á¾·á
+            // ì„¸ê·¸ë¨¼íŠ¸ì˜ ëŒ€ì‚¬ë¥¼ ëª¨ë‘ ì¶œë ¥í–ˆì„ ê²½ìš° ì¢…ë£Œ, ë˜ëŠ” ê°•ì œì¢…ë£Œ
             if (textIndex == _currentSegment.Text.Length)
                 break;
 
             yield return new WaitForSeconds(_currentSegment.CharShowInterval);
         }
 
-        // ¼¼±×¸ÕÆ® ¸¶¹«¸® ´Ü°è
+        // ì„¸ê·¸ë¨¼íŠ¸ ë§ˆë¬´ë¦¬ ë‹¨ê³„
         CleanUpOnSegmentOver();
     }
-    /// <summary> ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ® ¼­¼­È÷ »ç¶óÁü </summary>
+    /// <summary> ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ ì„œì„œíˆ ì‚¬ë¼ì§ </summary>
     public IEnumerator ClearTextCoroutine(float duration)
     {
         float eTime = 0;
@@ -175,7 +184,7 @@ public class DialogueView : MonoBehaviour
             eTime += Time.deltaTime;
         }
     }
-    /// <summary> ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ®¿¡¼­ [Time]À» Á¦¿Ü </summary>
+    /// <summary> ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ì—ì„œ [Time]ì„ ì œì™¸ </summary>
     private string ExtractTextWithoutTime(string originText)
     {
         StringBuilder result = new StringBuilder(originText.Length);
@@ -187,7 +196,7 @@ public class DialogueView : MonoBehaviour
                 var from = i;
                 var to = originText.IndexOf(']', from);
 
-                // ¸øÃ£Àº °æ¿ì ¿¡·¯¸¦ ¹ß»ıÇÏµµ·Ï ÇÏ°í, ´ë°ıÈ£¸¦ ¹®ÀÚ·Î Ãß°¡ÇÑ´Ù
+                // ëª»ì°¾ì€ ê²½ìš° ì—ëŸ¬ë¥¼ ë°œìƒí•˜ë„ë¡ í•˜ê³ , ëŒ€ê´„í˜¸ë¥¼ ë¬¸ìë¡œ ì¶”ê°€í•œë‹¤
                 if (to == -1)
                 {
                     Debug.LogError($"The pair in '[' does not exist");
@@ -205,13 +214,13 @@ public class DialogueView : MonoBehaviour
 
         return result.ToString();
     }
-    /// <summary> ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ® ºü¸£°Ô ³Ñ¾î°¡±â </summary>
+    /// <summary> ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ ë¹ ë¥´ê²Œ ë„˜ì–´ê°€ê¸° </summary>
     public void FastForward()
     {
         StopCoroutine(_currentSegmentCoroutine);
         CleanUpOnSegmentOver();
     }
-    /// <summary> ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ® Á¾·á Ã³¸® </summary>
+    /// <summary> ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ ì¢…ë£Œ ì²˜ë¦¬ </summary>
     public void CleanUpOnSegmentOver()
     {
         IsCurrentSegmentOver = true;

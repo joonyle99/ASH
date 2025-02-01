@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ public class SoundList : MonoBehaviour
 
     // 사운드 클립 데이터 '리스트'에 O(1)로 접근하기 위한 딕셔너리
     private Dictionary<string, int> _soundIndexMap = new();
+
+    [SerializeField] private Coroutine _recentLoopPlayedSFX;
 
     private void Awake()
     {
@@ -35,14 +38,36 @@ public class SoundList : MonoBehaviour
                 return;
             }
 
+            if(sound.IsLoop)
+            {
+                _recentLoopPlayedSFX = StartCoroutine(PlaySFXRequestCoroutine(sound));
+            }
             SoundManager.Instance.PlaySFX_AudioClip(sound.Clip, sound.Pitch * pitchMultiplier, sound.Volume * volumeMultiplier);
+            Debug.Log("Play sound at PlaySFX_AudioClip()");
         }
         else
         {
             // 키가 존재하지 않는다면 SoundManager의 CommonSFX에서 재생을 시도한다
             SoundManager.Instance.PlayCommonSFX(key, pitchMultiplier, volumeMultiplier);
+            Debug.Log("Play sound at PlayCommonSFX()");
         }
     }
+
+    private IEnumerator PlaySFXRequestCoroutine(SoundClipData sound, float pitchMultiplier = 1f, float volumeMultiplier = 1f)
+    {
+        while(true)
+        {
+            SoundManager.Instance.PlaySFX_AudioClip(sound.Clip, sound.Pitch * pitchMultiplier, sound.Volume * volumeMultiplier);
+
+            yield return new WaitForSeconds(sound.Clip.length);
+        }
+    }
+
+    public void StopRecentLoopPlayedSFX()
+    {
+        StopCoroutine(_recentLoopPlayedSFX);
+    }
+
     public void PlayBGM(string key, float volumeMultiplier = 1f)
     {
         if (_soundIndexMap.ContainsKey(key))
