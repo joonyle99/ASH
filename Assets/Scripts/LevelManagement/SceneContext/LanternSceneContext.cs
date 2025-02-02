@@ -1,4 +1,4 @@
-﻿using Com.LuisPedroFonseca.ProCamera2D;
+using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -203,7 +203,6 @@ public sealed class LanternSceneContext : SceneContext
         _StopCheckingConnections = true;
 
         // 랜턴으로 카메라 이동 후 대기
-        InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
         SceneEffectManager.Instance.Camera.StartFollow(lanternAttack.Lantern.transform);
         yield return new WaitForSeconds(_cameraLastLanternStayDuration);
 

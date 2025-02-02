@@ -31,7 +31,7 @@ public class ChasingCamera : MonoBehaviour
                 );
             _helperTrans.position = nextHelperPos;
 
-            if (Mathf.Abs(_targetTrans.position.y - _helperTrans.position.y) < _distance)
+            if (Mathf.Abs(_targetTrans.position.y - _helperTrans.position.y) <= _distance)
             {
                 StopChasing();
                 this.enabled = false;
@@ -47,22 +47,19 @@ public class ChasingCamera : MonoBehaviour
 
             var player = SceneContext.Current.Player;
 
-            // ÇÃ·¹ÀÌ¾î°¡ Ä«¸Þ¶ó ¾È¿¡ ÀÖ´ÂÁö È®ÀÎ
+            // í”Œë ˆì´ì–´ê°€ ì¹´ë©”ë¼ ì•ˆì— ìžˆëŠ”ì§€ í™•ì¸
             var playerViewportPos = SceneContext.Current.CameraController.MainCamera.WorldToViewportPoint(player.HeadTrans.position);
             if (playerViewportPos.y < 0)
             {
-                // Debug.Log("ÇÃ·¹ÀÌ¾î°¡ Ä«¸Þ¶ó ¾Æ·¡·Î ¶³¾îÁ®¼­ »ç¸ÁÇÕ´Ï´Ù.");
+                // Debug.Log("í”Œë ˆì´ì–´ê°€ ì¹´ë©”ë¼ ì•„ëž˜ë¡œ ë–¨ì–´ì ¸ì„œ ì‚¬ë§í•©ë‹ˆë‹¤.");
 
                 player.CurHp -= player.CurHp;
-
-                if (_isChasing)
-                    StopChasing();
-
+                EndChasing();
                 return;
             }
             else if (playerViewportPos.y > 1)
             {
-                // Debug.Log("ÇÃ·¹ÀÌ¾î°¡ Ä«¸Þ¶ó À§·Î ¿Ã¶ó°¡¼­ µû¶ó°©´Ï´Ù.");
+                // Debug.Log("í”Œë ˆì´ì–´ê°€ ì¹´ë©”ë¼ ìœ„ë¡œ ì˜¬ë¼ê°€ì„œ ë”°ë¼ê°‘ë‹ˆë‹¤.");
 
                 _helperTrans.position = new Vector3
                     (
@@ -120,5 +117,14 @@ public class ChasingCamera : MonoBehaviour
         // 3. Camera -> Player (Follow)
         _camera.CurrentCameraType = CameraController.CameraType.Normal;
         SceneContext.Current.CameraController.StartFollow(SceneContext.Current.Player.transform);
+    }
+    public void EndChasing()
+    {
+        if (_isChasing == false)
+            return;
+
+        _isChasing = false;
+
+        _camera.CurrentCameraType = CameraController.CameraType.Normal;
     }
 }

@@ -229,6 +229,8 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         _currentSpotLight.intensity = (_currentLightFill / _lightUpTime) * _currentSettings.Intensity;
         if (_currentLightFill > _lightUpTime)
         {
+            InputManager.Instance.ChangeToStayStillSetter();
+
             TurnLightOn();
         }
     }
