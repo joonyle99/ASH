@@ -149,8 +149,15 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
 
         IsLightOn = true;
 
+        if (SceneContext.Current.CameraController.CurrentCameraType == CameraController.CameraType.Chasing)
+        {
+            InputManager.Instance.ChangeToStayStillSetter();
+        }
+
         if (!_isExplodeDone)
+        {
             StartCoroutine(ExplodeCoroutine());
+        }
     }
     void TurnLightOff()
     {
@@ -229,8 +236,6 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         _currentSpotLight.intensity = (_currentLightFill / _lightUpTime) * _currentSettings.Intensity;
         if (_currentLightFill > _lightUpTime)
         {
-            InputManager.Instance.ChangeToStayStillSetter();
-
             TurnLightOn();
         }
     }
