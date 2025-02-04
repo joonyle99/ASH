@@ -1,9 +1,14 @@
+using UnityEngine;
+
 public class JumpState : PlayerState
 {
     PlayerJumpController _jumpController;
 
     protected override bool OnEnter()
     {
+        if (GameUIManager.Instance.OptionView.IsPause) return true;
+
+
         _jumpController = Player.GetComponent<PlayerJumpController>();
 
         Player.Animator.SetTrigger("Jump");
@@ -20,6 +25,8 @@ public class JumpState : PlayerState
 
     protected override bool OnUpdate()
     {
+        if (GameUIManager.Instance.OptionView.IsPause) return true;
+
         if (Player.IsUpWardGrounded)
         {
             StateBase state = Player.PreviousState;

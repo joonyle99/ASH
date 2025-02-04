@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ÄÆ¾À ÇÃ·¹ÀÌ¾î´Â ´Ù¾çÇÑ ¿¬ÃâÀ» ½ÃÄö½º¸¦ ÅëÇØ Àç»ıÇÑ´Ù
+/// ì»·ì”¬ í”Œë ˆì´ì–´ëŠ” ë‹¤ì–‘í•œ ì—°ì¶œì„ ì‹œí€€ìŠ¤ë¥¼ í†µí•´ ì¬ìƒí•œë‹¤
 /// </summary>
 public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuildListener
 {
+    [Tooltip("ì €ì¥ ë° ë¶ˆëŸ¬ì˜¤ê¸°ë¥¼ ì œì™¸í•˜ê³  ì²´í¬ ì‹œ í•´ë‹¹ ì»·ì”¬ ë‹¨ í•œë²ˆë§Œ ì¬ìƒ")]
     [SerializeField] bool _playOnce = true;
+    public bool PlayOnce => _playOnce;
+
     [SerializeField] bool _played = false;
     public bool IsPlayed
     {
@@ -31,7 +34,8 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
         if (_statePreserver)
         {
             if (SceneChangeManager.Instance &&
-                SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+                SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading ||
+                SceneChangeManager.Instance.SceneChangeType == SceneChangeType.PlayerRespawn)
             {
                 bool played = _statePreserver.LoadState("_playSaved", _played);
                 if (played)
@@ -63,7 +67,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
     }
 
     /// <summary>
-    /// ½ÃÄö½º¿¡ ¸Â´Â ¿¬ÃâÀ» Àç»ıÇÑ´Ù
+    /// ì‹œí€€ìŠ¤ì— ë§ëŠ” ì—°ì¶œì„ ì¬ìƒí•œë‹¤
     /// </summary>
     /// <param name="sequence"></param>
     /// <returns></returns>
@@ -121,7 +125,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
     }
 
     /// <summary>
-    /// ½ÃÄö½º¸¦ Àç»ıÇÑ´Ù
+    /// ì‹œí€€ìŠ¤ë¥¼ ì¬ìƒí•œë‹¤
     /// </summary>
     public void Play()
     {
@@ -129,6 +133,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
         {
             _played = true;
 
+            Debug.Log("Play" + gameObject.name+ "'s cutscene");
             StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence))));
         }
         else
@@ -138,7 +143,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
     }
 
     /// <summary>
-    /// Æ®¸®°Å·Î ÀÎÇÑ ½ÃÄö½º Àç»ı
+    /// íŠ¸ë¦¬ê±°ë¡œ ì¸í•œ ì‹œí€€ìŠ¤ ì¬ìƒ
     /// </summary>
     /// <param name="activator"></param>
     /// <param name="reporter"></param>

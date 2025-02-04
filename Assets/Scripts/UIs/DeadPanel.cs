@@ -25,7 +25,7 @@ public class DeadPanel : MonoBehaviour
         StartCoroutine(OpenFadeLogic());
 
         _buttonAccept.onClick.RemoveAllListeners();
-        _buttonAccept.onClick.AddListener(SceneContext.Current.Player.Respawn);
+        _buttonAccept.onClick.AddListener(PlayerBehaviour.Respawn);
     }
 
     private IEnumerator OpenFadeLogic()

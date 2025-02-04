@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ¿¬ÃâÀÌ µé¾î°£ Æ¯º°ÇÑ ¹®À¸·Î Passage¸¦ Á¦¾îÇÑ´Ù
+/// ì• ë‹ˆë©”ì´ì…˜ì´ ì—°ì¶œì´ ë“¤ì–´ê°„ íŠ¹ë³„í•œ ë¬¸ìœ¼ë¡œ Passageë¥¼ ì œì–´í•œë‹¤
 /// </summary>
 public class BossDoor : Door
 {
@@ -10,8 +10,8 @@ public class BossDoor : Door
     [Space]
 
     [SerializeField] private GameObject _passage;
-    [SerializeField] private DialogueData _failDialogue;                        // ¹® ¿­±â ½ÇÆĞ ´ë»ç
-    [SerializeField] private DialogueData _successDialogue;                     // ¹® ¿­±â ¼º°ø ´ë»ç
+    [SerializeField] private DialogueData _failDialogue;                        // ë¬¸ ì—´ê¸° ì‹¤íŒ¨ ëŒ€ì‚¬
+    [SerializeField] private DialogueData _successDialogue;                     // ë¬¸ ì—´ê¸° ì„±ê³µ ëŒ€ì‚¬
 
     [Space] private float _waitTime = 2f;
 
@@ -53,17 +53,21 @@ public class BossDoor : Door
     {
         if (_statePreserver)
         {
-            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading ||
+                SceneChangeManager.Instance.SceneChangeType == SceneChangeType.PlayerRespawn)
             {
                 if (IsOpened = _statePreserver.LoadState<bool>("_isOpenSaved", IsOpened))
                 {
                     _animator.SetTrigger("InstantOpen");
 
                     InitOpening();
+                    Debug.Log(gameObject.name + "Boss door conditional 1");
                 }
                 else
                 {
                     InitClosing();
+                    Debug.Log(gameObject.name + "Boss door conditional 2");
                 }
             }
             else
@@ -73,10 +77,12 @@ public class BossDoor : Door
                     _animator.SetTrigger("InstantOpen");
 
                     InitOpening();
+                    Debug.Log(gameObject.name + "Boss door conditional 3");
                 }
                 else
                 {
                     InitClosing();
+                    Debug.Log(gameObject.name + "Boss door conditional 4");
                 }
             }
         }
@@ -89,8 +95,7 @@ public class BossDoor : Door
     {
         if (CanOpenDoor)
         {
-            //_soundList.PlaySFX("Open"); »ç¿îµå ÇÃ·¹ÀÌ´Â DoorOpenAnimation¿¡¼­ ¼öÇà
-
+            //_soundList.PlaySFX("Open"); ì‚¬ìš´ë“œ í”Œë ˆì´ëŠ” DoorOpenAnimationì—ì„œ ìˆ˜í–‰
             StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, OpenDoorCoroutine())));
         }
         else
@@ -117,7 +122,7 @@ public class BossDoor : Door
     // control door (open / close)
     protected override IEnumerator OpenDoorCoroutine(bool useCameraEffect = true)
     {
-        // »óÈ£ÀÛ¿ëÀ¸·Î ¿©´Â °æ¿ì¿¡¸¸ InputSetter¸¦ º¯°æÇÑ´Ù
+        // ìƒí˜¸ì‘ìš©ìœ¼ë¡œ ì—¬ëŠ” ê²½ìš°ì—ë§Œ InputSetterë¥¼ ë³€ê²½í•œë‹¤
         if (IsInteractable)
         {
             InputManager.Instance.ChangeToStayStillSetter();
@@ -128,8 +133,8 @@ public class BossDoor : Door
         yield return StartCoroutine(base.OpenDoorCoroutine(useCameraEffect));
 
         /*
-         * TODO: º¸½º¿Í ½Î¿ì´Ù Áß°£¿¡ Á×À¸¸é º¸½ºÅ°°¡ ¼Ò¸ğµÈ »óÅÂÀÌ¹Ç·Î ¹®ÀÌ ¿­¸®Áö ¾Ê´Â ¹ö±× Á¸Àç
-        // ¿­¼è¸¦ ¼Ò¸ğÇÑ´Ù
+         * TODO: ë³´ìŠ¤ì™€ ì‹¸ìš°ë‹¤ ì¤‘ê°„ì— ì£½ìœ¼ë©´ ë³´ìŠ¤í‚¤ê°€ ì†Œëª¨ëœ ìƒíƒœì´ë¯€ë¡œ ë¬¸ì´ ì—´ë¦¬ì§€ ì•ŠëŠ” ë²„ê·¸ ì¡´ì¬
+        // ì—´ì‡ ë¥¼ ì†Œëª¨í•œë‹¤
         if (BossDungeonManager.Instance.IsAllKeysCollected)
         {
             BossDungeonManager.Instance.OnOpenBossDoor();
@@ -138,14 +143,14 @@ public class BossDoor : Door
 
         yield return new WaitForSeconds(_waitTime);
 
-        // ¼º°ø ´ÙÀÌ¾ó·Î±× ½ÇÇà
+        // ì„±ê³µ ë‹¤ì´ì–¼ë¡œê·¸ ì‹¤í–‰
         if (_successDialogue != null)
         {
             DialogueController.Instance.StartDialogue(_successDialogue, false);
             yield return new WaitUntil(() => DialogueController.Instance.IsDialogueActive == false);
         }
 
-        // »óÈ£ÀÛ¿ëÀ¸·Î ¿©´Â °æ¿ì¿¡¸¸ InputSetter¸¦ º¯°æÇÑ´Ù
+        // ìƒí˜¸ì‘ìš©ìœ¼ë¡œ ì—¬ëŠ” ê²½ìš°ì—ë§Œ InputSetterë¥¼ ë³€ê²½í•œë‹¤
         if (IsInteractable)
         {
             if (_enterInputSetter)
@@ -159,8 +164,8 @@ public class BossDoor : Door
         }
 
         /*
-        // yield return _doorOpenAnimation.OpenCoroutine();                                             // ´Ü¼øÈ÷ ÄÚ·çÆ¾À» ½ÃÀÛÇÑ´Ù (¿µÈ­°ü¿¡¼­ ¿µÈ­°¡ ³¡³¯ ¶§±îÁö ±â´Ù¸°´Ù)
-        // yield return _doorOpenAnimation.StartCoroutine(_doorOpenAnimation.OpenCoroutine());          // ¸í½ÃÀûÀ¸·Î ÄÚ·çÆ¾À» ½ÃÀÛÇÑ´Ù  (¿µÈ­°ü Á÷¿ø¿¡°Ô ºÎÅ¹ÇØ ¿µÈ­¸¦ »ó¿µÇÏ°í ¿µÈ­°¡ ³¡³¯ ¶§±îÁö ±â´Ù¸°´Ù)
+        // yield return _doorOpenAnimation.OpenCoroutine();                                             // ë‹¨ìˆœíˆ ì½”ë£¨í‹´ì„ ì‹œì‘í•œë‹¤ (ì˜í™”ê´€ì—ì„œ ì˜í™”ê°€ ëë‚  ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤)
+        // yield return _doorOpenAnimation.StartCoroutine(_doorOpenAnimation.OpenCoroutine());          // ëª…ì‹œì ìœ¼ë¡œ ì½”ë£¨í‹´ì„ ì‹œì‘í•œë‹¤  (ì˜í™”ê´€ ì§ì›ì—ê²Œ ë¶€íƒí•´ ì˜í™”ë¥¼ ìƒì˜í•˜ê³  ì˜í™”ê°€ ëë‚  ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤)
         */
     }
 
@@ -231,6 +236,7 @@ public class BossDoor : Door
         if (_statePreserver)
         {
             _statePreserver.SaveState<bool>("_isOpenSaved", IsOpened);
+            Debug.Log(gameObject.name + "'s saved door open state : " + IsOpened);
         }
     }
 }

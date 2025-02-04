@@ -43,7 +43,7 @@ public class SoundList : MonoBehaviour
                 _recentLoopPlayedSFX = StartCoroutine(PlaySFXRequestCoroutine(sound));
             }
             SoundManager.Instance.PlaySFX_AudioClip(sound.Clip, sound.Pitch * pitchMultiplier, sound.Volume * volumeMultiplier);
-            Debug.Log("Play sound at PlaySFX_AudioClip()");
+            //Debug.Log("Play sound at PlaySFX_AudioClip()");
         }
         else
         {

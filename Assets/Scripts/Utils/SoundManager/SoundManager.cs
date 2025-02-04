@@ -184,7 +184,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         if (_soundListIndexMap.TryGetValue(key, out var soundListIndex))
         {
             // SoundManager의 SoundList에 접근하여 해당 키에 맞는 SFX를 재생
-            Debug.Log("PlayCommonSFX: " + key);
+            //Debug.Log("PlayCommonSFX: " + key);
             _soundLists[soundListIndex].PlaySFX(key, pitchMultiplier, volumeMultiplier);
             return;
         }

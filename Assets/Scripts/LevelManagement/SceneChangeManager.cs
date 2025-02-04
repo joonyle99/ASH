@@ -1,8 +1,10 @@
-﻿using LevelGraph;
+using LevelGraph;
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
 
+[Serializable]
 public enum SceneChangeType
 {
     None = 0,
@@ -27,7 +29,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     [SerializeField] private LevelGraphData _levelGraphData;                        // 레벨 그래프
     [SerializeField] private SceneTransitionPlayer _defaultSceneTransitionPlayer;   // 기본적으로 사용할 씬 전환 플레이어 (Either Playable or None Playable)
 
-    private SceneChangeType _sceneChangeType = SceneChangeType.None;
+    [SerializeField] private SceneChangeType _sceneChangeType = SceneChangeType.None;
     public SceneChangeType SceneChangeType
     {
         get => _sceneChangeType;
@@ -37,6 +39,8 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
     private void Start()
     {
         var sceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+        _sceneChangeType = SceneChangeType.None;
 
         if (GameSceneManager.IsDefinedScene(sceneName))
         {

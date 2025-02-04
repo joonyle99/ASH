@@ -1,7 +1,12 @@
+using UnityEngine;
+
 public class RunState : PlayerState, IAttackableState, IJumpableState, IInteractableState
 {
     protected override bool OnEnter()
     {
+        if (GameUIManager.Instance.OptionView.IsPause) return true;
+
+
         Player.PlayerMovementController.enabled = true;
         Player.Animator.SetBool("IsRun", true);
 
@@ -10,6 +15,9 @@ public class RunState : PlayerState, IAttackableState, IJumpableState, IInteract
 
     protected override bool OnUpdate()
     {
+        if (GameUIManager.Instance.OptionView.IsPause) return true;
+
+
         if (!Player.IsMoveXKey)
         {
             ChangeState<IdleState>();
@@ -41,6 +49,8 @@ public class RunState : PlayerState, IAttackableState, IJumpableState, IInteract
     }
     protected override bool OnExit()
     {
+        if (GameUIManager.Instance.OptionView.IsPause) return true;
+
         Player.PlayerMovementController.enabled = false;
         Player.Animator.SetBool("IsRun", false);
 

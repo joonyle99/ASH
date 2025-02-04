@@ -8,20 +8,20 @@ using UnityEditor.SceneManagement;
 
 public class Passage : TriggerZone
 {
-    [Header("¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡ Passage ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡")]
+    [Header("â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Passage â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€")]
     [Space]
 
-    [Tooltip("ÇÃ·¹ÀÌ¾î°¡ ¿©±â·Î µé¾î°¡¼­ ´ÙÀ½ ½ºÅ×ÀÌÁö·Î °¥ ¶§")][SerializeField] InputSetterScriptableObject _enterInputSetter;
-    [Tooltip("ÇÃ·¹ÀÌ¾î°¡ ÀÌÀü ½ºÅ×ÀÌÁö¿¡¼­ ¿©±â·Î ³ª¿Ã ¶§")][SerializeField] InputSetterScriptableObject _exitInputSetter;
+    [Tooltip("í”Œë ˆì´ì–´ê°€ ì—¬ê¸°ë¡œ ë“¤ì–´ê°€ì„œ ë‹¤ìŒ ìŠ¤í…Œì´ì§€ë¡œ ê°ˆ ë•Œ")][SerializeField] InputSetterScriptableObject _enterInputSetter;
+    [Tooltip("í”Œë ˆì´ì–´ê°€ ì´ì „ ìŠ¤í…Œì´ì§€ì—ì„œ ì—¬ê¸°ë¡œ ë‚˜ì˜¬ ë•Œ")][SerializeField] InputSetterScriptableObject _exitInputSetter;
 
     [Space]
 
-    [Tooltip("ÇØ´ç ÀÔ±¸¸¦ ÅëÇØ ¾À¿¡ ÀÔ¼ºÇßÀ» ¶§ ½ÇÇàÇÏ´Â ÄÆ¾À")]
+    [Tooltip("í•´ë‹¹ ì…êµ¬ë¥¼ í†µí•´ ì”¬ì— ì…ì„±í–ˆì„ ë•Œ ì‹¤í–‰í•˜ëŠ” ì»·ì”¬")]
     [SerializeField] private CutscenePlayer _entranceCutscenePlayer;
 
     [Space]
 
-    [Tooltip("ÇØ´ç ÀÔ±¸¸¦ ÅëÇØ ¾À¿¡ ÀÔ¼ºÇßÀ» ¶§ ÇÃ·¹ÀÌ¾î°¡ ½ºÆùµÇ´Â À§Ä¡")]
+    [Tooltip("í•´ë‹¹ ì…êµ¬ë¥¼ í†µí•´ ì”¬ì— ì…ì„±í–ˆì„ ë•Œ í”Œë ˆì´ì–´ê°€ ìŠ¤í°ë˜ëŠ” ìœ„ì¹˜")]
     [SerializeField] private Transform _playerSpawnPoint;
 
     [Space]
@@ -60,7 +60,7 @@ public class Passage : TriggerZone
         if (_isPlayerExiting || !_canEnter)
             return;
 
-        // ´ÙÀ½ ¾ÀÀ¸·Î ³Ñ¾î°£´Ù
+        // ë‹¤ìŒ ì”¬ìœ¼ë¡œ ë„˜ì–´ê°„ë‹¤
         StartCoroutine(ExitSceneCoroutine());
     }
     public override void OnPlayerExit(PlayerBehaviour player)
@@ -71,7 +71,7 @@ public class Passage : TriggerZone
         _isPlayerExiting = false;
     }
 
-    // ´ÙÀ½ ¾ÀÀ¸·Î ³Ñ¾î°¡±â À§ÇÑ ·ÎÁ÷
+    // ë‹¤ìŒ ì”¬ìœ¼ë¡œ ë„˜ì–´ê°€ê¸° ìœ„í•œ ë¡œì§
     private IEnumerator ExitSceneCoroutine()
     {
         // * push cutscene
@@ -80,7 +80,7 @@ public class Passage : TriggerZone
 
         // # load next passage data
         var fromPassageName = name;
-        var toPassageData = SceneChangeManager.Instance.GetNextPassageData(fromPassageName);          // this passage¿¡ ´ëÀÀµÇ´Â next passageÀÇ data¸¦ °¡Á®¿Â´Ù
+        var toPassageData = SceneChangeManager.Instance.GetNextPassageData(fromPassageName);          // this passageì— ëŒ€ì‘ë˜ëŠ” next passageì˜ dataë¥¼ ê°€ì ¸ì˜¨ë‹¤
         var toSceneName = toPassageData.SceneName;
 
         // * wait cutscene
@@ -92,27 +92,27 @@ public class Passage : TriggerZone
     }
     private IEnumerator ExitSceneCutsceneCoroutine()
     {
-        // ¾ÀÀ» ³ª°¡´Â ÄÆ¾À¿¡¼­ ÇÃ·¹ÀÌ¾îÀÇ ÀÔ·ÂÀ» ¹ŞÁö ¾Êµµ·Ï ¼³Á¤
+        // ì”¬ì„ ë‚˜ê°€ëŠ” ì»·ì”¬ì—ì„œ í”Œë ˆì´ì–´ì˜ ì…ë ¥ì„ ë°›ì§€ ì•Šë„ë¡ ì„¤ì •
         InputManager.Instance.ChangeInputSetter(_enterInputSetter);
 
-        // ¾ÀÀ» ³ª°¡´Â È¿°ú
+        // ì”¬ì„ ë‚˜ê°€ëŠ” íš¨ê³¼
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
     }
     
-    // Passage¸¦ ÅëÇØ ¹ÛÀ¸·Î ³ª¿È
+    // Passageë¥¼ í†µí•´ ë°–ìœ¼ë¡œ ë‚˜ì˜´
     public IEnumerator PlayerExitCoroutine()
     {
         if(_canEnter)
             _isPlayerExiting = true;
 
-        // spawn point·Î ÀÌµ¿
+        // spawn pointë¡œ ì´ë™
         SceneContext.Current.Player.transform.position = _playerSpawnPoint.position;
 
         // exiting input setter
         if (_exitInputSetter != null) InputManager.Instance.ChangeInputSetter(_exitInputSetter);
         else InputManager.Instance.ChangeToDefaultSetter();
 
-        // ¾ÆÁ÷ passage¸¦ ³ª°¡Áö ¾Ê¾Ò°Å³ª ½Ã°£ÀÌ Áö³ªÁö ¾Ê¾Ò´Ù¸é °è¼Ó ´ë±â
+        // ì•„ì§ passageë¥¼ ë‚˜ê°€ì§€ ì•Šì•˜ê±°ë‚˜ ì‹œê°„ì´ ì§€ë‚˜ì§€ ì•Šì•˜ë‹¤ë©´ ê³„ì† ëŒ€ê¸°
         float eTime = 0f;
         while(_isPlayerExiting || eTime < _exitTimeOut)
         {
@@ -126,11 +126,12 @@ public class Passage : TriggerZone
         InputManager.Instance.ChangeToDefaultSetter();
     }
 
-    // Passage¿¡¼­ ³ª¿Â ÈÄ, ÇØ´ç ¾À¿¡ ÄÆ¾ÀÀ» ½ÇÇà
+    // Passageì—ì„œ ë‚˜ì˜¨ í›„, í•´ë‹¹ ì”¬ì— ì»·ì”¬ì„ ì‹¤í–‰
     public IEnumerator PlayEnterCutscene()
     {
         if(_entranceCutscenePlayer == null) yield break;
         if (!_entranceCutscenePlayer.isActiveAndEnabled) yield break;
+        if(_entranceCutscenePlayer.IsPlayed && _entranceCutscenePlayer.PlayOnce) yield break;
 
         InputManager.Instance.ChangeToStayStillSetter();
 

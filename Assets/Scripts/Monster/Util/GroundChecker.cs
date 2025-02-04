@@ -40,7 +40,8 @@ public class GroundChecker : MonoBehaviour
 
     private void OnDestroy()
     {
-        StopCoroutine(_groundCheckCoroutine);
+        if(_groundCheckCoroutine != null)
+            StopCoroutine(_groundCheckCoroutine);
     }
 
     private IEnumerator CheckGroundCoroutine()

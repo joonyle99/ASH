@@ -432,6 +432,11 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     }
     private void UpdateImageFlip()
     {
+        //일시정지 시 플레이어 플립되는 현상 차단
+        OptionView optionView = GameUIManager.Instance.OptionView;
+        if (optionView.IsPause) return;
+
+
         if (CurrentStateIs<RunState>() || CurrentStateIs<InAirState>())
         {
             if (IsOppositeDirSync && IsMoveXKey)
@@ -579,16 +584,18 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     }
 
     // respawn
-    public void Respawn()
+    public static void Respawn()
     {
-        SceneChangeManager.Instance.SceneChangeType = SceneChangeType.PlayerRespawn;
+        //저장된 데이터가 없는 경우 맵의 제일 처음에 플레이어 스폰
+        if(!PersistentDataManager.LoadToSavedData(SceneChangeType.PlayerRespawn))
+        {
+            SceneChangeManager.Instance.SceneChangeType = SceneChangeType.PlayerRespawn;
 
-        var sceneName = PersistentDataManager.Instance.SavedPersistentData.SceneName;
-        sceneName = sceneName == "" ? SceneManager.GetActiveScene().name : sceneName;
-        var passageName = PersistentDataManager.Instance.SavedPersistentData.PassageName;
-        passageName = passageName == "" ? SceneContext.Current.EntrancePassage.PassageName : passageName;
+            var sceneName = SceneManager.GetActiveScene().name;
+            var passageName = SceneContext.Current.EntrancePassage.PassageName;
 
-        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+            SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+        }
     }
     #endregion
 

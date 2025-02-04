@@ -8,14 +8,14 @@ using UnityEditor;
 using JetBrains.Annotations;
 using System.Linq;
 
-/// <summary> Áö¼Ó¼º ÀÖ´Â µ¥ÀÌÅÍ </summary>
+/// <summary> ì§€ì†ì„± ìˆëŠ” ë°ì´í„° </summary>
 public class PersistentData
 {
     public string SceneName = "";
     public string PassageName = "";
 
-    public Dictionary<string, DataGroup> DataGroups = new();      // ÇÃ·¹ÀÌ µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ´Âµ¥ »ç¿ë
-    public DataGroup GlobalDataGroup = new();                     // ¿µ±¸Àû µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ´Âµ¥ »ç¿ë
+    public Dictionary<string, DataGroup> DataGroups = new();      // í”Œë ˆì´ ë°ì´í„°ë¥¼ ì €ì¥í•˜ëŠ”ë° ì‚¬ìš©
+    public DataGroup GlobalDataGroup = new();                     // ì˜êµ¬ì  ë°ì´í„°ë¥¼ ì €ì¥í•˜ëŠ”ë° ì‚¬ìš©
 
     public PersistentData CopyPersistentData(PersistentData data)
     {
@@ -61,7 +61,7 @@ public class PersistentData
 
             foreach (var dataGroup in dataGroups.Value)
             {
-                //ÀúÀå°ü·ÃµÈ Å« ¹®Á¦ »ı±â¸é ¾Æ·¡ ÄÚµå »èÁ¦ ¿ä¸Á
+                //ì €ì¥ê´€ë ¨ëœ í° ë¬¸ì œ ìƒê¸°ë©´ ì•„ë˜ ì½”ë“œ ì‚­ì œ ìš”ë§
                 //if (!dataGroup.Key.Substring(dataGroup.Key.Length - 5, 5).Equals("Saved"))
                 //    continue;
 
@@ -106,7 +106,7 @@ public class PersistentData
     }
 }
 
-/// <summary> Áö¼Ó¼ºÀÖ´Â µ¥ÀÌÅÍ¸¦ °ü¸®ÇÏ´Â Å¬·¡½º </summary>
+/// <summary> ì§€ì†ì„±ìˆëŠ” ë°ì´í„°ë¥¼ ê´€ë¦¬í•˜ëŠ” í´ë˜ìŠ¤ </summary>
 public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<PersistentDataManager>
 {
     private PersistentData _persistentData = new();
@@ -126,13 +126,13 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
     private void Update()
     {
-        // CHEAT: F7 Å°¸¦ ´©¸£¸é ºû ½ºÅ³ È¹µæ
+        // CHEAT: F7 í‚¤ë¥¼ ëˆ„ë¥´ë©´ ë¹› ìŠ¤í‚¬ íšë“
         if (Input.GetKeyDown(KeyCode.F7) && GameSceneManager.Instance.CheatMode == true)
         {
             ObtainSkill_Light();
         }
 
-        // CHEAT: F8 Å°¸¦ ´©¸£¸é ´õºí Á¡ÇÁ, ´ë½¬ È¹µæ
+        // CHEAT: F8 í‚¤ë¥¼ ëˆ„ë¥´ë©´ ë”ë¸” ì í”„, ëŒ€ì‰¬ íšë“
         if (Input.GetKeyDown(KeyCode.F8) && GameSceneManager.Instance.CheatMode == true)
         {
             ObtainSkill_Moving();
@@ -140,12 +140,12 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
 #if UNITY_EDITOR
         /*
-        // µ¥ÀÌÅÍ ±×·ì Ãâ·Â
+        // ë°ì´í„° ê·¸ë£¹ ì¶œë ¥
         if (Input.GetKeyDown(KeyCode.Q))
         {
             PrintDataGroup();
         }
-        // ±Û·Î¹ú µ¥ÀÌÅÍ ±×·ì Ãâ·Â
+        // ê¸€ë¡œë²Œ ë°ì´í„° ê·¸ë£¹ ì¶œë ¥
         if (Input.GetKeyDown(KeyCode.E))
         {
             PrintGlobalDataGroup();
@@ -160,8 +160,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         {
             Debug.Log("=============Save Data============");
             SavedPersistentData.PrintData();
-        }
-        */
+        }*/
+        
 #endif
     }
 
@@ -171,11 +171,11 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return false;
 
-        // ÀÌ¹Ì Á¸ÀçÇÏ´Â µ¥ÀÌÅÍ ±×·ìÀÌ¶ó¸é Ãß°¡ÇÏÁö ¾Ê´Â´Ù
+        // ì´ë¯¸ ì¡´ì¬í•˜ëŠ” ë°ì´í„° ê·¸ë£¹ì´ë¼ë©´ ì¶”ê°€í•˜ì§€ ì•ŠëŠ”ë‹¤
         if (HasDataGroup(groupName))
             return false;
 
-        // »õ·Î¿î µ¥ÀÌÅÍ ±×·ìÀ» »ı¼ºÇÑ´Ù
+        // ìƒˆë¡œìš´ ë°ì´í„° ê·¸ë£¹ì„ ìƒì„±í•œë‹¤
         Instance._persistentData.DataGroups[groupName] = new DataGroup();
 
         return true;
@@ -276,7 +276,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance == null)
             return;
 
-        // Áßº¹µÈ key¿¡ »õ·Î¿î value°¡ µé¾î¿À¸é µ¤¾î¾´´Ù
+        // ì¤‘ë³µëœ keyì— ìƒˆë¡œìš´ valueê°€ ë“¤ì–´ì˜¤ë©´ ë®ì–´ì“´ë‹¤
         Instance._persistentData.GlobalDataGroup[key] = value;
     }
     public static bool HasByGlobal<T>(string key) where T : new()
@@ -346,10 +346,10 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
     /**
      * <summary>
-     * ÃÖ½ÅÁ¤º¸¸¦ ÀúÀåÇÏ°í ÀÖ´Â _persistentData¸¦ °¡Á®¿Í
-     * _savedPersistentData¿¡ ÀúÀå
+     * ìµœì‹ ì •ë³´ë¥¼ ì €ì¥í•˜ê³  ìˆëŠ” _persistentDataë¥¼ ê°€ì ¸ì™€
+     * _savedPersistentDataì— ì €ì¥
      * 
-     * ¡Ø_savedPersistentData´Â »ç¸Á(È¤Àº ºÒ·¯¿À±â)½Ã ·ÎµåµÉ µ¥ÀÌÅÍ
+     * â€»_savedPersistentDataëŠ” ì‚¬ë§(í˜¹ì€ ë¶ˆëŸ¬ì˜¤ê¸°)ì‹œ ë¡œë“œë  ë°ì´í„°
      * </summary>
      */
     public static void CopyPDataToSavedPData(string passageName)
@@ -362,8 +362,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
     /**
      * <summary>
-     * ·¹º§ ·Îµå½Ã ¿ÀºêÁ§Æ®°¡ ÂüÁ¶ÇÏ´Â _persistentData¸¦ 
-     * _savedPersistentData·Î ´ëÃ¼ÇÏ¿© ÀúÀåµÈ µ¥ÀÌÅÍ°¡ ºÒ·¯¿È
+     * ë ˆë²¨ ë¡œë“œì‹œ ì˜¤ë¸Œì íŠ¸ê°€ ì°¸ì¡°í•˜ëŠ” _persistentDataë¥¼ 
+     * _savedPersistentDataë¡œ ëŒ€ì²´í•˜ì—¬ ì €ì¥ëœ ë°ì´í„°ê°€ ë¶ˆëŸ¬ì˜´
      * </summary>
      */
     public static void ReplacePDataToSavedPData()
@@ -373,14 +373,16 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
 
     /**
      * <summary>
-     * ÀúÀåµÈ µ¥ÀÌÅÍ¸¦ ºÒ·¯¿À´Â ±â´É
-     * ÀúÀåµÈ °ÔÀÓ µ¥ÀÌÅÍ¸¦ ºÒ·¯¿À°í ½ÍÀ¸¸é ÇØ´ç ÇÔ¼ö »ç¿ë
-     * Áß°£¿¡ ·ÎÁ÷ÀÌ ½ÇÆĞÇÑ´Ù¸é false ¸®ÅÏ
+     * ì €ì¥ëœ ë°ì´í„°ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ê¸°ëŠ¥
+     * ì €ì¥ëœ ê²Œì„ ë°ì´í„°ë¥¼ ë¶ˆëŸ¬ì˜¤ê³  ì‹¶ìœ¼ë©´ í•´ë‹¹ í•¨ìˆ˜ ì‚¬ìš©
+     * ì¤‘ê°„ì— ë¡œì§ì´ ì‹¤íŒ¨í•œë‹¤ë©´ false ë¦¬í„´
      * </summary>
      */
-    public static bool LoadToSavedData()
+    public static bool LoadToSavedData(SceneChangeType sceneChangeType = SceneChangeType.Loading)
     {
-        ///---------¾À ÆÄ±« Àü ¼öÇàµÇ¾î¾ß ÇÏ´Â °Í----------
+        SceneChangeManager.Instance.SceneChangeType = sceneChangeType;
+
+        ///---------ì”¬ íŒŒê´´ ì „ ìˆ˜í–‰ë˜ì–´ì•¼ í•˜ëŠ” ê²ƒ----------
         if (SceneContext.Current.Player && SceneContext.Current.Player.CurrentStateIs<DieState>())
         {
             Coroutine playerDieEnterCoroutine = ((DieState)SceneContext.Current.Player.CurrentState).DieEnterCoroutine;
@@ -401,6 +403,7 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         if (Instance._savedPersistentData != null)
         {
             ReplacePDataToSavedPData();
+            //Instance._persistentData.DataGroups.RemoveNonSavedPersistentData();
 
             MonsterRespawnManager.Instance.StopRespawnCoroutine();
             string sceneName = Instance.PersistentData.SceneName;
@@ -411,17 +414,39 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
                 return false;
             }
 
-            SceneChangeManager.Instance.SceneChangeType = SceneChangeType.Loading;
             SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+
             return true;
         }
 
-        //ÀúÀåµÈ µ¥ÀÌÅÍ°¡ ¾ø´Â °æ¿ì
+        //ì €ì¥ëœ ë°ì´í„°ê°€ ì—†ëŠ” ê²½ìš°
         Debug.Log("Have not saved data");
         return false;
     }
 
-    // ÇÁ·Ñ·Î±× È­¸é¿¡¼­ È£ÃâµÇµµ·Ï ÇÏ±â
+    public static void RemoveNonSavedPersistentData()
+    {
+        Dictionary<string, DataGroup> newGroup = new Dictionary<string, DataGroup>();
+
+        foreach(var dataSet in Instance._persistentData.DataGroups)
+        {
+            DataGroup newData = new DataGroup();
+
+            foreach(var data in dataSet.Value)
+            {
+                if(data.Key.Contains("Saved"))
+                {
+                    newData.Add(data.Key, data.Value);
+                }
+            }
+
+            newGroup.Add(dataSet.Key, newData);
+        }
+
+        Instance._persistentData.DataGroups = newGroup;
+    }
+
+    // í”„ë¡¤ë¡œê·¸ í™”ë©´ì—ì„œ í˜¸ì¶œë˜ë„ë¡ í•˜ê¸°
     public static void ClearPersistentData()
     {
         Instance.PersistentData.SceneName = "";

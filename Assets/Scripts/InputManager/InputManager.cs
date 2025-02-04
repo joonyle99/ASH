@@ -45,7 +45,7 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
             Debug.Log($"_currentSetter is null");
             return;
         }
-
+        Debug.Log(_currentSetter.ToString());
         _currentSetter.Update();
         _cachedState = _currentSetter.GetState();
     }
