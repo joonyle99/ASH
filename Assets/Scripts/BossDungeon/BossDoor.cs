@@ -62,12 +62,12 @@ public class BossDoor : Door
                     _animator.SetTrigger("InstantOpen");
 
                     InitOpening();
-                    Debug.Log(gameObject.name + "Boss door conditional 1");
+                    //Debug.Log(gameObject.name + "Boss door conditional 1");
                 }
                 else
                 {
                     InitClosing();
-                    Debug.Log(gameObject.name + "Boss door conditional 2");
+                    //Debug.Log(gameObject.name + "Boss door conditional 2");
                 }
             }
             else
@@ -77,12 +77,12 @@ public class BossDoor : Door
                     _animator.SetTrigger("InstantOpen");
 
                     InitOpening();
-                    Debug.Log(gameObject.name + "Boss door conditional 3");
+                    //Debug.Log(gameObject.name + "Boss door conditional 3");
                 }
                 else
                 {
                     InitClosing();
-                    Debug.Log(gameObject.name + "Boss door conditional 4");
+                    //Debug.Log(gameObject.name + "Boss door conditional 4");
                 }
             }
         }

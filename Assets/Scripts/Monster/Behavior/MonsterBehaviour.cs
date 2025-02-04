@@ -3,15 +3,15 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// ¸ó½ºÅÍÀÇ ±âº» Çàµ¿À» Á¤ÀÇÇÏ´Â Ãß»óÅ¬·¡½º
+/// ëª¬ìŠ¤í„°ì˜ ê¸°ë³¸ í–‰ë™ì„ ì •ì˜í•˜ëŠ” ì¶”ìƒí´ë˜ìŠ¤
 /// </summary>
 public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 {
     /// <summary>
-    /// ¸ó½ºÅÍ µ¥ÀÌÅÍ¸¦ Ä¸½¶È­ÇÏ´Â Å¬·¡½º
+    /// ëª¬ìŠ¤í„° ë°ì´í„°ë¥¼ ìº¡ìŠí™”í•˜ëŠ” í´ë˜ìŠ¤
     /// </summary>
     [Serializable]
-    public struct MonsterData // Struct´Â °£´ÜÇÏ°í, ºÒº¯¼ºÀ» °¡Áö¸ç, ¿øº»¿¡ µ¿ÀûÀ¸·Î ¼öÁ¤ÇÒ ÇÊ¿ä°¡ ¾ø´Â µ¥ÀÌÅÍ¸¦ ÀúÀåÇÒ ¶§ »ç¿ë
+    public struct MonsterData // StructëŠ” ê°„ë‹¨í•˜ê³ , ë¶ˆë³€ì„±ì„ ê°€ì§€ë©°, ì›ë³¸ì— ë™ì ìœ¼ë¡œ ìˆ˜ì •í•  í•„ìš”ê°€ ì—†ëŠ” ë°ì´í„°ë¥¼ ì €ì¥í•  ë•Œ ì‚¬ìš©
     {
         public string MonsterName;
         public MonsterDefine.RankType RankType;
@@ -25,19 +25,19 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     [Serializable]
     public struct RespawnData
     {
-        // * ÇÁ¸®ÆÕ ±¸Á¶ *
+        // * í”„ë¦¬íŒ¹ êµ¬ì¡° *
         // prefab_(monster name)
         // -> monster_(monster name)
 
-        // prefab_(monster name)ÀÇ ±âº» À§Ä¡
+        // prefab_(monster name)ì˜ ê¸°ë³¸ ìœ„ì¹˜
         public Vector3 DefaultPrefabPosition;
 
-        // Ground ¸ó½ºÅÍ
-        // Patrol Point »çÀÌ¿¡¼­ »ı¼ºµÈ´Ù.
+        // Ground ëª¬ìŠ¤í„°
+        // Patrol Point ì‚¬ì´ì—ì„œ ìƒì„±ëœë‹¤.
         public GroundActionAreaData groundActionAreaData;
 
-        // Floating ¸ó½ºÅÍ
-        // Patrol Area ³»ºÎ¿¡¼­ ·£´ıÀ¸·Î »ı¼ºµÈ´Ù.
+        // Floating ëª¬ìŠ¤í„°
+        // Patrol Area ë‚´ë¶€ì—ì„œ ëœë¤ìœ¼ë¡œ ìƒì„±ëœë‹¤.
         public FloatingActionAreaData floatingActionAreaData;
     }
 
@@ -66,7 +66,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     public FloatingChaseEvaluator FloatingChaseEvaluator { get; private set; }
     public AttackEvaluator AttackEvaluator { get; private set; }
 
-    [Header("¡ª¡ª¡ª¡ª¡ª¡ª¡ª Monster Behaviour ¡ª¡ª¡ª¡ª¡ª¡ª¡ª")]
+    [Header("â€•â€•â€•â€•â€•â€•â€• Monster Behaviour â€•â€•â€•â€•â€•â€•â€•")]
     [Space]
 
     [Header("SpawnType")]
@@ -88,7 +88,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
             // Debug.Log("CurHp is changed");
 
-            // Ã¼·ÂÀÌ 0 ÀÌÇÏ°¡ µÇ¸é »ç¸Á
+            // ì²´ë ¥ì´ 0 ì´í•˜ê°€ ë˜ë©´ ì‚¬ë§
             if (_curHp <= 0)
             {
                 // Debug.Log("Die");
@@ -150,7 +150,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             {
                 if (_isGodMode)
                 {
-                    // TODO: ÀÓ½Ã·Î ºÒº¸½º´Â GodModeOutlineÀ» »ç¿ëÇÏÁö ¾Êµµ·Ï ¼³Á¤
+                    // TODO: ì„ì‹œë¡œ ë¶ˆë³´ìŠ¤ëŠ” GodModeOutlineì„ ì‚¬ìš©í•˜ì§€ ì•Šë„ë¡ ì„¤ì •
                     if (monsterData.RankType != MonsterDefine.RankType.FinalBoss)
                         MaterialController.EnableGodModeOutline();
                 }
@@ -241,15 +241,15 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     /// <summary>
     /// animation transition event
     /// </summary>
-    /// <param name="targetTransitionParam">ÀüÀÌ¸¦ À§ÇÑ Æ®¸®°Å ÆÄ¶ó¹ÌÅÍ</param>
-    /// <param name="state">ÇöÀçÀÇ »óÅÂ</param>
-    /// <returns>ºÎ¿ï°ªÀ» ¸®ÅÏÇÏ¿©, ÄÚ·çÆ¾¿¡¼­ ÇØ´ç ÀÌº¥Æ®ÀÇ Á¾·á¸¦ ±â´Ù¸²</returns>
+    /// <param name="targetTransitionParam">ì „ì´ë¥¼ ìœ„í•œ íŠ¸ë¦¬ê±° íŒŒë¼ë¯¸í„°</param>
+    /// <param name="state">í˜„ì¬ì˜ ìƒíƒœ</param>
+    /// <returns>ë¶€ìš¸ê°’ì„ ë¦¬í„´í•˜ì—¬, ì½”ë£¨í‹´ì—ì„œ í•´ë‹¹ ì´ë²¤íŠ¸ì˜ ì¢…ë£Œë¥¼ ê¸°ë‹¤ë¦¼</returns>
     public delegate bool AnimTransitionDelegate(string targetTransitionParam, Monster_StateBase state);
     public event AnimTransitionDelegate AnimTransitionEvent;
 
     /// <summary>
-    /// ¸Ş¼­µå ÂüÁ¶¸¦ À§ÇÑ µ¨¸®°ÔÀÌÆ® (ÇÔ¼ö Æ÷ÀÎÅÍ ¼±¾ğ)
-    /// ÀÌ µ¨¸®°ÔÀÌÆ®´Â No Parameter, No Return ¸Ş¼­µå¸¦ ´ë»óÀ¸·Î ÇÑ´Ù
+    /// ë©”ì„œë“œ ì°¸ì¡°ë¥¼ ìœ„í•œ ë¸ë¦¬ê²Œì´íŠ¸ (í•¨ìˆ˜ í¬ì¸í„° ì„ ì–¸)
+    /// ì´ ë¸ë¦¬ê²Œì´íŠ¸ëŠ” No Parameter, No Return ë©”ì„œë“œë¥¼ ëŒ€ìƒìœ¼ë¡œ í•œë‹¤
     /// </summary>
     public delegate void ActionDelegate();
 
@@ -315,20 +315,20 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
                     GroundCheckCollider.bounds.size, 0f, Vector2.zero, 0f,
                     GroundCheckLayer);
 
-                // Debug.Log($"{groundRayHits.Length}°³ÀÇ RayCastHit");
+                // Debug.Log($"{groundRayHits.Length}ê°œì˜ RayCastHit");
 
                 // ground rayCast hit
                 bool hasGroundContact = groundRayHits.Length > 0;
 
-                // groundRayHits´Â ¸ó½ºÅÍ¿Í Áö¸éÀÌ Ãæµ¹ÇÑ ÁöÁ¡¿¡ ´ëÇÑ Á¤º¸ÀÌ´Ù.
-                // ÀÌ Áß, °¡Àå °¡±î¿î ÁöÁ¡À» GroundRayHit¿¡ ÀúÀåÇÑ´Ù.
+                // groundRayHitsëŠ” ëª¬ìŠ¤í„°ì™€ ì§€ë©´ì´ ì¶©ëŒí•œ ì§€ì ì— ëŒ€í•œ ì •ë³´ì´ë‹¤.
+                // ì´ ì¤‘, ê°€ì¥ ê°€ê¹Œìš´ ì§€ì ì„ GroundRayHitì— ì €ì¥í•œë‹¤.
                 foreach (var hit in groundRayHits)
                 {
-                    // ¿©±â¼­ ¿Ö hit.normalÀÌ ¾Æ·¡ÂÊÀ» ÇâÇÏ´ÂÁö È®ÀÎÇØ¾ß ÇÑ´Ù.
+                    // ì—¬ê¸°ì„œ ì™œ hit.normalì´ ì•„ë˜ìª½ì„ í–¥í•˜ëŠ”ì§€ í™•ì¸í•´ì•¼ í•œë‹¤.
                     // Debug.DrawRay(hit.point, hit.normal, Color.cyan);
                     // Debug.Log($"{hit.collider.gameObject.name}");
 
-                    // Ãæµ¹ ÁöÁ¡°ú ÀÌ ¿ÀºêÁ§Æ®¿ÍÀÇ °Å¸®°¡ °¡Àå °¡±î¿î ³ğÀ» ÀúÀå
+                    // ì¶©ëŒ ì§€ì ê³¼ ì´ ì˜¤ë¸Œì íŠ¸ì™€ì˜ ê±°ë¦¬ê°€ ê°€ì¥ ê°€ê¹Œìš´ ë†ˆì„ ì €ì¥
                     if (groundRayHit)
                     {
                         float newDistSquared = Vector2.SqrMagnitude(hit.point - (Vector2)transform.position);
@@ -362,7 +362,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             if (AttackEvaluator.IsDuringCoolTime || AttackEvaluator.IsWaitingEvent) return;
 
             /*
-            // ÄÆ¾À ½ÇÇà ÁßÀÌ¸é ¾ÈµÇ°Ô ÇÏ±â
+            // ì»·ì”¬ ì‹¤í–‰ ì¤‘ì´ë©´ ì•ˆë˜ê²Œ í•˜ê¸°
             if (cutscenePlayerList)
             {
                 if (cutscenePlayerList.CheckAnyPlaying())
@@ -375,7 +375,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
                 return;
             }
 
-            // °ø°İ °¡´ÉÇÑ ´ë»óÀÌ ÀÖ´ÂÁö È®ÀÎ
+            // ê³µê²© ê°€ëŠ¥í•œ ëŒ€ìƒì´ ìˆëŠ”ì§€ í™•ì¸
             if (AttackEvaluator.IsTargetWithinRange())
             {
                 var action = AttackEvaluator.StartCoolTime();
@@ -423,30 +423,30 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     // init
     private void InitMonsterData()
     {
-        // ¸ó½ºÅÍÀÇ ÀÌ¸§
+        // ëª¬ìŠ¤í„°ì˜ ì´ë¦„
         monsterData.MonsterName = _monsterDataObject.Name.ToString();
 
-        // ¸ó½ºÅÍÀÇ ·©Å©
+        // ëª¬ìŠ¤í„°ì˜ ë­í¬
         monsterData.RankType = _monsterDataObject.RankType;
 
-        // ¸ó½ºÅÍÀÇ Çàµ¿ Å¸ÀÔ
+        // ëª¬ìŠ¤í„°ì˜ í–‰ë™ íƒ€ì…
         monsterData.MoveType = _monsterDataObject.MoveType;
 
-        // ¸ó½ºÅÍÀÇ ÃÖ´ë Ã¼·Â
+        // ëª¬ìŠ¤í„°ì˜ ìµœëŒ€ ì²´ë ¥
         monsterData.MaxHp = _monsterDataObject.MaxHp;
 
-        // ¸ó½ºÅÍÀÇ ÀÌµ¿¼Óµµ
+        // ëª¬ìŠ¤í„°ì˜ ì´ë™ì†ë„
         monsterData.MoveSpeed = _monsterDataObject.MoveSpeed;
 
-        // ¸ó½ºÅÍÀÇ °¡¼Óµµ
+        // ëª¬ìŠ¤í„°ì˜ ê°€ì†ë„
         monsterData.Acceleration = _monsterDataObject.Acceleration;
 
-        // ¸ó½ºÅÍÀÇ Á¡ÇÁÆÄ¿ö
+        // ëª¬ìŠ¤í„°ì˜ ì í”„íŒŒì›Œ
         monsterData.JumpForce = _monsterDataObject.JumpForce;
     }
     private void InitMonsterCondition()
     {
-        // TODO: ¸ó½ºÅÍÀÇ ¹æÇâÀ» ÀúÀåÇÑ´Ù
+        // TODO: ëª¬ìŠ¤í„°ì˜ ë°©í–¥ì„ ì €ì¥í•œë‹¤
 
         RecentDir = DefaultDir;
 
@@ -483,7 +483,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     }
     public void SetRecentDir(int targetDir)
     {
-        // flipÀ» ½ÃÅ³Áö¿¡ ´ëÇÑ °ª
+        // flipì„ ì‹œí‚¬ì§€ì— ëŒ€í•œ ê°’
         var flipValue = RecentDir * targetDir;
         if (flipValue == 1)
         {
@@ -496,11 +496,11 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
             return;
         }
 
-        // ¹Ù¶óº¸´Â ¹æÇâ º¯°æ
+        // ë°”ë¼ë³´ëŠ” ë°©í–¥ ë³€ê²½
         RecentDir = targetDir;
 
         //Debug.Log("Flip Monster");
-        // ¹Ù¶óº¸´Â ¹æÇâÀ¸·Î Flip
+        // ë°”ë¼ë³´ëŠ” ë°©í–¥ìœ¼ë¡œ Flip
         transform.localScale = new Vector3(transform.localScale.x * flipValue, transform.localScale.y, transform.localScale.z);
     }
     public void StartSetRecentDirAfterGrounded(int targetDir)
@@ -509,7 +509,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     }
     private IEnumerator SetRecentDirAfterGrounded(int targetDir)
     {
-        // ÄÚ·çÆ¾À» »ç¿ëÇØ ¹æÇâ ÀüÈ¯À» ¶¥À» ¹âÀº ÈÄ·Î ¼³Á¤ÇÑ´Ù
+        // ì½”ë£¨í‹´ì„ ì‚¬ìš©í•´ ë°©í–¥ ì „í™˜ì„ ë•…ì„ ë°Ÿì€ í›„ë¡œ ì„¤ì •í•œë‹¤
         yield return new WaitUntil(() => IsGround);
 
         SetRecentDir(targetDir);
@@ -535,11 +535,11 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         if (onDamage)
             CurHp -= (int)attackInfo.Damage;
     }
-    public void KnockBack(Vector2 forceVector)
+    public virtual void KnockBack(Vector2 forceVector)
     {
         if (FloatingMovementModule)
         {
-            // NavMeshAgent Àü¿ë KnockBack
+            // NavMeshAgent ì „ìš© KnockBack
             // Debug.Log("KnockBack");
 
             if (FloatingMovementModule.Agent.isStopped == true)
@@ -549,10 +549,10 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         }
         else
         {
-            // ¼Óµµ ÃÊ±âÈ­
+            // ì†ë„ ì´ˆê¸°í™”
             RigidBody2D.velocity = Vector2.zero;
 
-            // MonsterÀÇ Mass¿¡ µû¸¥ º¸Á¤
+            // Monsterì˜ Massì— ë”°ë¥¸ ë³´ì •
             forceVector *= RigidBody2D.mass / 1.0f;
             RigidBody2D.AddForce(forceVector, ForceMode2D.Impulse);
         }
@@ -575,7 +575,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     // hitBox
     public void SetHitBoxDisable(bool isDisable)
     {
-        // includeInactive : true -> ºñÈ°¼ºÈ­µÈ ÀÚ½Ä ¿ÀºêÁ§Æ®µµ °Ë»ö
+        // includeInactive : true -> ë¹„í™œì„±í™”ëœ ìì‹ ì˜¤ë¸Œì íŠ¸ë„ ê²€ìƒ‰
         var hitBox = GetComponentInChildren<MonsterBodyHit>(true);
 
         if (hitBox)
@@ -621,19 +621,19 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         {
             if (LifePieceDropper.IsDropChance())
             {
-                // Debug.Log("»ı¸í Á¶°¢ µå¶ø ¼º°ø !");
+                // Debug.Log("ìƒëª… ì¡°ê° ë“œë ì„±ê³µ !");
                 LifePieceDropper.DropProcess(transform.position);
             }
             else
             {
-                // Debug.Log("»ı¸í Á¶°¢ µå¶ø ½ÇÆĞ !");
+                // Debug.Log("ìƒëª… ì¡°ê° ë“œë ì‹¤íŒ¨ !");
             }
         }
 
         var currentQuest = QuestController.Instance.CurrentQuest;
         if (currentQuest != null && currentQuest.IsActive)
         {
-            // ÇØ´ç Äù½ºÆ®¿¡ ÇØ´çÇÏ´Â ¸ó½ºÅÍÀÎÁö È®ÀÎ
+            // í•´ë‹¹ í€˜ìŠ¤íŠ¸ì— í•´ë‹¹í•˜ëŠ” ëª¬ìŠ¤í„°ì¸ì§€ í™•ì¸
             if (monsterData.RankType.Equals(MonsterDefine.RankType.Normal))
                 currentQuest.IncreaseCount();
         }
@@ -644,7 +644,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         // Stop all coroutines on this behavior
         StopAllCoroutines();
 
-        // Á¦¾î±ÇÀº Monster Respawn Manager¿¡°Ô ³Ñ±ä´Ù
+        // ì œì–´ê¶Œì€ Monster Respawn Managerì—ê²Œ ë„˜ê¸´ë‹¤
         MonsterRespawnManager.Instance.NotifyDeath(this);
     }
     private IEnumerator DeathEffectCoroutine()
@@ -677,7 +677,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         // effect process
         MaterialController.DisintegrateEffect.Play(0f, true);
         yield return new WaitUntil(() => MaterialController.DisintegrateEffect.IsEffectDone);
-        MaterialController.DisintegrateEffect.ResetIsEffectDone();      // ¸®½ºÆù Àü¿ë ·ÎÁ÷
+        MaterialController.DisintegrateEffect.ResetIsEffectDone();      // ë¦¬ìŠ¤í° ì „ìš© ë¡œì§
     }
 
     // state
@@ -689,14 +689,14 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     {
         return CurrentState is TState;
     }
-    /// <summary> ÄğÅ¸ÀÓ Action°ú °°Àº 'myFunction'Àº ÇØ´ç StateÀÇ AnimationÀÌ TriggerµÇ¸é¼­ ½ÃÀÛµÈ´Ù </summary>
+    /// <summary> ì¿¨íƒ€ì„ Actionê³¼ ê°™ì€ 'myFunction'ì€ í•´ë‹¹ Stateì˜ Animationì´ Triggerë˜ë©´ì„œ ì‹œì‘ëœë‹¤ </summary>
     public void StartChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState, ActionDelegate myFunction = null, float duration = 0f)
     {
         StartCoroutine(ChangeStateCoroutine(targetTransitionParam, currentState, myFunction, duration));
     }
     private IEnumerator ChangeStateCoroutine(string targetTransitionParam, Monster_StateBase currentState, ActionDelegate myFunction, float duration)
     {
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ÀüÀÌ Á¶°ÇÀÌ ÀÖ´Â °æ¿ì Á¶°ÇÀ» ¸¸Á·ÇÒ ¶§±îÁö ´ë±â
+        // ì• ë‹ˆë©”ì´ì…˜ ì „ì´ ì¡°ê±´ì´ ìˆëŠ” ê²½ìš° ì¡°ê±´ì„ ë§Œì¡±í•  ë•Œê¹Œì§€ ëŒ€ê¸°
         if (AnimTransitionEvent != null)
             yield return new WaitUntil(() => AnimTransitionEvent(targetTransitionParam, currentState));
 
@@ -707,7 +707,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
         Animator.SetTrigger(targetTransitionParam);
 
-        // Ãß°¡·Î ½ÇÇàÇØ¾ß ÇÏ´Â ÇÔ¼ö
+        // ì¶”ê°€ë¡œ ì‹¤í–‰í•´ì•¼ í•˜ëŠ” í•¨ìˆ˜
         myFunction?.Invoke();
     }
 
@@ -764,7 +764,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     {
         // Debug.Log("PlayCutSceneInRunning");
 
-        // ÇöÀç ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ 99% ¿Ï·áµÉ ¶§±îÁö ±â´Ù¸³´Ï´Ù.
+        // í˜„ì¬ ì• ë‹ˆë©”ì´ì…˜ì´ 99% ì™„ë£Œë  ë•Œê¹Œì§€ ê¸°ë‹¤ë¦½ë‹ˆë‹¤.
         yield return new WaitUntil(() =>
         {
             AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
@@ -789,7 +789,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     }
 
     /// <summary>
-    /// ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ÇØ½Ã°ªÀ» ÅëÇØ ÇØ´ç ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ÀÌ¸§À» ¹İÈ¯ÇÕ´Ï´Ù.
+    /// ì• ë‹ˆë©”ì´ì…˜ì˜ í•´ì‹œê°’ì„ í†µí•´ í•´ë‹¹ ì• ë‹ˆë©”ì´ì…˜ì˜ ì´ë¦„ì„ ë°˜í™˜í•©ë‹ˆë‹¤.
     /// </summary>
     public string GetStateNameByHash(Animator animator, int hash)
     {

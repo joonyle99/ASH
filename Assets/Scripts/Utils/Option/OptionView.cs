@@ -11,6 +11,7 @@ public class OptionView : MonoBehaviour
     [Space]
 
     [SerializeField] private Image _optionPanel;
+    [SerializeField] private bool _isTitleScene = false;
 
     [Space]
 
@@ -73,11 +74,14 @@ public class OptionView : MonoBehaviour
     {
         if (InputManager.Instance.State.EscapeKey.KeyDown)
         {
-            var PlayablePlayer = SceneContext.Current.PlayableSceneTransitionPlayer;
-            if ((PlayablePlayer != null && PlayablePlayer.IsPlayable == false) ||
-                _keySettingUIManager.IsOpened())
+            if(!_isTitleScene)
             {
-                return;
+                var PlayablePlayer = SceneContext.Current.PlayableSceneTransitionPlayer;
+                if ((PlayablePlayer != null && PlayablePlayer.IsPlayable == false) ||
+                    _keySettingUIManager.IsOpened())
+                {
+                    return;
+                }
             }
 
             TogglePanel();

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public sealed class Frog : MonsterBehaviour
 {
     protected override void Awake()
@@ -23,11 +25,11 @@ public sealed class Frog : MonsterBehaviour
     {
         base.OnHit(attackInfo);
 
-        // ¼±°ø ´çÇÏ¸é °ø°İ ¸ğµå ÁøÀÔ
+        // ì„ ê³µ ë‹¹í•˜ë©´ ê³µê²© ëª¨ë“œ ì§„ì…
         if (!AttackEvaluator.IsUsable)
             AttackEvaluator.IsUsable = true;
 
-        // ¼±°ø ´çÇÏ¸é Ãß°İ ¸ğµå ÁøÀÔ
+        // ì„ ê³µ ë‹¹í•˜ë©´ ì¶”ê²© ëª¨ë“œ ì§„ì…
         if (!GroundChaseEvaluator.IsUsable)
             GroundChaseEvaluator.IsUsable = true;
 
@@ -35,15 +37,22 @@ public sealed class Frog : MonsterBehaviour
     }
     private bool HandleGroundedTransition(string targetTransitionParam, Monster_StateBase currentState)
     {
-        // Hurt ¾Ö´Ï¸ŞÀÌ¼ÇÀº ¾î¶°ÇÑ »óÈ²¿¡¼­µµ Áï½Ã ÀüÈ¯
+        // Hurt ì• ë‹ˆë©”ì´ì…˜ì€ ì–´ë– í•œ ìƒí™©ì—ì„œë„ ì¦‰ì‹œ ì „í™˜
         if (targetTransitionParam is "Hurt") return true;
 
-        // ¶¥¿¡ ´êÀ» ¶§±îÁö ¾Ö´Ï¸ŞÀÌ¼Ç ÀüÈ¯À» ¹Ì·ë
+        // ë•…ì— ë‹¿ì„ ë•Œê¹Œì§€ ì• ë‹ˆë©”ì´ì…˜ ì „í™˜ì„ ë¯¸ë£¸
         return IsGround;
     }
 
     private void OnDestroy()
     {
         AnimTransitionEvent -= HandleGroundedTransition;
+    }
+
+    public override void KnockBack(Vector2 forceVector)
+    {
+        RigidBody2D.velocity = Vector2.zero;
+
+        base.KnockBack(forceVector);
     }
 }
