@@ -133,7 +133,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
         {
             _played = true;
 
-            Debug.Log("Play" + gameObject.name+ "'s cutscene");
+            //Debug.Log("Play" + gameObject.name+ "'s cutscene");
             StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence))));
         }
         else
