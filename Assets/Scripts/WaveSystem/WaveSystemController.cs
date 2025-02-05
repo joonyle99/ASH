@@ -29,12 +29,12 @@ public class WaveSpawnMonsterInfo
 public class WaveInfo
 {
     #region Auto Setting Variable
-    //¹è¿­ ¿ø¼Ò¸í 
+    //ë°°ì—´ ì›ì†Œëª… 
     [HideInInspector]
     public string WaveIdx;
 
     /// <summary>
-    /// ¿şÀÌºê Á¤º¸¿Í ¿şÀÌºêº° ¸ó½ºÅÍµéÀÌ ÀúÀåµÉ °ÔÀÓ¿ÀºêÁ§Æ®ÀÇ ±¸ºĞÀ» À§ÇØ »ç¿ë(½ÇÁúÀûÀÎ µ¥ÀÌÅÍ ÀÛ¾÷x)
+    /// ì›¨ì´ë¸Œ ì •ë³´ì™€ ì›¨ì´ë¸Œë³„ ëª¬ìŠ¤í„°ë“¤ì´ ì €ì¥ë  ê²Œì„ì˜¤ë¸Œì íŠ¸ì˜ êµ¬ë¶„ì„ ìœ„í•´ ì‚¬ìš©(ì‹¤ì§ˆì ì¸ ë°ì´í„° ì‘ì—…x)
     /// </summary>
     /// 
     [SerializeField, HideInInspector]
@@ -49,9 +49,17 @@ public class WaveInfo
         {
             foreach (var monster in WaveMonsters)
             {
-                if (!monster.Monster.GetComponentInChildren<MonsterBehaviour>().IsDead)
+                GameObject monsterObj = monster.Monster;
+                MonsterBehaviour monsterBehaviour = null;
+
+                if(monsterObj != null)
                 {
-                    return false;
+                    monsterBehaviour = monsterObj.GetComponentInChildren<MonsterBehaviour>();
+
+                    if (!monsterBehaviour.IsDead)
+                    {
+                        return false;
+                    }
                 }
             }
 
@@ -59,7 +67,6 @@ public class WaveInfo
         }
     }
 
-    [SerializeField]
     public WaveSpawnMonsterInfo[] WaveMonsters;
 
     public void Init(string waveIdx, string waveInfoId)
@@ -140,17 +147,17 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
             monsterBundles.Add(transform.GetChild(i).gameObject);
         }
 
-        //WaveInfoµ¥ÀÌÅÍ Ãß°¡µÈ °æ¿ì
+        //WaveInfoë°ì´í„° ì¶”ê°€ëœ ê²½ìš°
         CheckAddWaveInfoElement(monsterBundles);
-        //WaveInfoµ¥ÀÌÅÍ »èÁ¦µÈ °æ¿ì
+        //WaveInfoë°ì´í„° ì‚­ì œëœ ê²½ìš°
         if (CheckRemoveWaveInfoElement(monsterBundles)) return;
-        //waveInfoµ¥ÀÌÅÍ ½ºÀ§Ä¡ µÈ °æ¿ì
+        //waveInfoë°ì´í„° ìŠ¤ìœ„ì¹˜ ëœ ê²½ìš°
         if (SwitchWaveInfosAndMonsterBundles()) return;
 
-        //ÇÒ´çµÈ ÇÊµå¸ó½ºÅÍ ¸ó½ºÅÍ¹øµé·Î ºÎ¸ğ ÀüÈ¯
+        //í• ë‹¹ëœ í•„ë“œëª¬ìŠ¤í„° ëª¬ìŠ¤í„°ë²ˆë“¤ë¡œ ë¶€ëª¨ ì „í™˜
         SetParentAssiginedFieldMonster();
 
-        //»èÁ¦µÈ ÇÊµå¸ó½ºÅÍ ¸ó½ºÅÍ¹øµé·Î ºÎÅÍ »èÁ¦
+        //ì‚­ì œëœ í•„ë“œëª¬ìŠ¤í„° ëª¬ìŠ¤í„°ë²ˆë“¤ë¡œ ë¶€í„° ì‚­ì œ
         RemoveFieldMonsterFromWaveInfos(monsterBundles);
     }
 
@@ -196,10 +203,10 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
         return false;
     }
     /// <summary>
-    /// ÀÎ½ºÆåÅÍ Ã¢ÀÇ WaveInfos¿ø¼ÒÀÇ ¼ø¼­°¡ ¹Ù²î¸é È£ÃâµÇ´ÂÇÔ¼ö, ÇØ´çÇÔ¼ö°¡ È£ÃâµÇ°í true¸¦ ¸®ÅÏÇßÀ» ¶§
-    /// RemoveFieldMonsterFromWaveInfos()°¡ È£ÃâµÈ´Ù¸é µ¥ÀÌÅÍ°¡ ÀÇµµÄ¡ ¾Ê°Ô »èÁ¦µÉ ¼ö ÀÖÀ½
+    /// ì¸ìŠ¤í™í„° ì°½ì˜ WaveInfosì›ì†Œì˜ ìˆœì„œê°€ ë°”ë€Œë©´ í˜¸ì¶œë˜ëŠ”í•¨ìˆ˜, í•´ë‹¹í•¨ìˆ˜ê°€ í˜¸ì¶œë˜ê³  trueë¥¼ ë¦¬í„´í–ˆì„ ë•Œ
+    /// RemoveFieldMonsterFromWaveInfos()ê°€ í˜¸ì¶œëœë‹¤ë©´ ë°ì´í„°ê°€ ì˜ë„ì¹˜ ì•Šê²Œ ì‚­ì œë  ìˆ˜ ìˆìŒ
     /// </summary>
-    /// <returns>true : WaveInfos¿ø¼Ò°¡ ±³È¯ÀÌ ÀÏ¾î³­ °æ¿ì, false : true°¡ ¾Æ´Ñ °æ¿ì</returns>
+    /// <returns>true : WaveInfosì›ì†Œê°€ êµí™˜ì´ ì¼ì–´ë‚œ ê²½ìš°, false : trueê°€ ì•„ë‹Œ ê²½ìš°</returns>
     private bool SwitchWaveInfosAndMonsterBundles()
     {
         int idx = 0;
@@ -210,7 +217,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
             int monsterBundleIdx = idx + 1;
             string monsterBundleId = transform.GetChild(monsterBundleIdx).name.Split(' ')[1];
 
-            //¼ø¼­°¡ ¹Ù²ï idx¸¦ Ã£¾ÒÀ» ¶§
+            //ìˆœì„œê°€ ë°”ë€ idxë¥¼ ì°¾ì•˜ì„ ë•Œ
             if (_waveInfos[idx].WaveInfoID != monsterBundleId)
             {
                 monsterBundleIdx = 1;
@@ -342,7 +349,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
         }
     }
 
-    /* renewal¿¡ »ç¿ë
+    /* renewalì— ì‚¬ìš©
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
         if(activator.Type == ActivatorType.Player &&
@@ -366,7 +373,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
 
         for (int i = 0; i < _waveInfos.Count; i++)
         {
-            //ÇØ´ç ¿şÀÌºêÀÇ ¸ó½ºÅÍ ½ºÆù
+            //í•´ë‹¹ ì›¨ì´ë¸Œì˜ ëª¬ìŠ¤í„° ìŠ¤í°
             foreach (var monster in _waveInfos[i].WaveMonsters)
             {
                 Transform monsterTransform = SpawnWaveMonster(i + 1, monster);
@@ -383,7 +390,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
             {
                 if (_waveInfos[i].IsClear)
                 {
-                    //ÇÑ ¿şÀÌºê Å¬¸®¾î½Ã Çàµ¿
+                    //í•œ ì›¨ì´ë¸Œ í´ë¦¬ì–´ì‹œ í–‰ë™
                     yield return new WaitForSeconds(_timeOfEndOnceWaveCycle);
 
                     break;
@@ -396,11 +403,11 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
     }
 
     /// <summary>
-    /// ¿şÀÌºê ¸ó½ºÅÍ¸¦ ½ºÆùÇÏ´Â ÀÛ¾÷
+    /// ì›¨ì´ë¸Œ ëª¬ìŠ¤í„°ë¥¼ ìŠ¤í°í•˜ëŠ” ì‘ì—…
     /// </summary>
     /// <param name="waveStage"></param>
     /// <param name="waveMonsterInfo"></param>
-    /// <returns> ¿şÀÌºê ¸ó½ºÅÍ°¡ ½ºÆùµÉ ÁöÁ¡(Position) </returns>
+    /// <returns> ì›¨ì´ë¸Œ ëª¬ìŠ¤í„°ê°€ ìŠ¤í°ë  ì§€ì (Position) </returns>
     private Transform SpawnWaveMonster(int waveStage, WaveSpawnMonsterInfo waveMonsterInfo)
     {
         switch (waveMonsterInfo.InstanceType)
@@ -436,7 +443,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
 
     private void StartOfWaveSystemLogic()
     {
-        /* renewal¿¡ »ç¿ë
+        /* renewalì— ì‚¬ìš©
         //_enterWaveDoor.CloseDoor(false);
         //_exitWaveDoor.CloseDoor(false);
         */
@@ -449,7 +456,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
 
         _endWaveCutscene?.Play();
 
-        /* renewal¿¡ »ç¿ë
+        /* renewalì— ì‚¬ìš©
         //_enterWaveDoor.OpenDoor(false);
         //_exitWaveDoor.OpenDoor(false);
         */
