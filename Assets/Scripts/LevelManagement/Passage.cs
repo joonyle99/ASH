@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
+
 public class Passage : TriggerZone
 {
     [Header("─────────── Passage ───────────")]
@@ -47,7 +48,7 @@ public class Passage : TriggerZone
     public InputSetterScriptableObject EnterInputSetter => _enterInputSetter;
     public InputSetterScriptableObject ExitInputSetter => _exitInputSetter;
 
-    [SerializeField]private bool _isPlayerExiting;
+    [SerializeField] protected bool _isPlayerExiting;
 
     void Awake()
     {

@@ -5,7 +5,9 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
 {
     [SerializeField] SoundList _soundList;
 
-    //Á¶°¢ ¾ø¾Ö°í »ı±â´Â°Ç ¾À ´ÜÀ§¿¡¼­ ¸®½ºÆ®·Î º¸°üÇØ ÀÌ¿ë
+    [SerializeField] CutscenePlayer _cutscenePlayer;
+
+    //ì¡°ê° ì—†ì• ê³  ìƒê¸°ëŠ”ê±´ ì”¬ ë‹¨ìœ„ì—ì„œ ë¦¬ìŠ¤íŠ¸ë¡œ ë³´ê´€í•´ ì´ìš©
     public void OnEnterReported(TriggerActivator activator, TriggerReporter reporter)
     {
         if (activator.Type == ActivatorType.Player)
@@ -37,11 +39,13 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
             else
             {
                 var info = new ItemObtainPanel.ItemObtainInfo();
-                info.MainText = "½ºÅ³ Á¶°¢À» È¹µæÇÏ¿´½À´Ï´Ù.";
-                info.DetailText = "´ÙÀ½ ½ºÅ³ ÇØ±İ±îÁö ¾ÕÀ¸·Î ÇÊ¿äÇÑ ½ºÅ³ Á¶°¢ " + (3 - skillPieceCount % 3).ToString() + "°³";
+                info.MainText = "ìŠ¤í‚¬ ì¡°ê°ì„ íšë“í•˜ì˜€ìŠµë‹ˆë‹¤.";
+                info.DetailText = "ë‹¤ìŒ ìŠ¤í‚¬ í•´ê¸ˆê¹Œì§€ ì•ìœ¼ë¡œ í•„ìš”í•œ ìŠ¤í‚¬ ì¡°ê° " + (3 - skillPieceCount % 3).ToString() + "ê°œ";
                 GameUIManager.OpenItemObtainPanel(info);
                 SceneContext.Current.StartCoroutine(PlaySoundCoroutine("Piece", 0.25f));
             }
+
+            _cutscenePlayer?.Play();
         }
     }
     IEnumerator PlaySoundCoroutine(string key, float delay)

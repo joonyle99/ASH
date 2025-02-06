@@ -4,10 +4,11 @@ using UnityEngine;
 public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeonManager>
 {
     [SerializeField] private string _dataGroupName = "BossDungeon";
-    [SerializeField] private DialogueData _firstKeyDialogue;
 
+    //key
+    [SerializeField] private DialogueData _firstKeyDialogue;
     [SerializeField] private int _maxKeyCount = 3;
-    public int MaxKeyCount => _maxKeyCount;         // Boss Key SlotÀÇ °³¼ö¿Í ÀÏÄ¡ÇØ¾ß ÇÑ´Ù
+    public int MaxKeyCount => _maxKeyCount;         // Boss Key Slotì˜ ê°œìˆ˜ì™€ ì¼ì¹˜í•´ì•¼ í•œë‹¤
 
     [SerializeField] private bool _isFirstKeyObtained = false;
     private static bool s_isFirstKeyObtained = false;
@@ -23,7 +24,6 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
             }
         }
     }
-
     public int CurrentKeyCount
     {
         get
@@ -34,7 +34,6 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
             return PersistentDataManager.Get<int>(_dataGroupName, "_bossKeyCountSaved");
         }
     }
-
     public bool IsAllKeysCollected => PersistentDataManager.Get<int>(_dataGroupName, "_bossKeyCountSaved") == _maxKeyCount;
 
     public void OnKeyObtained(BossKey key = null)
@@ -55,6 +54,24 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
     public void OnOpenBossDoor()
     {
         PersistentDataManager.UpdateValue<int>(_dataGroupName, "_bossKeyCountSaved", x => 0);
+    }
+
+    public void OnDashObtainEventPlayed()
+    {
+        PersistentDataManager.UpdateValue<bool>(_dataGroupName, "_dashObtainEventSaved", x => true);
+    }
+
+    public bool DashObtainEventNotPlayed()
+    {
+        if (!PersistentDataManager.HasDataGroup(_dataGroupName))
+            MakeDataGroup();
+
+        if (!PersistentDataManager.Has<bool>(_dataGroupName, "_dashObtainEventSaved"))
+        {
+            return true;
+        }
+
+        return !PersistentDataManager.Get<bool>(_dataGroupName, "_dashObtainEventSaved");
     }
 
     public void MakeDataGroup()
