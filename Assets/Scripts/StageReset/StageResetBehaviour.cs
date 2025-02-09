@@ -18,7 +18,7 @@ public class StageResetBehaviour : InteractableObject
 
 
     [Header("PreserveState")]
-    [SerializeField, Tooltip("ÇöÀç ¾ÀÀÇ ÀÏ¹İÀûÀÎ °ÔÀÓ¿ÀºêÁ§Æ®ÀÇ PreserveState GroupName")]
+    [SerializeField, Tooltip("í˜„ì¬ ì”¬ì˜ ì¼ë°˜ì ì¸ ê²Œì„ì˜¤ë¸Œì íŠ¸ì˜ PreserveState GroupName")]
     private string _currentSceneBasicGroupName;
 
     private void Awake()
@@ -42,8 +42,8 @@ public class StageResetBehaviour : InteractableObject
         DialogueController.Instance.StartDialogue(_dialogueData, false);
 
         List<ResponseContainer> responseFunctions = new List<ResponseContainer>();
-        responseFunctions.Add(new ResponseContainer(ResponseButtonType.Reject, RejectStageReset));
         responseFunctions.Add(new ResponseContainer(ResponseButtonType.Accept, AcceptStageReset));
+        responseFunctions.Add(new ResponseContainer(ResponseButtonType.Reject, RejectStageReset));
         DialogueController.Instance.View.OpenResponsePanel(responseFunctions);
     }
 
@@ -68,11 +68,11 @@ public class StageResetBehaviour : InteractableObject
 
     public void ResetStage()
     {
-        // ÃÖ½Å µ¥ÀÌÅÍ (PersistentData) °¡ ¾Æ´Ñ ¾ÀÀÇ ¿øº» µ¥ÀÌÅÍ¸¦ °¡Á®¿À±â À§ÇØ ½ºÅ×ÀÌÁö ¸®¼Â ´ë»ó µ¥ÀÌÅÍ¸¦ »èÁ¦
+        // ìµœì‹  ë°ì´í„° (PersistentData) ê°€ ì•„ë‹Œ ì”¬ì˜ ì›ë³¸ ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¤ê¸° ìœ„í•´ ìŠ¤í…Œì´ì§€ ë¦¬ì…‹ ëŒ€ìƒ ë°ì´í„°ë¥¼ ì‚­ì œ
         PersistentDataManager.Instance.PersistentData.DataGroups[_currentSceneBasicGroupName].Clear();
-        // ¾À ÀüÈ¯ Å¸ÀÔ º¯°æ
+        // ì”¬ ì „í™˜ íƒ€ì… ë³€ê²½
         SceneChangeManager.Instance.SceneChangeType = SceneChangeType.StageReset;
-        // ¸ó½ºÅÍ°¡ ¸®½ºÆù ´ë±âÇÏ´Â ÄÚ·çÆ¾À» Á¤ÁöÇÑ´Ù (¾À ÀüÈ¯ ÄÚ·çÆ¾Àº À¯ÁöµÇ±â ¶§¹®)
+        // ëª¬ìŠ¤í„°ê°€ ë¦¬ìŠ¤í° ëŒ€ê¸°í•˜ëŠ” ì½”ë£¨í‹´ì„ ì •ì§€í•œë‹¤ (ì”¬ ì „í™˜ ì½”ë£¨í‹´ì€ ìœ ì§€ë˜ê¸° ë•Œë¬¸)
         MonsterRespawnManager.Instance.StopRespawnCoroutine();
         // ...
         BossDungeonManager.Instance.MakeDataGroup();

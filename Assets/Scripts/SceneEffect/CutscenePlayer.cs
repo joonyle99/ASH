@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 /// <summary>
@@ -114,10 +115,35 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
             }
             else if (effect.Type == SceneEffect.EffectType.CoroutineCall)
             {
-                /*
-                effect.TargetScript.GetType
-                yield return effect.MethodName;
-                */
+                var monoBehaviour = effect.TargetScript;
+                if (monoBehaviour != null)
+                {
+                    var methodName = effect.MethodName;
+
+                    // 리플렉션으로 메서드 가져오기
+                    var method = monoBehaviour.GetType().GetMethod(methodName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+                    if (method != null)
+                    {
+                        // 메서드가 코루틴(즉, IEnumerator 반환)을 실행하는지 확인
+                        var result = method.Invoke(monoBehaviour, null); // 매개변수가 없는 메서드 호출
+                        if (result is IEnumerator enumerator)
+                        {
+                            yield return monoBehaviour.StartCoroutine(enumerator);
+                        }
+                        else
+                        {
+                            Debug.LogError($"Method '{methodName}' is not a coroutine or does not return IEnumerator.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError($"Method '{methodName}' not found in {monoBehaviour.GetType().Name}.");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("TargetScript is invalid.");
+                }
             }
         }
 

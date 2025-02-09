@@ -5,14 +5,14 @@ using System.Text.RegularExpressions;
 using Com.LuisPedroFonseca.ProCamera2D;
 
 #if UNITY_EDITOR
-// Ä¿½ºÅÒ ¿¡µğÅÍ¸¦ »ç¿ëÇÏ±â À§ÇÑ ³×ÀÓ½ºÆäÀÌ½º
+// ì»¤ìŠ¤í…€ ì—ë””í„°ë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•œ ë„¤ì„ìŠ¤í˜ì´ìŠ¤
 using UnityEditor;
 using UnityEditorInternal;
 #endif
 
 /// <summary>
-/// ÄÆ¾ÀÀ» À§ÇÑ ¾À ÀÌÆåÆ® Å¬·¡½º
-/// ´Ù¾çÇÑ Effect TypeÀÌ Á¸ÀçÇÑ´Ù
+/// ì»·ì”¬ì„ ìœ„í•œ ì”¬ ì´í™íŠ¸ í´ë˜ìŠ¤
+/// ë‹¤ì–‘í•œ Effect Typeì´ ì¡´ì¬í•œë‹¤
 /// </summary>
 [System.Serializable]
 public class SceneEffect
@@ -54,27 +54,35 @@ public class SceneEffect
 [CustomPropertyDrawer(typeof(SceneEffect))]
 public class SceneEffectDrawer : PropertyDrawer
 {
-    private int HEIGHT = 18;
+    private int DEFAULT_HEIGHT = 18;
+    private int EXTEND_HEIGHT = 24;
     private UnityEventDrawer _eventDrawer;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
         EditorGUI.BeginProperty(position, label, property);
 
-        int indent = EditorGUI.indentLevel;
+        int originIndent = EditorGUI.indentLevel;
+        var typeProperty = property.FindPropertyRelative("_type");
 
-        Rect foldoutRect = EditorGUI.IndentedRect(new Rect(position.x, position.y, position.width, HEIGHT));
-        position.y += HEIGHT + 2;
-        property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(foldoutRect, property.isExpanded, label);
+        Rect folderRect = new Rect();
+        if ((SceneEffect.EffectType)typeProperty.enumValueIndex == SceneEffect.EffectType.CoroutineCall)
+            folderRect = EditorGUI.IndentedRect(new Rect(position.x, position.y, position.width, EXTEND_HEIGHT));
+        else
+            folderRect = EditorGUI.IndentedRect(new Rect(position.x, position.y, position.width, DEFAULT_HEIGHT));
+
+        position.y += DEFAULT_HEIGHT + 2; // 1. Effect Typeê°€ ë“¤ì–´ê°ˆ ìœ„ì¹˜ ì„¤ì •
+
+        property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(folderRect, property.isExpanded, label);
         if (property.isExpanded)
         {
             EditorGUI.indentLevel++;
-            var typeProperty = property.FindPropertyRelative("_type");
 
             Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent("Effect Type"));
-            Rect fieldRect = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width, HEIGHT));
+            Rect fieldRect = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width, DEFAULT_HEIGHT));
+
             EditorGUI.PropertyField(fieldRect, typeProperty, GUIContent.none);
-            position.y += HEIGHT + 2;
+            position.y += DEFAULT_HEIGHT + 2; // 2. ì²« ë²ˆì§¸ í•„ë“œ ìœ„ì¹˜ ì„¤ì •
 
             switch ((SceneEffect.EffectType)typeProperty.enumValueIndex)
             {
@@ -94,7 +102,7 @@ public class SceneEffectDrawer : PropertyDrawer
                     DrawField("InputSetter", position, property);
                     break;
                 case SceneEffect.EffectType.ChangeToDefaultInputSetter:
-                    position.y -= HEIGHT + 2;
+                    position.y -= DEFAULT_HEIGHT + 2; // 3. ì²« ë²ˆì§¸ í•„ë“œ í•„ìš” ì—†ìŒ
                     break;
                 case SceneEffect.EffectType.WaitForSeconds:
                     DrawField("Time", position, property);
@@ -104,13 +112,13 @@ public class SceneEffectDrawer : PropertyDrawer
                     break;
                 case SceneEffect.EffectType.CoroutineCall:
                     DrawField("TargetScript", position, property);
-                    position.y += HEIGHT + 2;
+                    position.y += DEFAULT_HEIGHT + 2; // 4. ë‘ ë²ˆì§¸ í•„ë“œ í•„ìš” ìˆìŒ
                     DrawField("MethodName", position, property);
                     break;
             }
-            position.y += HEIGHT + 2;
         }
-        EditorGUI.indentLevel = indent;
+
+        EditorGUI.indentLevel = originIndent;
         EditorGUI.EndFoldoutHeaderGroup();
         EditorGUI.EndProperty();
     }
@@ -119,7 +127,7 @@ public class SceneEffectDrawer : PropertyDrawer
     {
         if (inspectorName == "") inspectorName = SplitCamelCase(fieldName);
         Rect contentRect = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), new GUIContent(inspectorName));
-        Rect fieldRect = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width, HEIGHT));
+        Rect fieldRect = EditorGUI.IndentedRect(new Rect(contentRect.x, contentRect.y, contentRect.width, DEFAULT_HEIGHT));
         EditorGUI.PropertyField(fieldRect, property.FindPropertyRelative(fieldName), GUIContent.none);
     }
     public static string SplitCamelCase(string str)
@@ -147,14 +155,14 @@ public class SceneEffectDrawer : PropertyDrawer
             var effectType = (SceneEffect.EffectType)property.FindPropertyRelative("_type").enumValueIndex;
 
             if (effectType == SceneEffect.EffectType.ChangeToDefaultInputSetter)
-                return (HEIGHT + 2) * 2;
+                return (EXTEND_HEIGHT + 2) * 2;
             else if (effectType == SceneEffect.EffectType.FunctionCall)
-                return (HEIGHT + 2) * 2 + GetEventHeight(property.FindPropertyRelative("Function"));
+                return (EXTEND_HEIGHT + 2) * 2 + GetEventHeight(property.FindPropertyRelative("Function"));
             else
-                return (HEIGHT + 2) * 3;
+                return (EXTEND_HEIGHT + 2) * 3;
         }
         else
-            return (HEIGHT + 2);
+            return (EXTEND_HEIGHT + 2);
     }
 }
 #endif
