@@ -39,7 +39,7 @@ public class DebugBehavior : MonoBehaviour
 
 #if UNITY_EDITOR
         // CHEAT: F1 키를 누르면 현재 마지막 CheckPoint를 표시한다 (없다면 입구를 표시한다)
-        if (Input.GetKeyDown(KeyCode.F1))
+        if (Input.GetKeyDown(KeyCode.F1) && GameSceneManager.Instance.CheatMode == true)
         {
             var checkPoint = SceneContext.Current.CheckPointManager.LatestCheckpointPosition;
 
@@ -55,11 +55,11 @@ public class DebugBehavior : MonoBehaviour
             Debug.DrawLine(checkPoint + diagonal2 * LENGTH, checkPoint + diagonal4 * LENGTH, Color.red, 5f);
         }
         // CHEAT: F2 키를 누르면 게임 속도를 3배로 높인다
-        if (Input.GetKeyDown(KeyCode.F2))
+        if (Input.GetKeyDown(KeyCode.F2) && GameSceneManager.Instance.CheatMode == true)
         {
             Time.timeScale = 3f;
         }
-        else if (Input.GetKeyUp(KeyCode.F2))
+        else if (Input.GetKeyUp(KeyCode.F2) && GameSceneManager.Instance.CheatMode == true)
         {
             Time.timeScale = 1f;
         }
