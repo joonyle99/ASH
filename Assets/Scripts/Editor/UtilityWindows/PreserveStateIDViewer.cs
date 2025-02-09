@@ -6,60 +6,71 @@ using UnityEngine.SceneManagement;
 
 public class PreserveStateIDViewer : EditorWindow
 {
-    // À©µµ¿ì¸¦ ¿­±â À§ÇÑ ¸Ş´º
+    private static Scene _currentScene;
+    private static List<PreserveState> _allPreserveStateComponents;
+    private static GameObject[] _allRootObjects;
+
+    // ìœˆë„ìš°ë¥¼ ì—´ê¸° ìœ„í•œ ë©”ë‰´
     [MenuItem("Window/Preserve StateID Viewer")]
     static void Init()
     {
-        // À©µµ¿ì¸¦ ¿­±â
+        // í˜„ì¬ ì”¬ì˜ ëª¨ë“  ì˜¤ë¸Œì íŠ¸ë¥¼ ê°€ì ¸ì˜¨ë‹¤
+        _currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
+        // ëª¨ë“  ì˜¤ë¸Œì íŠ¸ì—ì„œ PreserveState ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜¨ë‹¤
+        _allPreserveStateComponents = new List<PreserveState>();
+        _allRootObjects = _currentScene.GetRootGameObjects();
+
+        foreach (var rootObject in _allRootObjects)
+        {
+            _allPreserveStateComponents.AddRange(rootObject.GetComponentsInChildren<PreserveState>());
+        }
+
+        //ì˜¤ë¸Œì íŠ¸ë¥¼ idìˆœìœ¼ë¡œ ì •ë ¬í•œë‹¤, ì´ ë•Œ ë¹ˆ idê°€ ìˆë‹¤ë©´ ì œì¼ ì•„ë˜ ë°°ì¹˜
+        _allPreserveStateComponents.Sort(new PreserveStateComparer().CompareWithId);
+
+        // ìœˆë„ìš°ë¥¼ ì—´ê¸°
         GetWindow(typeof(PreserveStateIDViewer));
+
     }
 
     public void OnGUI()
     {
-        // ÇöÀç ¾ÀÀÇ ¸ğµç ¿ÀºêÁ§Æ®¸¦ °¡Á®¿Â´Ù
-        Scene currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene();
-        var allRootObjects = currentScene.GetRootGameObjects();
-        
-        // ¸ğµç ¿ÀºêÁ§Æ®¿¡¼­ PreserveState ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿Â´Ù
-        List<PreserveState> allPreserveStateComponents = new List<PreserveState>();
-        foreach(var rootObject in allRootObjects )
-        {
-            allPreserveStateComponents.AddRange(rootObject.GetComponentsInChildren<PreserveState>());
-        }
+        if (_allPreserveStateComponents == null || _currentScene == null)
+            return;
 
-        // ¿ÀºêÁ§Æ®¸¦ ÀÌ¸§¼øÀ¸·Î Á¤·ÄÇÑ´Ù
+        // ì˜¤ë¸Œì íŠ¸ë¥¼ ì´ë¦„ìˆœìœ¼ë¡œ ì •ë ¬í•œë‹¤
         // allPreserveStateComponents.Sort(new PreserveStateComparer());
 
-        // PreserveState ÄÄÆ÷³ÍÆ®¸¦ º¸¿©ÁØ´Ù
+        // PreserveState ì»´í¬ë„ŒíŠ¸ë¥¼ ë³´ì—¬ì¤€ë‹¤
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Object");
         EditorGUILayout.LabelField("GroupName");
         EditorGUILayout.LabelField("ID");
         EditorGUILayout.EndHorizontal();
 
-        // PreserveState ÄÄÆ÷³ÍÆ®¸¦ º¸¿©ÁØ´Ù
-        foreach (var preserveStateComponent in  allPreserveStateComponents )
+        // PreserveState ì»´í¬ë„ŒíŠ¸ë¥¼ ë³´ì—¬ì¤€ë‹¤
+        foreach (var preserveStateComponent in  _allPreserveStateComponents)
         {
             EditorGUILayout.BeginHorizontal();
 
             GUI.enabled = false;
 
-            // ¿ÀºêÁ§Æ®¸¦ º¸¿©ÁØ´Ù
+            // ì˜¤ë¸Œì íŠ¸ë¥¼ ë³´ì—¬ì¤€ë‹¤
             EditorGUILayout.ObjectField("", preserveStateComponent, typeof(PreserveState), true);
 
             GUI.enabled = true;
 
-            // ±×·ì ÀÌ¸§°ú ID¸¦ º¸¿©ÁØ´Ù
+            // ê·¸ë£¹ ì´ë¦„ê³¼ IDë¥¼ ë³´ì—¬ì¤€ë‹¤
             string groupName = EditorGUILayout.TextField(preserveStateComponent.EditorGroupName);
             string id = EditorGUILayout.TextField(preserveStateComponent.EditorID);
 
-            // ±×·ì ÀÌ¸§°ú ID°¡ º¯°æµÇ¾ú´Ù¸é ÀúÀåÇÑ´Ù
+            // ê·¸ë£¹ ì´ë¦„ê³¼ IDê°€ ë³€ê²½ë˜ì—ˆë‹¤ë©´ ì €ì¥í•œë‹¤
             if (preserveStateComponent.EditorGroupName != groupName ||
                 preserveStateComponent.EditorID != id)
             {
                 preserveStateComponent.EditorGroupName = groupName;
                 preserveStateComponent.EditorID = id;
-                EditorSceneManager.MarkSceneDirty(currentScene);
+                EditorSceneManager.MarkSceneDirty(_currentScene);
                 //EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
             }
 
@@ -67,12 +78,26 @@ public class PreserveStateIDViewer : EditorWindow
         }
     }
 
-    // PreserveState¸¦ ±×·ì ÀÌ¸§À¸·Î Á¤·ÄÇÏ±â À§ÇÑ ºñ±³ÀÚ
+    // PreserveStateë¥¼ ê·¸ë£¹ ì´ë¦„ìœ¼ë¡œ ì •ë ¬í•˜ê¸° ìœ„í•œ ë¹„êµì
     public class PreserveStateComparer : IComparer<PreserveState>
     {
         public int Compare(PreserveState x, PreserveState y)
         {
             if (x.EditorGroupName.CompareTo(y.EditorGroupName) < 0)
+                return -1;
+
+            return 1;
+        }
+
+        public int CompareWithId(PreserveState x, PreserveState y)
+        {
+            if (x.EditorID.Length <= 2) return 1;
+            if (y.EditorID.Length <= 2) return -1;
+
+            int xId = int.Parse(x.EditorID.Substring(2, x.EditorID.Length - 2));
+            int yId = int.Parse(y.EditorID.Substring(2, y.EditorID.Length - 2));
+
+            if (xId.CompareTo(yId) < 0)
                 return -1;
 
             return 1;

@@ -24,18 +24,18 @@ public class ShiningRock : InteractableObject, IAttackListener
     {
         if (!_hasPlayedDialogue)
         {
-            DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract, false);                // °Å±â ´©±¸ ÀÖ¾î?
+            DialogueController.Instance.StartDialogue(_dialogueOnFirstInteract, false);                // ê±°ê¸° ëˆ„êµ¬ ìˆì–´?
             _hasPlayedDialogue = true;
             _isHittable = true;
         }
         else
         {
-            if (_hp == 3)
-                DialogueController.Instance.StartDialogue(_dialogueAfterSecondAttack, false);          // ¹°¸®ÀûÀÎ °ø°İÀ¸·Î ºÎ¼­Áú °Å °°¾Æ
-            else if (_hp == 2)
-                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract, false);      // °ğ ºÎ¼­Áú °Å °°¾Æ
-            else if (_hp == 1)
-                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract, false);      // °ğ ºÎ¼­Áú °Å °°¾Æ
+            if (_hp == 5)
+                DialogueController.Instance.StartDialogue(_dialogueAfterSecondAttack, false);          // ë¬¼ë¦¬ì ì¸ ê³µê²©ìœ¼ë¡œ ë¶€ì„œì§ˆ ê±° ê°™ì•„
+            else if (_hp == 3)
+                DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract, false);      // ê³§ ë¶€ì„œì§ˆ ê±° ê°™ì•„
+            //else if (_hp == 1)
+            //    DialogueController.Instance.StartDialogue(_dialogueOnConsecutiveInteract, false);      // ê³§ ë¶€ì„œì§ˆ ê±° ê°™ì•„
         }
     }
 
@@ -55,9 +55,9 @@ public class ShiningRock : InteractableObject, IAttackListener
         _hp--;
         _soundList.PlaySFX("Hit");
 
-        if (_hp == 2)
+        if (_hp == 4)
         {
-            DialogueController.Instance.StartDialogue(_dialogueOnFirstAttack, false);                  // ¾î ºÎ¼­Áö´Â ¼Ò¸®°¡ µé·Á
+            DialogueController.Instance.StartDialogue(_dialogueOnFirstAttack, false);                  // ì–´ ë¶€ì„œì§€ëŠ” ì†Œë¦¬ê°€ ë“¤ë ¤
         }
         else if (_hp == 0)
         {

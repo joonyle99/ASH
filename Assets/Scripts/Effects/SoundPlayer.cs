@@ -1,16 +1,15 @@
 using UnityEngine;
 
-public class SoundPlayer : MonoBehaviour
+public class SoundPlayer : SoundList
 {
-    [SerializeField] AudioSource _source;
-
-    public void PlaySound()
+    public void PlayFirstElementSoundData_SFX()
     {
-        _source.Play();
-    }
-    public void StopSound()
-    {
-        _source.Stop();
-    }
+        if(Datas.Count == 0)
+        {
+            Debug.Log("Any sound data not exist");
+            return;
+        }
 
+        PlaySFX(Datas[0].Key);
+    }
 }

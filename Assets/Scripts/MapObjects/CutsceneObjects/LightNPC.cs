@@ -16,7 +16,8 @@ public class LightNPC : MonoBehaviour
     [SerializeField] private float _flashDuration = 0.4f;
     [SerializeField] private float _flashEndDuration = 0.5f;
     [SerializeField] private Light2D _flashLight;
-
+    [SerializeField] private float _playerCapeIntensityValue = 0f;
+    
     private SoundList _soundList;
     private AudioSource _loopSound;
 
@@ -24,6 +25,11 @@ public class LightNPC : MonoBehaviour
     {
         _soundList = GetComponent<SoundList>();
         _loopSound = GetComponent<AudioSource>();
+    }
+
+    public void SetParentToNull()
+    {
+        gameObject.transform.SetParent(null);
     }
 
     public void StartStartingPointMovement()
@@ -82,7 +88,7 @@ public class LightNPC : MonoBehaviour
         }
         yield return new WaitForSeconds(_flashDuration);
         _soundList.PlaySFX("SE_Light_absorb");
-        SceneContext.Current.Player.SetCapeIntensity(2.7f);
+        SceneContext.Current.Player.SetCapeIntensity(_playerCapeIntensityValue);
         eTime = 0f;
         while (eTime < _flashEndDuration)
         {
@@ -93,6 +99,17 @@ public class LightNPC : MonoBehaviour
         }
 
         if (_isDestroyAfterFlash)
-            Destroy(gameObject);
+        {
+            DestructEventCaller destructEventCaller;
+
+            if (TryGetComponent(out destructEventCaller))
+            {
+                Destruction.Destruct(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Data;
 
 /// <summary>
-/// Æ®·£½ºÆû »óÅÂ¸¦ ÀúÀåÇÏ´Â ±¸Á¶Ã¼
+/// íŠ¸ëœìŠ¤í¼ ìƒíƒœë¥¼ ì €ì¥í•˜ëŠ” êµ¬ì¡°ì²´
 /// </summary>
 struct TransformState
 {
@@ -11,7 +11,7 @@ struct TransformState
     public Quaternion Rotation;
     public Vector3 Scale;
 
-    // »ı¼ºÀÚ
+    // ìƒì„±ì
     public TransformState(Transform transform)
     {
         Position = transform.localPosition;
@@ -30,21 +30,21 @@ struct TransformState
 }
 
 /// <summary>
-/// ¿ÀºêÁ§Æ®ÀÇ »óÅÂ¸¦ ÀúÀåÇÏ°í ºÒ·¯¿À´Â Å¬·¡½º
-/// Æ®·£½ºÆû°ú ÆÄ±« »óÅÂ¿¡ ´ëÇÑ ÀúÀå°ú ºÒ·¯¿À±â¸¦ ÀÚÃ¼ÀûÀ¸·Î Áö¿øÇÏ°í
-/// Ãß°¡ÀûÀÎ »óÅÂ¸¦ ÀúÀåÇÏ°í ºÒ·¯¿À´Â ±â´É´Â °¢ ¿ÀºêÁ§Æ®ÀÇ Awake()¿Í OnDestroy()¿¡¼­ Á÷Á¢ ±¸ÇöÇØ¾ßÇÑ´Ù
+/// ì˜¤ë¸Œì íŠ¸ì˜ ìƒíƒœë¥¼ ì €ì¥í•˜ê³  ë¶ˆëŸ¬ì˜¤ëŠ” í´ë˜ìŠ¤
+/// íŠ¸ëœìŠ¤í¼ê³¼ íŒŒê´´ ìƒíƒœì— ëŒ€í•œ ì €ì¥ê³¼ ë¶ˆëŸ¬ì˜¤ê¸°ë¥¼ ìì²´ì ìœ¼ë¡œ ì§€ì›í•˜ê³ 
+/// ì¶”ê°€ì ì¸ ìƒíƒœë¥¼ ì €ì¥í•˜ê³  ë¶ˆëŸ¬ì˜¤ëŠ” ê¸°ëŠ¥ëŠ” ê° ì˜¤ë¸Œì íŠ¸ì˜ Awake()ì™€ OnDestroy()ì—ì„œ ì§ì ‘ êµ¬í˜„í•´ì•¼í•œë‹¤
 /// </summary>
 public partial class PreserveState : MonoBehaviour, IDestructionListener, ISceneContextBuildListener
 {
-    [SerializeField] private string _groupName;                     // µ¥ÀÌÅÍ ±×·ìÀÇ ÀÌ¸§
-    [SerializeField] private string _ID;                            // µ¥ÀÌÅÍÀÇ ID
+    [SerializeField] private string _groupName;                     // ë°ì´í„° ê·¸ë£¹ì˜ ì´ë¦„
+    [SerializeField] private string _ID;                            // ë°ì´í„°ì˜ ID
     [SerializeField] public string ID => _ID;
 
-    [SerializeField] private bool _preserveTransform = true;        // Æ®·£½ºÆû µ¥ÀÌÅÍ¸¦ ÀúÀåÇÒÁö ¿©ºÎ
-    [SerializeField] private bool _preserveDestruction = true;      // ÆÄ±« »óÅÂ¸¦ ÀúÀåÇÒÁö ¿©ºÎ
+    [SerializeField] private bool _preserveTransform = true;        // íŠ¸ëœìŠ¤í¼ ë°ì´í„°ë¥¼ ì €ì¥í• ì§€ ì—¬ë¶€
+    [SerializeField] private bool _preserveDestruction = true;      // íŒŒê´´ ìƒíƒœë¥¼ ì €ì¥í• ì§€ ì—¬ë¶€
 
-    public string TransformKey => _ID + "_transformStateSaved";          // Æ®·£½ºÆû µ¥ÀÌÅÍÀÇ Å°
-    public string DestructionKey => _ID + "_destructedSaved";            // ÆÄ±« »óÅÂÀÇ Å°
+    public string TransformKey => _ID + "_transformStateSaved";          // íŠ¸ëœìŠ¤í¼ ë°ì´í„°ì˜ í‚¤
+    public string DestructionKey => _ID + "_destructedSaved";            // íŒŒê´´ ìƒíƒœì˜ í‚¤
 
 #if UNITY_EDITOR
     public string EditorGroupName
@@ -59,16 +59,16 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
     }
 #endif
 
-    // Æ®·£½ºÆû°ú ÆÄ±« »óÅÂ¸¦ ºÒ·¯¿Í ÃÊ±âÈ­ ÇÏ´Â ÀÛ¾÷ (°íÀ¯ÇÑ µ¥ÀÌÅÍ´Â µû·Î ÃÊ±âÈ­ ÇØ¾ßÇÑ´Ù)
+    // íŠ¸ëœìŠ¤í¼ê³¼ íŒŒê´´ ìƒíƒœë¥¼ ë¶ˆëŸ¬ì™€ ì´ˆê¸°í™” í•˜ëŠ” ì‘ì—… (ê³ ìœ í•œ ë°ì´í„°ëŠ” ë”°ë¡œ ì´ˆê¸°í™” í•´ì•¼í•œë‹¤)
     private void Awake()
     {
-        //OnSaveÇÔ¼ö ¹ÙÀÎµù
+        //OnSaveí•¨ìˆ˜ ë°”ì¸ë”©
         SaveAndLoader.OnSaveStarted += OnSaveData;
 
-        // µ¥ÀÌÅÍ ±×·ìÀÌ Á¸ÀçÇÏÁö ¾Ê´Â´Ù¸é »ı¼º
+        // ë°ì´í„° ê·¸ë£¹ì´ ì¡´ì¬í•˜ì§€ ì•ŠëŠ”ë‹¤ë©´ ìƒì„±
         PersistentDataManager.TryAddDataGroup(_groupName);
 
-        // Æ®·£½ºÆû µ¥ÀÌÅÍ ºÒ·¯¿À±â
+        // íŠ¸ëœìŠ¤í¼ ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
         if (_preserveTransform)
         {
             LoadAndApplyState<TransformState>(_groupName, TransformKey, transformState =>
@@ -80,7 +80,7 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
             });
         }
 
-        // ÆÄ±« »óÅÂ ºÒ·¯¿À±â
+        // íŒŒê´´ ìƒíƒœ ë¶ˆëŸ¬ì˜¤ê¸°
         if (_preserveDestruction)
         {
             LoadAndApplyState<bool>(_groupName, DestructionKey, destruct =>
@@ -88,7 +88,16 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
                 if (destruct)
                 {
                     // Debug.Log($"Apply Destruction");
-                    Destroy(gameObject);
+                    MonsterBehaviour monsterBehaviour;
+
+                    if(TryGetComponent(out monsterBehaviour))
+                    {
+                        monsterBehaviour.DestroyMonsterPrefab();
+                    }
+                    else
+                    {
+                        Destroy(gameObject);
+                    }
                 }
             });
         }
@@ -98,35 +107,36 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
     {
     }
 
-    // ¿ÀºêÁ§Æ® ÆÄ±« ½Ã (¾À ÀüÈ¯ ½Ã) µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ´Â ÀÛ¾÷
+    // ì˜¤ë¸Œì íŠ¸ íŒŒê´´ ì‹œ (ì”¬ ì „í™˜ ì‹œ) ë°ì´í„°ë¥¼ ì €ì¥í•˜ëŠ” ì‘ì—…
     private void OnDestroy()
     {
-        // ÇÃ·¹ÀÌ ¸ğµå¿¡¼­¸¸ ÀúÀå
+        // í”Œë ˆì´ ëª¨ë“œì—ì„œë§Œ ì €ì¥
         if (Application.isPlaying)
         {
             if (SceneChangeManager.Instance &&
                 (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap || 
                  SceneChangeManager.Instance.SceneChangeType == SceneChangeType.PlayerRespawn))
             {
-                // Æ®·£½ºÆû µ¥ÀÌÅÍ ÀúÀå (¾À ÀüÈ¯ ½Ã)
+                // íŠ¸ëœìŠ¤í¼ ë°ì´í„° ì €ì¥ (ì”¬ ì „í™˜ ì‹œ)
                 SaveTransformState();
             }
             SaveAndLoader.OnSaveStarted -= OnSaveData;
         }
     }
 
-    // ¿ÀºêÁ§Æ®°¡ ÆÄ±«µÇ¾úÀ» ¶§ ÆÄ±« »óÅÂÀÇ µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ´Â ÀÛ¾÷
+    // ì˜¤ë¸Œì íŠ¸ê°€ íŒŒê´´ë˜ì—ˆì„ ë•Œ íŒŒê´´ ìƒíƒœì˜ ë°ì´í„°ë¥¼ ì €ì¥í•˜ëŠ” ì‘ì—…
     public void OnDestruction()
     {
-        // ÆÄ±« »óÅÂ µ¥ÀÌÅÍ ÀúÀå(´Ü, ½ºÅ×ÀÌÁö ÃÊ±âÈ­ ¾Æ´Ò °æ¿ì)
+        // íŒŒê´´ ìƒíƒœ ë°ì´í„° ì €ì¥(ë‹¨, ìŠ¤í…Œì´ì§€ ì´ˆê¸°í™” ì•„ë‹ ê²½ìš°)
         if (_preserveDestruction)
         {
+            //Debug.Log($"{gameObject.name} save destruction info");
             PersistentDataManager.Set(_groupName, DestructionKey, true);
             SaveAndLoader.OnSaveStarted -= OnSaveData;
         }
     }
 
-    // Æ®·£½ºÆû µ¥ÀÌÅÍ¸¦ ÀúÀåÇÏ´Â ÀÛ¾÷
+    // íŠ¸ëœìŠ¤í¼ ë°ì´í„°ë¥¼ ì €ì¥í•˜ëŠ” ì‘ì—…
     public void SaveTransformState()
     {
         if (_preserveTransform)
@@ -149,14 +159,14 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
 
     private static void LoadAndApplyState<T>(string groupName, string key, Action<T> loadAction) where T : new()
     {
-        // µ¥ÀÌÅÍ°¡ Á¸ÀçÇÑ´Ù¸é
+        // ë°ì´í„°ê°€ ì¡´ì¬í•œë‹¤ë©´
         if (PersistentDataManager.Has<T>(groupName, key))
         {
-            // µ¥ÀÌÅÍ¸¦ °¡Á®¿Â´Ù
+            // ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¨ë‹¤
             // Debug.Log("Loading Saved Data : { key : " + key + " value : " + PersistentDataManager.Get<T>(groupName, key).ToString() + " }");
             var state = PersistentDataManager.Get<T>(groupName, key);
 
-            // µ¥ÀÌÅÍ¸¦ Àû¿ëÇÑ´Ù
+            // ë°ì´í„°ë¥¼ ì ìš©í•œë‹¤
             loadAction.Invoke(state);
         }
     }

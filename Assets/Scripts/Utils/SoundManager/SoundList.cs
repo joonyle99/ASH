@@ -68,6 +68,9 @@ public class SoundList : MonoBehaviour
 
     public void StopRecentLoopPlayedSFX()
     {
+        if (_recentLoopPlayedSFX == null)
+            return;
+
         StopCoroutine(_recentLoopPlayedSFX);
     }
 

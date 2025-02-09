@@ -160,8 +160,8 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         {
             Debug.Log("=============Save Data============");
             SavedPersistentData.PrintData();
-        }*/
-        
+        }
+        */
 #endif
     }
 

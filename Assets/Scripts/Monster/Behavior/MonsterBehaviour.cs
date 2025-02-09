@@ -72,8 +72,8 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     [Header("SpawnType")]
     [Space]
 
-    [SerializeField] private bool _isWaveMonster = false;
-    public bool IsWaveMonster => _isWaveMonster;
+    [SerializeField] private bool _isRespawnable = true;
+    public bool IsRespawnable => _isRespawnable;
 
     [Header("Condition")]
     [Space]
@@ -286,6 +286,12 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
 
         // Cutscene Player
         cutscenePlayerList = GetComponent<CutscenePlayerList>();
+
+        //Event Listener
+        if(!_isRespawnable)
+        {
+            gameObject.AddComponent<DestructEventCaller>();
+        }
 
         InitMonsterData();
 
@@ -644,9 +650,17 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         // Stop all coroutines on this behavior
         StopAllCoroutines();
 
-        // 제어권은 Monster Respawn Manager에게 넘긴다
-        MonsterRespawnManager.Instance.NotifyDeath(this);
+        // 리스폰 가능한 몬스터인 경우 제어권은 Monster Respawn Manager에게 넘긴다
+        if(_isRespawnable)
+        {
+            MonsterRespawnManager.Instance.NotifyDeath(this);
+        }
+        else
+        {
+            Destruction.Destruct(gameObject.transform.parent.gameObject);
+        }
     }
+
     private IEnumerator DeathEffectCoroutine()
     {
         // effect process

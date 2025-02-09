@@ -77,4 +77,11 @@ public sealed class Bat : MonsterBehaviour
         Gizmos.DrawLine(_shootPosition.position, _shootPosition.position + vector2_1 * _ShootingDebugLength);
         Gizmos.DrawLine(_shootPosition.position, _shootPosition.position + vector2_2 * _ShootingDebugLength);
     }
+
+    public override void Die(bool isHitBoxDisable, bool isDeathProcess)
+    {
+        cutscenePlayerList?.PlayCutscene("AppearLightNPC");
+
+        base.Die(isHitBoxDisable, isDeathProcess);
+    }
 }

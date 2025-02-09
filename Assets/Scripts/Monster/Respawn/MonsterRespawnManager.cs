@@ -6,10 +6,10 @@ using joonyle99;
 
 public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterRespawnManager>
 {
-    // ¾À¿¡ Á¸ÀçÇÏ´Â ¸ğµç ¸ó½ºÅÍ ¸®½ºÆ®
+    // ì”¬ì— ì¡´ì¬í•˜ëŠ” ëª¨ë“  ëª¬ìŠ¤í„° ë¦¬ìŠ¤íŠ¸
     public List<MonsterBehaviour> MonsterList;
 
-    // ÇöÀç ¸®½ºÆùÀÌ ¼öÇàµÇ´Â ÄÚ·çÆ¾
+    // í˜„ì¬ ë¦¬ìŠ¤í°ì´ ìˆ˜í–‰ë˜ëŠ” ì½”ë£¨í‹´
     private List<Coroutine> runningRespawnCoroutines = new();
 
     protected override void Awake()
@@ -18,12 +18,12 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
 
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
 
-        // ¿şÀÌºê ¸ó½ºÅÍ¸¦ Á¦¿ÜÇÑ ¸ğµç ¸ó½ºÅÍ¸¦ Ã£°í, ¸®½ºÆ®¿¡ Ãß°¡ÇÑ´Ù
+        // ì›¨ì´ë¸Œ ëª¬ìŠ¤í„°ë¥¼ ì œì™¸í•œ ëª¨ë“  ëª¬ìŠ¤í„°ë¥¼ ì°¾ê³ , ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€í•œë‹¤
         var monsterArray = FindObjectsOfType<MonsterBehaviour>();
 
         foreach(var monster in monsterArray)
         {
-            if(!monster.IsWaveMonster)
+            if(monster.IsRespawnable)
             {
                 MonsterList.Add(monster);
             }
@@ -44,7 +44,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
             return;
         }
 
-        // monsterBehavior¸¦ È®ÀÎÇÏ°í ¾î¶² ¸ó½ºÅÍÀÎÁö¿¡ µû¶ó ¸®½ºÆù ½Ã°£À» °áÁ¤ÇÑ´Ù
+        // monsterBehaviorë¥¼ í™•ì¸í•˜ê³  ì–´ë–¤ ëª¬ìŠ¤í„°ì¸ì§€ì— ë”°ë¼ ë¦¬ìŠ¤í° ì‹œê°„ì„ ê²°ì •í•œë‹¤
 
         var respawnTime = monsterBehavior.MonsterDataObject.RespawnTimeRange.Random();
 
@@ -54,7 +54,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     }
     private IEnumerator RespawnCoroutine(MonsterBehaviour monsterBehavior, float respawnTime)
     {
-        // µ¥ÀÌÅÍ¸¦ °¡Á®¿Â´Ù
+        // ë°ì´í„°ë¥¼ ê°€ì ¸ì˜¨ë‹¤
         var monsterData = monsterBehavior.monsterData;
         var respawnData = monsterBehavior.respawnData;
 
@@ -69,73 +69,73 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
     {
         //Debug.Log($"removed monster hash code: {monster.GetHashCode()}");
 
-        // ¸ó½ºÅÍ¸¦ ¸®½ºÆ®¿¡¼­ Á¦°ÅÇÑ´Ù
+        // ëª¬ìŠ¤í„°ë¥¼ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œê±°í•œë‹¤
         MonsterList.Remove(monster);
 
-        // ¸ó½ºÅÍ¸¦ ¾À¿¡¼­ »èÁ¦ÇÑ´Ù
+        // ëª¬ìŠ¤í„°ë¥¼ ì”¬ì—ì„œ ì‚­ì œí•œë‹¤
         monster.DestroyMonsterPrefab();
     }
     private void AddProcess(MonsterBehaviour.MonsterData monsterData, MonsterBehaviour.RespawnData respawnData)
     {
         // Debug.Log("Monster Add Process");
 
-        // ÇÁ¸®ÆÕ(¸ó½ºÅÍ¸¦ ´ãÀº)À» ·ÎµåÇÑ´Ù
+        // í”„ë¦¬íŒ¹(ëª¬ìŠ¤í„°ë¥¼ ë‹´ì€)ì„ ë¡œë“œí•œë‹¤
         var resourcePath = "Prefabs/Monster/Normal/Prefab_" + monsterData.MonsterName;
         var prefabResource = Resources.Load<GameObject>(resourcePath);
 
-        // Debug.Log("ÀÎ½ºÅÏ½º »ı¼º ¹Ù·Î Á÷Àü");
+        // Debug.Log("ì¸ìŠ¤í„´ìŠ¤ ìƒì„± ë°”ë¡œ ì§ì „");
 
         // 
-        // ¼³¸í:
-        //      ¾î¶² Å¸ÀÔÀÇ ¸ó½ºÅÍÀÌµç, ¸ó½ºÅÍ¸¦ ´ãÀº ÇÁ¸®ÆÕÀÇ ¸®½ºÆù À§Ä¡´Â ÀÌÀü ÇÁ¸®ÆÕÀÇ À§Ä¡¿Í µ¿ÀÏÇÏ´Ù
+        // ì„¤ëª…:
+        //      ì–´ë–¤ íƒ€ì…ì˜ ëª¬ìŠ¤í„°ì´ë“ , ëª¬ìŠ¤í„°ë¥¼ ë‹´ì€ í”„ë¦¬íŒ¹ì˜ ë¦¬ìŠ¤í° ìœ„ì¹˜ëŠ” ì´ì „ í”„ë¦¬íŒ¹ì˜ ìœ„ì¹˜ì™€ ë™ì¼í•˜ë‹¤
         // 
-        // Ãß°¡:
-        //      1. Instantiate(): »õ·Î¿î °ÔÀÓ ¿ÀºêÁ§Æ®°¡ »ı¼ºµÇ°í ¸Ş¸ğ¸®¿¡ ÇÒ´çµÈ´Ù.
-        //      2. Awake(): ¿ÀºêÁ§Æ®°¡ ¸Ş¸ğ¸®¿¡ ÇÒ´çµÇÀÚ¸¶ÀÚ Áï½Ã È£ÃâµÈ´Ù. (ÄÄÆ÷³ÍÆ®³ª ½ºÅ©¸³Æ® ÃÊ±âÈ­ ÀÛ¾÷¿¡ ÀûÇÕ)
-        //      3. OnEnable(): ¿ÀºêÁ§Æ®°¡ È°¼ºÈ­ »óÅÂ·Î ÀüÈ¯µÉ ¶§ È£ÃâµÈ´Ù.
-        //      4. MemberFunction(): Ã¹¹øÂ° ÃÊ±âÈ­ ÀÛ¾÷ÀÎ Awake()¿Í OnEnable() ÀÌÈÄ¿¡, ±×¸®°í Start()°¡ È£ÃâµÇ±â Àü È£ÃâµÈ´Ù.
-        //      5. Start(): Awake()¿Í OnEnable() ÀÌÈÄ, Ã¹¹øÂ° ÇÁ·¹ÀÓÀÌ Update() µÇ±âÀü¿¡ È£ÃâµÈ´Ù.
+        // ì¶”ê°€:
+        //      1. Instantiate(): ìƒˆë¡œìš´ ê²Œì„ ì˜¤ë¸Œì íŠ¸ê°€ ìƒì„±ë˜ê³  ë©”ëª¨ë¦¬ì— í• ë‹¹ëœë‹¤.
+        //      2. Awake(): ì˜¤ë¸Œì íŠ¸ê°€ ë©”ëª¨ë¦¬ì— í• ë‹¹ë˜ìë§ˆì ì¦‰ì‹œ í˜¸ì¶œëœë‹¤. (ì»´í¬ë„ŒíŠ¸ë‚˜ ìŠ¤í¬ë¦½íŠ¸ ì´ˆê¸°í™” ì‘ì—…ì— ì í•©)
+        //      3. OnEnable(): ì˜¤ë¸Œì íŠ¸ê°€ í™œì„±í™” ìƒíƒœë¡œ ì „í™˜ë  ë•Œ í˜¸ì¶œëœë‹¤.
+        //      4. MemberFunction(): ì²«ë²ˆì§¸ ì´ˆê¸°í™” ì‘ì—…ì¸ Awake()ì™€ OnEnable() ì´í›„ì—, ê·¸ë¦¬ê³  Start()ê°€ í˜¸ì¶œë˜ê¸° ì „ í˜¸ì¶œëœë‹¤.
+        //      5. Start(): Awake()ì™€ OnEnable() ì´í›„, ì²«ë²ˆì§¸ í”„ë ˆì„ì´ Update() ë˜ê¸°ì „ì— í˜¸ì¶œëœë‹¤.
         var prefabInstance = Instantiate(prefabResource, respawnData.DefaultPrefabPosition, Quaternion.identity);
 
-        // Debug.Log("ÀÎ½ºÅÏ½º »ı¼º ¹Ù·Î Á÷ÈÄ");
+        // Debug.Log("ì¸ìŠ¤í„´ìŠ¤ ìƒì„± ë°”ë¡œ ì§í›„");
 
-        // »õ·Î »ı¼ºÇÑ ¸ó½ºÅÍ¸¦ »ç¸Á ÀÌÀüÀÇ Á¤º¸¸¦ Åä´ë·Î ¾÷µ¥ÀÌÆ®ÇÑ´Ù.
+        // ìƒˆë¡œ ìƒì„±í•œ ëª¬ìŠ¤í„°ë¥¼ ì‚¬ë§ ì´ì „ì˜ ì •ë³´ë¥¼ í† ëŒ€ë¡œ ì—…ë°ì´íŠ¸í•œë‹¤.
 
-        // Çàµ¿ ¹İ°æ Á¤º¸¸¦ ÃßÃâÇÑ´Ù
+        // í–‰ë™ ë°˜ê²½ ì •ë³´ë¥¼ ì¶”ì¶œí•œë‹¤
         var respawnDataSender = prefabInstance.GetComponentInChildren<ActionAreaDataSender>();
-        // ÇÁ¸®ÆÕÀÇ ÀÚ½Ä¿¡ ÀÖ´Â ½ÇÁúÀûÀÎ ¸ó½ºÅÍ¸¦ ÃßÃâÇÑ´Ù
+        // í”„ë¦¬íŒ¹ì˜ ìì‹ì— ìˆëŠ” ì‹¤ì§ˆì ì¸ ëª¬ìŠ¤í„°ë¥¼ ì¶”ì¶œí•œë‹¤
         var monsterBehavior = prefabInstance.GetComponentInChildren<MonsterBehaviour>();
 
-        // TEMP: ÀÓ½Ã ÇÔ¼ö
+        // TEMP: ì„ì‹œ í•¨ìˆ˜
         InstantFunction(monsterBehavior);
 
-        // * Çàµ¿ ¹İ°æ µ¥ÀÌÅÍ¸¦ ÀÌ¿ëÇØ ¸ó½ºÅÍÀÇ Çàµ¿ ¹İ°æ Á¤º¸¸¦ º¯°æ *
+        // * í–‰ë™ ë°˜ê²½ ë°ì´í„°ë¥¼ ì´ìš©í•´ ëª¬ìŠ¤í„°ì˜ í–‰ë™ ë°˜ê²½ ì •ë³´ë¥¼ ë³€ê²½ *
         UpdateActionAreaInfo(respawnDataSender, monsterData.MoveType, respawnData);
-        // * ¸®½ºÆù À§Ä¡ µ¥ÀÌÅÍ¸¦ ÀÌ¿ëÇØ ¸ó½ºÅÍÀÇ À§Ä¡¸¦ º¯°æ *
+        // * ë¦¬ìŠ¤í° ìœ„ì¹˜ ë°ì´í„°ë¥¼ ì´ìš©í•´ ëª¬ìŠ¤í„°ì˜ ìœ„ì¹˜ë¥¼ ë³€ê²½ *
         UpdateMonsterPosition(monsterBehavior.transform, monsterData.MoveType, respawnData);
 
-        // ¸ó½ºÅÍ ¸®½ºÆù ÇÁ·Î¼¼½º ½ÇÇà
+        // ëª¬ìŠ¤í„° ë¦¬ìŠ¤í° í”„ë¡œì„¸ìŠ¤ ì‹¤í–‰
         monsterBehavior.RespawnProcess();
 
-        // ¸ó½ºÅÍ ¸ñ·Ï¿¡ Ãß°¡ÇÑ´Ù
+        // ëª¬ìŠ¤í„° ëª©ë¡ì— ì¶”ê°€í•œë‹¤
         MonsterList.Add(monsterBehavior);
 
         //Debug.Log($"added monster hash code: {monster.GetHashCode()}");
     }
 
     /// <summary>
-    /// Prefab_MonsterNameÀÇ Çàµ¿ ¹İ°æÀ» ¼³Á¤
+    /// Prefab_MonsterNameì˜ í–‰ë™ ë°˜ê²½ì„ ì„¤ì •
     /// </summary>
     private void UpdateActionAreaInfo(ActionAreaDataSender actionAreaDataSender, MonsterDefine.MoveType moveType, MonsterBehaviour.RespawnData respawnData)
     {
-        // Debug.Log("¸®½ºÆùµÈ ¸ó½ºÅÍÀÇ È°µ¿ ¿µ¿ª Á¤º¸¸¦ ¾÷µ¥ÀÌÆ®");
+        // Debug.Log("ë¦¬ìŠ¤í°ëœ ëª¬ìŠ¤í„°ì˜ í™œë™ ì˜ì—­ ì •ë³´ë¥¼ ì—…ë°ì´íŠ¸");
 
-        // Áö»ó ¸ó½ºÅÍÀÇ Çàµ¿ ¹İ°æ Á¤º¸ ¼³Á¤
+        // ì§€ìƒ ëª¬ìŠ¤í„°ì˜ í–‰ë™ ë°˜ê²½ ì •ë³´ ì„¤ì •
         if (moveType == MonsterDefine.MoveType.GroundNormal)
         {
             actionAreaDataSender.SetActionAreaPosition(respawnData.groundActionAreaData.PatrolPointAPosition, respawnData.groundActionAreaData.PatrolPointBPosition);
         }
-        // °øÁß ¸ó½ºÅÍÀÇ Çàµ¿ ¹İ°æ Á¤º¸ ¼³Á¤
+        // ê³µì¤‘ ëª¬ìŠ¤í„°ì˜ í–‰ë™ ë°˜ê²½ ì •ë³´ ì„¤ì •
         else if (moveType == MonsterDefine.MoveType.FloatingNormal)
         {
             actionAreaDataSender.SetActionAreaPosition(respawnData.floatingActionAreaData.PatrolAreaPosition, respawnData.floatingActionAreaData.ChaseAreaPosition);
@@ -143,26 +143,26 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         }
         else
         {
-            // Debug.Log($"UpdateActionAreaInfo°¡ ÇÊ¿ä¾ø´Â ÀÌµ¿ Å¸ÀÔÀÔ´Ï´Ù. => {moveType}");
+            // Debug.Log($"UpdateActionAreaInfoê°€ í•„ìš”ì—†ëŠ” ì´ë™ íƒ€ì…ì…ë‹ˆë‹¤. => {moveType}");
             return;
         }
 
-        // transformÀÇ º¯°æ»çÇ×ÀÌ Áï½Ã ¹°¸® ¿£Áø¿¡ ¹İ¿µµÇ¾î, bounds°¡ transform°ú µ¿±âÈ­µÈ´Ù
+        // transformì˜ ë³€ê²½ì‚¬í•­ì´ ì¦‰ì‹œ ë¬¼ë¦¬ ì—”ì§„ì— ë°˜ì˜ë˜ì–´, boundsê°€ transformê³¼ ë™ê¸°í™”ëœë‹¤
         UnityEngine.Physics2D.SyncTransforms();
 
-        // º¯°æµÈ ¸®½ºÆù Á¤º¸¸¦ »õ·Ó°Ô »ı¼ºµÈ °´Ã¼¿¡ ÇÒ´çÇØÁØ´Ù
+        // ë³€ê²½ëœ ë¦¬ìŠ¤í° ì •ë³´ë¥¼ ìƒˆë¡­ê²Œ ìƒì„±ëœ ê°ì²´ì— í• ë‹¹í•´ì¤€ë‹¤
         actionAreaDataSender.UpdateActionAreaData();
     }
     /// <summary>
-    /// Prefab_MonsterName¿¡ ÀÚ½ÄÀ¸·Î ÀÖ´Â Monster_MonsterNameÀÇ ¸®½ºÆù À§Ä¡¸¦ ¼³Á¤
+    /// Prefab_MonsterNameì— ìì‹ìœ¼ë¡œ ìˆëŠ” Monster_MonsterNameì˜ ë¦¬ìŠ¤í° ìœ„ì¹˜ë¥¼ ì„¤ì •
     /// </summary>
     private void UpdateMonsterPosition(Transform monsterTransform, MonsterDefine.MoveType moveType, MonsterBehaviour.RespawnData respawnData)
     {
-        // Debug.Log("¸®½ºÆùµÈ ¸ó½ºÅÍÀÇ ¸®½ºÆù À§Ä¡ ¾÷µ¥ÀÌÆ®");
+        // Debug.Log("ë¦¬ìŠ¤í°ëœ ëª¬ìŠ¤í„°ì˜ ë¦¬ìŠ¤í° ìœ„ì¹˜ ì—…ë°ì´íŠ¸");
 
         var respawnPos = Vector3.zero;
 
-        // Áö»ó ¸ó½ºÅÍÀÇ ¸®½ºÆù À§Ä¡ ¼³Á¤
+        // ì§€ìƒ ëª¬ìŠ¤í„°ì˜ ë¦¬ìŠ¤í° ìœ„ì¹˜ ì„¤ì •
         if (moveType == MonsterDefine.MoveType.GroundNormal)
         {
             var t = Random.Range(0f, 1f);
@@ -192,7 +192,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
         {
             respawnPos = respawnData.DefaultPrefabPosition;
         }
-        // °øÁß ¸ó½ºÅÍÀÇ ¸®½ºÆù À§Ä¡ ¼³Á¤
+        // ê³µì¤‘ ëª¬ìŠ¤í„°ì˜ ë¦¬ìŠ¤í° ìœ„ì¹˜ ì„¤ì •
         else if (moveType == MonsterDefine.MoveType.FloatingNormal)
         {
             var respawnBounds = respawnData.floatingActionAreaData.RespawnBounds;
@@ -203,7 +203,7 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
 
             respawnPos = new Vector3(posX, posY, posZ);
 
-            // floating monster´Â warp¸¦ »ç¿ëÇÑ´Ù
+            // floating monsterëŠ” warpë¥¼ ì‚¬ìš©í•œë‹¤
             monsterTransform.GetComponent<FloatingMovementModule>().SetPosition(respawnPos);
             return;
         }
@@ -213,10 +213,10 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
 
     private void InstantFunction(MonsterBehaviour monsterBehavior)
     {
-        // TEMP: ¸ó½ºÅÍÀÇ MaterialÀ» º¯°æÇØÁà¾ß 1ÇÁ·¹ÀÓ µ¿¾È ÀÌ¹ÌÁö°¡ º¸ÀÌ´Â ¹ö±×¸¦ ¼öÁ¤ÇÒ ¼ö ÀÖ´Ù.
+        // TEMP: ëª¬ìŠ¤í„°ì˜ Materialì„ ë³€ê²½í•´ì¤˜ì•¼ 1í”„ë ˆì„ ë™ì•ˆ ì´ë¯¸ì§€ê°€ ë³´ì´ëŠ” ë²„ê·¸ë¥¼ ìˆ˜ì •í•  ìˆ˜ ìˆë‹¤.
         monsterBehavior.GetComponent<MaterialController>().InitMaterialForRespawn();
 
-        // TEMP: ¸ó½ºÅÍÀÇ Evaluator¸¦ Àá½Ã ´ë±â½ÃÄÑÁà¾ß ¸®½ºÆùÀÌ ¿Ï·áµÈ ÀÌÈÄ¿¡ ÀÛµ¿ÇÑ´Ù.
+        // TEMP: ëª¬ìŠ¤í„°ì˜ Evaluatorë¥¼ ì ì‹œ ëŒ€ê¸°ì‹œì¼œì¤˜ì•¼ ë¦¬ìŠ¤í°ì´ ì™„ë£Œëœ ì´í›„ì— ì‘ë™í•œë‹¤.
         var evaluators = monsterBehavior.GetComponents<Evaluator>();
         foreach (var evaluator in evaluators)
         {
@@ -226,10 +226,10 @@ public class MonsterRespawnManager : HappyTools.SingletonBehaviourFixed<MonsterR
 
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // MonsterList¸¦ ºñ¿î´Ù
+        // MonsterListë¥¼ ë¹„ìš´ë‹¤
         MonsterList.Clear();
 
-        // ¸ğµç ¸ó½ºÅÍ¸¦ Ã£°í, ¸®½ºÆ®¿¡ Ãß°¡ÇÑ´Ù
+        // ëª¨ë“  ëª¬ìŠ¤í„°ë¥¼ ì°¾ê³ , ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€í•œë‹¤
         var monsterArray = FindObjectsOfType<MonsterBehaviour>();
         MonsterList = new List<MonsterBehaviour>(monsterArray);
     }
