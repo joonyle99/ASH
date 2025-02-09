@@ -149,11 +149,6 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
 
         IsLightOn = true;
 
-        if (SceneContext.Current.CameraController.CurrentCameraType == CameraController.CameraType.Chasing)
-        {
-            InputManager.Instance.ChangeToStayStillSetter();
-        }
-
         if (!_isExplodeDone)
         {
             StartCoroutine(ExplodeCoroutine());
@@ -174,6 +169,18 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
     }
     IEnumerator ExplodeCoroutine()
     {
+        // 보스 랜턴 공격 판단
+        LanternSceneContext lightSceneContext = LanternSceneContext.Current;
+        BossBehaviour bossBehavior = null;
+        if (lightSceneContext != null)
+        {
+            bossBehavior = lightSceneContext.Boss;
+            if (bossBehavior != null)
+            {
+                InputManager.Instance.ChangeToStayStillSetter();
+            }
+        }
+
         float eTime = 0f;
         float originalRadius = _currentSpotLight.pointLightOuterRadius;
         float originalIntensity = _currentSpotLight.intensity;
@@ -203,14 +210,10 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
         _isExplodeDone = true;
 
-        var lightSceneContext = LanternSceneContext.Current;
-        if (lightSceneContext != null)
+        // 보스 랜턴 공격 실행
+        if (bossBehavior != null)
         {
-            var boss = lightSceneContext.Boss;
-            if (boss != null)
-            {
-                lightSceneContext.LenternAttack(new LanternAttack(this, boss));
-            }
+            lightSceneContext.LenternAttack(new LanternAttack(this, bossBehavior));
         }
     }
 
