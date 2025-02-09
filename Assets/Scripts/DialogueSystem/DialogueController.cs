@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ´ÙÀÌ¾ó·Î±×¸¦ ½ÃÀÛÇÏ°í Á¾·áÇÏ´Â ¿ªÇÒÀ» ÇÑ´Ù
+/// ë‹¤ì´ì–¼ë¡œê·¸ë¥¼ ì‹œì‘í•˜ê³  ì¢…ë£Œí•˜ëŠ” ì—­í• ì„ í•œë‹¤
 /// </summary>
 public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueController>
 {
@@ -12,10 +12,10 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
     [SerializeField] private float _dialogueSegmentFadeTime;
 
-    public bool IsDialoguePanel => View.IsDialoguePanelActive;          // ´ëÈ­ ÆĞ³ÎÀÌ ¿­·ÁÀÖ´ÂÁö ¿©ºÎ
-    public bool IsDialogueActive { get; set; } = false;                 // ´ëÈ­°¡ ÁøÇà ÁßÀÎÁö ¿©ºÎ
+    public bool IsDialoguePanel => View.IsDialoguePanelActive;          // ëŒ€í™” íŒ¨ë„ì´ ì—´ë ¤ìˆëŠ”ì§€ ì—¬ë¶€
+    public bool IsDialogueActive { get; set; } = false;                 // ëŒ€í™”ê°€ ì§„í–‰ ì¤‘ì¸ì§€ ì—¬ë¶€
 
-    private DialogueView _view;                                         // ´ÙÀÌ¾ó·Î±× ºä UI
+    private DialogueView _view;                                         // ë‹¤ì´ì–¼ë¡œê·¸ ë·° UI
     public DialogueView View
     {
         get
@@ -36,7 +36,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     {
         if (IsDialogueActive)
         {
-            Debug.Log("´ëÈ­°¡ ÀÌ¹Ì ÁøÇàÁßÀÔ´Ï´Ù");
+            Debug.Log("ëŒ€í™”ê°€ ì´ë¯¸ ì§„í–‰ì¤‘ì…ë‹ˆë‹¤");
             return;
         }
 
@@ -52,33 +52,33 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false, bool canSkip = false)
     {
-        // 1. ´ÙÀÌ¾ó·Î±× ½ÃÄö½º¸¦ »ı¼ºÇÑ´Ù
+        // 1. ë‹¤ì´ì–¼ë¡œê·¸ ì‹œí€€ìŠ¤ë¥¼ ìƒì„±í•œë‹¤
         DialogueSequence dialogueSequence = new DialogueSequence(data);
 
-        // 2. ÀÔ·Â ¼³Á¤ÀÌ ÀÖÀ» °æ¿ì º¯°æ
+        // 2. ì…ë ¥ ì„¤ì •ì´ ìˆì„ ê²½ìš° ë³€ê²½
         if (data.InputSetter != null)
             InputManager.Instance.ChangeInputSetter(data.InputSetter);
 
-        // 3. ´ÙÀÌ¾ó·Î±× ºä UI¸¦ ¿­¾îÁØ´Ù
+        // 3. ë‹¤ì´ì–¼ë¡œê·¸ ë·° UIë¥¼ ì—´ì–´ì¤€ë‹¤
         View.OpenPanel(canSkip);
 
         IsDialogueActive = true;
 
-        // 4. ´ÙÀÌ¾ó·Î±× ½ÃÄö½º ½ÃÀÛ
-        while (!dialogueSequence.IsOver)
+        // 4. ë‹¤ì´ì–¼ë¡œê·¸ ì‹œí€€ìŠ¤ ì‹œì‘
+        while (dialogueSequence.IsOver == false)
         {
             #region Dialogue
 
-            // ´ÙÀÌ¾ó·Î±× ºä UI¿¡ ÇöÀç ¼¼±×¸ÕÆ®¸¦ Ç¥½Ã
+            // ë‹¤ì´ì–¼ë¡œê·¸ ë·° UIì— í˜„ì¬ ì„¸ê·¸ë¨¼íŠ¸ë¥¼ í‘œì‹œ
             View.StartNextSegment(dialogueSequence.CurrentSegment);
 
-            // ÁøÇàÁßÀÎ ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ®°¡ ³¡³¯ ¶§±îÁö ·çÇÁ¸¦ µ¹¸ç ´ë±â
+            // ì§„í–‰ì¤‘ì¸ ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ê°€ ëë‚  ë•Œê¹Œì§€ ë£¨í”„ë¥¼ ëŒë©° ëŒ€ê¸°
             while (!View.IsCurrentSegmentOver)
             {
                 yield return null;
 
-                // (*º¯°æ)½ºÅµ¹öÆ°À» ´©¸£°Å³ª Å°´Ù¿î½Ã ½ºÅµ
-                // ¾î¶² Å°¶óµµ ´­·¯Á³´Ù¸é ½ºÅµ
+                // (*ë³€ê²½)ìŠ¤í‚µë²„íŠ¼ì„ ëˆ„ë¥´ê±°ë‚˜ í‚¤ë‹¤ìš´ì‹œ ìŠ¤í‚µ
+                // ì–´ë–¤ í‚¤ë¼ë„ ëˆŒëŸ¬ì¡Œë‹¤ë©´ ìŠ¤í‚µ
                 if (canSkip && (_isSkipSequence || Input.anyKeyDown))
                 {
                     View.FastForward();
@@ -87,7 +87,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                     yield return null;
                 }
 
-                // CHEAT: F3 Å°¸¦ ´©¸£¸é ÇöÀç Segment¸¦ ºü¸£°Ô ³Ñ±ä´Ù
+                // CHEAT: F3 í‚¤ë¥¼ ëˆ„ë¥´ë©´ í˜„ì¬ Segmentë¥¼ ë¹ ë¥´ê²Œ ë„˜ê¸´ë‹¤
                 if (Input.GetKeyDown(KeyCode.F3) && GameSceneManager.Instance.CheatMode == true)
                 {
                     View.FastForward();
@@ -102,29 +102,29 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
             #region Quest
 
-            // ¸¶Áö¸· ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ®ÀÎ °æ¿ì Äù½ºÆ®°¡ µî·ÏµÇ¾î ÀÖ´ÂÁö È®ÀÎ
+            // ë§ˆì§€ë§‰ ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ì¸ ê²½ìš° í€˜ìŠ¤íŠ¸ê°€ ë“±ë¡ë˜ì–´ ìˆëŠ”ì§€ í™•ì¸
             if (dialogueSequence.IsLastSegment)
             {
-                // ´ÙÀÌ¾ó·Î±×¿¡ Äù½ºÆ®°¡ µî·ÏµÇ¾î ÀÖ´Â °æ¿ì
+                // ë‹¤ì´ì–¼ë¡œê·¸ì— í€˜ìŠ¤íŠ¸ê°€ ë“±ë¡ë˜ì–´ ìˆëŠ” ê²½ìš°
                 if (data.Quest != null)
                 {
-                    // Äù½ºÆ®¸¦ Ã³À½ ¹ŞÀº °æ¿ì, ÀÚµ¿ ¼ö¶ô
+                    // í€˜ìŠ¤íŠ¸ë¥¼ ì²˜ìŒ ë°›ì€ ê²½ìš°, ìë™ ìˆ˜ë½
                     if (data.Quest.IsFirst)
                     {
                         data.Quest.IsFirst = false;
 
                         QuestController.Instance.AcceptQuest(data.Quest);
                     }
-                    else if(data.IsResponseDialougue)
+                    else if (data.IsResponseDialougue)
                     {
                         List<ResponseContainer> contaienr = new List<ResponseContainer>();
                         contaienr.Add(new ResponseContainer(ResponseButtonType.Accept, () => QuestController.Instance.AcceptQuest(data.Quest)));
                         contaienr.Add(new ResponseContainer(ResponseButtonType.Reject, () => QuestController.Instance.RejectQuest(data.Quest)));
 
-                        // Äù½ºÆ® ÀÀ´ä ÆĞ³ÎÀ» ¿¬´Ù
+                        // í€˜ìŠ¤íŠ¸ ì‘ë‹µ íŒ¨ë„ì„ ì—°ë‹¤
                         View.OpenResponsePanel(contaienr);
 
-                        // Handler: ÀÌº¥Æ®°¡ ¹ß»ıÇßÀ» ¶§ È£ÃâµÇ´Â ÇÔ¼ö¸¦ ÁöÄªÇÑ´Ù (¿ÉÀú¹ö ÆĞÅÏ)
+                        // Handler: ì´ë²¤íŠ¸ê°€ ë°œìƒí–ˆì„ ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜ë¥¼ ì§€ì¹­í•œë‹¤ (ì˜µì €ë²„ íŒ¨í„´)
                         var isClicked = false;
                         void ResponseHandler()
                         {
@@ -137,10 +137,10 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                         View.ResponsePanel.Reject.onClick.RemoveListener(ResponseHandler);
                         View.ResponsePanel.Reject.onClick.AddListener(ResponseHandler);
 
-                        // ÇØ´ç Äù½ºÆ®°¡ ¼ö¶ô / °ÅÀıµÇ±â Àü±îÁö ´ë±â
+                        // í•´ë‹¹ í€˜ìŠ¤íŠ¸ê°€ ìˆ˜ë½ / ê±°ì ˆë˜ê¸° ì „ê¹Œì§€ ëŒ€ê¸°
                         yield return new WaitUntil(() => isClicked);
 
-                        // Äù½ºÆ® ÀÀ´ä Á¾·á »ç¿îµå Àç»ı
+                        // í€˜ìŠ¤íŠ¸ ì‘ë‹µ ì¢…ë£Œ ì‚¬ìš´ë“œ ì¬ìƒ
                         SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
                     }
                 }
@@ -148,20 +148,20 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
             #endregion
 
-            // ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ®°¡ ³¡³­ ÈÄ ´ë±â ½Ã°£¸¸Å­ ´ë±â
+            // ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ê°€ ëë‚œ í›„ ëŒ€ê¸° ì‹œê°„ë§Œí¼ ëŒ€ê¸°
             yield return StartCoroutine(View.ClearTextCoroutine(_dialogueSegmentFadeTime));
 
-            // ´ÙÀ½ ´ÙÀÌ¾ó·Î±× ¼¼±×¸ÕÆ®·Î ÀÌµ¿
+            // ë‹¤ìŒ ë‹¤ì´ì–¼ë¡œê·¸ ì„¸ê·¸ë¨¼íŠ¸ë¡œ ì´ë™
             dialogueSequence.MoveNext();
         }
 
-        // 5. ´ÙÀÌ¾ó·Î±× ºä UI¸¦ ´İ¾ÆÁØ´Ù
+        // 5. ë‹¤ì´ì–¼ë¡œê·¸ ë·° UIë¥¼ ë‹«ì•„ì¤€ë‹¤
         View.ClosePanel();
 
         if (!isContinueDialogue)
             IsDialogueActive = false;
 
-        // 6. ´ÙÀÌ¾ó·Î±× ½ÃÄö½º°¡ ³¡³µ±â ¶§¹®¿¡ ÀÔ·Â ¼³Á¤À» ±âº»°ªÀ¸·Î º¯°æ
+        // 6. ë‹¤ì´ì–¼ë¡œê·¸ ì‹œí€€ìŠ¤ê°€ ëë‚¬ê¸° ë•Œë¬¸ì— ì…ë ¥ ì„¤ì •ì„ ê¸°ë³¸ê°’ìœ¼ë¡œ ë³€ê²½
         if (data.InputSetter != null)
             InputManager.Instance.ChangeToDefaultSetter();
 
@@ -174,13 +174,13 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     {
         if (_currentDialogueCoroutine == null)
         {
-            // Debug.Log("´ëÈ­°¡ ÁøÇà ÁßÀÌ ¾Æ´Õ´Ï´Ù");
+            // Debug.Log("ëŒ€í™”ê°€ ì§„í–‰ ì¤‘ì´ ì•„ë‹™ë‹ˆë‹¤");
             return;
         }
 
         if (_currentDialogueData == null)
         {
-            Debug.LogError("´ëÈ­°¡ ÁøÇà ÁßÀÌÁö¸¸ ´ëÈ­ µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù");
+            Debug.LogError("ëŒ€í™”ê°€ ì§„í–‰ ì¤‘ì´ì§€ë§Œ ëŒ€í™” ë°ì´í„°ê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤");
             return;
         }
 
@@ -202,7 +202,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
     public void SkipDialogue()
     {
-        if(!View.IsCurrentSegmentOver)
+        if (!View.IsCurrentSegmentOver)
         {
             _isSkipSequence = true;
         }
@@ -210,7 +210,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
     private void SetCurrentDialogueData(bool playAtFirst)
     {
-        if(_currentDialogueData)
+        if (_currentDialogueData)
         {
             _currentDialogueData.PlayAtFirst = playAtFirst;
         }

@@ -47,7 +47,7 @@ public class BossDungeonManager : HappyTools.SingletonBehaviourFixed<BossDungeon
         if (IsFirstKeyObtained == false)
         {
             IsFirstKeyObtained = true;
-            DialogueController.Instance.StartDialogue(_firstKeyDialogue);
+            DialogueController.Instance.StartDialogue(_firstKeyDialogue, false);
         }
     }
 

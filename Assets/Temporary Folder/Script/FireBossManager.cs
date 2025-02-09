@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using static SceneTransitionPlayer;
+using System.Collections.Generic;
 
 public class FireBossManager : MonoBehaviour
 {
@@ -43,6 +44,9 @@ public class FireBossManager : MonoBehaviour
 
     [Space]
 
+    // ë§ˆì§€ë§‰ ëŒ€í™”
+    [SerializeField] private DialogueData _dialogueData;
+
     [SerializeField] private SoundList _soundList;
 
     // fire find cutscene
@@ -53,7 +57,7 @@ public class FireBossManager : MonoBehaviour
     }
     public void SetCameraBoundaries()
     {
-        // Ã³À½¿¡ °ÔÀÓ ¿ÀºêÁ§Æ®°¡ ºñÈ°¼ºÈ­µÇ¾î ÀÖÀ¸¸é Bounds°¡ À¯È¿ÇÏÁö ¾Ê±â ¶§¹®¿¡ ¿©±â¼­ °¡Á®¿Â´Ù
+        // ì²˜ìŒì— ê²Œì„ ì˜¤ë¸Œì íŠ¸ê°€ ë¹„í™œì„±í™”ë˜ì–´ ìˆìœ¼ë©´ Boundsê°€ ìœ íš¨í•˜ì§€ ì•Šê¸° ë•Œë¬¸ì— ì—¬ê¸°ì„œ ê°€ì ¸ì˜¨ë‹¤
         var leftWallCollider = _invisibleWall_Left.GetComponent<BoxCollider2D>();
         var rightWallCollider = _invisibleWall_Right.GetComponent<BoxCollider2D>();
 
@@ -114,19 +118,19 @@ public class FireBossManager : MonoBehaviour
         yield return new WaitForSeconds(_lastEmittingWaitTime);
         */
 
-        // screen fade out => 2ÃÊ
+        // screen fade out => 2ì´ˆ
         yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(_fadeDuration, FadeType.Darken);
 
-        // waiting => 2ÃÊ
+        // waiting => 2ì´ˆ
         yield return new WaitForSeconds(_fadeWaitTime);
         SceneEffectManager.Instance.Camera.StopConstantShake();
         _rageEffectEmitting.gameObject.SetActive(false);
         _rageEffectStaying.gameObject.SetActive(true);
 
-        // screen fade in => 2ÃÊ
+        // screen fade in => 2ì´ˆ
         yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(_fadeDuration, FadeType.Dim);
 
-        // effect fade out => 2ÃÊ
+        // effect fade out => 2ì´ˆ
         var particleRenderer = _rageEffectStaying.ParticleSystem.GetComponent<ParticleSystemRenderer>();
         var particleMaterial = particleRenderer.material;
 
@@ -179,10 +183,10 @@ public class FireBossManager : MonoBehaviour
         // fireTransform.GetChild(0).position = _warpPoint.position;
         // _fireRigidbody.position = _warpPoint.position;
 
-        // TODO: ÀÌ»óÇÏ°Ô µ¿ÀÛÇÑ´Ù
+        // TODO: ì´ìƒí•˜ê²Œ ë™ì‘í•œë‹¤
 
-        fireTransform.position = _warpPoint.position;               // ÅÚ·¹Æ÷Æ® ÀÌµ¿
-        fireTransform.localScale = startScale;                      // ¿ø·¡ Å©±â·Î µÇµ¹¸²
+        fireTransform.position = _warpPoint.position;               // í…”ë ˆí¬íŠ¸ ì´ë™
+        fireTransform.localScale = startScale;                      // ì›ë˜ í¬ê¸°ë¡œ ë˜ëŒë¦¼
 
         effectObject.SetActive(false);
     }
@@ -193,13 +197,13 @@ public class FireBossManager : MonoBehaviour
 
     public void ActiveCameraChasing()
     {
-        _chasingCamera.enabled = true;          // chasing cameraÀÇ OnEnable¿¡¼­ event listener¸¦ µî·ÏÇÏ´Â ·ÎÁ÷ÀÌ ½ÇÇàµÈ´Ù
+        _chasingCamera.enabled = true;          // chasing cameraì˜ OnEnableì—ì„œ event listenerë¥¼ ë“±ë¡í•˜ëŠ” ë¡œì§ì´ ì‹¤í–‰ëœë‹¤
         _chasingCamera.StartChasing();
     }
     public void DeActiveCameraChasing()
     {
         _chasingCamera.StopChasing();
-        _chasingCamera.enabled = false;         // chasing cameraÀÇ OnDisable¿¡¼­ event listener¸¦ ÇØÁ¦ÇÏ´Â ·ÎÁ÷ÀÌ ½ÇÇàµÈ´Ù
+        _chasingCamera.enabled = false;         // chasing cameraì˜ OnDisableì—ì„œ event listenerë¥¼ í•´ì œí•˜ëŠ” ë¡œì§ì´ ì‹¤í–‰ëœë‹¤
     }
     public void StartCameraChasing()
     {
@@ -208,5 +212,51 @@ public class FireBossManager : MonoBehaviour
     public void StopCameraChasing()
     {
         _chasingCamera.StopChasing();
+    }
+
+    public IEnumerator StartLastDialogue()
+    {
+        // ì´ë ‡ê²Œ í•˜ë©´ ê·¸ëƒ¥ ëŒ€í™”ì°½ì„ ë„˜ê²¨ë²„ë¦¬ë©´ .. ì•ˆë˜ë‹ˆê¹Œ,,
+
+        // ì•„ì‰½ê²Œë„ ë§ˆì§€ë§‰ ëŒ€í™”ì°½ì„ ìœ ì§€ì‹œí‚¤ì§€ëŠ” ëª»í•  ê²ƒ ê°™ë‹¤.
+        DialogueController.Instance.StartDialogue(_dialogueData, false);
+
+        // ì‘ë‹µ íŒ¨ë„ ì—´ê¸°
+        // ì´ ì‘ë‹µ íŒ¨ë„ì€ ì¢€ ìƒˆë¡œìš´ í˜•íƒœë¡œ ë§Œë“¤ì–´ë„ ë  ê±° ê°™ê¸°ë„..?
+        var view = DialogueController.Instance.View;
+
+        List<ResponseContainer> responseFunctions = new List<ResponseContainer>();
+        responseFunctions.Add(new ResponseContainer(ResponseButtonType.Accept, Accept));
+        responseFunctions.Add(new ResponseContainer(ResponseButtonType.Reject, Reject));
+        view.OpenResponsePanel(responseFunctions);
+
+        // Handler: ì´ë²¤íŠ¸ê°€ ë°œìƒí–ˆì„ ë•Œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜ë¥¼ ì§€ì¹­í•œë‹¤ (ì˜µì €ë²„ íŒ¨í„´)
+        var isClicked = false;
+        void ResponseHandler()
+        {
+            isClicked = true;
+            view.ResponsePanel.Accept.onClick.RemoveListener(ResponseHandler);
+            view.ResponsePanel.Reject.onClick.RemoveListener(ResponseHandler);
+        }
+        view.ResponsePanel.Accept.onClick.RemoveListener(ResponseHandler);
+        view.ResponsePanel.Accept.onClick.AddListener(ResponseHandler);
+        view.ResponsePanel.Reject.onClick.RemoveListener(ResponseHandler);
+        view.ResponsePanel.Reject.onClick.AddListener(ResponseHandler);
+
+        // í•´ë‹¹ í€˜ìŠ¤íŠ¸ê°€ ìˆ˜ë½ / ê±°ì ˆë˜ê¸° ì „ê¹Œì§€ ëŒ€ê¸°
+        yield return new WaitUntil(() => isClicked);
+
+        // í€˜ìŠ¤íŠ¸ ì‘ë‹µ ì¢…ë£Œ ì‚¬ìš´ë“œ ì¬ìƒ
+        SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
+    }
+    private void Accept()
+    {
+        Debug.Log("Accept");
+        DialogueController.Instance.ShutdownDialogue();
+    }
+    private void Reject()
+    {
+        Debug.Log("Reject");
+        DialogueController.Instance.ShutdownDialogue();
     }
 }
