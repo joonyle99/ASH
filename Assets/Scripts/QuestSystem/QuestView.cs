@@ -18,7 +18,7 @@ public class QuestView : MonoBehaviour, ISceneContextBuildListener
 
     public void OnSceneContextBuilt()
     {
-        var currentQuest = QuestController.Instance.CurrentQuest;
+        var currentQuest = QuestController.Instance.GlobalQuest;
         if (currentQuest != null && currentQuest.QuestData != null && currentQuest.IsActive == true)
         {
             UpdatePanel(currentQuest);

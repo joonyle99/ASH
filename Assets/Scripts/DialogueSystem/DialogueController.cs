@@ -108,8 +108,6 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                 // 다이얼로그에 퀘스트가 등록되어 있는 경우
                 if (data.Quest != null)
                 {
-                    Debug.Log("퀘스트가 등록되어 있다");
-
                     if (data.Quest.IsAutoFirst == true)
                     {
                         data.Quest.IsAutoFirst = false;
@@ -120,8 +118,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                     {
                         // 수락 / 버튼 리스너 컨테이너 생성
                         List<ResponseContainer> container = new List<ResponseContainer>();
-                        container.Add(new ResponseContainer(ResponseButtonType.Accept, () => data.Quest.OnEndingAccept?.Invoke()));
-                        container.Add(new ResponseContainer(ResponseButtonType.Reject, () => data.Quest.OnEndingReject?.Invoke()));
+                        container.Add(new ResponseContainer(ResponseButtonType.Accept, () => data.Quest.OnAccept?.Invoke()));
+                        container.Add(new ResponseContainer(ResponseButtonType.Reject, () => data.Quest.OnReject?.Invoke()));
 
                         // 퀘스트 응답 패널을 연다 (+ 리스너 컨테이너 등록)
                         View.OpenResponsePanel(container);

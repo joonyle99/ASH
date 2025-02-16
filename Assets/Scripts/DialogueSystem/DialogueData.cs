@@ -41,18 +41,22 @@ public class DialogueData : ScriptableObject
             _scriptText = _script.text;
         }
     }
+    private void OnEnable()
+    {
+        _quest = null;
+    }
 
     /// <summary>
     /// Quest를 DialogueData에 연결한다
     /// </summary>
     public void LinkQuestData(Quest quest)
     {
-        Debug.Log("다이얼로그에 퀘스트 연결 성공");
+        Debug.Log("[Success] - link quest data to dialogue data");
         this.Quest = quest;
     }
     public void UnlinkQuestData()
     {
-        Debug.Log("다이얼로그에서 퀘스트 해제 성공");
+        Debug.Log("[Failure] - link quest data to dialogue data");
         this.Quest = null;
     }
 

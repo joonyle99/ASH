@@ -21,9 +21,6 @@ public class Merchant : InteractableObject
     [Header("Merchant")]
     [Space]
 
-    [SerializeField] private Quest _quest;
-    public Quest Quest => _quest;
-
     [SerializeField] private List<DialogueDictionary> _dialogueCollection = new List<DialogueDictionary>();
 
     private Coroutine _interactCoroutine;
@@ -37,17 +34,15 @@ public class Merchant : InteractableObject
     {
         if (_interactCoroutine != null)
         {
-            Debug.LogWarning($"이미 상호작용 코루틴이 실행 중입니다");
+            Debug.LogWarning($"이미 상호작용 중입니다");
             return;
         }
 
-        Quest currentQuest = QuestController.Instance.CurrentQuest;
-        if (currentQuest != null && currentQuest.QuestData != null && currentQuest.IsActive == true)
+        Quest globalQuest = QuestController.Instance.GlobalQuest;
+        if (globalQuest != null && globalQuest.QuestData != null)
         {
-            _quest = currentQuest;
+            _interactCoroutine = StartCoroutine(OnInteractCoroutine(globalQuest));
         }
-
-        _interactCoroutine = StartCoroutine(OnInteractCoroutine(_quest));
     }
 
     private IEnumerator OnInteractCoroutine(Quest nowQuest)
@@ -61,6 +56,7 @@ public class Merchant : InteractableObject
             if (nowQuest.IsComplete())
             {
                 Debug.Log("Complete Quest");
+
                 string completionString = "Completion " + (nowQuest.CurrentRepeatCount + 1).ToString();
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == completionString).Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
@@ -73,6 +69,7 @@ public class Merchant : InteractableObject
             else
             {
                 Debug.Log("Not Succeeded Quest");
+
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Not Yet Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 DialogueController.Instance.StartDialogue(dialogueData, false);
@@ -83,18 +80,20 @@ public class Merchant : InteractableObject
         else
         {
             // 최대 반복 횟수에 도달
-            if (!nowQuest.IsRepeatable())
+            if (nowQuest.IsRepeatable() == false)
             {
                 Debug.Log("Already Max Repeat Quest Count Played");
+
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "Final Completion").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
                 DialogueController.Instance.StartDialogue(dialogueData, false);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
             }
             // 퀘스트 첫 등록 (자동 수락)
-            else if (nowQuest.IsAutoFirst)
+            else if (nowQuest.IsAutoFirst == true)
             {
                 Debug.Log("Accept Quest At First");
+
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "First Meeting").Value;
                 if (CheckInvalid(dialogueData) == true) yield break;
 
@@ -107,6 +106,7 @@ public class Merchant : InteractableObject
             else
             {
                 Debug.Log("Accept Quest After Secend Time");
+
                 /*
                  * 어색해서 주석 처리함
                  * 
@@ -133,8 +133,10 @@ public class Merchant : InteractableObject
                 DialogueData dialogueData3;
 
                 // 수락 시
-                if (nowQuest.IsAcceptedBefore)
+                if (nowQuest.IsAcceptedBefore == true)
                 {
+                    Debug.Log("수락 합니다");
+
                     dialogueData3 = _dialogueCollection.FirstOrDefault(d => d.Key == "Acception").Value;
                     if (CheckInvalid(dialogueData3) == true) yield break;
                     DialogueController.Instance.StartDialogue(dialogueData3, false);
@@ -143,6 +145,8 @@ public class Merchant : InteractableObject
                 // 거절 시
                 else
                 {
+                    Debug.Log("거절 합니다");
+
                     dialogueData3 = _dialogueCollection.FirstOrDefault(d => d.Key == "Rejection").Value;
                     if (CheckInvalid(dialogueData3) == true) yield break;
                     DialogueController.Instance.StartDialogue(dialogueData3, false);
@@ -171,14 +175,5 @@ public class Merchant : InteractableObject
         }
 
         return false;
-    }
-
-    public void AcceptCallback()
-    {
-        QuestController.Instance.AcceptQuest(_quest);
-    }
-    public void RejectCallback()
-    {
-        QuestController.Instance.RejectQuest(_quest);
     }
 }

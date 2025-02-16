@@ -9,11 +9,12 @@ using UnityEngine.Events;
 /// 현재 Quest 클래스는 Merchant와 Ending에서 사용하고 있는데
 /// 이를 고려하여 문제가 없을지 확인하고, 재작업이 필요하다면 수정해야 한다.
 /// </summary>
-public class Quest : MonoBehaviour
+[System.Serializable]
+public class Quest
 {
     #region Attribute
 
-    [SerializeField] private QuestData _questData;
+    [SerializeField] private QuestData _questData; // GoalCount과 RewardAmount를 가지고 있는 ScriptableObject
     public QuestData QuestData => _questData;
 
     [Space]
@@ -55,10 +56,10 @@ public class Quest : MonoBehaviour
     [Space]
 
     [Header("Callback")]
-    [SerializeField] private UnityEvent _onEndingAccept;
-    public UnityEvent OnEndingAccept => _onEndingAccept;
-    [SerializeField] private UnityEvent _onEndingReject;
-    public UnityEvent OnEndingReject => _onEndingReject;
+    [SerializeField] private UnityEvent _onAccept;
+    public UnityEvent OnAccept => _onAccept;
+    [SerializeField] private UnityEvent _onReject;
+    public UnityEvent OnReject => _onReject;
 
     public bool IsAutoFirst
     {
@@ -76,6 +77,8 @@ public class Quest : MonoBehaviour
         set => _isAcceptedBefore = value;
     }
 
+    public bool CanRepeat => _currentRepeatCount < _maxRepeatCount;
+
     #endregion
 
     #region Function
@@ -90,15 +93,16 @@ public class Quest : MonoBehaviour
     {
         SceneContext.Current.Player.IncreaseMaxHp(_questData.RewardAmount);
 
-        _currentRepeatCount++;
         _currentCount = 0;
+        _currentRepeatCount++;
 
         IsActive = false;
+        IsAcceptedBefore = false;
     }
 
     public bool IsComplete()
     {
-        return CurrentCount >= _questData.GoalCount;
+        return _currentCount >= _questData.GoalCount;
     }
     public bool IsRepeatable()
     {

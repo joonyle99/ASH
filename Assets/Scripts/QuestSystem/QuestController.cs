@@ -6,8 +6,8 @@ using UnityEngine;
 /// </summary>
 public class QuestController : HappyTools.SingletonBehaviourFixed<QuestController>
 {
-    private Quest _currentQuest;
-    public Quest CurrentQuest => _currentQuest;
+    [SerializeField] private Quest _globalQuest;
+    public Quest GlobalQuest => _globalQuest;
 
     private QuestView _view;
     public QuestView View 
@@ -20,24 +20,27 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
         }
     }
 
+    public void AcceptQuest()
+    {
+        _globalQuest.IsActive = true;
+        _globalQuest.IsAcceptedBefore = true;
+
+        View.UpdatePanel(_globalQuest);
+        View.OpenPanel();
+    }
+    public void RejectQuest()
+    {
+        _globalQuest.IsAcceptedBefore = false;
+    }
     public void AcceptQuest(Quest quest)
     {
-        // 싱글톤 객체인 QuestController에 새로운 퀘스트 인스턴스를 생성
-        // 얕은 복사이지만 퀘스트는 값만 가지고 있기 때문에 상관 없음 (QuestData는 전역 참조)
-        // _currentQuest = new Quest(quest);
-
-        // 참조 할당 씬의 객체와 동기화된다는 장점이 있지만,
-        // 씬을 이동하면 해당 객체는 파괴되기 때문에 참조가 끊김.
-
-        // DontDestroyOnLoad(quest.gameObject);
-
         quest.IsActive = true;
         quest.IsAcceptedBefore = true;
 
         View.UpdatePanel(quest);
         View.OpenPanel();
 
-        _currentQuest = quest;
+        _globalQuest = quest;
     }
     public void RejectQuest(Quest quest)
     {
@@ -49,14 +52,11 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
         View.ClosePanel();
 
         // 퀘스트 완료 이벤트 발생
-        _currentQuest.CompleteProcess();
-
-        // 현재 실행 중인 퀘스트 해제
-        _currentQuest = null;
+        _globalQuest.CompleteProcess();
     }
     public void UpdateQuest()
     {
         // 퀘스트 데이터를 뷰에 전달
-        View.UpdatePanel(_currentQuest);
+        View.UpdatePanel(_globalQuest);
     }
 }
