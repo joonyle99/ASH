@@ -217,17 +217,31 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     /// <param name="targetSource">null이 아닌 경우 특정 오디오 소스를 사용, audioSource를 
     /// 지정해 주면 _playingBgmPlayer에 대한 전처리 및 후처리 해야함</param>
     /// <returns></returns>
-    public void PlayCommonBGMFade(string key, float duration, AudioSource newBgmPlayer = null, float volumeMultiplier = 1f)
+    public bool PlayCommonBGMFade(string key, float duration, AudioSource newBgmPlayer = null, float volumeMultiplier = 1f)
     {
         if (!_soundListIndexMap.TryGetValue(key, out var soundListIndex))
         {
             Debug.LogWarning("No BGM matching: " + key);
-            return;
+            return false;
+        }
+
+        SoundClipData newClip = _soundLists[soundListIndex].GetSoundClipData(key);
+        if (newClip == null)
+        {
+            Debug.Log($"Invalid sound clip data called");
+
+            return false;
+        }
+
+        if (_playingBgmPlayer.clip != null && newClip.Clip.name == _playingBgmPlayer.clip.name)
+        {
+            Debug.Log("Already playing clip : " + key);
+            return false;
         }
 
         if (newBgmPlayer == null)
         {
-            if (_anyBgmFadeInOutPlaying) return;
+            if (_anyBgmFadeInOutPlaying) return false;
             
             if(_mainBgmPlayer.isPlaying)
             {
@@ -241,31 +255,25 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             if(newBgmPlayer.isPlaying)
             {
                 Debug.Log($"All bgm player used, dont play bgm with fadein");
-                return;
+                return false;
             }
         }
+
         _playingBgmPlayer = newBgmPlayer;
 
         _anyBgmFadeInOutPlaying = true;
-        StartCoroutine(BGMFadeInCoroutine(key, soundListIndex, duration, newBgmPlayer));
+        StartCoroutine(BGMFadeInCoroutine(key, newClip, duration, newBgmPlayer));
+
+        return true;
     }
 
-    private IEnumerator BGMFadeInCoroutine(string key, int soundListIndex, float duration, AudioSource newBgmPlayer)
+    private IEnumerator BGMFadeInCoroutine(string key, SoundClipData soundClipData, float duration, AudioSource newBgmPlayer)
     {
         float eTime = 0f;
         float originalChannelVolume = 1;
 
-        SoundClipData newClip = _soundLists[soundListIndex].GetSoundClipData(key);
-
-        if(newClip == null)
-        {
-            Debug.Log($"Invalid sound clip data called");
-
-            yield break;
-        }
-
         newBgmPlayer.volume = 0;
-        newBgmPlayer.clip = newClip.Clip;
+        newBgmPlayer.clip = soundClipData.Clip;
         newBgmPlayer.Play();
 
         while (eTime < duration)
@@ -294,9 +302,11 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             return;
         }
 
-        PlayCommonBGMFade(fadeinKey, fadeinDuration);
-        AudioSource _waitingBgmPlayer = _playingBgmPlayer == _mainBgmPlayer ? _subBgmPlayer : _mainBgmPlayer;
-        StopBGMFade(fadeoutDuration, _waitingBgmPlayer);
+        if(PlayCommonBGMFade(fadeinKey, fadeinDuration))
+        {
+            AudioSource _waitingBgmPlayer = _playingBgmPlayer == _mainBgmPlayer ? _subBgmPlayer : _mainBgmPlayer;
+            StopBGMFade(fadeoutDuration, _waitingBgmPlayer);
+        }
     }
     public void PlayCommonBGMForScene(string sceneName)
     {
