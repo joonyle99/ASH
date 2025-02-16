@@ -9,12 +9,13 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 {
     [SerializeField] private GameObject _soundListParent;
 
-    private AudioSource _playingBgmPlayer;
+    private List<AudioSource> _playingBgmPlayers = new List<AudioSource>();
     //_playingBgmPlayer의 상호배제 위함
+    //fade in과 out을 동시에 사용하기 원하면 BGMFadeInOut함수 호출 바람
     private bool _anyBgmFadeInOutPlaying = false;
-
-    [SerializeField] private AudioSource _mainBgmPlayer;
-    [SerializeField] private AudioSource _subBgmPlayer;
+    
+    //해당 게임 오브젝트에 bgm으로 사용할 audio source 추가
+    [SerializeField] private GameObject _bgmPlayer;
 
     [SerializeField] private AudioSource _sfxPlayer;
 
@@ -49,7 +50,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         }
 
         _pitchedSFXPlayer[PitchPrecision] = _sfxPlayer;
-        _playingBgmPlayer = _mainBgmPlayer;
     }
 
 #if UNITY_EDITOR
@@ -171,18 +171,20 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     }
     public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f)
     {
-        if (clip == _mainBgmPlayer.clip)
+        if (CheckPlayingClip(clip))
         {
             Debug.Log($"Already Playing this Audio Clip" +
                              $"\n" +
-                             $"<color=yellow>New Audio Source</color>: {clip.name} <color=green>Old Audio Source</color>: {_playingBgmPlayer.clip.name}");
+                             $"<color=yellow>New Audio Source</color>: {clip.name}");
             return;
         }
 
-        _mainBgmPlayer.Stop();
-        _mainBgmPlayer.clip = clip;
-        _mainBgmPlayer.volume = volumeMultiplier;
-        _mainBgmPlayer.Play();
+        AudioSource currentBgmPlayer = GetRestBgmPlayer();
+        currentBgmPlayer.Stop();
+        currentBgmPlayer.clip = clip;
+        currentBgmPlayer.volume = volumeMultiplier;
+        currentBgmPlayer.Play();
+        _playingBgmPlayers.Add(currentBgmPlayer);
     }
 
     // play common sound (searching in sound list which sound manager has)
@@ -226,16 +228,11 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         }
 
         SoundClipData newClip = _soundLists[soundListIndex].GetSoundClipData(key);
-        if (newClip == null)
-        {
-            Debug.Log($"Invalid sound clip data called");
 
-            return false;
-        }
-
-        if (_playingBgmPlayer.clip != null && newClip.Clip.name == _playingBgmPlayer.clip.name)
+        if(CheckPlayingClip(newClip.Clip))
         {
-            Debug.Log("Already playing clip : " + key);
+            Debug.Log($"Already playing clip : {newClip.Clip}");
+
             return false;
         }
 
@@ -243,23 +240,10 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         {
             if (_anyBgmFadeInOutPlaying) return false;
             
-            if(_mainBgmPlayer.isPlaying)
-            {
-                newBgmPlayer = _subBgmPlayer;
-            }
-            else
-            {
-                newBgmPlayer = _mainBgmPlayer;
-            }
-
-            if(newBgmPlayer.isPlaying)
-            {
-                Debug.Log($"All bgm player used, dont play bgm with fadein");
-                return false;
-            }
+            newBgmPlayer = GetRestBgmPlayer();
         }
 
-        _playingBgmPlayer = newBgmPlayer;
+        _playingBgmPlayers.Add(newBgmPlayer);
 
         _anyBgmFadeInOutPlaying = true;
         StartCoroutine(BGMFadeInCoroutine(key, newClip, duration, newBgmPlayer));
@@ -294,52 +278,68 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         _anyBgmFadeInOutPlaying = false;
     }
 
-    private void BGMFadeInOut(string fadeinKey, float fadeinDuration, float fadeoutDuration)
+    private void BGMFadeInOut(string fadeinKey, float fadeinDuration, string exceptionFadeoutKey, float fadeoutDuration)
     {
         if(!_soundListIndexMap.ContainsKey(fadeinKey))
         {
-            Debug.LogWarning("No BGM matching: " + fadeinKey);
+            Debug.LogWarning("No BGM matching with fadein: " + fadeinKey);
             return;
         }
 
-        if(PlayCommonBGMFade(fadeinKey, fadeinDuration))
+        if (!_soundListIndexMap.TryGetValue(exceptionFadeoutKey, out var soundListIndex))
         {
-            AudioSource _waitingBgmPlayer = _playingBgmPlayer == _mainBgmPlayer ? _subBgmPlayer : _mainBgmPlayer;
-            StopBGMFade(fadeoutDuration, _waitingBgmPlayer);
+            Debug.LogWarning("No BGM matching with fadeout: " + exceptionFadeoutKey);
+            return;
+        }
+
+
+        if (PlayCommonBGMFade(fadeinKey, fadeinDuration))
+        {
+            SoundClipData exceptionFadeoutClipData = _soundLists[soundListIndex].GetSoundClipData(exceptionFadeoutKey);
+            SoundClipData newClip = _soundLists[soundListIndex].GetSoundClipData(fadeinKey);
+
+            for (int i = 0; i < _playingBgmPlayers.Count; i++)
+            {
+                if (_playingBgmPlayers[i].clip != exceptionFadeoutClipData.Clip &&
+                    _playingBgmPlayers[i].clip != newClip.Clip)
+                {
+                    StopBGMFade(fadeoutDuration, _playingBgmPlayers[i]);
+                }
+            }
         }
     }
     public void PlayCommonBGMForScene(string sceneName)
     {
         if (GameSceneManager.IsOpeningScene(sceneName))
         {
-            BGMFadeInOut("MainTheme", 5, 5);
+            BGMFadeInOut("MainTheme", 5, "Dungeon_Wave", 5);
             //PlayCommonBGM("MainTheme");
         }
         else if (GameSceneManager.IsExploration1(sceneName))
         {
-            BGMFadeInOut("Exploration1", 5, 5);
+            BGMFadeInOut("Exploration1", 5, "Dungeon_Wave", 5);
             //PlayCommonBGM("Exploration1");
         }
         else if (GameSceneManager.IsExploration2(sceneName))
         {
-            BGMFadeInOut("Exploration2", 5, 5);
+            BGMFadeInOut("Exploration2", 5, "Dungeon_Wave", 5);
             //PlayCommonBGM("Exploration2");
         }
         else if (GameSceneManager.IsBossDungeon1(sceneName)
             || GameSceneManager.IsBossDungeon2(sceneName)
             || GameSceneManager.IsBossScene(sceneName))
         {
-            BGMFadeInOut("BossDungeon1", 5, 5);
+            BGMFadeInOut("BossDungeon1", 5, "Dungeon_Wave", 5);
             //PlayCommonBGM("BossDungeon1");
         }
         else if (GameSceneManager.IsEndingScene(sceneName))
         {
-            BGMFadeInOut("EndingTheme", 5, 5);
+            BGMFadeInOut("EndingTheme", 5, "Dungeon_Wave", 5);
             //PlayCommonBGM("EndingTheme");
         }
         else
         {
-            BGMFadeInOut("BasicBGM", 5, 5);
+            BGMFadeInOut("BasicBGM", 5, "Dungeon_Wave", 5);
             // 기본 BGM 재생
             //PlayCommonBGM("BasicBGM");
         }
@@ -348,7 +348,10 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     // stop bgm sound
     public void StopBGM()
     {
-        _playingBgmPlayer.Stop();
+        for (int i = 0; i < _playingBgmPlayers.Count; i++)
+        {
+            _playingBgmPlayers[i].Stop();
+        }
     }
     /// <summary>
     /// 일반적으로 현재 플레이 중인 bgm을 페이드 아웃하여 멈춤,
@@ -362,10 +365,15 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     {
         if (targetSource == null)
         {
-            if (_anyBgmFadeInOutPlaying) return;
-
-            targetSource = _playingBgmPlayer;
+            if (_anyBgmFadeInOutPlaying)
+            {
+                Debug.Log($"Any bgm fade in(or out) coroutine playing");
+                return;
+            }
+            Debug.Log($"Want to stop fadeout target player is null");
+            return;
         }
+
 
         _anyBgmFadeInOutPlaying = true;
 
@@ -395,12 +403,38 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             targetSource.Stop();
         }
 
-        if(targetSource == _playingBgmPlayer)
-            _playingBgmPlayer = _mainBgmPlayer;
+        _playingBgmPlayers.Remove(targetSource);
 
         _anyBgmFadeInOutPlaying = false;
     }
 
+    private AudioSource GetRestBgmPlayer()
+    {
+        AudioSource[] bgmSources = _bgmPlayer.GetComponents<AudioSource>();
+        for(int i = 0; i < bgmSources.Length; i++)
+        {
+            if (!bgmSources[i].isPlaying)
+            {
+                return bgmSources[i];
+            }
+        }
+
+        AudioSource newSource = _bgmPlayer.AddComponent<AudioSource>();
+        return newSource;
+    }
+
+    private bool CheckPlayingClip(AudioClip clip)
+    {
+        for (int i = 0; i < _playingBgmPlayers.Count; i++)
+        {
+            if(_playingBgmPlayers[i].clip == clip)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     public void PauseAllSound()
     {
         for (int i = 0; i < allSFXPlayer.Count; i++)
@@ -414,7 +448,10 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             allSFXPlayer[i].Pause();
         }
 
-        _mainBgmPlayer.Pause();
+        for (int i = 0; i < _playingBgmPlayers.Count; i++)
+        {
+            _playingBgmPlayers[i].Pause();
+        }
     }
     public void UnPauseAllSound()
     {
@@ -429,7 +466,10 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             allSFXPlayer[i].UnPause();
         }
 
-        _mainBgmPlayer.UnPause();
+        for (int i = 0; i < _playingBgmPlayers.Count; i++)
+        {
+            _playingBgmPlayers[i].UnPause();
+        }
     }
 
     public void OnSceneContextBuilt()
@@ -437,6 +477,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         // Debug.Log("OnSceneContextBuilt in SoundManager");
 
         allSFXPlayer = FindObjectsByType<AudioSource>(FindObjectsSortMode.None).ToList();
-        allSFXPlayer.Remove(_mainBgmPlayer);
+        //allSFXPlayer.Remove(_mainBgmPlayer);
     }
 }
