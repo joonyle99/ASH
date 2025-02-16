@@ -10,13 +10,14 @@ public class FireBossManager : MonoBehaviour
 
     [Space]
 
-    // boundaries
+    [Header("[Environment]")]
     [SerializeField] private GameObject _invisibleWall_Left;
     [SerializeField] private GameObject _invisibleWall_Right;
+    [SerializeField] private GameObject _footholds;
 
     [Space]
 
-    // rage effect
+    [Header("[Rage Effect]")]
     [SerializeField] private ParticleHelper _rageEffectEmitting;
     [SerializeField] private ParticleHelper _rageEffectStaying;
     [SerializeField] private float _emittingWaitTime = 3f;
@@ -26,11 +27,7 @@ public class FireBossManager : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private GameObject _footholds;
-
-    [Space]
-
-    // teleport effect
+    [Header("[Teleport Effect]")]
     [SerializeField] private GameObject _firePrefab;
     [SerializeField] private ParticleHelper _warpEffect;
     [SerializeField] private Transform _warpPoint;
@@ -39,7 +36,7 @@ public class FireBossManager : MonoBehaviour
 
     [Space]
 
-    // camera chasing
+    [Header("[Camera]")]
     [SerializeField] private ChasingCamera _chasingCamera;
 
     [Space]

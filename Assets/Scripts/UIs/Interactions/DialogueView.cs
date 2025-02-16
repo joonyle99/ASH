@@ -66,8 +66,7 @@ public class DialogueView : MonoBehaviour
         {
             for (int i = 0; i < responseFunctions.Count; i++)
             {
-                var responseFunctionContainer = responseFunctions[i];
-                _responsePanel.BindActionOnClicked(responseFunctionContainer.buttonType, responseFunctionContainer.action);
+                _responsePanel.BindActionOnClicked(responseFunctions[i].buttonType, responseFunctions[i].action);
             }
         }
     }

@@ -358,6 +358,7 @@ public sealed class Fire : BossBehaviour
         // flame beam
         _flameBeamAngle = 360f / _flameBeamCount; // 360 / 8 = 45
         _flameBeamAngleEachCast = _flameBeamAngle / _flameBeamCastCount;  // 45 / 3 = 15
+
         // rage target hurt count
         rageTargetHurtCount = finalTargetHurtCount - _shouldLanternAttackedCount;
     }
