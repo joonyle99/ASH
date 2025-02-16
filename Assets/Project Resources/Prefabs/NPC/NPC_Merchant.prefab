@@ -114,6 +114,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3367403295636280568}
   - component: {fileID: 3367403295636280570}
+  - component: {fileID: 3593561359789128108}
   m_Layer: 0
   m_Name: NPC_Merchant
   m_TagString: Untagged
@@ -157,15 +158,7 @@ MonoBehaviour:
   _stateChange: 0
   _animationType: 0
   _identifier: {fileID: 0}
-  _quest:
-    _id: 1
-    _questData: {fileID: 11400000, guid: c9945988796d39c4695ac8a631f0a267, type: 2}
-    _currentCount: 0
-    _maxRepeatCount: 5
-    _currentRepeatCount: 0
-    _isFirst: 1
-    _isActive: 0
-    _isAcceptedBefore: 0
+  _quest: {fileID: 3593561359789128108}
   _dialogueCollection:
   - Key: First Meeting
     Value: {fileID: 11400000, guid: 84f9890d75b8de94fa7afdd619052eaf, type: 2}
@@ -197,6 +190,56 @@ MonoBehaviour:
     Value: {fileID: 11400000, guid: 15e9975d62fd58a4d80e6cf5e4e42340, type: 2}
   - Key: Re-request After Rejection
     Value: {fileID: 11400000, guid: c07a418679885f644a05d883401e3342, type: 2}
+--- !u!114 &3593561359789128108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3367403295636280573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36fa9c92e8af81046952faa0b433b681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _questData: {fileID: 11400000, guid: c9945988796d39c4695ac8a631f0a267, type: 2}
+  _id: 10000
+  _currentCount: 0
+  _currentRepeatCount: 0
+  _maxRepeatCount: 5
+  _isActive: 0
+  _isAcceptedBefore: 0
+  _isAutoFirst: 1
+  _onEndingAccept:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3367403295636280570}
+        m_TargetAssemblyTypeName: Merchant, Assembly-CSharp
+        m_MethodName: AcceptCallback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _onEndingReject:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3367403295636280570}
+        m_TargetAssemblyTypeName: Merchant, Assembly-CSharp
+        m_MethodName: RejectCallback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &431982738041336752
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -262,19 +305,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7397914762835945733, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.x
-      value: -0.000037789345
+      value: -0.00004541874
       objectReference: {fileID: 0}
     - target: {fileID: -7397914762835945733, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: -0.00717628
+      value: -0.0071753263
       objectReference: {fileID: 0}
     - target: {fileID: -7397914762835945733, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Extent.x
-      value: 1.5603528
+      value: 1.5603452
       objectReference: {fileID: 0}
     - target: {fileID: -7397914762835945733, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Extent.y
-      value: 1.5085863
+      value: 1.5085853
       objectReference: {fileID: 0}
     - target: {fileID: -4602342563749153231, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_IsActive
@@ -286,7 +329,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -4387628148757238925, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: 0.0017617941
+      value: 0.0017598867
       objectReference: {fileID: 0}
     - target: {fileID: -4387628148757238925, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Extent.x
@@ -314,7 +357,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -927677026545203949, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.x
-      value: -0.010542095
+      value: -0.010564685
       objectReference: {fileID: 0}
     - target: {fileID: -927677026545203949, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.y
@@ -322,11 +365,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -927677026545203949, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Extent.x
-      value: 0.697523
+      value: 0.69751567
       objectReference: {fileID: 0}
     - target: {fileID: -927677026545203949, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Extent.y
-      value: 0.75867426
+      value: 0.7586752
       objectReference: {fileID: 0}
     - target: {fileID: -701601348678159458, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Sprite
@@ -338,7 +381,7 @@ PrefabInstance:
       objectReference: {fileID: 8506435791810515117, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
     - target: {fileID: 1117430788406926515, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.x
-      value: 0.0050553083
+      value: 0.005009532
       objectReference: {fileID: 0}
     - target: {fileID: 1117430788406926515, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.y
@@ -354,19 +397,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4567515801328239865, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.x
-      value: -0.0012070537
+      value: -0.0012295842
       objectReference: {fileID: 0}
     - target: {fileID: 4567515801328239865, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: -0.0026441813
+      value: -0.002645135
       objectReference: {fileID: 0}
     - target: {fileID: 4567515801328239865, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Extent.x
-      value: 0.62877786
+      value: 0.6287706
       objectReference: {fileID: 0}
     - target: {fileID: 4567515801328239865, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Extent.y
-      value: 0.73944414
+      value: 0.7394451
       objectReference: {fileID: 0}
     - target: {fileID: 6337466783016565233, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Sprite
@@ -378,7 +421,7 @@ PrefabInstance:
       objectReference: {fileID: -8319143368176096584, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
     - target: {fileID: 6967697052299362006, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.x
-      value: 0.000015258789
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6967697052299362006, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.y
@@ -402,15 +445,15 @@ PrefabInstance:
       objectReference: {fileID: -4602595423253586929, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
     - target: {fileID: 7838175017862885668, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.x
-      value: -0.0035398006
+      value: -0.003585577
       objectReference: {fileID: 0}
     - target: {fileID: 7838175017862885668, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: -0.0014529824
+      value: -0.0014548898
       objectReference: {fileID: 0}
     - target: {fileID: 7838175017862885668, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Extent.x
-      value: 0.45146036
+      value: 0.4514451
       objectReference: {fileID: 0}
     - target: {fileID: 7838175017862885668, guid: a0bc3786a4e945248a316fc58670a62e, type: 3}
       propertyPath: m_Bounds.m_Extent.y

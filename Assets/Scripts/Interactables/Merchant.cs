@@ -21,8 +21,7 @@ public class Merchant : InteractableObject
     [Header("Merchant")]
     [Space]
 
-    // Merchant´Â °¢ÀÚ °íÀ¯ÇÑ Äù½ºÆ®¸¦ °¡Áú ¼ö ÀÖÀ½
-    [SerializeField] private Quest _quest;          // Á÷·ÄÈ­ µÇ¾ú±â ¶§¹®¿¡ nullÀÌ ¾Æ´Ñ »óÅÂ·Î Á¸Àç
+    [SerializeField] private Quest _quest;
     public Quest Quest => _quest;
 
     [SerializeField] private List<DialogueDictionary> _dialogueCollection = new List<DialogueDictionary>();
@@ -38,27 +37,27 @@ public class Merchant : InteractableObject
     {
         if (_interactCoroutine != null)
         {
-            Debug.LogWarning($"ÀÌ¹Ì »óÈ£ÀÛ¿ë ÄÚ·çÆ¾ÀÌ ½ÇÇà ÁßÀÔ´Ï´Ù");
+            Debug.LogWarning($"ì´ë¯¸ ìƒí˜¸ì‘ìš© ì½”ë£¨í‹´ì´ ì‹¤í–‰ ì¤‘ì…ë‹ˆë‹¤");
             return;
         }
 
-        
-        // * TODO: Äù½ºÆ® ½Ã½ºÅÛ ¿Ï¼ºÇÏ±â
         Quest currentQuest = QuestController.Instance.CurrentQuest;
-        if (currentQuest.QuestData != null)
+        if (currentQuest != null && currentQuest.QuestData != null && currentQuest.IsActive == true)
+        {
             _quest = currentQuest;
+        }
 
         _interactCoroutine = StartCoroutine(OnInteractCoroutine(_quest));
-        
     }
 
     private IEnumerator OnInteractCoroutine(Quest nowQuest)
     {
         Debug.Log("Quest argument in Merchant 'OnInteractCoroutine()' Function : " + nowQuest.QuestData);
-        // Äù½ºÆ® È°¼ºÈ­ »óÅÂ (ÁøÇà Áß)
+
+        // í€˜ìŠ¤íŠ¸ í™œì„±í™” ìƒíƒœ (ì§„í–‰ ì¤‘)
         if (nowQuest.IsActive)
         {
-            // Äù½ºÆ® ¿Ï·á
+            // í€˜ìŠ¤íŠ¸ ì™„ë£Œ
             if (nowQuest.IsComplete())
             {
                 Debug.Log("Complete Quest");
@@ -70,7 +69,7 @@ public class Merchant : InteractableObject
 
                 QuestController.Instance.CompleteQuest();
             }
-            // Äù½ºÆ® ¹Ì¿Ï·á
+            // í€˜ìŠ¤íŠ¸ ë¯¸ì™„ë£Œ
             else
             {
                 Debug.Log("Not Succeeded Quest");
@@ -80,10 +79,10 @@ public class Merchant : InteractableObject
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
             }
         }
-        // Äù½ºÆ® ºñÈ°¼ºÈ­ »óÅÂ (µî·Ï °¡´É)
+        // í€˜ìŠ¤íŠ¸ ë¹„í™œì„±í™” ìƒíƒœ (ë“±ë¡ ê°€ëŠ¥)
         else
         {
-            // ÃÖ´ë ¹İº¹ È½¼ö¿¡ µµ´Ş
+            // ìµœëŒ€ ë°˜ë³µ íšŸìˆ˜ì— ë„ë‹¬
             if (!nowQuest.IsRepeatable())
             {
                 Debug.Log("Already Max Repeat Quest Count Played");
@@ -92,8 +91,8 @@ public class Merchant : InteractableObject
                 DialogueController.Instance.StartDialogue(dialogueData, false);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
             }
-            // Äù½ºÆ® Ã¹ µî·Ï (ÀÚµ¿ ¼ö¶ô)
-            else if (nowQuest.IsFirst)
+            // í€˜ìŠ¤íŠ¸ ì²« ë“±ë¡ (ìë™ ìˆ˜ë½)
+            else if (nowQuest.IsAutoFirst)
             {
                 Debug.Log("Accept Quest At First");
                 var dialogueData = _dialogueCollection.FirstOrDefault(d => d.Key == "First Meeting").Value;
@@ -104,14 +103,14 @@ public class Merchant : InteractableObject
                 DialogueController.Instance.StartDialogue(dialogueData, false);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
             }
-            // Äù½ºÆ® µÎ¹øÂ° µî·Ï (¼ö¶ô / °ÅÀı)
+            // í€˜ìŠ¤íŠ¸ ë‘ë²ˆì§¸ ë“±ë¡ (ìˆ˜ë½ / ê±°ì ˆ)
             else
             {
                 Debug.Log("Accept Quest After Secend Time");
                 /*
-                 * ¾î»öÇØ¼­ ÁÖ¼® Ã³¸®ÇÔ
+                 * ì–´ìƒ‰í•´ì„œ ì£¼ì„ ì²˜ë¦¬í•¨
                  * 
-                if (!_quest.IsAcceptedBefore)
+                if (!_endingQuest.IsAcceptedBefore)
                 {
                     var dialogueData1 = _dialogueCollection.FirstOrDefault(d => d.Key == "Re-request After Rejection").Value;
                     if (CheckInvalid(dialogueData1) == true) yield break;
@@ -133,7 +132,7 @@ public class Merchant : InteractableObject
 
                 DialogueData dialogueData3;
 
-                // ¼ö¶ô ½Ã
+                // ìˆ˜ë½ ì‹œ
                 if (nowQuest.IsAcceptedBefore)
                 {
                     dialogueData3 = _dialogueCollection.FirstOrDefault(d => d.Key == "Acception").Value;
@@ -141,7 +140,7 @@ public class Merchant : InteractableObject
                     DialogueController.Instance.StartDialogue(dialogueData3, false);
                     yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
                 }
-                // °ÅÀı ½Ã
+                // ê±°ì ˆ ì‹œ
                 else
                 {
                     dialogueData3 = _dialogueCollection.FirstOrDefault(d => d.Key == "Rejection").Value;
@@ -158,7 +157,7 @@ public class Merchant : InteractableObject
     {
         if (!DialogueController.Instance.IsDialogueActive)
         {
-            // »óÈ£ÀÛ¿ë Á¾·á Ã³¸®
+            // ìƒí˜¸ì‘ìš© ì¢…ë£Œ ì²˜ë¦¬
             ExitInteraction();
         }
     }
@@ -172,5 +171,14 @@ public class Merchant : InteractableObject
         }
 
         return false;
+    }
+
+    public void AcceptCallback()
+    {
+        QuestController.Instance.AcceptQuest(_quest);
+    }
+    public void RejectCallback()
+    {
+        QuestController.Instance.RejectQuest(_quest);
     }
 }

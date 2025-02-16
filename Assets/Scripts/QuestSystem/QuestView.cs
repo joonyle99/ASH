@@ -5,7 +5,7 @@ using TMPro;
 using CanvasGroup = UnityEngine.CanvasGroup;
 
 /// <summary>
-/// Äù½ºÆ® µ¥ÀÌÅÍ¸¦ Àü´Ş¹Ş¾Æ ºä UI¿¡ Ç¥½ÃÇÏ´Â Å¬·¡½º
+/// í€˜ìŠ¤íŠ¸ ë°ì´í„°ë¥¼ ì „ë‹¬ë°›ì•„ ë·° UIì— í‘œì‹œí•˜ëŠ” í´ë˜ìŠ¤
 /// </summary>
 public class QuestView : MonoBehaviour, ISceneContextBuildListener
 {
@@ -18,16 +18,12 @@ public class QuestView : MonoBehaviour, ISceneContextBuildListener
 
     public void OnSceneContextBuilt()
     {
-        
-        // * TODO: Äù½ºÆ® ½Ã½ºÅÛ ¿Ï¼ºÇÏ±â
         var currentQuest = QuestController.Instance.CurrentQuest;
-
-        if (currentQuest.QuestData != null && currentQuest.IsActive)
+        if (currentQuest != null && currentQuest.QuestData != null && currentQuest.IsActive == true)
         {
             UpdatePanel(currentQuest);
             OpenPanel();
         }
-        
     }
 
     public void OpenPanel()

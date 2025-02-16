@@ -44,9 +44,13 @@ public class FireBossManager : MonoBehaviour
 
     [Space]
 
-    // 마지막 대화
-    [SerializeField] private DialogueData _dialogueData;
+    [Header("[Ending]")]
+    [SerializeField] private DialogueData _endingDialogue;
+    [SerializeField] private Quest _endingQuest;
 
+    [Space]
+
+    [Header("[Etc]")]
     [SerializeField] private SoundList _soundList;
 
     // fire find cutscene
@@ -214,49 +218,18 @@ public class FireBossManager : MonoBehaviour
         _chasingCamera.StopChasing();
     }
 
-    public IEnumerator StartLastDialogue()
+    public IEnumerator StartEndingDialogue()
     {
-        // 이렇게 하면 그냥 대화창을 넘겨버리면 .. 안되니까,,
-
-        // 아쉽게도 마지막 대화창을 유지시키지는 못할 것 같다.
-        DialogueController.Instance.StartDialogue(_dialogueData, false);
-
-        // 응답 패널 열기
-        // 이 응답 패널은 좀 새로운 형태로 만들어도 될 거 같기도..?
-        var view = DialogueController.Instance.View;
-
-        List<ResponseContainer> responseFunctions = new List<ResponseContainer>();
-        responseFunctions.Add(new ResponseContainer(ResponseButtonType.Accept, Accept));
-        responseFunctions.Add(new ResponseContainer(ResponseButtonType.Reject, Reject));
-        view.OpenResponsePanel(responseFunctions);
-
-        // Handler: 이벤트가 발생했을 때 호출되는 함수를 지칭한다 (옵저버 패턴)
-        var isClicked = false;
-        void ResponseHandler()
-        {
-            isClicked = true;
-            view.ResponsePanel.Accept.onClick.RemoveListener(ResponseHandler);
-            view.ResponsePanel.Reject.onClick.RemoveListener(ResponseHandler);
-        }
-        view.ResponsePanel.Accept.onClick.RemoveListener(ResponseHandler);
-        view.ResponsePanel.Accept.onClick.AddListener(ResponseHandler);
-        view.ResponsePanel.Reject.onClick.RemoveListener(ResponseHandler);
-        view.ResponsePanel.Reject.onClick.AddListener(ResponseHandler);
-
-        // 해당 퀘스트가 수락 / 거절되기 전까지 대기
-        yield return new WaitUntil(() => isClicked);
-
-        // 퀘스트 응답 종료 사운드 재생
-        SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
+        _endingDialogue.LinkQuestData(_endingQuest);
+        DialogueController.Instance.StartDialogue(_endingDialogue, false);
+        yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
     }
-    private void Accept()
+    public void AcceptCallback()
     {
         Debug.Log("Accept");
-        DialogueController.Instance.ShutdownDialogue();
     }
-    private void Reject()
+    public void RejectCallback()
     {
         Debug.Log("Reject");
-        DialogueController.Instance.ShutdownDialogue();
     }
 }

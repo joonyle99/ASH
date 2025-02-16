@@ -1,35 +1,29 @@
 using UnityEngine;
+using UnityEngine.Events;
 
-[System.Serializable]
-public class Quest
+/// <summary>
+/// 현재의 Quest 클래스는 Nullable이 될 수 없다.
+/// 왜냐하면 inspector에서 serialized field 사용되기 때문이다.
+/// 따라서 serialized field를 사용하지 않고, monoBehaviour를 상속받아 사용해야 한다.
+/// 
+/// 현재 Quest 클래스는 Merchant와 Ending에서 사용하고 있는데
+/// 이를 고려하여 문제가 없을지 확인하고, 재작업이 필요하다면 수정해야 한다.
+/// </summary>
+public class Quest : MonoBehaviour
 {
-    public Quest(Quest quest)
-    {
-        _questData = quest.QuestData;
-
-        _currentCount = quest.CurrentCount;
-
-        _maxRepeatCount = quest.MaxRepeatCount;
-        _currentRepeatCount = quest.CurrentRepeatCount;
-
-        IsFirst = quest.IsFirst;
-        IsActive = quest.IsActive;
-        IsAcceptedBefore = quest.IsAcceptedBefore;
-    }
-
     #region Attribute
-
-    // quest�� ���� ID
-    [SerializeField] private int _id;
-    public int Id => _id;
-
-    [Space]
 
     [SerializeField] private QuestData _questData;
     public QuestData QuestData => _questData;
 
     [Space]
 
+    [SerializeField] private int _id;
+    public int Id => _id;
+
+    [Space]
+
+    [Header("Condition - Count")]
     [SerializeField] private int _currentCount;
     public int CurrentCount
     {
@@ -42,24 +36,34 @@ public class Quest
                 _currentCount = _questData.GoalCount;
         }
     }
-
-    [Space]
-
-    [SerializeField] private int _maxRepeatCount;                                   // �ִ� ����Ʈ �ݺ� Ƚ��
-    public int MaxRepeatCount => _maxRepeatCount;
-    [SerializeField] private int _currentRepeatCount;                               // ���� ����Ʈ �ݺ� Ƚ��
+    [SerializeField] private int _currentRepeatCount;                               // 현재 퀘스트 반복 횟수
     public int CurrentRepeatCount => _currentRepeatCount;
+    [SerializeField] private int _maxRepeatCount;                                   // 최대 퀘스트 반복 횟수
+    public int MaxRepeatCount => _maxRepeatCount;
 
     [Space]
 
-    [SerializeField] private bool _isFirst = true;                                  // ����Ʈ�� ó�� �޾Ҵ��� ����
-    [SerializeField] private bool _isActive;                                        // ����Ʈ Ȱ��ȭ ����
-    [SerializeField] private bool _isAcceptedBefore;                                // ����Ʈ ���� ����
+    [Header("Condition - Toggle")]
+    [SerializeField] private bool _isActive;                                        // 퀘스트 활성화 여부
+    [SerializeField] private bool _isAcceptedBefore;                                // 퀘스트 수락 여부
 
-    public bool IsFirst
+    [Space]
+
+    [Header("Options")]
+    [SerializeField] private bool _isAutoFirst;                                     // 자동 수락 여부 (처음에만)
+
+    [Space]
+
+    [Header("Callback")]
+    [SerializeField] private UnityEvent _onEndingAccept;
+    public UnityEvent OnEndingAccept => _onEndingAccept;
+    [SerializeField] private UnityEvent _onEndingReject;
+    public UnityEvent OnEndingReject => _onEndingReject;
+
+    public bool IsAutoFirst
     {
-        get => _isFirst;
-        set => _isFirst = value;
+        get => _isAutoFirst;
+        set => _isAutoFirst = value;
     }                                     
     public bool IsActive
     {

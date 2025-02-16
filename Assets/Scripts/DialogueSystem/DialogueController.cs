@@ -108,21 +108,23 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                 // 다이얼로그에 퀘스트가 등록되어 있는 경우
                 if (data.Quest != null)
                 {
-                    // 퀘스트를 처음 받은 경우, 자동 수락
-                    if (data.Quest.IsFirst)
-                    {
-                        data.Quest.IsFirst = false;
+                    Debug.Log("퀘스트가 등록되어 있다");
 
+                    if (data.Quest.IsAutoFirst == true)
+                    {
+                        data.Quest.IsAutoFirst = false;
+                        yield return new WaitForSeconds(1f);
                         QuestController.Instance.AcceptQuest(data.Quest);
                     }
-                    else if (data.IsResponseDialougue)
+                    else
                     {
-                        List<ResponseContainer> contaienr = new List<ResponseContainer>();
-                        contaienr.Add(new ResponseContainer(ResponseButtonType.Accept, () => QuestController.Instance.AcceptQuest(data.Quest)));
-                        contaienr.Add(new ResponseContainer(ResponseButtonType.Reject, () => QuestController.Instance.RejectQuest(data.Quest)));
+                        // 수락 / 버튼 리스너 컨테이너 생성
+                        List<ResponseContainer> container = new List<ResponseContainer>();
+                        container.Add(new ResponseContainer(ResponseButtonType.Accept, () => data.Quest.OnEndingAccept?.Invoke()));
+                        container.Add(new ResponseContainer(ResponseButtonType.Reject, () => data.Quest.OnEndingReject?.Invoke()));
 
-                        // 퀘스트 응답 패널을 연다
-                        View.OpenResponsePanel(contaienr);
+                        // 퀘스트 응답 패널을 연다 (+ 리스너 컨테이너 등록)
+                        View.OpenResponsePanel(container);
 
                         // Handler: 이벤트가 발생했을 때 호출되는 함수를 지칭한다 (옵저버 패턴)
                         var isClicked = false;
@@ -133,16 +135,16 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                             View.ResponsePanel.Reject.onClick.RemoveListener(ResponseHandler);
                         }
                         View.ResponsePanel.Accept.onClick.RemoveListener(ResponseHandler);
-                        View.ResponsePanel.Accept.onClick.AddListener(ResponseHandler);
                         View.ResponsePanel.Reject.onClick.RemoveListener(ResponseHandler);
+                        View.ResponsePanel.Accept.onClick.AddListener(ResponseHandler);
                         View.ResponsePanel.Reject.onClick.AddListener(ResponseHandler);
 
                         // 해당 퀘스트가 수락 / 거절되기 전까지 대기
                         yield return new WaitUntil(() => isClicked);
-
-                        // 퀘스트 응답 종료 사운드 재생
-                        SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
                     }
+
+                    // 퀘스트 응답 종료 사운드 재생
+                    SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
                 }
             }
 

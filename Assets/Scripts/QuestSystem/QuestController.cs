@@ -1,13 +1,12 @@
 using UnityEngine;
 
 /// <summary>
-/// ½ÇÇà ÁßÀÎ Äù½ºÆ®¸¦ °ü¸®ÇÏ°í
-/// Äù½ºÆ® µ¥ÀÌÅÍ¸¦ ºä¿¡ Àü´ŞÇÏ´Â Å¬·¡½º
+/// ì‹¤í–‰ ì¤‘ì¸ í€˜ìŠ¤íŠ¸ë¥¼ ê´€ë¦¬í•˜ê³ 
+/// í€˜ìŠ¤íŠ¸ ë°ì´í„°ë¥¼ ë·°ì— ì „ë‹¬í•˜ëŠ” í´ë˜ìŠ¤
 /// </summary>
 public class QuestController : HappyTools.SingletonBehaviourFixed<QuestController>
 {
-    // SerializeField·Î Á÷·ÄÈ­ÇÏ¸é ±âº»ÀûÀ¸·Î nullÀÌ ¾Æ´Ñ »óÅÂ·Î Á¸ÀçÇÏ±â ¶§¹®¿¡ »ç¿ë ¾È ÇÔ
-    [SerializeField] private Quest _currentQuest;
+    private Quest _currentQuest;
     public Quest CurrentQuest => _currentQuest;
 
     private QuestView _view;
@@ -23,24 +22,22 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
 
     public void AcceptQuest(Quest quest)
     {
-        // ½Ì±ÛÅæ °´Ã¼ÀÎ QuestController¿¡ »õ·Î¿î Äù½ºÆ® ÀÎ½ºÅÏ½º¸¦ »ı¼º
-        // ¾èÀº º¹»çÀÌÁö¸¸ Äù½ºÆ®´Â °ª¸¸ °¡Áö°í ÀÖ±â ¶§¹®¿¡ »ó°ü ¾øÀ½ (QuestData´Â Àü¿ª ÂüÁ¶)
+        // ì‹±ê¸€í†¤ ê°ì²´ì¸ QuestControllerì— ìƒˆë¡œìš´ í€˜ìŠ¤íŠ¸ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ìƒì„±
+        // ì–•ì€ ë³µì‚¬ì´ì§€ë§Œ í€˜ìŠ¤íŠ¸ëŠ” ê°’ë§Œ ê°€ì§€ê³  ìˆê¸° ë•Œë¬¸ì— ìƒê´€ ì—†ìŒ (QuestDataëŠ” ì „ì—­ ì°¸ì¡°)
         // _currentQuest = new Quest(quest);
 
-        // ÂüÁ¶ ÇÒ´ç ¾ÀÀÇ °´Ã¼¿Í µ¿±âÈ­µÈ´Ù´Â ÀåÁ¡ÀÌ ÀÖÁö¸¸,
-        // ¾ÀÀ» ÀÌµ¿ÇÏ¸é ÇØ´ç °´Ã¼´Â ÆÄ±«µÇ±â ¶§¹®¿¡ ÂüÁ¶°¡ ²÷±è.
-        _currentQuest = quest;
+        // ì°¸ì¡° í• ë‹¹ ì”¬ì˜ ê°ì²´ì™€ ë™ê¸°í™”ëœë‹¤ëŠ” ì¥ì ì´ ìˆì§€ë§Œ,
+        // ì”¬ì„ ì´ë™í•˜ë©´ í•´ë‹¹ ê°ì²´ëŠ” íŒŒê´´ë˜ê¸° ë•Œë¬¸ì— ì°¸ì¡°ê°€ ëŠê¹€.
 
-        // Äù½ºÆ® È°¼ºÈ­
-        _currentQuest.IsActive = true;
+        // DontDestroyOnLoad(quest.gameObject);
 
-        _currentQuest.IsAcceptedBefore = true;
+        quest.IsActive = true;
+        quest.IsAcceptedBefore = true;
 
-        // Äù½ºÆ® µ¥ÀÌÅÍ¸¦ ºä¿¡ Àü´Ş
-        View.UpdatePanel(_currentQuest);
-
-        // Äù½ºÆ® ÆĞ³Î ¿­±â
+        View.UpdatePanel(quest);
         View.OpenPanel();
+
+        _currentQuest = quest;
     }
     public void RejectQuest(Quest quest)
     {
@@ -48,18 +45,18 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
     }
     public void CompleteQuest()
     {
-        // Äù½ºÆ® ÆĞ³Î ´İ±â
+        // í€˜ìŠ¤íŠ¸ íŒ¨ë„ ë‹«ê¸°
         View.ClosePanel();
 
-        // Äù½ºÆ® ¿Ï·á ÀÌº¥Æ® ¹ß»ı
+        // í€˜ìŠ¤íŠ¸ ì™„ë£Œ ì´ë²¤íŠ¸ ë°œìƒ
         _currentQuest.CompleteProcess();
 
-        // ÇöÀç ½ÇÇà ÁßÀÎ Äù½ºÆ® ÇØÁ¦
-        //_currentQuest = null;
+        // í˜„ì¬ ì‹¤í–‰ ì¤‘ì¸ í€˜ìŠ¤íŠ¸ í•´ì œ
+        _currentQuest = null;
     }
     public void UpdateQuest()
     {
-        // Äù½ºÆ® µ¥ÀÌÅÍ¸¦ ºä¿¡ Àü´Ş
+        // í€˜ìŠ¤íŠ¸ ë°ì´í„°ë¥¼ ë·°ì— ì „ë‹¬
         View.UpdatePanel(_currentQuest);
     }
 }
