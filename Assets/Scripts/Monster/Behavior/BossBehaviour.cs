@@ -90,10 +90,17 @@ public abstract class BossBehaviour : MonsterBehaviour
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
         if (IsDead)
+        {
             return IAttackListener.AttackResult.Fail;
+        }
 
-        if (IsGodMode && attackInfo.Type != AttackType.GimmickAttack)
-            return IAttackListener.AttackResult.Fail;
+        if (IsGodMode)
+        {
+            if (attackInfo.Type != global::AttackType.GimmickAttack)
+            {
+                return IAttackListener.AttackResult.Fail;
+            }
+        }
 
         // Hit Process
         HitProcess(attackInfo, false, false, true);
@@ -101,7 +108,7 @@ public abstract class BossBehaviour : MonsterBehaviour
         // 피격 횟수 증가
         TotalHitCount++;
         currentHitCount++;
-
+        
         // 체력 감소
         CurHp -= MonsterDefine.BossHealthUnit;
 

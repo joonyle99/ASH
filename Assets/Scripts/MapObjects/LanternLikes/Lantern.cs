@@ -178,6 +178,7 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
             if (bossBehavior != null)
             {
                 InputManager.Instance.ChangeToStayStillSetter();
+                SceneContext.Current.Player.IsGodMode = true;
             }
         }
 
