@@ -95,6 +95,25 @@ public class SoundList : MonoBehaviour
         }
     }
 
+    public SoundClipData GetSoundClipData(string key, float volumeMultiplier = 1f)
+    {
+        if (_soundIndexMap.ContainsKey(key))
+        {
+            int index = _soundIndexMap[key];
+            SoundClipData sound = _soundDatas[index];
+
+            if (sound.Clip == null)
+            {
+                Debug.LogWarning("No clip for: " + key);
+                return null;
+            }
+
+            return sound;
+        }
+
+        return null;
+    }
+
     public bool Exists(string key)
     {
         return _soundDatas.Exists(x => x.Key == key);

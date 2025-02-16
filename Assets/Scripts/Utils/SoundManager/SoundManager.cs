@@ -9,7 +9,13 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 {
     [SerializeField] private GameObject _soundListParent;
 
-    [SerializeField] private AudioSource _bgmPlayer;
+    private AudioSource _playingBgmPlayer;
+    //_playingBgmPlayer의 상호배제 위함
+    private bool _anyBgmFadeInOutPlaying = false;
+
+    [SerializeField] private AudioSource _mainBgmPlayer;
+    [SerializeField] private AudioSource _subBgmPlayer;
+
     [SerializeField] private AudioSource _sfxPlayer;
 
     [SerializeField] private AudioMixer _audioMixer;
@@ -43,6 +49,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         }
 
         _pitchedSFXPlayer[PitchPrecision] = _sfxPlayer;
+        _playingBgmPlayer = _mainBgmPlayer;
     }
 
 #if UNITY_EDITOR
@@ -164,18 +171,18 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     }
     public void PlayBGM(AudioClip clip, float volumeMultiplier = 1f)
     {
-        if (clip == _bgmPlayer.clip)
+        if (clip == _mainBgmPlayer.clip)
         {
             Debug.Log($"Already Playing this Audio Clip" +
                              $"\n" +
-                             $"<color=yellow>New Audio Source</color>: {clip.name} <color=green>Old Audio Source</color>: {_bgmPlayer.clip.name}");
+                             $"<color=yellow>New Audio Source</color>: {clip.name} <color=green>Old Audio Source</color>: {_playingBgmPlayer.clip.name}");
             return;
         }
 
-        _bgmPlayer.Stop();
-        _bgmPlayer.clip = clip;
-        _bgmPlayer.volume = volumeMultiplier;
-        _bgmPlayer.Play();
+        _mainBgmPlayer.Stop();
+        _mainBgmPlayer.clip = clip;
+        _mainBgmPlayer.volume = volumeMultiplier;
+        _mainBgmPlayer.Play();
     }
 
     // play common sound (searching in sound list which sound manager has)
@@ -201,63 +208,187 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
         Debug.LogWarning("No BGM matching: " + key);
     }
+
+    /// <summary>
+    /// 일반적으로 인자로 들어온 bgm을 사용중이지 않는 오디오소스에 페이드 인 하며 재생,
+    /// targetSource를 지정해 주게 되면 해당 오디오 소스를 사용하여 페이드 인 하며 재생
+    /// </summary>
+    /// <param name="duration"></param>
+    /// <param name="targetSource">null이 아닌 경우 특정 오디오 소스를 사용, audioSource를 
+    /// 지정해 주면 _playingBgmPlayer에 대한 전처리 및 후처리 해야함</param>
+    /// <returns></returns>
+    public void PlayCommonBGMFade(string key, float duration, AudioSource newBgmPlayer = null, float volumeMultiplier = 1f)
+    {
+        if (!_soundListIndexMap.TryGetValue(key, out var soundListIndex))
+        {
+            Debug.LogWarning("No BGM matching: " + key);
+            return;
+        }
+
+        if (newBgmPlayer == null)
+        {
+            if (_anyBgmFadeInOutPlaying) return;
+            
+            if(_mainBgmPlayer.isPlaying)
+            {
+                newBgmPlayer = _subBgmPlayer;
+            }
+            else
+            {
+                newBgmPlayer = _mainBgmPlayer;
+            }
+
+            if(newBgmPlayer.isPlaying)
+            {
+                Debug.Log($"All bgm player used, dont play bgm with fadein");
+                return;
+            }
+        }
+        _playingBgmPlayer = newBgmPlayer;
+
+        _anyBgmFadeInOutPlaying = true;
+        StartCoroutine(BGMFadeInCoroutine(key, soundListIndex, duration, newBgmPlayer));
+    }
+
+    private IEnumerator BGMFadeInCoroutine(string key, int soundListIndex, float duration, AudioSource newBgmPlayer)
+    {
+        float eTime = 0f;
+        float originalChannelVolume = 1;
+
+        SoundClipData newClip = _soundLists[soundListIndex].GetSoundClipData(key);
+
+        if(newClip == null)
+        {
+            Debug.Log($"Invalid sound clip data called");
+
+            yield break;
+        }
+
+        newBgmPlayer.volume = 0;
+        newBgmPlayer.clip = newClip.Clip;
+        newBgmPlayer.Play();
+
+        while (eTime < duration)
+        {
+            eTime += Time.deltaTime;
+
+            yield return null;
+
+            if (!newBgmPlayer.isPlaying)
+                break;
+
+            float t = eTime / duration;
+            newBgmPlayer.volume = Mathf.Lerp(0, originalChannelVolume, t);
+        }
+
+        newBgmPlayer.volume = originalChannelVolume;
+
+        _anyBgmFadeInOutPlaying = false;
+    }
+
+    private void BGMFadeInOut(string fadeinKey, float fadeinDuration, float fadeoutDuration)
+    {
+        if(!_soundListIndexMap.ContainsKey(fadeinKey))
+        {
+            Debug.LogWarning("No BGM matching: " + fadeinKey);
+            return;
+        }
+
+        PlayCommonBGMFade(fadeinKey, fadeinDuration);
+        AudioSource _waitingBgmPlayer = _playingBgmPlayer == _mainBgmPlayer ? _subBgmPlayer : _mainBgmPlayer;
+        StopBGMFade(fadeoutDuration, _waitingBgmPlayer);
+    }
     public void PlayCommonBGMForScene(string sceneName)
     {
         if (GameSceneManager.IsOpeningScene(sceneName))
         {
-            PlayCommonBGM("MainTheme");
+            BGMFadeInOut("MainTheme", 5, 5);
+            //PlayCommonBGM("MainTheme");
         }
         else if (GameSceneManager.IsExploration1(sceneName))
         {
-            PlayCommonBGM("Exploration1");
+            BGMFadeInOut("Exploration1", 5, 5);
+            //PlayCommonBGM("Exploration1");
         }
         else if (GameSceneManager.IsExploration2(sceneName))
         {
-            PlayCommonBGM("Exploration2");
+            BGMFadeInOut("Exploration2", 5, 5);
+            //PlayCommonBGM("Exploration2");
         }
         else if (GameSceneManager.IsBossDungeon1(sceneName)
             || GameSceneManager.IsBossDungeon2(sceneName)
             || GameSceneManager.IsBossScene(sceneName))
         {
-            PlayCommonBGM("BossDungeon1");
+            BGMFadeInOut("BossDungeon1", 5, 5);
+            //PlayCommonBGM("BossDungeon1");
         }
         else if (GameSceneManager.IsEndingScene(sceneName))
         {
-            PlayCommonBGM("EndingTheme");
+            BGMFadeInOut("EndingTheme", 5, 5);
+            //PlayCommonBGM("EndingTheme");
         }
         else
         {
+            BGMFadeInOut("BasicBGM", 5, 5);
             // 기본 BGM 재생
-            PlayCommonBGM("BasicBGM");
+            //PlayCommonBGM("BasicBGM");
         }
     }
 
     // stop bgm sound
     public void StopBGM()
     {
-        _bgmPlayer.Stop();
+        _playingBgmPlayer.Stop();
     }
-    public void StopBGMFade(float duration)
+    /// <summary>
+    /// 일반적으로 현재 플레이 중인 bgm을 페이드 아웃하여 멈춤,
+    /// targetSource를 지정해 주게 되면 해당 오디오 소스를 페이드 아웃 하며 멈춤
+    /// </summary>
+    /// <param name="duration"></param>
+    /// <param name="targetSource">null이 아닌 경우 특정 오디오 소스를 사용, audioSource를 
+    /// 지정해 주면 _playingBgmPlayer에 대한 전처리 및 후처리 해야함</param>
+    /// <returns></returns>
+    public void StopBGMFade(float duration, AudioSource targetSource = null)
     {
-        StartCoroutine(BGMFadeOutCoroutine(duration));
-        _bgmPlayer.Stop();
+        if (targetSource == null)
+        {
+            if (_anyBgmFadeInOutPlaying) return;
+
+            targetSource = _playingBgmPlayer;
+        }
+
+        _anyBgmFadeInOutPlaying = true;
+
+        StartCoroutine(BGMFadeOutCoroutine(duration, targetSource));
     }
-    private IEnumerator BGMFadeOutCoroutine(float duration)
+
+    private IEnumerator BGMFadeOutCoroutine(float duration, AudioSource targetSource)
     {
         float eTime = 0f;
-        float originalChannelVolume = _bgmPlayer.volume;
+        float originalChannelVolume = targetSource.volume;
+
         while (eTime < duration)
         {
             eTime += Time.deltaTime;
+
             yield return null;
-            if (!_bgmPlayer.isPlaying)
-                yield break;
+
+            if (!targetSource.isPlaying)
+                break;
+
             float t = eTime / duration;
-            _bgmPlayer.volume = Mathf.Lerp(originalChannelVolume, 0, t);
+            targetSource.volume = Mathf.Lerp(originalChannelVolume, 0, t);
         }
-        if (!_bgmPlayer.isPlaying)
-            yield break;
-        _bgmPlayer.Stop();
+
+        if (targetSource.isPlaying)
+        {
+            targetSource.Stop();
+        }
+
+        if(targetSource == _playingBgmPlayer)
+            _playingBgmPlayer = _mainBgmPlayer;
+
+        _anyBgmFadeInOutPlaying = false;
     }
 
     public void PauseAllSound()
@@ -273,7 +404,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             allSFXPlayer[i].Pause();
         }
 
-        _bgmPlayer.Pause();
+        _mainBgmPlayer.Pause();
     }
     public void UnPauseAllSound()
     {
@@ -288,7 +419,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             allSFXPlayer[i].UnPause();
         }
 
-        _bgmPlayer.UnPause();
+        _mainBgmPlayer.UnPause();
     }
 
     public void OnSceneContextBuilt()
@@ -296,6 +427,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         // Debug.Log("OnSceneContextBuilt in SoundManager");
 
         allSFXPlayer = FindObjectsByType<AudioSource>(FindObjectsSortMode.None).ToList();
-        allSFXPlayer.Remove(_bgmPlayer);
+        allSFXPlayer.Remove(_mainBgmPlayer);
     }
 }
