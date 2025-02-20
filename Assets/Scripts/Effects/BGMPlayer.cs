@@ -7,10 +7,11 @@ public class BGMPlayer : MonoBehaviour
 
     public void PlayBGM()
     {
-        SoundManager.Instance.PlayCommonBGM(key);
+        SoundManager.Instance.BGMFadeInOut(key, 3, "", 3);
     }
+
     public void PlayBGM2()
     {
-        SoundManager.Instance.PlayCommonBGM(key2);
+        SoundManager.Instance.BGMFadeInOut(key2, 3, "", 3);
     }
 }

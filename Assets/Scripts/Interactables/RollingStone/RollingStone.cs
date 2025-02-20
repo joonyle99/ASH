@@ -30,7 +30,7 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
 
     public bool IsBreakable => _attackableComponent == null;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _statePreserver = GetComponent<PreserveState>();
@@ -72,7 +72,7 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
 
         var isStonePushed = isStoneMoving && isStoneContact;
 
-        // ÇÃ·¹ÀÌ¾î°¡ µ¹À» Á÷Á¢ ¹Ì´Â °æ¿ì
+        // í”Œë ˆì´ì–´ê°€ ëŒì„ ì§ì ‘ ë¯¸ëŠ” ê²½ìš°
         if (isStonePushed)
         {
             //Debug.Log("============= PUSH =============");
@@ -90,7 +90,7 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
             {
                 //Debug.Log("============= PUSH - IsPlaying =============");
 
-                // ±âÁ¸ À½·®À¸·Î ¼³Á¤
+                // ê¸°ì¡´ ìŒëŸ‰ìœ¼ë¡œ ì„¤ì •
                 if (_rollAudioTiming < 1f)
                 {
                     //Debug.Log("============= PUSH - Init Volume =============");
@@ -100,7 +100,7 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
                 }
             }
         }
-        // ÀÚ¿¬½º·´°Ô ¼­¼­È÷ ¸ØÃß´Â °æ¿ì
+        // ìì—°ìŠ¤ëŸ½ê²Œ ì„œì„œíˆ ë©ˆì¶”ëŠ” ê²½ìš°
         else
         {
             //Debug.Log("============= NOT PUSH =============");
@@ -155,9 +155,9 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
 
         if (isDirSync)
         {
-            // Debug.Log("¹Î´Ù");
+            // Debug.Log("ë¯¼ë‹¤");
 
-            // Rolling StoneÀÇ xÃà ¹æÇâÀÇ ¼Óµµ¿Í ÇÃ·¹ÀÌ¾î°¡ ¹Ì´Â ¹æÇâÀÌ ´Ù¸£¸é ¼Óµµ¸¦ 0À¸·Î ¸¸µé¾îÁØ´Ù.
+            // Rolling Stoneì˜ xì¶• ë°©í–¥ì˜ ì†ë„ì™€ í”Œë ˆì´ì–´ê°€ ë¯¸ëŠ” ë°©í–¥ì´ ë‹¤ë¥´ë©´ ì†ë„ë¥¼ 0ìœ¼ë¡œ ë§Œë“¤ì–´ì¤€ë‹¤.
             if (isMoveDirNoneSync)
             {
                 _rigidbody.velocity = Vector2.zero;
@@ -165,22 +165,22 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
 
             _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower);
 
-            // ÇÃ·¹ÀÌ¾îµµ ÇÔ²² ÀÌµ¿ÇÑ´Ù
+            // í”Œë ˆì´ì–´ë„ í•¨ê»˜ ì´ë™í•œë‹¤
             Player.Rigidbody.AddForce(Player.RawInputs.Movement * 70f);
         }
         else if (isOppositeDirSync)
         {
             if (_canPull)
             {
-                // Debug.Log("´ç±ä´Ù");
+                // Debug.Log("ë‹¹ê¸´ë‹¤");
 
-                // Rolling StoneÀÇ xÃà ¹æÇâÀÇ ¼Óµµ¿Í ÇÃ·¹ÀÌ¾î°¡ ¹Ì´Â ¹æÇâÀÌ ´Ù¸£¸é ¼Óµµ¸¦ 0À¸·Î ¸¸µé¾îÁØ´Ù.
+                // Rolling Stoneì˜ xì¶• ë°©í–¥ì˜ ì†ë„ì™€ í”Œë ˆì´ì–´ê°€ ë¯¸ëŠ” ë°©í–¥ì´ ë‹¤ë¥´ë©´ ì†ë„ë¥¼ 0ìœ¼ë¡œ ë§Œë“¤ì–´ì¤€ë‹¤.
                 if (isMoveDirNoneSync)
                 {
                     _rigidbody.velocity = Vector2.zero;
                 }
 
-                //µÚ¿¡ º®ÀÌ ¾øÀ» ¶§¸¸ ÈûÀ» °¡ÇÔ, µÚ¿¡ º®ÀÌ ÀÖÀ» ¶§´Â ±× Áï½Ã Èû »èÁ¦
+                //ë’¤ì— ë²½ì´ ì—†ì„ ë•Œë§Œ í˜ì„ ê°€í•¨, ë’¤ì— ë²½ì´ ìˆì„ ë•ŒëŠ” ê·¸ ì¦‰ì‹œ í˜ ì‚­ì œ
                 if (!Player.IsWallToBehind)
                     _rigidbody.AddForce(Player.RawInputs.Movement * _pushPower * 0.7f);
                 else
@@ -190,7 +190,7 @@ public class RollingStone : InteractableObject, ISceneContextBuildListener
 
         if (_isMaxClampSpeed)
         {
-            // Debug.Log("°æ»ç¸é¿¡¼­ÀÇ ÃÖ´ë ¼Óµµ Á¶Á¤ Áß");
+            // Debug.Log("ê²½ì‚¬ë©´ì—ì„œì˜ ìµœëŒ€ ì†ë„ ì¡°ì • ì¤‘");
             _rigidbody.velocity = Vector2.ClampMagnitude(_rigidbody.velocity, _maxRollSpeed);
         }
     }

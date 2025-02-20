@@ -132,10 +132,22 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         if (volume < 0.01f)
         {
             _audioMixer.SetFloat("BGM", -80);
+
+            for (int i = 0; i < _playingBgmPlayers.Count; i++)
+            {
+                _playingBgmPlayers[i].mute = true;
+                _playingBgmPlayers[i].volume = volume;
+            }
         }
         else
         {
             _audioMixer.SetFloat("BGM", Mathf.Log10(volume) * 20);
+
+            for (int i = 0; i < _playingBgmPlayers.Count; i++)
+            {
+                _playingBgmPlayers[i].mute = false;
+                _playingBgmPlayers[i].volume = volume;
+            }
         }
 
         JsonDataManager.Add("BGMVolume", volume.ToString());
@@ -219,7 +231,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     /// <param name="targetSource">null이 아닌 경우 특정 오디오 소스를 사용, audioSource를 
     /// 지정해 주면 _playingBgmPlayer에 대한 전처리 및 후처리 해야함</param>
     /// <returns></returns>
-    public bool PlayCommonBGMFade(string key, float duration, AudioSource newBgmPlayer = null, float volumeMultiplier = 1f)
+    public bool PlayCommonBGMFade(string key, float duration, AudioSource newBgmPlayer = null)
     {
         if (!_soundListIndexMap.TryGetValue(key, out var soundListIndex))
         {
@@ -254,8 +266,8 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     private IEnumerator BGMFadeInCoroutine(string key, SoundClipData soundClipData, float duration, AudioSource newBgmPlayer)
     {
         float eTime = 0f;
-        float originalChannelVolume = 1;
 
+        float volumeOffset = newBgmPlayer.volume;
         newBgmPlayer.volume = 0;
         newBgmPlayer.clip = soundClipData.Clip;
         newBgmPlayer.Play();
@@ -270,38 +282,41 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
                 break;
 
             float t = eTime / duration;
-            newBgmPlayer.volume = Mathf.Lerp(0, originalChannelVolume, t);
+            newBgmPlayer.volume = Mathf.Lerp(0, volumeOffset, t);
         }
 
-        newBgmPlayer.volume = originalChannelVolume;
+        newBgmPlayer.volume = volumeOffset;
 
         _anyBgmFadeInOutPlaying = false;
     }
 
-    private void BGMFadeInOut(string fadeinKey, float fadeinDuration, string exceptionFadeoutKey, float fadeoutDuration)
+    public void BGMFadeInOut(string fadeinKey, float fadeinDuration, string exceptionFadeoutKey, float fadeoutDuration, float volumeMultiplier = 1f)
     {
-        if(!_soundListIndexMap.ContainsKey(fadeinKey))
+        bool isExceptionFadeout = exceptionFadeoutKey.Length != 0;
+        int exceptionSoundListIndex = -1;
+
+        if(!_soundListIndexMap.TryGetValue(fadeinKey, out var fadeinSoundListIndex))
         {
             Debug.LogWarning("No BGM matching with fadein: " + fadeinKey);
             return;
         }
 
-        if (!_soundListIndexMap.TryGetValue(exceptionFadeoutKey, out var soundListIndex))
+        if (isExceptionFadeout && !_soundListIndexMap.TryGetValue(exceptionFadeoutKey, out exceptionSoundListIndex))
         {
             Debug.LogWarning("No BGM matching with fadeout: " + exceptionFadeoutKey);
             return;
         }
 
-
-        if (PlayCommonBGMFade(fadeinKey, fadeinDuration))
+        if (PlayCommonBGMFade(fadeinKey, fadeinDuration, GetRestBgmPlayer()))
         {
-            SoundClipData exceptionFadeoutClipData = _soundLists[soundListIndex].GetSoundClipData(exceptionFadeoutKey);
-            SoundClipData newClip = _soundLists[soundListIndex].GetSoundClipData(fadeinKey);
+            SoundClipData exceptionFadeoutClipData =
+                isExceptionFadeout ? _soundLists[exceptionSoundListIndex].GetSoundClipData(exceptionFadeoutKey) : null;
+            SoundClipData newClip = _soundLists[fadeinSoundListIndex].GetSoundClipData(fadeinKey);
 
             for (int i = 0; i < _playingBgmPlayers.Count; i++)
             {
-                if (_playingBgmPlayers[i].clip != exceptionFadeoutClipData.Clip &&
-                    _playingBgmPlayers[i].clip != newClip.Clip)
+                if(!(isExceptionFadeout && exceptionFadeoutClipData.Clip == _playingBgmPlayers[i].clip) &&
+                    (newClip.Clip != _playingBgmPlayers[i].clip))
                 {
                     StopBGMFade(fadeoutDuration, _playingBgmPlayers[i]);
                 }
@@ -374,7 +389,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             return;
         }
 
-
         _anyBgmFadeInOutPlaying = true;
 
         StartCoroutine(BGMFadeOutCoroutine(duration, targetSource));
@@ -420,6 +434,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         }
 
         AudioSource newSource = _bgmPlayer.AddComponent<AudioSource>();
+        newSource.loop = true;
         return newSource;
     }
 

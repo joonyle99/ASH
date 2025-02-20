@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ®¸¦ ÄÁÆ®·ÑÇÑ´Ù
+/// í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ë¥¼ ì»¨íŠ¸ë¡¤í•œë‹¤
 /// </summary>
 public class PlayerInteractionController : MonoBehaviour
 {
@@ -11,19 +11,19 @@ public class PlayerInteractionController : MonoBehaviour
     [Header("Interaction Controller")]
     [Space]
 
-    [SerializeField] private InteractableObject _closetTarget;                  // ÇöÀç »óÈ£ÀÛ¿ë ÁßÀÎ ¿ÀºêÁ§Æ®
+    [SerializeField] private InteractableObject _closetTarget;                  // í˜„ì¬ ìƒí˜¸ì‘ìš© ì¤‘ì¸ ì˜¤ë¸Œì íŠ¸
     public InteractableObject ClosetTarget
     {
         get => _closetTarget;
         set
         {
-            // 3. ÇÃ·¹ÀÌ¾î¿Í ¿ÀºêÁ§Æ®ÀÇ »óÈ£ÀÛ¿ëÀÌ °Å¸®°¡ ¸Ö¾îÁ® ³¡³­ °æ¿ì (feat. InteractionMarker.cs)
+            // 3. í”Œë ˆì´ì–´ì™€ ì˜¤ë¸Œì íŠ¸ì˜ ìƒí˜¸ì‘ìš©ì´ ê±°ë¦¬ê°€ ë©€ì–´ì ¸ ëë‚œ ê²½ìš° (feat. InteractionMarker.cs)
             if (_closetTarget != null && value == null)
             {
-                // ¿ÀºêÁ§Æ®ÀÇ »óÈ£ÀÛ¿ë Á¾·á ÇÔ¼ö¸¦ È£Ãâ
+                // ì˜¤ë¸Œì íŠ¸ì˜ ìƒí˜¸ì‘ìš© ì¢…ë£Œ í•¨ìˆ˜ë¥¼ í˜¸ì¶œ
                 ClosetTarget.ExitInteraction();
 
-                // »óÈ£ÀÛ¿ë ¸¶Ä¿ UI ºñÈ°¼ºÈ­
+                // ìƒí˜¸ì‘ìš© ë§ˆì»¤ UI ë¹„í™œì„±í™”
                 if (_interactionMarker.IsMarking)
                 {
                     _interactionMarker.DisableMarker();
@@ -36,11 +36,12 @@ public class PlayerInteractionController : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private List<InteractableObject> _interactionTargetList;               // ¹üÀ§ ¾ÈÀÇ »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ® ¸®½ºÆ®
+    [SerializeField] private List<InteractableObject> _interactionTargetList;               // ë²”ìœ„ ì•ˆì˜ ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ ë¦¬ìŠ¤íŠ¸
 
     private PlayerBehaviour _player;
     private InteractionMarker _interactionMarker;
 
+    private bool _canInteract => !DialogueController.Instance.IsDialogueActive;
     #endregion
 
     #region Function
@@ -56,12 +57,12 @@ public class PlayerInteractionController : MonoBehaviour
     }
     private void Update()
     {
-        if (!ClosetTarget) return;
+        if (!ClosetTarget || !_canInteract) return;
 
         var isInteracting = ClosetTarget.IsInteracting;
         var isInteractable = ClosetTarget.IsInteractable;
 
-        // 4. ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ëÀ» ³¡¸¶Ä£ °æ¿ì (feat. InteractionMarker.cs)
+        // 4. í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš©ì„ ëë§ˆì¹œ ê²½ìš° (feat. InteractionMarker.cs)
         if (!isInteractable)
         {
             ClosetTarget.ExitInteraction();
@@ -101,6 +102,8 @@ public class PlayerInteractionController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+        if (!_canInteract) return;
+
         if (ClosetTarget)
         {
             if (ClosetTarget.IsInteracting)
@@ -109,18 +112,18 @@ public class PlayerInteractionController : MonoBehaviour
     }
 
     /// <summary>
-    /// »óÈ£ÀÛ¿ëÀÌ ½ÃÀÛµÇ¸é Interaction »óÅÂ·Î ÀüÈ¯ÇÑ´Ù
+    /// ìƒí˜¸ì‘ìš©ì´ ì‹œì‘ë˜ë©´ Interaction ìƒíƒœë¡œ ì „í™˜í•œë‹¤
     /// </summary>
     public void OnPlayerInteractionEnter()
     {
-        // ¸ğµç »óÈ£ÀÛ¿ëÀÌ Interaction State·Î ÀüÀÌµÅ¾ß ÇÏ´Â °ÍÀº ¾Æ´Ï´Ù (´ÙÀÌ¾ó·Î±×µµ »óÈ£ÀÛ¿ëÀÓ)
+        // ëª¨ë“  ìƒí˜¸ì‘ìš©ì´ Interaction Stateë¡œ ì „ì´ë¼ì•¼ í•˜ëŠ” ê²ƒì€ ì•„ë‹ˆë‹¤ (ë‹¤ì´ì–¼ë¡œê·¸ë„ ìƒí˜¸ì‘ìš©ì„)
         if (ClosetTarget.StateChange == InteractionStateChangeType.InteractionState)
         {
             _player.ChangeState<InteractionState>();
         }
     }
     /// <summary>
-    /// »óÈ£ÀÛ¿ëÀÌ Á¾·áµÇ¸é Idle »óÅÂ·Î ÀüÈ¯ÇÑ´Ù
+    /// ìƒí˜¸ì‘ìš©ì´ ì¢…ë£Œë˜ë©´ Idle ìƒíƒœë¡œ ì „í™˜í•œë‹¤
     /// </summary>
     public void OnPlayerInteractionExit()
     {
@@ -131,7 +134,7 @@ public class PlayerInteractionController : MonoBehaviour
     }
 
     /// <summary>
-    /// »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ® ÈÄº¸ ¸®½ºÆ®¿¡ Ãß°¡
+    /// ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ í›„ë³´ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€
     /// </summary>
     /// <param name="target"></param>
     public void AddInteractionTarget(InteractableObject target)
@@ -140,13 +143,13 @@ public class PlayerInteractionController : MonoBehaviour
         {
             _interactionTargetList.Add(target);
 
-            // »óÈ£ÀÛ¿ë Å¸°ÙÀÌ ¾ø´Â °æ¿ì ³Ö¾îÁØ´Ù
+            // ìƒí˜¸ì‘ìš© íƒ€ê²Ÿì´ ì—†ëŠ” ê²½ìš° ë„£ì–´ì¤€ë‹¤
             if (ClosetTarget == null)
                 SetClosetTarget(target);
         }
     }
     /// <summary>
-    /// »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ® ÈÄº¸ ¸®½ºÆ®¿¡¼­ Á¦°Å
+    /// ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ í›„ë³´ ë¦¬ìŠ¤íŠ¸ì—ì„œ ì œê±°
     /// </summary>
     /// <param name="target"></param>
     public void RemoveInteractionTarget(InteractableObject target)
@@ -155,14 +158,14 @@ public class PlayerInteractionController : MonoBehaviour
         {
             _interactionTargetList.Remove(target);
 
-            // »óÈ£ÀÛ¿ë Å¸°ÙÀÌ °°Àº °æ¿ì Á¦°ÅÇØÁØ´Ù
+            // ìƒí˜¸ì‘ìš© íƒ€ê²Ÿì´ ê°™ì€ ê²½ìš° ì œê±°í•´ì¤€ë‹¤
             if (ClosetTarget == target)
                 ClosetTarget = null;
         }
     }
 
     /// <summary>
-    /// »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ® ÈÄº¸ ¸®½ºÆ® Áß, °¡Àå °¡±î¿î Å¸°ÙÀ» °í¸¥´Ù
+    /// ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ í›„ë³´ ë¦¬ìŠ¤íŠ¸ ì¤‘, ê°€ì¥ ê°€ê¹Œìš´ íƒ€ê²Ÿì„ ê³ ë¥¸ë‹¤
     /// </summary>
     public bool PickClosestTarget()
     {
@@ -170,7 +173,7 @@ public class PlayerInteractionController : MonoBehaviour
 
         if (newClosetTarget == null) return false;
 
-        // Áßº¹ÀÌ ¾Æ´Ï¶ó¸é ³Ö´Â´Ù
+        // ì¤‘ë³µì´ ì•„ë‹ˆë¼ë©´ ë„£ëŠ”ë‹¤
         if (newClosetTarget != ClosetTarget)
         {
             SetClosetTarget(newClosetTarget);
@@ -180,7 +183,7 @@ public class PlayerInteractionController : MonoBehaviour
         return false;
     }
     /// <summary>
-    /// ÈÄº¸ ¸®½ºÆ®¿¡¼­ °¡Àå °¡±î¿î Å¸°ÙÀ» Ã£´Â´Ù
+    /// í›„ë³´ ë¦¬ìŠ¤íŠ¸ì—ì„œ ê°€ì¥ ê°€ê¹Œìš´ íƒ€ê²Ÿì„ ì°¾ëŠ”ë‹¤
     /// </summary>
     /// <returns></returns>
     public InteractableObject FindClosestTarget()
@@ -203,19 +206,19 @@ public class PlayerInteractionController : MonoBehaviour
         return closestTarget;
     }
     /// <summary>
-    /// ÇöÀç »óÈ£ÀÛ¿ë ÁßÀÎ ¿ÀºêÁ§Æ®¸£ º¯°æ
+    /// í˜„ì¬ ìƒí˜¸ì‘ìš© ì¤‘ì¸ ì˜¤ë¸Œì íŠ¸ë¥´ ë³€ê²½
     /// </summary>
     /// <param name="newTarget"></param>
     public void SetClosetTarget(InteractableObject newTarget)
     {
-        // »õ·Î¿î Å¸°ÙÀÌ ¾ø´Ù¸é ¸®ÅÏ
+        // ìƒˆë¡œìš´ íƒ€ê²Ÿì´ ì—†ë‹¤ë©´ ë¦¬í„´
         if (newTarget == null) return;
-        // ÀÌ¹Ì °°Àº Å¸°ÙÀÌ¶ó¸é ¸®ÅÏ
+        // ì´ë¯¸ ê°™ì€ íƒ€ê²Ÿì´ë¼ë©´ ë¦¬í„´
         if (ClosetTarget == newTarget) return;
 
         ClosetTarget = newTarget;
 
-        // 1. ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ë °¡´ÉÇÑ ¿ÀºêÁ§Æ®ÀÇ Æ®¸®°Å ¹Ú½º¿¡ µé¾î°£ °æ¿ì (feat. InteractionMarker.cs)
+        // 1. í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš© ê°€ëŠ¥í•œ ì˜¤ë¸Œì íŠ¸ì˜ íŠ¸ë¦¬ê±° ë°•ìŠ¤ì— ë“¤ì–´ê°„ ê²½ìš° (feat. InteractionMarker.cs)
         _interactionMarker.EnableMarker(ClosetTarget);
     }
 

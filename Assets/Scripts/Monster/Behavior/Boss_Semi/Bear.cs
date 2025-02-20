@@ -22,7 +22,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
     #region Variable
 
-    [Header("¡ª¡ª¡ª¡ª¡ª¡ª¡ª Bear Behaviour ¡ª¡ª¡ª¡ª¡ª¡ª¡ª")]
+    [Header("â€•â€•â€•â€•â€•â€•â€• Bear Behaviour â€•â€•â€•â€•â€•â€•â€•")]
     [Space]
 
     [Tooltip("1 : Slash Right\n2 : Slash Left\n3 : BodySlam\n4 : Stomp")]
@@ -102,9 +102,9 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
     // [Space]
 
-    [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;             // »öÀÌ ¼­¼­È÷ µ¹¾Æ¿À´Â È¿°ú
-    [SerializeField] private ParticleSystem[] _disintegrateEffects;                             // Àí°¡·ç È¿°ú ÆÄÆ¼Å¬
-    [SerializeField] private GameObject _bossKnockDownGameObject;                               // ³Ë´ÙÀ½ ÀÌ¹ÌÁö ¿ÀºêÁ§Æ®
+    [SerializeField] private BossClearColorChangePlayer bossClearColorChangeEffect;             // ìƒ‰ì´ ì„œì„œíˆ ëŒì•„ì˜¤ëŠ” íš¨ê³¼
+    [SerializeField] private ParticleSystem[] _disintegrateEffects;                             // ì¿ê°€ë£¨ íš¨ê³¼ íŒŒí‹°í´
+    [SerializeField] private GameObject _bossKnockDownGameObject;                               // ë„‰ë‹¤ìŒ ì´ë¯¸ì§€ ì˜¤ë¸Œì íŠ¸
 
     #endregion
 
@@ -114,7 +114,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     {
         base.Awake();
 
-        // µ¢Äğ ½ºÅ³ ¾Ö´Ï¸ŞÀÌ¼Ç Å¬¸³ÀÇ ±æÀÌ ÃßÃâ
+        // ë©ì¿¨ ìŠ¤í‚¬ ì• ë‹ˆë©”ì´ì…˜ í´ë¦½ì˜ ê¸¸ì´ ì¶”ì¶œ
         foreach (var clip in Animator.runtimeAnimatorController.animationClips)
         {
             if (clip.name == "ani_bear_slash")
@@ -127,7 +127,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
                 _earthquakeAnimDuration = clip.length;
         }
 
-        // °ø°İ ÆÇµ¶±âÀÇ ´ë±â ÀÌº¥Æ® µî·Ï
+        // ê³µê²© íŒë…ê¸°ì˜ ëŒ€ê¸° ì´ë²¤íŠ¸ ë“±ë¡
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
 
@@ -165,7 +165,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         if (IsDead || IsGroggy || !IsCapturable)
             return;
 
-        // ±×·Î±â »óÅÂ·Î ÁøÀÔ
+        // ê·¸ë¡œê¸° ìƒíƒœë¡œ ì§„ì…
         SetAnimatorTrigger("Groggy");
 
         /*
@@ -177,7 +177,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     // boss base
     public override void AttackPreProcess()
     {
-        // ÇöÀç °ø°İ »óÅÂ º¯°æ
+        // í˜„ì¬ ê³µê²© ìƒíƒœ ë³€ê²½
         _currentAttack = _nextAttack;
 
         if (_currentAttack is AttackType.EarthQuake)
@@ -188,7 +188,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
             /*
             if (_totalEarthquakeCount == 3 && _isAbleLightGuideCutscene == true)
             {
-                // Debug.Log("Lighting Guide ÄÆ¾À È£Ãâ");
+                // Debug.Log("Lighting Guide ì»·ì”¬ í˜¸ì¶œ");
 
                 _isAbleLightGuideCutscene = false;
                 StartCoroutine(PlayCutSceneInRunning("Lighting Guide"));
@@ -219,20 +219,20 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     {
         // Debug.Log("bear groggy pre process");
 
-        // ±×·Î±â »óÅÂ ÁøÀÔ (´õÀÌ»ó ¼ÕÀüµîÀÇ ¿µÇâÀ» ¹ŞÁö ¾ÊÀ½)
+        // ê·¸ë¡œê¸° ìƒíƒœ ì§„ì… (ë”ì´ìƒ ì†ì „ë“±ì˜ ì˜í–¥ì„ ë°›ì§€ ì•ŠìŒ)
         IsGroggy = true;
 
-        // ¸ó½ºÅÍÀÇ MonsterBodyHit¸¦ ²ö´Ù (ÇÃ·¹ÀÌ¾î¸¦ Å¸°İÇÒ ¼ö ¾ø´Ù)
+        // ëª¬ìŠ¤í„°ì˜ MonsterBodyHitë¥¼ ëˆë‹¤ (í”Œë ˆì´ì–´ë¥¼ íƒ€ê²©í•  ìˆ˜ ì—†ë‹¤)
         SetHitBoxAttackable(false);
     }
     public override void GroggyPostProcess()
     {
         // Debug.Log("bear groggy post process");
 
-        // ±×·Î±â »óÅÂ Á¾·á (ÀÌÁ¦ ¼ÕÀüµîÀÇ ¿µÇâÀ» ¹ŞÀ½)
+        // ê·¸ë¡œê¸° ìƒíƒœ ì¢…ë£Œ (ì´ì œ ì†ì „ë“±ì˜ ì˜í–¥ì„ ë°›ìŒ)
         IsGroggy = false;
 
-        // ¸ó½ºÅÍÀÇ Body HitBox¸¦ ÄÒ´Ù (ÇÃ·¹ÀÌ¾î¸¦ Å¸°İÇÒ ¼ö ÀÖ´Ù)
+        // ëª¬ìŠ¤í„°ì˜ Body HitBoxë¥¼ ì¼ ë‹¤ (í”Œë ˆì´ì–´ë¥¼ íƒ€ê²©í•  ìˆ˜ ìˆë‹¤)
         SetHitBoxAttackable(true);
 
         currentHitCount = 0;
@@ -263,19 +263,19 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     // slash
     public void SlashPre_AnimEvent()
     {
-        // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡
+        // í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜
         var playerPos = SceneContext.Current.Player.transform.position;
 
-        // ÇÃ·¹ÀÌ¾î¸¦ ¹Ù¶óº¸´Â ¹æÇâ
+        // í”Œë ˆì´ì–´ë¥¼ ë°”ë¼ë³´ëŠ” ë°©í–¥
         var dirBearToPlayer = System.Math.Sign(playerPos.x - transform.position.x);
 
-        // ¹Ù¶óº¸´Â ¹æÇâ¿¡ ÇÃ·¹ÀÌ¾î°¡ ÀÖ´ÂÁö
+        // ë°”ë¼ë³´ëŠ” ë°©í–¥ì— í”Œë ˆì´ì–´ê°€ ìˆëŠ”ì§€
         var isPlayerInLookDirection = dirBearToPlayer == RecentDir;
 
-        // ¹Ù¶óº¸´Â ¹æÇâ¿¡ ÇÃ·¹ÀÌ¾î°¡ ÀÖ´Ù¸é
+        // ë°”ë¼ë³´ëŠ” ë°©í–¥ì— í”Œë ˆì´ì–´ê°€ ìˆë‹¤ë©´
         if (isPlayerInLookDirection)
         {
-            // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡¸¦ ±â¾ï
+            // í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜ë¥¼ ê¸°ì–µ
             _playerPos = playerPos;
         }
         else
@@ -307,11 +307,11 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     // bodySlam
     public void BodySlamPre_AnimEvent()
     {
-        // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡
+        // í”Œë ˆì´ì–´ì˜ ìœ„ì¹˜
         var playerPos = SceneContext.Current.Player.transform.position;
         var dirBearToPlayer = System.Math.Sign(playerPos.x - transform.position.x);
 
-        // ¹æÇâ ÀüÈ¯
+        // ë°©í–¥ ì „í™˜
         SetRecentDir(dirBearToPlayer);
     }
     public void BodySlam01_AnimEvent()
@@ -377,10 +377,10 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
             allocationCount++;
 
         } while (_usedPosX.Any(usedPosX => Mathf.Abs(usedPosX - newPosXInRange) <= _minDistanceEach) && allocationCount <= _allocationLimit);
-        // List<>: C#¿¡¼­ Á¦°øÇÏ´Â 'Á¦³×¸¯ ÄÃ·º¼Ç (<Type> ´öºĞ¿¡, ¹Ú½Ì / ¾ğ¹Ú½ÌÀ» ÇÏÁö ¾ÊÀ½)' À¯Çü Áß ÇÏ³ª·Î, µ¿Àû ¹è¿­À» ±¸Çö
-        // Any(): LINQ(Language Integrated Query) È®Àå ¸Ş¼­µå
-        // ÄÃ·º¼Ç ³»ÀÇ ¿ä¼Ò Áß ÇÏ³ª¶óµµ ÁÖ¾îÁø Á¶°ÇÀ» ¸¸Á·ÇÏ´ÂÁö È®ÀÎÇÏ´Â ¸Ş¼­µå
-        // ¼º´É»óÀÇ ÀÌÀ¯·Î posReallocationCount <= 10·Î ÃÖ´ë ÀçÇÒ´ç È½¼ö¸¦ Á¦ÇÑ
+        // List<>: C#ì—ì„œ ì œê³µí•˜ëŠ” 'ì œë„¤ë¦­ ì»¬ë ‰ì…˜ (<Type> ë•ë¶„ì—, ë°•ì‹± / ì–¸ë°•ì‹±ì„ í•˜ì§€ ì•ŠìŒ)' ìœ í˜• ì¤‘ í•˜ë‚˜ë¡œ, ë™ì  ë°°ì—´ì„ êµ¬í˜„
+        // Any(): LINQ(Language Integrated Query) í™•ì¥ ë©”ì„œë“œ
+        // ì»¬ë ‰ì…˜ ë‚´ì˜ ìš”ì†Œ ì¤‘ í•˜ë‚˜ë¼ë„ ì£¼ì–´ì§„ ì¡°ê±´ì„ ë§Œì¡±í•˜ëŠ”ì§€ í™•ì¸í•˜ëŠ” ë©”ì„œë“œ
+        // ì„±ëŠ¥ìƒì˜ ì´ìœ ë¡œ posReallocationCount <= 10ë¡œ ìµœëŒ€ ì¬í• ë‹¹ íšŸìˆ˜ë¥¼ ì œí•œ
 
         // store posX
         _usedPosX.Add(newPosXInRange);
@@ -407,7 +407,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     }
     public void GenerateGroundWave()
     {
-        // 2°³ÀÇ Áö¸éÆÄ¸¦ ¹ß»ı½ÃÅ²´Ù (ÁÂ / ¿ì)
+        // 2ê°œì˜ ì§€ë©´íŒŒë¥¼ ë°œìƒì‹œí‚¨ë‹¤ (ì¢Œ / ìš°)
         var wave1 = Instantiate(_waveSkillPrefab, _waveSpawnPoint.position, Quaternion.identity);
         wave1.SetDir(Vector2.left);
         wave1.SetActor(this);
@@ -421,7 +421,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
     {
         base.ExecutePostDeathActions();
 
-        // Èæ°õ »ç¸Á ÈÄ ¿¬Ãâ
+        // í‘ê³° ì‚¬ë§ í›„ ì—°ì¶œ
         StartCoroutine(AfterBearDeathCoroutine());
     }
     public IEnumerator AfterBearDeathCoroutine()
@@ -433,31 +433,32 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         yield return ChangeImageCoroutine();
         yield return ChangeBackgroundCoroutine();
 
-        // ÃÖÁ¾ ÄÆ¾À Àç»ı
+        // ìµœì¢… ì»·ì”¬ ì¬ìƒ
         cutscenePlayerList.PlayCutscene("Final CutScene");
     }
     public IEnumerator ChangeImageCoroutine()
     {
-        // »ç¸Á ÀÌ¹ÌÁö·Î º¯°æÇÏ±â À§ÇÑ °¡¸²¸· È¿°ú
+        // ì‚¬ë§ ì´ë¯¸ì§€ë¡œ ë³€ê²½í•˜ê¸° ìœ„í•œ ê°€ë¦¼ë§‰ íš¨ê³¼
         foreach (var effect in _disintegrateEffects)
             effect.gameObject.SetActive(true);  // play on awake effect
 
-        // ÆÄÆ¼Å¬ÀÌ ¾î´ÀÁ¤µµ ³ª¿Ã¶§±îÁö ´ë±â
+        // íŒŒí‹°í´ì´ ì–´ëŠì •ë„ ë‚˜ì˜¬ë•Œê¹Œì§€ ëŒ€ê¸°
         var endParticleTime = _disintegrateEffects[0].main.duration;
         yield return new WaitForSeconds(endParticleTime / 2f);
 
-        // ³Ë´Ù¿î ÀÌ¹ÌÁö·Î º¯°æ
+        // ë„‰ë‹¤ìš´ ì´ë¯¸ì§€ë¡œ ë³€ê²½
         SetAnimatorTrigger("DieEnd");
 
         yield return new WaitForSeconds(5f);
     }
     public IEnumerator ChangeBackgroundCoroutine()
     {
-        // »öÀÌ ¼­¼­È÷ µ¹¾Æ¿À´Â È¿°ú ½ÃÀÛ
+        // ìƒ‰ì´ ì„œì„œíˆ ëŒì•„ì˜¤ëŠ” íš¨ê³¼ ì‹œì‘
         bossClearColorChangeEffect.PlayEffect();
 
-        // º¸½º´øÀü BGM Æ²±â
-        SoundManager.Instance.PlayCommonBGM("Exploration1");
+        // ë³´ìŠ¤ë˜ì „ BGM í‹€ê¸°
+        //SoundManager.Instance.PlayCommonBGM("Exploration1");
+        SoundManager.Instance.BGMFadeInOut("Exploration1", 3f, "", 3f);
 
         yield return new WaitUntil(() => bossClearColorChangeEffect.isEndEffect);
 
@@ -470,11 +471,11 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         }
     }
 
-    // wait event (Attack Evaluator¿¡ ´ëÇÑ ´ë±â ÀÌº¥Æ®)
+    // wait event (Attack Evaluatorì— ëŒ€í•œ ëŒ€ê¸° ì´ë²¤íŠ¸)
     private IEnumerator OnAttackWaitEvent()
     {
-        // ÇØ´ç WaitEvent() Handler´Â ¾ÆÁ÷ State°¡ ¹Ù²î±â Àü¿¡ È£ÃâµÇ´Â ÀÌº¥Æ®ÀÌ¹Ç·Î,
-        // nextAttackÀ» ±âÁØÀ¸·Î Ã³¸®ÇØ¾ß ÇÑ´Ù. (»ç½Ç»ó nextAttackÀÌ currentAttack)
+        // í•´ë‹¹ WaitEvent() HandlerëŠ” ì•„ì§ Stateê°€ ë°”ë€Œê¸° ì „ì— í˜¸ì¶œë˜ëŠ” ì´ë²¤íŠ¸ì´ë¯€ë¡œ,
+        // nextAttackì„ ê¸°ì¤€ìœ¼ë¡œ ì²˜ë¦¬í•´ì•¼ í•œë‹¤. (ì‚¬ì‹¤ìƒ nextAttackì´ currentAttack)
         switch (_nextAttack)
         {
             case AttackType.SlashLeft:
@@ -523,7 +524,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         if (player == null)
             return;
 
-        // Á¾À¯¼® »ı¼º ³ôÀÌ
+        // ì¢…ìœ ì„ ìƒì„± ë†’ì´
         Gizmos.color = Color.red;
         Vector3 pointA = new Vector3(player.transform.position.x - 25f, _ceilingHeight, player.transform.position.z);
         Vector3 pointB = new Vector3(player.transform.position.x + 25f, _ceilingHeight, player.transform.position.z);
@@ -532,7 +533,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
 
         Gizmos.color = Color.yellow;
 
-        // ¿À¸¥ÂÊ Á¾À¯¼® ¹üÀ§
+        // ì˜¤ë¥¸ìª½ ì¢…ìœ ì„ ë²”ìœ„
         /*
         Vector3 pointC = new Vector3(player.BodyCollider.bounds.max.x + _distanceRange.Start, _ceilingHeight, player.transform.position.z);
         Vector3 pointD = new Vector3(player.BodyCollider.bounds.max.x + _distanceRange.Start, _ceilingHeight - 3f, player.transform.position.z);
@@ -544,7 +545,7 @@ public sealed class Bear : BossBehaviour, ILightCaptureListener
         // joonyle99.Line3D rightLine_right = new joonyle99.Line3D(pointE, pointF);
         // Gizmos.DrawLine(rightLine_right.pointA, rightLine_right.pointB);
 
-        // ¿ŞÂÊ Á¾À¯¼® ¹üÀ§
+        // ì™¼ìª½ ì¢…ìœ ì„ ë²”ìœ„
         /*
         Vector3 pointG = new Vector3(player.BodyCollider.bounds.min.x - _distanceRange.Start, _ceilingHeight, player.transform.position.z);
         Vector3 pointH = new Vector3(player.BodyCollider.bounds.min.x - _distanceRange.Start, _ceilingHeight - 3f, player.transform.position.z);
