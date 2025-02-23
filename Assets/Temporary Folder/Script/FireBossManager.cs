@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using static SceneTransitionPlayer;
-using System.Collections.Generic;
 
 public class FireBossManager : MonoBehaviour
 {
@@ -44,6 +43,8 @@ public class FireBossManager : MonoBehaviour
     [Header("[Ending]")]
     [SerializeField] private DialogueData _endingDialogue;
     [SerializeField] private Quest _endingQuest;
+    [SerializeField] private Lantern _lastLantern;
+    private bool _isEndMoveProcess = false;
 
     [Space]
 
@@ -220,6 +221,8 @@ public class FireBossManager : MonoBehaviour
         _endingDialogue.LinkQuestData(_endingQuest);
         DialogueController.Instance.StartDialogue(_endingDialogue, false);
         yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+        yield return PlayerMoveCoroutine();
+        yield return LightSkillCoroutine();
     }
     public void AcceptCallback()
     {
@@ -228,5 +231,63 @@ public class FireBossManager : MonoBehaviour
     public void RejectCallback()
     {
         Debug.Log("Reject");
+    }
+    private IEnumerator PlayerMoveCoroutine()
+    {
+        _isEndMoveProcess = false;
+
+        yield return new WaitForSeconds(1f);
+
+        // 플레이어 위치
+        var player = SceneContext.Current.Player;
+        var playerPosX = player.transform.position.x;
+        Debug.DrawRay(player.transform.position, Vector3.down * 5f, Color.cyan, 10f);
+
+        // 마지막 랜턴에서 플레이어까지의 방향
+        var lanternToPlayerDir = System.Math.Sign(playerPosX - _lastLantern.transform.position.x);
+        var _distanceFromLantern = 4f;
+        Debug.DrawRay(_lastLantern.transform.position + Vector3.up, Vector3.right * lanternToPlayerDir * _distanceFromLantern, Color.cyan, 10f);
+
+        // 플레이어가 이동할 목표 위치
+        var playerMoveTargetPosX = _lastLantern.transform.position.x + (lanternToPlayerDir) * _distanceFromLantern;
+        Debug.DrawRay(new Vector3(playerMoveTargetPosX, _lastLantern.transform.position.y, _lastLantern.transform.position.z), Vector3.down * 5f, Color.cyan, 10f);
+
+        // 플레이어 이동 방향
+        var playerMoveDir = System.Math.Sign(playerMoveTargetPosX - playerPosX);
+        Debug.DrawRay(player.transform.position, Vector3.right * playerMoveDir * 5f, Color.cyan, 10f);
+
+        // 플레이어 이동을 대기
+        yield return MoveCoroutine(playerMoveDir, playerMoveTargetPosX);
+
+        // 만약 플레이어가 뒤돌고 있다면 방향을 돌려준다
+        if (lanternToPlayerDir == player.RecentDir)
+        {
+            var dirForLookToLantern = (-1) * playerMoveDir;
+            yield return MoveCoroutine(dirForLookToLantern, playerMoveTargetPosX + dirForLookToLantern * 0.2f);
+        }
+
+        InputManager.Instance.ChangeToStayStillSetter();
+    }
+    private IEnumerator MoveCoroutine(int moveDir, float targetPosX)
+    {
+        var isRight = moveDir > 0;
+
+        if (isRight)
+        {
+            InputManager.Instance.ChangeToMoveRightSetter();
+        }
+        else
+        {
+            InputManager.Instance.ChangeToMoveLeftSetter();
+        }
+
+        yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.2f);
+
+        _isEndMoveProcess = true;
+    }
+    private IEnumerator LightSkillCoroutine()
+    {
+        InputManager.Instance.ChangeToOnlyLightSetter();
+        yield return new WaitUntil(() => _lastLantern.IsLightOn);
     }
 }

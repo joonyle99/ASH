@@ -28,13 +28,14 @@ public class PlayerLightSkillController : MonoBehaviour
     }
     void Update()
     {
-        InputState inputState = InputManager.Instance.State;
+        InputManager inputMgr = InputManager.Instance;
+        InputState inputState = inputMgr.State;
 
         _isLightableState = _player.CurrentStateIs<IdleState>() || _player.CurrentStateIs<RunState>();
 
         // Auto Light Source Off
         if ((_isLightWorking && !_isLightableState)
-            || SceneEffectManager.Instance.IsPlayingCutscene)
+            || (SceneEffectManager.Instance.IsPlayingCutscene && !inputMgr.IsCurrentSetter(inputMgr.OnlyLightInputSetter)))
         {
             _player.Animator.SetBool("IsLightWorking", false);
         }
@@ -56,7 +57,7 @@ public class PlayerLightSkillController : MonoBehaviour
             _curAngle += _rotateSpeed * inputState.Vertical * Time.deltaTime;
             _curAngle = Mathf.Clamp(_curAngle, -_maxAngle, _maxAngle);
 
-            // -35 ~ 35¸¦ 0 ~ 1·Î Á¤±ÔÈ­
+            // -35 ~ 35ë¥¼ 0 ~ 1ë¡œ ì •ê·œí™”
             _lightAngleValue = (_curAngle + _maxAngle) / (2 * _maxAngle);
             _player.Animator.SetFloat("LightAngleValue", _lightAngleValue);
         }
@@ -72,7 +73,7 @@ public class PlayerLightSkillController : MonoBehaviour
         _isLightWorking = true;
         _player.Animator.SetBool("IsLightWorking", _isLightWorking);
 
-        // ºûÀ» ÄÒ´Ù
+        // ë¹›ì„ ì¼ ë‹¤
         _light.SetActive(true);
         _player.SoundList.PlaySFX("SE_LightSkill");
     }
@@ -86,12 +87,12 @@ public class PlayerLightSkillController : MonoBehaviour
         _isLightWorking = false;
         _player.Animator.SetBool("IsLightWorking", _isLightWorking);
 
-        // ÃÊ±âÈ­
+        // ì´ˆê¸°í™”
         _curAngle = 0f;
         _lightAngleValue = (_curAngle + _maxAngle) / (2 * _maxAngle);
         _player.Animator.SetFloat("LightAngleValue", _lightAngleValue);
 
-        // ºûÀ» ²ö´Ù
+        // ë¹›ì„ ëˆë‹¤
         _light.SetActive(false);
     }
 
@@ -99,14 +100,14 @@ public class PlayerLightSkillController : MonoBehaviour
     {
         //Debug.Log("Pressable");
 
-        // ºû ½ºÅ³ ½ÃÀü ½Ã°£ µ¿¾ÈÀº Press ºÒ°¡´É
+        // ë¹› ìŠ¤í‚¬ ì‹œì „ ì‹œê°„ ë™ì•ˆì€ Press ë¶ˆê°€ëŠ¥
         _isLightButtonPressable = true;
     }
     public void LightButtonDisPressable()
     {
         //Debug.Log("DisPressable");
 
-        // ºû ½ºÅ³ ½ÃÀüÀÌ ½ÃÀÛµÇ¸é Press ºÒ°¡´É
+        // ë¹› ìŠ¤í‚¬ ì‹œì „ì´ ì‹œì‘ë˜ë©´ Press ë¶ˆê°€ëŠ¥
         _isLightButtonPressable = false;
     }
 }

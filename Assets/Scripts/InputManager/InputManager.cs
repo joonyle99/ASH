@@ -32,6 +32,9 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
     [SerializeField] private InputSetterScriptableObject _stayStillInputSetter;
     public InputSetterScriptableObject StayStillInputSetter => _stayStillInputSetter;
 
+    [SerializeField] private InputSetterScriptableObject _onlyLightInputSetter;
+    public InputSetterScriptableObject OnlyLightInputSetter => _onlyLightInputSetter;
+
     private IInputSetter _currentSetter;
     public IInputSetter CurrentSetter => _currentSetter;
 
@@ -88,6 +91,15 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
         }
         ChangeInputSetter(_stayStillInputSetter);
     }
+    public void ChangeToOnlyLightSetter()
+    {
+        if (_onlyLightInputSetter == null)
+        {
+            Debug.LogError("Only Light Input Setter is not set");
+            return;
+        }
+        ChangeInputSetter(_onlyLightInputSetter);
+    }
     public void ChangeInputSetter(IInputSetter setter)
     {
         if (setter == _currentSetter)
@@ -115,5 +127,9 @@ public class InputManager : HappyTools.SingletonBehaviourFixed<InputManager>
         */
 
         _currentSetter = setter;
+    }
+    public bool IsCurrentSetter(IInputSetter setter)
+    {
+        return _currentSetter == setter;
     }
 }
