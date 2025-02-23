@@ -289,5 +289,6 @@ public class FireBossManager : MonoBehaviour
     {
         InputManager.Instance.ChangeToOnlyLightSetter();
         yield return new WaitUntil(() => _lastLantern.IsLightOn);
+        yield return new WaitUntil(() => LanternSceneContext.Current.IsEndLastAttack == true);
     }
 }

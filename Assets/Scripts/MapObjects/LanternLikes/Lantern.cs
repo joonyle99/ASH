@@ -31,7 +31,6 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
     [SerializeField] float _explosionScale = 1.5f;
     [SerializeField] float _explosionStartDuration = 0.1f;
     [SerializeField] float _explosionEndDuration = 0.9f;
-    [SerializeField] bool _canAttack = true;
     LightSettings _currentSettings;
     [Header("References")]
     Light2D _currentSpotLight;
@@ -44,6 +43,8 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
     float _idleTime = 0f;
     float _idleInterval;
     bool _isExplodeDone = false;
+
+    [SerializeField] bool _isLastAttack = false;
 
     PreserveState _statePreserver;
 
@@ -173,8 +174,7 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         // 보스 랜턴 공격 판단
         LanternSceneContext lightSceneContext = LanternSceneContext.Current;
         bool isBossScene = lightSceneContext != null && lightSceneContext.Boss != null;
-        bool canLanternAttack = isBossScene == true && _canAttack == true;
-        if (canLanternAttack == true)
+        if (isBossScene == true)
         {
             // 공격을 위한 설정
             InputManager.Instance.ChangeToStayStillSetter();
@@ -211,9 +211,10 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         _isExplodeDone = true;
 
         // 보스 랜턴 공격 실행
-        if (canLanternAttack == true)
+        if (isBossScene == true)
         {
-            lightSceneContext.LenternAttack(new LanternAttack(this, lightSceneContext.Boss));
+            var lanternAttack = new LanternAttack(this, lightSceneContext.Boss);
+            StartCoroutine(lightSceneContext.LenternAttack(lanternAttack, _isLastAttack));
         }
     }
 

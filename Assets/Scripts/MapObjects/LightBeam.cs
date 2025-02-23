@@ -22,14 +22,19 @@ public class LightBeam : MonoBehaviour
         _endLantern = end;
         _beamEffect = GetComponent<LightBeamLineEffect>();
         if (_endLantern == LanternSceneContext.Current.LightDoor)
+        {
             _beamEffect.MarkAsLastConnection();
+        }
     }
     public void SetLanternsWithBoss(LanternLike start, BossBehaviour end)
     {
         _startLantern = start;
         _endBoss = end;
         _beamEffect = GetComponent<LightBeamLineEffect>();
-        _beamEffect.MarkAsLastConnection();
+        if (_endBoss == LanternSceneContext.Current.Boss)
+        {
+            _beamEffect.MarkAsLastConnection();
+        }
     }
     private void OnEnable()
     {
@@ -37,7 +42,7 @@ public class LightBeam : MonoBehaviour
         {
             if (_endBoss != null)
             {
-                _beamEffect.StartBeamEffect(new Transform[] { _startLantern.LightPoint, _endBoss.CenterOfMass });
+                _beamEffect.StartBeamEffect(new Transform[] { _startLantern.transform, _endBoss.CenterOfMass });
             }
             else
             {
