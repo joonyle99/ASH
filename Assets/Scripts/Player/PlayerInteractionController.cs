@@ -38,10 +38,10 @@ public class PlayerInteractionController : MonoBehaviour
 
     [SerializeField] private List<InteractableObject> _interactionTargetList;               // 범위 안의 상호작용 가능한 오브젝트 리스트
 
+    public bool CanInteract => !DialogueController.Instance.IsDialogueActive;
+
     private PlayerBehaviour _player;
     private InteractionMarker _interactionMarker;
-
-    private bool _canInteract => !DialogueController.Instance.IsDialogueActive;
     #endregion
 
     #region Function
@@ -57,57 +57,62 @@ public class PlayerInteractionController : MonoBehaviour
     }
     private void Update()
     {
-        if (!ClosetTarget || !_canInteract) return;
-
-        var isInteracting = ClosetTarget.IsInteracting;
-        var isInteractable = ClosetTarget.IsInteractable;
-
-        // 4. 플레이어가 상호작용을 끝마친 경우 (feat. InteractionMarker.cs)
-        if (!isInteractable)
+        if (!ClosetTarget) return;
+        if (CanInteract)
         {
-            ClosetTarget.ExitInteraction();
+            var isInteracting = ClosetTarget.IsInteracting;
+            var isInteractable = ClosetTarget.IsInteractable;
 
-            if (_interactionMarker.IsMarking)
+            // 4. 플레이어가 상호작용을 끝마친 경우 (feat. InteractionMarker.cs)
+            if (!isInteractable)
             {
-                _interactionMarker.DisableMarker();
-            }
+                ClosetTarget.ExitInteraction();
 
-            return;
-        }
-
-        if (isInteracting)
-        {
-            ClosetTarget.UpdateInteracting();
-        }
-        else
-        {
-            if (_interactionTargetList.Count >= 2)
-            {
-                var isPickedNewTarget = PickClosestTarget();
-
-                if (isPickedNewTarget)
+                if (_interactionMarker.IsMarking)
                 {
-                    return;
+                    _interactionMarker.DisableMarker();
                 }
+
+                return;
             }
 
-            if (InputManager.Instance.State.InteractionKey.KeyDown)
+            if (isInteracting)
             {
-                if (_player.CanInteract)
+                ClosetTarget.UpdateInteracting();
+            }
+            else
+            {
+                if (_interactionTargetList.Count >= 2)
                 {
-                    ClosetTarget.EnterInteraction();
+                    var isPickedNewTarget = PickClosestTarget();
+
+                    if (isPickedNewTarget)
+                    {
+                        return;
+                    }
+                }
+
+                if (InputManager.Instance.State.InteractionKey.KeyDown)
+                {
+                    if (_player.CanInteract)
+                    {
+                        ClosetTarget.EnterInteraction();
+                    }
                 }
             }
         }
     }
     private void FixedUpdate()
     {
-        if (!_canInteract) return;
-
-        if (ClosetTarget)
+        if(ClosetTarget)
         {
-            if (ClosetTarget.IsInteracting)
-                ClosetTarget.FixedUpdateInteracting();
+            if (CanInteract)
+            {
+                if (ClosetTarget.IsInteracting)
+                {
+                    ClosetTarget.FixedUpdateInteracting();
+                }
+            }
         }
     }
 

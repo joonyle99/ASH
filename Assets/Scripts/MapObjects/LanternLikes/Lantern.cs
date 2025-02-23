@@ -44,6 +44,8 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
     float _idleInterval;
     bool _isExplodeDone = false;
 
+    [SerializeField] bool _isLastAttack = false;
+
     PreserveState _statePreserver;
 
     void Awake()
@@ -171,15 +173,12 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
     {
         // 보스 랜턴 공격 판단
         LanternSceneContext lightSceneContext = LanternSceneContext.Current;
-        BossBehaviour bossBehavior = null;
-        if (lightSceneContext != null)
+        bool isBossScene = lightSceneContext != null && lightSceneContext.Boss != null;
+        if (isBossScene == true)
         {
-            bossBehavior = lightSceneContext.Boss;
-            if (bossBehavior != null)
-            {
-                InputManager.Instance.ChangeToStayStillSetter();
-                SceneContext.Current.Player.IsGodMode = true;
-            }
+            // 공격을 위한 설정
+            InputManager.Instance.ChangeToStayStillSetter();
+            SceneContext.Current.Player.IsGodMode = true;
         }
 
         float eTime = 0f;
@@ -212,9 +211,10 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         _isExplodeDone = true;
 
         // 보스 랜턴 공격 실행
-        if (bossBehavior != null)
+        if (isBossScene == true)
         {
-            lightSceneContext.LenternAttack(new LanternAttack(this, bossBehavior));
+            var lanternAttack = new LanternAttack(this, lightSceneContext.Boss);
+            StartCoroutine(lightSceneContext.LenternAttack(lanternAttack, _isLastAttack));
         }
     }
 

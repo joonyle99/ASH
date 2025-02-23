@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +10,7 @@ public enum InputSetterDataType
     MoveRightInputSetter,
     MoveLeftInputSetter,
     StayStillInputSetter,
+    OnlyLightInputSetter,
 }
 
 [Serializable]

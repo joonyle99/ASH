@@ -29,11 +29,15 @@ public class KeySettingManager
                 StayStillInputSetter SSInputSetter = InputManager.Instance?.StayStillInputSetter as StayStillInputSetter;
                 SSInputSetter.SetKeyCode(keyName, newKeyCode);
                 break;
+            case InputSetterDataType.OnlyLightInputSetter:
+                OnlyLightInputSetter onlyLightInputSetter = InputManager.Instance?.OnlyLightInputSetter as OnlyLightInputSetter;
+                onlyLightInputSetter.SetKeyCode(keyName, newKeyCode);
+                break;
         }
     }
 
     /// <summary>
-    /// °Ë»çÇÒ InputSetter°¡ Ãß°¡µÇ¸é ÇØ´ç ÇÔ¼öÀÇ ÄÉÀÌ½º¸¦ Ãß°¡ÇØ ÁÖ¾î¾ß ÇÔ
+    /// ê²€ì‚¬í•  InputSetterê°€ ì¶”ê°€ë˜ë©´ í•´ë‹¹ í•¨ìˆ˜ì˜ ì¼€ì´ìŠ¤ë¥¼ ì¶”ê°€í•´ ì£¼ì–´ì•¼ í•¨
     /// </summary>
     /// <param name="name"></param>
     /// <param name="keyCode"></param>
@@ -42,9 +46,8 @@ public class KeySettingManager
     {
         if (_unusableKey.Contains(keyCode)) return ChangeKeySettingErrorReason.UnusableKey;
 
-
-        PCInputSetter pCInputSetter = InputManager.Instance.DefaultInputSetter as PCInputSetter;
-        foreach (var pair in pCInputSetter.KeyCodes)
+        PCInputSetter pcInputSetter = InputManager.Instance.DefaultInputSetter as PCInputSetter;
+        foreach (var pair in pcInputSetter.KeyCodes)
         {
             if (pair.Value.KeyCode == keyCode)
             {
