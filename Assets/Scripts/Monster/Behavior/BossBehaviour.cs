@@ -62,6 +62,7 @@ public abstract class BossBehaviour : MonsterBehaviour
             }
         }
     }
+    public bool IsLastHitTimming => targetHitCount -1 == targetHitCount;
 
     [Space]
 
@@ -197,11 +198,11 @@ public abstract class BossBehaviour : MonsterBehaviour
         // Debug.DrawRay(player.transform.position, Vector3.down * 5f, Color.cyan, 10f);
 
         // 보스에서 플레이어까지의 방향
-        var BossToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
-        // Debug.DrawRay(transform.position + Vector3.up, Vector3.right * BossToPlayerDir * _distanceFromBoss, Color.cyan, 10f);
+        var bossToPlayerDir = System.Math.Sign(playerPosX - transform.position.x);
+        // Debug.DrawRay(transform.position + Vector3.up, Vector3.right * bossToPlayerDir * _distanceFromBoss, Color.cyan, 10f);
 
         // 플레이어가 이동할 목표 위치
-        var playerMoveTargetPosX = transform.position.x + (BossToPlayerDir) * _distanceFromBoss;
+        var playerMoveTargetPosX = transform.position.x + (bossToPlayerDir) * _distanceFromBoss;
         // Debug.DrawRay(new Vector3(playerMoveTargetPosX, transform.position.y, transform.position.z), Vector3.down * 5f, Color.cyan, 10f);
 
         // 플레이어 이동 방향
@@ -212,10 +213,10 @@ public abstract class BossBehaviour : MonsterBehaviour
         yield return MoveCoroutine(playerMoveDir, playerMoveTargetPosX);
 
         // 만약 플레이어가 뒤돌고 있다면 방향을 돌려준다
-        if (BossToPlayerDir == player.RecentDir)
+        if (bossToPlayerDir == player.RecentDir)
         {
-            var dirForLookToBear = (-1) * playerMoveDir;
-            yield return MoveCoroutine(dirForLookToBear, playerMoveTargetPosX + dirForLookToBear * 0.2f);
+            var dirForLookToBoss = (-1) * playerMoveDir;
+            yield return MoveCoroutine(dirForLookToBoss, playerMoveTargetPosX + dirForLookToBoss * 0.2f);
         }
 
         InputManager.Instance.ChangeToStayStillSetter();

@@ -31,6 +31,7 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
     [SerializeField] float _explosionScale = 1.5f;
     [SerializeField] float _explosionStartDuration = 0.1f;
     [SerializeField] float _explosionEndDuration = 0.9f;
+    [SerializeField] bool _canAttack = true;
     LightSettings _currentSettings;
     [Header("References")]
     Light2D _currentSpotLight;
@@ -171,15 +172,13 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
     {
         // 보스 랜턴 공격 판단
         LanternSceneContext lightSceneContext = LanternSceneContext.Current;
-        BossBehaviour bossBehavior = null;
-        if (lightSceneContext != null)
+        bool isBossScene = lightSceneContext != null && lightSceneContext.Boss != null;
+        bool canLanternAttack = isBossScene == true && _canAttack == true;
+        if (canLanternAttack == true)
         {
-            bossBehavior = lightSceneContext.Boss;
-            if (bossBehavior != null)
-            {
-                InputManager.Instance.ChangeToStayStillSetter();
-                SceneContext.Current.Player.IsGodMode = true;
-            }
+            // 공격을 위한 설정
+            InputManager.Instance.ChangeToStayStillSetter();
+            SceneContext.Current.Player.IsGodMode = true;
         }
 
         float eTime = 0f;
@@ -212,9 +211,9 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         _isExplodeDone = true;
 
         // 보스 랜턴 공격 실행
-        if (bossBehavior != null)
+        if (canLanternAttack == true)
         {
-            lightSceneContext.LenternAttack(new LanternAttack(this, bossBehavior));
+            lightSceneContext.LenternAttack(new LanternAttack(this, lightSceneContext.Boss));
         }
     }
 
