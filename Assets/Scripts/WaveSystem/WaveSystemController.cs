@@ -101,13 +101,16 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
     [SerializeField] private List<WaveInfo> _waveInfos;
     [SerializeField] private bool _isClearAllWaves = false;
     [SerializeField] private float _timeOfEndOnceWaveCycle = 1.0f;
+    [SerializeField] private List<string> _normalBgm;
+    [SerializeField] private string _dungeonWaveBgm = "Dungeon_Wave";
+
 
     [Header("External Called GameObject"), Space(10)]
 
     [SerializeField] private CutscenePlayer _startWaveCutscene;
     [SerializeField] private CutscenePlayer _endWaveCutscene;
 
-    Coroutine _currentPlayingWaveCoroutine;
+    private Coroutine _currentPlayingWaveCoroutine;
 
     public bool IsClearAllWaves
     {
@@ -313,6 +316,10 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
     private void Init()
     {
         _identifier = GetComponent<Identifier>();
+        _normalBgm = new List<string>()
+        {
+            "Exploration1", "Exploration2"
+        };
 
         foreach (var waveInfo in _waveInfos)
         {
@@ -370,6 +377,17 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
         StartOfWaveSystemLogic();
 
         bool isFirstOfSpawn = true;
+
+        AudioSource bgmPlayer = GetPlayingNormalBgmPlayer();
+
+        if (bgmPlayer != null)
+        {
+            SoundManager.Instance.PlayCommonBGMFade(_dungeonWaveBgm, 3, null, bgmPlayer.time);
+        }
+        else
+        {
+            SoundManager.Instance.PlayCommonBGMFade(_dungeonWaveBgm, 3, null);
+        }
 
         for (int i = 0; i < _waveInfos.Count; i++)
         {
@@ -451,6 +469,9 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
 
     private void EndOfWaveSystemLogic()
     {
+        AudioSource bgmPlayer = SoundManager.Instance.GetBgmPlayer(_dungeonWaveBgm);
+        SoundManager.Instance.StopBGMFade(3, bgmPlayer);
+
         _currentPlayingWaveCoroutine = null;
         IsClearAllWaves = true;
 
@@ -460,5 +481,22 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
         //_enterWaveDoor.OpenDoor(false);
         //_exitWaveDoor.OpenDoor(false);
         */
+    }
+
+    //wave 시스템이 있는 일반적인 씬에서 재생되는 bgm 플레이어 리턴
+    private AudioSource GetPlayingNormalBgmPlayer()
+    {
+        for(int i = 0; i < _normalBgm.Count; i++)
+        {
+            string normalBgmKey = _normalBgm[i];
+            AudioSource bgmPlayer = SoundManager.Instance.GetBgmPlayer(normalBgmKey);
+
+            if (bgmPlayer != null)
+            {
+                return bgmPlayer;
+            }
+        }
+
+        return null;
     }
 }

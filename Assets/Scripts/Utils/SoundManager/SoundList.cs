@@ -113,6 +113,18 @@ public class SoundList : MonoBehaviour
 
         return null;
     }
+    public SoundClipData GetSoundClipData(AudioClip clip, float volumeMultiplier = 1f)
+    {
+        for(int i = 0; i < _soundDatas.Count; i++)
+        {
+            if( _soundDatas[i].Clip == clip)
+            {
+                return _soundDatas[i];
+            }
+        }
+
+        return null;
+    }
 
     public bool Exists(string key)
     {

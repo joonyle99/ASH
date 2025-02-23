@@ -26,18 +26,16 @@ public class ItemObtainPanel : MonoBehaviour
     }
     public void Open(ItemObtainInfo info)
     {
-        if (info.Icon != null) 
-            _icon.sprite = info.Icon;
         //스킬 조각인 경우 메인 텍스트가 이미지로 들어가 있음
-        if(info.MainText == "")
+        if (_mainTextImage != null)
         {
             _mainTextImage.gameObject.SetActive(true);
         }
         else
         {
             _mainTextImage.gameObject.SetActive(false);
-            _mainText.text = info.MainText;
         }
+
         _detailText.text = info.DetailText;
         gameObject.SetActive(true);
     }
