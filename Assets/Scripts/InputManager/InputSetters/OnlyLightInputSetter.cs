@@ -8,9 +8,9 @@ public class OnlyLightInputSetter : InputSetterScriptableObject, IInputSetter
     {
         _keyCodes = new List<DataDictionary<string, CustomKeyCode>>
         {
-            new DataDictionary<string, CustomKeyCode>() { Key = "위쪽이동", Value = new CustomKeyCode("위쪽이동", KeyCode.UpArrow) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "아래쪽이동", Value = new CustomKeyCode("아래쪽이동", KeyCode.DownArrow) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "LightSkill", Value = new CustomKeyCode("LightSkill", KeyCode.Q) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "위쪽이동", Value = new CustomKeyCode("위쪽이동", "위쪽이동", KeyCode.UpArrow) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "아래쪽이동", Value = new CustomKeyCode("아래쪽이동","아래쪽이동", KeyCode.DownArrow) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "LightSkill", Value = new CustomKeyCode("LightSkill", "LightSkill", KeyCode.Q) },
         };
     }
 

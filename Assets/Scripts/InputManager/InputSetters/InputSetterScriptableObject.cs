@@ -16,11 +16,15 @@ public enum InputSetterDataType
 [Serializable]
 public class CustomKeyCode
 {
+    public string Key;
+
+    //해당 키의 설명
     public string Name;
     public KeyCode KeyCode;
 
-    public CustomKeyCode(string name, KeyCode keyCode)
+    public CustomKeyCode(string key, string name, KeyCode keyCode)
     {
+        Key = key;
         Name = name;
         KeyCode = keyCode;
     }
@@ -51,29 +55,42 @@ public abstract class InputSetterScriptableObject : ScriptableObject, IInputSett
 
     public virtual void Update() { }
 
-    public virtual void SetKeyCode(string keyName, KeyCode newKeyCode)
+    public virtual void SetKeyCode(string key, KeyCode newKeyCode)
     {
-        CustomKeyCode targetKeyCode = GetKeyCode(keyName);
+        CustomKeyCode targetKeyCode = GetKeyCode(key);
 
         if (targetKeyCode == null)
         {
-            Debug.Log(keyName + " not exist keyname");
+            Debug.Log(key + " not exist keyname");
             return;
         }
-        Debug.Log(keyName + " change key to " + newKeyCode);
+        Debug.Log(key + " change key to " + newKeyCode);
 
         targetKeyCode.KeyCode = newKeyCode;
     }
 
-    public CustomKeyCode GetKeyCode(string name)
+    public CustomKeyCode GetKeyCode(string key)
     {
         for (int i = 0; i < _keyCodes.Count; i++)
         {
             DataDictionary<string, CustomKeyCode> dict = _keyCodes[i];
 
-            if (dict.Key.Equals(name))
+            if (dict.Key.Equals(key))
             {
                 return dict.Value;
+            }
+        }
+
+        return null;
+    }
+
+    public CustomKeyCode GetCustomKeyCodeByKeyCode(KeyCode keyCode)
+    {
+        for(int i = 0; i < _keyCodes.Count; i++)
+        {
+            if(_keyCodes[i].Value.KeyCode == keyCode)
+            {
+                return _keyCodes[i].Value;
             }
         }
 

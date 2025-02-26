@@ -1,3 +1,4 @@
+using HappyTools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,38 +29,46 @@ public enum ChangeKeySettingErrorReason
     UnusableKey,
 }
 
-public class KeySettingUIManager : MonoBehaviour
+public class KeySettingUIManager : SingletonBehaviourFixed<KeySettingUIManager>
 {
-    [SerializeField] RectTransform _scrollViewContent;
-    [SerializeField] Transform _window;
+    [SerializeField] private GameObject _window;
+    [SerializeField] private GameObject _OverlappedKeyWarningText;
 
-    [Header("Prefabs")]
-    [SerializeField] GameObject _keySettingBundlePrefab;
+    private bool _waitAnyKeyDown = false;
 
-    [SerializeField] GameObject _keySettingBoxPrefab;
+    public GameObject ColumnKeyBox1;
+    public GameObject ColumnKeyBox2;
 
-    [Header("UI Setting"), Tooltip("boxª˝º∫ Ω√ box¿« ≈©±‚¥¬ margin∞˙ content¿« widthø° ¿««ÿ ∞·¡§")]
-    [SerializeField] float _boxLeftMargin = 10f;
-    [SerializeField] float _boxRightMargin = 10f;
-    [SerializeField] float _boxTopMargin = 10f;
-    [SerializeField] float _boxBottomMargin = 10f;
+    private List<KeySettingBox> _keyBoxes = new List<KeySettingBox>();
 
-    //∆ƒ∂ÛπÃ≈Õ∑Œ π⁄Ω∫ ≈©±‚¿« ∫Ø»≠∑Æ¿ª ∫Í∑ŒµÂƒ≥Ω∫∆Æ
-    public UnityEvent<float, float> OnChangedContentBoxSize;
+    [SerializeField] private List<DataDictionary<KeyCode, Sprite>> _fillIntoButtonWithImages = new List<DataDictionary<KeyCode, Sprite>>();
 
-    private void Awake()
-    {
-        OnChangedContentBoxSize = new UnityEvent<float, float>();
-        OnChangedContentBoxSize.AddListener(SetContentSize);
-    }
     private void Start()
     {
-        Init();
+        foreach (var keyBox in ColumnKeyBox1.GetComponentsInChildren<KeySettingBox>())
+        {
+            _keyBoxes.Add(keyBox);
+        }
+        foreach (var keyBox in ColumnKeyBox2.GetComponentsInChildren<KeySettingBox>())
+        {
+            _keyBoxes.Add(keyBox);
+        }
+
+        int keyBoxIdx = 0;
+        foreach (var keyCodeData in InputManager.Instance.DefaultInputSetter.KeyCodes)
+        {
+            KeySettingBox keySettingBox = _keyBoxes[keyBoxIdx];
+            keySettingBox.InitKey(keyCodeData.Key, keyCodeData.Value);
+            keySettingBox.BindOnChangeKeyButton(
+                () => OnChangedKeyboardSetting(this, new ChangeKeyCodeArgs(keySettingBox, InputSetterDataType.DefaultInputSetter, keyCodeData.Value)));
+
+            keyBoxIdx++;
+        }
     }
 
     private void Update()
     {
-        if (InputManager.Instance.State.EscapeKey.KeyDown)
+        if (InputManager.Instance.State.EscapeKey.KeyDown && !_waitAnyKeyDown)
         {
             var PlayablePlayer = SceneContext.Current.PlayableSceneTransitionPlayer;
             if (PlayablePlayer != null && PlayablePlayer.IsPlayable == false)
@@ -71,94 +80,10 @@ public class KeySettingUIManager : MonoBehaviour
         }
     }
     #region Initialize
-    private void Init()
-    {
-        AddContentInScrollView(CreateKeySettingBundle(InputManager.Instance.DefaultInputSetter));
-        AddContentInScrollView(CreateKeySettingBundle(InputManager.Instance.StayStillInputSetter));
-    }
 
-    private void AddContentInScrollView(GameObject content)
-    {
-        RectTransform contentRect = content.GetComponent<RectTransform>();
-        content.transform.SetParent(_scrollViewContent.transform, false);
-
-        _scrollViewContent.sizeDelta =
-            new Vector2(_scrollViewContent.sizeDelta.x, _scrollViewContent.sizeDelta.y + contentRect.sizeDelta.y);
-    }
-
-    private GameObject CreateKeySettingBundle(InputSetterScriptableObject inputSetter)
-    {
-        List<DataDictionary<string, CustomKeyCode>> keyCodes = new List<DataDictionary<string, CustomKeyCode>>();
-
-        switch(inputSetter.InputSetterDataType)
-        {
-            case InputSetterDataType.DefaultInputSetter:
-                {
-                    keyCodes = ((PCInputSetter)inputSetter).KeyCodes;
-                    break;
-                }
-            case InputSetterDataType.StayStillInputSetter:
-                {
-                    keyCodes = ((StayStillInputSetter)inputSetter).KeyCodes;
-                    break;
-                }
-        }
-
-        RectTransform keySettingBundle = Instantiate(_keySettingBundlePrefab).GetComponent<RectTransform>();
-        RectTransform label = keySettingBundle.transform.GetChild(0).Find("Label").GetComponent<RectTransform>();
-        RectTransform content = keySettingBundle.transform.GetChild(0).Find("Content").GetComponent<RectTransform>();
-
-        //label
-        label.transform.Find("Description").GetComponent<TMP_Text>().text = inputSetter.name;
-        label.GetComponentInChildren<Button>().onClick.AddListener(() => { ToggleDropDownBox(keySettingBundle); });
-
-        //content
-        float boxWidth = content.rect.width - (_boxLeftMargin + _boxRightMargin);
-        float nextBoxPosX = _boxLeftMargin;
-        float nextBoxPosY = -_boxTopMargin - label.sizeDelta.y;
-
-        for(int i = 0; i < keyCodes.Count; i++)
-        {
-            GameObject newBox = CreateKeySettingBox(inputSetter.InputSetterDataType, keyCodes[i].Value);
-            RectTransform boxRect = newBox.GetComponent<RectTransform>();
-
-            boxRect.localPosition = new Vector3(nextBoxPosX, nextBoxPosY);
-            boxRect.sizeDelta = new Vector2(boxWidth, boxRect.sizeDelta.y);
-            newBox.transform.SetParent(content.transform, false);
-
-            nextBoxPosY -= boxRect.sizeDelta.y + _boxBottomMargin + _boxTopMargin;
-        }
-
-        //set content size
-        content.sizeDelta = new Vector2(content.sizeDelta.x, -nextBoxPosY - _boxTopMargin);
-        keySettingBundle.sizeDelta =
-            new Vector2(keySettingBundle.sizeDelta.x, content.sizeDelta.y + label.sizeDelta.y);
-
-        return keySettingBundle.gameObject;
-    }
-
-    private GameObject CreateKeySettingBox(InputSetterDataType inputSetterDataType, CustomKeyCode keyCode)
-    {
-        GameObject newBox = Instantiate(_keySettingBoxPrefab);
-        TMP_Text actionText = newBox.transform.GetChild(0).Find("Text_Action").GetComponent<TMP_Text>();
-        Button button = newBox.transform.GetChild(0).Find("Button").GetComponent<Button>();
-        TMP_Text buttonText = newBox.transform.GetChild(0).Find("Button").GetComponentInChildren<TMP_Text>();
-
-        button.onClick.AddListener(() => OnChangedKeyboardSetting(this, new ChangeKeyCodeArgs(newBox.GetComponent<KeySettingBox>(), inputSetterDataType, keyCode)));
-        actionText.text = keyCode.Name;
-        buttonText.text = keyCode.KeyCode.ToString();
-
-        return newBox;
-    }
     #endregion
 
     #region Function
-
-    private void SetContentSize(float x, float y)
-    {
-        _scrollViewContent.sizeDelta = new Vector2(_scrollViewContent.sizeDelta.x + x, _scrollViewContent.sizeDelta.y + y);
-    }
-
     public void ToggleKeySettingPanel()
     {
         bool value = !_window.gameObject.activeSelf;
@@ -175,31 +100,12 @@ public class KeySettingUIManager : MonoBehaviour
 
     public void ClosePanel()
     {
-        transform.Find("Window").gameObject.SetActive(false);
+        _window.gameObject.SetActive(false);
     }
 
     public bool IsOpened()
     {
         return _window.gameObject.activeSelf;
-    }
-
-    public void ToggleDropDownBox(RectTransform keySettingBundle)
-    {
-        RectTransform labelRect = keySettingBundle.transform.GetChild(0).Find("Label").GetComponent<RectTransform>();
-        RectTransform contentRect = keySettingBundle.transform.GetChild(0).Find("Content").GetComponent<RectTransform>();
-
-        if (keySettingBundle.sizeDelta.y == labelRect.sizeDelta.y)
-        {
-            keySettingBundle.sizeDelta = new Vector2(keySettingBundle.sizeDelta.x,
-                labelRect.sizeDelta.y + contentRect.sizeDelta.y);
-            OnChangedContentBoxSize?.Invoke(0, contentRect.sizeDelta.y);
-        }
-        else
-        {
-            keySettingBundle.sizeDelta = new Vector2(keySettingBundle.sizeDelta.x,
-                labelRect.sizeDelta.y);
-            OnChangedContentBoxSize?.Invoke(0, -contentRect.sizeDelta.y);
-        }
     }
 
     private string KeySettingErrorString(ChangeKeySettingErrorReason value)
@@ -209,9 +115,9 @@ public class KeySettingUIManager : MonoBehaviour
             case ChangeKeySettingErrorReason.None:
                 return "None";
             case ChangeKeySettingErrorReason.AlreadyUsing:
-                return "¿ÃπÃ ªÁøÎ¡ﬂ¿Œ ≈∞ ¿‘¥œ¥Ÿ";
+                return "Ïù¥ÎØ∏ ÏÇ¨Ïö©Ï§ëÏù∏ ÌÇ§ ÏûÖÎãàÎã§";
             case ChangeKeySettingErrorReason.UnusableKey:
-                return "ªÁøÎ ∫“∞°¥…«— ≈∞ ¿‘¥œ¥Ÿ";
+                return "ÏÇ¨Ïö© Î∂àÍ∞ÄÎä•Ìïú ÌÇ§ ÏûÖÎãàÎã§";
         }
 
         return "";
@@ -221,24 +127,23 @@ public class KeySettingUIManager : MonoBehaviour
     #region Events
     private void OnChangedKeyboardSetting(object sender, ChangeKeyCodeArgs changeKeyCodeArgs)
     {
-        Debug.Log("Call ButtonClick : " + changeKeyCodeArgs.KeySettingBox.MouseClickCount);
+        Debug.Log($"{changeKeyCodeArgs.TargetKeyCode.Name} action key pressed");
         if (changeKeyCodeArgs.KeySettingBox.MouseClickCount >= 1)
         {
             changeKeyCodeArgs.KeySettingBox.MouseClickCount = 0;
             return;
         }
 
-        TMP_Text buttonText = changeKeyCodeArgs.KeySettingBox.transform.GetChild(0).Find("Button").GetComponentInChildren<TMP_Text>();
-        buttonText.GetComponentInParent<Button>().interactable = false;
+        changeKeyCodeArgs.KeySettingBox.ChangeKeyButton.interactable = false;
         StartCoroutine(ChangeKeyboardSettingLogic(this, changeKeyCodeArgs));
     }
 
     private IEnumerator ChangeKeyboardSettingLogic(object sender, ChangeKeyCodeArgs changeKeyCodeArgs)
     {
-        TMP_Text buttonText = changeKeyCodeArgs.KeySettingBox.transform.GetChild(0).Find("Button").GetComponentInChildren<TMP_Text>();
-        buttonText.text = "ªÁøÎ«œΩ« ≈∞∏¶ ¿‘∑¬«ÿ ¡÷ººø‰.";
+        changeKeyCodeArgs.KeySettingBox.SetKeyText(KeyCode.None);
         yield return null;
 
+        _waitAnyKeyDown = true;
         while (true)
         {
             if(Input.anyKeyDown)
@@ -247,37 +152,114 @@ public class KeySettingUIManager : MonoBehaviour
                 {
                     if (Input.GetKey(kCode))
                     {
-                        if (kCode == KeyCode.Mouse0)
+                        if(kCode == KeyCode.Escape)
                         {
-                            changeKeyCodeArgs.KeySettingBox.MouseClickCount++;
-                            Debug.Log("ChangeKeyboard Setting Logic in Mouse click Count : " + changeKeyCodeArgs.KeySettingBox.MouseClickCount);
-                        }
-
-                        ChangeKeySettingErrorReason changeKeySettingErrorReason = KeySettingManager.CheckKeyCode(changeKeyCodeArgs.TargetKeyCode.Name, kCode);
-                        string errorString = KeySettingErrorString(changeKeySettingErrorReason);
-                        if (changeKeySettingErrorReason == ChangeKeySettingErrorReason.None)
-                        {
-                            KeySettingManager.SetKeyboardSetting(changeKeyCodeArgs.InputSetterDataType,
-                            changeKeyCodeArgs.TargetKeyCode.Name, kCode);
-                            buttonText.text = kCode.ToString();
+                            changeKeyCodeArgs.KeySettingBox.SetKeyText(changeKeyCodeArgs.TargetKeyCode.KeyCode);
                         }
                         else
                         {
-                            buttonText.text = errorString;
-                            Debug.Log("Fail to Change Key reason : " + errorString);
+                            if (kCode == KeyCode.Mouse0)
+                            {
+                                changeKeyCodeArgs.KeySettingBox.MouseClickCount++;
+                                Debug.Log("ChangeKeyboard Setting Logic in Mouse click Count : " + changeKeyCodeArgs.KeySettingBox.MouseClickCount);
+                            }
 
+                            ChangeKeySettingErrorReason changeKeySettingErrorReason = KeySettingManager.CheckKeyCode(changeKeyCodeArgs.TargetKeyCode.Name, kCode);
+                            string errorString = KeySettingErrorString(changeKeySettingErrorReason);
+                            if (changeKeySettingErrorReason == ChangeKeySettingErrorReason.None)
+                            {
+                                KeySettingManager.SetKeyboardSetting(changeKeyCodeArgs.InputSetterDataType,
+                                changeKeyCodeArgs.TargetKeyCode.Key, kCode);
+                                changeKeyCodeArgs.KeySettingBox.SetKeyText(kCode);
+                            }
+                            else if(changeKeySettingErrorReason == ChangeKeySettingErrorReason.AlreadyUsing)
+                            {
+                                // ÏÉàÎ°ú ÎàÑÎ•∏ ÌÇ§Í∞Ä ÏûêÏã†Ïù¥ ÏïÑÎãå Í≤ΩÏö∞Îßå Î°úÏßÅ ÏßÑÌñâ
+                                if(kCode != changeKeyCodeArgs.TargetKeyCode.KeyCode)
+                                {
+                                    _OverlappedKeyWarningText.gameObject.SetActive(true);
+
+                                    //ÏÇ¨Ïö©Ï§ëÏù∏ ÌÇ§ Î≥ÄÍ≤Ω ÏõêÌï† Îïå Ïû¨ÌôïÏù∏
+                                    while (true)
+                                    {
+                                        yield return null;
+
+                                        if (Input.anyKeyDown)
+                                        {
+                                            foreach (KeyCode checkKeyCode in Enum.GetValues(typeof(KeyCode)))
+                                            {
+                                                if (Input.GetKey(checkKeyCode))
+                                                {
+                                                    //ÌÇ§ Î≥ÄÍ≤Ω
+                                                    if (checkKeyCode == kCode)
+                                                    {
+                                                        // Í∏∞Ï°¥ ÏÇ¨Ïö©Ï§ëÏù¥Îçò ÌÇ§ ÏÇ≠Ï†ú
+                                                        string actionKey = KeySettingManager.GetActionKeyByKeyCode(changeKeyCodeArgs.InputSetterDataType, checkKeyCode);
+                                                        KeySettingManager.SetKeyboardSetting(changeKeyCodeArgs.InputSetterDataType, actionKey, KeyCode.None);
+                                                        GetKeySettingBox(actionKey)?.SetKeyText(KeyCode.None);
+
+                                                        // ÌÇ§ Î≥ÄÍ≤Ω
+                                                        KeySettingManager.SetKeyboardSetting(changeKeyCodeArgs.InputSetterDataType,
+                                                        changeKeyCodeArgs.TargetKeyCode.Key, kCode);
+                                                        changeKeyCodeArgs.KeySettingBox.SetKeyText(kCode);
+
+                                                    }
+                                                }
+                                            }
+
+                                            break;
+                                        }
+                                    }
+
+                                    _OverlappedKeyWarningText.gameObject.SetActive(false);
+                                }
+                                else
+                                {
+                                    changeKeyCodeArgs.KeySettingBox.SetKeyText(changeKeyCodeArgs.TargetKeyCode.KeyCode);
+                                }
+                            }
+                            else
+                            {
+                                Debug.Log("Fail to Change Key reason : " + errorString);
+                            }
                         }
                     }
                 }
 
-                buttonText.GetComponentInParent<Button>().interactable = true;
-                buttonText.text = changeKeyCodeArgs.TargetKeyCode.KeyCode.ToString();
+                changeKeyCodeArgs.KeySettingBox.ChangeKeyButton.interactable = true;
 
+                _waitAnyKeyDown = false;
                 yield break;
             }
 
             yield return null;
         }
+    }
+
+    private KeySettingBox GetKeySettingBox(string key)
+    {
+        for(int i = 0; i < _keyBoxes.Count; i++)
+        {
+            if (_keyBoxes[i].ActionKey == key)
+            {
+                return _keyBoxes[i];
+            }
+        }
+
+        return null;
+    }
+
+    public Sprite FindImageButtonBox(KeyCode keyCode)
+    {
+        for (int i = 0; i < _fillIntoButtonWithImages.Count; i++)
+        {
+            if (keyCode == _fillIntoButtonWithImages[i].Key)
+            {
+                return _fillIntoButtonWithImages[i].Value;
+            }
+        }
+
+        return null;
     }
     #endregion
 }

@@ -1,11 +1,83 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class KeySettingBox : MonoBehaviour
 {
-    //Å°¼¼ÆÃ º¯°æ ½Ã Å°¼¼ÆÃ ¹öÆ°À» Å¬¸¯ÇÏ°Ô µÇ¸é,
-    //OnChangedKeyboardSetting¿¡¼­ Å° ÀÔ·ÂÀ» ¹Þ°í ±× Áï½Ã ´Ù½Ã OnClick¹öÆ°ÀÌ Å¬¸¯µÇ¾î ·ÎÁ÷ÀÌ Àç½ÇÇà µÊ.
-    //ÀÌ¸¦ È®ÀÎÇÏ±â À§ÇÑ º¯¼ö
+    //í‚¤ì„¸íŒ… ë³€ê²½ ì‹œ í‚¤ì„¸íŒ… ë²„íŠ¼ì„ í´ë¦­í•˜ê²Œ ë˜ë©´,
+    //OnChangedKeyboardSettingì—ì„œ í‚¤ ìž…ë ¥ì„ ë°›ê³  ê·¸ ì¦‰ì‹œ ë‹¤ì‹œ OnClickë²„íŠ¼ì´ í´ë¦­ë˜ì–´ ë¡œì§ì´ ìž¬ì‹¤í–‰ ë¨.
+    //ì´ë¥¼ í™•ì¸í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
     public int MouseClickCount = 0;
+
+    public string ActionKey = "";
+
+    private float _widthOffset = 50f;
+
+    [SerializeField] private TMP_Text _action;
+
+    [SerializeField] private TMP_Text _keyText;
+    [SerializeField] private Image _keyImg;
+
+    [SerializeField] private Button _changeKeyButton;
+    public Button ChangeKeyButton => _changeKeyButton;
+
+    public void InitKey(string key, CustomKeyCode keyCode)
+    {
+        ActionKey = key;
+        if(keyCode == null)
+        {
+            _keyText.text = "";
+
+            _keyText.gameObject.SetActive(true);
+            _keyImg.gameObject.SetActive(false);
+            return;
+        }
+
+        _action.text = keyCode.Name;
+        SetKeyText(keyCode.KeyCode);
+    }
+
+    public void SetKeyText(KeyCode newKey)
+    {
+        Sprite buttonImage = KeySettingUIManager.Instance.FindImageButtonBox(newKey);
+
+        if (buttonImage != null)
+        {
+            _keyImg.sprite = buttonImage;
+            SetButtonWidth(20f + _widthOffset);
+            _keyText.gameObject.SetActive(false);
+            _keyImg.gameObject.SetActive(true);
+        }
+        else
+        {
+            if (newKey == KeyCode.None)
+            {
+                _keyText.text = "";
+                SetButtonWidth(50f + _widthOffset);
+            }
+            else
+            {
+                _keyText.text = newKey.ToString();
+                SetButtonWidth(20f * _keyText.text.Length + _widthOffset);
+            }
+
+            _keyText.gameObject.SetActive(true);
+            _keyImg.gameObject.SetActive(false);
+        }
+    }
+
+    private void SetButtonWidth(float width)
+    {
+        RectTransform buttonRect = _changeKeyButton.GetComponent<RectTransform>();
+        buttonRect.sizeDelta = new Vector2(width, buttonRect.sizeDelta.y);
+    }
+
+    public void BindOnChangeKeyButton(UnityAction action)
+    {
+        _changeKeyButton.onClick.AddListener(action);
+    }
 }

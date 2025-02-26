@@ -101,6 +101,10 @@ public class PlayerInteractionController : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            ClosetTarget.IsInteracting = false;
+        }
     }
     private void FixedUpdate()
     {

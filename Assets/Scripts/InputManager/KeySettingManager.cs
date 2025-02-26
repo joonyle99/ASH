@@ -7,7 +7,7 @@ public class KeySettingManager
 {
     private static HashSet<KeyCode> _unusableKey = new HashSet<KeyCode>() { KeyCode.LeftApple };
 
-    public static void SetKeyboardSetting(InputSetterDataType inputSetterDataType, string keyName, KeyCode newKeyCode)
+    public static void SetKeyboardSetting(InputSetterDataType inputSetterDataType, string key, KeyCode newKeyCode)
     {
         switch (inputSetterDataType)
         {
@@ -18,22 +18,60 @@ public class KeySettingManager
             case InputSetterDataType.DefaultInputSetter:
                 {
                     PCInputSetter pcInputSetter = InputManager.Instance?.DefaultInputSetter as PCInputSetter;
-                    pcInputSetter.SetKeyCode(keyName, newKeyCode);
+                    pcInputSetter.SetKeyCode(key, newKeyCode);
                     break;
                 }
-            case InputSetterDataType.MoveRightInputSetter: 
+            case InputSetterDataType.MoveRightInputSetter:
                 break;
-            case InputSetterDataType.MoveLeftInputSetter: 
+            case InputSetterDataType.MoveLeftInputSetter:
                 break;
             case InputSetterDataType.StayStillInputSetter:
                 StayStillInputSetter SSInputSetter = InputManager.Instance?.StayStillInputSetter as StayStillInputSetter;
-                SSInputSetter.SetKeyCode(keyName, newKeyCode);
+                SSInputSetter.SetKeyCode(key, newKeyCode);
                 break;
             case InputSetterDataType.OnlyLightInputSetter:
                 OnlyLightInputSetter onlyLightInputSetter = InputManager.Instance?.OnlyLightInputSetter as OnlyLightInputSetter;
-                onlyLightInputSetter.SetKeyCode(keyName, newKeyCode);
+                onlyLightInputSetter.SetKeyCode(key, newKeyCode);
                 break;
         }
+    }
+
+    public static string GetActionKeyByKeyCode(InputSetterDataType inputSetterDataType, KeyCode keyCode)
+    {
+        switch (inputSetterDataType)
+        {
+            case InputSetterDataType.None:
+                {
+                    break;
+                }
+            case InputSetterDataType.DefaultInputSetter:
+                {
+                    PCInputSetter pcInputSetter = InputManager.Instance?.DefaultInputSetter as PCInputSetter;
+                    CustomKeyCode customKeyCode = pcInputSetter.GetCustomKeyCodeByKeyCode(keyCode);
+
+                    return customKeyCode == null ? "" : customKeyCode.Key;
+                }
+            case InputSetterDataType.MoveRightInputSetter:
+                break;
+            case InputSetterDataType.MoveLeftInputSetter:
+                break;
+            case InputSetterDataType.StayStillInputSetter:
+                {
+                    StayStillInputSetter SSInputSetter = InputManager.Instance?.StayStillInputSetter as StayStillInputSetter;
+                    CustomKeyCode customKeyCode = SSInputSetter.GetCustomKeyCodeByKeyCode(keyCode);
+
+                    return customKeyCode == null ? "" : customKeyCode.Key;
+                }
+            case InputSetterDataType.OnlyLightInputSetter:
+                {
+                    OnlyLightInputSetter onlyLightInputSetter = InputManager.Instance?.OnlyLightInputSetter as OnlyLightInputSetter;
+                    CustomKeyCode customKeyCode = onlyLightInputSetter.GetCustomKeyCodeByKeyCode(keyCode);
+
+                    return customKeyCode == null ? "" : customKeyCode.Key;
+                }
+        }
+
+        return "";
     }
 
     /// <summary>
