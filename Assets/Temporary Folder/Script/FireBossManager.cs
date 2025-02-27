@@ -195,6 +195,34 @@ public class FireBossManager : MonoBehaviour
     public void ExecuteVisibleFootholds()
     {
         _footholds.SetActive(true);
+        //StartCoroutine(ExecuteVisibleFootholdsCoroutine());
+    }
+    private IEnumerator ExecuteVisibleFootholdsCoroutine()
+    {
+        _footholds.SetActive(true);
+
+        var spriteRenderers = _footholds.GetComponentsInChildren<SpriteRenderer>();
+
+        var eTime = 0f;
+        var duration = 2f;
+
+        while (eTime < duration)
+        {
+            foreach (var spriteRenderer in spriteRenderers)
+            {
+                var t = eTime / duration;
+
+                var nextAlpha = Mathf.Lerp(0f, 1f, t);
+
+                var color = spriteRenderer.color;
+                color.a = nextAlpha;
+                spriteRenderer.color = color;
+            }
+
+            yield return null;
+
+            eTime += Time.deltaTime;
+        }
     }
 
     public void ActiveCameraChasing()
