@@ -8,28 +8,28 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     /// <summary>
     /// <para>
     /// Idle:
-    /// ¾Æ¹«·± Ä«¸Ş¶ó È¿°úµµ ¾ø´Â default »óÅÂ.
-    /// Ä«¸Ş¶ó°¡ ÇÃ·¹ÀÌ¾î ÂÑ¾Æ´Ù´Ô.
+    /// ì•„ë¬´ëŸ° ì¹´ë©”ë¼ íš¨ê³¼ë„ ì—†ëŠ” default ìƒíƒœ.
+    /// ì¹´ë©”ë¼ê°€ í”Œë ˆì´ì–´ ì«“ì•„ë‹¤ë‹˜.
     /// </para>
     /// 
     /// <para>
     /// MajorEvent:
-    /// Idle°ú Cutscene »çÀÌÀÇ »óÅÂ·Î, ¿ÀºêÁ§Æ®µéÀº ÀüºÎ ÀÛµ¿ÇÏÁö¸¸ Ä«¸Ş¶ó È¿°ú°¡ ÀÏºÎ Àû¿ëµÈ »óÅÂ.
-    /// Ä«¸Ş¶ó focus°¡ ¹Ù²î°Å³ª shake µÇ´Â µîÀÇ È¿°ú°¡ Àû¿ëµÉ ¼ö ÀÖÀ½.
-    /// ´Ù¸¥ ¿ì¼±¼øÀ§°¡ ´õ ³ôÀº MajorEvent³ª ÄÆ½ÅÀ¸·Î override µÉ ¼ö ÀÖÀ½.
-    /// ¿©·¯ MajorEvent Áß¿¡¼± °¡Àå ³ôÀº EventÀÇ ¼³Á¤¸¸ »ç¿ëÇÔ.
-    /// ÄÆ¾ÀÀ¸·Î overrideµÈ °æ¿ì, ÄÆ¾ÀÀÌ Á¾·áµÈ ÈÄ µ¹¾Æ¿È.
-    /// ´Ù¸¥ MajorEvent¿Í µ¿½Ã¿¡ ½ÇÇàµÉ ¼ö ÀÖ´Â°Ô ÀÖÀ½ ! (µÎ ¿òÁ÷ÀÌ´Â ¹°Ã¼¸¦ ¸ğµÎ Ä«¸Ş¶ó ¾È¿¡ Àâ¾Æ¾ßÇÒ ¶§ µî)
-    /// °°Àº ¿ì¼±¼øÀ§ÀÎ (È¤Àº ¾Æ¿¹ °°Àº) MajorEventÀÏ ¶§, ³ªÁß°Å°¡ override ÇØ¾ßÇÒ ¼öµµ ÀÖ°í, ÇÕÃÄ¾ßÇÒ ¼öµµ ÀÖÀ½.
-    /// °°Àº ¿ì¼±¼øÀ§ÀÏ ¶§ ¾î¶»°ÔÇÒÁö Á¤ÀÇÇØ¾ßÇÔ -> ±âº»Àº override, ¼³Á¤ÇÏ¸é ÇÕÄ¡±â °¡´ÉÇÏ°ÔÇÏÀÚ.
-    /// ÇÕÄ¡±â¶õ ? µ¿½Ã¿¡ Æ®´Â °ÍÀÏ »Ó. ½ÃÀÛ¼ø¼­¿Í Á¾·á¼ø¼­°¡ ´Ş¶óµµ ÀÇµµÇÑ´ë·Î µÇ¾î¾ßÇÔ.
+    /// Idleê³¼ Cutscene ì‚¬ì´ì˜ ìƒíƒœë¡œ, ì˜¤ë¸Œì íŠ¸ë“¤ì€ ì „ë¶€ ì‘ë™í•˜ì§€ë§Œ ì¹´ë©”ë¼ íš¨ê³¼ê°€ ì¼ë¶€ ì ìš©ëœ ìƒíƒœ.
+    /// ì¹´ë©”ë¼ focusê°€ ë°”ë€Œê±°ë‚˜ shake ë˜ëŠ” ë“±ì˜ íš¨ê³¼ê°€ ì ìš©ë  ìˆ˜ ìˆìŒ.
+    /// ë‹¤ë¥¸ ìš°ì„ ìˆœìœ„ê°€ ë” ë†’ì€ MajorEventë‚˜ ì»·ì‹ ìœ¼ë¡œ override ë  ìˆ˜ ìˆìŒ.
+    /// ì—¬ëŸ¬ MajorEvent ì¤‘ì—ì„  ê°€ì¥ ë†’ì€ Eventì˜ ì„¤ì •ë§Œ ì‚¬ìš©í•¨.
+    /// ì»·ì”¬ìœ¼ë¡œ overrideëœ ê²½ìš°, ì»·ì”¬ì´ ì¢…ë£Œëœ í›„ ëŒì•„ì˜´.
+    /// ë‹¤ë¥¸ MajorEventì™€ ë™ì‹œì— ì‹¤í–‰ë  ìˆ˜ ìˆëŠ”ê²Œ ìˆìŒ ! (ë‘ ì›€ì§ì´ëŠ” ë¬¼ì²´ë¥¼ ëª¨ë‘ ì¹´ë©”ë¼ ì•ˆì— ì¡ì•„ì•¼í•  ë•Œ ë“±)
+    /// ê°™ì€ ìš°ì„ ìˆœìœ„ì¸ (í˜¹ì€ ì•„ì˜ˆ ê°™ì€) MajorEventì¼ ë•Œ, ë‚˜ì¤‘ê±°ê°€ override í•´ì•¼í•  ìˆ˜ë„ ìˆê³ , í•©ì³ì•¼í•  ìˆ˜ë„ ìˆìŒ.
+    /// ê°™ì€ ìš°ì„ ìˆœìœ„ì¼ ë•Œ ì–´ë–»ê²Œí• ì§€ ì •ì˜í•´ì•¼í•¨ -> ê¸°ë³¸ì€ override, ì„¤ì •í•˜ë©´ í•©ì¹˜ê¸° ê°€ëŠ¥í•˜ê²Œí•˜ì.
+    /// í•©ì¹˜ê¸°ë€ ? ë™ì‹œì— íŠ¸ëŠ” ê²ƒì¼ ë¿. ì‹œì‘ìˆœì„œì™€ ì¢…ë£Œìˆœì„œê°€ ë‹¬ë¼ë„ ì˜ë„í•œëŒ€ë¡œ ë˜ì–´ì•¼í•¨.
     /// </para>
     /// 
     /// <para>
     /// Cutscene:
-    /// ÄÆ¾À ÁßÀ¸·Î ÁöÁ¤µÈ ¿ÀºêÁ§Æ®¿Ü ´Ù¸¥ ¾ÖµéÀº ÀÛµ¿ÇÏÁö ¾ÊÀ½, UIµµ »ç¶óÁü.
-    /// ¿À·ÎÁö ÄÆ¾À¸¸ Àç»ıÇÏ¸ç ´Ù¸¥ »óÅÂ³ª ´Ù¸¥ ÄÆ½ÅÀ¸·Î override µÉ ¼ö ¾øÀ½ (ÄÆ¾À Áß ´Ù¸¥ ÄÆ¾ÀÀÌ È£ÃâµÇÁö ¾ÊÀ½)
-    /// CutsceneÀº ÄÚ·çÆ¾, MajorEvent´Â State Machine Ã³·³ °ü¸®
+    /// ì»·ì”¬ ì¤‘ìœ¼ë¡œ ì§€ì •ëœ ì˜¤ë¸Œì íŠ¸ì™¸ ë‹¤ë¥¸ ì• ë“¤ì€ ì‘ë™í•˜ì§€ ì•ŠìŒ, UIë„ ì‚¬ë¼ì§.
+    /// ì˜¤ë¡œì§€ ì»·ì”¬ë§Œ ì¬ìƒí•˜ë©° ë‹¤ë¥¸ ìƒíƒœë‚˜ ë‹¤ë¥¸ ì»·ì‹ ìœ¼ë¡œ override ë  ìˆ˜ ì—†ìŒ (ì»·ì”¬ ì¤‘ ë‹¤ë¥¸ ì»·ì”¬ì´ í˜¸ì¶œë˜ì§€ ì•ŠìŒ)
+    /// Cutsceneì€ ì½”ë£¨í‹´, MajorEventëŠ” State Machine ì²˜ëŸ¼ ê´€ë¦¬
     /// </para>
     /// </summary>
     private enum State { Idle, Cutscene, SceneEvent }
@@ -81,7 +81,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     {
         if (_currentState == State.SceneEvent)
         {
-            // ¸ğµç SceneEvent¸¦ ½ÇÇàÇÑ´Ù (¾÷µ¥ÀÌÆ®)
+            // ëª¨ë“  SceneEventë¥¼ ì‹¤í–‰í•œë‹¤ (ì—…ë°ì´íŠ¸)
             foreach (var sceneEvent in _sceneEvents)
             {
                 if (sceneEvent.Enabled)
@@ -136,7 +136,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     {
         // Debug.Log($"PushCutscene - {cutscene.Owner.name}");
 
-        // ÄÆ¾ÀÀÌ ¾ø´Â °æ¿ì ¹Ù·Î Àç»ı
+        // ì»·ì”¬ì´ ì—†ëŠ” ê²½ìš° ë°”ë¡œ ì¬ìƒ
         if (_cutSceneQueue.Count == 0 && _recentCutscene == null)
         {
             /*
@@ -148,13 +148,13 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
 
             PlayCutscene(cutscene);
         }
-        // ÄÆ¾ÀÀÌ ÀÖ´Â °æ¿ì Å¥¿¡ Ãß°¡
+        // ì»·ì”¬ì´ ìˆëŠ” ê²½ìš° íì— ì¶”ê°€
         else
         {
             _cutSceneQueue.Add(cutscene);
         }
 
-        // ÄÆ¾ÀÀÌ Àç»ıµÇ´Â µ¿¾È ´Ù¸¥ ÀÌº¥Æ®µéÀº ºñÈ°¼ºÈ­
+        // ì»·ì”¬ì´ ì¬ìƒë˜ëŠ” ë™ì•ˆ ë‹¤ë¥¸ ì´ë²¤íŠ¸ë“¤ì€ ë¹„í™œì„±í™”
         DisableAllSceneEvents();
 
         yield return null;
@@ -180,7 +180,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
         }
         else
         {
-            // ÄÆ¾À ot ¾À ÀÌº¥Æ®°¡ ¾ø´Â °æ¿ì ±âº» »óÅÂ·Î ¼³Á¤
+            // ì»·ì”¬ ot ì”¬ ì´ë²¤íŠ¸ê°€ ì—†ëŠ” ê²½ìš° ê¸°ë³¸ ìƒíƒœë¡œ ì„¤ì •
             EnterIdleState();
         }
     }
