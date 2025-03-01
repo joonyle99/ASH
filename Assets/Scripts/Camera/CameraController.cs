@@ -5,8 +5,8 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using System.Collections.Generic;
 
 /// <summary>
-/// Main Ä«¸Ş¶ó¿¡ ºÙ¾îÀÖ´Â ÄÄÆ÷³ÍÆ®ÀÌ¸ç
-/// ¾À ÄÁÅØ½ºÆ® ºôµå ½Ã OnSceneContextBuilt() ÇÔ¼ö°¡ È£ÃâµÈ´Ù.
+/// Main ì¹´ë©”ë¼ì— ë¶™ì–´ìˆëŠ” ì»´í¬ë„ŒíŠ¸ì´ë©°
+/// ì”¬ ì»¨í…ìŠ¤íŠ¸ ë¹Œë“œ ì‹œ OnSceneContextBuilt() í•¨ìˆ˜ê°€ í˜¸ì¶œëœë‹¤.
 /// </summary>
 public class CameraController : MonoBehaviour, ISceneContextBuildListener
 {
@@ -32,9 +32,9 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
     public CameraType CurrentCameraType { get; set; } = CameraType.Normal;
 
-    private Vector3[] _viewportCorners = new Vector3[4];        // ºäÆ÷Æ®(Ä«¸Ş¶ó°¡ º¸´Â È­¸éÀÇ 'Á¤±ÔÈ­'µÈ 2D ÁÂÇ¥ ½Ã½ºÅÛ)ÀÇ 4°³ ÄÚ³Ê ÁÂÇ¥
-    private Vector3[] _worldCorners = new Vector3[4];           // ¿ùµå °ø°£¿¡¼­ÀÇ ºäÆ÷Æ® ÇÁ·¯½ºÅÒ ÄÚ³Ê ÁÂÇ¥
-    private Vector3[] _intersectionPoints = new Vector3[4];     // Z == 0ÀÎ XY Æò¸é°úÀÇ ±³Â÷Á¡
+    private Vector3[] _viewportCorners = new Vector3[4];        // ë·°í¬íŠ¸(ì¹´ë©”ë¼ê°€ ë³´ëŠ” í™”ë©´ì˜ 'ì •ê·œí™”'ëœ 2D ì¢Œí‘œ ì‹œìŠ¤í…œ)ì˜ 4ê°œ ì½”ë„ˆ ì¢Œí‘œ
+    private Vector3[] _worldCorners = new Vector3[4];           // ì›”ë“œ ê³µê°„ì—ì„œì˜ ë·°í¬íŠ¸ í”„ëŸ¬ìŠ¤í…€ ì½”ë„ˆ ì¢Œí‘œ
+    private Vector3[] _intersectionPoints = new Vector3[4];     // Z == 0ì¸ XY í‰ë©´ê³¼ì˜ êµì°¨ì 
 
     public Vector3 LeftBottom => _intersectionPoints[0];
     public Vector3 RightBottom => _intersectionPoints[1];
@@ -42,8 +42,8 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public Vector3 LeftTop => _intersectionPoints[3];
 
     // C = A + t * (B - A)
-    // A°¡ ±âÁØÀÌ°í, t * (B - A)´Â A¿¡¼­ ¾ó¸¶³ª ¶³¾îÁ®ÀÖ´ÂÁö¸¦ ³ªÅ¸³½´Ù.
-    // t = 0ÀÌ¸é A, t = 1ÀÌ¸é B, 0 < t < 1ÀÌ¸é A¿Í B »çÀÌÀÇ ¾îµò°¡
+    // Aê°€ ê¸°ì¤€ì´ê³ , t * (B - A)ëŠ” Aì—ì„œ ì–¼ë§ˆë‚˜ ë–¨ì–´ì ¸ìˆëŠ”ì§€ë¥¼ ë‚˜íƒ€ë‚¸ë‹¤.
+    // t = 0ì´ë©´ A, t = 1ì´ë©´ B, 0 < t < 1ì´ë©´ Aì™€ B ì‚¬ì´ì˜ ì–´ë”˜ê°€
     public Vector3 LeftMiddle => (LeftBottom + LeftTop) / 2f;       // = LeftBottom + 0.5f * (LeftTop - LeftBottom) = (LeftBottom + LeftTop) / 2f
     public Vector3 RightMiddle => (RightBottom + RightTop) / 2f;
     public Vector3 TopMiddle => (RightTop + LeftTop) / 2f;
@@ -89,10 +89,10 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
         _viewportCorners = new Vector3[]
         {
-            new Vector3(0, 0, _mainCamera.nearClipPlane), // ÁÂÇÏ´Ü
-            new Vector3(1, 0, _mainCamera.nearClipPlane), // ¿ìÇÏ´Ü
-            new Vector3(1, 1, _mainCamera.nearClipPlane), // ¿ì»ó´Ü
-            new Vector3(0, 1, _mainCamera.nearClipPlane)  // ÁÂ»ó´Ü
+            new Vector3(0, 0, _mainCamera.nearClipPlane), // ì¢Œí•˜ë‹¨
+            new Vector3(1, 0, _mainCamera.nearClipPlane), // ìš°í•˜ë‹¨
+            new Vector3(1, 1, _mainCamera.nearClipPlane), // ìš°ìƒë‹¨
+            new Vector3(0, 1, _mainCamera.nearClipPlane)  // ì¢Œìƒë‹¨
 
             // (0,1)-------------(1,1)
             //   |                 |
@@ -125,21 +125,21 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         for (int i = 0; i < 4; i++)
         {
-            // ºäÆ÷Æ® ÁÂÇ¥(ÁÂÇÏ´Ü, ¿ìÇÏ´Ü, ¿ì»ó´Ü, ÁÂ»ó´Ü)¸¦ ¿ùµå ÁÂÇ¥·Î º¯È¯
+            // ë·°í¬íŠ¸ ì¢Œí‘œ(ì¢Œí•˜ë‹¨, ìš°í•˜ë‹¨, ìš°ìƒë‹¨, ì¢Œìƒë‹¨)ë¥¼ ì›”ë“œ ì¢Œí‘œë¡œ ë³€í™˜
             _worldCorners[i] = _mainCamera.ViewportToWorldPoint(_viewportCorners[i]);
 
-            // Ä«¸Ş¶ó À§Ä¡¿¡¼­ ¿ùµå ÄÚ³Ê ÁöÁ¡À¸·ÎÀÇ ¹æÇâ º¤ÅÍ
+            // ì¹´ë©”ë¼ ìœ„ì¹˜ì—ì„œ ì›”ë“œ ì½”ë„ˆ ì§€ì ìœ¼ë¡œì˜ ë°©í–¥ ë²¡í„°
             Vector3 direction = _worldCorners[i] - _mainCamera.transform.position;
-            // directionÀÌ Z == 0ÀÎ XY Æò¸é°ú ÀÌ·ç´Â ºñÀ²
+            // directionì´ Z == 0ì¸ XY í‰ë©´ê³¼ ì´ë£¨ëŠ” ë¹„ìœ¨
             float ratio = (-1) * _mainCamera.transform.position.z / direction.z;
-            // directionÀ» Z == 0ÀÎ XY Æò¸é±îÁöÀÇ ½î´Â º¤ÅÍ
+            // directionì„ Z == 0ì¸ XY í‰ë©´ê¹Œì§€ì˜ ì˜ëŠ” ë²¡í„°
             Vector3 newDirection = new Vector3(direction.x * ratio, direction.y * ratio, (-1) * _mainCamera.transform.position.z);
-            // newDirection°ú Z == 0ÀÎ XY Æò¸éÀÇ ±³Â÷Á¡
+            // newDirectionê³¼ Z == 0ì¸ XY í‰ë©´ì˜ êµì°¨ì 
             _intersectionPoints[i] = _mainCamera.transform.position + newDirection;
 
             // Debug.DrawLine(_mainCamera.transform.position, _intersectionPoints[i], Color.cyan, 0.2f);
 
-            // LeftMiddle, RightMiddle, TopMiddle, BottomMiddle ¿¡¼­ Draw Line length 1
+            // LeftMiddle, RightMiddle, TopMiddle, BottomMiddle ì—ì„œ Draw Line length 1
             Debug.DrawLine(LeftMiddle, LeftMiddle + Vector3.forward, Color.red);
             Debug.DrawLine(RightMiddle, RightMiddle + Vector3.forward, Color.green);
             Debug.DrawLine(TopMiddle, TopMiddle + Vector3.forward, Color.blue);
@@ -172,11 +172,11 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void ResetCameraSettings()
     {
-        // Debug.Log($"Ä«¸Ş¶ó ¸®¼Â");
+        // Debug.Log($"ì¹´ë©”ë¼ ë¦¬ì…‹");
 
         if (SceneContext.Current.Player && CurrentCameraType == CameraType.Normal)
         {
-            // Ä«¸Ş¶ó Å¸°Ù¿¡ ÇÃ·¹ÀÌ¸Ó¸¸ Æ÷ÇÔ½ÃÅ²´Ù (³ª¸ÓÁö Å¸°Ù »èÁ¦)
+            // ì¹´ë©”ë¼ íƒ€ê²Ÿì— í”Œë ˆì´ë¨¸ë§Œ í¬í•¨ì‹œí‚¨ë‹¤ (ë‚˜ë¨¸ì§€ íƒ€ê²Ÿ ì‚­ì œ)
             StartFollow(SceneContext.Current.Player.transform);
         }
 
@@ -237,7 +237,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         return _proCamera.CameraTargets;
     }
 
-    /// <summary> ÄÚµå·Î ÀÛµ¿ ½Ã »ç¿ë </summary>
+    /// <summary> ì½”ë“œë¡œ ì‘ë™ ì‹œ ì‚¬ìš© </summary>
     public void StartFollow(Transform target, bool removeExisting = true)
     {
         if (removeExisting)
@@ -245,7 +245,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
 
         _proCamera.AddCameraTarget(target);
     }
-    /// <summary> CutscenePlayer·Î ÀÛµ¿ ½Ã »ç¿ë </summary>
+    /// <summary> CutscenePlayerë¡œ ì‘ë™ ì‹œ ì‚¬ìš© </summary>
     public void FollowOnly(Transform target)
     {
         _proCamera.RemoveAllCameraTargets();
@@ -253,12 +253,12 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     }
     public void DisableCameraFollow()
     {
-        // 0¿¡ °¡±î¿ï ¼ö·Ï ºü¸£°Ô µû¶ó°¨
+        // 0ì— ê°€ê¹Œìš¸ ìˆ˜ë¡ ë¹ ë¥´ê²Œ ë”°ë¼ê°
         _proCamera.HorizontalFollowSmoothness = 100f;
         _proCamera.VerticalFollowSmoothness = 100f;
     }
 
-    // effect: snap (ÇÑ ÇÁ·¹ÀÓ µ¿¾È smoothness¸¦ 0À¸·Î ¼³Á¤ÇÔÀ¸·Î½á, ÇÃ·¹ÀÌ¾î¸¦ Áï½Ã µû¶ó°¡µµ·Ï ÇÑ´Ù.)
+    // effect: snap (í•œ í”„ë ˆì„ ë™ì•ˆ smoothnessë¥¼ 0ìœ¼ë¡œ ì„¤ì •í•¨ìœ¼ë¡œì¨, í”Œë ˆì´ì–´ë¥¼ ì¦‰ì‹œ ë”°ë¼ê°€ë„ë¡ í•œë‹¤.)
     public void SnapFollow()
     {
         StartCoroutine(SnapFollowCoroutine());
@@ -294,7 +294,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     {
         // Debug.Log($"ConstantShakePreset: {preset.name}");
 
-        _shakeComponent.StopConstantShaking(0f);    // ÀÌÀü¿¡ Àû¿ëµÈ ConstantShake¸¦ ÁßÁö
+        _shakeComponent.StopConstantShaking(0f);    // ì´ì „ì— ì ìš©ëœ ConstantShakeë¥¼ ì¤‘ì§€
         _shakeComponent.ConstantShake(preset);
     }
     public void StopConstantShake(float smooth = 0.1f)
@@ -375,5 +375,9 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     public void TurnOffZoomToFitTargets()
     {
         _zoomToFitTargetsComponent.enabled = false;
+    }
+    public void MoveTo(Vector3 position)
+    {
+        transform.position = position;
     }
 }
