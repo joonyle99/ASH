@@ -13,11 +13,11 @@ public class DeadPanel : MonoBehaviour
     //수락 시 부활
     [SerializeField] private Button _buttonAccept;
     //거절 시 메인화면 이동
-    [SerializeField] private Button _buttonReject;
+    //[SerializeField] private Button _buttonReject;
 
     private void Start()
     {
-        _buttonReject.onClick.AddListener(GameUIManager.Instance.OptionView.GoToTitleScene);
+        //_buttonReject.onClick.AddListener(GameUIManager.Instance.OptionView.GoToTitleScene);
     }
 
     public void Open()
@@ -34,7 +34,7 @@ public class DeadPanel : MonoBehaviour
 
         _window.SetActive(true);
         _buttonAccept.gameObject.SetActive(false);
-        _buttonReject.gameObject.SetActive(false);
+        //_buttonReject.gameObject.SetActive(false);
         _text.gameObject.SetActive(false);
 
         yield return FadeWindow(2f);
@@ -42,7 +42,7 @@ public class DeadPanel : MonoBehaviour
         yield return new WaitForSeconds(textDisplayWaitTime);
 
         _buttonAccept.gameObject.SetActive(true);
-        _buttonReject.gameObject.SetActive(true);
+        //_buttonReject.gameObject.SetActive(true);
         _text.gameObject.SetActive(true);
     }
 
@@ -72,6 +72,6 @@ public class DeadPanel : MonoBehaviour
     private void OnDestroy()
     {
         _buttonAccept.onClick?.RemoveAllListeners();
-        _buttonReject.onClick?.RemoveAllListeners();
+        //_buttonReject.onClick?.RemoveAllListeners();
     }
 }
