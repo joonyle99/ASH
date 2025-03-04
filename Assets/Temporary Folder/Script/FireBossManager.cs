@@ -4,7 +4,7 @@ using static SceneTransitionPlayer;
 
 public class FireBossManager : MonoBehaviour
 {
-    // tornado effect
+    [Header("[Tornado Effect]")]
     [SerializeField] private Tornado _tornado;
 
     [Space]
@@ -44,7 +44,6 @@ public class FireBossManager : MonoBehaviour
     [SerializeField] private DialogueData _endingDialogue;
     [SerializeField] private Quest _endingQuest;
     [SerializeField] private Lantern _lastLantern;
-    private bool _isEndMoveProcess = false;
 
     [Space]
 
@@ -194,8 +193,8 @@ public class FireBossManager : MonoBehaviour
     }
     public void ExecuteVisibleFootholds()
     {
-        _footholds.SetActive(true);
-        //StartCoroutine(ExecuteVisibleFootholdsCoroutine());
+        //_footholds.SetActive(true);
+        StartCoroutine(ExecuteVisibleFootholdsCoroutine());
     }
     private IEnumerator ExecuteVisibleFootholdsCoroutine()
     {
@@ -262,8 +261,6 @@ public class FireBossManager : MonoBehaviour
     }
     private IEnumerator PlayerMoveCoroutine()
     {
-        _isEndMoveProcess = false;
-
         yield return new WaitForSeconds(1f);
 
         // 플레이어 위치
@@ -310,8 +307,6 @@ public class FireBossManager : MonoBehaviour
         }
 
         yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.2f);
-
-        _isEndMoveProcess = true;
     }
     private IEnumerator LightSkillCoroutine()
     {
