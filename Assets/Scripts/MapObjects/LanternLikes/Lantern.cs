@@ -179,6 +179,12 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
             // 공격을 위한 설정
             InputManager.Instance.ChangeToStayStillSetter();
             SceneContext.Current.Player.IsGodMode = true;
+
+            // 보스 랜턴 공격 실행
+            var lanternAttack = new LanternAttack(this, lightSceneContext.Boss);
+            StartCoroutine(lightSceneContext.LenternAttack(lanternAttack, _isLastAttack));
+
+            // TODO: IsGodMode 레퍼런스 카운트 때문에 플레이어가 무적이 되는 상태 해결
         }
 
         float eTime = 0f;
@@ -209,13 +215,6 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
 
         _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
         _isExplodeDone = true;
-
-        // 보스 랜턴 공격 실행
-        if (isBossScene == true)
-        {
-            var lanternAttack = new LanternAttack(this, lightSceneContext.Boss);
-            StartCoroutine(lightSceneContext.LenternAttack(lanternAttack, _isLastAttack));
-        }
     }
 
     public void OnDarkBeamCollision()
