@@ -25,10 +25,6 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     [Space]
 
-    [SerializeField] private int _godModeReferenceCount;
-
-    [Space]
-
     [SerializeField] private bool _isCanAttack = true;
     [SerializeField] private bool _isCanDash = true;
 
@@ -72,6 +68,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
 
     public delegate void HealthChangeEvent(int curHp, int maxHp);
     public event HealthChangeEvent OnHealthChanged;
+
+    private int _godModeReferenceCount;
 
     #endregion
 
@@ -121,16 +119,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             // 이후 Blink Effect가 종료된 후, GodMode를 False로 설정하려 하면
             // 레퍼런스 카운터가 1이 되면서, GodMode가 True로 유지된다.
 
-            if (value)
-            {
-                _godModeReferenceCount++;
-                _isGodMode = _godModeReferenceCount > 0;
-            }
-            else
-            {
-                _godModeReferenceCount = Math.Max(0, _godModeReferenceCount - 1);
-                _isGodMode = _godModeReferenceCount > 0;
-            }
+            int previousCount = _godModeReferenceCount;
+            _godModeReferenceCount += value ? 1 : -1;
+            _godModeReferenceCount = Math.Max(0, _godModeReferenceCount);
+            _isGodMode = _godModeReferenceCount > 0;
+
+            Debug.Log($"IsGodMode changed: {previousCount} -> {_godModeReferenceCount} (Active: {_isGodMode})");
         }
     }
     public bool IsDead

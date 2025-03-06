@@ -183,8 +183,6 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
             // 보스 랜턴 공격 실행
             var lanternAttack = new LanternAttack(this, lightSceneContext.Boss);
             StartCoroutine(lightSceneContext.LenternAttack(lanternAttack, _isLastAttack));
-
-            // TODO: IsGodMode 레퍼런스 카운트 때문에 플레이어가 무적이 되는 상태 해결
         }
 
         float eTime = 0f;

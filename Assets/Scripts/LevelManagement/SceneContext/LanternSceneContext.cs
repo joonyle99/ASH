@@ -59,9 +59,10 @@ public sealed class LanternSceneContext : SceneContext
 
     [SerializeField] SoundList _soundList;
 
-    List<LanternLike> _lanternActivationOrder = new List<LanternLike>();
+    List<LanternLike> _activeLanterns = new List<LanternLike>();
 
     [Space]
+
     public bool IsEndLastAttack = false;
 
     const float MaxRayCastDistance = 1000f;
@@ -123,8 +124,8 @@ public sealed class LanternSceneContext : SceneContext
 
     public void RecordActivationTime(LanternLike lantern)
     {
-        _lanternActivationOrder.Remove(lantern);
-        _lanternActivationOrder.Add(lantern);
+        _activeLanterns.Remove(lantern);
+        _activeLanterns.Add(lantern);
     }
     IEnumerator UnsilenceCoroutine()
     {
@@ -174,11 +175,11 @@ public sealed class LanternSceneContext : SceneContext
     }
     bool IsTurnedOnInOrder(LanternLike first, LanternLike second)
     {
-        foreach (var lantern in _lanternActivationOrder)
+        foreach (var activeLantern in _activeLanterns)
         {
-            if (lantern == first)
+            if (activeLantern == first)
                 return true;
-            else if (lantern == second)
+            else if (activeLantern == second)
                 return false;
         }
         return false;
@@ -207,7 +208,8 @@ public sealed class LanternSceneContext : SceneContext
     {
         _stopCheckingConnections = true;
 
-        var activeLanterAttackList = new List<LanternAttack>();
+        // lanternAttack를 제외한 모든 랜턴에 대해 빛 모이는 연출을 진행한다
+        var activeAttacks = new List<LanternAttack>();
 
         // 마지막 공격의 경우 빛 모이는 연출이 들어간다
         if (isLastAttack == true)
@@ -215,17 +217,18 @@ public sealed class LanternSceneContext : SceneContext
             InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
             yield return new WaitForSeconds(0.7f);
 
-            foreach (var activeLantern in _lanternActivationOrder)
+            foreach (var activeLantern in _activeLanterns)
             {
                 if (activeLantern == lanternAttack.Lantern)
                 {
                     continue;
                 }
 
+                Debug.Log(activeLantern.transform.gameObject.name);
                 SceneEffectManager.Instance.Camera.StartFollow(activeLantern.transform);
                 yield return new WaitForSeconds(1.2f);
 
-                activeLanterAttackList.Add(new LanternAttack(activeLantern, lanternAttack.Boss));
+                activeAttacks.Add(new LanternAttack(activeLantern, lanternAttack.Boss));
             }
         }
 
@@ -236,15 +239,15 @@ public sealed class LanternSceneContext : SceneContext
         // 레이저 발사 SUB
         if (isLastAttack == true)
         {
-            foreach (var activeLanternAttack in activeLanterAttackList)
+            foreach (var activeAttack in activeAttacks)
             {
-                if (activeLanternAttack.Beam == null)
+                if (activeAttack.Beam == null)
                 {
-                    activeLanternAttack.Beam = Instantiate(_beamPrefab);
+                    activeAttack.Beam = Instantiate(_beamPrefab);
                 }
 
-                activeLanternAttack.Beam.SetLanternsWithBoss(activeLanternAttack.Lantern, activeLanternAttack.Boss);
-                StartCoroutine(ConnectionCoroutine(activeLanternAttack));
+                activeAttack.Beam.SetLanternsWithBoss(activeAttack.Lantern, activeAttack.Boss);
+                StartCoroutine(ConnectionCoroutine(activeAttack));
             }
         }
 
@@ -253,7 +256,7 @@ public sealed class LanternSceneContext : SceneContext
         _lastConnectionCameraPoint.position = lanternAttack.Beam.CurrentShootingPosition;
         SceneEffectManager.Instance.Camera.StartConstantShake(_beamShootingPreset);
         SceneEffectManager.Instance.Camera.StartFollow(_lastConnectionCameraPoint);
-        while (!lanternAttack.Beam.IsShootingDone)
+        while (lanternAttack.Beam.IsShootingDone == false)
         {
             _lastConnectionCameraPoint.position = lanternAttack.Beam.CurrentShootingPosition;
             yield return null;
@@ -270,17 +273,24 @@ public sealed class LanternSceneContext : SceneContext
         // 초기화 SUB
         if (isLastAttack == true)
         {
-            foreach (var activeLanternAttack in activeLanterAttackList)
+            foreach (var activeAttack in activeAttacks)
             {
-                StartCoroutine(activeLanternAttack.Beam.FadeOutBeamCoroutine());
+                StartCoroutine(activeAttack.Beam.FadeOutBeamCoroutine());
             }
+
         }
-        // 초기화 MAIN
-        StartCoroutine(lanternAttack.Beam.FadeOutBeamCoroutine());
+        // 초기화 MAIN (전부 다 사라지고 나서...)
+        yield return lanternAttack.Beam.FadeOutBeamCoroutine();
 
+        // Lantern에서 true해준 것을 false로 바꿔준다
         InputManager.Instance.ChangeToDefaultSetter();
+        SceneContext.Current.Player.IsGodMode = false;
 
-        IsEndLastAttack = true;
+        // 마지막 랜턴까지 연출이 끝나는 경우
+        if (isLastAttack == true)
+        {
+            IsEndLastAttack = true;
+        }
     }
     IEnumerator ConnectionCoroutine(LanternAttack lanternAttack)
     {
@@ -289,8 +299,8 @@ public sealed class LanternSceneContext : SceneContext
         lanternAttack.Beam.gameObject.SetActive(true);
         if (!_isSilenced)
             yield return new WaitUntil(() => lanternAttack.Beam.IsShootingDone);
-        //activeLanternAttack.Lantern.OnBeamConnected(activeLanternAttack.Beam);
-        //activeLanternAttack.Boss.OnBeamConnected(activeLanternAttack.Beam);
+        //activeAttack.Lantern.OnBeamConnected(activeAttack.Beam);
+        //activeAttack.Boss.OnBeamConnected(activeAttack.Beam);
     }
 
     // Lantern Connection
