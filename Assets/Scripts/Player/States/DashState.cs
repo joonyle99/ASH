@@ -26,7 +26,7 @@ public class DashState : PlayerState
 
     protected override bool OnUpdate()
     {
-        // ∞°º”µµ ∂ßπÆø° Update()ø°º≠ º”µµ∏¶ ∞Ëº”«ÿº≠ º≥¡§«ÿ¡ÿ¥Ÿ
+        // Í∞ÄÏÜçÎèÑ ÎïåÎ¨∏Ïóê Update()ÏóêÏÑú ÏÜçÎèÑÎ•º Í≥ÑÏÜçÌï¥ÏÑú ÏÑ§Ï†ïÌï¥Ï§ÄÎã§
         Player.Rigidbody.velocity = _dashDir * _dashSpeed;
 
         _elapsedDashTime += Time.deltaTime;
@@ -59,45 +59,31 @@ public class DashState : PlayerState
 
     private void PreProcess()
     {
-        {
-            SceneContext.Current.Player.CanDash = false;
-        }
+        Player.CanDash = false;
 
-        {
-            Player.IsGodMode = true;
-            _originGravity = Player.Rigidbody.gravityScale;
-            Player.Rigidbody.gravityScale = 0f;
-        }
+        Player.IsGodMode = true;
+        _originGravity = Player.Rigidbody.gravityScale;
+        Player.Rigidbody.gravityScale = 0f;
 
-        {
-            _dashDir = new Vector2(Player.RawInputs.Movement.x, 0f).normalized;
-        }
+        _dashDir = Player.PlayerLookDir2D;
 
-        {
-            _elapsedDashTime = 0f;
-        }
+        _elapsedDashTime = 0f;
     }
 
     private void PostProcess()
     {
-        {
-            Player.IsGodMode = false;
-            Player.Rigidbody.gravityScale = _originGravity;
-        }
+        Player.IsGodMode = false;
+        Player.Rigidbody.gravityScale = _originGravity;
 
-        {
-            _dashDir = Vector2.zero;
-            _originGravity = 0f;
-        }
+        _dashDir = Vector2.zero;
+        _originGravity = 0f;
 
-        {
-            _elapsedDashTime = 0f;
-        }
+        _elapsedDashTime = 0f;
     }
 
     private IEnumerator DashCoolDown()
     {
         yield return new WaitForSeconds(_targetDashCoolTime);
-        SceneContext.Current.Player.CanDash = true;
+        Player.CanDash = true;
     }
 }
