@@ -3,7 +3,6 @@ using UnityEngine;
 [System.Serializable]
 public class TeleportGraph : MonoBehaviour
 {
-    [SerializeField] private Transform _subject;
     [SerializeField] private TeleportNode[] _teleportNodes;
 
     [Space]
@@ -37,16 +36,18 @@ public class TeleportGraph : MonoBehaviour
         _nextNode = _currentNode.GetRandomConnectedNode();
     }
 
-    public void Move()
+    public void Move(Rigidbody2D subjectRigidbody)
     {
         if (_currentNode == null || _nextNode == null)
         {
-            Debug.Log($"��带 Move �߿� �ʱ�ȭ�մϴ�.");
+            Debug.Log($"노드를 Move 중에 초기화합니다.");
             InitTeleportNode();
         }
 
         // move
-        _subject.position = _currentNode.transform.position;
+        subjectRigidbody.transform.position = _currentNode.transform.position;
+        subjectRigidbody.MovePosition(_currentNode.transform.position);
+        //subjectRigidbody.position = _currentNode.transform.position;
 
         // update
         UpdateTeleportNode();

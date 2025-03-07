@@ -2,14 +2,26 @@ using UnityEngine;
 
 public class TeleportationModule : MonoBehaviour
 {
+    [SerializeField] private GameObject _firePrefab;
+
     [SerializeField] private TeleportGraph _teleportGraph1;
     [SerializeField] private TeleportGraph _teleportGraph2;
 
     [SerializeField] private TeleportGraph _currentGraph;
 
+    private Rigidbody2D _rigidbody;
+
+    private void Awake()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>();
+    }
+
     public void ExecuteTeleport_AnimEvent()
     {
-        _currentGraph.Move();
+        var playerPos = SceneContext.Current.Player.transform.position;
+        var firePrefabPos = _firePrefab.transform.position;
+        _firePrefab.transform.position = new Vector3(firePrefabPos.x, playerPos.y, firePrefabPos.z);
+        _currentGraph.Move(_rigidbody);
     }
 
     public void ChangeGraphTo1()

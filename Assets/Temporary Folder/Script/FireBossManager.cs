@@ -173,24 +173,27 @@ public class FireBossManager : MonoBehaviour
             var t = eTime / _targetDuration;
             var easeTime = joonyle99.Math.EaseOutQuart(t);
 
-            fireTransform.localScale = new Vector3(
-                Mathf.Lerp(startScale.x, _targetScale.x, easeTime),
-                Mathf.Lerp(startScale.y, _targetScale.y, easeTime),
-                startScale.z);
+            //fireTransform.localScale = new Vector3(
+            //    Mathf.Lerp(startScale.x, _targetScale.x, easeTime),
+            //    Mathf.Lerp(startScale.y, _targetScale.y, easeTime),
+            //    startScale.z);
 
+            fireTransform.localScale = Vector3.Lerp(startScale, _targetScale, easeTime);
             yield return null;
-
             eTime += Time.deltaTime;
         }
 
-        // fireTransform.GetChild(0).position = _warpPoint.position;
-        // _fireRigidbody.position = _warpPoint.position;
+        fireTransform.position = _warpPoint.position;
+        // **자식 Rigidbody 동기화**
+        var fireRigidbodys = _firePrefab.GetComponentsInChildren<Rigidbody2D>();
+        foreach (var fireRigidbody in fireRigidbodys)
+        {
+            fireRigidbody.position = _warpPoint.position;   // 위치 강제 동기화
+            fireRigidbody.velocity = Vector2.zero;          // 속도 초기화 (이전 움직임 제거)
+            fireRigidbody.angularVelocity = 0f;             // 회전 속도 초기화
+        }
 
-        // TODO: 이상하게 동작한다
-
-        fireTransform.position = _warpPoint.position;               // 텔레포트 이동
         fireTransform.localScale = startScale;                      // 원래 크기로 되돌림
-
         effectObject.SetActive(false);
     }
     public void ExecuteVisibleFootholds()
