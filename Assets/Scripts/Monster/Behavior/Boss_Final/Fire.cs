@@ -651,6 +651,7 @@ public sealed class Fire : BossBehaviour
         firePillarCoroutine = null;
     }
 
+    // TEMP..?
     private IEnumerator FlameBeamSoundCoroutine()
     {
         // flameBeam의 애니메이터를 가져온다

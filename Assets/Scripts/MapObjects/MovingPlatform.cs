@@ -2,18 +2,18 @@ using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 /// <summary>
-/// ÆÛÁñ ±â¹Í¿¡ »ç¿ëµÇ´Â ¿òÁ÷ÀÌ´Â ÇÃ·§Æû
+/// í¼ì¦ ê¸°ë¯¹ì— ì‚¬ìš©ë˜ëŠ” ì›€ì§ì´ëŠ” í”Œë«í¼
 /// </summary>
 public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
 {
     private enum Type { Vertical, Horizontal }
 
-    [Header("¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡ Moving Platform ¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡¦¡")]
+    [Header("â”€â”€â”€â”€â”€â”€â”€â”€â”€ Moving Platform â”€â”€â”€â”€â”€â”€â”€â”€â”€")]
     [Space]
 
     [SerializeField] private Type _type = Type.Vertical;
     [SerializeField] private float _speed = 1;
-    //¹ö´×ºñ¹ö
+    //ë²„ë‹ë¹„ë²„
     [SerializeField] private LayerMask _playerLayer;
 
     [Space]
@@ -34,9 +34,9 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
     private Rigidbody2D _rigidbody;
     [SerializeField]
     private float _travelDistance = 0f;
-    //½ºÀ§Ä¡ÀÇ È°¼ºÈ­ ¿©ºÎ(trueÀÌ´õ¶óµµ _hasPlayerAtPath°¡ trueÀÌ¸é ÇÃ·§ÆûÀº ¿òÁ÷ÀÌÁö ¾ÊÀ½)
+    //ìŠ¤ìœ„ì¹˜ì˜ í™œì„±í™” ì—¬ë¶€(trueì´ë”ë¼ë„ _hasPlayerAtPathê°€ trueì´ë©´ í”Œë«í¼ì€ ì›€ì§ì´ì§€ ì•ŠìŒ)
     private bool _isMoving = false;
-    //½ºÀ§Ä¡ °æ·Î¿¡ ÇÃ·¹ÀÌ¾î°¡ ÀÖ´ÂÁö ÆÇº°, ¹ö´×ºñ¹ö ÀÓ½Ã ÄÚµå
+    //ìŠ¤ìœ„ì¹˜ ê²½ë¡œì— í”Œë ˆì´ì–´ê°€ ìˆëŠ”ì§€ íŒë³„, ë²„ë‹ë¹„ë²„ ì„ì‹œ ì½”ë“œ
     private bool _hasPlayerAtPath = false;
 
     private PreserveState _statePreserver;
@@ -91,7 +91,7 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
         }
         else
         {
-            //¹ö´×ºñ¹ö ÀÓ½Ã ÄÚµå
+            //ë²„ë‹ë¹„ë²„ ì„ì‹œ ì½”ë“œ
             if (_moveAudio.isPlaying)
                 _moveAudio.Stop();
         }
@@ -120,7 +120,7 @@ public class MovingPlatform : ToggleableObject, ISceneContextBuildListener
             }
         }
 
-        //¹ö´×ºñ¹ö ÀÓ½ÃÄÚµå
+        //ë²„ë‹ë¹„ë²„ ì„ì‹œì½”ë“œ
         var target = _path.GetPosition(_travelDistance);
         var direction = (target - transform.position).normalized;
         var rayLength = 0.5f;
