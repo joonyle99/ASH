@@ -179,6 +179,10 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
             // 공격을 위한 설정
             InputManager.Instance.ChangeToStayStillSetter();
             SceneContext.Current.Player.IsGodMode = true;
+
+            // 보스 랜턴 공격 실행
+            var lanternAttack = new LanternAttack(this, lightSceneContext.Boss);
+            StartCoroutine(lightSceneContext.LenternAttack(lanternAttack, _isLastAttack));
         }
 
         float eTime = 0f;
@@ -209,13 +213,6 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
 
         _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
         _isExplodeDone = true;
-
-        // 보스 랜턴 공격 실행
-        if (isBossScene == true)
-        {
-            var lanternAttack = new LanternAttack(this, lightSceneContext.Boss);
-            StartCoroutine(lightSceneContext.LenternAttack(lanternAttack, _isLastAttack));
-        }
     }
 
     public void OnDarkBeamCollision()

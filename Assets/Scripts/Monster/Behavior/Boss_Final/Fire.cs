@@ -405,6 +405,17 @@ public sealed class Fire : BossBehaviour
 
         return result;
     }
+    public override void Die(bool isHitBoxDisable, bool isDeathProcess)
+    {
+        // 보스는 사망 이펙트를 재생하지 않는다
+        base.Die(true, false);
+
+        // TODO: 보스에게 재가 뿜어져 나오는 연출(1페이즈 연출과 동일)
+
+        // TODO: 페이드 아웃
+
+        // TODO: 등등.. 피그마 연출보고 이제 이거 하면 된다
+    }
 
     public override void AttackPreProcess()
     {

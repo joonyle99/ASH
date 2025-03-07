@@ -4,7 +4,7 @@ using static SceneTransitionPlayer;
 
 public class FireBossManager : MonoBehaviour
 {
-    // tornado effect
+    [Header("[Tornado Effect]")]
     [SerializeField] private Tornado _tornado;
 
     [Space]
@@ -12,6 +12,8 @@ public class FireBossManager : MonoBehaviour
     [Header("[Environment]")]
     [SerializeField] private GameObject _invisibleWall_Left;
     [SerializeField] private GameObject _invisibleWall_Right;
+    [SerializeField] private GameObject _invisibleWall_Left_2;
+    [SerializeField] private GameObject _invisibleWall_Right_2;
     [SerializeField] private GameObject _footholds;
 
     [Space]
@@ -44,7 +46,6 @@ public class FireBossManager : MonoBehaviour
     [SerializeField] private DialogueData _endingDialogue;
     [SerializeField] private Quest _endingQuest;
     [SerializeField] private Lantern _lastLantern;
-    private bool _isEndMoveProcess = false;
 
     [Space]
 
@@ -56,24 +57,6 @@ public class FireBossManager : MonoBehaviour
     {
         _tornado.gameObject.SetActive(true);
         _tornado.TornadoAnimation();
-    }
-    public void SetCameraBoundaries()
-    {
-        // 처음에 게임 오브젝트가 비활성화되어 있으면 Bounds가 유효하지 않기 때문에 여기서 가져온다
-        var leftWallCollider = _invisibleWall_Left.GetComponent<BoxCollider2D>();
-        var rightWallCollider = _invisibleWall_Right.GetComponent<BoxCollider2D>();
-
-        if (leftWallCollider == null || rightWallCollider == null)
-        {
-            Debug.LogError("Left or Right Wall Collider is null");
-            return;
-        }
-
-        var leftValue = _invisibleWall_Left.transform.position.x + leftWallCollider.bounds.extents.x;
-        var rightValue = _invisibleWall_Right.transform.position.x - rightWallCollider.bounds.extents.x;
-
-        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Left, true, leftValue);
-        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Right, true, rightValue);
     }
     public void SetUpBattle()
     {
@@ -92,6 +75,24 @@ public class FireBossManager : MonoBehaviour
         yield return new WaitUntil(() => SceneContext.Current.CameraController.IsUpdateFinished);
 
         yield return null;
+    }
+    private void SetCameraBoundaries()
+    {
+        // 처음에 게임 오브젝트가 비활성화되어 있으면 Bounds가 유효하지 않기 때문에 여기서 가져온다
+        var leftWallCollider = _invisibleWall_Left.GetComponent<BoxCollider2D>();
+        var rightWallCollider = _invisibleWall_Right.GetComponent<BoxCollider2D>();
+
+        if (leftWallCollider == null || rightWallCollider == null)
+        {
+            Debug.LogError("Left or Right Wall Collider is null");
+            return;
+        }
+
+        var leftValue = _invisibleWall_Left.transform.position.x + leftWallCollider.bounds.extents.x;
+        var rightValue = _invisibleWall_Right.transform.position.x - rightWallCollider.bounds.extents.x;
+
+        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Left, true, leftValue);
+        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Right, true, rightValue);
     }
 
     // fire rage cutscene
@@ -194,7 +195,73 @@ public class FireBossManager : MonoBehaviour
     }
     public void ExecuteVisibleFootholds()
     {
+        //_footholds.SetActive(true);
+        StartCoroutine(ExecuteVisibleFootholdsCoroutine());
+    }
+    private IEnumerator ExecuteVisibleFootholdsCoroutine()
+    {
         _footholds.SetActive(true);
+
+        var spriteRenderers = _footholds.GetComponentsInChildren<SpriteRenderer>();
+
+        var eTime = 0f;
+        var duration = 2f;
+
+        while (eTime < duration)
+        {
+            foreach (var spriteRenderer in spriteRenderers)
+            {
+                var t = eTime / duration;
+
+                var nextAlpha = Mathf.Lerp(0f, 1f, t);
+
+                var color = spriteRenderer.color;
+                color.a = nextAlpha;
+                spriteRenderer.color = color;
+            }
+
+            yield return null;
+
+            eTime += Time.deltaTime;
+        }
+    }
+
+    // extension fire rage cutscene
+    public IEnumerator SetUpRageCoroutine()
+    {
+        // set boundaries
+        _invisibleWall_Left.SetActive(false);
+        _invisibleWall_Right.SetActive(false);
+        _invisibleWall_Left_2.SetActive(true);
+        _invisibleWall_Right_2.SetActive(true);
+        SetCameraBoundaries2();
+
+        // set camera size
+        SceneContext.Current.CameraController.UpdateScreenSize(15f, 2f);
+
+        yield return new WaitUntil(() => SceneContext.Current.CameraController.IsUpdateFinished);
+
+        yield return null;
+
+        Debug.Log("SetUpRageCoroutine 끝");
+    }
+    private void SetCameraBoundaries2()
+    {
+        // 처음에 게임 오브젝트가 비활성화되어 있으면 Bounds가 유효하지 않기 때문에 여기서 가져온다
+        var leftWallCollider = _invisibleWall_Left_2.GetComponent<BoxCollider2D>();
+        var rightWallCollider = _invisibleWall_Right_2.GetComponent<BoxCollider2D>();
+
+        if (leftWallCollider == null || rightWallCollider == null)
+        {
+            Debug.LogError("Left or Right Wall Collider is null");
+            return;
+        }
+
+        var leftValue = _invisibleWall_Left_2.transform.position.x + leftWallCollider.bounds.extents.x;
+        var rightValue = _invisibleWall_Right_2.transform.position.x - rightWallCollider.bounds.extents.x;
+
+        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Left, true, leftValue);
+        SceneContext.Current.CameraController.SetBoundaries(CameraController.BoundaryType.Right, true, rightValue);
     }
 
     public void ActiveCameraChasing()
@@ -234,8 +301,6 @@ public class FireBossManager : MonoBehaviour
     }
     private IEnumerator PlayerMoveCoroutine()
     {
-        _isEndMoveProcess = false;
-
         yield return new WaitForSeconds(1f);
 
         // 플레이어 위치
@@ -282,8 +347,6 @@ public class FireBossManager : MonoBehaviour
         }
 
         yield return new WaitUntil(() => System.Math.Abs(targetPosX - SceneContext.Current.Player.transform.position.x) < 0.2f);
-
-        _isEndMoveProcess = true;
     }
     private IEnumerator LightSkillCoroutine()
     {
