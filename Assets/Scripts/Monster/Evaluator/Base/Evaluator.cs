@@ -6,20 +6,20 @@ using UnityEditor;
 #endif
 
 /// <summary>
-/// ¹üÀ§ ¾È¿¡ ´ë»óÀÌ µé¾î¿Ô´Â Áö¸¦ ÆÇ´ÜÇÏ´Â 'ÆÇµ¶±â' Å¬·¡½º
+/// ë²”ìœ„ ì•ˆì— ëŒ€ìƒì´ ë“¤ì–´ì™”ëŠ” ì§€ë¥¼ íŒë‹¨í•˜ëŠ” 'íŒë…ê¸°' í´ë˜ìŠ¤
 /// </summary>
 public abstract class Evaluator : MonoBehaviour
 {
-    [Header("¦¡¦¡¦¡¦¡¦¡¦¡¦¡ Evaluator ¦¡¦¡¦¡¦¡¦¡¦¡¦¡")]
+    [Header("â”€â”€â”€â”€â”€â”€â”€ Evaluator â”€â”€â”€â”€â”€â”€â”€")]
     [Space]
 
-    [SerializeField] protected LayerMask targetLayer;           // ÆÇµ¶ ´ë»ó ·¹ÀÌ¾î
-    [SerializeField] protected BoxCollider2D checkCollider;     // ÆÇµ¶ Äİ¶óÀÌ´õ
+    [SerializeField] protected LayerMask targetLayer;           // íŒë… ëŒ€ìƒ ë ˆì´ì–´
+    [SerializeField] protected BoxCollider2D checkCollider;     // íŒë… ì½œë¼ì´ë”
 
     [Header("____ Togle Options ____")]
     [Space]
 
-    [Tooltip("ÆÇµ¶±â¸¦ »ç¿ëÇÒÁö °áÁ¤ÇÕ´Ï´Ù")]
+    [Tooltip("íŒë…ê¸°ë¥¼ ì‚¬ìš©í• ì§€ ê²°ì •í•©ë‹ˆë‹¤")]
     [SerializeField] private bool _isUsable = true;
     public bool IsUsable
     {
@@ -33,13 +33,13 @@ public abstract class Evaluator : MonoBehaviour
     private float _debugCoolTime;
     public float DebugCoolTime { get => _debugCoolTime; set => _debugCoolTime = value; }
 
-    [SerializeField] private bool _isWaitingEvent;              // ÀÌº¥Æ® ´ë±â ¿©ºÎ
+    [SerializeField] private bool _isWaitingEvent;              // ì´ë²¤íŠ¸ ëŒ€ê¸° ì—¬ë¶€
     public bool IsWaitingEvent
     {
         get => _isWaitingEvent;
         set => _isWaitingEvent = value;
     }
-    [SerializeField] private bool _isDuringCoolTime;            // ÆÇµ¶±â ÄğÅ¸ÀÓ ¿©ºÎ
+    [SerializeField] private bool _isDuringCoolTime;            // íŒë…ê¸° ì¿¨íƒ€ì„ ì—¬ë¶€
     public bool IsDuringCoolTime
     {
         get => _isDuringCoolTime;
@@ -49,7 +49,7 @@ public abstract class Evaluator : MonoBehaviour
             _debugCoolTime = _targetEvaluatorCoolTime;
         }
     }
-    [SerializeField] private float _targetEvaluatorCoolTime;    // ÆÇµ¶ ÄğÅ¸ÀÓ ½Ã°£
+    [SerializeField] private float _targetEvaluatorCoolTime;    // íŒë… ì¿¨íƒ€ì„ ì‹œê°„
     public float TargetCheckCoolTime
     {
         get => _targetEvaluatorCoolTime;
@@ -62,14 +62,14 @@ public abstract class Evaluator : MonoBehaviour
     private Coroutine _coolTimeCoroutine;
     private Coroutine _waitCoroutine;
 
-    // ÆÇµ¶ ÇÊÅÍ ÀÌº¥Æ®
+    // íŒë… í•„í„° ì´ë²¤íŠ¸
     public delegate bool FilterDelegate(Vector3 targetPoint);
     public event FilterDelegate FilterEvent;
 
-    // ÆÇµ¶ ÀÌº¥Æ® Á¤ÀÇ
-    protected delegate void EvaluationDelegate(Vector3 targetPoint);        // void EvaluationDelegate(Vector3 targetPoint)ÀÌ¶ó´Â µ¨¸®°ÔÀÌÆ®(´ë¸®ÀÚ) ¼±¾ğ
-    protected event EvaluationDelegate EvaluationEvent;                     // EvaluationDelegate µ¨¸®°ÔÀÌÆ®¸¦ ÀÌº¥Æ®·Î ¼±¾ğ(µ¨¸®°ÔÀÌÆ®¸¦ ¿ÜºÎ¿¡¼­ ¸Ú´ë·Î È£ÃâÇÏ´Â ¹®Á¦¸¦ ¹æÁö
-                                                                            // event Å°¿öµå´Â ¿ÜºÎ¿¡¼­ EvaluationEvent(Vector3.back); ¿Í °°ÀÌ È£ÃâÇÒ ¼ö ¾øµµ·Ï ¸·´Â´Ù
+    // íŒë… ì´ë²¤íŠ¸ ì •ì˜
+    protected delegate void EvaluationDelegate(Vector3 targetPoint);        // void EvaluationDelegate(Vector3 targetPoint)ì´ë¼ëŠ” ë¸ë¦¬ê²Œì´íŠ¸(ëŒ€ë¦¬ì) ì„ ì–¸
+    protected event EvaluationDelegate EvaluationEvent;                     // EvaluationDelegate ë¸ë¦¬ê²Œì´íŠ¸ë¥¼ ì´ë²¤íŠ¸ë¡œ ì„ ì–¸(ë¸ë¦¬ê²Œì´íŠ¸ë¥¼ ì™¸ë¶€ì—ì„œ ë©‹ëŒ€ë¡œ í˜¸ì¶œí•˜ëŠ” ë¬¸ì œë¥¼ ë°©ì§€)
+                                                                            // event í‚¤ì›Œë“œëŠ” ì™¸ë¶€ì—ì„œ EvaluationEvent(Vector3.back); ì™€ ê°™ì´ í˜¸ì¶œí•  ìˆ˜ ì—†ë„ë¡ ë§‰ëŠ”ë‹¤
 
     public delegate IEnumerator WaitEventDelegate();
     public event WaitEventDelegate WaitEvent;
@@ -87,7 +87,7 @@ public abstract class Evaluator : MonoBehaviour
     }
 
     /// <summary>
-    /// ÆÇµ¶ Äİ¶óÀÌ´õÀÇ ¹üÀ§ ¾È¿¡ µé¾î¿À´Â Å¸°ÙÀ» °¨ÁöÇÑ´Ù
+    /// íŒë… ì½œë¼ì´ë”ì˜ ë²”ìœ„ ì•ˆì— ë“¤ì–´ì˜¤ëŠ” íƒ€ê²Ÿì„ ê°ì§€í•œë‹¤
     /// </summary>
     /// <returns></returns>
     public virtual Collider2D IsTargetWithinRange()
@@ -103,7 +103,7 @@ public abstract class Evaluator : MonoBehaviour
         Collider2D targetCollider = Physics2D.OverlapBox(checkCollider.transform.position, checkCollider.bounds.size, 0f, targetLayer);
         if (targetCollider == null) return null;
 
-        // Å½ÁöÇÑ ´ë»óÀÇ ÀÌ¸§À» Ãâ·Â
+        // íƒì§€í•œ ëŒ€ìƒì˜ ì´ë¦„ì„ ì¶œë ¥
         // Debug.Log($"{targetCollider.gameObject.name}");
 
         // check player
@@ -115,21 +115,21 @@ public abstract class Evaluator : MonoBehaviour
                 // do additional event
                 if (EvaluationEvent != null)
                 {
-                    // ÇÃ·¹ÀÌ¾îÀÇ Å¸°Ù Æ÷ÀÎÆ® ¼³Á¤
+                    // í”Œë ˆì´ì–´ì˜ íƒ€ê²Ÿ í¬ì¸íŠ¸ ì„¤ì •
                     Vector3 playerPos = player.transform.position + new Vector3(0f, player.BodyCollider.bounds.extents.y * 1.5f, 0f);
 
-                    // ÇÊÅÍ¸µ Á¶°ÇÀ» ¸¸Á·ÇÏ¸é ÆÇµ¶ ÀÌº¥Æ®¸¦ ¹ß»ı½ÃÅ°Áö ¾ÊÀ½
+                    // í•„í„°ë§ ì¡°ê±´ì„ ë§Œì¡±í•˜ë©´ íŒë… ì´ë²¤íŠ¸ë¥¼ ë°œìƒì‹œí‚¤ì§€ ì•ŠìŒ
                     bool isFiltered = false;
                     if (FilterEvent != null)
                     {
-                        // Debug.Log("ÆÇµ¶±â ÇÊÅÍ¸µ °Ë»ç ½ÃÀÛ");
+                        // Debug.Log("íŒë…ê¸° í•„í„°ë§ ê²€ì‚¬ ì‹œì‘");
                         isFiltered = FilterEvent(playerPos);
                     }
                     if (isFiltered) return null;
 
                     EvaluationEvent(playerPos);
 
-                    // playerPosÀ» Áß½ÉÀ¸·ÎÇÏ´Â ½ÊÀÚ°¡ Ç¥½Ã
+                    // playerPosì„ ì¤‘ì‹¬ìœ¼ë¡œí•˜ëŠ” ì‹­ìê°€ í‘œì‹œ
                     var vec1 = new Vector3(-1f, 1f, 0f);
                     var vec2 = new Vector3(1f, -1f, 0f);
                     var vec3 = new Vector3(-1f, -1f, 0f);
@@ -148,37 +148,37 @@ public abstract class Evaluator : MonoBehaviour
     {
         bool isNeverBoth = true;
 
-        // Æ¯Á¤ ÀÌº¥Æ®°¡ µî·ÏµÇ¾î ÀÖ´Ù¸é ½ÇÇà
+        // íŠ¹ì • ì´ë²¤íŠ¸ê°€ ë“±ë¡ë˜ì–´ ìˆë‹¤ë©´ ì‹¤í–‰
         if (WaitEvent != null)
         {
             isNeverBoth = false;
 
-            // Debug.Log("ÀÌº¥Æ® ´ë±â ½ÃÀÛ");
+            // Debug.Log("ì´ë²¤íŠ¸ ëŒ€ê¸° ì‹œì‘");
             IsWaitingEvent = true;
 
             yield return WaitEvent();
 
             IsWaitingEvent = false;
-            // Debug.Log("ÀÌº¥Æ® ´ë±â ³¡");
+            // Debug.Log("ì´ë²¤íŠ¸ ëŒ€ê¸° ë");
         }
 
-        // ÄğÅ¸ÀÓÀÌ 0.01ÃÊ ÀÌ»óÀÌ¸é ÄğÅ¸ÀÓ ½ÇÇà
+        // ì¿¨íƒ€ì„ì´ 0.01ì´ˆ ì´ìƒì´ë©´ ì¿¨íƒ€ì„ ì‹¤í–‰
         if (_targetEvaluatorCoolTime > 0.01f)
         {
             isNeverBoth = false;
 
-            //Debug.Log("ÄğÅ¸ÀÓ ´ë±â ½ÃÀÛ");
+            //Debug.Log("ì¿¨íƒ€ì„ ëŒ€ê¸° ì‹œì‘");
             IsDuringCoolTime = true;
 
             yield return new WaitForSeconds(_targetEvaluatorCoolTime);
 
             IsDuringCoolTime = false;
-            //Debug.Log("ÄğÅ¸ÀÓ ´ë±â ³¡");
+            //Debug.Log("ì¿¨íƒ€ì„ ëŒ€ê¸° ë");
         }
 
         if (isNeverBoth)
         {
-            // Debug.Log($"ÄğÅ¸ÀÓÀÌ ½ÇÇàµÇ¾úÁö¸¸, ¾î¶°ÇÑ ÀÌº¥Æ®³ª ´ë±â ½Ã°£À» ±â´Ù¸®Áö ¾Ê½À´Ï´Ù");
+            // Debug.Log($"ì¿¨íƒ€ì„ì´ ì‹¤í–‰ë˜ì—ˆì§€ë§Œ, ì–´ë– í•œ ì´ë²¤íŠ¸ë‚˜ ëŒ€ê¸° ì‹œê°„ì„ ê¸°ë‹¤ë¦¬ì§€ ì•ŠìŠµë‹ˆë‹¤");
             yield return null;
         }
     }
@@ -189,7 +189,7 @@ public abstract class Evaluator : MonoBehaviour
 
         _coolTimeCoroutine = StartCoroutine(CoolTimeCoroutine());
 
-        // ÇÊ¿äÇÏ´Ù¸é Ãß°¡ ¸Ş¼­µå¸¦ ¹İÈ¯
+        // í•„ìš”í•˜ë‹¤ë©´ ì¶”ê°€ ë©”ì„œë“œë¥¼ ë°˜í™˜
         return null;
     }
 
@@ -216,33 +216,33 @@ public abstract class Evaluator : MonoBehaviour
 }
 
 #if UNITY_EDITOR
-// Ä¿½ºÅÒ ¿¡µğÅÍ
+// ì»¤ìŠ¤í…€ ì—ë””í„°
 [CustomEditor(typeof(Evaluator), true)]
 public class EvaluatorEditor : Editor
 {
-    // Unity ¿¡µğÅÍ¿¡¼­ ÀÎ½ºÆåÅÍ GUI¸¦ ±×¸®´Â ¸Ş¼­µåÀÔ´Ï´Ù.
-    // OnInspectorGUI ¸Ş¼­µå¸¦ ¿À¹ö¶óÀÌµåÇÏ¿© Ä¿½ºÅÒ GUI¸¦ Á¤ÀÇÇÕ´Ï´Ù.
+    // Unity ì—ë””í„°ì—ì„œ ì¸ìŠ¤í™í„° GUIë¥¼ ê·¸ë¦¬ëŠ” ë©”ì„œë“œì…ë‹ˆë‹¤.
+    // OnInspectorGUI ë©”ì„œë“œë¥¼ ì˜¤ë²„ë¼ì´ë“œí•˜ì—¬ ì»¤ìŠ¤í…€ GUIë¥¼ ì •ì˜í•©ë‹ˆë‹¤.
     public override void OnInspectorGUI()
     {
-        // ÇöÀç ÀÎ½ºÆåÅÍ¿¡¼­ ÆíÁı ÁßÀÎ TeleportNode '°´Ã¼'¸¦ °¡Á®¿É´Ï´Ù.
+        // í˜„ì¬ ì¸ìŠ¤í™í„°ì—ì„œ í¸ì§‘ ì¤‘ì¸ TeleportNode 'ê°ì²´'ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
         Evaluator t = (Evaluator)target;
 
-        // ±âº» ÀÎ½ºÆåÅÍ GUI¸¦ ±×¸³´Ï´Ù.
+        // ê¸°ë³¸ ì¸ìŠ¤í™í„° GUIë¥¼ ê·¸ë¦½ë‹ˆë‹¤.
         DrawDefaultInspector();
 
-        // ½ºÆäÀÌ½º
+        // ìŠ¤í˜ì´ìŠ¤
         EditorGUILayout.Space();
 
-        // ±âº» ½½¶óÀÌ´õ UI
+        // ê¸°ë³¸ ìŠ¬ë¼ì´ë” UI
         t.DebugCoolTime = EditorGUILayout.Slider("DebugCoolTime", t.DebugCoolTime, 0f, t.TargetCheckCoolTime);
 
-        // °ªÀÌ ¹Ù²î¾úÀ» ¶§ º¯°æµÈ ³»¿ëÀ» Àû¿ë
+        // ê°’ì´ ë°”ë€Œì—ˆì„ ë•Œ ë³€ê²½ëœ ë‚´ìš©ì„ ì ìš©
         if (GUI.changed)
         {
             EditorUtility.SetDirty(target);
         }
 
-        // ÀÎ½ºÆåÅÍ¸¦ ´Ù½Ã ±×¸®µµ·Ï ÇÕ´Ï´Ù.
+        // ì¸ìŠ¤í™í„°ë¥¼ ë‹¤ì‹œ ê·¸ë¦¬ë„ë¡ í•©ë‹ˆë‹¤.
         Repaint();
     }
 }
