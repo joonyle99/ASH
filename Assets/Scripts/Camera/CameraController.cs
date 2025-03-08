@@ -16,6 +16,7 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
         Normal,
         Chasing,
         Surrounding,
+        Looking
     }
 
     [System.Serializable]

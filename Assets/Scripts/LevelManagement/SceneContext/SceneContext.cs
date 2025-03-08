@@ -3,24 +3,24 @@ using System.Linq;
 using Com.LuisPedroFonseca.ProCamera2D;
 
 /// <summary>
-/// ÇöÀç ¾À¿¡ ´ëÇÑ µ¿ÀÛÀº ¸ğµÎ ´ã´çÇÔ.
-/// ¾ÀÀÇ 'ÁÖ¿ä ¿ÀºêÁ§Æ®'¿¡ ´ëÇÑ ·¹ÆÛ·±½º¸¦ °®°í ÀÖÀ½
+/// í˜„ì¬ ì”¬ì— ëŒ€í•œ ë™ì‘ì€ ëª¨ë‘ ë‹´ë‹¹í•¨.
+/// ì”¬ì˜ 'ì£¼ìš” ì˜¤ë¸Œì íŠ¸'ì— ëŒ€í•œ ë ˆí¼ëŸ°ìŠ¤ë¥¼ ê°–ê³  ìˆìŒ
 /// </summary>
 public class SceneContext : MonoBehaviour
 {
     public static SceneContext Current { get; private set; }                // singleton
 
     // basic
-    public PlayerBehaviour Player { get; private set; }                     // ÇÃ·¹ÀÌ¾î
-    public ProCamera2D ProCamera { get; private set; }                      // ÇÁ·Î Ä«¸Ş¶ó
-    public CameraController CameraController { get; private set; }          // Ä«¸Ş¶ó ÄÁÆ®·Ñ·¯
+    public PlayerBehaviour Player { get; private set; }                     // í”Œë ˆì´ì–´
+    public ProCamera2D ProCamera { get; private set; }                      // í”„ë¡œ ì¹´ë©”ë¼
+    public CameraController CameraController { get; private set; }          // ì¹´ë©”ë¼ ì»¨íŠ¸ë¡¤ëŸ¬
 
     // extra
-    public Passage EntrancePassage { get; private set; }                                                                                // ¾ÀÀÇ ÀÔ±¸
-    public SceneTransitionPlayer SceneTransitionPlayer { get; private set; }                                                            // ¾À ÀüÈ¯ ÇÃ·¹ÀÌ¾î (Å¸ÀÌÆ², ÇÁ·Ñ·Î±×·ÎÀÇ ÀÌµ¿)
-    public PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer => SceneTransitionPlayer as PlayableSceneTransitionPlayer;      // ¾À ÀüÈ¯ ÇÃ·¹ÀÌ¾î (Å½Çè±¸°£, º¸½º´øÀü, º¸½ºÀüÀ¸·ÎÀÇ ÀÌµ¿)
+    public Passage EntrancePassage { get; private set; }                                                                                // ì”¬ì˜ ì…êµ¬
+    public SceneTransitionPlayer SceneTransitionPlayer { get; private set; }                                                            // ì”¬ ì „í™˜ í”Œë ˆì´ì–´ (íƒ€ì´í‹€, í”„ë¡¤ë¡œê·¸ë¡œì˜ ì´ë™)
+    public PlayableSceneTransitionPlayer PlayableSceneTransitionPlayer => SceneTransitionPlayer as PlayableSceneTransitionPlayer;      // ì”¬ ì „í™˜ í”Œë ˆì´ì–´ (íƒí—˜êµ¬ê°„, ë³´ìŠ¤ë˜ì „, ë³´ìŠ¤ì „ìœ¼ë¡œì˜ ì´ë™)
 
-    [SerializeField] private CheckpointManager _checkpointManager;          // Ã¼Å©Æ÷ÀÎÆ® ¸Å´ÏÀú
+    [SerializeField] private CheckpointManager _checkpointManager;          // ì²´í¬í¬ì¸íŠ¸ ë§¤ë‹ˆì €
     public CheckpointManager CheckPointManager => _checkpointManager;
 
     protected void Awake()
@@ -29,7 +29,7 @@ public class SceneContext : MonoBehaviour
         ProCamera = FindObjectOfType<ProCamera2D>();
         CameraController = ProCamera.GetComponent<CameraController>();
 
-        // SceneContext¿¡ Ã¼Å©Æ÷ÀÎÆ® ¸Å´ÏÀú¸¦ Ãß°¡ÇÑ´Ù
+        // SceneContextì— ì²´í¬í¬ì¸íŠ¸ ë§¤ë‹ˆì €ë¥¼ ì¶”ê°€í•œë‹¤
         if (_checkpointManager == null)
         {
             _checkpointManager = GetComponentInChildren<CheckpointManager>();
@@ -40,8 +40,8 @@ public class SceneContext : MonoBehaviour
     }
 
     /// <summary>
-    /// ±âº»ÀûÀ¸·Î »õ·Î¿î ¾ÀÀÇ Start¿¡¼­ È£ÃâµÇ°í, Ãß°¡·Î NonPlayableScene, PlayableSceneÀ¸·ÎÀÇ ÀüÈ¯ ½Ã
-    /// ÇØ´ç ¾À¿¡ ´ëÇÑ ÄÁÅØ½ºÆ®¸¦ °¡Á®¿Â´Ù. i.e) ÇÃ·¹ÀÌ¾î, ¾À ÀüÈ¯ ÇÃ·¹ÀÌ¾î, ½ÃÀÛ ÀÔ±¸, Ã¼Å© Æ÷ÀÎÆ®, ÄÁÅØ½ºÆ® ¸®½º³Ê ...
+    /// ê¸°ë³¸ì ìœ¼ë¡œ ìƒˆë¡œìš´ ì”¬ì˜ Startì—ì„œ í˜¸ì¶œë˜ê³ , ì¶”ê°€ë¡œ NonPlayableScene, PlayableSceneìœ¼ë¡œì˜ ì „í™˜ ì‹œ
+    /// í•´ë‹¹ ì”¬ì— ëŒ€í•œ ì»¨í…ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì˜¨ë‹¤. i.e) í”Œë ˆì´ì–´, ì”¬ ì „í™˜ í”Œë ˆì´ì–´, ì‹œì‘ ì…êµ¬, ì²´í¬ í¬ì¸íŠ¸, ì»¨í…ìŠ¤íŠ¸ ë¦¬ìŠ¤ë„ˆ ...
     /// </summary>
     public Result BuildPlayable(string entranceName)
     {
@@ -67,12 +67,12 @@ public class SceneContext : MonoBehaviour
         Player = FindFirstObjectByType<PlayerBehaviour>();
 
         // 2. scene transition player
-        var playableTransitions = FindObjectsOfType<PlayableSceneTransitionPlayer>();   // ¸ğµç playable scene transition player¸¦ Ã£´Â´Ù
+        var playableTransitions = FindObjectsOfType<PlayableSceneTransitionPlayer>();   // ëª¨ë“  playable scene transition playerë¥¼ ì°¾ëŠ”ë‹¤
         for (int index = 0; index < playableTransitions.Length; index++)
         {
             // Debug.Log($"Scene Transition Player: {playableTransitions[index].gameObject.name}");
 
-            // scene change manager°¡ ºÙ¾îÀÖÁö ¾ÊÀº (¿ì¼±¼øÀ§°¡ ³ôÀº) scene transition player¸¦ Ã£¾Æ¼­ ÇÒ´çÇØÁØ´Ù (ex: Initial Scene Transition Player) 
+            // scene change managerê°€ ë¶™ì–´ìˆì§€ ì•Šì€ (ìš°ì„ ìˆœìœ„ê°€ ë†’ì€) scene transition playerë¥¼ ì°¾ì•„ì„œ í• ë‹¹í•´ì¤€ë‹¤ (ex: Initial Scene Transition Player) 
             if (playableTransitions[index].GetComponent<SceneChangeManager>() == null)
             {
                 // Debug.Log($"Scene Transition Player: {playableTransitions[index].gameObject.name}");
@@ -105,22 +105,22 @@ public class SceneContext : MonoBehaviour
         if (defaultBuildResult == Result.Fail)
             buildResult = Result.Fail;
 
-        // Debug.Log($"SceneContext Á¤»óÀû ºôµå ¼º°ø ¿©ºÎ: {buildResult == Result.Success}");
+        // Debug.Log($"SceneContext ì •ìƒì  ë¹Œë“œ ì„±ê³µ ì—¬ë¶€: {buildResult == Result.Success}");
 
         return buildResult;
     }
 
     /// <summary>
-    /// ¾À ÄÁÅØ½ºÆ® ºôµå ½Ã ±âº»ÀûÀ¸·Î È£ÃâµÇ´Â ÇÔ¼ö.
-    /// Æ¯¼öÇÑ ¾À ÀüÈ¯ ÇÃ·¹ÀÌ¾î°¡ ¾ø´Ù¸é ±âº» ¾À ÀüÈ¯ ÇÃ·¹ÀÌ¾î¸¦ Ã£¾Æ¼­ ¼³Á¤ÇØÁØ´Ù.
-    /// ¶ÇÇÑ ¾ÀÀÌ ÀüÈ¯µÇ¾î ¾À ÄÁÅØ½ºÆ®°¡ »õ·Î ºôµåµÇ¸é, ¸ğµç ¸®½º³Ê¸¦ Ã£¾Æ ÀÌº¥Æ®¸¦ Àü´ŞÇÑ´Ù
-    /// i.e) ¾À ÀüÈ¯ ½Ã, ¾ÀÀÇ ÀÔ±¸¿¡¼­ ³ª¿À´Â ÄÆ¾À, ÇÃ·¹ÀÌ¾î »óÅÂ ÃÊ±âÈ­, º¸½º ´øÀü UI Ç¥½Ã µî
+    /// ì”¬ ì»¨í…ìŠ¤íŠ¸ ë¹Œë“œ ì‹œ ê¸°ë³¸ì ìœ¼ë¡œ í˜¸ì¶œë˜ëŠ” í•¨ìˆ˜.
+    /// íŠ¹ìˆ˜í•œ ì”¬ ì „í™˜ í”Œë ˆì´ì–´ê°€ ì—†ë‹¤ë©´ ê¸°ë³¸ ì”¬ ì „í™˜ í”Œë ˆì´ì–´ë¥¼ ì°¾ì•„ì„œ ì„¤ì •í•´ì¤€ë‹¤.
+    /// ë˜í•œ ì”¬ì´ ì „í™˜ë˜ì–´ ì”¬ ì»¨í…ìŠ¤íŠ¸ê°€ ìƒˆë¡œ ë¹Œë“œë˜ë©´, ëª¨ë“  ë¦¬ìŠ¤ë„ˆë¥¼ ì°¾ì•„ ì´ë²¤íŠ¸ë¥¼ ì „ë‹¬í•œë‹¤
+    /// i.e) ì”¬ ì „í™˜ ì‹œ, ì”¬ì˜ ì…êµ¬ì—ì„œ ë‚˜ì˜¤ëŠ” ì»·ì”¬, í”Œë ˆì´ì–´ ìƒíƒœ ì´ˆê¸°í™”, ë³´ìŠ¤ ë˜ì „ UI í‘œì‹œ ë“±
     /// </summary>
     public Result DefaultBuild()
     {
         Result buildResult = Result.Success;
 
-        // ±âº» ¾À ÀüÈ¯ ÇÃ·¹ÀÌ¾î¸¦ ¼³Á¤ÇØÁØ´Ù
+        // ê¸°ë³¸ ì”¬ ì „í™˜ í”Œë ˆì´ì–´ë¥¼ ì„¤ì •í•´ì¤€ë‹¤
         if (SceneTransitionPlayer == null)
         {
             SceneTransitionPlayer = FindFirstObjectByType<SceneTransitionPlayer>();
@@ -142,7 +142,7 @@ public class SceneContext : MonoBehaviour
             {
                 // Debug.Log($"SceneContextBuildListener: {name}");
 
-                // ¾À ÄÁÅØ½ºÆ® ºôµå ¿Ï·á ÀÌº¥Æ®¸¦ Àü´ŞÇÑ´Ù
+                // ì”¬ ì»¨í…ìŠ¤íŠ¸ ë¹Œë“œ ì™„ë£Œ ì´ë²¤íŠ¸ë¥¼ ì „ë‹¬í•œë‹¤
                 buildListener.OnSceneContextBuilt();
             }
         }

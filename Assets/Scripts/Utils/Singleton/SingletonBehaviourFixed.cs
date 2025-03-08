@@ -57,7 +57,7 @@ namespace HappyTools
 
         protected virtual void OnDestroy()
         {
-            // Debug.Log($"Destroyed {typeof(T).Name} instance");
+             //Debug.Log($"Destroyed {typeof(T).Name} instance");
         }
     }
 }

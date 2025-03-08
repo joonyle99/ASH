@@ -88,7 +88,7 @@ public class LightNPC : MonoBehaviour
         }
         yield return new WaitForSeconds(_flashDuration);
         _soundList.PlaySFX("SE_Light_absorb");
-        SceneContext.Current.Player.SetCapeIntensity(_playerCapeIntensityValue);
+        SceneContext.Current.Player?.SetCapeIntensity(_playerCapeIntensityValue);
         eTime = 0f;
         while (eTime < _flashEndDuration)
         {
