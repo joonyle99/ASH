@@ -68,7 +68,7 @@ public class TitleSceneManager : MonoBehaviour
     IEnumerator OpenPrologueSceneCoroutine()
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-        SceneChangeManager.Instance.ChangeToNonPlayableScene("PrologueScene");
+        SceneChangeManager.Instance.ChangeToNonPlayableScene("NewPrologueScene");
     }
     /// <summary>
     /// 해당 씬으로 전환합니다

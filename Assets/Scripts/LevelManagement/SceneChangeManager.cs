@@ -79,7 +79,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         // 이미 존재하는 SceneContext가 있는 경우
         else
         {
-            // Debug.Log("The scene already has a sceneContext. Returns it immediately");
+             Debug.Log("The scene already has a sceneContext. Returns it immediately");
         }
 
         return sceneContext;
