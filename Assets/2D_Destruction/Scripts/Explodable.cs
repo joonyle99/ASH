@@ -47,7 +47,8 @@ public class Explodable : MonoBehaviour
         //if fragments exist destroy the original
         if (fragments.Count > 0)
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            GetComponent<SpriteRenderer>().enabled = false;
         }
 
         ExplosionForce ef = FindObjectOfType<ExplosionForce>();

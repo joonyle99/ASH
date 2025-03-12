@@ -48,11 +48,11 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
 
     PreserveState _statePreserver;
 
-    void Awake()
+    protected override void Awake()
     {
         _statePreserver = GetComponent<PreserveState>();
     }
-    void Update()
+    protected override void Update()
     {
         if (!IsLightOn || (IsLightOn && !_isExplodeDone && !_turnedOnAtStart))
             return;
@@ -66,7 +66,8 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         _currentSpotLight.pointLightOuterRadius = Mathf.Lerp(_idleEffectScaleMin, _idleEffectScaleMax, (sinValue + 1) / 2) * _currentSettings.OuterRadius;
 
     }
-    void OnDestroy()
+
+    protected override void OnDestroy()
     {
         if (_statePreserver)
         {
@@ -79,7 +80,7 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         }
     }
 
-    void TurnCurrentSpotLightOn()
+    protected void TurnCurrentSpotLightOn()
     {
         _currentSpotLight.gameObject.SetActive(true);
         _currentSpotLight.pointLightOuterRadius = _currentSettings.OuterRadius;
@@ -144,7 +145,7 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         SaveAndLoader.OnSaveStarted += SaveLanternOnState;
     }
 
-    void TurnLightOn()
+    protected void TurnLightOn()
     {
         if (IsLightOn)
             return;
@@ -156,7 +157,7 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
             StartCoroutine(ExplodeCoroutine());
         }
     }
-    void TurnLightOff()
+    protected void TurnLightOff()
     {
         if (!IsLightOn)
             return;
@@ -169,7 +170,7 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
 
         StopAllCoroutines();
     }
-    IEnumerator ExplodeCoroutine()
+    protected IEnumerator ExplodeCoroutine()
     {
         // 보스 랜턴 공격 판단
         LanternSceneContext lightSceneContext = LanternSceneContext.Current;

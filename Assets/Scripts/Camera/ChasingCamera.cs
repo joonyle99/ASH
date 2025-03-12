@@ -14,10 +14,26 @@ public class ChasingCamera : MonoBehaviour
 
     private CameraController _camera;
 
+    public float DeadLinePosY
+    {
+        get
+        {
+            if (!_isChasing)
+            {
+                return -10000000;
+            }
+            else
+            {
+                return _helperTrans.position.y;
+            }
+        }
+    }
+
     private void Awake()
     {
         _camera = GetComponent<CameraController>();
     }
+
     private void Update()
     {
         if (_isChasing)
@@ -49,18 +65,18 @@ public class ChasingCamera : MonoBehaviour
 
             // 플레이어가 카메라 안에 있는지 확인
             var playerViewportPos = SceneContext.Current.CameraController.MainCamera.WorldToViewportPoint(player.HeadTrans.position);
-            if (playerViewportPos.y < 0)
+            if (playerViewportPos.y < 0 && !BossLantern.IsPlayingLostLantern)
             {
-                // Debug.Log("플레이어가 카메라 아래로 떨어져서 사망합니다.");
-
+                //Debug.Log("플레이어가 카메라 아래로 떨어져서 사망합니다.");
+                
                 player.CurHp -= player.CurHp;
                 EndChasing();
                 return;
             }
             else if (playerViewportPos.y > 1)
             {
-                // Debug.Log("플레이어가 카메라 위로 올라가서 따라갑니다.");
-
+                //Debug.Log("플레이어가 카메라 위로 올라가서 따라갑니다.");
+                
                 _helperTrans.position = new Vector3
                     (
                     _helperTrans.position.x,
@@ -107,10 +123,10 @@ public class ChasingCamera : MonoBehaviour
     }
     public void StopChasing()
     {
-        if (_isChasing == false)
+        if (_isChasing == false || BossLantern.IsPlayingLostLantern)
             return;
 
-        // Debug.Log("Stop Chasing");
+         //Debug.Log("Stop Chasing");
 
         _isChasing = false;
 
