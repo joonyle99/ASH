@@ -18,9 +18,9 @@ public class TeleportationModule : MonoBehaviour
 
     public void ExecuteTeleport_AnimEvent()
     {
-        var playerPos = SceneContext.Current.Player.transform.position;
-        var firePrefabPos = _firePrefab.transform.position;
-        _firePrefab.transform.position = new Vector3(firePrefabPos.x, playerPos.y, firePrefabPos.z);
+        //var playerPos = SceneContext.Current.Player.transform.position;
+        //var firePrefabPos = _firePrefab.transform.position;
+        //_firePrefab.transform.position = new Vector3(firePrefabPos.x, playerPos.y, firePrefabPos.z);
         _currentGraph.Move(_rigidbody);
     }
 
