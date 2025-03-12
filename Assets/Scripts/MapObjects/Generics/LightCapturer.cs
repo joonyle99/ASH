@@ -1,16 +1,16 @@
 using UnityEngine;
 
 /// <summary>
-/// ÇÃ·¹ÀÌ¾î°¡ ½ğ ºûÀ» ¹Ş´Â ¿ÀºêÁ§Æ®¿¡ ºÎÂøµÇ´Â ÄÄÆ÷³ÍÆ®
+/// í”Œë ˆì´ì–´ê°€ ìœ ë¹›ì„ ë°›ëŠ” ì˜¤ë¸Œì íŠ¸ì— ë¶€ì°©ë˜ëŠ” ì»´í¬ë„ŒíŠ¸
 /// </summary>
 public class LightCapturer : MonoBehaviour
 {
-    // ºûÀ» ¹Ş´Â ¿ÀºêÁ§Æ®¿¡ ºÎÂøµÇ´Â ÄÄÆ÷³ÍÆ®
+    // ë¹›ì„ ë°›ëŠ” ì˜¤ë¸Œì íŠ¸ì— ë¶€ì°©ë˜ëŠ” ì»´í¬ë„ŒíŠ¸
     [RequireInterface(typeof(ILightCaptureListener))]
     [SerializeField] private Object _lightCaptureListenerObject;
 
-    private bool _isGettingLighted = false;             // ÇöÀç ÇÁ·¹ÀÓ¿¡ ºûÀ» ¹Ş°í ÀÖ´ÂÁö ¿©ºÎ
-    private bool _wasGettingLighted = false;            // ÀÌÀü ÇÁ·¹ÀÓ¿¡ ºûÀ» ¹Ş°í ÀÖ¾ú´ÂÁö ¿©ºÎ
+    private bool _isGettingLighted = false;             // í˜„ì¬ í”„ë ˆì„ì— ë¹›ì„ ë°›ê³  ìˆëŠ”ì§€ ì—¬ë¶€
+    private bool _wasGettingLighted = false;            // ì´ì „ í”„ë ˆì„ì— ë¹›ì„ ë°›ê³  ìˆì—ˆëŠ”ì§€ ì—¬ë¶€
     private LightSource _lastLightSource = null;
 
     private ILightCaptureListener _lightCaptureListener => _lightCaptureListenerObject as ILightCaptureListener;
@@ -18,7 +18,7 @@ public class LightCapturer : MonoBehaviour
 
     private void LateUpdate()
     {
-        // ÀÌÀü ÇÁ·¹ÀÓ¿¡ ºûÀ» ¹Ş°í ÀÖ¾úÁö¸¸, ÀÌ¹ø ÇÁ·¹ÀÓ¿¡ ºûÀ» ¹ŞÁö ¾Ê¾ÒÀ» ¶§
+        // ì´ì „ í”„ë ˆì„ì— ë¹›ì„ ë°›ê³  ìˆì—ˆì§€ë§Œ, ì´ë²ˆ í”„ë ˆì„ì— ë¹›ì„ ë°›ì§€ ì•Šì•˜ì„ ë•Œ
         if (!_isGettingLighted && _wasGettingLighted)
         {
             if (_lightCaptureListener != null)
@@ -28,13 +28,13 @@ public class LightCapturer : MonoBehaviour
             }
         }
 
-        // ÇöÀç ÇÁ·¹ÀÓÀÇ »óÅÂ¸¦ ÀÌÀü ÇÁ·¹ÀÓÀÇ »óÅÂ·Î ÀúÀåÈÄ, ÇöÀç ÇÁ·¹ÀÓÀº ÃÊ±âÈ­
+        // í˜„ì¬ í”„ë ˆì„ì˜ ìƒíƒœë¥¼ ì´ì „ í”„ë ˆì„ì˜ ìƒíƒœë¡œ ì €ì¥í›„, í˜„ì¬ í”„ë ˆì„ì€ ì´ˆê¸°í™”
         _wasGettingLighted = _isGettingLighted;
         _isGettingLighted = false;
     }
 
     /// <summary>
-    /// LightSource°¡ ÀÌ ¿ÀºêÁ§Æ®¿¡ ºûÀ» ½î¾ÒÀ» ¶§ È£ÃâµÇ´Â ¸Ş¼­µå
+    /// LightSourceê°€ ì´ ì˜¤ë¸Œì íŠ¸ì— ë¹›ì„ ì˜ì•˜ì„ ë•Œ í˜¸ì¶œë˜ëŠ” ë©”ì„œë“œ
     /// </summary>
     /// <param name="lightSource"></param>
     public void OnLightHit(LightSource lightSource)

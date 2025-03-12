@@ -21,7 +21,7 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
     {
         Init();
 
-        //PlayCutscene("EndingCutscene_LookScene");
+        PlayCutscene("EndingCutscene_LookScene");
     }
 
     private void Init()

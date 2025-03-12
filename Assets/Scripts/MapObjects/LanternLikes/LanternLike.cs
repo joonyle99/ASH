@@ -5,7 +5,7 @@ using UnityEditor;
 #endif
 
 /// <summary>
-/// ±¤¼±ÀÌ ¿¬°áµÇ´Â ÆÇÁ¤Àº ÇØ¾ßÇÏ´Âµ¥ ·£ÅÏÀº ¾Æ´Ñ °Íµé
+/// ê´‘ì„ ì´ ì—°ê²°ë˜ëŠ” íŒì •ì€ í•´ì•¼í•˜ëŠ”ë° ëœí„´ì€ ì•„ë‹Œ ê²ƒë“¤
 /// </summary>
 public abstract class LanternLike : MonoBehaviour
 {
@@ -43,6 +43,12 @@ public abstract class LanternLike : MonoBehaviour
     }
 
     bool _isLightOn = false;
+
+    protected virtual void Awake() { }
+    protected virtual void Update() { }
+    protected virtual void OnDestroy() { }
+    protected virtual void FixedUpdate() { }
+
     public virtual void OnBeamConnected(LightBeam beam) { }
     public virtual void OnBeamDisconnected(LightBeam beam) { }
 }
