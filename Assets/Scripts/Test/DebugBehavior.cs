@@ -57,7 +57,7 @@ public class DebugBehavior : MonoBehaviour
         // CHEAT: F2 키를 누르면 게임 속도를 3배로 높인다
         if (Input.GetKeyDown(KeyCode.F2) && GameSceneManager.Instance.CheatMode == true)
         {
-            Time.timeScale = 3f;
+            Time.timeScale = 5f;
         }
         else if (Input.GetKeyUp(KeyCode.F2) && GameSceneManager.Instance.CheatMode == true)
         {
