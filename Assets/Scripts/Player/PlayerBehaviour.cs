@@ -590,6 +590,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
         }
     }
+    public static void RespawnHereScene()
+    {
+        SceneChangeManager.Instance.SceneChangeType = SceneChangeType.PlayerRespawn;
+
+        var sceneName = SceneManager.GetActiveScene().name;
+        var passageName = SceneContext.Current.EntrancePassage.PassageName;
+
+        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+    }
 
     // disintegrate
     public IEnumerator DeathEffectCoroutine()
