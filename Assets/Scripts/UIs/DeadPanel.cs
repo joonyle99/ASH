@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,12 +19,15 @@ public class DeadPanel : MonoBehaviour
         //_buttonReject.onClick.AddListener(GameUIManager.Instance.OptionView.GoToTitleScene);
     }
 
-    public void Open()
+    public void Open(bool respawnHereScene)
     {
         StartCoroutine(OpenFadeLogic());
 
         _buttonAccept.onClick.RemoveAllListeners();
-        _buttonAccept.onClick.AddListener(PlayerBehaviour.Respawn);
+        if (respawnHereScene)
+            _buttonAccept.onClick.AddListener(PlayerBehaviour.RespawnHereScene);
+        else
+            _buttonAccept.onClick.AddListener(PlayerBehaviour.Respawn);
     }
 
     private IEnumerator OpenFadeLogic()

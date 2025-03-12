@@ -197,11 +197,11 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
     }
 
     // dead panel
-    public static void OpenDeadPanel()
+    public static void OpenDeadPanel(bool respawnHereScene = false)
     {
         if (Instance == null) return;
 
-        Instance._deadPanel.Open();
+        Instance._deadPanel.Open(respawnHereScene);
     }
 
     // scene name text
