@@ -19,14 +19,14 @@ public class EndingPassage : TriggerZone
 
         // # change to next scene
         SceneChangeManager.Instance.SceneChangeType = SceneChangeType.ChangeMap;
-        SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene");
+        SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace");
     }
     private IEnumerator ExitSceneCutsceneCoroutine()
     {
-        // ¾ÀÀ» ³ª°¡´Â ÄÆ¾À¿¡¼­ ÇÃ·¹ÀÌ¾îÀÇ ÀÔ·ÂÀ» ¹ŞÁö ¾Êµµ·Ï ¼³Á¤
+        // ì”¬ì„ ë‚˜ê°€ëŠ” ì»·ì”¬ì—ì„œ í”Œë ˆì´ì–´ì˜ ì…ë ¥ì„ ë°›ì§€ ì•Šë„ë¡ ì„¤ì •
         InputManager.Instance.ChangeToStayStillSetter();
 
-        // ¾ÀÀ» ³ª°¡´Â È¿°ú
+        // ì”¬ì„ ë‚˜ê°€ëŠ” íš¨ê³¼
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
     }
 }
