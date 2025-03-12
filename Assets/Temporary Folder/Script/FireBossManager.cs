@@ -58,8 +58,6 @@ public class FireBossManager : MonoBehaviour
     [SerializeField] private DialogueData _endingRejectDialogue;
     [SerializeField] private Quest _endingRejectQuest;
     [SerializeField] private DialogueData _endingRejectDialogue01;
-    [SerializeField] private Quest _endingRejectQuest01;
-    [SerializeField] private DialogueData _endingRejectDialogue02;
 
     public enum EndingType
     {
@@ -327,61 +325,90 @@ public class FireBossManager : MonoBehaviour
     public IEnumerator StartEndingDialogue()
     {
         _endingDialogue.LinkQuestData(_endingQuest);
-        DialogueController.Instance.StartDialogue(_endingDialogue, false);
-        yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
 
-        // Accept Process
-        if (_endingType == EndingType.Accept)
+        while (true)
         {
-            var fire = _firePrefab.GetComponentInChildren<Fire>();
-            var ash = SceneContext.Current.Player;
+            DialogueController.Instance.StartDialogue(_endingDialogue, false);
+            yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
 
-            yield return PlayerMoveCoroutine();
-            yield return LightSkillCoroutine();
-            yield return ExecuteRageEffectCoroutine01();
-            SceneEffectManager.Instance.Camera.StartFollow(ash.transform);
-            _tornado.FireBody.SetActive(false);
-            _tornado.BlazeFire.SetActive(true);
-            fire.transform.position = _endingFireSpawnPoint.position;
-            fire.RigidBody2D.position = _endingFireSpawnPoint.position;
-            yield return ExecuteRageEffectCoroutine02();
-            DialogueController.Instance.StartDialogue(_endingAceeptDialogue01, false);
-            yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-            yield return fire.DeathEffectCoroutine();
-            _tornado.BlazeFire.SetActive(false);
-            DialogueController.Instance.StartDialogue(_endingAceeptDialogue02, false);
-            yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-            yield return ash.DeathEffectCoroutine();
-            DialogueController.Instance.StartDialogue(_endingAceeptDialogue03, false);
-            yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-            var transitionPlayer = SceneContext.Current.SceneTransitionPlayer;
-            yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Darken);
-            SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene");
-            yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Lighten);
-        }
-        // Reject Process
-        else if (_endingType == EndingType.Reject)
-        {
-            //_endingDialogue.LinkQuestData(_endingRejectQuest);
-            //DialogueController.Instance.StartDialogue(_endingDialogue, false);
-            //yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-            //if (_endingRejectType == EndingRejectType.Reject01)
-            //{
-            //    DialogueController.Instance.StartDialogue(_endingRejectDialogue01, false);
-            //    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-            //}
-            //else if (_endingRejectType == EndingRejectType.Reject02)
-            //{
-            //    _endingDialogue.LinkQuestData(_endingRejectQuest01);
-            //    DialogueController.Instance.StartDialogue(_endingRejectDialogue, false);
-            //    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-            //    DialogueController.Instance.StartDialogue(_endingRejectDialogue02, false);
-            //    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-            //}
-        }
-        else
-        {
-            Debug.LogError("EndingType is invalid");
+            // Accept Process
+            if (_endingType == EndingType.Accept)
+            {
+                var fire = _firePrefab.GetComponentInChildren<Fire>();
+                var ash = SceneContext.Current.Player;
+
+                yield return PlayerMoveCoroutine();
+                yield return LightSkillCoroutine();
+
+                yield return ExecuteRageEffectCoroutine01();
+
+                SceneEffectManager.Instance.Camera.StartFollow(ash.transform);
+                _tornado.FireBody.SetActive(false);
+                _tornado.BlazeFire.SetActive(true);
+                fire.transform.position = _endingFireSpawnPoint.position;
+                fire.RigidBody2D.position = _endingFireSpawnPoint.position;
+
+                yield return ExecuteRageEffectCoroutine02();
+
+                DialogueController.Instance.StartDialogue(_endingAceeptDialogue01, false);
+                yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+
+                //StartCoroutine(fire.DeathEffectCoroutine());
+                //yield return new WaitForSeconds(1.5f);
+                //yield return _tornado.FadeOutBlaze();
+                _tornado.BlazeFire.SetActive(false);
+
+                DialogueController.Instance.StartDialogue(_endingAceeptDialogue02, false);
+                yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+
+                yield return ash.DeathEffectCoroutine();
+
+                DialogueController.Instance.StartDialogue(_endingAceeptDialogue03, false);
+                yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+
+                var transitionPlayer = SceneContext.Current.SceneTransitionPlayer;
+                yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Darken);
+                SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace");
+                //yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Lighten);
+
+                // TODO..?
+                yield break;
+            }
+            // Reject Process
+            else if (_endingType == EndingType.Reject)
+            {
+                // 난 너의 선택을 존중해
+                // 하지만 여기서 그만둔다면 바뀌는 건 없을 거야
+                _endingRejectDialogue.LinkQuestData(_endingRejectQuest);
+                DialogueController.Instance.StartDialogue(_endingRejectDialogue, false);
+                yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+
+                if (_endingRejectType == EndingRejectType.Reject01)
+                {
+                    // 지금이라도 늦지 않았다.
+                    // 그대의 목숨과 맞바꾸어 이 세상을 구할것인가?
+                }
+                else if (_endingRejectType == EndingRejectType.Reject02)
+                {
+                    // 크윽... 죽음 앞에선 너도 별 수 없구나
+                    DialogueController.Instance.StartDialogue(_endingRejectDialogue01, false);
+                    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+
+                    GameUIManager.OpenDeadPanel(true);
+
+                    yield break;
+                }
+                else
+                {
+                    Debug.LogError("EndingRejectType is invalid");
+                    yield break;
+                }
+            }
+            else
+            {
+                Debug.LogError("EndingType is invalid");
+                yield break;
+            }
         }
     }
     public void AcceptCallback()
@@ -393,6 +420,16 @@ public class FireBossManager : MonoBehaviour
     {
         Debug.Log("Reject");
         _endingType = EndingType.Reject;
+    }
+    public void Reject01Callback()
+    {
+        Debug.Log("Reject01");
+        _endingRejectType = EndingRejectType.Reject01;
+    }
+    public void Reject02Callback()
+    {
+        Debug.Log("Reject02");
+        _endingRejectType = EndingRejectType.Reject02;
     }
     private IEnumerator PlayerMoveCoroutine()
     {
