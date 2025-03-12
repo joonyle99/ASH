@@ -6,13 +6,16 @@ using UnityEngine.SceneManagement;
 
 public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
 {
-    [SerializeField] private List<string> _surroundingSceneNames;
+    //[SerializeField] private List<string> _surroundingSceneNames;
+    [SerializeField] private Transform _endingImagesParent;
+     private List<Transform> _endingImageTransforms = new List<Transform>();
+
     [SerializeField] private float _sceneTransitionDuration = 3f;
-    [SerializeField] private float _sceneSurroundingDuration = 3f;
+    [SerializeField] private float _sceneSurroundingDuration = 5f;
 
     [Space]
 
-    public CameraFollowTarget CameraFollowTarget;
+    public GameObject CameraFollowTargetPrefab;
 
     private CutscenePlayer[] _cutscenePlayers;
 
@@ -21,13 +24,18 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
 
     private void Start()
     {
-        Initialzie();
+        Initialize();
 
         PlayCutscene("EndingCutscene_SurroundingScene");
     }
 
-    private void Initialzie()
+    private void Initialize()
     {
+        for(int i = 0; i < _endingImagesParent.childCount; i++)
+        {
+            _endingImageTransforms.Add(_endingImagesParent.GetChild(i));
+        }
+
         _cutscenePlayers = FindObjectsOfType<CutscenePlayer>();
         _endingSceneName = SceneManager.GetActiveScene().name;
 
@@ -56,10 +64,52 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
         }
     }
 
+    public void ChangeImagesForSurrounding()
+    {
+        StartCoroutine(ChangeImagesForSurroundingCoroutine());
+    }
+
+    private IEnumerator ChangeImagesForSurroundingCoroutine()
+    {
+        var halfDuration = _sceneTransitionDuration / 2;
+
+        var darken = SceneTransitionPlayer.FadeType.Darken;
+        var lighten = SceneTransitionPlayer.FadeType.Lighten;
+
+        // 순차적으로 씬을 변경하며 , 씬을 둘러보는 연출
+        for (int i = 0; i < _endingImageTransforms.Count; i++)
+        {
+            // darken
+            yield return _transitionPlayer.FadeCoroutine(halfDuration, darken);
+
+            if(i != 0)
+                _endingImageTransforms[i - 1].gameObject.SetActive(false);
+            _endingImageTransforms[i].gameObject.SetActive(true);
+
+            // lighten
+            yield return _transitionPlayer.FadeCoroutine(halfDuration, lighten);
+
+            yield return new WaitForSeconds(_sceneSurroundingDuration);
+        }
+
+        // darken
+        yield return _transitionPlayer.FadeCoroutine(halfDuration, darken);
+
+        _endingImagesParent.gameObject.SetActive(false);
+
+        // lighten
+        yield return _transitionPlayer.FadeCoroutine(halfDuration, lighten);
+
+
+        PlayCutscene("EndingCutscene_Final");
+    }
+
+    /* 기획상 폐기
     public void ChangeSceneForSurrounding()
     {
         StartCoroutine(ChangeSceneForSurroundingCoroutine());
     }
+
     private IEnumerator ChangeSceneForSurroundingCoroutine()
     {
         var halfDuration = _sceneTransitionDuration / 2;
@@ -76,11 +126,7 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
             // change to surrounding scene
             SceneChangeManager.Instance.ChangeToNonPlayableScene(_surroundingSceneNames[i], () => CreateFollowTarget());
 
-            Debug.Log("come on 1");
-
             yield return new WaitForSeconds(_sceneSurroundingDuration);
-
-            Debug.Log("come on 2");
 
             // lighten
             yield return _transitionPlayer.FadeCoroutine(halfDuration, lighten);
@@ -104,7 +150,7 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
         var followTarget = FindObjectOfType<CameraFollowTarget>();
         if (followTarget == null)
         {
-            followTarget = Instantiate(CameraFollowTarget);
+            followTarget = Instantiate(CameraFollowTargetPrefab).GetComponent<CameraFollowTarget>();
         }
         followTarget.SetData(newDir ?? Vector3.right, speed);
         followTarget.SetTrigger(true);
@@ -138,4 +184,5 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
 
         PlayCutscene("EndingCutscene_Final");
     }
+    */
 }
