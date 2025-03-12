@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using static SceneTransitionPlayer;
+using UnityEngine.Timeline;
 
 public class FireBossManager : MonoBehaviour
 {
@@ -46,6 +47,34 @@ public class FireBossManager : MonoBehaviour
     [SerializeField] private DialogueData _endingDialogue;
     [SerializeField] private Quest _endingQuest;
     [SerializeField] private Lantern _lastLantern;
+
+    [Space]
+    [SerializeField] private DialogueData _endingAceeptDialogue01;
+    [SerializeField] private DialogueData _endingAceeptDialogue02;
+    [SerializeField] private DialogueData _endingAceeptDialogue03;
+    [SerializeField] private Transform _endingFireSpawnPoint;
+
+    [Space]
+    [SerializeField] private DialogueData _endingRejectDialogue;
+    [SerializeField] private Quest _endingRejectQuest;
+    [SerializeField] private DialogueData _endingRejectDialogue01;
+    [SerializeField] private Quest _endingRejectQuest01;
+    [SerializeField] private DialogueData _endingRejectDialogue02;
+
+    public enum EndingType
+    {
+        None,
+        Accept,
+        Reject
+    }
+    private EndingType _endingType = EndingType.None;
+    public enum EndingRejectType
+    {
+        None,
+        Reject01,
+        Reject02
+    }
+    private EndingRejectType _endingRejectType = EndingRejectType.None;
 
     [Space]
 
@@ -102,6 +131,11 @@ public class FireBossManager : MonoBehaviour
     }
     private IEnumerator ExecuteRageEffectCoroutine()
     {
+        yield return ExecuteRageEffectCoroutine01();
+        yield return ExecuteRageEffectCoroutine02();
+    }
+    private IEnumerator ExecuteRageEffectCoroutine01()
+    {
         // playing
         _rageEffectEmitting.gameObject.SetActive(true);
 
@@ -129,7 +163,9 @@ public class FireBossManager : MonoBehaviour
         SceneEffectManager.Instance.Camera.StopConstantShake();
         _rageEffectEmitting.gameObject.SetActive(false);
         _rageEffectStaying.gameObject.SetActive(true);
-
+    }
+    private IEnumerator ExecuteRageEffectCoroutine02()
+    {
         // screen fade in => 2초
         yield return SceneContext.Current.SceneTransitionPlayer.FadeCoroutine(_fadeDuration, FadeType.Dim);
 
@@ -153,6 +189,8 @@ public class FireBossManager : MonoBehaviour
         }
 
         _rageEffectStaying.gameObject.SetActive(false);
+
+        particleMaterial.SetFloat("_Alpha", startAplpha);
     }
     public void ExecuteTeleportEffect()
     {
@@ -291,16 +329,70 @@ public class FireBossManager : MonoBehaviour
         _endingDialogue.LinkQuestData(_endingQuest);
         DialogueController.Instance.StartDialogue(_endingDialogue, false);
         yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-        yield return PlayerMoveCoroutine();
-        yield return LightSkillCoroutine();
+
+        // Accept Process
+        if (_endingType == EndingType.Accept)
+        {
+            var fire = _firePrefab.GetComponentInChildren<Fire>();
+            var ash = SceneContext.Current.Player;
+
+            yield return PlayerMoveCoroutine();
+            yield return LightSkillCoroutine();
+            yield return ExecuteRageEffectCoroutine01();
+            SceneEffectManager.Instance.Camera.StartFollow(ash.transform);
+            _tornado.FireBody.SetActive(false);
+            _tornado.BlazeFire.SetActive(true);
+            fire.transform.position = _endingFireSpawnPoint.position;
+            fire.RigidBody2D.position = _endingFireSpawnPoint.position;
+            yield return ExecuteRageEffectCoroutine02();
+            DialogueController.Instance.StartDialogue(_endingAceeptDialogue01, false);
+            yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+            yield return fire.DeathEffectCoroutine();
+            _tornado.BlazeFire.SetActive(false);
+            DialogueController.Instance.StartDialogue(_endingAceeptDialogue02, false);
+            yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+            yield return ash.DeathEffectCoroutine();
+            DialogueController.Instance.StartDialogue(_endingAceeptDialogue03, false);
+            yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+            var transitionPlayer = SceneContext.Current.SceneTransitionPlayer;
+            yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Darken);
+            SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene");
+            yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Lighten);
+        }
+        // Reject Process
+        else if (_endingType == EndingType.Reject)
+        {
+            //_endingDialogue.LinkQuestData(_endingRejectQuest);
+            //DialogueController.Instance.StartDialogue(_endingDialogue, false);
+            //yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+            //if (_endingRejectType == EndingRejectType.Reject01)
+            //{
+            //    DialogueController.Instance.StartDialogue(_endingRejectDialogue01, false);
+            //    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+            //}
+            //else if (_endingRejectType == EndingRejectType.Reject02)
+            //{
+            //    _endingDialogue.LinkQuestData(_endingRejectQuest01);
+            //    DialogueController.Instance.StartDialogue(_endingRejectDialogue, false);
+            //    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+            //    DialogueController.Instance.StartDialogue(_endingRejectDialogue02, false);
+            //    yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
+            //}
+        }
+        else
+        {
+            Debug.LogError("EndingType is invalid");
+        }
     }
     public void AcceptCallback()
     {
         Debug.Log("Accept");
+        _endingType = EndingType.Accept;
     }
     public void RejectCallback()
     {
         Debug.Log("Reject");
+        _endingType = EndingType.Reject;
     }
     private IEnumerator PlayerMoveCoroutine()
     {

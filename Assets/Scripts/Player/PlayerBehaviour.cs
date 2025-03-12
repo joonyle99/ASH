@@ -590,6 +590,15 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
         }
     }
+
+    // disintegrate
+    public IEnumerator DeathEffectCoroutine()
+    {
+        // effect process
+        MaterialController.DisintegrateEffect.Play();
+        yield return new WaitUntil(() => MaterialController.DisintegrateEffect.IsEffectDone);
+    }
+
     #endregion
 
     #region Sound

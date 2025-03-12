@@ -474,7 +474,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
                 _initialState = initialState as Monster_StateBase;
         }
 
-        // Init Animation State
+        // Initialzie Animation State
         CurrentState = _initialState;
     }
 
@@ -661,7 +661,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         }
     }
 
-    private IEnumerator DeathEffectCoroutine()
+    public IEnumerator DeathEffectCoroutine()
     {
         // effect process
         MaterialController.DisintegrateEffect.Play();
