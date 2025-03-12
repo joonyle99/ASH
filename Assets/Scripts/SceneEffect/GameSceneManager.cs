@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneManager>
 {
-    // HashSetÀº ÇØ½ÃÅ×ÀÌºíÀ» »ç¿ëÇÏ°í, ÁÖ·Î °íÀ¯¼º °Ë»ç¿¡ »ç¿ëÇÕ´Ï´Ù (¿ä¼ÒÀÇ Á¸Àç ¿©ºÎ¸¦ ºü¸£°Ô È®ÀÎÇÒ ¼ö ÀÖ½À´Ï´Ù)
-    // -> Áßº¹ ¿ä¼Ò¸¦ Çã¿ëÇÏÁö ¾Ê´Â´Ù
-    // Dictionary´Â ÇØ½ÃÅ×ÀÌºíÀ» »ç¿ëÇÏ°í, Å°¸¦ ÀÌ¿ëÇØ '°ª'À» °Ë»öÇÏ´Â µ¥ »ç¿ëÇÕ´Ï´Ù
-    // -> Áßº¹ °ªÀº Çã¿ëÇÏ³ª, Áßº¹ Å°´Â Çã¿ëÇÏÁö ¾Ê´Â´Ù
+    // HashSetì€ í•´ì‹œí…Œì´ë¸”ì„ ì‚¬ìš©í•˜ê³ , ì£¼ë¡œ ê³ ìœ ì„± ê²€ì‚¬ì— ì‚¬ìš©í•©ë‹ˆë‹¤ (ìš”ì†Œì˜ ì¡´ì¬ ì—¬ë¶€ë¥¼ ë¹ ë¥´ê²Œ í™•ì¸í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤)
+    // -> ì¤‘ë³µ ìš”ì†Œë¥¼ í—ˆìš©í•˜ì§€ ì•ŠëŠ”ë‹¤
+    // DictionaryëŠ” í•´ì‹œí…Œì´ë¸”ì„ ì‚¬ìš©í•˜ê³ , í‚¤ë¥¼ ì´ìš©í•´ 'ê°’'ì„ ê²€ìƒ‰í•˜ëŠ” ë° ì‚¬ìš©í•©ë‹ˆë‹¤
+    // -> ì¤‘ë³µ ê°’ì€ í—ˆìš©í•˜ë‚˜, ì¤‘ë³µ í‚¤ëŠ” í—ˆìš©í•˜ì§€ ì•ŠëŠ”ë‹¤
 
     public bool CheatMode = false;
 
@@ -36,14 +36,14 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     };
     private static HashSet<string> endingScene = new HashSet<string>
     {
-        "EndingScene"
+        "EndingScene_Peace"
     };
     private static HashSet<string> testScenes = new HashSet<string>
     {
-        // Ãß°¡·Î Å×½ºÆ® ¾À¿¡ '¾ÀÀÇ ÀÌ¸§À¸·ÎµÈ Passage'°¡ Á¸ÀçÇØ¾ß ÇÕ´Ï´Ù.
+        // ì¶”ê°€ë¡œ í…ŒìŠ¤íŠ¸ ì”¬ì— 'ì”¬ì˜ ì´ë¦„ìœ¼ë¡œëœ Passage'ê°€ ì¡´ì¬í•´ì•¼ í•©ë‹ˆë‹¤.
         // e.g) Passage Name: "Enter JunyeolScene"
 
-        "JunyeolScene", "ÁØ¿± ¾À", "ÁöÈñ ¾À"
+        "JunyeolScene", "ì¤€ì—½ ì”¬", "ì§€í¬ ì”¬"
     };
 
     private void Start()
