@@ -57,10 +57,16 @@ public class DialogueView : MonoBehaviour
     }
 
     /// <summary> 응답 패널 열기 </summary>
-    public void OpenResponsePanel(List<ResponseContainer> responseFunctions)
+    public void OpenResponsePanel(List<ResponseContainer> responseFunctions, string acceptText = null, string rejectText = null)
     {
         _indicator.gameObject.SetActive(false);
         _responsePanel.gameObject.SetActive(true);
+
+        var isInvalidAccept = acceptText == null || acceptText.Length < 1;
+        var isInvalidReject = rejectText == null || rejectText.Length < 1;
+
+        _responsePanel.AcceptText.text = isInvalidAccept ? "수락" : acceptText;
+        _responsePanel.RejectText.text = isInvalidReject ? "거절" : rejectText;
 
         if (responseFunctions != null)
         {

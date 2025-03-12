@@ -55,6 +55,15 @@ public class Quest
 
     [Space]
 
+    [Header("Response Text")]
+    [SerializeField] private string _acceptText;
+    [SerializeField] private string _rejectText;
+
+    public string AcceptText => _acceptText;
+    public string RejectText => _rejectText;
+
+    [Space]
+
     [Header("Callback")]
     [SerializeField] private UnityEvent _onAccept;
     public UnityEvent OnAccept => _onAccept;

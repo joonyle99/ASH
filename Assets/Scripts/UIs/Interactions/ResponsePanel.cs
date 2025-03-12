@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -26,17 +27,33 @@ public class ResponsePanel : MonoBehaviour
     private Button _accept;
     private Button _reject;
 
+    private TextMeshProUGUI _acceptText;
+    private TextMeshProUGUI _rejectText;
+
     public Button Accept => _accept;
     public Button Reject => _reject;
+
+    public TextMeshProUGUI AcceptText
+    {
+        get => _acceptText;
+        set => _acceptText = value;
+    }
+    public TextMeshProUGUI RejectText
+    {
+        get => _rejectText;
+        set => _rejectText = value;
+    }
 
     private void Awake()
     {
         _accept = transform.Find("Accept").GetComponent<Button>();
+        _acceptText = _accept.GetComponentInChildren<TextMeshProUGUI>();
         _reject = transform.Find("Reject").GetComponent<Button>();
+        _rejectText = _reject.GetComponentInChildren<TextMeshProUGUI>();
     }
 
     /// <summary>
-    /// ¿©·¯ °³Ã¼°¡ °ø¿ëÀ¸·Î »ç¿ëÇÏ´Â UIÀÌ¹Ç·Î panelÀÌ ´İÈ÷¸é ¸ğµç ¹öÆ°ÀÇ ¸®½º³Ê¸¦ »èÁ¦
+    /// ì—¬ëŸ¬ ê°œì²´ê°€ ê³µìš©ìœ¼ë¡œ ì‚¬ìš©í•˜ëŠ” UIì´ë¯€ë¡œ panelì´ ë‹«íˆë©´ ëª¨ë“  ë²„íŠ¼ì˜ ë¦¬ìŠ¤ë„ˆë¥¼ ì‚­ì œ
     /// </summary>
     private void OnDisable()
     {
