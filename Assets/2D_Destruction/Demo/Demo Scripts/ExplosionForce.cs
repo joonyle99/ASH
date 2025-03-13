@@ -7,7 +7,9 @@ public class ExplosionForce : MonoBehaviour {
 	public float force = 50;
 	public float radius = 5;
 	public float upliftModifer = 5;
-	
+
+    public CutscenePlayer Cutscene;
+
     /// <summary>
     /// create an explosion force
     /// </summary>

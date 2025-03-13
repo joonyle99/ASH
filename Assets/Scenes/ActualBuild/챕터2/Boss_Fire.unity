@@ -3476,6 +3476,7 @@ MonoBehaviour:
   force: 50
   radius: 5
   upliftModifer: 5
+  Cutscene: {fileID: 2053821010}
 --- !u!4 &443453297
 Transform:
   m_ObjectHideFlags: 0
@@ -5915,7 +5916,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: -1400.0587
+      value: -1420.5336
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
@@ -9423,7 +9424,7 @@ MonoBehaviour:
         - m_Target: {fileID: 1708039297}
           m_TargetAssemblyTypeName: GameUIManager, Assembly-CSharp
           m_MethodName: OpenDeadPanel
-          m_Mode: 1
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -11775,28 +11776,29 @@ MonoBehaviour:
         m_Calls: []
     TargetScript: {fileID: 1396333665}
     MethodName: StartEndingDialogue
-  - _type: 6
-    DialogueData: {fileID: 0}
+  - _type: 7
+    DialogueData: {fileID: 11400000, guid: 1034bb3a28a8c3e479e3512d454501b4, type: 2}
     ShakeData: {fileID: 0}
     ConstantShakeData: {fileID: 0}
-    Time: 0
+    Time: 1
     InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
     Function:
       m_PersistentCalls:
-        m_Calls: []
-    TargetScript: {fileID: 0}
-    MethodName: 
-  - _type: 4
-    DialogueData: {fileID: 0}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 2
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls: []
-    TargetScript: {fileID: 0}
-    MethodName: 
+        m_Calls:
+        - m_Target: {fileID: 1396333665}
+          m_TargetAssemblyTypeName: FireBossManager, Assembly-CSharp
+          m_MethodName: ChangeScseneToEndingPeaceful
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 1396333665}
+    MethodName: StartEndingDialogue
 --- !u!114 &2053821011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11953,11 +11955,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -81.51811
+      value: -131.67366
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 66.19713
+      value: 51.909496
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z

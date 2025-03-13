@@ -22,25 +22,18 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
     private SceneTransitionPlayer _transitionPlayer;
     private string _endingSceneName;
 
-    private void Start()
+    public static void Initialize()
     {
-        Initialize();
-
-        PlayCutscene("EndingCutscene_SurroundingScene");
-    }
-
-    private void Initialize()
-    {
-        for(int i = 0; i < _endingImagesParent.childCount; i++)
+        for(int i = 0; i < Instance._endingImagesParent.childCount; i++)
         {
-            _endingImageTransforms.Add(_endingImagesParent.GetChild(i));
+            Instance._endingImageTransforms.Add(Instance._endingImagesParent.GetChild(i));
         }
 
-        _cutscenePlayers = FindObjectsOfType<CutscenePlayer>();
-        _endingSceneName = SceneManager.GetActiveScene().name;
+        Instance._cutscenePlayers = FindObjectsOfType<CutscenePlayer>();
+        Instance._endingSceneName = SceneManager.GetActiveScene().name;
 
         SceneContext.Current.DefaultBuild();
-        _transitionPlayer = SceneContext.Current.SceneTransitionPlayer;
+        Instance._transitionPlayer = SceneContext.Current.SceneTransitionPlayer;
     }
 
     public void FadeIn(float duration)
@@ -52,13 +45,15 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
         StartCoroutine(_transitionPlayer.FadeCoroutine(duration, SceneTransitionPlayer.FadeType.Darken));
     }
 
-    private void PlayCutscene(string cutsceneName)
+    public static void PlayCutscene(string cutsceneName)
     {
-        for (int i = 0; i < _cutscenePlayers.Length; i++)
+        Debug.Log($"Cutscene player count {Instance._cutscenePlayers.Length}");
+        for (int i = 0; i < Instance._cutscenePlayers.Length; i++)
         {
-            if (cutsceneName == _cutscenePlayers[i].name)
+            if (cutsceneName == Instance._cutscenePlayers[i].name)
             {
-                _cutscenePlayers[i].Play();
+                Debug.Log("Cutscene start playing");
+                Instance._cutscenePlayers[i].Play();
                 return;
             }
         }
@@ -66,11 +61,14 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
 
     public void ChangeImagesForSurrounding()
     {
+        Debug.Log("ChangeImagesForSurrounding method called");
         StartCoroutine(ChangeImagesForSurroundingCoroutine());
     }
 
     private IEnumerator ChangeImagesForSurroundingCoroutine()
     {
+        Debug.Log("Play chage image for surrounding coroutine");
+
         var halfDuration = _sceneTransitionDuration / 2;
 
         var darken = SceneTransitionPlayer.FadeType.Darken;
@@ -103,6 +101,7 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
 
         PlayCutscene("EndingCutscene_Final");
     }
+
 
     /* 기획상 폐기
     public void ChangeSceneForSurrounding()

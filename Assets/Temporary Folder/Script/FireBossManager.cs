@@ -334,6 +334,7 @@ public class FireBossManager : MonoBehaviour
             // Accept Process
             if (_endingType == EndingType.Accept)
             {
+                
                 var fire = _firePrefab.GetComponentInChildren<Fire>();
                 var ash = SceneContext.Current.Player;
 
@@ -365,10 +366,10 @@ public class FireBossManager : MonoBehaviour
 
                 DialogueController.Instance.StartDialogue(_endingAceeptDialogue03, false);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-
+                
                 var transitionPlayer = SceneContext.Current.SceneTransitionPlayer;
                 yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Darken);
-                SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace");
+                
                 //yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Lighten);
 
                 // TODO..?
@@ -485,5 +486,24 @@ public class FireBossManager : MonoBehaviour
         InputManager.Instance.ChangeToOnlyLightSetter();
         yield return new WaitUntil(() => _lastLantern.IsLightOn);
         yield return new WaitUntil(() => LanternSceneContext.Current.IsEndLastAttack == true);
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            ChangeScseneToEndingPeaceful();
+        }
+    }
+
+    public void ChangeScseneToEndingPeaceful()
+    {
+        SceneEffectManager.StopPlayingCutscene();
+
+        SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace", () =>
+        {
+            EndingSceneManager.Initialize();
+            EndingSceneManager.PlayCutscene("EndingCutscene_SurroundingScene");
+        });
     }
 }

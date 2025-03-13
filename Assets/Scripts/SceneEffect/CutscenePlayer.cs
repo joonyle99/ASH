@@ -128,6 +128,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
                         var result = method.Invoke(monoBehaviour, null); // 매개변수가 없는 메서드 호출
                         if (result is IEnumerator enumerator)
                         {
+                            Debug.Log("Start coroutine called cutscene");
                             yield return monoBehaviour.StartCoroutine(enumerator);
                         }
                         else
@@ -147,6 +148,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
             }
         }
 
+        Debug.Log($"End of cutscene sequence coroutine called {gameObject.name}");
         IsPlaying = false;
     }
 
@@ -159,7 +161,7 @@ public class CutscenePlayer : MonoBehaviour, ITriggerListener, ISceneContextBuil
         {
             _played = true;
 
-            //Debug.Log("Play" + gameObject.name+ "'s cutscene");
+            Debug.Log("Play" + gameObject.name+ "'s cutscene");
             StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, PlaySequenceCoroutine(_sequence))));
         }
         else
