@@ -21,6 +21,7 @@ public class NewPrologueManager : MonoBehaviour
     [SerializeField] private BezierCurvePath _zoomInBookRightPath;
     [SerializeField] private BezierCurvePath _zoomOutBookPath;
     [SerializeField] private Image _fadeImage;
+    [SerializeField] private float _vignetteIntensity;
 
     [Header("Book")]
     [SerializeField] private Book _book;
@@ -45,7 +46,7 @@ public class NewPrologueManager : MonoBehaviour
 
     private IEnumerator StartPrologueLogic()
     {
-        yield return VignetteEffectLogic(3f, 0.5f);
+        yield return VignetteEffectLogic(3f, _vignetteIntensity);
 
         yield return MoveZoomInBookCameraLogic(2f, _zoomInBookPath);
         yield return new WaitForSeconds(3f);

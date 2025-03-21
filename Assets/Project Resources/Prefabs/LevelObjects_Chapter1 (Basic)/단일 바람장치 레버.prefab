@@ -80,13 +80,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isInteractable: 1
+  _isInteracting: 0
   _interactionMarkerPoint: {fileID: 0}
   _stateChange: 1
   _animationType: 0
-  _windZoneArr: []
-  _lever: {fileID: 7993793771925911442}
-  _cameraMoveDuration: 1.5
+  _identifier: {fileID: 0}
   _InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+  _lever: {fileID: 7993793771925911442}
+  _windZoneArr: []
+  _leverRotateDuration: 0.4
+  _cameraMoveDelay: 1
+  _cameraMoveDuration: 1
 --- !u!1 &6270838591393927764
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,6 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerActivators: []
+  _interactionObject: {fileID: 0}
 --- !u!1 &6913441067558503860
 GameObject:
   m_ObjectHideFlags: 0

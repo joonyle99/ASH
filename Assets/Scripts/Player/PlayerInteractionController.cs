@@ -103,7 +103,7 @@ public class PlayerInteractionController : MonoBehaviour
         }
         else
         {
-            ClosetTarget.IsInteracting = false;
+            ClosetTarget.ExitInteraction();
         }
     }
     private void FixedUpdate()
