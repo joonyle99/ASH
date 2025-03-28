@@ -20,10 +20,10 @@ public class TutorialZone : TriggerZone
 
     private void Awake()
     {
-        _displayReplaceKeyCode.Add(KeyCode.RightArrow, "°Ê");
-        _displayReplaceKeyCode.Add(KeyCode.LeftArrow, "°Á");
-        _displayReplaceKeyCode.Add(KeyCode.UpArrow, "°Ë");
-        _displayReplaceKeyCode.Add(KeyCode.DownArrow, "°È");
+        _displayReplaceKeyCode.Add(KeyCode.RightArrow, "‚Üí");
+        _displayReplaceKeyCode.Add(KeyCode.LeftArrow, "‚Üê");
+        _displayReplaceKeyCode.Add(KeyCode.UpArrow, "‚Üë");
+        _displayReplaceKeyCode.Add(KeyCode.DownArrow, "‚Üì");
         _displayReplaceKeyCode.Add(KeyCode.Mouse0, "Mouse Left");
         _displayReplaceKeyCode.Add(KeyCode.Mouse1, "Mouse Right");
 
@@ -47,21 +47,22 @@ public class TutorialZone : TriggerZone
 
     public override void OnPlayerEnter(PlayerBehaviour player)
     {
+        if (!gameObject.activeSelf) return;
         StartCoroutine(FadeAllCoroutine(0f, _originalAlpha, _fadeInDuration));
     }
-
     public override void OnPlayerStay(PlayerBehaviour player)
     {
         base.OnPlayerStay(player);
 
         UpdateKeyCodeText();
     }
-
     public override void OnPlayerExit(PlayerBehaviour player)
     {
+        if (!gameObject.activeSelf) return;
         StartCoroutine(FadeAllCoroutine(_originalAlpha, 0f, _fadeOffDuration));
     }
-    IEnumerator FadeAllCoroutine(float from, float to, float duration)
+
+    private IEnumerator FadeAllCoroutine(float from, float to, float duration)
     {
         float eTime = 0f;
         while (eTime <= duration)

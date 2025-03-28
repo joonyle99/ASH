@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using static SceneTransitionPlayer;
 using UnityEngine.Timeline;
+using TMPro;
 
 public class FireBossManager : MonoBehaviour
 {
@@ -77,6 +78,7 @@ public class FireBossManager : MonoBehaviour
     [Space]
 
     [Header("[Etc]")]
+    [SerializeField] private TutorialZone _lightingGuide;
     [SerializeField] private SoundList _soundList;
 
     // fire find cutscene
@@ -282,7 +284,7 @@ public class FireBossManager : MonoBehaviour
 
         yield return null;
 
-        Debug.Log("SetUpRageCoroutine 끝");
+        //Debug.Log("SetUpRageCoroutine 끝");
     }
     private void SetCameraBoundaries2()
     {
@@ -484,19 +486,33 @@ public class FireBossManager : MonoBehaviour
     private IEnumerator LightSkillCoroutine()
     {
         InputManager.Instance.ChangeToOnlyLightSetter();
-        yield return new WaitUntil(() => _lastLantern.IsLightOn);
+
+        var startTime = Time.time;
+        yield return new WaitUntil(() => _lastLantern.IsLightOn || Time.time - startTime > 5f);
+        if (!_lastLantern.IsLightOn) { ToggleLightingGuide(); }
+        yield return new WaitUntil(() => _lastLantern.IsLightOn); // 5초 이상 지속된 경우에만 빛 가이드를 통해서 들어오겠지
+
         yield return new WaitUntil(() => LanternSceneContext.Current.IsEndLastAttack == true);
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Z))
+        //if (Input.GetKeyDown(KeyCode.Z))
+        //{
+        //    ChangeSceneToEndingPeaceful();
+        //}
+
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    ToggleLightingGuide();
+        //}
+
+        if (_lightingGuide.gameObject.activeSelf)
         {
-            ChangeScseneToEndingPeaceful();
+            _lightingGuide.GetComponent<RectTransform>().position = SceneContext.Current.Player.transform.position + Vector3.up * 3f;
         }
     }
-
-    public void ChangeScseneToEndingPeaceful()
+    public void ChangeSceneToEndingPeaceful()
     {
         SceneEffectManager.StopPlayingCutscene();
 
@@ -505,5 +521,14 @@ public class FireBossManager : MonoBehaviour
             EndingSceneManager.Initialize();
             EndingSceneManager.PlayCutscene("EndingCutscene_SurroundingScene");
         });
+    }
+    public void ToggleLightingGuide()
+    {
+        var isActive = _lightingGuide.gameObject.activeSelf;
+        if (!isActive)
+        {
+            _lightingGuide.StopAllCoroutines();
+        }
+        _lightingGuide.gameObject.SetActive(!isActive);
     }
 }
