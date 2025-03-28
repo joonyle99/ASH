@@ -124,7 +124,7 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
             _godModeReferenceCount = Math.Max(0, _godModeReferenceCount);
             _isGodMode = _godModeReferenceCount > 0;
 
-            Debug.Log($"IsGodMode changed: {previousCount} -> {_godModeReferenceCount} (Active: {_isGodMode})");
+            //Debug.Log($"IsGodMode changed: {previousCount} -> {_godModeReferenceCount} (Active: {_isGodMode})");
         }
     }
     public bool IsDead

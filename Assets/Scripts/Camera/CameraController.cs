@@ -240,6 +240,8 @@ public class CameraController : MonoBehaviour, ISceneContextBuildListener
     /// <summary> 코드로 작동 시 사용 </summary>
     public void StartFollow(Transform target, bool removeExisting = true)
     {
+        // Debug.Log($"StartFollow to {target.gameObject.name}");
+
         if (removeExisting)
             _proCamera.RemoveAllCameraTargets();
 

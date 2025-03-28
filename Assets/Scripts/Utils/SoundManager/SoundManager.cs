@@ -264,7 +264,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         newBgmPlayer.time = startTime;
         newBgmPlayer.volume = 0;
         newBgmPlayer.Play();
-        Debug.Log($"key : {key} startTime {startTime} player's time {newBgmPlayer.time}");
+        //Debug.Log($"key : {key} startTime {startTime} player's time {newBgmPlayer.time}");
 
         while (eTime < duration)
         {

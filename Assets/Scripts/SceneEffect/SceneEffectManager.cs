@@ -145,13 +145,13 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
                 yield return new WaitWhile(() => IsPlayingCutscene);
             }
             */
-            Debug.Log("해당 컷씬 바로 시작");
+            //Debug.Log("해당 컷씬 바로 시작");
             PlayCutscene(cutscene);
         }
         // 컷씬이 있는 경우 큐에 추가
         else
         {
-            Debug.Log("재생중인 컷씬 있음");
+            //Debug.Log("재생중인 컷씬 있음");
             _cutSceneQueue.Add(cutscene);
         }
 
