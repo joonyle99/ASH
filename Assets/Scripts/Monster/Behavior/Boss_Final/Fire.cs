@@ -783,9 +783,13 @@ public sealed class Fire : BossBehaviour
             // StopTargetSkillCoroutine(flameBeamCoroutine, "_flameBeamCoroutine");
         }
 
-        if (fireBallCoroutine != null)
+        if (_fireBallList.Count > 0)
         {
             ClearAllFireBall();
+        }
+
+        if (fireBallCoroutine != null)
+        {
             StopCoroutine(fireBallCoroutine);
             fireBallCoroutine = null;
             // StopTargetSkillCoroutine(fireBallCoroutine, "_fireBallCoroutine");
@@ -904,6 +908,9 @@ public sealed class Fire : BossBehaviour
         //yield return new WaitUntil(() => _firePillarCoroutine == null);
     }
 
+    /// <summary>
+    /// 애니메이션 전이 조건: 텔레포트라면 공격 중이 아닐 때까지 대기..?
+    /// </summary>
     private bool HandleTeleportTransition(string targetTransitionParam, Monster_StateBase currentState)
     {
         // 전이할 애니메이션이 Teleport가 아니라면 즉시 전환
