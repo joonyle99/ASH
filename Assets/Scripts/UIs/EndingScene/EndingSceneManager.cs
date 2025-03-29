@@ -22,6 +22,15 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
     private SceneTransitionPlayer _transitionPlayer;
     private string _endingSceneName;
 
+    // private void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.Z))
+    //     {
+    //         EndingSceneManager.Initialize();
+    //         EndingSceneManager.PlayCutscene("EndingCutscene_SurroundingScene");
+    //     }
+    // }
+
     public static void Initialize()
     {
         for(int i = 0; i < Instance._endingImagesParent.childCount; i++)
@@ -156,7 +165,7 @@ public class EndingSceneManager : SingletonBehaviourFixed<EndingSceneManager>
 
         var cameraController = SceneContext.Current.CameraController;
 
-        cameraController.MainCamera.fieldOfView = 80f; // TODO.. 
+        cameraController.MainCamera.fieldOfView = 80f; // TODO..
         cameraController.CurrentCameraType = CameraController.CameraType.Surrounding;
         cameraController.StartFollow(followTarget.transform);
     }

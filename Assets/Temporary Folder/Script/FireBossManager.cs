@@ -370,7 +370,8 @@ public class FireBossManager : MonoBehaviour
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
 
                 yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-                SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace");
+                // SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace");
+                ChangeSceneToEndingPeaceful();
             }
             // Reject Process
             else if (_endingType == EndingType.Reject)
@@ -493,15 +494,10 @@ public class FireBossManager : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.Z))
-        //{
+        // if (Input.GetKeyDown(KeyCode.Z))
+        // {
         //    ChangeSceneToEndingPeaceful();
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.Q))
-        //{
-        //    ToggleLightingGuide();
-        //}
+        // }
 
         if (_lightingGuide.gameObject.activeSelf)
         {
