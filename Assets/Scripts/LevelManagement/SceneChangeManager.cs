@@ -20,7 +20,7 @@ public enum SceneChangeType
 ///     -> SceneChangeManager
 ///     -> SceneTransitionPlayer
 ///     -> PlayerableSceneTransitionPlayer
-/// </summary> 
+/// </summary>
 
 public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChangeManager>, ISceneContextBuildListener
 {
@@ -119,6 +119,8 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         Result buildResult = sceneContext.BuildPlayable("");
 
         IsChanging = false;
+
+        yield return null;
 
         changeDoneCallback?.Invoke();
 
