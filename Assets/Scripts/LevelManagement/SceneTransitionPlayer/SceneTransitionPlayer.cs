@@ -34,6 +34,7 @@ public class SceneTransitionPlayer : MonoBehaviour
         if (_fadeCoroutine != null)
         {
             StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = null;
         }
 
         _fadeCoroutine = StartCoroutine(FadeCoroutine(_fadeDuration, FadeType.Lighten));
@@ -45,6 +46,7 @@ public class SceneTransitionPlayer : MonoBehaviour
         if (_fadeCoroutine != null)
         {
             StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = null;
         }
 
         _fadeCoroutine = StartCoroutine(FadeCoroutine(_fadeDuration, FadeType.Darken));

@@ -3217,7 +3217,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1034649943}
           m_TargetAssemblyTypeName: TeleportationModule, Assembly-CSharp
-          m_MethodName: ChangeGraphTo2
+          m_MethodName: SetTeleportGraphTo2
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -5286,6 +5286,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &830282270 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8583369217867437073, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+  m_PrefabInstance: {fileID: 919728144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0fdb54b0e0b0dc468b4add7dd1db56c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &836560137
 GameObject:
   m_ObjectHideFlags: 0
@@ -5758,6 +5769,62 @@ PrefabInstance:
     - target: {fileID: 1322454706829173486, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4457450310015213331, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _particles.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4457450310015213331, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: _particles.Array.data[0]
+      value: 
+      objectReference: {fileID: 830282270}
+    - target: {fileID: 8583369217867437072, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.603
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437077, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437078, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437078, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -431940023
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437079, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437079, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: lengthInSec
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437079, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437079, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: EmissionModule.m_BurstCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437079, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: EmissionModule.m_Bursts.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437079, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437079, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8583369217867437079, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
+      propertyPath: InitialModule.startLifetime.minScalar
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7414d19d863b48d499b065a9a0df32f8, type: 3}
@@ -6401,7 +6468,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: -1492.1956
+      value: -1494.9255
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
@@ -13252,11 +13319,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -67.72356
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -54.301804
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z

@@ -19,21 +19,14 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
 
     public bool IsPlayable = true;
 
-    /// <summary>
-    /// 씬 입장 시 화면을 밝게 만드는 효과
-    /// </summary>
-    /// <returns></returns>
     public override IEnumerator EnterSceneEffectCoroutine()
     {
         IsPlayable = false;
 
-        //Debug.Log($"Enter Scene Effect 시작");
-
-        //Debug.Log("call EnterSceneEffectCoroutine in PlayableSceneTransitionPlayer");
-
         if (_fadeCoroutine != null)
         {
             StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = null;
         }
 
         _fadeCoroutine = StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Lighten));
@@ -42,22 +35,14 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
 
         if (entrance == null) yield break;
 
-        // SceneEffectManager.Instance.Camera.SnapFollow();
-
-        yield return StartCoroutine(entrance.PlayerExitCoroutine());
-
-        // Debug.Log($"Enter Scene Effect 종료");
+        yield return entrance.PlayerExitCoroutine();
 
         // ** 여기서 만약 씬 입장 시 플레이 해야하는 컷씬이 있다면 실행 **
         // yield return 하지 않고 즉시 실행한다
-        yield return StartCoroutine(entrance.PlayEnterCutscene());
+        yield return entrance.PlayEnterCutscene();
 
         IsPlayable = true;
     }
-    /// <summary>
-    /// 씬 퇴장 시 화면을 어둡게 만드는 효과
-    /// </summary>
-    /// <returns></returns>
     public override IEnumerator ExitSceneEffectCoroutine()
     {
         IsPlayable = false;
@@ -67,6 +52,7 @@ public class PlayableSceneTransitionPlayer : SceneTransitionPlayer
         if (_fadeCoroutine != null)
         {
             StopCoroutine(_fadeCoroutine);
+            _fadeCoroutine = null;
         }
 
         _fadeCoroutine = StartCoroutine(FadeCoroutine(TransitionDuration, FadeType.Darken));
