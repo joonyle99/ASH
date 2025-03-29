@@ -336,7 +336,7 @@ public class FireBossManager : MonoBehaviour
             // Accept Process
             if (_endingType == EndingType.Accept)
             {
-                
+
                 var fire = _firePrefab.GetComponentInChildren<Fire>();
                 var ash = SceneContext.Current.Player;
 
@@ -484,9 +484,10 @@ public class FireBossManager : MonoBehaviour
 
         var startTime = Time.time;
         yield return new WaitUntil(() => _lastLantern.IsLightOn || Time.time - startTime > 5f);
-        if (!_lastLantern.IsLightOn) { ToggleLightingGuide(); }
+        var useLightingGuide = false;
+        if (!_lastLantern.IsLightOn) { ToggleLightingGuide(); useLightingGuide = true; }
         yield return new WaitUntil(() => _lastLantern.IsLightOn); // 5초 이상 지속된 경우에만 빛 가이드를 통해서 들어오겠지
-
+        if (useLightingGuide) { ToggleLightingGuide(); }
         yield return new WaitUntil(() => LanternSceneContext.Current.IsEndLastAttack == true);
     }
 
