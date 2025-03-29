@@ -129,6 +129,7 @@ public abstract class Evaluator : MonoBehaviour
 
                     EvaluationEvent(playerPos);
 
+#if UNITY_EDITOR
                     // playerPos을 중심으로하는 십자가 표시
                     var vec1 = new Vector3(-1f, 1f, 0f);
                     var vec2 = new Vector3(1f, -1f, 0f);
@@ -136,6 +137,7 @@ public abstract class Evaluator : MonoBehaviour
                     var vec4 = new Vector3(1f, 1f, 0f);
                     Debug.DrawLine(playerPos + vec1, playerPos + vec2, Color.red);
                     Debug.DrawLine(playerPos + vec3, playerPos + vec4, Color.red);
+#endif
                 }
             }
         }
