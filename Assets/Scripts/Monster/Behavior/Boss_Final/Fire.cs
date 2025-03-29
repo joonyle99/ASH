@@ -511,6 +511,14 @@ public sealed class Fire : BossBehaviour
     {
         for (int i = 0; i < _fireBallCastCount; i++)
         {
+            // escape condition
+            if (SceneEffectManager.Instance.IsPlayingCutscene)
+            {
+                ClearAllFireBall();
+                fireBallCoroutine = null;
+                yield break;
+            }
+
             FireBallDirType dirType = IsRage ? Math.RangeMinMaxInclusive(FireBallDirType.Down, FireBallDirType.DiagonalRight) : FireBallDirType.Down;
             FireBallInfo info = new FireBallInfo(dirType);
 
