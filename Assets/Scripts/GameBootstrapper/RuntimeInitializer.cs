@@ -34,6 +34,7 @@ namespace HappyTools
             if (resourceGameObject != null)
             {
                 var gameBootstrapper = resourceGameObject.GetComponent<GameBootstrapper>();
+                gameBootstrapper.InitSetting();
                 gameBootstrapper.InitGame();
             }
         }
