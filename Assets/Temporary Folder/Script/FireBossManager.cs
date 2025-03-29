@@ -368,14 +368,9 @@ public class FireBossManager : MonoBehaviour
 
                 DialogueController.Instance.StartDialogue(_endingAceeptDialogue03, false);
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
-                
-                var transitionPlayer = SceneContext.Current.SceneTransitionPlayer;
-                yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Darken);
-                
-                //yield return transitionPlayer.FadeCoroutine(1.5f, FadeType.Lighten);
 
-                // TODO..?
-                yield break;
+                yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
+                SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace");
             }
             // Reject Process
             else if (_endingType == EndingType.Reject)
