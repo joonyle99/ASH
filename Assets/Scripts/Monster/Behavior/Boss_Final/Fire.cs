@@ -359,7 +359,7 @@ public sealed class Fire : BossBehaviour
         _flameBeamAngle = 360f / _flameBeamCount; // 360 / 8 = 45
         _flameBeamAngleEachCast = _flameBeamAngle / _flameBeamCastCount;  // 45 / 3 = 15
 
-        // rage target hurt count
+        _shouldLanternAttackedCount = FindObjectsOfType<BossLantern>(true).Length;
         rageTargetHurtCount = finalTargetHurtCount - _shouldLanternAttackedCount;
     }
     protected override void Start()
