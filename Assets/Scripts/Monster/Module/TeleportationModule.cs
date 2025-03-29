@@ -7,13 +7,16 @@ public class TeleportationModule : MonoBehaviour
     [SerializeField] private TeleportGraph _teleportGraph1;
     [SerializeField] private TeleportGraph _teleportGraph2;
 
-    [SerializeField] private TeleportGraph _currentGraph;
-
+    private TeleportGraph _currentGraph;
     private Rigidbody2D _rigidbody;
 
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+    }
+    private void Start()
+    {
+        SetTeleportGraphTo1();
     }
 
     public void ExecuteTeleport_AnimEvent()
@@ -24,14 +27,14 @@ public class TeleportationModule : MonoBehaviour
         _currentGraph.Move(_rigidbody);
     }
 
-    public void ChangeGraphTo1()
+    public void SetTeleportGraphTo1()
     {
         _teleportGraph1.gameObject.SetActive(true);
         _teleportGraph2.gameObject.SetActive(false);
 
         _currentGraph = _teleportGraph1;
     }
-    public void ChangeGraphTo2()
+    public void SetTeleportGraphTo2()
     {
         _teleportGraph1.gameObject.SetActive(false);
         _teleportGraph2.gameObject.SetActive(true);
