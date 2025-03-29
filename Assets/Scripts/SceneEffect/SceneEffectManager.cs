@@ -11,7 +11,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     /// 아무런 카메라 효과도 없는 default 상태.
     /// 카메라가 플레이어 쫓아다님.
     /// </para>
-    /// 
+    ///
     /// <para>
     /// MajorEvent:
     /// Idle과 Cutscene 사이의 상태로, 오브젝트들은 전부 작동하지만 카메라 효과가 일부 적용된 상태.
@@ -24,7 +24,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     /// 같은 우선순위일 때 어떻게할지 정의해야함 -> 기본은 override, 설정하면 합치기 가능하게하자.
     /// 합치기란 ? 동시에 트는 것일 뿐. 시작순서와 종료순서가 달라도 의도한대로 되어야함.
     /// </para>
-    /// 
+    ///
     /// <para>
     /// Cutscene:
     /// 컷씬 중으로 지정된 오브젝트외 다른 애들은 작동하지 않음, UI도 사라짐.
