@@ -109,7 +109,7 @@ public abstract class BossBehaviour : MonsterBehaviour
         // 피격 횟수 증가
         TotalHitCount++;
         currentHitCount++;
-        
+
         // 체력 감소
         CurHp -= MonsterDefine.BossHealthUnit;
 
