@@ -64,7 +64,6 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
         }
         float sinValue = Mathf.Cos((_idleTime / _idleInterval) * Mathf.PI * 2);
         _currentSpotLight.pointLightOuterRadius = Mathf.Lerp(_idleEffectScaleMin, _idleEffectScaleMax, (sinValue + 1) / 2) * _currentSettings.OuterRadius;
-
     }
 
     protected override void OnDestroy()
@@ -180,6 +179,9 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
             // 공격을 위한 설정
             InputManager.Instance.ChangeToStayStillSetter();
             SceneContext.Current.Player.IsGodMode = true;
+
+            // 잠시 기다린다
+            yield return new WaitForSeconds(1.0f);
 
             // 보스 랜턴 공격 실행
             var lanternAttack = new LanternAttack(this, lightSceneContext.Boss);
