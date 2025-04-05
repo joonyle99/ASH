@@ -45,7 +45,8 @@ public class DialogueView : MonoBehaviour
         _indicator.gameObject.SetActive(false);
         _responsePanel.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
-        _skipButton.gameObject.SetActive(canSkip);
+        //_skipButton.gameObject.SetActive(canSkip);
+        _skipButton.gameObject.SetActive(false);
         _textShaker = _dialogue.GetComponent<TextShaker>();
         string dialogueKeyCode = InputManager.Instance.StayStillInputSetter.GetKeyCode("Dialogue").KeyCode.ToString();
         _skipText.text = dialogueKeyCode;
