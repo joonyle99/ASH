@@ -57,7 +57,11 @@ public class PlayerInteractionController : MonoBehaviour
     }
     private void Update()
     {
-        if (!ClosetTarget) return;
+        if (!ClosetTarget)
+        {
+            return;
+        }
+
         if (CanInteract)
         {
             var isInteracting = ClosetTarget.IsInteracting;
