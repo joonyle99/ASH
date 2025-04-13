@@ -5767,11 +5767,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 279.57443
+      value: 497.1438
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 30.080181
+      value: 35.82635
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -15738,7 +15738,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 53.300457, y: -51.599957}
+  m_AnchoredPosition: {x: 76, y: -54.6}
   m_SizeDelta: {x: 57, y: 56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &288114432
@@ -45441,29 +45441,6 @@ Transform:
   m_Father: {fileID: 906235251}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1342049315
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5278967500371340760}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 862cf7a5bd2999548b1d3b7a7b21c9db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _skillKey: LightSkill
-  _skillUISound:
-    _isLoop: 0
-    _key: 
-    _clip: {fileID: 8300000, guid: a20b803cb8de33847ab5ef7c3276544b, type: 3}
-    _volumeType: 0
-    _volumeA: 1
-    _volumeB: 1
-    _pitchType: 0
-    _pitchA: 1
-    _pitchB: 1
 --- !u!1 &1349262108
 GameObject:
   m_ObjectHideFlags: 0
@@ -60834,7 +60811,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 25.86924, y: -4.9}
+  m_AnchoredPosition: {x: 35.914814, y: -4.9}
   m_SizeDelta: {x: 153.3, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1922159844
@@ -72442,64 +72419,6 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
-  - _type: 7
-    DialogueData: {fileID: 11400000, guid: 99920bd61e6abcd4ebf6df57968c616f, type: 2}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 3
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1342049315}
-          m_TargetAssemblyTypeName: SkillObtainer, Assembly-CSharp
-          m_MethodName: ObtainSkill
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    TargetScript: {fileID: 0}
-    MethodName: 
-  - _type: 4
-    DialogueData: {fileID: 11400000, guid: 99920bd61e6abcd4ebf6df57968c616f, type: 2}
-    ShakeData: {fileID: 0}
-    ConstantShakeData: {fileID: 0}
-    Time: 5
-    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
-    Function:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 38260891}
-          m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
-          m_MethodName: RemoveFollowTarget
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1509564072}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 38260891}
-          m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
-          m_MethodName: AddFollowTarget
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1434613769}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    TargetScript: {fileID: 0}
-    MethodName: 
   - _type: 0
     DialogueData: {fileID: 11400000, guid: 510253e748e1edf45a40b4c3002aa99a, type: 2}
     ShakeData: {fileID: 0}
@@ -72623,7 +72542,6 @@ GameObject:
   - component: {fileID: 5278967500371340743}
   - component: {fileID: 5278967500371340741}
   - component: {fileID: 1653155942}
-  - component: {fileID: 1342049315}
   - component: {fileID: 5278967500371340761}
   m_Layer: 10
   m_Name: CutscenePlayer_ObtainLightSkill
@@ -72631,7 +72549,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &5278967500371340761
 MonoBehaviour:
   m_ObjectHideFlags: 0
