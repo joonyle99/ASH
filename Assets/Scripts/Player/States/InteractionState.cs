@@ -1,6 +1,8 @@
+using UnityEngine;
+
 /// <summary>
-/// ÇÃ·¹ÀÌ¾î°¡ »óÈ£ÀÛ¿ë ÇÏ´Â °æ¿ì¿¡ ÁøÀÔÇÏ´Â »óÅÂ
-/// Enum Á¤º¸¸¦ °¡Áö°í ¾Ö´Ï¸ŞÀÌ¼Ç ¹× µ¿ÀÛÀ» Àû¿ëÇÑ´Ù
+/// í”Œë ˆì´ì–´ê°€ ìƒí˜¸ì‘ìš© í•˜ëŠ” ê²½ìš°ì— ì§„ì…í•˜ëŠ” ìƒíƒœ
+/// Enum ì •ë³´ë¥¼ ê°€ì§€ê³  ì• ë‹ˆë©”ì´ì…˜ ë° ë™ì‘ì„ ì ìš©í•œë‹¤
 /// </summary>
 public class InteractionState : PlayerState
 {
@@ -30,6 +32,9 @@ public class InteractionState : PlayerState
 
     protected override bool OnExit()
     {
+        //PlayerAnimatorì˜ Interaction_Entryì§„ì… ì „ OnEnter(), OnExit()í˜¸ì¶œ ì‹œ
+        //IsPush ì™€ IsRollì´ ë‘˜ ë‹¤ falseê°€ ë˜ì–´ ë‹¤ìŒ ìŠ¤í…Œì´íŠ¸ë¡œ ì§„ì…í•˜ì§€ ëª»í•¨
+
         switch (Player.PlayerInteractionController.ClosetTarget.AnimationType)
         {
             case InteractionAnimationType.Push:
@@ -39,6 +44,8 @@ public class InteractionState : PlayerState
                 Player.Animator.SetBool("IsRoll", false);
                 break;
         }
+
+
 
         return true;
     }
