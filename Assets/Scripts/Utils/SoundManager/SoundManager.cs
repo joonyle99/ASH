@@ -351,9 +351,11 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         else
         {
             //BGMFadeInOut("BasicBGM", 5, "Dungeon_Wave", 5);
-            // 기본 BGM 재생
+
             StopBGM();
-            PlayCommonBGM("BasicBGM");
+
+            // 기본 BGM 재생
+            //PlayCommonBGM("BasicBGM");
         }
     }
 
