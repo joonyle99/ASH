@@ -52,15 +52,15 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftControl))
-        {
-            CheatMode = !CheatMode;
+        //if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftControl))
+        //{
+        //    CheatMode = !CheatMode;
 
-            var text = (CheatMode == true) ? "CheatMode On" : "CheatMode Off";
-            var color = (CheatMode == true) ? Color.green : Color.red;
+        //    var text = (CheatMode == true) ? "CheatMode On" : "CheatMode Off";
+        //    var color = (CheatMode == true) ? Color.green : Color.red;
 
-            FindObjectOfType<ToastLabel>().ShowToast($"{text}", 2.0f, color);
-        }
+        //    FindObjectOfType<ToastLabel>().ShowToast($"{text}", 2.0f, color);
+        //}
     }
 
     public static bool IsOpeningScene(string sceneName)
