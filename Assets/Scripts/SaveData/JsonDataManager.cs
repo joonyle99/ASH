@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using DataGroup = System.Collections.Generic.Dictionary<string, object>;
 
-//jsonÀúÀåÀ» À§ÇÑ Å¬·¡½º°¡ ÀÖ´Ù¸é ÇØ´ç ºÎºĞ¿¡ ÃÊ±âÈ­
-#region JsonÁ÷·ÄÈ­ ÀÎÅÍÆäÀÌ½º Å¬·¡½º
+//jsonì €ì¥ì„ ìœ„í•œ í´ë˜ìŠ¤ê°€ ìˆë‹¤ë©´ í•´ë‹¹ ë¶€ë¶„ì— ì´ˆê¸°í™”
+#region Jsonì§ë ¬í™” ì¸í„°í˜ì´ìŠ¤ í´ë˜ìŠ¤
 /// <summary>
-/// objectÅ¸ÀÔÀÇ Á÷·ÄÈ­ ¹× ¿ªÁ÷·ÄÈ­¸¦ À§ÇÑ Å¸ÀÔ
+/// objectíƒ€ì…ì˜ ì§ë ¬í™” ë° ì—­ì§ë ¬í™”ë¥¼ ìœ„í•œ íƒ€ì…
 /// </summary>
 [Serializable]
 public class SerializableObjectType
@@ -103,7 +103,7 @@ public class SerializableObjectType
 }
 
 /// <summary>
-/// Á÷·ÄÈ­ °¡´ÉÇÑ PersistentDataÆ÷¸ËÀÇ Å¬·¡½º
+/// ì§ë ¬í™” ê°€ëŠ¥í•œ PersistentDataí¬ë§·ì˜ í´ë˜ìŠ¤
 /// </summary>
 [Serializable]
 public class JsonPersistentData
@@ -182,7 +182,7 @@ public class JsonPersistentData
 }
 
 /// <summary>
-/// Á÷·ÄÈ­ °¡´ÉÇÑ PlayerStatus°ü·Ã Å¬·¡½º
+/// ì§ë ¬í™” ê°€ëŠ¥í•œ PlayerStatusê´€ë ¨ í´ë˜ìŠ¤
 /// </summary>
 [Serializable]
 public class JsonPlayerData
@@ -258,6 +258,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     protected override void Awake()
     {
         path = Path.Combine(Application.dataPath, "database.json");
+        path = path.Replace("\\", "/");
         JsonLoad();
     }
 
@@ -267,7 +268,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     }
 
     #region Main Json Save Logic
-    // »õ·Î¿î µ¥ÀÌÅÍ Ãß°¡½Ã »ç¿ë
+    // ìƒˆë¡œìš´ ë°ì´í„° ì¶”ê°€ì‹œ ì‚¬ìš©
     public static void Add(string key, string value)
     {
         if (Instance == null)
@@ -285,7 +286,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         }
     }
 
-    // µé¾î°¡ÀÖ´Â µ¥ÀÌÅÍ ¼öÁ¤½Ã »ç¿ë
+    // ë“¤ì–´ê°€ìˆëŠ” ë°ì´í„° ìˆ˜ì •ì‹œ ì‚¬ìš©
     public static void Set(string key, string value)
     {
         if (Instance == null)
@@ -296,7 +297,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         Instance._globalSaveData.saveDataGroup[key] = value;
     }
 
-    // µ¥ÀÌÅÍ°¡ ÀÖ´ÂÁö ºñ±³
+    // ë°ì´í„°ê°€ ìˆëŠ”ì§€ ë¹„êµ
     public static bool Has(string key)
     {
         if (Instance == null)
@@ -307,7 +308,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         return Instance._globalSaveData.saveDataGroup.ContainsKey(key);
     }
 
-    // JSON ÆÄÀÏ·Î ÀúÀå
+    // JSON íŒŒì¼ë¡œ ì €ì¥
     public static void JsonSave()
     {
         JsonDataArray<string, string> arrayJson = DictionaryConvert(Instance._globalSaveData.saveDataGroup);
@@ -319,7 +320,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         // Debug.Log("Save Gamedata To Json File");
     }
 
-    // JSON ÆÄÀÏ ºÒ·¯¿À±â
+    // JSON íŒŒì¼ ë¶ˆëŸ¬ì˜¤ê¸°
     public static void JsonLoad()
     {
         SaveData data = new SaveData();
@@ -343,9 +344,9 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     }
 
     /**<summary>
-     * jsonÆÄÀÏ°ú Á÷Á¢ »óÈ£ÀÛ¿ë ÇÏ´Â _globalSaveDataº¯¼ö¿¡ key¸¦ ÀÌ¿ëÇØ¼­ ÇØ´ç Å¬·¡½º°¡ ÀÖ´ÂÁö
-     * È®ÀÎÇÏ°í ÀÖ´Ù¸é ÇØ´ç Å¬·¡½ºÀÇ ¿ÀºêÁ§Æ® ¸®ÅÏ
-     * ¡ØÇØ´ç ÇÔ¼ö È£Ãâ Àü ÃÖ½Å jsonÆÄÀÏÀ» È£ÃâÇÏ°í ½Í´Ù¸é JsonLoad()ÇÔ¼ö È£Ãâ ÇÊ¿ä
+     * jsoníŒŒì¼ê³¼ ì§ì ‘ ìƒí˜¸ì‘ìš© í•˜ëŠ” _globalSaveDataë³€ìˆ˜ì— keyë¥¼ ì´ìš©í•´ì„œ í•´ë‹¹ í´ë˜ìŠ¤ê°€ ìˆëŠ”ì§€
+     * í™•ì¸í•˜ê³  ìˆë‹¤ë©´ í•´ë‹¹ í´ë˜ìŠ¤ì˜ ì˜¤ë¸Œì íŠ¸ ë¦¬í„´
+     * â€»í•´ë‹¹ í•¨ìˆ˜ í˜¸ì¶œ ì „ ìµœì‹  jsoníŒŒì¼ì„ í˜¸ì¶œí•˜ê³  ì‹¶ë‹¤ë©´ JsonLoad()í•¨ìˆ˜ í˜¸ì¶œ í•„ìš”
      * </summary>
      */
     public static T GetObjectInGlobalSaveData<T>(string key)
@@ -359,9 +360,9 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     }
 
     /// <summary>
-    /// Dictionary¸¦ List·Î º¯È¯ÇÒ ¶§ »ç¿ë
-    /// Dictionary ÀÚÃ¼·Î JSON¿¡ ÀúÀåÇÒ¼ö ¾ø±â ¶§¹®¿¡ »ç¿ë
-    /// JsonSave ÇÔ¼ö¿¡¼­ »ç¿ëµÊ
+    /// Dictionaryë¥¼ Listë¡œ ë³€í™˜í•  ë•Œ ì‚¬ìš©
+    /// Dictionary ìì²´ë¡œ JSONì— ì €ì¥í• ìˆ˜ ì—†ê¸° ë•Œë¬¸ì— ì‚¬ìš©
+    /// JsonSave í•¨ìˆ˜ì—ì„œ ì‚¬ìš©ë¨
     /// </summary>
     public static JsonDataArray<TKey, TValue> DictionaryConvert<TKey, TValue>(Dictionary<TKey, TValue> dic)
     {
@@ -383,9 +384,9 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     }
 
     /// <summary>
-    /// List¸¦ Dictionary·Î º¯È¯ÇÒ ¶§ »ç¿ë
-    /// JsonÆÄÀÏ·Î ¹Ş¾Æ¿Â µ¥ÀÌÅÍ°¡ List·Î µÇ¾îÀÖ±â ¶§¹®¿¡ Dictionary·Î º¯È¯ÇÒ¶§ »ç¿ë
-    /// JsonLoad ÇÔ¼ö¿¡¼­ »ç¿ë
+    /// Listë¥¼ Dictionaryë¡œ ë³€í™˜í•  ë•Œ ì‚¬ìš©
+    /// JsoníŒŒì¼ë¡œ ë°›ì•„ì˜¨ ë°ì´í„°ê°€ Listë¡œ ë˜ì–´ìˆê¸° ë•Œë¬¸ì— Dictionaryë¡œ ë³€í™˜í• ë•Œ ì‚¬ìš©
+    /// JsonLoad í•¨ìˆ˜ì—ì„œ ì‚¬ìš©
     /// </summary>
     public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(string path)
     {
@@ -405,7 +406,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
     #region Convert To Json Interface Class
     /// <summary>
-    /// ÀÌ ÇÔ¼ö ´Üµ¶À¸·Î »ç¿ëÇÒ °æ¿ì JsonDataManager.JsonSave¸¦ È£ÃâÇØ ÁÖ¾î¾ß ÇÔ
+    /// ì´ í•¨ìˆ˜ ë‹¨ë…ìœ¼ë¡œ ì‚¬ìš©í•  ê²½ìš° JsonDataManager.JsonSaveë¥¼ í˜¸ì¶œí•´ ì£¼ì–´ì•¼ í•¨
     /// </summary>
     /// <param name="passageName"></param>
     public static void SavePersistentData(string passageName)
@@ -416,8 +417,8 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     }
 
     /// <summary>
-    /// ÀÌ ÇÔ¼ö ´Üµ¶À¸·Î »ç¿ëÇÒ °æ¿ì JsonDataManager.JsonSave¸¦ È£ÃâÇØ ÁÖ¾î¾ß ÇÔ
-    /// ¡Ø»ç¿ë¾ÈÇÔ
+    /// ì´ í•¨ìˆ˜ ë‹¨ë…ìœ¼ë¡œ ì‚¬ìš©í•  ê²½ìš° JsonDataManager.JsonSaveë¥¼ í˜¸ì¶œí•´ ì£¼ì–´ì•¼ í•¨
+    /// â€»ì‚¬ìš©ì•ˆí•¨
     /// </summary>
     /// <param name="jsonPlayerData"></param>
     public static void SavePlayerData(JsonPlayerData jsonPlayerData)
