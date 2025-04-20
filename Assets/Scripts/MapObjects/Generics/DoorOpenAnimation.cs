@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class DoorOpenAnimation : MonoBehaviour
 {
+    [SerializeField] private string _unlockDoorKey = "SE_Door_Unlock";
     [SerializeField] private string _openLowSoundKey = "SE_LightDoor_Open_Low";
     [SerializeField] private string _openSoundKey = "SE_LightDoor_Open";
 
@@ -28,8 +29,14 @@ public class DoorOpenAnimation : MonoBehaviour
 
     public IEnumerator OpenCoroutine()
     {
+        // unlock door with key
+        if (_unlockDoorKey.Length != 0)
+            _soundList.PlaySFX(_unlockDoorKey);
+
+        yield return new WaitForSeconds(0.1f);
+
         // 1
-        if(_doorOpenPreset)
+        if (_doorOpenPreset)
             SceneEffectManager.Instance.Camera.StartConstantShake(_doorOpenPreset);
 
         _dustParticle?.Play();
