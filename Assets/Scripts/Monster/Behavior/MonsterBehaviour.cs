@@ -444,7 +444,7 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
     private void InitMonsterCondition()
     {
         // TODO: 몬스터의 방향을 저장한다
-
+        Debug.Log($"Call awake in monsterBehaviour");
         RecentDir = DefaultDir;
 
         if (!CenterOfMass) CenterOfMass = this.transform;

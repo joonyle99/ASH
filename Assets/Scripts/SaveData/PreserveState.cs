@@ -114,8 +114,8 @@ public partial class PreserveState : MonoBehaviour, IDestructionListener, IScene
         if (Application.isPlaying)
         {
             if (SceneChangeManager.Instance &&
-                (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap || 
-                 SceneChangeManager.Instance.SceneChangeType == SceneChangeType.PlayerRespawn))
+                (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.ChangeMap))
+                 //SceneChangeManager.Instance.SceneChangeType == SceneChangeType.PlayerRespawn)) 사망 시 위치 정보 초기화 안됨
             {
                 // 트랜스폼 데이터 저장 (씬 전환 시)
                 SaveTransformState();

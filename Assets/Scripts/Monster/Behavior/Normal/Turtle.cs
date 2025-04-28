@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
 {
@@ -32,6 +33,9 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
                 //Debug.Log("Change Scene by Loading, Recent direction value : " + tmpDir);
                 //SetRecentDir(tmpDir);
             }
+
+            Debug.Log($"Call awake in Turtle");
+            AlignModelToMovement();
         }
 
         SaveAndLoader.OnSaveStarted += SaveTurtleState;
@@ -74,12 +78,12 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
 
     public override IAttackListener.AttackResult OnHit(AttackInfo attackInfo)
     {
-        // ** °ÅºÏÀÌ´Â Dead »óÅÂ¿¡¼­µµ Hit°¡ °¡´ÉÇÏ´Ù **
+        // ** ê±°ë¶ì´ëŠ” Dead ìƒíƒœì—ì„œë„ Hitê°€ ê°€ëŠ¥í•˜ë‹¤ **
 
-        // ¼û°Å³ª »ç¸Á »óÅÂ¿¡¼­ ÇÇ°İ Ã³¸®
+        // ìˆ¨ê±°ë‚˜ ì‚¬ë§ ìƒíƒœì—ì„œ í”¼ê²© ì²˜ë¦¬
         if (IsHiding || IsDead)
             HitProcess(attackInfo, false, true, false);
-        // ÀÏ¹İÀûÀÎ »óÅÂÀÇ ÇÇ°İ Ã³¸®
+        // ì¼ë°˜ì ì¸ ìƒíƒœì˜ í”¼ê²© ì²˜ë¦¬
         else
             HitProcess(attackInfo, false, true, true);
 
@@ -104,5 +108,14 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
             _statePreserver.SaveState("_isDeadSaved", IsDead);
             _statePreserver.SaveState("_recentDirSaved", RecentDir);
         }
+    }
+
+    /// <summary>
+    /// RecentDir ê°’ ë³€ê²½ í›„ í˜¸ì¶œ (í•„ìˆ˜ x)
+    /// </summary>
+    private void AlignModelToMovement()
+    {
+        int sign = RecentDir > 0 ? -1 : 1;
+        transform.localScale = new Vector3(sign * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
     }
 }
