@@ -78,7 +78,7 @@ public class OptionView : MonoBehaviour
             {
                 var PlayablePlayer = SceneContext.Current.PlayableSceneTransitionPlayer;
                 if ((PlayablePlayer != null && PlayablePlayer.IsPlayable == false) ||
-                    _keySettingUIManager.IsOpened())
+                    _keySettingUIManager.IsOpened() || SceneEffectManager.Instance.IsPlayingCutscene)
                 {
                     return;
                 }
