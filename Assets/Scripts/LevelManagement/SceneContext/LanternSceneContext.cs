@@ -345,7 +345,10 @@ public sealed class LanternSceneContext : SceneContext
         if (relation.A.transform == _lightDoor.transform || relation.B.transform == _lightDoor.transform)
         {
             if (!_lightDoor.IsOpened)
+            {
+                _stopCheckingConnections = true;
                 StartCoroutine(SceneEffectManager.Instance.PushCutscene(new Cutscene(this, LastConnectionCoroutine(relation))));
+            }
         }
         else
         {
@@ -365,8 +368,6 @@ public sealed class LanternSceneContext : SceneContext
     }
     IEnumerator LastConnectionCoroutine(LanternRelation relation)
     {
-        _stopCheckingConnections = true;
-
         //랜턴으로 카메라 이동 후 대기
         SceneEffectManager.Instance.Camera.StartFollow(relation.A.transform == _lightDoor ? relation.B.LightPoint : relation.A.LightPoint);
         InputManager.Instance.ChangeInputSetter(_lastConnectionInputSetter);
