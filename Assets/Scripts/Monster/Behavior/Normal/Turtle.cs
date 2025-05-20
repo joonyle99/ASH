@@ -50,7 +50,8 @@ public sealed class Turtle : MonsterBehaviour, ISceneContextBuildListener
     {
         if (_statePreserver)
         {
-            if(SceneChangeManager.Instance.SceneChangeType != SceneChangeType.StageReset)
+            if(SceneChangeManager.Instance != null &&
+                SceneChangeManager.Instance.SceneChangeType != SceneChangeType.StageReset)
             {
                 _statePreserver.SaveState<int>("_recentDir", RecentDir);
             }
