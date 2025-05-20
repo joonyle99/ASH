@@ -52,8 +52,8 @@ MonoBehaviour:
   _waitForGatheringTime: 1.5
   _radialForSlowing: 0.1
   _speedForSlowing: 0.1
-  _radialForGathering: -40
-  _speedForGathering: 1.2
+  _radialForGathering: -30
+  _speedForGathering: 1.15
   _ringStart: {fileID: 1327078671316631450}
   _ringEnd: {fileID: 7128027616073641140}
 --- !u!1001 &483486490
@@ -6002,8 +6002,52 @@ PrefabInstance:
       value: Particles_ArtefactEmbers
       objectReference: {fileID: 0}
     - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: NoiseModule.damping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: NoiseModule.frequency
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
       propertyPath: ShapeModule.radius.value
       value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: NoiseModule.strength.scalar
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: TrailModule.lifetime.scalar
+      value: 0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: TrailModule.minVertexDistance
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: NoiseModule.scrollSpeed.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: TrailModule.lifetime.minScalar
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: NoiseModule.positionAmount.scalar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: NoiseModule.rotationAmount.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: TrailModule.widthOverTrail.maxCurve.m_Curve.Array.data[0].time
+      value: 0.0023918152
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567414509711283744, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
+      propertyPath: TrailModule.widthOverTrail.maxCurve.m_Curve.Array.data[0].value
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 798c6cad03949544293e1e14f1530b82, type: 3}
