@@ -12,7 +12,7 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
 
     private static HashSet<string> openingScene = new HashSet<string>
     {
-        "TitleScene", "PrologueScene"
+        "TitleScene"
     };
     private static HashSet<string> exploration1 = new HashSet<string>
     {
