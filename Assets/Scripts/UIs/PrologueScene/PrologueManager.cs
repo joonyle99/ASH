@@ -29,7 +29,7 @@ public class PrologueManager : MonoBehaviour
     }
     public void Update()
     {
-        // CHEAT: F12 Å°¸¦ ´©¸£¸é ÇÁ·Ñ·Î±× ½ºÅµ
+        // CHEAT: F12 í‚¤ë¥¼ ëˆ„ë¥´ë©´ í”„ë¡¤ë¡œê·¸ ìŠ¤í‚µ
         if (Input.GetKeyDown(KeyCode.F12) && GameSceneManager.Instance.CheatMode == true)
         {
             StopAllCoroutines();
