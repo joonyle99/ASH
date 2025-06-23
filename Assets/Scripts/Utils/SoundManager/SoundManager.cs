@@ -324,8 +324,12 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     {
         if (GameSceneManager.IsOpeningScene(sceneName))
         {
-            BGMFadeInOut("MainTheme", 5, "Dungeon_Wave", 5);
+            BGMFadeInOut("MainTheme", 1, "", 5);
             //PlayCommonBGM("MainTheme");
+        }
+        else if(GameSceneManager.IsPrologueScene(sceneName))
+        {
+            BGMFadeInOut("Prologue", 5, "", 3);
         }
         else if (GameSceneManager.IsExploration1(sceneName))
         {
@@ -357,6 +361,19 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
             // 기본 BGM 재생
             //PlayCommonBGM("BasicBGM");
+        }
+
+        // wave bgm 재생 중이었을 시 끔
+        
+        AudioSource audioSource = GetBgmPlayer("Exploration1_Wave");
+        if (audioSource == null)
+        {
+            audioSource = GetBgmPlayer("Exploration2_Wave");
+        }
+
+        if(audioSource != null)
+        {
+            StopBGMFade(0, audioSource);
         }
     }
 

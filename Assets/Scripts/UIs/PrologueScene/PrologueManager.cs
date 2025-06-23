@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Video;
 
 public class PrologueManager : MonoBehaviour
 {
@@ -22,22 +23,32 @@ public class PrologueManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI[] _texts;
     [SerializeField] List<Script> _scripts;
 
+    [Space]
+
+    [SerializeField] VideoPlayer _videoPlayer;
+
     private void Start()
     {
         _proceedText.gameObject.SetActive(false);
-        StartCoroutine(PlayScripts());
+        //StartCoroutine(PlayScripts());
+        _videoPlayer.loopPointReached += StartGame;
     }
     public void Update()
     {
-        // CHEAT: F12 Å°¸¦ ´©¸£¸é ÇÁ·Ñ·Î±× ½ºÅµ
+        // CHEAT: F12 í‚¤ë¥¼ ëˆ„ë¥´ë©´ í”„ë¡¤ë¡œê·¸ ìŠ¤í‚µ
         if (Input.GetKeyDown(KeyCode.F12) && GameSceneManager.Instance.CheatMode == true)
         {
             StopAllCoroutines();
-            StartCoroutine(StartGame());
+            StartCoroutine(StartGameCoroutine());
         }
     }
+    
+    private void StartGame(UnityEngine.Video.VideoPlayer _videoPlayer)
+    {
+        StartCoroutine(StartGameCoroutine());
+    }
 
-    private IEnumerator StartGame()
+    private IEnumerator StartGameCoroutine()
     {
         PersistentDataManager.ClearPersistentData();
         PersistentDataManager.ClearSavedPersistentData();
@@ -45,8 +56,13 @@ public class PrologueManager : MonoBehaviour
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
         SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "Enter 1-1");
     }
+
     private IEnumerator PlayScripts()
     {
+        float scriptDelayTime = 3f;
+
+        yield return new WaitForSeconds(scriptDelayTime);
+
         foreach (var script in _scripts)
         {
             yield return PlayScript(script);
@@ -73,7 +89,7 @@ public class PrologueManager : MonoBehaviour
                 text.color = color;
         }
 
-        yield return StartGame();
+        yield return StartGameCoroutine();
     }
     private IEnumerator PlayScript(Script script)
     {

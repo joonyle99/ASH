@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class WaveSpawnMonsterInfo
@@ -102,7 +104,8 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
     [SerializeField] private bool _isClearAllWaves = false;
     [SerializeField] private float _timeOfEndOnceWaveCycle = 1.0f;
     [SerializeField] private List<string> _normalBgm;
-    [SerializeField] private string _dungeonWaveBgm = "Dungeon_Wave";
+    [SerializeField] private string _dungeon1WaveBgm = "Exploration1_Wave";
+    [SerializeField] private string _dungeon2WaveBgm = "Exploration2_Wave";
 
 
     [Header("External Called GameObject"), Space(10)]
@@ -379,14 +382,16 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
         bool isFirstOfSpawn = true;
 
         AudioSource bgmPlayer = GetPlayingNormalBgmPlayer();
-
+        string dungeonWaveClipKey = Regex.IsMatch(SceneManager.GetActiveScene().name, @".*1-.*") ?
+            _dungeon1WaveBgm : _dungeon2WaveBgm;
+        Debug.Log(_dungeon2WaveBgm);
         if (bgmPlayer != null)
         {
-            SoundManager.Instance.PlayCommonBGMFade(_dungeonWaveBgm, 3, null, bgmPlayer.time);
+            SoundManager.Instance.PlayCommonBGMFade(dungeonWaveClipKey, 3, null, bgmPlayer.time);
         }
         else
         {
-            SoundManager.Instance.PlayCommonBGMFade(_dungeonWaveBgm, 3, null);
+            SoundManager.Instance.PlayCommonBGMFade(dungeonWaveClipKey, 3, null);
         }
 
         for (int i = 0; i < _waveInfos.Count; i++)
@@ -469,7 +474,10 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
 
     private void EndOfWaveSystemLogic()
     {
-        AudioSource bgmPlayer = SoundManager.Instance.GetBgmPlayer(_dungeonWaveBgm);
+        string dungeonWaveClipKey = Regex.IsMatch(SceneManager.GetActiveScene().name, @"*1-*") ?
+            _dungeon1WaveBgm : _dungeon2WaveBgm;
+
+        AudioSource bgmPlayer = SoundManager.Instance.GetBgmPlayer(dungeonWaveClipKey);
         SoundManager.Instance.StopBGMFade(3, bgmPlayer);
 
         _currentPlayingWaveCoroutine = null;

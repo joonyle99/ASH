@@ -14,6 +14,10 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     {
         "TitleScene"
     };
+    private static HashSet<string> prologueScene = new HashSet<string>
+    {
+        "PrologueScene"
+    };
     private static HashSet<string> exploration1 = new HashSet<string>
     {
         "1-1", "1-2", "1-3"
@@ -68,6 +72,10 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     public static bool IsOpeningScene(string sceneName)
     {
         return openingScene.Contains(sceneName);
+    }
+    public static bool IsPrologueScene(string sceneName)
+    {
+        return prologueScene.Contains(sceneName);
     }
     public static bool IsExploration1(string sceneName)
     {

@@ -21434,6 +21434,64 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3662497261388711893, guid: 3e321f2a2d1a59e42b0f7cef97222735, type: 3}
   m_PrefabInstance: {fileID: 538864799}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1753788351
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1753788352}
+  - component: {fileID: 1753788353}
+  m_Layer: 12
+  m_Name: Fence
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1753788352
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753788351}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.18, y: 12.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1392495537982810825}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1753788353
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753788351}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 10}
+  m_EdgeRadius: 0
 --- !u!1 &1757630297
 GameObject:
   m_ObjectHideFlags: 0
@@ -26090,11 +26148,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 129.6561
+      value: -51.57075
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 67.48286
+      value: 72.941414
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -26587,6 +26645,10 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1392495538139728876, guid: cbee9443170d7b44b8104ad68557fca7, type: 3}
+      propertyPath: _fence
+      value: 
+      objectReference: {fileID: 1753788351}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbee9443170d7b44b8104ad68557fca7, type: 3}
 --- !u!1 &1392495537982810823 stripped
@@ -26610,6 +26672,11 @@ MonoBehaviour:
   _ID: 1_10
   _preserveTransform: 1
   _preserveDestruction: 1
+--- !u!4 &1392495537982810825 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1392495538139728867, guid: cbee9443170d7b44b8104ad68557fca7, type: 3}
+  m_PrefabInstance: {fileID: 1392495537982810822}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4390820059610688574
 PrefabInstance:
   m_ObjectHideFlags: 0
