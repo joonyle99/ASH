@@ -246,7 +246,8 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
             return false;
         }
-        Debug.Log($"New clip : {newClip.Clip}");
+
+        //Debug.Log($"New clip : {newClip.Clip}");
 
         if (newBgmPlayer == null)
         {
