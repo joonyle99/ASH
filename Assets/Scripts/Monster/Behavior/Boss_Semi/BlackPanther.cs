@@ -16,13 +16,13 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
     #region Variable
 
-    [Header("¡ª¡ª¡ª¡ª¡ª¡ª¡ª BlackPanther Behaviour ¡ª¡ª¡ª¡ª¡ª¡ª¡ª")]
+    [Header("â€•â€•â€•â€•â€•â€•â€• BlackPanther Behaviour â€•â€•â€•â€•â€•â€•â€•")]
     [Space]
 
     [Tooltip("1: Rush1\n2 : VineMissile\n3 : Rush2\n4 : VinePillar")]
     [SerializeField] private AttackType _firstAttack;
-    [SerializeField] private AttackType _currentAttack;
-    [SerializeField] private AttackType _nextAttack;
+    private AttackType _currentAttack;
+    private AttackType _nextAttack;
 
     [Header("____ Rush ____")]
     [Space]
@@ -69,7 +69,6 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     [SerializeField] private Range _createTimeRange;
 
     private List<float> _usedPosX;
-    private int _allocationLimit = 30;
 
     [Header("VinePillar - VFX")]
     [Space]
@@ -95,7 +94,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         base.Awake();
 
-        // µ¢Äğ ½ºÅ³ ¾Ö´Ï¸ŞÀÌ¼Ç Å¬¸³ÀÇ ±æÀÌ ÃßÃâ
+        // ë©ì¿¨ ìŠ¤í‚¬ ì• ë‹ˆë©”ì´ì…˜ í´ë¦½ì˜ ê¸¸ì´ ì¶”ì¶œ
         foreach (var clip in Animator.runtimeAnimatorController.animationClips)
         {
             if (clip.name == "ani_panther_vineMissile")
@@ -104,7 +103,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
                 _vinePillarAnimDuration = clip.length;
         }
 
-        // °ø°İ ÆÇµ¶±âÀÇ ´ë±â ÀÌº¥Æ® µî·Ï
+        // ê³µê²© íŒë…ê¸°ì˜ ëŒ€ê¸° ì´ë²¤íŠ¸ ë“±ë¡
         AttackEvaluator.WaitEvent -= OnAttackWaitEvent;
         AttackEvaluator.WaitEvent += OnAttackWaitEvent;
 
@@ -155,14 +154,14 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         if (IsDead || IsGroggy || !IsCapturable)
             return;
 
-        // ±×·Î±â »óÅÂ·Î ÁøÀÔ
+        // ê·¸ë¡œê¸° ìƒíƒœë¡œ ì§„ì…
         SetAnimatorTrigger("Groggy");
     }
 
     // boss base
     public override void AttackPreProcess()
     {
-        // ÇöÀç °ø°İ »óÅÂ º¯°æ
+        // í˜„ì¬ ê³µê²© ìƒíƒœ ë³€ê²½
         _currentAttack = _nextAttack;
 
         currentAttackCount++;
@@ -178,18 +177,18 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
     public override void GroggyPreProcess()
     {
-        // ±×·Î±â »óÅÂ ÁøÀÔ (´õÀÌ»ó ¼ÕÀüµîÀÇ ¿µÇâÀ» ¹ŞÁö ¾ÊÀ½)
+        // ê·¸ë¡œê¸° ìƒíƒœ ì§„ì… (ë”ì´ìƒ ì†ì „ë“±ì˜ ì˜í–¥ì„ ë°›ì§€ ì•ŠìŒ)
         IsGroggy = true;
 
-        // ¸ó½ºÅÍÀÇ MonsterBodyHit¸¦ ²ö´Ù (ÇÃ·¹ÀÌ¾î¸¦ Å¸°İÇÒ ¼ö ¾ø´Ù)
+        // ëª¬ìŠ¤í„°ì˜ MonsterBodyHitë¥¼ ëˆë‹¤ (í”Œë ˆì´ì–´ë¥¼ íƒ€ê²©í•  ìˆ˜ ì—†ë‹¤)
         SetHitBoxAttackable(false);
     }
     public override void GroggyPostProcess()
     {
-        // ±×·Î±â »óÅÂ Á¾·á (ÀÌÁ¦ ¼ÕÀüµîÀÇ ¿µÇâÀ» ¹ŞÀ½)
+        // ê·¸ë¡œê¸° ìƒíƒœ ì¢…ë£Œ (ì´ì œ ì†ì „ë“±ì˜ ì˜í–¥ì„ ë°›ìŒ)
         IsGroggy = false;
 
-        // ¸ó½ºÅÍÀÇ Body HitBox¸¦ ÄÒ´Ù (ÇÃ·¹ÀÌ¾î¸¦ Å¸°İÇÒ ¼ö ÀÖ´Ù)
+        // ëª¬ìŠ¤í„°ì˜ Body HitBoxë¥¼ ì¼ ë‹¤ (í”Œë ˆì´ì–´ë¥¼ íƒ€ê²©í•  ìˆ˜ ìˆë‹¤)
         SetHitBoxAttackable(true);
 
         currentHitCount = 0;
@@ -207,11 +206,11 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         // 1, 2, 3, 4 / 1, 2, 3, 4 ...
         int nextAttackNumber = (int)_currentAttack + 1;
 
-        // AttackTypeÀÇ ¸¶Áö¸· °ªÀ» ³Ñ¾î°¡¸é Ã¹ ¹øÂ° °ªÀ¸·Î µ¹¾Æ°©´Ï´Ù.
+        // AttackTypeì˜ ë§ˆì§€ë§‰ ê°’ì„ ë„˜ì–´ê°€ë©´ ì²« ë²ˆì§¸ ê°’ìœ¼ë¡œ ëŒì•„ê°‘ë‹ˆë‹¤.
         if (nextAttackNumber > (int)AttackType.VinePillar)
             nextAttackNumber = (int)AttackType.Rush1;
 
-        // ´ÙÀ½ °ø°İ Å¸ÀÔÀ» ¼³Á¤ÇÕ´Ï´Ù.
+        // ë‹¤ìŒ ê³µê²© íƒ€ì…ì„ ì„¤ì •í•©ë‹ˆë‹¤.
         _nextAttack = (AttackType)nextAttackNumber;
         Animator.SetInteger("NextAttackNumber", nextAttackNumber);
     }
@@ -223,8 +222,8 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         _targetPos = SceneContext.Current.Player.HeartCollider.bounds.center;
 
-        // ¿À¸¥ÂÊÀ» º¸°í ÀÖÀ¸¸é ÇÃ·¹ÀÌ¾î°¡ ¿À¸¥ÂÊ¿¡ ÀÖÀ» ¶§¸¸ ¹Ì»çÀÏÀ» ¹ß»çÇÑ´Ù
-        // ¿ŞÂÊÀ» º¸°í ÀÖÀ¸¸é ÇÃ·¹ÀÌ¾î°¡ ¿ŞÂÊ¿¡ ÀÖÀ» ¶§¸¸ ¹Ì»çÀÏÀ» ¹ß»çÇÑ´Ù
+        // ì˜¤ë¥¸ìª½ì„ ë³´ê³  ìˆìœ¼ë©´ í”Œë ˆì´ì–´ê°€ ì˜¤ë¥¸ìª½ì— ìˆì„ ë•Œë§Œ ë¯¸ì‚¬ì¼ì„ ë°œì‚¬í•œë‹¤
+        // ì™¼ìª½ì„ ë³´ê³  ìˆìœ¼ë©´ í”Œë ˆì´ì–´ê°€ ì™¼ìª½ì— ìˆì„ ë•Œë§Œ ë¯¸ì‚¬ì¼ì„ ë°œì‚¬í•œë‹¤
         bool isDifferentDir = (RecentDir > 0 && _missileSpawnPoint.position.x > _targetPos.x) ||
                             (RecentDir < 0 && _missileSpawnPoint.position.x < _targetPos.x);
         if (isDifferentDir)
@@ -239,7 +238,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         var dir = (_targetPos - (Vector2)_missileSpawnPoint.position).normalized;
 
-        // TODO: dirÀÇ x ¹æÇâÀÌ ¸ó½ºÅÍ°¡ ¹Ù¶óº¸´Â ¹æÇâ°ú ´Ù¸£´Ù¸é..?
+        // TODO: dirì˜ x ë°©í–¥ì´ ëª¬ìŠ¤í„°ê°€ ë°”ë¼ë³´ëŠ” ë°©í–¥ê³¼ ë‹¤ë¥´ë‹¤ë©´..?
 
         var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
 
@@ -249,9 +248,15 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         var spark = Instantiate(_sparkEffect, _missileSpawnPoint.position, Quaternion.Euler(0f, -90f * RecentDir, 0f));
         spark.Play();
+
+        PlaySound("SE_Leopard_missile2");
     }
 
     // vine pillar
+    public void VinePillar00_AnimEvent()
+    {
+        PlaySound("SE_Leopard_bine1");
+    }
     public void VinePillar01_AnimEvent()
     {
         var player = SceneContext.Current.Player;
@@ -264,7 +269,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         _usedPosX = new List<float>();
 
-        // ³ÕÄğ ±âµÕ »ı¼º À§Ä¡ ¼³Á¤ ·ÎÁ÷
+        // ë„ì¿¨ ê¸°ë‘¥ ìƒì„± ìœ„ì¹˜ ì„¤ì • ë¡œì§
         for (int i = 0; i < _pillarCount; ++i)
         {
             var min = player.transform.position.x - _pillarFarDist;
@@ -276,7 +281,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
             _usedPosX.Add(spawnPos);
         }
 
-        // ³ÕÄğ ±âµÕ »ı¼º Àü, À§ÇèÀ» ¾Ë¸®´Â Èë ÀÌÆåÆ®
+        // ë„ì¿¨ ê¸°ë‘¥ ìƒì„± ì „, ìœ„í—˜ì„ ì•Œë¦¬ëŠ” í™ ì´í™íŠ¸
         foreach (var posX in _usedPosX)
         {
             var leftPos = new Vector2(posX - _dustDistFromPillar, _floorHeight);
@@ -292,25 +297,35 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
             rightDust.Play();
         }
 
-        // ³ÕÄğ ±âµÕ »ı¼º
+        // ë„ì¿¨ ê¸°ë‘¥ ìƒì„±
         foreach (var posX in _usedPosX)
         {
             StartCoroutine(CreateVinePillar(posX));
         }
     }
+    public void VinePillar02_AnimEvent()
+    {
+        PlaySound("SE_Leopard_bine2_2");
+    }
     public IEnumerator CreateVinePillar(float createPosX)
     {
         yield return new WaitForSeconds(_createTimeRange.Random());
+
+        // SE_Leopard_bine3 ì‹¤í–‰..
+        PlaySound("SE_Leopard_bine3");
 
         var pos = new Vector2(createPosX, _floorHeight);
         var pillar = Instantiate(_pillar, pos, Quaternion.identity);
     }
 
-    // wait event (Attack Evaluator¿¡ ´ëÇÑ ´ë±â ÀÌº¥Æ®)
+    // wait event (Attack Evaluatorì— ëŒ€í•œ ëŒ€ê¸° ì´ë²¤íŠ¸)
     private IEnumerator OnAttackWaitEvent()
     {
-        // ÇØ´ç WaitEvent() Handler´Â ¾ÆÁ÷ State°¡ ¹Ù²î±â Àü¿¡ È£ÃâµÇ´Â ÀÌº¥Æ®ÀÌ¹Ç·Î,
-        // nextAttackÀ» ±âÁØÀ¸·Î Ã³¸®ÇØ¾ß ÇÑ´Ù. (»ç½Ç»ó nextAttackÀÌ currentAttack)
+        Debug.Log("enter OnAttackWaitEvent");
+        Debug.Log("_nextAttack : " + _nextAttack);
+
+        // í•´ë‹¹ WaitEvent() HandlerëŠ” ì•„ì§ Stateê°€ ë°”ë€Œê¸° ì „ì— í˜¸ì¶œë˜ëŠ” ì´ë²¤íŠ¸ì´ë¯€ë¡œ,
+        // nextAttackì„ ê¸°ì¤€ìœ¼ë¡œ ì²˜ë¦¬í•´ì•¼ í•œë‹¤. (ì‚¬ì‹¤ìƒ nextAttackì´ currentAttack)
         switch (_nextAttack)
         {
             case AttackType.Rush1:
@@ -323,6 +338,12 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
                 // Light Hint
                 if (IsLightingHintInRage)
                 {
+                    var cutscenePlayer = cutscenePlayerList.FindCutscene("Change RageState");
+                    if (cutscenePlayer != null && (cutscenePlayer.IsPlayed == false || cutscenePlayer.IsPlaying == true))
+                    {
+                        yield break;
+                    }
+
                     yield return LightingHintCoroutine();
                 }
 
@@ -331,35 +352,37 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
                 yield return WaitEventCoroutine_VinePillar();
                 break;
         }
+
+        Debug.Log("exit OnAttackWaitEvent");
     }
     private IEnumerator WaitEventCoroutine_Rush()
     {
-        // Ãß°İ À§Ä¡ ¼³Á¤
+        // ì¶”ê²© ìœ„ì¹˜ ì„¤ì •
         var player = SceneContext.Current.Player;
         var direction = Mathf.Sign(player.transform.position.x - transform.position.x);
         float targetPosX = Mathf.Clamp(player.transform.position.x + direction * _rushBackDist, _rushableRange.Start, _rushableRange.End);
 
-        // µğ¹ö±× ÄÚµå
-        Vector3 startPoint = new Vector3(targetPosX, transform.position.y, transform.position.z);
-        Vector3 endPoint = new Vector3(targetPosX, transform.position.y + 5f, transform.position.z);
-        Debug.DrawLine(startPoint, endPoint, Color.cyan, 1f);
+        // ë””ë²„ê·¸ ì½”ë“œ
+        //Vector3 startPoint = new Vector3(targetPosX, transform.position.y, transform.position.z);
+        //Vector3 endPoint = new Vector3(targetPosX, transform.position.y + 5f, transform.position.z);
+        //Debug.DrawLine(startPoint, endPoint, Color.cyan, 1f);
 
-        // ´ë»ó µŞÆíÀ¸·Î Áö³ª°¥ ¶§±îÁö ±â´Ù¸°´Ù
+        // ëŒ€ìƒ ë’·í¸ìœ¼ë¡œ ì§€ë‚˜ê°ˆ ë•Œê¹Œì§€ ê¸°ë‹¤ë¦°ë‹¤
         GroundChecker groundChecker = GetComponent<GroundChecker>();
         
         yield return new WaitUntil(() => (Mathf.Abs(transform.position.x - targetPosX) < 0.5f) || groundChecker.IsAnyGroundChecked);
 
         Animator.SetTrigger("Stop");
 
-        // ¸ØÃá ÈÄ, ´ë»óÀ» ÇâÇØ ¹Ù¶óº»´Ù
+        // ë©ˆì¶˜ í›„, ëŒ€ìƒì„ í–¥í•´ ë°”ë¼ë³¸ë‹¤
         var targetCollider2 = GroundChaseEvaluator.IsTargetWithinRange();
         if (targetCollider2) StartSetRecentDirAfterGrounded(GroundChaseEvaluator.ChaseDir);
     }
     private IEnumerator WaitEventCoroutine_VineMissile()
     {
-        // ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³¯¶§±îÁö ±â´Ù·Á¾ß ÇÑ´Ù
+        // ì• ë‹ˆë©”ì´ì…˜ì´ ëë‚ ë•Œê¹Œì§€ ê¸°ë‹¤ë ¤ì•¼ í•œë‹¤
 
-        // ´Ù¸¥ WaitEvent¿Í´Â Á¶±İ ´Ù¸¥ ÇüÅÂ·Î, ¾ğÁ¦µçÁö Á¾·áÇÏ±â À§ÇØ WaitForSeconds¸¦ »ç¿ëÇÏÁö ¾Ê´Â´Ù
+        // ë‹¤ë¥¸ WaitEventì™€ëŠ” ì¡°ê¸ˆ ë‹¤ë¥¸ í˜•íƒœë¡œ, ì–¸ì œë“ ì§€ ì¢…ë£Œí•˜ê¸° ìœ„í•´ WaitForSecondsë¥¼ ì‚¬ìš©í•˜ì§€ ì•ŠëŠ”ë‹¤
 
         float eTime = 0f;
         while (eTime < _vineMissileAnimDuration)
@@ -376,41 +399,10 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
     private IEnumerator WaitEventCoroutine_VinePillar()
     {
-        // ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ³¡³¯¶§±îÁö ±â´Ù·Á¾ß ÇÑ´Ù
+        // ì• ë‹ˆë©”ì´ì…˜ì´ ëë‚ ë•Œê¹Œì§€ ê¸°ë‹¤ë ¤ì•¼ í•œë‹¤
         yield return new WaitForSeconds(_vinePillarAnimDuration);
 
-        // Debug.Log("Vine Pillar AnimationÀÌ Á¾·áµÇ¾ú½À´Ï´Ù. ÀÌÁ¦ Attack EvaluatorÀÇ ÄğÅ¸ÀÓÀÌ ³¡³µ½À´Ï´Ù");
-    }
-    private IEnumerator LightingHintCoroutine()
-    {
-        // NÃÊ°£ Capturable »óÅÂ·Î ¸¸µé¸ç ´ë±âÇÏ´Â ÄÚ·çÆ¾
-
-        Debug.Log("LightHintCoroutine ½ÇÇà");
-
-        IsCapturable = true;
-
-        /*
-         * TODO: ºûÀÇ ÈùÆ® ¿¬Ãâ
-         * ²¿¸® ³»¸®´Â ¾Ö´Ï¸ŞÀÌ¼Ç
-         * ÀÌ¸¶ ´ÙÀÌ¾Æ ¹®¾çÀÌ Èò»öÀ¸·Î ¹İÂ¦ ºû³ª´Â ÀÌÆåÆ®
-         * È¿°úÀ½À» Ãß°¡¡¯ÇÏ±â·Î ÇÏ¿´½À´Ï´Ù.
-         */
-
-        var count = 4;
-        var interval = 1.2f;
-
-        PlayMultipleSound("Twinkle", count, interval);
-
-        for (int i = 0; i < count; i++)
-        {
-            _twinkleEffect.Play();
-            yield return new WaitForSeconds(_twinkleEffect.GetTwinkleLifeTime());
-            _twinkleEffect.Stop();
-        }
-
-        IsCapturable = false;
-
-        Debug.Log("LightHintCoroutine Á¾·á");
+        // Debug.Log("Vine Pillar Animationì´ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤. ì´ì œ Attack Evaluatorì˜ ì¿¨íƒ€ì„ì´ ëë‚¬ìŠµë‹ˆë‹¤");
     }
 
     // effects
@@ -418,7 +410,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     {
         base.ExecutePostDeathActions();
 
-        // ÈæÇ¥¹ü »ç¸Á ÈÄ ¿¬Ãâ
+        // í‘í‘œë²” ì‚¬ë§ í›„ ì—°ì¶œ
         StartCoroutine(AfterBlackPantherCoroutine());
     }
     public IEnumerator AfterBlackPantherCoroutine()
@@ -427,8 +419,25 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
 
         yield return new WaitForSeconds(2f);
 
-        // ÃÖÁ¾ ÄÆ¾À Àç»ı
+        // ìµœì¢… ì»·ì”¬ ì¬ìƒ
         cutscenePlayerList.PlayCutscene("Final CutScene");
+    }
+    public IEnumerator LightingHintCoroutine()
+    {
+        IsCapturable = true;
+
+        var count = 5;
+        var waitTime = _twinkleEffect.GetTwinkleLifeTime() + 0.2f;
+
+        for (int i = 0; i < count; i++)
+        {
+            PlaySound("Twinkle");
+            _twinkleEffect.Play();
+            yield return new WaitForSeconds(waitTime);
+            _twinkleEffect.Stop();
+        }
+
+        IsCapturable = false;
     }
 
     // etc
@@ -438,7 +447,7 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
     }
     public void RoarProcess()
     {
-        if (IsActiveLuminescence == false)
+        if (!IsActiveLuminescence)
         {
             SetActiveLuminescence(true);
             currentHitCount = 0;
@@ -465,19 +474,19 @@ public sealed class BlackPanther : BossBehaviour, ILightCaptureListener
         if (player == null)
             return;
 
-        // ³ÕÄğ ±âµÕÀÌ »ı¼ºµÇ´Â ¶¥ÀÇ ³ôÀÌ
+        // ë„ì¿¨ ê¸°ë‘¥ì´ ìƒì„±ë˜ëŠ” ë•…ì˜ ë†’ì´
         Gizmos.color = Color.red;
         Gizmos.DrawLine(new Vector3(player.transform.position.x - 50f, _floorHeight, player.transform.position.z),
             new Vector3(player.transform.position.x + 50f, _floorHeight, player.transform.position.z));
 
-        // ³ÕÄğ ±âµÕÀÌ »ı¼ºµÇ´Â ¹üÀ§
+        // ë„ì¿¨ ê¸°ë‘¥ì´ ìƒì„±ë˜ëŠ” ë²”ìœ„
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(new Vector3(player.transform.position.x - _pillarFarDist, _floorHeight, player.transform.position.z),
             new Vector3(player.transform.position.x - _pillarFarDist, _floorHeight + 5f, player.transform.position.z));
         Gizmos.DrawLine(new Vector3(player.transform.position.x + _pillarFarDist, _floorHeight, player.transform.position.z),
             new Vector3(player.transform.position.x + _pillarFarDist, _floorHeight + 5f, player.transform.position.z));
 
-        // Èë¸ÕÁöÀÇ ³ÕÄğ ±âµÕÀ¸·ÎºÎÅÍÀÇ ÃÖ¼Ò °Å¸®
+        // í™ë¨¼ì§€ì˜ ë„ì¿¨ ê¸°ë‘¥ìœ¼ë¡œë¶€í„°ì˜ ìµœì†Œ ê±°ë¦¬
         Gizmos.color = Color.cyan;
         Gizmos.DrawLine(new Vector3(player.transform.position.x - _dustDistFromPillar / 2f, _floorHeight, player.transform.position.z),
             new Vector3(player.transform.position.x - _dustDistFromPillar / 2f, _floorHeight + 1f, player.transform.position.z));

@@ -23,12 +23,12 @@ public class CutscenePlayerList : MonoBehaviour
     // play
     public void PlayCutscene(string cutsceneName)
     {
-        // ÇöÀç CutscenePlayerList °´Ã¼ÀÇ cutsceneDictionary¿¡¼­ cutscenePlayer¸¦ È®ÀÎ
+        // í˜„ìž¬ CutscenePlayerList ê°ì²´ì˜ cutsceneDictionaryì—ì„œ cutscenePlayerë¥¼ í™•ì¸
         var cutscenePlayer = FindCutscene(cutsceneName);
 
         if (cutscenePlayer == null)
         {
-            // ÇöÀç ¾À¿¡¼­ cutscenePlayer¸¦ Ã£¾Æ cutsceneDictionary¿¡ Ãß°¡ÇÑ´Ù
+            // í˜„ìž¬ ì”¬ì—ì„œ cutscenePlayerë¥¼ ì°¾ì•„ cutsceneDictionaryì— ì¶”ê°€í•œë‹¤
             cutscenePlayer = FindCutsceneInScene(cutsceneName);
 
             if(cutscenePlayer == null)
@@ -44,8 +44,7 @@ public class CutscenePlayerList : MonoBehaviour
     // find
     public CutscenePlayer FindCutscene(string cutsceneName)
     {
-        var cutscenePlayer = _cutsceneDictionary
-            .FirstOrDefault(c => c.name == cutsceneName && !c.cutscenePlayer.IsPlayed)?.cutscenePlayer;
+        var cutscenePlayer = _cutsceneDictionary.FirstOrDefault(c => c.name == cutsceneName)?.cutscenePlayer;
 
         if (cutscenePlayer == null)
         {
@@ -58,8 +57,7 @@ public class CutscenePlayerList : MonoBehaviour
 
     public CutscenePlayer FindCutsceneInScene(string cutsceneName)
     {
-        var cutscenePlayer = FindObjectsByType<CutscenePlayer>(FindObjectsSortMode.None)
-             .FirstOrDefault(c => c.name == cutsceneName && !c.IsPlayed);
+        var cutscenePlayer = FindObjectsByType<CutscenePlayer>(FindObjectsSortMode.None).FirstOrDefault(c => c.name == cutsceneName);
 
         if (cutscenePlayer == null)
         {
@@ -72,7 +70,7 @@ public class CutscenePlayerList : MonoBehaviour
     }
 
     // check
-    public bool CheckAnyPlaying()
+    public bool CheckAnyCutscenePlaying()
     {
         foreach (CutsceneDictionary cutscene in _cutsceneDictionary)
         {

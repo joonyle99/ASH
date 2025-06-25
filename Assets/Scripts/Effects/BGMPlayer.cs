@@ -7,7 +7,7 @@ public class BGMPlayer : MonoBehaviour
 
     public void PlayBGM()
     {
-        SoundManager.Instance.BGMFadeInOut(key, 3, "", 3);
+        SoundManager.Instance.BGMFadeInOut(key, 0f, "", 0f, 2f);
     }
 
     public void PlayBGM2()
