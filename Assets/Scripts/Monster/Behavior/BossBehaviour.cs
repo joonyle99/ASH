@@ -48,14 +48,9 @@ public abstract class BossBehaviour : MonsterBehaviour
             {
                 if (_totalHitCount == rageTargetHurtCount)
                 {
-                    // Debug.Log("call rage cutscene");
-
                     IsRage = true;
                     IsGodMode = true;
 
-                    // TODO: 여기서 공격으로 안 들어가도록 하기
-
-                    // TEMP 버닝비버라서 이렇게 해본다
                     //StartCoroutine(PlayCutSceneInRunning("Change RageState"));
                     PlayCutSceneImmediately("Change RageState");
                 }

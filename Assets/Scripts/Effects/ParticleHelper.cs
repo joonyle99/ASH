@@ -60,17 +60,17 @@ public class ParticleHelper : MonoBehaviour
 
     public float GetTwinkleLifeTime()
     {
-        return _particleSystem.main.startLifetime.constantMin + _particleSystem.main.startLifetime.constantMax / 2f;
+        return (_particleSystem.main.startLifetime.constantMin + _particleSystem.main.startLifetime.constantMax) / 2f;
     }
     public float GetDisintegrateLifeTime()
     {
-        // Main ModuleÀÇ Start Lifetime¿¡¼­ ÃÖ´ë°ª °¡Á®¿À±â
+        // Main Moduleì˜ Start Lifetimeì—ì„œ ìµœëŒ€ê°’ ê°€ì ¸ì˜¤ê¸°
         var totalDuration = _particleSystem.main.startLifetime.constantMax;
 
-        // Emission ¸ğµâ °¡Á®¿À±â
+        // Emission ëª¨ë“ˆ ê°€ì ¸ì˜¤ê¸°
         var emission = _particleSystem.emission;
 
-        // Burst·Î ÀÎÇÑ Ãß°¡ Áö¼Ó ½Ã°£ °è»ê
+        // Burstë¡œ ì¸í•œ ì¶”ê°€ ì§€ì† ì‹œê°„ ê³„ì‚°
         for (int i = 0; i < emission.burstCount; i++)
         {
             var burst = emission.GetBurst(i);
@@ -78,7 +78,7 @@ public class ParticleHelper : MonoBehaviour
             totalDuration = Mathf.Max(totalDuration, burstDuration + _particleSystem.main.startLifetime.constantMax);
         }
 
-        // Rate Over TimeÀ¸·Î ÀÎÇØ »ı¼ºµÈ ÆÄÆ¼Å¬ÀÇ Áö¼Ó ½Ã°£ °è»ê
+        // Rate Over Timeìœ¼ë¡œ ì¸í•´ ìƒì„±ëœ íŒŒí‹°í´ì˜ ì§€ì† ì‹œê°„ ê³„ì‚°
         if (emission.rateOverTime.constant > 0)
         {
             var simulationDuration = _particleSystem.main.duration;

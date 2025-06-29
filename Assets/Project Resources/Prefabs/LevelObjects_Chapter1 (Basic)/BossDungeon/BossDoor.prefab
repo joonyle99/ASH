@@ -257,13 +257,12 @@ MonoBehaviour:
   _interactionMarkerPoint: {fileID: 1095145399}
   _stateChange: 0
   _animationType: 0
+  _identifier: {fileID: 0}
   _isOpened: 0
-  _passage: {fileID: 5904064001357719047}
-  _goInDelay: 3
   _enterInputSetter: {fileID: 11400000, guid: bda65bfa556fab147895b7d4385ad239, type: 2}
+  _passage: {fileID: 5904064001357719047}
   _failDialogue: {fileID: 11400000, guid: 74a66fb99d254f94ea3126e87addfde1, type: 2}
-  _soundList: {fileID: 109193434}
-  _isControlableInputSetter: 1
+  _successDialogue: {fileID: 0}
 --- !u!95 &869879896
 Animator:
   serializedVersion: 5
@@ -324,7 +323,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_LightDoor_Open
+  - _isLoop: 0
+    _key: SE_LightDoor_Open
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -332,7 +332,8 @@ MonoBehaviour:
     _pitchType: 1
     _pitchA: 0.8
     _pitchB: 1
-  - _key: SE_LightDoor_Open_Low
+  - _isLoop: 0
+    _key: SE_LightDoor_Open_Low
     _clip: {fileID: 8300000, guid: 2c137d5a7c0112b41b56854a3cb5a4ae, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -340,7 +341,8 @@ MonoBehaviour:
     _pitchType: 1
     _pitchA: 0.3
     _pitchB: 0.4
-  - _key: Open
+  - _isLoop: 0
+    _key: SE_Door_Unlock
     _clip: {fileID: 8300000, guid: e3083b1bdf6daab4b9729a64f2bfae5a, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -360,14 +362,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2176e78879feeff4f9eddd53cf7f0d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _unlockDoorKey: SE_Door_Unlock
+  _openLowSoundKey: SE_LightDoor_Open_Low
+  _openSoundKey: SE_LightDoor_Open
   _doorOpenDelay: 2
+  _doorOpenSoundDelay: 0
   _stopShakeTiming: 2.3
   _doorOpenPreset: {fileID: 11400000, guid: 95769aec75c2d49ddb90af1600d6496c, type: 2}
   _soundList: {fileID: 109193434}
-  _openSoundInterval: 0.15
-  _openSoundRepeat: 7
-  _preheatSoundInterval: 0.15
-  _preheadSoundRepeat: 7
   _dustParticle: {fileID: 1044997699766655398}
 --- !u!114 &6103124190883986147
 MonoBehaviour:
