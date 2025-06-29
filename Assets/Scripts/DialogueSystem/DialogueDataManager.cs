@@ -115,7 +115,15 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
         return (T[])Resources.FindObjectsOfTypeAll(typeof(T));
     }
 
-    public string GetLanguageCode()
+    public void SetLanguageCode(LanguageCode languageCode)
+    {
+        _languageCode = languageCode;
+    }
+    public LanguageCode GetLanguageCode()
+    {
+        return _languageCode;
+    }
+    public string GetLanguageCodeToString()
     {
         switch (_languageCode)
         {
