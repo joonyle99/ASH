@@ -54,7 +54,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     }
 
     /// <summary>
-    /// PersistentDataManager¿¡ ÀúÀåµÈ dialogueData°ªµéÀ» ½ÇÁ¦ dialoguedata¿¡ µ¿±âÈ­
+    /// PersistentDataManagerì— ì €ì¥ëœ dialogueDataê°’ë“¤ì„ ì‹¤ì œ dialoguedataì— ë™ê¸°í™”
     /// </summary>
     public static void LoadSyncAllDialogueData(bool isNeedJsonSave)
     {
@@ -87,7 +87,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     }
 
     /// <summary>
-    /// dialogueData¸¦ PersistentDataManager¿¡ ÀúÀå
+    /// dialogueDataë¥¼ PersistentDataManagerì— ì €ì¥
     /// </summary>
     public static void SaveAllDialogueData(bool isNeedJsonSave)
     {
@@ -103,73 +103,6 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
                 PersistentDataManager.Set(Instance._groupName, id, Instance._dialogueDatas[i].PlayAtFirst);
             }
         }
-    }
-
-    public static List<DialogueData> FindDialogueDatas(FindDialogueDataType findDialogueDataType, string text)
-    {
-        List<DialogueData> result = new List<DialogueData>();
-
-        switch (findDialogueDataType)
-        {
-            case FindDialogueDataType.Name:
-                {
-                    for (int i = 0; i < Instance._dialogueDatas.Count; i++)
-                    {
-                        if (Instance._dialogueDatas[i].name != "" && Instance._dialogueDatas[i].name.Contains(text))
-                        {
-                            result.Add(Instance._dialogueDatas[i]);
-                        }
-                    }
-
-                    break;
-                }
-            case FindDialogueDataType.Text:
-                {
-                    for (int i = 0; i < Instance._dialogueDatas.Count; i++)
-                    {
-                        if (Instance._dialogueDatas[i].ScriptText != "" && Instance._dialogueDatas[i].ScriptText.Contains(text))
-                        {
-                            result.Add(Instance._dialogueDatas[i]);
-                        }
-                    }
-
-                    break;
-                }
-        }
-
-        return result;
-    }
-    public static DialogueData FindDialogueData(FindDialogueDataType findDialogueDataType, string text)
-    {
-        switch (findDialogueDataType)
-        {
-            case FindDialogueDataType.Name:
-                {
-                    for (int i = 0; i < Instance._dialogueDatas.Count; i++)
-                    {
-                        if (Instance._dialogueDatas[i].name != "" && Instance._dialogueDatas[i].name.Contains(text))
-                        {
-                            return Instance._dialogueDatas[i];
-                        }
-                    }
-
-                    break;
-                }
-            case FindDialogueDataType.Text:
-                {
-                    for (int i = 0; i < Instance._dialogueDatas.Count; i++)
-                    {
-                        if (Instance._dialogueDatas[i].ScriptText != "" && Instance._dialogueDatas[i].ScriptText.Contains(text))
-                        {
-                            return Instance._dialogueDatas[i];
-                        }
-                    }
-
-                    break;
-                }
-        }
-
-        return null;
     }
     public static void SetDialogueData(DialogueData dialogueData, bool playAtFirst = true)
     {

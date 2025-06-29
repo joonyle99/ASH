@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// 하나의 다이얼로그에 대한 모든 정보를 담는 ScriptableObject
+/// CF) DialogueSequence는 DialogueSegment의 집합
 /// </summary>
 [CreateAssetMenu(menuName = "Dialogue Data", fileName = "New Dialogue Data")]
 public class DialogueData : ScriptableObject
@@ -11,36 +11,32 @@ public class DialogueData : ScriptableObject
     [Header("Dialogue Data")]
     [Space]
 
-    [SerializeField] private string _defaultSpeaker;                        // 대사 캐릭터 이름
-    [SerializeField] private TextAsset _script;                             // 대사 스크립트
-    [SerializeField] private float _typingSpeed = 12.5f;                    // 글자 속도
-    [SerializeField] private InputSetterScriptableObject _inputSetter;      // 플레이어 입력 설정
-
-    [SerializeField] public bool PlayAtFirst;
+    [SerializeField] private int _scriptID;
+    public int ScriptID => _scriptID;                                       // 스크립트 ID
 
     [Space]
 
-    [SerializeField] private DialogueAction[] _actions;                     // 대화 액션
+    [Header("삭제 예정인 필드 - 대사 캐릭터, 대사 스크립트 (dialogue id로 대체)")]
+    [SerializeField] private string _defaultSpeaker;
+    [SerializeField] private TextAsset _script;
 
-    [SerializeField, TextArea(3, 30)] private string _scriptText;
-    public string ScriptText => _scriptText;
+    [Space]
 
-    private Quest _quest;
+    [SerializeField] private InputSetterScriptableObject _inputSetter;      // 플레이어 키 입력 설정
+    public InputSetterScriptableObject InputSetter => _inputSetter;
+
+    [Space]
+
+    public bool PlayAtFirst;                                                // 이미 한 번 본 경우, 다시 재생하지 않음
+    private float _typingSpeed = 25f;                                       // 타이핑 속도
+
+    private Quest _quest;                                                   // 다이얼로그에 연결된 퀘스트
     public Quest Quest
     {
         get => _quest;
         set => _quest = value;
     }
 
-    public InputSetterScriptableObject InputSetter => _inputSetter;
-
-    private void OnValidate()
-    {
-        if (_script)
-        {
-            _scriptText = _script.text;
-        }
-    }
     private void OnEnable()
     {
         _quest = null;
@@ -65,19 +61,21 @@ public class DialogueData : ScriptableObject
     /// </summary>
     public List<DialogueSegment> GetDialogueSequence()
     {
-        List<DialogueSegment> dialogueSequence = new List<DialogueSegment>();
-        string [] scriptLines = HappyTools.TSVRead.SplitLines(_script.text);
-        string speakerName = _defaultSpeaker;
+        string script = ScriptTable.GetScript(ScriptID);
+        string speaker = ScriptTable.GetSpeaker(ScriptID);
 
-        for (int i=0; i<scriptLines.Length; i++)
+        List<DialogueSegment> dialogueSequence = new List<DialogueSegment>();
+        string [] lines = HappyTools.TSVRead.SplitLines(_script.text);
+
+        for (int i=0; i<lines.Length; i++)
         {
             float charactersPerSecond = _typingSpeed;
             TextShakeParams shakeParams = TextShakeParams.None;
-            if (scriptLines[i].Trim().Length == 0)
+            if (lines[i].Trim().Length == 0)
                 continue;
-            if (scriptLines[i].StartsWith("#"))
+            if (lines[i].StartsWith("#"))
             {
-                string[] commands = scriptLines[i].Split("#");
+                string[] commands = lines[i].Split("#");
                 for (int c = 0; c < commands.Length; c++) 
                 {
                     var words = commands[c].Split(":");
@@ -99,19 +97,17 @@ public class DialogueData : ScriptableObject
                     }
                     else if (firstWord == "name")
                     {
-                        speakerName = words[1].Trim();
+                        speaker = words[1].Trim();
                     }
                 }
                 continue;
             }
 
-            // TODO : @로 시작하는 특수 액션들에 대한 처리
-
             DialogueSegment segment = new DialogueSegment();
-            segment.Text = scriptLines[i];
+            segment.Text = lines[i];
             segment.CharactersPerSecond = charactersPerSecond;
             segment.ShakeParams = shakeParams;
-            segment.Speaker = speakerName;
+            segment.Speaker = _defaultSpeaker;
 
             dialogueSequence.Add(segment);
         }
