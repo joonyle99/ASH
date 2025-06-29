@@ -48,18 +48,26 @@ public static class ScriptTable
     public static string GetSpeaker(int id)
     {
         // TODO: 예외 처리 필요 (id가 존재하지 않는 경우 등)
+        if (_tsvTable.ContainsKey(id) == false)
+        {
+            throw new System.Exception($"ScriptTable에서 id {id}를 찾을 수 없습니다.");
+        }
 
         int rowKey = id;
-        string language = "ja";
+        string language = DialogueDataManager.Instance.GetLanguageStringCode();
         string columnKey = $"speaker_{language}";
         return _tsvTable[rowKey][columnKey];
     }
     public static string GetScript(int id)
     {
         // TODO: 예외 처리 필요 (id가 존재하지 않는 경우 등)
+        if (_tsvTable.ContainsKey(id) == false)
+        {
+            throw new System.Exception($"ScriptTable에서 id {id}를 찾을 수 없습니다.");
+        }
 
         int rowKey = id;
-        string language = "ja";
+        string language = DialogueDataManager.Instance.GetLanguageStringCode();
         string columnKey = $"script_{language}";
         return _tsvTable[rowKey][columnKey];
     }

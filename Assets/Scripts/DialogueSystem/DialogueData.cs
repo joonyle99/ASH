@@ -65,7 +65,7 @@ public class DialogueData : ScriptableObject
         string speaker = ScriptTable.GetSpeaker(ScriptID);
 
         List<DialogueSegment> dialogueSequence = new List<DialogueSegment>();
-        string [] lines = HappyTools.TSVRead.SplitLines(_script.text);
+        string [] lines = HappyTools.TSVRead.SplitLines(script);
 
         for (int i=0; i<lines.Length; i++)
         {
@@ -76,7 +76,7 @@ public class DialogueData : ScriptableObject
             if (lines[i].StartsWith("#"))
             {
                 string[] commands = lines[i].Split("#");
-                for (int c = 0; c < commands.Length; c++) 
+                for (int c = 0; c < commands.Length; c++)
                 {
                     var words = commands[c].Split(":");
                     Debug.Log("index : " + c + " word : " + words);
@@ -107,7 +107,7 @@ public class DialogueData : ScriptableObject
             segment.Text = lines[i];
             segment.CharactersPerSecond = charactersPerSecond;
             segment.ShakeParams = shakeParams;
-            segment.Speaker = _defaultSpeaker;
+            segment.Speaker = speaker;
 
             dialogueSequence.Add(segment);
         }

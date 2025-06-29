@@ -123,7 +123,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         return _languageCode;
     }
-    public string GetLanguageCodeToString()
+    public string GetLanguageStringCode()
     {
         switch (_languageCode)
         {
