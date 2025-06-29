@@ -1,20 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
-public enum FindDialogueDataType
+public enum LanguageCode
 {
-    None = 0,
-    Name = 1,
-    Text = 2,
+    KOREAN = 0,
+    ENGISH = 1,
+    JAPANESE = 2,
 }
 
 public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDataManager>
 {
-    [SerializeField]
-    List<DialogueData> _dialogueDatas = new List<DialogueData>();
+    [SerializeField] private List<DialogueData> _dialogueDatas = new List<DialogueData>();
+    [SerializeField] private LanguageCode _languageCode = LanguageCode.KOREAN;
 
     string _groupName = "DialogueData";
 
@@ -115,5 +113,20 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         Resources.LoadAll("ScriptableObjects/DialogueData");
         return (T[])Resources.FindObjectsOfTypeAll(typeof(T));
+    }
+
+    public string GetLanguageCode()
+    {
+        switch (_languageCode)
+        {
+            case LanguageCode.KOREAN:
+                return "ko";
+            case LanguageCode.ENGISH:
+                return "en";
+            case LanguageCode.JAPANESE:
+                return "ja";
+            default:
+                return "ko"; // 기본값으로 한국어 사용
+        }
     }
 }

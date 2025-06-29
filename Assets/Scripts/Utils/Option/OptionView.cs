@@ -3,7 +3,6 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
-using Unity.VisualScripting;
 
 public class OptionView : MonoBehaviour
 {
@@ -15,6 +14,7 @@ public class OptionView : MonoBehaviour
 
     [Space]
 
+    [Header("Audio")]
     [SerializeField] private AudioMixer _audioMixer;
     [SerializeField] private Slider _bgmSlider;
     [SerializeField] private Slider _sfxSlider;
@@ -199,5 +199,20 @@ public class OptionView : MonoBehaviour
         yield return null;
 
         InitialVolumeSetting();
+    }
+
+    // language
+    public void ChangeLanguage(string lang)
+    {
+        switch (lang)
+        {
+            case "ko":
+
+                break;
+            case "en":
+                break;
+            case "ja":
+                break;
+        }
     }
 }
