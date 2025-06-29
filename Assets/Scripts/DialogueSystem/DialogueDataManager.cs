@@ -12,7 +12,7 @@ public enum LanguageCode
 public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDataManager>
 {
     [SerializeField] private List<DialogueData> _dialogueDatas = new List<DialogueData>();
-    [SerializeField] private LanguageCode _languageCode = LanguageCode.KOREAN;
+    [SerializeField] private LanguageCode _languageCode = LanguageCode.KOREAN; // TODO: 로컬 데이터로 저장할 필요가 있음.. PlayerPrefs or Json..?
 
     string _groupName = "DialogueData";
 
@@ -30,7 +30,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
         if (PersistentDataManager.Instance)
         {
-            PersistentDataManager.TryAddDataGroup(_groupName); 
+            PersistentDataManager.TryAddDataGroup(_groupName);
         }
 
         SaveAndLoader.OnSaveStarted += SaveAllDialogueDataWithJson;
@@ -42,7 +42,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
         SaveAndLoader.OnSaveStarted -= SaveAllDialogueDataWithJson;
     }
-    
+
     public static void ResetAllDialogueData()
     {
         for (int i = 0; i < Instance._dialogueDatas.Count; i++)
@@ -61,7 +61,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
         string additionalKey_playAtFirst = isNeedJsonSave ?
             Instance._playAtFirstAdditionalKeyForJson : Instance._playAtFirstAdditionalKey;
-        
+
         if (PersistentDataManager.Instance)
         {
             for(int i = 0; i < Instance._dialogueDatas.Count; i++)

@@ -71,14 +71,6 @@ public class OptionView : MonoBehaviour
         //IsFullScreen = true;
 
         StartCoroutine(SetupVolumeCoroutine());
-
-        _language.text = DialogueDataManager.Instance.GetLanguageCode() switch
-        {
-            LanguageCode.KOREAN => "한국어",
-            LanguageCode.ENGISH => "영어",
-            LanguageCode.JAPANESE => "일본어",
-            _ => "Unknown"
-        };
     }
 
     private void Update()
@@ -221,38 +213,24 @@ public class OptionView : MonoBehaviour
     }
     public void ChangeLanguage(string lang)
     {
+        LanguageCode languageCode = LanguageCode.KOREAN; // Default to Korean
         switch (lang)
         {
             case "ko":
-                DialogueDataManager.Instance.SetLanguageCode(LanguageCode.KOREAN);
-                _language.text = "한국어";
+                languageCode = LanguageCode.KOREAN;
                 break;
             case "en":
-                DialogueDataManager.Instance.SetLanguageCode(LanguageCode.ENGISH);
-                _language.text = "영어";
+                languageCode = LanguageCode.ENGISH;
                 break;
             case "ja":
-                DialogueDataManager.Instance.SetLanguageCode(LanguageCode.JAPANESE);
-                _language.text = "일본어";
+                languageCode = LanguageCode.JAPANESE;
                 break;
         }
+
+        DialogueDataManager.Instance.SetLanguageCode(languageCode);
     }
     public void ChangeLanguage(LanguageCode lang)
     {
-        switch (lang)
-        {
-            case LanguageCode.KOREAN:
-                DialogueDataManager.Instance.SetLanguageCode(LanguageCode.KOREAN);
-                _language.text = "한국어";
-                break;
-            case LanguageCode.ENGISH:
-                DialogueDataManager.Instance.SetLanguageCode(LanguageCode.ENGISH);
-                _language.text = "영어";
-                break;
-            case LanguageCode.JAPANESE:
-                DialogueDataManager.Instance.SetLanguageCode(LanguageCode.JAPANESE);
-                _language.text = "일본어";
-                break;
-        }
+        DialogueDataManager.Instance.SetLanguageCode(lang);
     }
 }
