@@ -70,6 +70,7 @@ public class OptionView : MonoBehaviour
     {
         //IsFullScreen = true;
 
+        _language.text = DialogueDataManager.Instance.GetLanguageCode().ToString();
         StartCoroutine(SetupVolumeCoroutine());
     }
 
@@ -232,5 +233,6 @@ public class OptionView : MonoBehaviour
     public void ChangeLanguage(LanguageCode lang)
     {
         DialogueDataManager.Instance.SetLanguageCode(lang);
+        _language.text = lang.ToString();
     }
 }
