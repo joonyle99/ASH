@@ -1790,6 +1790,7 @@ MonoBehaviour:
   _width: 1600
   _height: 900
   _isFullScreen: 1
+  _dropdown: {fileID: 6863951669726812167}
   _language: {fileID: 1636647824327279266}
   _keySettingUIManager: {fileID: 8703604131044747957}
 --- !u!210 &1878588742
@@ -15928,11 +15929,11 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: Option A
+    - m_Text: ko
       m_Image: {fileID: 0}
-    - m_Text: Option B
+    - m_Text: en
       m_Image: {fileID: 0}
-    - m_Text: Option C
+    - m_Text: jp
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
@@ -17578,7 +17579,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Option A
+  m_text: ko
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -18495,6 +18496,7 @@ GameObject:
   - component: {fileID: 2657132640711019034}
   - component: {fileID: 163395259480628625}
   - component: {fileID: 5428948633200410286}
+  - component: {fileID: 208222219691179204}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -18619,6 +18621,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &208222219691179204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6596502746016954382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b4a99a1d6d6cb46a4f5526abf7bd34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _languageTableId: ui_toMain
 --- !u!1 &6644637498556438763
 GameObject:
   m_ObjectHideFlags: 0

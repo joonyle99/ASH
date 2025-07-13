@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum LanguageCode
 {
@@ -19,6 +20,8 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     string _playAtFirstAdditionalKey = "_PlayAtFirst";
     string _playAtFirstAdditionalKeyForJson = "_PlayAtFirstSaved";
 
+    public static UnityAction OnLanguageChanged;
+
     protected override void Awake()
     {
         Init();
@@ -35,7 +38,10 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
         SaveAndLoader.OnSaveStarted += SaveAllDialogueDataWithJson;
     }
-
+    private void Start()
+    {
+        OnLanguageChanged?.Invoke();
+    }
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -117,7 +123,11 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
     public void SetLanguageCode(LanguageCode languageCode)
     {
+        if (languageCode == _languageCode) return;
+
         _languageCode = languageCode;
+
+        OnLanguageChanged?.Invoke();
     }
     public LanguageCode GetLanguageCode()
     {

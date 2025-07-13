@@ -48,6 +48,7 @@ public class OptionView : MonoBehaviour
     }
 
     [Header("Language")]
+    [SerializeField] private TMP_Dropdown _dropdown;
     [SerializeField] private TextMeshProUGUI _language;
 
     [Header("External Reference")]
@@ -65,6 +66,8 @@ public class OptionView : MonoBehaviour
 
         _sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSfxVolume);
         _sfxSlider.onValueChanged.AddListener(SetSfxValue);
+
+        _dropdown.onValueChanged.AddListener((x) => ChangeLanguage(x));
     }
     private void Start()
     {
@@ -211,6 +214,24 @@ public class OptionView : MonoBehaviour
         var currentLanguage = DialogueDataManager.Instance.GetLanguageCode();
         var nextLanguage = (LanguageCode)(Mathf.Clamp(((int)currentLanguage + 1) % ((int)LanguageCode.JAPANESE + 1), (int)LanguageCode.KOREAN, (int)LanguageCode.JAPANESE));
         ChangeLanguage(nextLanguage);
+    }
+    public void ChangeLanguage(int langIdx)
+    {
+        LanguageCode languageCode = LanguageCode.KOREAN; // Default to Korean
+        switch (langIdx)
+        {
+            case 0:
+                languageCode = LanguageCode.KOREAN;
+                break;
+            case 1:
+                languageCode = LanguageCode.ENGISH;
+                break;
+            case 2:
+                languageCode = LanguageCode.JAPANESE;
+                break;
+        }
+        Debug.Log($"Change language to {languageCode}");
+        DialogueDataManager.Instance.SetLanguageCode(languageCode);
     }
     public void ChangeLanguage(string lang)
     {
