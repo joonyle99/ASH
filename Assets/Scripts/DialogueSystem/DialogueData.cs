@@ -16,12 +16,6 @@ public class DialogueData : ScriptableObject
 
     [Space]
 
-    [Header("삭제 예정인 필드 - 대사 캐릭터, 대사 스크립트 (dialogue id로 대체)")]
-    [SerializeField] private string _defaultSpeaker;
-    [SerializeField] private TextAsset _script;
-
-    [Space]
-
     [SerializeField] private InputSetterScriptableObject _inputSetter;      // 플레이어 키 입력 설정
     public InputSetterScriptableObject InputSetter => _inputSetter;
 
