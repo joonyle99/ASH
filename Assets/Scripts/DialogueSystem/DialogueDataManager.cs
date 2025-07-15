@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using Steamworks;
 
 public enum LanguageCode
 {
@@ -41,6 +42,26 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     private void Start()
     {
         OnLanguageChanged?.Invoke();
+
+        //// TODO: 스팀 언어를 가져온다
+
+        //var steamLanguage = SteamApps.GetCurrentGameLanguage();
+
+        //switch (steamLanguage)
+        //{
+        //    case "korean":
+        //        _languageCode = LanguageCode.KOREAN;
+        //        break;
+        //    case "english":
+        //        _languageCode = LanguageCode.ENGISH;
+        //        break;
+        //    case "japanese":
+        //        _languageCode = LanguageCode.JAPANESE;
+        //        break;
+        //    default:
+        //        _languageCode = LanguageCode.ENGISH; // 기본값으로 영어 사용
+        //        break;
+        //}
     }
     protected override void OnDestroy()
     {
