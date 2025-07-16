@@ -36,14 +36,14 @@ public class SkillObtainer : MonoBehaviour
         var skillToGet = PersistentDataManager.SkillOrderData.GetFromDict(_skillKey);
         var info = new SkillObtainPanel.SkillInfo();
         info.Icon = skillToGet.UnlockImage;
-        info.MainText = skillToGet.Name;
+        info.MainText = skillToGet.NameId;
         info.DetailText = "";
         CustomKeyCode keyCode = InputManager.Instance.DefaultInputSetter.GetKeyCode(skillToGet.Key);
         if(keyCode != null)
         {
             info.DetailText += keyCode.KeyCode.ToString();
         }
-        info.DetailText += skillToGet.DetailText;
+        info.DetailText += UITranslator.GetLocalizedString(skillToGet.DetailTextId);
         GameUIManager.OpenSkillObtainPanel(info);
         PersistentDataManager.SetByGlobal(ObtainSkillKey, true);
         StartCoroutine(PlaySoundCoroutine(0.25f));

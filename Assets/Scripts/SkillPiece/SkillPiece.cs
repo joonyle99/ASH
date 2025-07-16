@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -20,17 +21,13 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
                 var info = new SkillObtainPanel.SkillInfo();
 
                 info.Icon = PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].UnlockImage;
-                info.MainText = PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Name;
+                
+                info.MainText = UITranslator.GetLocalizedString(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].NameId); ;
                 info.DetailText = "";
 
                 CustomKeyCode keyCode = InputManager.Instance.DefaultInputSetter.GetKeyCode(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key);
 
-                if (keyCode != null)
-                {
-                    info.DetailText += keyCode.KeyCode.ToString();
-                }
-
-                info.DetailText += PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].DetailText;
+                info.DetailText += string.Format(UITranslator.GetLocalizedString(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].DetailTextId), keyCode.KeyCode.ToString());
 
                 PersistentDataManager.SetByGlobal<bool>(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key, true);
                 GameUIManager.OpenSkillObtainPanel(info);
@@ -39,8 +36,8 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
             else
             {
                 var info = new ItemObtainPanel.ItemObtainInfo();
-                info.MainText = "스킬 조각을 획득하였습니다.";
-                info.DetailText = "다음 스킬 해금까지 앞으로 필요한 스킬 조각 " + (3 - skillPieceCount % 3).ToString() + "개";
+                info.MainText = UITranslator.GetLocalizedString("ui_obtainSkillPiece");
+                info.DetailText = string.Format(UITranslator.GetLocalizedString("ui_remainSkillPiece"), 3 - skillPieceCount % 3);
                 GameUIManager.OpenItemObtainPanel(info);
                 SceneContext.Current.StartCoroutine(PlaySoundCoroutine("Piece", 0.25f));
             }

@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using static Unity.VisualScripting.Icons;
 
 [RequireComponent(typeof(TMP_Text))]
@@ -71,9 +72,25 @@ public class UITranslator : MonoBehaviour
                             .ToArray();
 
             string rowId = columns[0].Trim();
+            Debug.Log($"i : {i} text : {string.Join(",", columns)}");
             if (rowId == textId)
-            {
-                return columns[langIndex].Trim();
+            {/*
+                // {}와 같은 포맷문자열 파싱
+                if (columns[langIndex].Contains("{"))
+                {
+                    char[] separator = { '{', '}' };
+                    string[] formatStrings = columns[langIndex].Split(separator);
+                    for (int j = 0; j < formatStrings.Length; j++)
+                    {
+                        if (formatStrings[j].Contains("{"))
+                        {
+                            string formatString = GetLocalizedString(formatStrings[j + 1]);
+                            columns[langIndex].Replace(formatStrings[j + 1], formatString);
+                            j++;
+                        }
+                    }
+                }*/
+                return columns[langIndex];
             }
         }
 

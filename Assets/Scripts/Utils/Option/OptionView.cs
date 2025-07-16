@@ -42,7 +42,6 @@ public class OptionView : MonoBehaviour
 
             FullScreen?.SetActive(!value);
             FullScreenChecked?.SetActive(value);
-            Debug.Log("IsfullScreen property called");
             _isFullScreen = value;
         }
     }
@@ -67,7 +66,7 @@ public class OptionView : MonoBehaviour
         _sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSfxVolume);
         _sfxSlider.onValueChanged.AddListener(SetSfxValue);
 
-        _dropdown.onValueChanged.AddListener((x) => ChangeLanguage(x));
+        _dropdown.onValueChanged.AddListener((optionIdx) => ChangeLanguage(optionIdx));
     }
     private void Start()
     {

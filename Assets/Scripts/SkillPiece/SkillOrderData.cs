@@ -7,8 +7,8 @@ public class SkillData
     public string Key;
     public Sprite PieceIcon;
     public Sprite UnlockImage;
-    public string Name;
-    public string DetailText;
+    public string NameId;
+    public string DetailTextId;
     //public int RequiredPieceCount;
 
     public SkillData(SkillData skillData)
@@ -16,8 +16,8 @@ public class SkillData
         Key = skillData.Key;
         PieceIcon = skillData.PieceIcon;
         UnlockImage = skillData.UnlockImage;
-        Name = skillData.Name;
-        DetailText = skillData.DetailText;
+        NameId = skillData.NameId;
+        DetailTextId = skillData.DetailTextId;
     }
 }
 
@@ -43,7 +43,7 @@ public class SkillOrderData : ScriptableObject
                 return _skillDatas[i];
             }
 
-            Debug.Log("½ºÅ³ È¹µæ °¡´É È½¼ö ÃÊ°ú");
+            Debug.Log("ìŠ¤í‚¬ íšë“ ê°€ëŠ¥ íšŸìˆ˜ ì´ˆê³¼");
 
             return _skillDatas[^1];
         }

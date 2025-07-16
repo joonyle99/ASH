@@ -125,17 +125,12 @@ public class GameUIManager : MonoBehaviour, ISceneContextBuildListener
             var info = new SkillObtainPanel.SkillInfo();
 
             info.Icon = PersistentDataManager.SkillOrderData[skillPieceCount / 3].UnlockImage;
-            info.MainText = PersistentDataManager.SkillOrderData[skillPieceCount / 3].Name;
+            info.MainText = UITranslator.GetLocalizedString(PersistentDataManager.SkillOrderData[skillPieceCount / 3].NameId);
             info.DetailText = "";
 
             CustomKeyCode keyCode = InputManager.Instance.DefaultInputSetter.GetKeyCode(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key);
 
-            if (keyCode != null)
-            {
-                info.DetailText += keyCode.KeyCode.ToString();
-            }
-
-            info.DetailText += PersistentDataManager.SkillOrderData[skillPieceCount / 3].DetailText;
+            info.DetailText += string.Format(UITranslator.GetLocalizedString(PersistentDataManager.SkillOrderData[skillPieceCount / 3].DetailTextId), keyCode.KeyCode.ToString());
 
             OpenSkillObtainPanel(info);
         
