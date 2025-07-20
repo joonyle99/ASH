@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 public class KeySettingBox : MonoBehaviour
 {
@@ -25,8 +26,11 @@ public class KeySettingBox : MonoBehaviour
     [SerializeField] private Button _changeKeyButton;
     public Button ChangeKeyButton => _changeKeyButton;
 
+    private CustomKeyCode _keyCode;
+
     public void InitKey(string key, CustomKeyCode keyCode)
     {
+        _keyCode = keyCode;
         ActionKey = key;
         if(keyCode == null)
         {
@@ -37,7 +41,7 @@ public class KeySettingBox : MonoBehaviour
             return;
         }
 
-        _action.text = keyCode.Name;
+        _action.text = UITranslator.GetLocalizedString(keyCode.NameKey);
         SetKeyText(keyCode.KeyCode);
     }
 
@@ -79,5 +83,10 @@ public class KeySettingBox : MonoBehaviour
     public void BindOnChangeKeyButton(UnityAction action)
     {
         _changeKeyButton.onClick.AddListener(action);
+    }
+
+    public void ApplyActionText()
+    {
+        _action.text = UITranslator.GetLocalizedString(_keyCode.NameKey);
     }
 }

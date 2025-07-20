@@ -3,11 +3,12 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using Steamworks;
+using System;
 
 public enum LanguageCode
 {
     KOREAN = 0,
-    ENGISH = 1,
+    ENGLISH = 1,
     JAPANESE = 2,
 }
 
@@ -38,10 +39,11 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
         }
 
         SaveAndLoader.OnSaveStarted += SaveAllDialogueDataWithJson;
+
     }
     private void Start()
     {
-        OnLanguageChanged?.Invoke();
+        LoadLanguageCode();
 
         //// TODO: 스팀 언어를 가져온다
 
@@ -91,7 +93,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
         if (PersistentDataManager.Instance)
         {
-            for(int i = 0; i < Instance._dialogueDatas.Count; i++)
+            for (int i = 0; i < Instance._dialogueDatas.Count; i++)
             {
                 bool playAtFirstSaveData = true;
                 string id = Instance._dialogueDatas[i].name + additionalKey_playAtFirst;
@@ -156,16 +158,48 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     }
     public string GetLanguageStringCode()
     {
+        Debug.Log(_languageCode);
         switch (_languageCode)
         {
             case LanguageCode.KOREAN:
                 return "ko";
-            case LanguageCode.ENGISH:
+            case LanguageCode.ENGLISH:
                 return "en";
             case LanguageCode.JAPANESE:
                 return "ja";
             default:
                 return "ko"; // 기본값으로 한국어 사용
         }
+    }
+
+
+    public void LoadLanguageCode()
+    {
+        if(JsonDataManager.Has("LanguageCode"))
+        {
+            string languageCode = JsonDataManager.Instance.GlobalSaveData.saveDataGroup["LanguageCode"];
+            switch(languageCode)
+            {
+                case "KOREAN":
+                    SetLanguageCode(LanguageCode.KOREAN);
+                    break;
+                case "ENGLISH":
+                    SetLanguageCode(LanguageCode.ENGLISH);
+                    break;
+                case "JAPANESE":
+                    SetLanguageCode(LanguageCode.JAPANESE);
+                    break;
+            }
+        }
+        else
+        {
+            SetLanguageCode(LanguageCode.KOREAN);
+        }
+    }
+
+    public void SaveLanguageCode()
+    {
+        JsonDataManager.Add("LanguageCode", _languageCode.ToString());
+        JsonDataManager.JsonSave();
     }
 }

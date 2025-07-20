@@ -122,12 +122,20 @@ public class KeySettingUIManager : SingletonBehaviourFixed<KeySettingUIManager>
 
         return "";
     }
+
+    public void ApplyActionTexts()
+    {
+        for (int i = 0; i < _keyBoxes.Count; i++)
+        {
+            _keyBoxes[i].ApplyActionText();
+        }
+    }
     #endregion
 
     #region Events
     private void OnChangedKeyboardSetting(object sender, ChangeKeyCodeArgs changeKeyCodeArgs)
     {
-        Debug.Log($"{changeKeyCodeArgs.TargetKeyCode.Name} action key pressed");
+        Debug.Log($"{changeKeyCodeArgs.TargetKeyCode.NameKey} action key pressed");
         if (changeKeyCodeArgs.KeySettingBox.MouseClickCount >= 1)
         {
             changeKeyCodeArgs.KeySettingBox.MouseClickCount = 0;
@@ -164,7 +172,7 @@ public class KeySettingUIManager : SingletonBehaviourFixed<KeySettingUIManager>
                                 Debug.Log("ChangeKeyboard Setting Logic in Mouse click Count : " + changeKeyCodeArgs.KeySettingBox.MouseClickCount);
                             }
 
-                            ChangeKeySettingErrorReason changeKeySettingErrorReason = KeySettingManager.CheckKeyCode(changeKeyCodeArgs.TargetKeyCode.Name, kCode);
+                            ChangeKeySettingErrorReason changeKeySettingErrorReason = KeySettingManager.CheckKeyCode(changeKeyCodeArgs.TargetKeyCode.NameKey, kCode);
                             string errorString = KeySettingErrorString(changeKeySettingErrorReason);
                             if (changeKeySettingErrorReason == ChangeKeySettingErrorReason.None)
                             {
@@ -177,6 +185,7 @@ public class KeySettingUIManager : SingletonBehaviourFixed<KeySettingUIManager>
                                 // 새로 누른 키가 자신이 아닌 경우만 로직 진행
                                 if(kCode != changeKeyCodeArgs.TargetKeyCode.KeyCode)
                                 {
+                                    _OverlappedKeyWarningText.GetComponent<TMP_Text>().text = UITranslator.GetLocalizedString("ui_keyWarring");
                                     _OverlappedKeyWarningText.gameObject.SetActive(true);
 
                                     //사용중인 키 변경 원할 때 재확인

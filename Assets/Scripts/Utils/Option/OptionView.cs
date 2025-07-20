@@ -74,6 +74,9 @@ public class OptionView : MonoBehaviour
 
         _language.text = DialogueDataManager.Instance.GetLanguageCode().ToString();
         StartCoroutine(SetupVolumeCoroutine());
+
+        _dropdown.value = (int)DialogueDataManager.Instance.GetLanguageCode();
+        Debug.Log(_dropdown.value);
     }
 
     private void Update()
@@ -223,7 +226,7 @@ public class OptionView : MonoBehaviour
                 languageCode = LanguageCode.KOREAN;
                 break;
             case 1:
-                languageCode = LanguageCode.ENGISH;
+                languageCode = LanguageCode.ENGLISH;
                 break;
             case 2:
                 languageCode = LanguageCode.JAPANESE;
@@ -241,7 +244,7 @@ public class OptionView : MonoBehaviour
                 languageCode = LanguageCode.KOREAN;
                 break;
             case "en":
-                languageCode = LanguageCode.ENGISH;
+                languageCode = LanguageCode.ENGLISH;
                 break;
             case "ja":
                 languageCode = LanguageCode.JAPANESE;

@@ -67,6 +67,10 @@ public class SerializableObjectType
                 + v.Rotation.x + "|" + v.Rotation.y + "|" + v.Rotation.z + "|" + v.Rotation.w + "|"
                 + v.Scale.x + "|" + v.Scale.y + "|" + v.Scale.z;
         }
+        else if(type.IsEnum)
+        {
+            _objectSerialized = "e" + _object.GetType().Name + "#" + _object.ToString();
+        }
     }
 
     public void OnAfterDeserialize()
@@ -98,6 +102,33 @@ public class SerializableObjectType
             ts.Scale = new Vector3(float.Parse(v[7]), float.Parse(v[8]), float.Parse(v[9]));
 
             _object = ts;
+        }
+        // enum 처리
+        else if (type == 'e')
+        {
+            string[] parts = _objectSerialized.Substring(1).Split('#');
+            if (parts.Length == 2)
+            {
+                string enumTypeName = parts[0];
+                string enumValue = parts[1];
+
+                // 자동 타입 검색
+                Type enumType = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(a => a.GetTypes())
+                    .FirstOrDefault(t => t.IsEnum && t.Name == enumTypeName);
+
+                if (enumType != null)
+                {
+                    if (Enum.TryParse(enumType, enumValue, out object result))
+                        _object = result;
+                    else
+                        Debug.LogError($"[Enum 파싱 실패] {enumType}.{enumValue}");
+                }
+                else
+                {
+                    Debug.LogError($"[Enum 타입 찾기 실패] {enumTypeName}");
+                }
+            }
         }
     }
 }

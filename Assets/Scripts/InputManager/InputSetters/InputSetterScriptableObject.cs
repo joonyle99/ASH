@@ -19,13 +19,13 @@ public class CustomKeyCode
     public string Key;
 
     //해당 키의 설명
-    public string Name;
+    public string NameKey;
     public KeyCode KeyCode;
 
-    public CustomKeyCode(string key, string name, KeyCode keyCode)
+    public CustomKeyCode(string key, string nameKey, KeyCode keyCode)
     {
         Key = key;
-        Name = name;
+        NameKey = nameKey;
         KeyCode = keyCode;
     }
 }

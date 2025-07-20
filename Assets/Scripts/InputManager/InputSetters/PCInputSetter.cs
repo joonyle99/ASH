@@ -8,15 +8,15 @@ public class PCInputSetter : InputSetterScriptableObject, IInputSetter
     {
         _keyCodes = new List<DataDictionary<string, CustomKeyCode>>
         {
-            new DataDictionary<string, CustomKeyCode>() { Key = "위쪽이동", Value = new CustomKeyCode("위쪽이동","위로 이동", KeyCode.UpArrow) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "아래쪽이동", Value = new CustomKeyCode("아래쪽이동","아래로 이동", KeyCode.DownArrow) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "왼쪽이동", Value = new CustomKeyCode("왼쪽이동","왼쪽으로 이동", KeyCode.LeftArrow) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "오른쪽이동", Value = new CustomKeyCode("오른쪽이동","오른쪽으로 이동", KeyCode.RightArrow) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "Jump", Value = new CustomKeyCode("Jump", "점프", KeyCode.Space) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "Dash", Value = new CustomKeyCode("Dash", "대시/회피", KeyCode.LeftShift) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "상호작용", Value = new CustomKeyCode("상호작용","상호작용", KeyCode.F) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "LightSkill", Value = new CustomKeyCode("LightSkill", "빛 스킬", KeyCode.Q) },
-            new DataDictionary<string, CustomKeyCode>() { Key = "기본공격", Value = new CustomKeyCode("기본공격", "공격", KeyCode.A) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "위쪽이동", Value = new CustomKeyCode("위쪽이동","ui_moveToupper", KeyCode.UpArrow) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "아래쪽이동", Value = new CustomKeyCode("아래쪽이동","ui_moveToLower", KeyCode.DownArrow) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "왼쪽이동", Value = new CustomKeyCode("왼쪽이동","ui_moveToLeft", KeyCode.LeftArrow) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "오른쪽이동", Value = new CustomKeyCode("오른쪽이동","ui_moveToRight", KeyCode.RightArrow) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "Jump", Value = new CustomKeyCode("Jump", "ui_jump", KeyCode.Space) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "Dash", Value = new CustomKeyCode("Dash", "ui_dash", KeyCode.LeftShift) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "상호작용", Value = new CustomKeyCode("상호작용","ui_interaction", KeyCode.F) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "LightSkill", Value = new CustomKeyCode("LightSkill", "ui_lightSkill", KeyCode.Q) },
+            new DataDictionary<string, CustomKeyCode>() { Key = "기본공격", Value = new CustomKeyCode("기본공격", "ui_attack", KeyCode.A) },
         };
     }
 

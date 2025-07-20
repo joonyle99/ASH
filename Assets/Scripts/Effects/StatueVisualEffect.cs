@@ -64,8 +64,8 @@ public class StatueVisualEffect : MonoBehaviour, ISceneContextBuildListener
 
             }
 
-            //¾À ·Îµå½Ã ÀÌ¹Ì ÇÃ·¹ÀÌ µÈ ÀûÀÌ ÀÖ´Â °æ¿ì ÄÑÁø ÇÃ·¹ÀÌ »óÅÂ°¡
-            //À¯ÁöµÇ¾î¾ß ÇÏ´Â ÀÌÆåÆ®
+            //ì”¬ ë¡œë“œì‹œ ì´ë¯¸ í”Œë ˆì´ ëœ ì ì´ ìˆëŠ” ê²½ìš° ì¼œì§„ í”Œë ˆì´ ìƒíƒœê°€
+            //ìœ ì§€ë˜ì–´ì•¼ í•˜ëŠ” ì´í™íŠ¸
             if (Played)
             {
                 ActiveEyes();
@@ -80,7 +80,7 @@ public class StatueVisualEffect : MonoBehaviour, ISceneContextBuildListener
 
     public void PlayEffectsOnSaveStarted()
     {
-        //ÃÖÃÊ 1È¸¸¸ ½Ç½ÃµÇ´Â ·ÎÁ÷µé
+        //ìµœì´ˆ 1íšŒë§Œ ì‹¤ì‹œë˜ëŠ” ë¡œì§ë“¤
         if (!_played)
         {
             PlayDustParticle();
@@ -123,6 +123,7 @@ public class StatueVisualEffect : MonoBehaviour, ISceneContextBuildListener
     {
         if (_saveText == null) return;
 
+        _saveText.text = UITranslator.GetLocalizedString("ui_save");
         _saveText.enabled = true;
         _textDisplayTime = Time.time;
 

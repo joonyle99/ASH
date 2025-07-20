@@ -20,8 +20,13 @@ public class UITranslator : MonoBehaviour
     private void Awake()
     {
         textUI = GetComponent<TMP_Text>();
-
+        DialogueDataManager.OnLanguageChanged -= ApplyLanguageChange;
         DialogueDataManager.OnLanguageChanged += ApplyLanguageChange;
+    }
+
+    private void OnEnable()
+    {
+        ApplyLanguageChange();
     }
 
     public void ApplyLanguageChange()
@@ -72,7 +77,7 @@ public class UITranslator : MonoBehaviour
                             .ToArray();
 
             string rowId = columns[0].Trim();
-            Debug.Log($"i : {i} text : {string.Join(",", columns)}");
+            //Debug.Log($"i : {i} text : {string.Join(",", columns)}");
             if (rowId == textId)
             {/*
                 // {}와 같은 포맷문자열 파싱
