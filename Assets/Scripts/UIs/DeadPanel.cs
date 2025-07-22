@@ -37,12 +37,14 @@ public class DeadPanel : MonoBehaviour
         _window.SetActive(true);
         _buttonAccept.gameObject.SetActive(false);
         //_buttonReject.gameObject.SetActive(false);
+        _text.text = UITranslator.GetLocalizedString("ui_retryQuestion");
         _text.gameObject.SetActive(false);
 
         yield return FadeWindow(2f);
 
         yield return new WaitForSeconds(textDisplayWaitTime);
 
+        _buttonAccept.GetComponentInChildren<TMP_Text>().text = UITranslator.GetLocalizedString("ui_retryConfirm");
         _buttonAccept.gameObject.SetActive(true);
         //_buttonReject.gameObject.SetActive(true);
         _text.gameObject.SetActive(true);

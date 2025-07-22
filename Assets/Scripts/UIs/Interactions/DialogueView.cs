@@ -66,8 +66,8 @@ public class DialogueView : MonoBehaviour
         var isInvalidAccept = acceptText == null || acceptText.Length < 1;
         var isInvalidReject = rejectText == null || rejectText.Length < 1;
 
-        _responsePanel.AcceptText.text = isInvalidAccept ? "수락" : acceptText;
-        _responsePanel.RejectText.text = isInvalidReject ? "거절" : rejectText;
+        _responsePanel.AcceptText.text = isInvalidAccept ? UITranslator.GetLocalizedString("ui_accept") : acceptText;
+        _responsePanel.RejectText.text = isInvalidReject ? UITranslator.GetLocalizedString("ui_reject") : rejectText;
 
         if (responseFunctions != null)
         {

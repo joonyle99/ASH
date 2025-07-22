@@ -12,8 +12,15 @@ public class TutorialZone : TriggerZone
     [SerializeField] private GameObject skillObject;
     [SerializeField] private float _fadeInDuration = 0.3f;
     [SerializeField] private float _fadeOffDuration = 0.3f;
+    [SerializeField] private string _nameKeyCode = "";
+    [SerializeField] private string _extraKeyCode = "";
+    [SerializeField] private string _extra1KeyCode = "";
 
     private float _originalAlpha = 1f;
+
+    private TMP_Text _nameText;
+    private TMP_Text _extraText;
+    private TMP_Text _extra1Text;
 
     private Image[] _images;
     private TextMeshProUGUI[] _texts;
@@ -28,6 +35,10 @@ public class TutorialZone : TriggerZone
         _displayReplaceKeyCode.Add(KeyCode.Mouse1, "Mouse Right");
 
         // get every image and text
+        _nameText = transform.GetChild(0).Find("Name").GetComponent<TMP_Text>();
+        _extraText = transform.GetChild(0).Find("Extra")?.GetComponent<TMP_Text>();
+        _extra1Text = transform.GetChild(0).Find("Extra (1)")?.GetComponent<TMP_Text>();
+
         _images = skillObject.GetComponentsInChildren<Image>();
         _texts = skillObject.GetComponentsInChildren<TextMeshProUGUI>();
 
@@ -48,12 +59,15 @@ public class TutorialZone : TriggerZone
     public override void OnPlayerEnter(PlayerBehaviour player)
     {
         if (!gameObject.activeSelf) return;
+
+        LocalizationTutorialUI();
         StartCoroutine(FadeAllCoroutine(0f, _originalAlpha, _fadeInDuration));
     }
     public override void OnPlayerStay(PlayerBehaviour player)
     {
         base.OnPlayerStay(player);
 
+        LocalizationTutorialUI();
         UpdateKeyCodeText();
     }
     public override void OnPlayerExit(PlayerBehaviour player)
@@ -136,5 +150,15 @@ public class TutorialZone : TriggerZone
                 }
             }
         }
+    }
+
+    private void LocalizationTutorialUI()
+    {
+        if(_nameKeyCode != "")
+            _nameText.text = UITranslator.GetLocalizedString(_nameKeyCode);
+        if (_extraKeyCode != "")
+            _extraText.text = UITranslator.GetLocalizedString(_extraKeyCode);
+        if (_extra1KeyCode != "")
+            _extra1Text.text = UITranslator.GetLocalizedString(_extra1KeyCode);
     }
 }

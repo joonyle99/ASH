@@ -10168,8 +10168,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC800 \uC7A5"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5ceadb0debb497848b900f49b58047b1, type: 2}
-  m_sharedMaterial: {fileID: 4325964464309410933, guid: 5ceadb0debb497848b900f49b58047b1, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 22fcea132d90bec4893bb60a8e61bafb, type: 2}
+  m_sharedMaterial: {fileID: -1492081779889206289, guid: 22fcea132d90bec4893bb60a8e61bafb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -10401,6 +10401,7 @@ MonoBehaviour:
   _playerSpawnPoint: {fileID: 9051673257819384037}
   _canEnter: 0
   _exitTimeOut: 1
+  _isPlayerExiting: 0
 --- !u!114 &1453974305632487962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10531,7 +10532,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _soundDatas:
-  - _key: SE_Point_Save
+  - _isLoop: 0
+    _key: SE_Point_Save
     _clip: {fileID: 8300000, guid: d61bb015e2cd0c640b8623350ef7639a, type: 3}
     _volumeType: 0
     _volumeA: 1
@@ -10539,7 +10541,8 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 0
-  - _key: SE_Point_Statue
+  - _isLoop: 0
+    _key: SE_Point_Statue
     _clip: {fileID: 8300000, guid: 9a7e02dd007ac3b48a0dfcc11a9e3afc, type: 3}
     _volumeType: 0
     _volumeA: 1

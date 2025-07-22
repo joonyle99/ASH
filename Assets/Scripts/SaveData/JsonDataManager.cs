@@ -67,7 +67,7 @@ public class SerializableObjectType
                 + v.Rotation.x + "|" + v.Rotation.y + "|" + v.Rotation.z + "|" + v.Rotation.w + "|"
                 + v.Scale.x + "|" + v.Scale.y + "|" + v.Scale.z;
         }
-        else if(type.IsEnum)
+        else if (type.IsEnum)
         {
             _objectSerialized = "e" + _object.GetType().Name + "#" + _object.ToString();
         }
@@ -456,6 +456,48 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     {
         string jsonData = JsonUtility.ToJson(jsonPlayerData);
         Add("PlayerData", jsonData);
+    }
+
+    public static void SaveLanguageCodeData(string languageCode)
+    {
+        Add("LanguageCode", languageCode);
+
+
+        // json파일을 불러와 languageCode 부분만 직접 저장
+        string fromJsonData = File.ReadAllText(Application.dataPath + "/database.json");
+
+        Dictionary<string, string> convertData = new();
+        convertData = ToDictionary<string, string>(fromJsonData);
+        if(convertData.ContainsKey("LanguageCode"))
+        {
+            convertData["LanguageCode"] = languageCode;
+        }
+        else
+        {
+            convertData.Add("LanguageCode", languageCode);
+        }
+
+        JsonDataArray<string, string> dataArray = DictionaryConvert(convertData);
+        string json = JsonUtility.ToJson(dataArray, true);
+
+        File.WriteAllText(Instance.path, json);
+        Debug.Log(json);
+    }
+
+    public static void LoadLanguageCodeData()
+    {
+        if (!File.Exists(Instance.path))
+        {
+
+            return;
+        }
+
+        string fromJsonData = File.ReadAllText(Application.dataPath + "/database.json");
+
+        if(!Instance._globalSaveData.saveDataGroup.ContainsKey("LanguageCode"))
+        {
+            Instance._globalSaveData.saveDataGroup.Add("LanguageCode", ToDictionary<string, string>(fromJsonData)["LanguageCode"]);
+        }
     }
     #endregion
 

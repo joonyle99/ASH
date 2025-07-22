@@ -6,7 +6,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
-using static Unity.VisualScripting.Icons;
 
 [RequireComponent(typeof(TMP_Text))]
 public class UITranslator : MonoBehaviour
@@ -32,7 +31,7 @@ public class UITranslator : MonoBehaviour
     public void ApplyLanguageChange()
     {
         string text = GetLocalizedString(_languageTableId);
-        Debug.Log($"Ui language change to /{text}/");
+        //Debug.Log($"Ui language change to /{text}/");
         if (text != "")
         {
             textUI.text = text;

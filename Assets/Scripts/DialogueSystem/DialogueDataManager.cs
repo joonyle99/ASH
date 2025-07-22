@@ -69,6 +69,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         base.OnDestroy();
 
+
         SaveAndLoader.OnSaveStarted -= SaveAllDialogueDataWithJson;
     }
 
@@ -150,6 +151,8 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
         _languageCode = languageCode;
 
+        JsonDataManager.SaveLanguageCodeData(_languageCode.ToString());
+
         OnLanguageChanged?.Invoke();
     }
     public LanguageCode GetLanguageCode()
@@ -158,7 +161,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     }
     public string GetLanguageStringCode()
     {
-        Debug.Log(_languageCode);
+        //Debug.Log(_languageCode);
         switch (_languageCode)
         {
             case LanguageCode.KOREAN:
@@ -177,7 +180,10 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         if(JsonDataManager.Has("LanguageCode"))
         {
-            string languageCode = JsonDataManager.Instance.GlobalSaveData.saveDataGroup["LanguageCode"];
+            JsonDataManager.LoadLanguageCodeData();
+            string languageCode = "KOREAN";
+            languageCode = JsonDataManager.Instance.GlobalSaveData.saveDataGroup["LanguageCode"];
+            Debug.Log($"Loaded language code : {languageCode}");
             switch(languageCode)
             {
                 case "KOREAN":
@@ -195,11 +201,5 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
         {
             SetLanguageCode(LanguageCode.KOREAN);
         }
-    }
-
-    public void SaveLanguageCode()
-    {
-        JsonDataManager.Add("LanguageCode", _languageCode.ToString());
-        JsonDataManager.JsonSave();
     }
 }

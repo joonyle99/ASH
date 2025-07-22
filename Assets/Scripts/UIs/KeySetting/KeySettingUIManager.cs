@@ -90,6 +90,7 @@ public class KeySettingUIManager : SingletonBehaviourFixed<KeySettingUIManager>
 
         if(value)
         {
+            ApplyActionTexts();
             _window.gameObject.SetActive(value);
         }
         else

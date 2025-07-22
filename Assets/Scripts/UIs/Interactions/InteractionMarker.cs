@@ -111,9 +111,11 @@ public class InteractionMarker : MonoBehaviour
 
     public void SetInteractionMarkerKey()
     {
+        TMP_Text keyName = transform.Find("Name").GetComponentInChildren<TMP_Text>();
         TMP_Text keyText = transform.Find("Key Box").GetComponentInChildren<TMP_Text>();
         PCInputSetter pcInputSetter = InputManager.Instance.DefaultInputSetter as PCInputSetter;
 
+        keyName.text = UITranslator.GetLocalizedString("ui_interaction");
         keyText.text = pcInputSetter.GetKeyCode("상호작용").KeyCode.ToString();
     }
 }
