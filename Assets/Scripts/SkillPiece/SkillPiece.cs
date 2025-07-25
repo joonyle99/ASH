@@ -22,7 +22,7 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
 
                 info.Icon = PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].UnlockImage;
                 
-                info.MainText = UITranslator.GetLocalizedString(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].NameId); ;
+                info.MainText = UITranslator.GetLocalizedString(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].NameId);
                 info.DetailText = "";
 
                 CustomKeyCode keyCode = InputManager.Instance.DefaultInputSetter.GetKeyCode(PersistentDataManager.SkillOrderData[skillPieceCount / 3 - 1].Key);

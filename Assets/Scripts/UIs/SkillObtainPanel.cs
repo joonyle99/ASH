@@ -25,6 +25,7 @@ public class SkillObtainPanel : MonoBehaviour
         _icon.sprite = info.Icon;
         _mainText.text = info.MainText;
         _detailText.text = info.DetailText;
+
         gameObject.SetActive(true);
     }
     public void Close()
