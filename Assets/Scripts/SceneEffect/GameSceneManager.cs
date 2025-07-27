@@ -56,7 +56,7 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     }
     private void Update()
     {
-#if UNITY_EDITOR
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftControl))
         {
             CheatMode = !CheatMode;
