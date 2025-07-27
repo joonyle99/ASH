@@ -38,6 +38,8 @@ public class PrologueManager : MonoBehaviour
         // CHEAT: F12 키를 누르면 프롤로그 스킵
         if (Input.GetKeyDown(KeyCode.F12) && GameSceneManager.Instance.CheatMode == true)
         {
+            _videoPlayer.loopPointReached -= StartGame;
+
             StopAllCoroutines();
             StartCoroutine(StartGameCoroutine());
         }

@@ -36,6 +36,8 @@ public class KeySettingUIManager : SingletonBehaviourFixed<KeySettingUIManager>
 
     private bool _waitAnyKeyDown = false;
 
+    [SerializeField] private bool _isTitleScene = false;
+
     public GameObject ColumnKeyBox1;
     public GameObject ColumnKeyBox2;
 
@@ -70,10 +72,13 @@ public class KeySettingUIManager : SingletonBehaviourFixed<KeySettingUIManager>
     {
         if (InputManager.Instance.State.EscapeKey.KeyDown && !_waitAnyKeyDown)
         {
-            var PlayablePlayer = SceneContext.Current.PlayableSceneTransitionPlayer;
-            if (PlayablePlayer != null && PlayablePlayer.IsPlayable == false)
+            if(!_isTitleScene)
             {
-                return;
+                var PlayablePlayer = SceneContext.Current.PlayableSceneTransitionPlayer;
+                if (PlayablePlayer != null && PlayablePlayer.IsPlayable == false)
+                {
+                    return;
+                }
             }
 
             ClosePanel();

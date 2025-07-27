@@ -5561,7 +5561,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -21.4, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &32617438
@@ -5767,11 +5767,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 167.00046
+      value: 494.07224
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 28.783522
+      value: 58.414352
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8098,6 +8098,29 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 11400000, guid: cfc449fdb173256418565dade869a1fb, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2.5
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 906235250}
+          m_TargetAssemblyTypeName: LightNPC, Assembly-CSharp
+          m_MethodName: StartCurveMovement
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 11400000, guid: cfc449fdb173256418565dade869a1fb, type: 2}
     ShakeData: {fileID: 0}
@@ -8256,11 +8279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcde1d72e9500c345ba00a32fe155490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemObtainInfo:
-    Icon: {fileID: 21300000, guid: ed6174cfc03074afa9523d9500a2c7c0, type: 3}
-    MainText: "\uBE5B\uC758 \uC870\uAC01\uC744 \uD68D\uB4DD\uD558\uC600\uC2B5\uB2C8\uB2E4."
-    DetailText: "\uBE5B \uC2A4\uD0AC \uD574\uAE08\uAE4C\uC9C0 \uC55E\uC73C\uB85C
-      \uD544\uC694\uD55C \uBE5B\uC758 \uC870\uAC01 2\uAC1C"
+  _remainSkillPiece: 2
 --- !u!1 &168947831
 GameObject:
   m_ObjectHideFlags: 0
@@ -15443,7 +15462,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -23.3, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &278818426
 MonoBehaviour:
@@ -22576,7 +22595,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -25, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &538217077
@@ -27004,7 +27023,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5171320283883025226, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
       propertyPath: m_Color.a
-      value: -62.35327
+      value: -73.95581
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f61a01b95f2e1d4caadff740832880e, type: 3}
@@ -36229,6 +36248,7 @@ GameObject:
   - component: {fileID: 900296487}
   - component: {fileID: 900296486}
   - component: {fileID: 900296488}
+  - component: {fileID: 900296489}
   m_Layer: 10
   m_Name: AppearLightNPC
   m_TagString: Untagged
@@ -36363,6 +36383,29 @@ MonoBehaviour:
         - m_Target: {fileID: 906235250}
           m_TargetAssemblyTypeName: LightNPC, Assembly-CSharp
           m_MethodName: StartStartingPointMovement
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 11400000, guid: cfc449fdb173256418565dade869a1fb, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2.5
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 906235250}
+          m_TargetAssemblyTypeName: LightNPC, Assembly-CSharp
+          m_MethodName: StartCurveMovement
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -36512,6 +36555,29 @@ MonoBehaviour:
           m_CallState: 2
     TargetScript: {fileID: 0}
     MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 11400000, guid: cfc449fdb173256418565dade869a1fb, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2.5
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 906235250}
+          m_TargetAssemblyTypeName: LightNPC, Assembly-CSharp
+          m_MethodName: StartCurveMovement
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
   - _type: 7
     DialogueData: {fileID: 11400000, guid: cfc449fdb173256418565dade869a1fb, type: 2}
     ShakeData: {fileID: 0}
@@ -36627,6 +36693,19 @@ MonoBehaviour:
     _pitchType: 0
     _pitchA: 1
     _pitchB: 1
+--- !u!114 &900296489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900296483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcde1d72e9500c345ba00a32fe155490, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _remainSkillPiece: 0
 --- !u!1 &904385435
 GameObject:
   m_ObjectHideFlags: 0
@@ -65197,11 +65276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcde1d72e9500c345ba00a32fe155490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemObtainInfo:
-    Icon: {fileID: 21300000, guid: ed6174cfc03074afa9523d9500a2c7c0, type: 3}
-    MainText: "\uBE5B\uC758 \uC870\uAC01\uC744 \uD68D\uB4DD\uD558\uC600\uC2B5\uB2C8\uB2E4."
-    DetailText: "\uBE5B \uC2A4\uD0AC \uD574\uAE08\uAE4C\uC9C0 \uC55E\uC73C\uB85C
-      \uD544\uC694\uD55C \uBE5B\uC758 \uC870\uAC01 1\uAC1C"
+  _remainSkillPiece: 1
 --- !u!114 &2127900805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65383,6 +65458,29 @@ MonoBehaviour:
         - m_Target: {fileID: 906235250}
           m_TargetAssemblyTypeName: LightNPC, Assembly-CSharp
           m_MethodName: StartStartingPointMovement
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    TargetScript: {fileID: 0}
+    MethodName: 
+  - _type: 5
+    DialogueData: {fileID: 11400000, guid: cfc449fdb173256418565dade869a1fb, type: 2}
+    ShakeData: {fileID: 0}
+    ConstantShakeData: {fileID: 0}
+    Time: 2.5
+    InputSetter: {fileID: 11400000, guid: bf0db712ef0adfe4f9dc8c0fa46d50f6, type: 2}
+    Function:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 906235250}
+          m_TargetAssemblyTypeName: LightNPC, Assembly-CSharp
+          m_MethodName: StartCurveMovement
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -71894,6 +71992,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4171086192498513503, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: -1492081779889206289, guid: 22fcea132d90bec4893bb60a8e61bafb, type: 2}
+    - target: {fileID: 4171086192498513503, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4600537874083143564, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -71908,6 +72014,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4600537874083143564, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4950070036215958278, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4950070036961960967, guid: 5b6a6f3cfe18e824485ee1e3e3e7ca55, type: 3}

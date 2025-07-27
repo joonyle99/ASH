@@ -24,6 +24,8 @@ public class InteractionMarker : MonoBehaviour
     {
         _rectTransform = GetComponent<RectTransform>();
         _canvasGroup = GetComponent<CanvasGroup>();
+
+        DialogueDataManager.OnLanguageChanged += SetInteractionMarkerKey;
     }
 
     public void Update()

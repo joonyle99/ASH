@@ -37,11 +37,27 @@ public class OptionView : MonoBehaviour
         get => _isFullScreen;
         set
         {
-            Window?.SetActive(value);
-            WindowChecked?.SetActive(!value);
+            if(Window != null)
+            {
+                Window.GetComponentInChildren<TMP_Text>().text = UITranslator.GetLocalizedString("ui_window");
+                Window.SetActive(value);
+            }
+            if(WindowChecked != null)
+            {
+                WindowChecked.GetComponentInChildren<TMP_Text>().text = UITranslator.GetLocalizedString("ui_window");
+                WindowChecked.SetActive(!value);
+            }
 
-            FullScreen?.SetActive(!value);
-            FullScreenChecked?.SetActive(value);
+            if(FullScreen != null)
+            {
+                FullScreen.GetComponentInChildren<TMP_Text>().text = UITranslator.GetLocalizedString("ui_fullScreen");
+                FullScreen.SetActive(!value);
+            }
+            if(FullScreenChecked != null)
+            {
+                FullScreenChecked.GetComponentInChildren<TMP_Text>().text = UITranslator.GetLocalizedString("ui_fullScreen");
+                FullScreenChecked.SetActive(value);
+            }
             _isFullScreen = value;
         }
     }
@@ -67,16 +83,19 @@ public class OptionView : MonoBehaviour
         _sfxSlider.onValueChanged.AddListener(SoundManager.Instance.SetSfxVolume);
         _sfxSlider.onValueChanged.AddListener(SetSfxValue);
 
-        _dropdown.onValueChanged.AddListener((optionIdx) => ChangeLanguage(optionIdx));
+        _dropdown?.onValueChanged.AddListener((optionIdx) => ChangeLanguage(optionIdx));
     }
     private void Start()
     {
         //IsFullScreen = true;
 
-        ApplyLanguageText();
+        _language.text = DialogueDataManager.Instance.GetLanguageCode().ToString();
         StartCoroutine(SetupVolumeCoroutine());
 
-        _dropdown.value = (int)DialogueDataManager.Instance.GetLanguageCode();
+        if(_dropdown != null)
+        {
+            _dropdown.value = (int)DialogueDataManager.Instance.GetLanguageCode();
+        }
     }
 
     private void Update()

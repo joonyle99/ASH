@@ -474,7 +474,7 @@ public class WaveSystemController : MonoBehaviour, ITriggerListener, ISceneConte
 
     private void EndOfWaveSystemLogic()
     {
-        string dungeonWaveClipKey = Regex.IsMatch(SceneManager.GetActiveScene().name, @"*1-*") ?
+        string dungeonWaveClipKey = SceneManager.GetActiveScene().name.Contains("1-") ?
             _dungeon1WaveBgm : _dungeon2WaveBgm;
 
         AudioSource bgmPlayer = SoundManager.Instance.GetBgmPlayer(dungeonWaveClipKey);

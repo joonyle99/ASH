@@ -16,6 +16,7 @@ public class SkillPiece : MonoBehaviour, ITriggerListener
             PersistentDataManager.UpdateValueByGlobal<int>("SkillPiece", x => x + 1);
             Destruction.Destruct(gameObject);
             int skillPieceCount = PersistentDataManager.GetByGlobal<int>("SkillPiece");
+            Debug.Log($"Skill piece count : {skillPieceCount}");
             if (skillPieceCount % 3 == 0)
             {
                 var info = new SkillObtainPanel.SkillInfo();
