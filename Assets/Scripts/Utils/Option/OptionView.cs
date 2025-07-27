@@ -49,6 +49,7 @@ public class OptionView : MonoBehaviour
     [Header("Language")]
     [SerializeField] private TMP_Dropdown _dropdown;
     [SerializeField] private TextMeshProUGUI _language;
+    [SerializeField] private TextMeshProUGUI _language2;
 
     [Header("External Reference")]
     [Space]
@@ -72,11 +73,10 @@ public class OptionView : MonoBehaviour
     {
         //IsFullScreen = true;
 
-        _language.text = DialogueDataManager.Instance.GetLanguageCode().ToString();
+        ApplyLanguageText();
         StartCoroutine(SetupVolumeCoroutine());
 
         _dropdown.value = (int)DialogueDataManager.Instance.GetLanguageCode();
-        Debug.Log(_dropdown.value);
     }
 
     private void Update()
@@ -232,8 +232,8 @@ public class OptionView : MonoBehaviour
                 languageCode = LanguageCode.JAPANESE;
                 break;
         }
-        Debug.Log($"Change language to {languageCode}");
         DialogueDataManager.Instance.SetLanguageCode(languageCode);
+        ApplyLanguageText();
     }
     public void ChangeLanguage(string lang)
     {
@@ -252,10 +252,19 @@ public class OptionView : MonoBehaviour
         }
 
         DialogueDataManager.Instance.SetLanguageCode(languageCode);
+        ApplyLanguageText();
     }
-    public void ChangeLanguage(LanguageCode lang)
+    public void ChangeLanguage(LanguageCode languageCode)
     {
-        DialogueDataManager.Instance.SetLanguageCode(lang);
-        _language.text = lang.ToString();
+        DialogueDataManager.Instance.SetLanguageCode(languageCode);
+        ApplyLanguageText();
+    }
+
+    private void ApplyLanguageText()
+    {
+        var languageText = UITranslator.GetLocalizedString("ui_language");
+
+        _language.text = languageText;
+        _language2.text = languageText;
     }
 }
