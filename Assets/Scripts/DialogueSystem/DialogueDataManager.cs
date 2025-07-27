@@ -185,16 +185,14 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
             JsonDataManager.LoadLanguageCodeData();
 
             languageCode = JsonDataManager.Instance.GlobalSaveData.saveDataGroup["LanguageCode"];
-
         }
         else
         {
             if (SteamManager.Initialized)
             {
                 languageCode = SteamApps.GetCurrentGameLanguage().ToUpper();
-                //Debug.Log($"Default language : {languageCode}");
 
-                if(languageCode == "KOREANA")
+                if (languageCode == "KOREANA")
                 {
                     languageCode = "KOREAN";
                 }
@@ -202,7 +200,6 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
             else
             {
                 languageCode = "KOREAN";
-                //Debug.Log($"Steamworks not initialized");
             }
         }
 

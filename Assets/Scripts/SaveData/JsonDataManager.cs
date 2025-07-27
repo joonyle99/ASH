@@ -462,7 +462,6 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     {
         Add("LanguageCode", languageCode);
 
-
         // json파일을 불러와 languageCode 부분만 직접 저장
         string fromJsonData = File.ReadAllText(Application.dataPath + "/database.json");
 
@@ -481,7 +480,6 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         string json = JsonUtility.ToJson(dataArray, true);
 
         File.WriteAllText(Instance.path, json);
-        Debug.Log(json);
     }
 
     public static void LoadLanguageCodeData()
