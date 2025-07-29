@@ -111,11 +111,7 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
     {
         base.OnDestroy();
 
-        _cutSceneQueue.Clear();
-        _sceneEvents.Clear();
-
-        _onAdditionalBefore = null;
-        _onAdditionalAfter = null;
+        ResetAll();
     }
 
     public void OnSceneContextBuilt()
@@ -246,12 +242,32 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
 
     public static void StopPlayingCutscene()
     {
-        if (Instance._recentCutscene != null &&
-            Instance._recentCutscene.CutSceneCoreCoroutine != null)
+        var recentCutscene = Instance._recentCutscene;
+        if (recentCutscene != null)
         {
-            Instance._recentCutscene.Owner.StopCoroutine(Instance._recentCutscene.CutSceneCoreCoroutine);
+            var cutSceneCoreCo = recentCutscene.CutSceneCoreCoroutine;
+            if (cutSceneCoreCo != null)
+            {
+                recentCutscene.Owner.StopCoroutine(cutSceneCoreCo);
+            }
         }
 
-        Instance._cutSceneQueue.Clear();
+        var cutSceneQueue = Instance._cutSceneQueue;
+        if (cutSceneQueue != null)
+        {
+            if (cutSceneQueue.Count > 0)
+            {
+                Instance._cutSceneQueue.Clear();
+            }
+        }
+    }
+
+    public void ResetAll()
+    {
+        _cutSceneQueue.Clear();
+        _sceneEvents.Clear();
+
+        _onAdditionalBefore = null;
+        _onAdditionalAfter = null;
     }
 }
