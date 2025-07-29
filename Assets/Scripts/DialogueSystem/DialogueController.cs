@@ -27,6 +27,11 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     }
 
     private Coroutine _currentDialogueCoroutine;
+    public Coroutine CurrentDialogueCoroutine
+    {
+        get => _currentDialogueCoroutine;
+        set => _currentDialogueCoroutine = value;
+    }
     [SerializeField] private DialogueData _currentDialogueData;
 
     private bool _isSkipSequence = false;

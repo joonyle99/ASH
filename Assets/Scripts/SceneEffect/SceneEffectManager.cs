@@ -249,7 +249,10 @@ public class SceneEffectManager : HappyTools.SingletonBehaviourFixed<SceneEffect
             if (cutSceneCoreCo != null)
             {
                 recentCutscene.Owner.StopCoroutine(cutSceneCoreCo);
+                recentCutscene.CutSceneCoreCoroutine = null;
             }
+
+            recentCutscene = null;
         }
 
         var cutSceneQueue = Instance._cutSceneQueue;
