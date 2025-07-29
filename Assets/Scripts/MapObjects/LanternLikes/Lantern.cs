@@ -180,9 +180,6 @@ public class Lantern : LanternLike, ILightCaptureListener, ISceneContextBuildLis
             InputManager.Instance.ChangeToStayStillSetter();
             SceneContext.Current.Player.IsGodMode = true;
 
-            // 잠시 기다린다
-            yield return new WaitForSeconds(1.0f);
-
             // 보스 랜턴 공격 실행
             var lanternAttack = new LanternAttack(this, lightSceneContext.Boss);
             StartCoroutine(lightSceneContext.LenternAttack(lanternAttack, _isLastAttack));
