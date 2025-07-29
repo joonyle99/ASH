@@ -328,7 +328,8 @@ public class FireBossManager : MonoBehaviour
     {
         _endingDialogue.LinkQuestData(_endingQuest);
 
-        while (true)
+        bool breakFlag = false;
+        while (breakFlag == false)
         {
             DialogueController.Instance.StartDialogue(_endingDialogue, false);
             yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
@@ -336,7 +337,6 @@ public class FireBossManager : MonoBehaviour
             // Accept Process
             if (_endingType == EndingType.Accept)
             {
-
                 var fire = _firePrefab.GetComponentInChildren<Fire>();
                 var ash = SceneContext.Current.Player;
 
@@ -346,6 +346,7 @@ public class FireBossManager : MonoBehaviour
                 yield return ExecuteRageEffectCoroutine01();
 
                 SceneEffectManager.Instance.Camera.StartFollow(ash.transform);
+
                 _tornado.FireBody.SetActive(false);
                 _tornado.BlazeFire.SetActive(true);
                 fire.transform.position = _endingFireSpawnPoint.position;
@@ -370,8 +371,11 @@ public class FireBossManager : MonoBehaviour
                 yield return new WaitUntil(() => DialogueController.Instance.IsDialoguePanel == false);
 
                 yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-                // SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace");
-                ChangeSceneToEndingPeaceful();
+
+                StartCoroutine(ChangeEndingSceneCo());
+
+                breakFlag = true;
+                yield break;
             }
             // Reject Process
             else if (_endingType == EndingType.Reject)
@@ -395,17 +399,22 @@ public class FireBossManager : MonoBehaviour
 
                     GameUIManager.OpenDeadPanel(true);
 
+                    breakFlag = true;
                     yield break;
                 }
                 else
                 {
                     Debug.LogError("EndingRejectType is invalid");
+
+                    breakFlag = true;
                     yield break;
                 }
             }
             else
             {
                 Debug.LogError("EndingType is invalid");
+
+                breakFlag = true;
                 yield break;
             }
         }
@@ -494,25 +503,26 @@ public class FireBossManager : MonoBehaviour
 
     private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.Z))
-        // {
-        //    ChangeSceneToEndingPeaceful();
-        // }
-
         if (_lightingGuide.gameObject.activeSelf)
         {
             _lightingGuide.GetComponent<RectTransform>().position = SceneContext.Current.Player.transform.position + Vector3.up * 3f;
         }
     }
-    public void ChangeSceneToEndingPeaceful()
+    private IEnumerator ChangeEndingSceneCo()
     {
-        SceneEffectManager.StopPlayingCutscene();
+        //yield return null;
+        yield return new WaitForSeconds(1f);
 
-        SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace", () =>
+        SceneEffectManager.StopPlayingCutscene();
+        SceneEffectManager.Instance.ResetAll();
+
+        if (DialogueController.Instance.CurrentDialogueCoroutine != null)
         {
-            EndingSceneManager.Initialize();
-            EndingSceneManager.PlayCutscene("EndingCutscene_SurroundingScene");
-        });
+            StopCoroutine(DialogueController.Instance.CurrentDialogueCoroutine);
+            DialogueController.Instance.CurrentDialogueCoroutine = null;
+        }
+
+        SceneChangeManager.Instance.ChangeToNonPlayableScene("EndingScene_Peace");
     }
     public void ToggleLightingGuide()
     {

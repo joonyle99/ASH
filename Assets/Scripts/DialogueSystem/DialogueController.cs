@@ -27,8 +27,12 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     }
 
     private Coroutine _currentDialogueCoroutine;
-    [SerializeField]
-    private DialogueData _currentDialogueData;
+    public Coroutine CurrentDialogueCoroutine
+    {
+        get => _currentDialogueCoroutine;
+        set => _currentDialogueCoroutine = value;
+    }
+    [SerializeField] private DialogueData _currentDialogueData;
 
     private bool _isSkipSequence = false;
 
@@ -55,9 +59,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         // 1. 다이얼로그 시퀀스를 생성한다
         DialogueSequence dialogueSequence = new DialogueSequence(data);
 
-        // 2. 입력 설정이 있을 경우 변경
-        if (data.InputSetter != null)
-            InputManager.Instance.ChangeInputSetter(data.InputSetter);
+        //// 2. 입력 설정이 있을 경우 변경
+        //if (data.InputSetter != null)
+        //    InputManager.Instance.ChangeInputSetter(data.InputSetter);
 
         // 3. 다이얼로그 뷰 UI를 열어준다
         View.OpenPanel(canSkip);
@@ -161,9 +165,9 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         if (!isContinueDialogue)
             IsDialogueActive = false;
 
-        // 6. 다이얼로그 시퀀스가 끝났기 때문에 입력 설정을 기본값으로 변경
-        if (data.InputSetter != null)
-            InputManager.Instance.ChangeToDefaultSetter();
+        //// 6. 다이얼로그 시퀀스가 끝났기 때문에 입력 설정을 기본값으로 변경
+        //if (data.InputSetter != null)
+        //    InputManager.Instance.ChangeToDefaultSetter();
 
         SetCurrentDialogueData(false);
         _currentDialogueCoroutine = null;
@@ -186,8 +190,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
         SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
 
-        if (_currentDialogueData.InputSetter != null)
-            InputManager.Instance.ChangeToDefaultSetter();
+        //if (_currentDialogueData.InputSetter != null)
+        //    InputManager.Instance.ChangeToDefaultSetter();
 
         StopCoroutine(_currentDialogueCoroutine);
         _currentDialogueCoroutine = null;
