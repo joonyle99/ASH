@@ -223,7 +223,11 @@ public class DialogueView : MonoBehaviour
     /// <summary> 다이얼로그 세그먼트 빠르게 넘어가기 </summary>
     public void FastForward()
     {
-        StopCoroutine(_currentSegmentCoroutine);
+        if (_currentSegmentCoroutine != null)
+        {
+            StopCoroutine(_currentSegmentCoroutine);
+            _currentSegmentCoroutine = null;
+        }
         CleanUpOnSegmentOver();
     }
     /// <summary> 다이얼로그 세그먼트 종료 처리 </summary>
