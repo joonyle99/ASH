@@ -28,6 +28,11 @@ public class InteractionMarker : MonoBehaviour
         DialogueDataManager.OnLanguageChanged += SetInteractionMarkerKey;
     }
 
+    private void OnDestroy()
+    {
+        DialogueDataManager.OnLanguageChanged -= SetInteractionMarkerKey;
+    }
+
     public void Update()
     {
         if (_isMarking)

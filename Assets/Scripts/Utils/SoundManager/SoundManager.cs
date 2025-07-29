@@ -9,6 +9,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 {
     [SerializeField] private GameObject _soundListParent;
 
+    // 현재 소리 나고 있는 모든 오디오 저장
     private List<AudioSource> _playingBgmPlayers = new List<AudioSource>();
 
     //해당 게임 오브젝트에 bgm으로 사용할 audio source 추가
@@ -251,9 +252,10 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
 
         if (newBgmPlayer == null)
         {
-            newBgmPlayer = GetRestBgmPlayer();
+            newBgmPlayer = GetRestBgmPlayer(key);
         }
 
+        _playingBgmPlayers.Add(newBgmPlayer);
         StartCoroutine(BGMFadeInCoroutine(key, newClip, duration, newBgmPlayer, startTime));
 
         return true;
@@ -283,7 +285,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         }
 
         newBgmPlayer.volume = GetAudioMixerVolume("BGM") * GetSoundClipData(key).Volume;
-        _playingBgmPlayers.Add(newBgmPlayer);
     }
 
     public void BGMFadeInOut(string fadeinKey, float fadeinDuration,
@@ -305,7 +306,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
             return;
         }
 
-        if (PlayCommonBGMFade(fadeinKey, fadeinDuration, GetRestBgmPlayer()))
+        if (PlayCommonBGMFade(fadeinKey, fadeinDuration, GetRestBgmPlayer(fadeinKey)))
         {
             SoundClipData exceptionFadeoutClipData =
                 isExceptionFadeout ? _soundLists[exceptionSoundListIndex].GetSoundClipData(exceptionFadeoutKey) : null;
@@ -322,7 +323,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         }
     }
     public void PlayCommonBGMForScene(string sceneName)
-    {
+    { 
         if (GameSceneManager.IsOpeningScene(sceneName))
         {
             BGMFadeInOut("MainTheme", 1, "", 5);
@@ -365,7 +366,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         }
 
         // wave bgm 재생 중이었을 시 끔
-        
         AudioSource audioSource = GetBgmPlayer("Exploration1_Wave");
         if (audioSource == null)
         {
@@ -383,6 +383,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     {
         for (int i = 0; i < _playingBgmPlayers.Count; i++)
         {
+            Debug.Log($"Stop bgm : {_playingBgmPlayers[i].clip.name}");
             _playingBgmPlayers[i].Stop();
         }
     }
@@ -431,18 +432,35 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         _playingBgmPlayers.Remove(targetSource);
     }
 
-    private AudioSource GetRestBgmPlayer()
+    private AudioSource GetRestBgmPlayer(string fadeinKey = "")
     {
         AudioSource[] bgmSources = _bgmPlayer.GetComponents<AudioSource>();
+        
+        // 이미 키가 있는 오디오 소스 가져옴
+        if(fadeinKey != "")
+        {
+            for(int i = 0; i < bgmSources.Length; i++)
+            {
+                if(bgmSources[i].clip == GetSoundClipData(fadeinKey).Clip)
+                {
+                    return bgmSources[i];
+                }
+            }
+        }
+
+        // 빈 오디오 리턴
         for (int i = 0; i < bgmSources.Length; i++)
         {
             if (!bgmSources[i].isPlaying)
             {
+                Debug.Log($"Rest 2 bgm player : {bgmSources[i].clip}");
                 return bgmSources[i];
             }
         }
 
+        Debug.Log($"Rest 3 bgm player");
         AudioSource newSource = _bgmPlayer.AddComponent<AudioSource>();
+        newSource.playOnAwake = false;
         newSource.loop = true;
         return newSource;
     }
@@ -498,7 +516,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     {
         for (int i = 0; i < _playingBgmPlayers.Count; i++)
         {
-            Debug.Log($"Played clip {_playingBgmPlayers[i].clip}");
+            Debug.Log($"Played clip {_playingBgmPlayers[i].clip} playing bgm player's count : {_playingBgmPlayers.Count}");
             if (_playingBgmPlayers[i].clip == clip)
             {
                 return true;
