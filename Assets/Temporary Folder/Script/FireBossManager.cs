@@ -510,8 +510,7 @@ public class FireBossManager : MonoBehaviour
     }
     private IEnumerator ChangeEndingSceneCo()
     {
-        //yield return null;
-        yield return new WaitForSeconds(1f);
+        yield return null;
 
         SceneEffectManager.StopPlayingCutscene();
         SceneEffectManager.Instance.ResetAll();
