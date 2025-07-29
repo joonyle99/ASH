@@ -34,14 +34,14 @@ public class EndingSceneManager : MonoBehaviour
         _transitionPlayer = SceneContext.Current.SceneTransitionPlayer;
     }
 
-    public void FadeIn(float duration)
-    {
-        StartCoroutine(_transitionPlayer.FadeCoroutine(duration, SceneTransitionPlayer.FadeType.Lighten));
-    }
-    public void FadeOut(float duration)
-    {
-        StartCoroutine(_transitionPlayer.FadeCoroutine(duration, SceneTransitionPlayer.FadeType.Darken));
-    }
+    //public void FadeIn(float duration)
+    //{
+    //    StartCoroutine(_transitionPlayer.FadeCoroutine(duration, SceneTransitionPlayer.FadeType.Lighten));
+    //}
+    //public void FadeOut(float duration)
+    //{
+    //    StartCoroutine(_transitionPlayer.FadeCoroutine(duration, SceneTransitionPlayer.FadeType.Darken));
+    //}
 
     public void PlayCutscene(string cutsceneName)
     {
@@ -75,6 +75,7 @@ public class EndingSceneManager : MonoBehaviour
         // 순차적으로 씬을 변경하며 , 씬을 둘러보는 연출
         for (int i = 0; i < _endingImageTransforms.Count; i++)
         {
+            // TODO: 해당 씬에서는 처음부터 darken 상태로,, (한 프레임 불편함..)
             // darken
             yield return _transitionPlayer.FadeCoroutine(halfDuration, darken);
 
