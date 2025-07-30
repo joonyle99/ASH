@@ -126,7 +126,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
                         container.Add(new ResponseContainer(ResponseButtonType.Reject, () => data.Quest.OnReject?.Invoke()));
 
                         // 퀘스트 응답 패널을 연다 (+ 리스너 컨테이너 등록)
-                        View.OpenResponsePanel(container, data.Quest.AcceptText, data.Quest.RejectText);
+                        View.OpenResponsePanel(container, UITranslator.GetLocalizedString(data.Quest.AcceptText), UITranslator.GetLocalizedString(data.Quest.RejectText));
 
                         // Handler: 이벤트가 발생했을 때 호출되는 함수를 지칭한다 (옵저버 패턴)
                         var isClicked = false;

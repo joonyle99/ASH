@@ -19,7 +19,6 @@ public class EndingSceneManager : MonoBehaviour
     private void Start()
     {
         Initialize();
-
         PlayCutscene("EndingCutscene_SurroundingScene");
     }
 
@@ -77,7 +76,10 @@ public class EndingSceneManager : MonoBehaviour
         {
             // TODO: 해당 씬에서는 처음부터 darken 상태로,, (한 프레임 불편함..)
             // darken
-            yield return _transitionPlayer.FadeCoroutine(halfDuration, darken);
+            if(i != 0)
+            {
+                yield return _transitionPlayer.FadeCoroutine(halfDuration, darken);
+            }
 
             if(i != 0)
                 _endingImageTransforms[i - 1].gameObject.SetActive(false);

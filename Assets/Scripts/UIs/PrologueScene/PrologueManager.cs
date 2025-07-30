@@ -26,10 +26,14 @@ public class PrologueManager : MonoBehaviour
     [Space]
 
     [SerializeField] VideoPlayer _videoPlayer;
+    [SerializeField] VideoClip _videoEn;
+    [SerializeField] VideoClip _videoJp;
+    [SerializeField] VideoClip _videoKo;
 
     private void Start()
     {
         _proceedText.gameObject.SetActive(false);
+        PlayPrologue();
         //StartCoroutine(PlayScripts());
         _videoPlayer.loopPointReached += StartGame;
     }
@@ -44,7 +48,25 @@ public class PrologueManager : MonoBehaviour
             StartCoroutine(StartGameCoroutine());
         }
     }
-    
+
+    private void PlayPrologue()
+    {
+        switch (DialogueDataManager.Instance.GetLanguageCode())
+        {
+            case LanguageCode.KOREAN:
+                _videoPlayer.clip = _videoKo;
+                break;
+            case LanguageCode.ENGLISH:
+                _videoPlayer.clip = _videoEn;
+                break;
+            case LanguageCode.JAPANESE:
+                _videoPlayer.clip = _videoJp;
+                break;
+        }
+
+        _videoPlayer.Play();
+    }
+
     private void StartGame(UnityEngine.Video.VideoPlayer _videoPlayer)
     {
         StartCoroutine(StartGameCoroutine());

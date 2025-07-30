@@ -406,11 +406,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -172.88925
+      value: 617.52954
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.664964
+      value: 293.80325
       objectReference: {fileID: 0}
     - target: {fileID: 3829097960754704896, guid: 4f7f026955e96b84e87249fa234cd98a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -709,7 +709,7 @@ VideoPlayer:
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_SkipOnDrop: 0
   m_Looping: 0
   m_WaitForFirstFrame: 1
@@ -1613,7 +1613,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1959340519}
-  - component: {fileID: 1959340520}
   - component: {fileID: 1959340521}
   m_Layer: 0
   m_Name: PrologueManager
@@ -1637,53 +1636,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1959340520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1959340518}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8dffba6d7cb29d74a9c4ab720a0ba5a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _fadeInDuration: 0.3
-  _fadeOutDuration: 1
-  _lineWaitDuration: 1
-  _pageWaitDuration: 1.5
-  _proceedText: {fileID: 492434328}
-  _texts:
-  - {fileID: 249829310}
-  - {fileID: 1159313930}
-  - {fileID: 1046411884}
-  - {fileID: 17910713}
-  - {fileID: 8983681}
-  - {fileID: 772406960}
-  _scripts:
-  - Lines:
-    - "\uAC00\uC5FD\uAD70\u2026 \uAC80\uC740\uD3EC\uC2DD\uC790\uB4E4\uC774 \uBAA8\uB4E0
-      \uAC83\uB4E4\uC744 \uBE8F\uC5B4\uAC14\uAD6C\uB098."
-    - "\uB108\uD55C\uD14C\uC11C\uB3C4. \uB098\uD55C\uD14C\uC11C\uB3C4."
-    - "\uC65C \uC790\uAFB8 \uB3C4\uC6C0\uC744 \uC8FC\uB0D0\uB294 \uD45C\uC815\uC774\uB124? "
-    - "\uB098\uB294 \uB124\uAC00 \uC138\uC0C1\uC744 \uBC14\uAFC0 \uC218 \uC788\uB2E4\uACE0
-      \uBBFF\uAC70\uB4E0."
-    - "\uB098\uB294\u2026 \uB098\uB294 \uC544\uBB34\uAC83\uB3C4 \uD560 \uC218 \uC5C6\uC5C8\uC5B4."
-    - "\uADF8\uC800 \uB0B4 \uC544\uB4E4\uC774 \uBB34\uC0AC\uD788 \uC0B4\uC544 \uC788\uAE38
-      \uBC14\uB784 \uBFD0\u2026."
-  - Lines:
-    - "\uC65C, \uC61B \uB3D9\uD654\uC5D0\uB3C4 \uB098\uC624\uB294 \uC598\uAE30\uC796\uC544."
-    - "\uC774\uB7F0 \uD3EC\uC2DD\uC790\uB4E4\uC5D0\uAC8C\uB3C4 \uBAA9\uC228\uC744
-      \uAC78\uACE0 \uB364\uBE44\uB294 \uC601\uC6C5\uB4E4\uC774 \uC788\uB2E4\uACE0
-      \uB9D0\uC774\uC57C."
-    - "\uC5EC\uAE34 \uC5EC\uC804\uD574."
-    - "\uAC80\uC740 \uD3EC\uC2DD\uC790\uB4E4\uC774 \uC138\uC0C1 \uBB34\uC11C\uC6B8
-      \uAC83 \uC5C6\uC774 \uB0A0\uB6F0\uACE0 \uC788\uC5B4."
-    - "\uC774\uC81C \uB3D9\uBB3C\uB3C4 \uC0AC\uB78C\uB3C4 \uC0B4 \uACF3\uC744 \uC783\uC5C8\uB2E4. "
-    - "\uAE30\uC138\uB4F1\uB4F1\uD574\uC9C4 \uC800 \uAC80\uC740 \uB140\uC11D\uB4E4\uC744
-      \uC81C\uC678\uD558\uBA74\u2026\u2026"
-  _videoPlayer: {fileID: 315869737}
 --- !u!114 &1959340521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1731,6 +1683,9 @@ MonoBehaviour:
     - "\uAE30\uC138\uB4F1\uB4F1\uD574\uC9C4 \uC800 \uAC80\uC740 \uB140\uC11D\uB4E4\uC744
       \uC81C\uC678\uD558\uBA74\u2026\u2026"
   _videoPlayer: {fileID: 315869737}
+  _videoEn: {fileID: 32900000, guid: cbd70b0fdc2211541aabd1b50a2a8150, type: 3}
+  _videoJp: {fileID: 32900000, guid: 45b2fe7aac187f24482062d4e0d1d418, type: 3}
+  _videoKo: {fileID: 32900000, guid: b875f6106403b6a448199928a3c93aae, type: 3}
 --- !u!1 &2021194759
 GameObject:
   m_ObjectHideFlags: 0

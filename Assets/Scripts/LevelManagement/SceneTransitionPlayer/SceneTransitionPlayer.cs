@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ¾ÀÀÌ ÀüÈ¯µÉ ¶§, È­¸éÀÌ Fade In / Out µÇ´Â ÀüÈ¯ È¿°ú
+/// ì”¬ì´ ì „í™˜ë  ë•Œ, í™”ë©´ì´ Fade In / Out ë˜ëŠ” ì „í™˜ íš¨ê³¼
 /// </summary>
 public class SceneTransitionPlayer : MonoBehaviour
 {
@@ -27,6 +27,8 @@ public class SceneTransitionPlayer : MonoBehaviour
         Color color = _fadeImage.color;
         color.a = alpha;
         _fadeImage.color = color;
+
+        Debug.Log(color.a);
     }
 
     public virtual IEnumerator EnterSceneEffectCoroutine()
@@ -63,13 +65,13 @@ public class SceneTransitionPlayer : MonoBehaviour
 
         // GameUIManager.SetDebugText($"fadeType: {fadeType.ToString()}");
 
-        // _fadeImage.color.a 0: °ËÁ¤»ö ÀÌ¹ÌÁö°¡ Åõ¸í
-        // _fadeImage.color.a 1: °ËÁ¤»ö ÀÌ¹ÌÁö°¡ ºÒÅõ¸í
+        // _fadeImage.color.a 0: ê²€ì •ìƒ‰ ì´ë¯¸ì§€ê°€ íˆ¬ëª…
+        // _fadeImage.color.a 1: ê²€ì •ìƒ‰ ì´ë¯¸ì§€ê°€ ë¶ˆíˆ¬ëª…
 
         float from = _fadeImage.color.a;
         float to = 1f;
 
-        // FadeType¿¡ µû¶ó ½ÃÀÛ ¹× Á¾·á °ªÀ» ¼³Á¤
+        // FadeTypeì— ë”°ë¼ ì‹œì‘ ë° ì¢…ë£Œ ê°’ì„ ì„¤ì •
         switch (fadeType)
         {
             case FadeType.Darken:

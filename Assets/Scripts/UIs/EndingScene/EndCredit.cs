@@ -19,6 +19,13 @@ public class EndCredit : MonoBehaviour
 
     public void StartEndCredits()
     {
+        object[] args =
+        {
+            UITranslator.GetLocalizedString("ui_producion"), UITranslator.GetLocalizedString("ui_planning"),
+            UITranslator.GetLocalizedString("ui_art"), UITranslator.GetLocalizedString("ui_sound"),
+            UITranslator.GetLocalizedString("ui_programming")
+        };
+        CreditsText.text = string.Format(UITranslator.GetLocalizedString("ui_endCredits"), args);
         Panel.gameObject.SetActive(true);
         StartCoroutine(StartEndCreditsTextLogic(60f));
         StartCoroutine(StartEndCreditsFadeOutLogic(10f));
@@ -39,6 +46,8 @@ public class EndCredit : MonoBehaviour
             Vector3 newTextPosition = new Vector3(CreditsText.rectTransform.position.x, newPositionY, CreditsText.rectTransform.position.z);
             CreditsText.rectTransform.position = newTextPosition;
         }
+
+        SceneChangeManager.Instance.ChangeToNonPlayableScene("TitleScene");
     }
 
     private IEnumerator StartEndCreditsFadeOutLogic(float duration)
@@ -55,5 +64,6 @@ public class EndCredit : MonoBehaviour
             float newPanelAlpha = Mathf.Lerp(panelAlphaOffset, 1f, timer / duration);
             Panel.color = new Color(Panel.color.r, Panel.color.g, Panel.color.b, newPanelAlpha);
         }
+        
     }
 }
