@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Timeline;
+using UnityEngine.UI;
+using static SceneTransitionPlayer;
 
 public class EndingSceneManager : MonoBehaviour
 {
@@ -15,6 +18,8 @@ public class EndingSceneManager : MonoBehaviour
     public CutscenePlayer[] cutscenePlayers;
     public GameObject CameraFollowTargetPrefab;
     private SceneTransitionPlayer _transitionPlayer;
+
+    public Image fadeImage;
 
     private void Start()
     {
@@ -66,6 +71,8 @@ public class EndingSceneManager : MonoBehaviour
     {
         Debug.Log("Play chage image for surrounding coroutine");
 
+        yield return new WaitForSeconds(3f);
+
         var halfDuration = _sceneTransitionDuration / 2;
 
         var darken = SceneTransitionPlayer.FadeType.Darken;
@@ -74,18 +81,24 @@ public class EndingSceneManager : MonoBehaviour
         // 순차적으로 씬을 변경하며 , 씬을 둘러보는 연출
         for (int i = 0; i < _endingImageTransforms.Count; i++)
         {
-            // TODO: 해당 씬에서는 처음부터 darken 상태로,, (한 프레임 불편함..)
             // darken
-            if(i != 0)
+            if (i != 0)
             {
                 yield return _transitionPlayer.FadeCoroutine(halfDuration, darken);
             }
 
-            if(i != 0)
+            if (i != 0)
+            {
                 _endingImageTransforms[i - 1].gameObject.SetActive(false);
+            }
+
             _endingImageTransforms[i].gameObject.SetActive(true);
 
             // lighten
+            if (i == 0)
+            {
+                StartCoroutine(FadeCoroutine(halfDuration, lighten));
+            }
             yield return _transitionPlayer.FadeCoroutine(halfDuration, lighten);
 
             yield return new WaitForSeconds(_sceneSurroundingDuration);
@@ -183,4 +196,50 @@ public class EndingSceneManager : MonoBehaviour
         PlayCutscene("EndingCutscene_Final");
     }
     */
+
+    private IEnumerator FadeCoroutine(float duration, FadeType fadeType)
+    {
+        if (fadeImage == null)
+        {
+            Debug.LogWarning("No Fade Image!!");
+            yield break;
+        }
+
+        // GameUIManager.SetDebugText($"fadeType: {fadeType.ToString()}");
+
+        // _fadeImage.color.a 0: 검정색 이미지가 투명
+        // _fadeImage.color.a 1: 검정색 이미지가 불투명
+
+        float from = fadeImage.color.a;
+        float to = 1f;
+
+        // FadeType에 따라 시작 및 종료 값을 설정
+        switch (fadeType)
+        {
+            case FadeType.Darken:
+                to = 1f;
+                break;
+            case FadeType.Lighten:
+                to = 0f;
+                break;
+            case FadeType.Dim:
+                to = 0.2f;
+                break;
+        }
+
+        Color imageColor = fadeImage.color;
+
+        float eTime = 0f;
+        while (eTime < duration)
+        {
+            imageColor.a = Mathf.Lerp(from, to, eTime / duration);
+            fadeImage.color = imageColor;
+
+            yield return null;
+            eTime += Time.deltaTime;
+        }
+
+        imageColor.a = to;
+        fadeImage.color = imageColor;
+    }
 }
