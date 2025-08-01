@@ -255,6 +255,8 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
     protected override void Start()
     {
         base.Start();
+
+        ResetGodMode();
     }
     protected override void Update()
     {
@@ -606,6 +608,12 @@ public class PlayerBehaviour : StateMachineBase, IAttackListener, ISceneContextB
         // effect process
         MaterialController.DisintegrateEffect.Play();
         yield return new WaitUntil(() => MaterialController.DisintegrateEffect.IsEffectDone);
+    }
+
+    public void ResetGodMode()
+    {
+        _godModeReferenceCount = 0;
+        _isGodMode = false;
     }
 
     #endregion

@@ -54,6 +54,9 @@ public class InstantRespawnState : PlayerState
         Player.enabled = true;
         Player.Animator.speed = 1;
 
+        // reset god mode
+        Player.ResetGodMode();
+
         // defualt input setter
         InputManager.Instance.ChangeToDefaultSetter();
     }
