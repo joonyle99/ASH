@@ -56,7 +56,7 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
     }
     private void Update()
     {
-//#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.LeftControl))
         {
             CheatMode = !CheatMode;
@@ -66,7 +66,7 @@ public class GameSceneManager : HappyTools.SingletonBehaviourFixed<GameSceneMana
 
             FindObjectOfType<ToastLabel>().ShowToast($"{text}", 2.0f, color);
         }
-//#endif
+#endif
     }
 
     public static bool IsOpeningScene(string sceneName)
