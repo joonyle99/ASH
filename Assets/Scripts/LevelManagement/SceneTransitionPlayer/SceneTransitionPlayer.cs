@@ -27,8 +27,6 @@ public class SceneTransitionPlayer : MonoBehaviour
         Color color = _fadeImage.color;
         color.a = alpha;
         _fadeImage.color = color;
-
-        Debug.Log(color.a);
     }
 
     public virtual IEnumerator EnterSceneEffectCoroutine()

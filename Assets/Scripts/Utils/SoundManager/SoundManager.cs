@@ -326,7 +326,8 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     { 
         if (GameSceneManager.IsOpeningScene(sceneName))
         {
-            BGMFadeInOut("MainTheme", 1, "", 5);
+            StopBGM();
+            PlayCommonBGMFade("MainTheme", 1);
             //PlayCommonBGM("MainTheme");
         }
         else if(GameSceneManager.IsPrologueScene(sceneName))
@@ -335,7 +336,7 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         }
         else if (GameSceneManager.IsExploration1(sceneName))
         {
-            BGMFadeInOut("Exploration1", 5, "Dungeon_Wave", 5, 1);
+            BGMFadeInOut("Exploration1", 5, "Dungeon_Wave", 5);
             //PlayCommonBGM("Exploration1");
         }
         else if (GameSceneManager.IsExploration2(sceneName))
@@ -383,9 +384,9 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     {
         for (int i = 0; i < _playingBgmPlayers.Count; i++)
         {
-            Debug.Log($"Stop bgm : {_playingBgmPlayers[i].clip.name}");
             _playingBgmPlayers[i].Stop();
         }
+        _playingBgmPlayers.Clear();
     }
     /// <summary>
     /// 일반적으로 현재 플레이 중인 bgm을 페이드 아웃하여 멈춤,
@@ -453,12 +454,10 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
         {
             if (!bgmSources[i].isPlaying)
             {
-                Debug.Log($"Rest 2 bgm player : {bgmSources[i].clip}");
                 return bgmSources[i];
             }
         }
 
-        Debug.Log($"Rest 3 bgm player");
         AudioSource newSource = _bgmPlayer.AddComponent<AudioSource>();
         newSource.playOnAwake = false;
         newSource.loop = true;
@@ -516,7 +515,6 @@ public class SoundManager : HappyTools.SingletonBehaviourFixed<SoundManager>, IS
     {
         for (int i = 0; i < _playingBgmPlayers.Count; i++)
         {
-            Debug.Log($"Played clip {_playingBgmPlayers[i].clip} playing bgm player's count : {_playingBgmPlayers.Count}");
             if (_playingBgmPlayers[i].clip == clip)
             {
                 return true;
