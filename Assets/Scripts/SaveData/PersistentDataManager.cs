@@ -449,6 +449,11 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     // 프롤로그 화면에서 호출되도록 하기
     public static void ClearPersistentData()
     {
+        if (Instance.PersistentData == null)
+        {
+            return;
+        }
+
         Instance.PersistentData.SceneName = "";
         Instance.PersistentData.PassageName = "";
         Instance.PersistentData.DataGroups.Clear();
@@ -456,6 +461,11 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
     }
     public static void ClearSavedPersistentData()
     {
+        if (Instance.SavedPersistentData == null)
+        {
+            return;
+        }
+
         Instance.SavedPersistentData.SceneName = "";
         Instance.SavedPersistentData.PassageName = "";
         Instance.SavedPersistentData._jsonDataGroups?.data?.Clear();
