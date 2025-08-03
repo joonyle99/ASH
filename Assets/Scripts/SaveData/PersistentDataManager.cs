@@ -380,6 +380,16 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
      */
     public static bool LoadToSavedData(SceneChangeType sceneChangeType = SceneChangeType.Loading)
     {
+        JsonDataManager.JsonLoad();
+        Instance._savedPersistentData = JsonDataManager.GetObjectInGlobalSaveData<JsonPersistentData>("PersistentData");
+
+        if (Instance._savedPersistentData == null)
+        {
+            //저장된 데이터가 없는 경우
+            Debug.Log("Have not saved data");
+            return false;
+        }
+
         SceneChangeManager.Instance.SceneChangeType = sceneChangeType;
 
         ///---------씬 파괴 전 수행되어야 하는 것----------
@@ -395,33 +405,25 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         DialogueController.Instance.ShutdownDialogue();
 
         SceneEffectManager.StopPlayingCutscene();
+
         ///----------------------------------------------
 
-        JsonDataManager.JsonLoad();
-        Instance._savedPersistentData = JsonDataManager.GetObjectInGlobalSaveData<JsonPersistentData>("PersistentData");
+        ReplacePDataToSavedPData();
+        //Instance._persistentData.DataGroups.RemoveNonSavedPersistentData();
 
-        if (Instance._savedPersistentData != null)
+        MonsterRespawnManager.Instance.StopRespawnCoroutine();
+
+        string sceneName = Instance.PersistentData.SceneName;
+        string passageName = Instance.PersistentData.PassageName;
+        if (sceneName == "" || passageName == "")
         {
-            ReplacePDataToSavedPData();
-            //Instance._persistentData.DataGroups.RemoveNonSavedPersistentData();
-
-            MonsterRespawnManager.Instance.StopRespawnCoroutine();
-            string sceneName = Instance.PersistentData.SceneName;
-            string passageName = Instance.PersistentData.PassageName;
-            if (sceneName == "" || passageName == "")
-            {
-                Debug.LogWarning("Not Saved Scene or PassageData Load");
-                return false;
-            }
-
-            SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
-
-            return true;
+            Debug.LogWarning("Not Saved Scene or PassageData Load");
+            return false;
         }
 
-        //저장된 데이터가 없는 경우
-        Debug.Log("Have not saved data");
-        return false;
+        SceneChangeManager.Instance.ChangeToPlayableScene(sceneName, passageName);
+
+        return true;
     }
 
     public static void RemoveNonSavedPersistentData()
