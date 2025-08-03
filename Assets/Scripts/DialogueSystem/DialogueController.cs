@@ -190,8 +190,8 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
         SoundManager.Instance.PlayCommonSFX("SE_UI_Select");
 
-        //if (_currentDialogueData.InputSetter != null)
-        //    InputManager.Instance.ChangeToDefaultSetter();
+        if (_currentDialogueData.InputSetter != null)
+            InputManager.Instance.ChangeToDefaultSetter();
 
         StopCoroutine(_currentDialogueCoroutine);
         _currentDialogueCoroutine = null;
