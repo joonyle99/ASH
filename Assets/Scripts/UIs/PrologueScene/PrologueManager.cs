@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Video;
+using UnityEngine.UI;
 
 public class PrologueManager : MonoBehaviour
 {
@@ -30,22 +31,34 @@ public class PrologueManager : MonoBehaviour
     [SerializeField] VideoClip _videoJp;
     [SerializeField] VideoClip _videoKo;
 
+    [Space]
+    
+    [SerializeField] Button _skipButton;
+    [SerializeField] TextMeshProUGUI _skipText;
+
     private void Start()
     {
         _proceedText.gameObject.SetActive(false);
+
+        _skipButton.gameObject.SetActive(false);
+
         PlayPrologue();
+
         //StartCoroutine(PlayScripts());
+
+        _videoPlayer.loopPointReached -= StartGame;
         _videoPlayer.loopPointReached += StartGame;
+    }
+    private void OnDestroy()
+    {
+        _videoPlayer.loopPointReached -= StartGame;
     }
     public void Update()
     {
         // CHEAT: F12 키를 누르면 프롤로그 스킵
         if (Input.GetKeyDown(KeyCode.F12) && GameSceneManager.Instance.CheatMode == true)
         {
-            _videoPlayer.loopPointReached -= StartGame;
-
-            StopAllCoroutines();
-            StartCoroutine(StartGameCoroutine());
+            SkipPrologue();
         }
     }
 
@@ -65,6 +78,9 @@ public class PrologueManager : MonoBehaviour
         }
 
         _videoPlayer.Play();
+        _skipText.text = UITranslator.GetLocalizedString("ui_skip");
+
+        StartCoroutine(FadeInButtonComponents(_skipButton, 2f));
     }
 
     private void StartGame(UnityEngine.Video.VideoPlayer _videoPlayer)
@@ -77,7 +93,13 @@ public class PrologueManager : MonoBehaviour
         PersistentDataManager.ClearPersistentData();
         PersistentDataManager.ClearSavedPersistentData();
 
-        yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
+        yield return null;
+
+        //if (SceneContext.Current && SceneContext.Current.SceneTransitionPlayer)
+        //{
+        //    yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
+        //}
+
         SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "Enter 1-1");
     }
 
@@ -163,5 +185,52 @@ public class PrologueManager : MonoBehaviour
         }
         color.a = 1;
         _proceedText.color = color;
+    }
+    
+    public void SkipPrologue()
+    {
+        StopAllCoroutines();
+        StartCoroutine(StartGameCoroutine());
+    }
+
+    private IEnumerator FadeInButtonComponents(Button button, float fadeDuration)
+    {
+        // 10초 대기 후에 스킵 버튼 활성화
+        yield return new WaitForSeconds(10f);
+
+        // 버튼 활성화
+        button.gameObject.SetActive(true);
+
+        // 컴포넌트 가져오기
+        Image image = button.GetComponent<Image>();
+        TextMeshProUGUI text = button.GetComponentInChildren<TextMeshProUGUI>();
+
+        // 초기 알파 설정
+        Color imageColor = image.color;
+        Color textColor = text.color;
+        imageColor.a = 0f;
+        textColor.a = 0f;
+        image.color = imageColor;
+        text.color = textColor;
+
+        float elapsed = 0f;
+        while (elapsed < fadeDuration)
+        {
+            float alpha = elapsed / fadeDuration;
+
+            imageColor.a = alpha;
+            textColor.a = alpha;
+            image.color = imageColor;
+            text.color = textColor;
+
+            yield return null;
+            elapsed += Time.deltaTime;
+        }
+
+        // 최종 알파 1로 설정
+        imageColor.a = 1f;
+        textColor.a = 1f;
+        image.color = imageColor;
+        text.color = textColor;
     }
 }
