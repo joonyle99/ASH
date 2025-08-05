@@ -344,13 +344,20 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     }
 
     // JSON 파일로 저장
+    // 아예 없는 경우에 새로 생성
     public static void JsonSave()
     {
         JsonDataArray<string, string> arrayJson = DictionaryConvert(Instance._globalSaveData.saveDataGroup);
-
         string json = JsonUtility.ToJson(arrayJson, true);
 
-        File.WriteAllText(Instance._newPath, json);
+        if (File.Exists(Instance._oldPath))
+        {
+            File.WriteAllText(Instance._oldPath, json);
+        }
+        else
+        {
+            File.WriteAllText(Instance._newPath, json);
+        }
 
         // Debug.Log("Save Gamedata To Json File");
     }
