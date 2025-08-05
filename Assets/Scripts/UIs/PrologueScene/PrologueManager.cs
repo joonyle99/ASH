@@ -83,22 +83,11 @@ public class PrologueManager : MonoBehaviour
         StartCoroutine(FadeInButtonComponents(_skipButton, 2f));
     }
 
-    private void StartGame(UnityEngine.Video.VideoPlayer _videoPlayer)
+    private void StartGame(UnityEngine.Video.VideoPlayer _videoPlayer = null)
     {
-        StartCoroutine(StartGameCoroutine());
-    }
-
-    private IEnumerator StartGameCoroutine()
-    {
+        // 데이터 초기화
         PersistentDataManager.ClearPersistentData();
         PersistentDataManager.ClearSavedPersistentData();
-
-        yield return null;
-
-        //if (SceneContext.Current && SceneContext.Current.SceneTransitionPlayer)
-        //{
-        //    yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
-        //}
 
         SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "Enter 1-1");
     }
@@ -135,7 +124,7 @@ public class PrologueManager : MonoBehaviour
                 text.color = color;
         }
 
-        yield return StartGameCoroutine();
+        yield return null;
     }
     private IEnumerator PlayScript(Script script)
     {
@@ -190,7 +179,7 @@ public class PrologueManager : MonoBehaviour
     public void SkipPrologue()
     {
         StopAllCoroutines();
-        StartCoroutine(StartGameCoroutine());
+        StartGame();
     }
 
     private IEnumerator FadeInButtonComponents(Button button, float fadeDuration)

@@ -140,7 +140,6 @@ public class SerializableObjectType
 public class JsonPersistentData
 {
     public string SceneName = "";
-
     public string PassageName = "";
 
     public JsonDataArray<string, JsonDataArray<string, SerializableObjectType>> _jsonDataGroups;
@@ -281,15 +280,19 @@ public class SaveData
 
 public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManager>
 {
-    private string path;
+    private string _oldPath;
+    private string _newPath;
 
     private SaveData _globalSaveData = new SaveData();
     public SaveData GlobalSaveData => Instance._globalSaveData;
 
     protected override void Awake()
     {
-        path = Path.Combine(Application.dataPath, "database.json");
-        path = path.Replace("\\", "/");
+        _oldPath = Path.Combine(Application.dataPath, "database.json");
+        _newPath = Path.Combine(Application.persistentDataPath, "database.json");
+        _oldPath = _oldPath.Replace("\\", "/");
+        _newPath = _newPath.Replace("\\", "/");
+
         JsonLoad();
     }
 
@@ -299,6 +302,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     }
 
     #region Main Json Save Logic
+
     // 새로운 데이터 추가시 사용
     public static void Add(string key, string value)
     {
@@ -346,7 +350,7 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
         string json = JsonUtility.ToJson(arrayJson, true);
 
-        File.WriteAllText(Instance.path, json);
+        File.WriteAllText(Instance._newPath, json);
 
         // Debug.Log("Save Gamedata To Json File");
     }
@@ -354,23 +358,27 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     // JSON 파일 불러오기
     public static void JsonLoad()
     {
-        SaveData data = new SaveData();
-
-        if (!File.Exists(Instance.path))
+        // 최우선으로 old path 확인
+        if (File.Exists(Instance._oldPath))
         {
-            JsonSave();
+            Debug.Log($"JsonLoad - _path: {Instance._oldPath}");
+
+            Dictionary<string, string> dataDic = new Dictionary<string, string>();
+            dataDic = ToDictionary<string, string>(File.ReadAllText(Instance._oldPath));
+            Instance._globalSaveData.saveDataGroup = dataDic;
+        }
+        // 없으면 new path 확인
+        else if (File.Exists(Instance._newPath))
+        {
+            Debug.Log($"JsonLoad - _path: {Instance._newPath}");
+
+            Dictionary<string, string> dataDic = new Dictionary<string, string>();
+            dataDic = ToDictionary<string, string>(File.ReadAllText(Instance._newPath));
+            Instance._globalSaveData.saveDataGroup = dataDic;
         }
         else
         {
-            string fromJsonData = File.ReadAllText(Application.dataPath + "/database.json");
-
-            Dictionary<string, string> dataDic = new Dictionary<string, string>();
-
-            dataDic = ToDictionary<string, string>(fromJsonData);
-
-            Instance._globalSaveData.saveDataGroup = dataDic;
-
-            // Debug.Log("Load Gamedata From Json File");
+            JsonSave();
         }
     }
 
@@ -433,9 +441,11 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
 
         return returnDictionary;
     }
+
     #endregion
 
     #region Convert To Json Interface Class
+
     /// <summary>
     /// 이 함수 단독으로 사용할 경우 JsonDataManager.JsonSave를 호출해 주어야 함
     /// </summary>
@@ -462,8 +472,22 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     {
         Add("LanguageCode", languageCode);
 
-        // json파일을 불러와 languageCode 부분만 직접 저장
-        string fromJsonData = File.ReadAllText(Application.dataPath + "/database.json");
+        string fromJsonData = string.Empty;
+
+        // 최우선으로 old path
+        if (File.Exists(Instance._oldPath))
+        {
+            fromJsonData = File.ReadAllText(Instance._oldPath);
+        }
+        else if (File.Exists(Instance._newPath))
+        {
+            fromJsonData = File.ReadAllText(Instance._newPath);
+        }
+        else
+        {
+            Debug.LogError("No JSON file found to save LanguageCode data.");
+            return;
+        }
 
         Dictionary<string, string> convertData = new();
         convertData = ToDictionary<string, string>(fromJsonData);
@@ -479,24 +503,41 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         JsonDataArray<string, string> dataArray = DictionaryConvert(convertData);
         string json = JsonUtility.ToJson(dataArray, true);
 
-        File.WriteAllText(Instance.path, json);
+        // 최우선으로 old path
+        if (File.Exists(Instance._oldPath))
+        {
+            File.WriteAllText(Instance._oldPath, json);
+        }
+        else if (File.Exists(Instance._newPath))
+        {
+            File.WriteAllText(Instance._newPath, json);
+        }
     }
 
     public static void LoadLanguageCodeData()
     {
-        if (!File.Exists(Instance.path))
-        {
+        string fromJsonData = string.Empty;
 
+        if (File.Exists(Instance._oldPath))
+        {
+            fromJsonData = File.ReadAllText(Instance._oldPath);
+        }
+        else if (File.Exists(Instance._newPath))
+        {
+            fromJsonData = File.ReadAllText(Instance._newPath);
+        }
+        else
+        {
+            Debug.LogError("No JSON file found to save LanguageCode data.");
             return;
         }
-
-        string fromJsonData = File.ReadAllText(Application.dataPath + "/database.json");
 
         if(!Instance._globalSaveData.saveDataGroup.ContainsKey("LanguageCode"))
         {
             Instance._globalSaveData.saveDataGroup.Add("LanguageCode", ToDictionary<string, string>(fromJsonData)["LanguageCode"]);
         }
     }
+
     #endregion
 
     public void DebugGlobalSaveData()

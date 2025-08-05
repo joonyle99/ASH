@@ -69,7 +69,6 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         base.OnDestroy();
 
-
         SaveAndLoader.OnSaveStarted -= SaveAllDialogueDataWithJson;
     }
 
@@ -174,7 +173,6 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
                 return "ko"; // 기본값으로 한국어 사용
         }
     }
-
 
     public void LoadLanguageCode()
     {

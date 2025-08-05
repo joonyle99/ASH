@@ -448,7 +448,6 @@ public class PersistentDataManager : HappyTools.SingletonBehaviourFixed<Persiste
         Instance._persistentData.DataGroups = newGroup;
     }
 
-    // 프롤로그 화면에서 호출되도록 하기
     public static void ClearPersistentData()
     {
         if (Instance.PersistentData == null)
