@@ -8,14 +8,14 @@ using System;
 public enum LanguageCode
 {
     KOREAN = 0,
-    ENGLISH = 1,
+    ENGLISH = 1, // DEFAULT LANGUAGE
     JAPANESE = 2,
 }
 
 public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDataManager>
 {
     [SerializeField] private List<DialogueData> _dialogueDatas = new List<DialogueData>();
-    [SerializeField] private LanguageCode _languageCode = LanguageCode.KOREAN; // TODO: 로컬 데이터로 저장할 필요가 있음.. PlayerPrefs or Json..?
+    [SerializeField] private LanguageCode _languageCode = LanguageCode.ENGLISH; // TODO: 로컬 데이터로 저장할 필요가 있음.. PlayerPrefs or Json..?
 
     string _groupName = "DialogueData";
 
@@ -199,7 +199,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
             }
             else
             {
-                languageCode = "KOREAN";
+                languageCode = "ENGLISH";
             }
         }
 
