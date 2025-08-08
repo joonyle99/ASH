@@ -22,6 +22,7 @@ public class DialogueData : ScriptableObject
     [Space]
 
     public bool PlayAtFirst;                                                // 이미 한 번 본 경우, 다시 재생하지 않음
+    public bool IsBossDialogue;                                                // 보스 다이얼로그인지 확인
     private float _typingSpeed = 25f;                                       // 타이핑 속도
 
     private Quest _quest;                                                   // 다이얼로그에 연결된 퀘스트

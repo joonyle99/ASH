@@ -45,11 +45,13 @@ public class DialogueView : MonoBehaviour
         _indicator.gameObject.SetActive(false);
         _responsePanel.gameObject.SetActive(false);
         _dialoguePanel.gameObject.SetActive(true);
-        //_skipButton.gameObject.SetActive(canSkip);
-        _skipButton.gameObject.SetActive(false);
         _textShaker = _dialogue.GetComponent<TextShaker>();
-        string dialogueKeyCode = InputManager.Instance.StayStillInputSetter.GetKeyCode("Dialogue").KeyCode.ToString();
-        _skipText.text = dialogueKeyCode;
+
+        _skipButton.gameObject.SetActive(canSkip);
+        if (canSkip)
+        {
+            _skipText.text = UITranslator.GetLocalizedString("ui_skip");
+        }
     }
     /// <summary> 다이얼로그 뷰 UI 패널 닫기 </summary>
     public void ClosePanel()
@@ -242,5 +244,11 @@ public class DialogueView : MonoBehaviour
     {
         if(DialogueController.Instance)
             DialogueController.Instance.SkipDialogue();
+    }
+
+    public void ShutdownDialogue()
+    {
+        if (DialogueController.Instance)
+            DialogueController.Instance.ShutdownDialogue();
     }
 }

@@ -38,7 +38,11 @@ public class Quest
         }
     }
     [SerializeField] private int _currentRepeatCount;                               // 현재 퀘스트 반복 횟수
-    public int CurrentRepeatCount => _currentRepeatCount;
+    public int CurrentRepeatCount
+    {
+        get => _currentRepeatCount;
+        set => _currentRepeatCount = value;
+    }
     [SerializeField] private int _maxRepeatCount;                                   // 최대 퀘스트 반복 횟수
     public int MaxRepeatCount => _maxRepeatCount;
 

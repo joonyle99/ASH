@@ -4,7 +4,7 @@ using UnityEngine;
 /// 실행 중인 퀘스트를 관리하고
 /// 퀘스트 데이터를 뷰에 전달하는 클래스
 /// </summary>
-public class QuestController : HappyTools.SingletonBehaviourFixed<QuestController>
+public class QuestController : HappyTools.SingletonBehaviourFixed<QuestController>, ISceneContextBuildListener
 {
     [SerializeField] private Quest _globalQuest;
     public Quest GlobalQuest => _globalQuest;
@@ -18,6 +18,27 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
                 _view = FindObjectOfType<QuestView>(true);
             return _view;
         }
+    }
+
+    public void OnSceneContextBuilt()
+    {
+        if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading ||
+            SceneChangeManager.Instance.SceneChangeType == SceneChangeType.PlayerRespawn)
+        {
+            LoadGlobalQuestData();
+        }
+    }
+
+
+    private void LoadGlobalQuestData()
+    {
+        string questDataGroupName = "QuestData";
+
+        _globalQuest.CurrentRepeatCount = PersistentDataManager.Get<int>(questDataGroupName, "currentRepeatCount_Saved");
+        _globalQuest.CurrentCount = PersistentDataManager.Get<int>(questDataGroupName, "currentCount_Saved");
+        _globalQuest.IsActive = PersistentDataManager.Get<bool>(questDataGroupName, "isActive_Saved");
+        _globalQuest.IsAcceptedBefore = PersistentDataManager.Get<bool>(questDataGroupName, "isAcceptedBefore_Saved");
+        _globalQuest.IsAutoFirst = PersistentDataManager.Get<bool>(questDataGroupName, "isAutoFirst_Saved");
     }
 
     public void AcceptQuest()
@@ -59,4 +80,17 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
         // 퀘스트 데이터를 뷰에 전달
         View.UpdatePanel(_globalQuest);
     }
+
+    public void SaveQuestData()
+    {
+        string questDataGroupName = "QuestData";
+        PersistentDataManager.TryAddDataGroup(questDataGroupName);
+
+        PersistentDataManager.Set(questDataGroupName, "currentRepeatCount_Saved", _globalQuest.CurrentRepeatCount);
+        PersistentDataManager.Set(questDataGroupName, "currentCount_Saved", _globalQuest.CurrentCount);
+        PersistentDataManager.Set(questDataGroupName, "isActive_Saved", _globalQuest.IsActive);
+        PersistentDataManager.Set(questDataGroupName, "isAcceptedBefore_Saved", _globalQuest.IsAcceptedBefore);
+        PersistentDataManager.Set(questDataGroupName, "isAutoFirst_Saved", _globalQuest.IsAutoFirst);
+    }
+
 }

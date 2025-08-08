@@ -47,6 +47,8 @@ public class SaveAndLoader : MonoBehaviour, ITriggerListener
         _statueVisualEffect.PlayEffectsOnSaveStarted();
         _statueVisualEffect.DeactiveSaveTextLogic();
 
+        QuestController.Instance.SaveQuestData();
+
         OnSaveStarted?.Invoke();
 
         JsonDataManager.SavePersistentData(_passageName);

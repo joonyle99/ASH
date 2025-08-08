@@ -136,7 +136,7 @@ public class SceneChangeManager : HappyTools.SingletonBehaviourFixed<SceneChange
         if (IsChanging)
             return;
 
-        if (SceneChangeType == SceneChangeType.Loading)
+        if (SceneChangeType == SceneChangeType.Loading || SceneChangeType == SceneChangeType.PlayerRespawn)
         {
             DialogueDataManager.LoadSyncAllDialogueData(true);
         }

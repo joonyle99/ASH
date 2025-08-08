@@ -39,8 +39,8 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
         }
 
         SaveAndLoader.OnSaveStarted += SaveAllDialogueDataWithJson;
-
     }
+
     private void Start()
     {
         LoadLanguageCode();
@@ -85,6 +85,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     /// </summary>
     public static void LoadSyncAllDialogueData(bool isNeedJsonSave)
     {
+        JsonDataManager.JsonLoad();
         ResetAllDialogueData();
         PersistentDataManager.TryAddDataGroup(Instance._groupName);
 
@@ -126,11 +127,11 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
             for (int i = 0; i < Instance._dialogueDatas.Count; i++)
             {
                 string id = Instance._dialogueDatas[i].name + additionalKey_playAtFirst;
-
                 PersistentDataManager.Set(Instance._groupName, id, Instance._dialogueDatas[i].PlayAtFirst);
             }
         }
     }
+
     public static void SetDialogueData(DialogueData dialogueData, bool playAtFirst = true)
     {
         if (!dialogueData) return;

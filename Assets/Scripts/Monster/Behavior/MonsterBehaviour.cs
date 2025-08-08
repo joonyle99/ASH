@@ -631,7 +631,9 @@ public abstract class MonsterBehaviour : MonoBehaviour, IAttackListener
         {
             // 해당 퀘스트에 해당하는 몬스터인지 확인
             if (monsterData.RankType.Equals(MonsterDefine.RankType.Normal))
+            {
                 currentQuest.IncreaseCount();
+            }
         }
 
         // Wait until death effect is done

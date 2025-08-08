@@ -30,8 +30,9 @@ public class PushableTree : InteractableObject, ISceneContextBuildListener
             }
 
             var treeTransform = new TransformState(_treeTrunk.transform);
-            //ÀúÀå ½ÃÁ¡ÀÇ µ¥ÀÌÅÍ¸¦ ºÒ·¯¿À´Â °æ¿ì
-            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading)
+            //ì €ì¥ ì‹œì ì˜ ë°ì´í„°ë¥¼ ë¶ˆëŸ¬ì˜¤ëŠ” ê²½ìš°
+            if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading ||
+                SceneChangeManager.Instance.SceneChangeType == SceneChangeType.PlayerRespawn)
             {
                 var newTreeTransform = _statePreserver.LoadState("_FallingTreeTransformSaved", treeTransform);
                 _treeTrunk.transform.localPosition = newTreeTransform.Position;
@@ -103,7 +104,7 @@ public class PushableTree : InteractableObject, ISceneContextBuildListener
     {
         if (_statePreserver)
         {
-            // falling treeÀÇ µ¥ÀÌÅÍ¸¦ ÀúÀåÇÑ´Ù.
+            // falling treeì˜ ë°ì´í„°ë¥¼ ì €ì¥í•œë‹¤.
             _statePreserver.SaveState("_FallingTreeTransformSaved", new TransformState(_treeTrunk.transform));
         }
     }

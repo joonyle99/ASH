@@ -51,11 +51,14 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         }
 
         _currentDialogueData = data;
+        Debug.Log($"{data.name} : {data.PlayAtFirst}");
         _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue, !data.PlayAtFirst));
     }
 
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false, bool canSkip = false)
     {
+        canSkip = canSkip && data.Quest == null;
+
         // 1. 다이얼로그 시퀀스를 생성한다
         DialogueSequence dialogueSequence = new DialogueSequence(data);
 
@@ -83,12 +86,10 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
 
                 // (*변경)스킵버튼을 누르거나 키다운시 스킵
                 // 어떤 키라도 눌러졌다면 스킵
-                if (canSkip && (_isSkipSequence || Input.anyKeyDown))
+                if(_isSkipSequence || (Input.anyKeyDown && !Input.GetMouseButtonDown(0)))
                 {
                     View.FastForward();
                     _isSkipSequence = false;
-
-                    yield return null;
                 }
 
                 // CHEAT: F3 키를 누르면 현재 Segment를 빠르게 넘긴다
@@ -170,6 +171,12 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             InputManager.Instance.ChangeToDefaultSetter();
 
         SetCurrentDialogueData(false);
+        // 보스 스테이지 경우 사망해도 바로 스킵할 수 있도록 json저장
+        if(data.IsBossDialogue)
+        {
+            DialogueDataManager.SaveAllDialogueData(true);
+        }
+
         _currentDialogueCoroutine = null;
         _currentDialogueData = null;
     }
