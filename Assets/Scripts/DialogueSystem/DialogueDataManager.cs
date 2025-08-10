@@ -14,8 +14,11 @@ public enum LanguageCode
 
 public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDataManager>
 {
+    [SerializeField] private List<DialogueData> _bossDialogueData = new List<DialogueData>();
+    public List<DialogueData> BossDialogueData => _bossDialogueData;
+
     [SerializeField] private List<DialogueData> _dialogueDatas = new List<DialogueData>();
-    [SerializeField] private LanguageCode _languageCode = LanguageCode.ENGLISH; // TODO: 로컬 데이터로 저장할 필요가 있음.. PlayerPrefs or Json..?
+    [SerializeField] private LanguageCode _languageCode = LanguageCode.ENGLISH; 
 
     string _groupName = "DialogueData";
 
@@ -31,7 +34,19 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
     private void Init()
     {
-        _dialogueDatas = LoadAssetsOfType<DialogueData>().ToList();
+        List<DialogueData> _loadDialogueDatas = LoadAssetsOfType<DialogueData>().ToList();
+
+        for (int i = 0; i < _loadDialogueDatas.Count; i++)
+        {
+            if (_loadDialogueDatas[i].IsBossDialogue)
+            {
+                _bossDialogueData.Add(_loadDialogueDatas[i]);
+            }
+            else
+            {
+                _dialogueDatas.Add(_loadDialogueDatas[i]);
+            }
+        }
 
         if (PersistentDataManager.Instance)
         {
@@ -78,6 +93,11 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
         {
             Instance._dialogueDatas[i].PlayAtFirst = true;
         }
+
+        for (int i = 0; i < Instance._bossDialogueData.Count; i++)
+        {
+            Instance._bossDialogueData[i].PlayAtFirst = true;
+        }
     }
 
     /// <summary>
@@ -85,12 +105,34 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     /// </summary>
     public static void LoadSyncAllDialogueData(bool isNeedJsonSave)
     {
-        JsonDataManager.JsonLoad();
+        Debug.Log("1111");
         ResetAllDialogueData();
         PersistentDataManager.TryAddDataGroup(Instance._groupName);
 
         string additionalKey_playAtFirst = isNeedJsonSave ?
             Instance._playAtFirstAdditionalKeyForJson : Instance._playAtFirstAdditionalKey;
+
+        //보스 데이터 파일 json에서 불러와 persistentDataManager에 할당
+        Debug.Log(JsonDataManager.Instance.GlobalSaveData.saveDataGroup.ContainsKey("DialogueData"));
+        JsonDataManager.LoadDialogueData();
+        Debug.Log(JsonDataManager.Instance.GlobalSaveData.saveDataGroup.ContainsKey("DialogueData"));
+        if (JsonDataManager.Instance.GlobalSaveData.saveDataGroup.ContainsKey("DialogueData"))
+        {
+            Debug.Log("2222");
+            Dictionary<string, bool> bossDialougeData = JsonDataManager.GetObjectInGlobalSaveData<JsonDataArray<string, bool>>("DialogueData").ToDictionary();
+
+            for (int i = 0; i < Instance.BossDialogueData.Count; i++)
+            {
+                string key = Instance.BossDialogueData[i].name + Instance._playAtFirstAdditionalKeyForJson;
+                
+                if(bossDialougeData.ContainsKey(key))
+                {
+                    SetDialogueData(Instance.BossDialogueData[i], bossDialougeData[key]);
+                    Debug.Log($"{key} dialogue play at first : {bossDialougeData[key]}");
+                }
+            }
+        }
+
 
         if (PersistentDataManager.Instance)
         {
@@ -126,6 +168,10 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
         {
             for (int i = 0; i < Instance._dialogueDatas.Count; i++)
             {
+                // 보스 다이얼로그는 본 직후 json데이터에 직접 접근해서 저장
+                if (Instance._dialogueDatas[i].IsBossDialogue)
+                    continue;
+
                 string id = Instance._dialogueDatas[i].name + additionalKey_playAtFirst;
                 PersistentDataManager.Set(Instance._groupName, id, Instance._dialogueDatas[i].PlayAtFirst);
             }
@@ -133,6 +179,12 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     }
 
     public static void SetDialogueData(DialogueData dialogueData, bool playAtFirst = true)
+    {
+        if (!dialogueData) return;
+
+        dialogueData.PlayAtFirst = playAtFirst;
+    }
+    public static void SetBossDialogueData(DialogueData dialogueData, bool playAtFirst = true)
     {
         if (!dialogueData) return;
 

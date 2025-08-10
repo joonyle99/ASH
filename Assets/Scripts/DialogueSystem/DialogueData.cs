@@ -32,6 +32,19 @@ public class DialogueData : ScriptableObject
         set => _quest = value;
     }
 
+    public DialogueData() { }
+
+    public DialogueData(DialogueData copy)
+    {
+        _scriptID = copy._scriptID;
+        _inputSetter = copy._inputSetter;
+        _quest = copy._quest;
+        PlayAtFirst = copy.PlayAtFirst;
+        IsBossDialogue = copy.IsBossDialogue;
+        _typingSpeed = copy._typingSpeed;
+        _quest = copy._quest;
+    }
+
     private void OnEnable()
     {
         _quest = null;

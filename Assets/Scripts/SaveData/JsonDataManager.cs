@@ -465,6 +465,64 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
     }
 
     /// <summary>
+    /// json 파일 저장을 위한 버퍼 및 json파일에 직접 저장
+    /// </summary>
+    public static void SaveDialogueData()
+    {
+        // json파일 불러옴
+        string fromJsonData = string.Empty;
+        if (File.Exists(Instance._oldPath))
+        {
+            fromJsonData = File.ReadAllText(Instance._oldPath);
+        }
+        else if (File.Exists(Instance._newPath))
+        {
+            fromJsonData = File.ReadAllText(Instance._newPath);
+        }
+        else
+        {
+            Debug.LogError("No JSON file found to save dialogue data.");
+            return;
+        }
+        Dictionary<string, string> convertDataFromJson = ToDictionary<string, string>(fromJsonData);
+
+        // 버퍼에 저장
+        List<DialogueData> dialoguePlayData = DialogueDataManager.Instance.BossDialogueData;
+        JsonDataArray<string, bool> jsonDataArray = new JsonDataArray<string, bool>();
+        string additionalKey = "_PlayAtFirstSaved";
+
+        for (int i = 0; i < dialoguePlayData.Count; i++)
+        {
+            jsonDataArray.Add(dialoguePlayData[i].name + additionalKey, dialoguePlayData[i].PlayAtFirst);
+        }
+
+        string jsonData = JsonUtility.ToJson(jsonDataArray);
+        Add("DialogueData", jsonData);
+        //
+
+        // 다이얼로그 데이터를 포함한 string으로 json 파일 갱신
+        if(convertDataFromJson.ContainsKey("DialogueData"))
+        {
+            convertDataFromJson["DialogueData"] = jsonData;
+        }
+        else
+        {
+            convertDataFromJson.Add("DialogueData", jsonData);
+        }
+        JsonDataArray<string, string> jsonDataFinal = DictionaryConvert(convertDataFromJson);
+        string toJsonData = JsonUtility.ToJson(jsonDataFinal, true);
+
+        if (File.Exists(Instance._oldPath))
+        {
+            File.WriteAllText(Instance._oldPath, toJsonData);
+        }
+        else
+        {
+            File.WriteAllText(Instance._newPath, toJsonData);
+        }
+    }
+
+    /// <summary>
     /// 이 함수 단독으로 사용할 경우 JsonDataManager.JsonSave를 호출해 주어야 함
     /// ※사용안함
     /// </summary>
@@ -518,6 +576,40 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         else if (File.Exists(Instance._newPath))
         {
             File.WriteAllText(Instance._newPath, json);
+        }
+    }
+
+    public static void LoadDialogueData()
+    {
+        string fromJsonData = string.Empty;
+
+        if (File.Exists(Instance._oldPath))
+        {
+            fromJsonData = File.ReadAllText(Instance._oldPath);
+        }
+        else if (File.Exists(Instance._newPath))
+        {
+            fromJsonData = File.ReadAllText(Instance._newPath);
+        }
+        else
+        {
+            Debug.LogError("No JSON file found to save dialogue data.");
+            return;
+        }
+
+        Dictionary<string, string> convertData = ToDictionary<string, string>(fromJsonData);
+        if (convertData.ContainsKey("DialogueData"))
+        {
+            if (!Instance._globalSaveData.saveDataGroup.ContainsKey("DialogueData"))
+            {
+                Debug.Log("11111");
+                Instance._globalSaveData.saveDataGroup.Add("DialogueData", convertData["DialogueData"]);
+            }
+            else
+            {
+                Debug.Log("22222");
+                Instance._globalSaveData.saveDataGroup["DialogueData"] = convertData["DialogueData"];
+            }
         }
     }
 

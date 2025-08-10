@@ -51,7 +51,6 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         }
 
         _currentDialogueData = data;
-        Debug.Log($"{data.name} : {data.PlayAtFirst}");
         _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue, !data.PlayAtFirst));
     }
 
@@ -174,7 +173,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
         // 보스 스테이지 경우 사망해도 바로 스킵할 수 있도록 json저장
         if(data.IsBossDialogue)
         {
-            DialogueDataManager.SaveAllDialogueData(true);
+            JsonDataManager.SaveDialogueData();
         }
 
         _currentDialogueCoroutine = null;
