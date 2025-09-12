@@ -37,7 +37,7 @@ public class DebugBehavior : MonoBehaviour
             BossDungeonManager.Instance.OnKeyObtained();
         }
 
-#if UNITY_EDITOR
+#if  DEVELOPMENT_BUILD || UNITY_EDITOR
         // CHEAT: F1 키를 누르면 현재 마지막 CheckPoint를 표시한다 (없다면 입구를 표시한다)
         if (Input.GetKeyDown(KeyCode.F1) && GameSceneManager.Instance.CheatMode == true)
         {
