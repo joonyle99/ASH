@@ -50,8 +50,10 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
             return;
         }
 
+        bool _isResetDialogue = data.ScriptID == 4201;
+
         _currentDialogueData = data;
-        _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue, !data.PlayAtFirst));
+        _currentDialogueCoroutine = StartCoroutine(DialogueCoroutine(data, isContinueDialogue, _isResetDialogue == false ? !data.PlayAtFirst : false));
     }
 
     private IEnumerator DialogueCoroutine(DialogueData data, bool isContinueDialogue = false, bool canSkip = false)
