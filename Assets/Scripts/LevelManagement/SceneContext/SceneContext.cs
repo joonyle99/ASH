@@ -138,9 +138,15 @@ public class SceneContext : MonoBehaviour
             var monoBehaviours = FindObjectsOfType<MonoBehaviour>(true);                // should include inactive objects
             var buildListeners = monoBehaviours.OfType<ISceneContextBuildListener>();
 
+            // 우선순위 별 정렬
+            buildListeners = buildListeners.OrderBy(listener =>
+            {
+                return listener.Priority;
+            }).ToArray();
+            
             foreach (var buildListener in buildListeners)
             {
-                // Debug.Log($"SceneContextBuildListener: {name}");
+                // Debug.Log($"SceneContextBuildListener: {buildListener.GetType()} priority: {buildListener.Priority}");
 
                 // 씬 컨텍스트 빌드 완료 이벤트를 전달한다
                 buildListener.OnSceneContextBuilt();

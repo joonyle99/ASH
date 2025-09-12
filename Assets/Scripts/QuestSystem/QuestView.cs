@@ -9,6 +9,8 @@ using CanvasGroup = UnityEngine.CanvasGroup;
 /// </summary>
 public class QuestView : MonoBehaviour, ISceneContextBuildListener
 {
+    public int Priority => 15;
+
     public Image QuestPanel;
     public TextMeshProUGUI Counter;
 

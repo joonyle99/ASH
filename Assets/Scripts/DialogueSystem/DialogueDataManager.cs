@@ -105,7 +105,6 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     /// </summary>
     public static void LoadSyncAllDialogueData(bool isNeedJsonSave)
     {
-        Debug.Log("1111");
         ResetAllDialogueData();
         PersistentDataManager.TryAddDataGroup(Instance._groupName);
 
@@ -118,7 +117,6 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
 
         if (JsonDataManager.Instance.GlobalSaveData.saveDataGroup.ContainsKey("DialogueData"))
         {
-            Debug.Log("2222");
             Dictionary<string, bool> bossDialougeData = JsonDataManager.GetObjectInGlobalSaveData<JsonDataArray<string, bool>>("DialogueData").ToDictionary();
 
             for (int i = 0; i < Instance.BossDialogueData.Count; i++)
@@ -182,7 +180,6 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         if (!dialogueData) return;
 
-        Debug.Log(dialogueData.name + " :: " + playAtFirst);
         dialogueData.PlayAtFirst = playAtFirst;
     }
     public static void SetBossDialogueData(DialogueData dialogueData, bool playAtFirst = true)

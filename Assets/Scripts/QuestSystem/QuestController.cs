@@ -20,15 +20,15 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
         }
     }
 
+    // start에서 호출
     public void OnSceneContextBuilt()
     {
-        if(SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading ||
+        if (SceneChangeManager.Instance.SceneChangeType == SceneChangeType.Loading ||
             SceneChangeManager.Instance.SceneChangeType == SceneChangeType.PlayerRespawn)
         {
             LoadGlobalQuestData();
         }
     }
-
 
     private void LoadGlobalQuestData()
     {
