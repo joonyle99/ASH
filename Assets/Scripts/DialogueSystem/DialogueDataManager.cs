@@ -91,12 +91,12 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         for (int i = 0; i < Instance._dialogueDatas.Count; i++)
         {
-            Instance._dialogueDatas[i].PlayAtFirst = true;
+            SetDialogueData(Instance._dialogueDatas[i]);
         }
 
         for (int i = 0; i < Instance._bossDialogueData.Count; i++)
         {
-            Instance._bossDialogueData[i].PlayAtFirst = true;
+            SetDialogueData(Instance._bossDialogueData[i]);
         }
     }
 
@@ -113,9 +113,9 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
             Instance._playAtFirstAdditionalKeyForJson : Instance._playAtFirstAdditionalKey;
 
         //보스 데이터 파일 json에서 불러와 persistentDataManager에 할당
-        Debug.Log(JsonDataManager.Instance.GlobalSaveData.saveDataGroup.ContainsKey("DialogueData"));
+
         JsonDataManager.LoadDialogueData();
-        Debug.Log(JsonDataManager.Instance.GlobalSaveData.saveDataGroup.ContainsKey("DialogueData"));
+
         if (JsonDataManager.Instance.GlobalSaveData.saveDataGroup.ContainsKey("DialogueData"))
         {
             Debug.Log("2222");
@@ -182,6 +182,7 @@ public class DialogueDataManager : HappyTools.SingletonBehaviourFixed<DialogueDa
     {
         if (!dialogueData) return;
 
+        Debug.Log(dialogueData.name + " :: " + playAtFirst);
         dialogueData.PlayAtFirst = playAtFirst;
     }
     public static void SetBossDialogueData(DialogueData dialogueData, bool playAtFirst = true)

@@ -602,12 +602,10 @@ public class JsonDataManager : HappyTools.SingletonBehaviourFixed<JsonDataManage
         {
             if (!Instance._globalSaveData.saveDataGroup.ContainsKey("DialogueData"))
             {
-                Debug.Log("11111");
                 Instance._globalSaveData.saveDataGroup.Add("DialogueData", convertData["DialogueData"]);
             }
             else
             {
-                Debug.Log("22222");
                 Instance._globalSaveData.saveDataGroup["DialogueData"] = convertData["DialogueData"];
             }
         }

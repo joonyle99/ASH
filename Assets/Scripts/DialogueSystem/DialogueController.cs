@@ -222,6 +222,7 @@ public class DialogueController : HappyTools.SingletonBehaviourFixed<DialogueCon
     {
         if (_currentDialogueData)
         {
+            Debug.Log(_currentDialogueData.name + " : " + playAtFirst);
             _currentDialogueData.PlayAtFirst = playAtFirst;
         }
     }
