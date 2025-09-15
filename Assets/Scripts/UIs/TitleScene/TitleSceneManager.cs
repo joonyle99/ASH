@@ -35,6 +35,8 @@ public class TitleSceneManager : MonoBehaviour
 
     public void OpenPrologueScene()
     {
+        SceneChangeManager.Instance.SceneChangeType = SceneChangeType.None;
+
         StartCoroutine(OpenPrologueSceneCoroutine());
     }
     public void ChangeScene(string sceneName)
@@ -68,6 +70,7 @@ public class TitleSceneManager : MonoBehaviour
     IEnumerator OpenPrologueSceneCoroutine()
     {
         yield return SceneContext.Current.SceneTransitionPlayer.ExitSceneEffectCoroutine();
+
         SceneChangeManager.Instance.ChangeToNonPlayableScene("PrologueScene");
     }
     /// <summary>
