@@ -20,6 +20,15 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
         }
     }
 
+    public void InitializeQuestData()
+    {
+        _globalQuest.CurrentRepeatCount = 0;
+        _globalQuest.CurrentCount = 0;
+        _globalQuest.IsActive = false;
+        _globalQuest.IsAcceptedBefore = false;
+        _globalQuest.IsAutoFirst = true;
+    }
+
     // start에서 호출
     public void OnSceneContextBuilt()
     {
@@ -33,6 +42,11 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
     private void LoadGlobalQuestData()
     {
         string questDataGroupName = "QuestData";
+
+        if (PersistentDataManager.HasDataGroup(questDataGroupName) == false)
+        {
+            PersistentDataManager.TryAddDataGroup(questDataGroupName);
+        }
 
         _globalQuest.CurrentRepeatCount = PersistentDataManager.Get<int>(questDataGroupName, "currentRepeatCount_Saved");
         _globalQuest.CurrentCount = PersistentDataManager.Get<int>(questDataGroupName, "currentCount_Saved");
@@ -84,7 +98,11 @@ public class QuestController : HappyTools.SingletonBehaviourFixed<QuestControlle
     public void SaveQuestData()
     {
         string questDataGroupName = "QuestData";
-        PersistentDataManager.TryAddDataGroup(questDataGroupName);
+
+        if (PersistentDataManager.HasDataGroup(questDataGroupName) == false)
+        {
+            PersistentDataManager.TryAddDataGroup(questDataGroupName);
+        }
 
         PersistentDataManager.Set(questDataGroupName, "currentRepeatCount_Saved", _globalQuest.CurrentRepeatCount);
         PersistentDataManager.Set(questDataGroupName, "currentCount_Saved", _globalQuest.CurrentCount);

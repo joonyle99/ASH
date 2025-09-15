@@ -70,6 +70,7 @@ public class NewPrologueManager : MonoBehaviour
     {
         PersistentDataManager.ClearPersistentData();
         PersistentDataManager.ClearSavedPersistentData();
+        QuestController.Instance.InitializeQuestData();
 
         yield return FadeOutLogic(5f);
 
