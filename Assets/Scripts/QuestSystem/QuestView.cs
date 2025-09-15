@@ -26,6 +26,10 @@ public class QuestView : MonoBehaviour, ISceneContextBuildListener
             UpdatePanel(currentQuest);
             OpenPanel();
         }
+        else
+        {
+            ClosePanel();
+        }
     }
 
     public void OpenPanel()
