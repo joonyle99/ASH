@@ -53,6 +53,11 @@ public class QuestView : MonoBehaviour, ISceneContextBuildListener
 
         var canvasGroup = QuestPanel.GetComponent<CanvasGroup>();
 
+        if (canvasGroup.gameObject.activeInHierarchy == isOpen)
+        {
+            yield break;
+        }
+
         var eTime = 0f;
 
         if (isOpen)
