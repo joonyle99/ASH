@@ -88,6 +88,7 @@ public class PrologueManager : MonoBehaviour
         // 데이터 초기화
         PersistentDataManager.ClearPersistentData();
         PersistentDataManager.ClearSavedPersistentData();
+        QuestController.Instance.InitializeQuestData();
 
         SceneChangeManager.Instance.ChangeToPlayableScene("1-1", "Enter 1-1");
     }
