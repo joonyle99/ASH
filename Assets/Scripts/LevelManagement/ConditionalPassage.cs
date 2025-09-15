@@ -71,7 +71,10 @@ public class ConditionalPassage : Passage
             case PassageEnterBlockReason.None:
                 break;
             case PassageEnterBlockReason.AlreadyObtainDashSkill:
-                CanEnter -= BossDungeonManager.Instance.DashObtainEventNotPlayed;
+                if (BossDungeonManager.Instance != null)
+                {
+                    CanEnter -= BossDungeonManager.Instance.DashObtainEventNotPlayed;
+                }
                 break;
         }
     }
